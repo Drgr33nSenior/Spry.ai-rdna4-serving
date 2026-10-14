@@ -1,0 +1,56 @@
+{
+  "reason": "Fresh clone must not depend on private scratchpad directory names.",
+  "binding_changes": {
+    "tests/reference/test_cache0521.py": {
+      "before": "4518201cd4f81233ea1e6b8cd9124837efa630f3dcc3e5a5a4942ad8d7f5e5ec",
+      "after": "8066b3725ac55888a6f217bd0a61c2c3dc779ce2f82a5e999c52ea458af9c425",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/reference/test_modern_stack.py": {
+      "before": "c357a9f5c8eeb90934b78054dfd4982167ded40e220ccddf494761e949828b0c",
+      "after": "2c903f2a6189f2651fb2bfa81e18ea7e3214f33c813b3286ffc12838942cbd53",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/reference/test_modern_identity.py": {
+      "before": "e5a3d6c993ce6ec6578963b524d85767076800ebb6ad352355cb3a4bc3b447c7",
+      "after": "f680105298b1e5087c5f2cc05951ba23cf3b3921f1eeb7e694318eee8f79cedf",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/reference/test_runtime_contract.py": {
+      "before": "d90e5f3eb54505daf132d6e33963bed3ba5988178a95efc9563673377d09037b",
+      "after": "1b781ce5ad0ef14ca5714a832b8765f366818889211d0eb2693000cb9d9f773e",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/reference/test_allocation0521.py": {
+      "before": "8f9e83587e1d06f29b55e50e8973ff185423621cebfb88034b667bf178b0d662",
+      "after": "4134bbc81c4c8dd693be1f21cf893825a0bfdea0c88b7aa71b18aff5c5f3eecb",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/reference/test_lifecycle0521.py": {
+      "before": "bca6a3aba311f6da14048926ab6303c0d880d04c805f6af70c88accd6c99d52e",
+      "after": "31c70167ee4df3793bb97c2463b92712dd914f32c085fb2346ebeb8e8a61d0f6",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/test_runner_activation.py": {
+      "before": "db3c3d98cc198fe14f8e7eb23eff30f0082eab3b972897ff3e24156b7db247b3",
+      "after": "6b98cf1ea36fb1c056d674b9043b0aea8cb9b8823b9fc53f0b99c813f09c537e",
+      "change": "Fixture and canonical-source path bindings only; assertions and numerical tolerances retained."
+    },
+    "tests/fixtures/STOCK-INPUTS.json": {
+      "before": "eb52793913aedd874c9b015a9f54ab240557423cf8123e4ae067fa6c4e20b038",
+      "after": "ec25dd631577a821b3e5a81da41232c739cc8009117ed79544835912e5e345db",
+      "change": "Replace only the donor machine locator with an inert fixture label; relative file hashes and acceptance criteria unchanged."
+    },
+    "tests/fixtures/baseline/STOCK-INPUTS.json": {
+      "before": "ecc4dd2b41dda98e2f86befebb0fdd2b56ea4bdd3fd2ac0daa58610993c2dd5b",
+      "after": "f3083a17dd53138a84b087b5af33a0fcde48656bc79c4e915a4c8e6975bf294b",
+      "change": "Replace only the donor machine locator with an inert fixture label; relative file hashes and acceptance criteria unchanged."
+    }
+  },
+  "native_snapshot_directory_rename": {
+    "from": "candidate-next",
+    "to": "prototype"
+  },
+  "production_source_bytes_changed": false,
+  "historical_snapshot_binding": "Original-native baseline remains relative to the deliberately substituted original-native fixture root."
+}

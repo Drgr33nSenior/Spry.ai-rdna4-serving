@@ -1,0 +1,19 @@
+{
+  "name": "fp8-kv4",
+  "scope": "experimental private source profile; public admission remains closed",
+  "model": "Qwen/Qwen3.8-27B-FP8",
+  "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+  "weights": "official FP8; BF16 remaining tensors",
+  "kv_storage": "local G32 E2M1/UE8M0 interleaved17-byte groups in12full layers;4protected BF16 full layers",
+  "protected_physical_layers": [3, 7, 59, 63],
+  "attention_compute": "BF16 input/output; FP32 WHT and accumulation; software unpack",
+  "tp": 2,
+  "context": 4096,
+  "physical_slots_per_rank": 4096,
+  "reserved_slot_zero": true,
+  "page_size": 1,
+  "execution": "eager",
+  "mamba_cache_policy": "no_buffer",
+  "public_mode_registered": false,
+  "launch_authorized": false
+}

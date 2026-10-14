@@ -1,0 +1,1131 @@
+{
+  "integration_seal_sha256": "c5b35b58c9795c3c20a2c7255b1d1eaaf538ea0aede61c5b6e5a004398a33289",
+  "stock_seal_sha256": "bca8efaa3c113a26e5ed035c90f1adf85cb632280c805de224c634f5705eac76",
+  "files": {
+    "prototype/TARGET-REQUIREMENTS.json": {
+      "donor": "integration-seal",
+      "source": "candidate-next/TARGET-REQUIREMENTS.json",
+      "sha256": "a74c11aa63277311c17e6109c604cfcfda6cbe2b83f235f84861e2058bcdfa78"
+    },
+    "prototype/codec/codec.h": {
+      "donor": "integration-seal",
+      "source": "candidate-next/codec/codec.h",
+      "sha256": "852ce3209f934938e87818f77427258e16fd867880e45036a785db9f4e318446"
+    },
+    "prototype/image-source/python/sglang/srt/configs/hybrid_arch.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/configs/hybrid_arch.py",
+      "sha256": "0d8a23c8eb88abd930041c417923b0e2f43ad028a04bceced3784454926a33c3"
+    },
+    "prototype/image-source/python/sglang/srt/configs/mamba_utils.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/configs/mamba_utils.py",
+      "sha256": "659d941b57b6960f1144e7c6a6e0449ea630b273ea69cb4f89312c10e0a8ff11"
+    },
+    "prototype/image-source/python/sglang/srt/configs/model_config.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/configs/model_config.py",
+      "sha256": "be3a0168bdd3b4a6b1f7778420b83f95c315535812b44e9422e1b48dd856a11e"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/attention_registry.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/attention_registry.py",
+      "sha256": "dfd9c0b6e85774524f6378ae09278cf6dc000e093ddf6beaadc44d1d20bdacd1"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/base_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/base_attn_backend.py",
+      "sha256": "fdad1a473de751358de57216c48200157ec5e14791dc0dda3eebd9faa9caa628"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py",
+      "sha256": "8339a92ed5e4fd91f306f81f48d29c60f93a9e0e2ae4974cb6916f9f9a46f858"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/linear/gdn_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/linear/gdn_backend.py",
+      "sha256": "c12e054cbe9f85cf15b0590a8ea7e3e175f62121160c3f548e0aa7ce71d1af0d"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/triton_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/triton_backend.py",
+      "sha256": "9924224f0dd4150fe1fc9ef7de6a556c49857608792479379179a973436762c1"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/ultraquant_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/ultraquant_backend.py",
+      "sha256": "db5e094980b84c27e3d5640ba7f1df1f3c83e18cd5b261c7a805858a1feabc24"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/ultraquant_contract.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/ultraquant_contract.py",
+      "sha256": "00376eff68440a1be5c75dcb64d537debdb75ccf8734d80c91c13bb135b453a9"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/ultraquant_evidence.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/ultraquant_evidence.py",
+      "sha256": "8d90aedeb10f22e13cf83fe146dad1d2f50a8f0be0a3d831f0d1ce16dcee1fb8"
+    },
+    "prototype/image-source/python/sglang/srt/layers/attention/ultraquant_stack_contract.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/attention/ultraquant_stack_contract.py",
+      "sha256": "df786d5d2627b39e60e3fc3b4925df98001d3ebd651fc7ab44e5122caf805f87"
+    },
+    "prototype/image-source/python/sglang/srt/layers/quantization/__init__.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/quantization/__init__.py",
+      "sha256": "13a9f194ce7693840529647e818fd784cbd221b7120ceafa98a986762a85512c"
+    },
+    "prototype/image-source/python/sglang/srt/layers/radix_attention.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/layers/radix_attention.py",
+      "sha256": "df6e94b67b61feb4f8e3a7b1fdb0c0444cc56e4bf9d90a622e028bddff31619e"
+    },
+    "prototype/image-source/python/sglang/srt/managers/schedule_batch.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/managers/schedule_batch.py",
+      "sha256": "cd4283b51e4764b755cab49a28d2197f9c0274ddd10d7d87f6948727ad390c0a"
+    },
+    "prototype/image-source/python/sglang/srt/managers/scheduler.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/managers/scheduler.py",
+      "sha256": "512eef0faa953ca52e9b194556751d6e828bd003ee2cc5f9354cb2e6d7b12eb5"
+    },
+    "prototype/image-source/python/sglang/srt/managers/scheduler_components/batch_result_processor.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/managers/scheduler_components/batch_result_processor.py",
+      "sha256": "2f5baf667e6879e96b0fd4435750778d3989d03674e01c2963a08bed32091736"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/allocator/base.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/allocator/base.py",
+      "sha256": "33e7882442d8ebf437843eee634dc6514106033e491142779ff8aba9425f4cff"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/allocator/mamba.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/allocator/mamba.py",
+      "sha256": "610d6b3b8452741812efb549cca2903aed8f6e4e585f5b34fa23b935116c0e01"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/allocator/paged.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/allocator/paged.py",
+      "sha256": "2b3d08d1b99717a26b6ca83f67a8578faf0445fbd9d9c3115b835a804e684cdc"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/allocator/token.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/allocator/token.py",
+      "sha256": "5dd2e12b227f2fa3a90b1e7621d45eecd78b55f2d53e1bfb62ec843c2b47877c"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/allocator/unified_mamba.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/allocator/unified_mamba.py",
+      "sha256": "a50c395b82bff413fe4740c684bf4640297af4e02d158595a6c0519a59b5d888"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/base_prefix_cache.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/base_prefix_cache.py",
+      "sha256": "49f20555e6b96af071db38a1bd9829b322ce76381940bd2f340abced151335a9"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/cache_init_params.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/cache_init_params.py",
+      "sha256": "5f8d789f87cfba2d06deccf545df26d23528a015c13fe871ba679cc223ac6b5e"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/common.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/common.py",
+      "sha256": "1b3b2088e4bd0967c94464bd64a59a313924d5f211562b079ec066caf2236202"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/hybrid_cache/hybrid_cache_controller.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/hybrid_cache/hybrid_cache_controller.py",
+      "sha256": "c9c3be8ce5fd22cca7ee1ad4325fb92f8ce071c6e02206201ab3fac1d0a772e3"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py",
+      "sha256": "cd47de4732e37074f607b15eacf5316a37d0b4aeb015a3de07e3c7b5b2b0f2d6"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/kv_cache_configurator.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/kv_cache_configurator.py",
+      "sha256": "afaac626b5ad14440521666310379c84dcc109e3d9f48ef09c9a0fd470cc0d52"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/memory_pool.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/memory_pool.py",
+      "sha256": "47e13954eb8b06836a5279fedd1f79f03dbd40245819ae152af3a02f3887c1ac"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/radix_cache.py",
+      "sha256": "e4fa8ac274784e3c40505025a8bb94627cd347c98833a9a9f1b912a2063cca8b"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/cache_action.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/cache_action.py",
+      "sha256": "cc4ba144976cc39e00beed54763e87ed20fe30c254419088f16e733f08d06d2c"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/component_type.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/component_type.py",
+      "sha256": "df978797a6ddc376477d01931d8bb30b8185499a27fe8c9691db19a429155332"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/components/__init__.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/components/__init__.py",
+      "sha256": "ece31aca48073b093036db38be9e6a3e2ccacc2681bdf7417d4ba94d4db8cd41"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/components/base.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/components/base.py",
+      "sha256": "63464b635fb5a875678aa73017db729017b77516ff2bdd430bb8b58129220d73"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/components/full.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/components/full.py",
+      "sha256": "6380586e6d84ef37c2e2244c807a1c7b5a2e84cb78d0a473f3d34cadd6c673bf"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/components/mamba.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/components/mamba.py",
+      "sha256": "c1086e3ab077a2f75966f8455b77346ead9510497e9012094805f6dd5f29d9cc"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/tree_core_registry.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/tree_core_registry.py",
+      "sha256": "ab08c6584ab8d0b354a1ec616c81dd5745933a5c585a4c4b9a6c8b8f1c124118"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py",
+      "sha256": "c232f023c7ba53e0847307f8e0597ead5fbcbaa8b29a45da36d2fb4eda75fe62"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_cache/unified_tree_core_interface.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_cache/unified_tree_core_interface.py",
+      "sha256": "cd2572be5bb89b9250d0c68aa0b7a382a64734b09cd00ab055ed2c82b2814fa8"
+    },
+    "prototype/image-source/python/sglang/srt/mem_cache/unified_radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/mem_cache/unified_radix_cache.py",
+      "sha256": "f7adb0b5dadff790f45a54c6942f2fa804f187872a8d106350e3447f98b21cc1"
+    },
+    "prototype/image-source/python/sglang/srt/model_executor/forward_batch_info.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/model_executor/forward_batch_info.py",
+      "sha256": "ef4426b3ece1b515eeb5223d394de6a8d154d912bcf62e7ed4bae20e17064797"
+    },
+    "prototype/image-source/python/sglang/srt/model_executor/model_runner.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/model_executor/model_runner.py",
+      "sha256": "d8ce6f38279913d11b4a7e910a7fd1432e952a0bdcf33ebe726b6f49af0ba6ba"
+    },
+    "prototype/image-source/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py",
+      "sha256": "528aa280a7360842591687df833df16d3fa4ce1b7db1817b1f86908899fa2956"
+    },
+    "prototype/image-source/python/sglang/srt/model_executor/model_runner_components/kv_pool_runtime.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/model_executor/model_runner_components/kv_pool_runtime.py",
+      "sha256": "1ddd5dd58b60c8f567cad62d34a58dc6298eb50c143e27397a8b3ddd23ad4c93"
+    },
+    "prototype/image-source/python/sglang/srt/model_executor/pool_configurator.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/model_executor/pool_configurator.py",
+      "sha256": "0343b31300a219aba18f790dec6f7f87aee5ae8cca6fd855f530abfef6da0542"
+    },
+    "prototype/image-source/python/sglang/srt/models/qwen3_5.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/models/qwen3_5.py",
+      "sha256": "9ccff88d991fc492daff984e73b5f88fb4daac62d19a2c19c6c686c9bbe5499c"
+    },
+    "prototype/image-source/python/sglang/srt/server_args.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/srt/server_args.py",
+      "sha256": "1dc6d150bf7c4ef5c2316c2ce21ca28ea557ac26fcdb150d21ac48fff1a784e6"
+    },
+    "prototype/image-source/python/sglang/version.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/image-source/python/sglang/version.py",
+      "sha256": "b10f7d9ea276972352b1e9de0eb0bbb47d8ebe64c29469e15ea016a12019bb22"
+    },
+    "prototype/runtime/attention.hip": {
+      "donor": "integration-seal",
+      "source": "candidate-next/runtime/attention.hip",
+      "sha256": "ced35705d23a1879322c7c8e670c527e28059e841a544283e6beb41668421a3c"
+    },
+    "prototype/runtime/bf16_math.h": {
+      "donor": "integration-seal",
+      "source": "candidate-next/runtime/bf16_math.h",
+      "sha256": "0290613cdaf8ddf057e010b9b37f653e96401ef44648e2ce1018b9c6958a0d11"
+    },
+    "prototype/runtime/uq.h": {
+      "donor": "integration-seal",
+      "source": "candidate-next/runtime/uq.h",
+      "sha256": "e4b278486a8a3434fbd1e90f799cdebc9e240bfa0f2e018524a911aea0ef75cb"
+    },
+    "prototype/scripts/bf16_source_identity.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/scripts/bf16_source_identity.py",
+      "sha256": "28ebc67a369b92e460d0c3c6faa0d0553ef72da224c84b656691669056c56d9d"
+    },
+    "prototype/scripts/build_bf16_v2.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/scripts/build_bf16_v2.py",
+      "sha256": "b8c0ebc845df2e086147454886861d8c9736e427dde04a3703e92724bcfb2040"
+    },
+    "prototype/scripts/collect_bf16_toolchain.py": {
+      "donor": "integration-seal",
+      "source": "candidate-next/scripts/collect_bf16_toolchain.py",
+      "sha256": "e736f5c9ca2e2094a8ac939a29c593e8f016f91d4e295513ce135c6338a9522b"
+    },
+    "tests/fixtures/legacy/codec/codec.h": {
+      "donor": "integration-seal",
+      "source": "candidate/codec/codec.h",
+      "sha256": "852ce3209f934938e87818f77427258e16fd867880e45036a785db9f4e318446"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/configs/mamba_utils.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/configs/mamba_utils.py",
+      "sha256": "1853231eebc49e3836f675e00330f638bfa0e4b2bb3ae8a09c657c5c34d816b8"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/configs/model_config.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/configs/model_config.py",
+      "sha256": "dadbc11c0b020f6a9b7f2ed71809f06d2ba4a9191f1df4600a8f29ced153534a"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/attention_registry.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/attention_registry.py",
+      "sha256": "5584a6a0fc443a24202d65a2714cc56f66101fc2feb84b614f4667dd44f9f9bd"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py",
+      "sha256": "d1f43975cb51c0c13e6b29269491664a5333539ea4b1d68f2d9b70d908dcfc0c"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/linear/gdn_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/linear/gdn_backend.py",
+      "sha256": "7283e05370d785785681176b2d58cfac6a98ccc34164068991f9f6c2e3aaede2"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/triton_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/triton_backend.py",
+      "sha256": "c09161c77e4586064c0d70c5dda4f943378510a4facb187590ac31e17b0e6e73"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/ultraquant_backend.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/ultraquant_backend.py",
+      "sha256": "d84a18117c0eb7aed5b05982bfced2bd3eed32c142cae69105ee795b58979560"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/ultraquant_contract.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/ultraquant_contract.py",
+      "sha256": "00376eff68440a1be5c75dcb64d537debdb75ccf8734d80c91c13bb135b453a9"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/ultraquant_evidence.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/ultraquant_evidence.py",
+      "sha256": "aaa3c995133f660cbf6c910b46826918a9412adbb0ab13027667909f6f56e1a5"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/attention/ultraquant_stack_contract.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/attention/ultraquant_stack_contract.py",
+      "sha256": "df786d5d2627b39e60e3fc3b4925df98001d3ebd651fc7ab44e5122caf805f87"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/quantization/__init__.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/quantization/__init__.py",
+      "sha256": "0b909ac91199253300f029dc544173067ea10208de69e5789f58f7a7500ec0b2"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/layers/radix_attention.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/layers/radix_attention.py",
+      "sha256": "15529683355513768815d53e7cef239d46d3448adbbd522c807492815d912c4b"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/managers/schedule_batch.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/managers/schedule_batch.py",
+      "sha256": "31932496a5bdf3022a63a897d8a8bc3a44ac2d5e79ddb5db7eb9904716ebc511"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/managers/scheduler.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/managers/scheduler.py",
+      "sha256": "18977006d561e53c85e08e6f4a3299cf85b7cffa34b0fd95c6db2243a3a403ab"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/managers/scheduler_components/batch_result_processor.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/managers/scheduler_components/batch_result_processor.py",
+      "sha256": "c68ec4ff752f1176a80a99a2db421df8115190c2517e587ba894880fec9ab6c3"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/allocator/base.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/allocator/base.py",
+      "sha256": "3cb5988e38dc69ac25b38aff05d564fa2adf2be9d7966070097c7d53cef81ea5"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/allocator/token.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/allocator/token.py",
+      "sha256": "7c32d67805923cd516957b0f079df478f8ec73b916a5ecaec0d28b05e5ffca32"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/base_prefix_cache.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/base_prefix_cache.py",
+      "sha256": "e0efb8fd4bd859d680444dcdaa2c1d15d1af48f0a9005f5cc218f0553694660d"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/common.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/common.py",
+      "sha256": "560299ac89d7c50ce217bddd1f3ca443f6deac32a986c1d58017f0a7eba1958b"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/mamba_radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/mamba_radix_cache.py",
+      "sha256": "10e58cf7b606dccd8fe264fd84a6434c9a4ed74f7af9d51ee47ad01550e99fce"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/memory_pool.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/memory_pool.py",
+      "sha256": "7e585c4c5870ac84a048069e61bfd9892f2c638b2d89964e927d2c554f3f951e"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/mem_cache/radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/mem_cache/radix_cache.py",
+      "sha256": "4987445109288fdccd895566915ad891a98a776ecc88714fc0ad4ebfc8f5b1f4"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/model_executor/model_runner.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/model_executor/model_runner.py",
+      "sha256": "1a6678c782aea0cfe4f038e88e97541edbd7faad8c46f23ff341fb15aa5c1de7"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/model_executor/model_runner_kv_cache_mixin.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/model_executor/model_runner_kv_cache_mixin.py",
+      "sha256": "094751b86d0d0584e4d159a3f514d3327161de5a635acceb668b0fd9469799bd"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/model_executor/pool_configurator.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/model_executor/pool_configurator.py",
+      "sha256": "854d692022aec1f114cb7df1ad9366fd6b1f1ecd8fc25ffacceffd85125a2d73"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/models/qwen3_5.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/models/qwen3_5.py",
+      "sha256": "48a8e32043f1bcf711243152e53db5a1bdec0372913a28acd6fd59bc0feedf6b"
+    },
+    "tests/fixtures/legacy/image-source/python/sglang/srt/server_args.py": {
+      "donor": "integration-seal",
+      "source": "candidate/image-source/python/sglang/srt/server_args.py",
+      "sha256": "a7e58d90db59b43895560a9c28549afe651d30d1c71f3f4536e387c19b7230d0"
+    },
+    "tests/fixtures/legacy/runtime/attention.hip": {
+      "donor": "integration-seal",
+      "source": "candidate/runtime/attention.hip",
+      "sha256": "ab8b167fa0b097153ceba1386fb429e5f1b2c554ad3a75e79c11b49831991029"
+    },
+    "tests/fixtures/legacy/runtime/bf16_math.h": {
+      "donor": "integration-seal",
+      "source": "candidate/runtime/bf16_math.h",
+      "sha256": "efdfb5f2a8f5d57faa7f461b41ec234e4a27d20cfb644bb8994239af8c663a24"
+    },
+    "tests/fixtures/legacy/runtime/uq.h": {
+      "donor": "integration-seal",
+      "source": "candidate/runtime/uq.h",
+      "sha256": "e4b278486a8a3434fbd1e90f799cdebc9e240bfa0f2e018524a911aea0ef75cb"
+    },
+    "tests/fixtures/legacy/scripts/bf16_source_identity.py": {
+      "donor": "integration-seal",
+      "source": "candidate/scripts/bf16_source_identity.py",
+      "sha256": "28ebc67a369b92e460d0c3c6faa0d0553ef72da224c84b656691669056c56d9d"
+    },
+    "tests/fixtures/legacy/scripts/build_bf16_v2.py": {
+      "donor": "integration-seal",
+      "source": "candidate/scripts/build_bf16_v2.py",
+      "sha256": "b8c0ebc845df2e086147454886861d8c9736e427dde04a3703e92724bcfb2040"
+    },
+    "tests/fixtures/legacy/scripts/build_hip.py": {
+      "donor": "integration-seal",
+      "source": "candidate/scripts/build_hip.py",
+      "sha256": "58778f3b4af4ef0a11276d5a764f07e2a6b5a82f0abc52acc2f369e2e5a91626"
+    },
+    "tests/fixtures/legacy/scripts/collect_bf16_toolchain.py": {
+      "donor": "integration-seal",
+      "source": "candidate/scripts/collect_bf16_toolchain.py",
+      "sha256": "e736f5c9ca2e2094a8ac939a29c593e8f016f91d4e295513ce135c6338a9522b"
+    },
+    "tests/fixtures/legacy/scripts/source_identity.py": {
+      "donor": "integration-seal",
+      "source": "candidate/scripts/source_identity.py",
+      "sha256": "7c1ddac2b1e1eed37b91a55c788f68231bc5d5b429346acd9d257e5d5a239d03"
+    },
+    "tests/fixtures/legacy/tests/bf16_math_test.cpp": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/bf16_math_test.cpp",
+      "sha256": "4f94331ba1112d54cb7da667ab32c378bc35ae6b4a57221e1b4086430ceff04c"
+    },
+    "tests/fixtures/legacy/tests/codec_test.cpp": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/codec_test.cpp",
+      "sha256": "d23d9ce8b08d4a54c7da569b3e33b9c2fa644cd5f1902326b19406df4e75951c"
+    },
+    "tests/fixtures/legacy/tests/fixtures/Qwen3.8-27B-FP8.LICENSE": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/fixtures/Qwen3.8-27B-FP8.LICENSE",
+      "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a"
+    },
+    "tests/fixtures/legacy/tests/fixtures/qwen3.8-27b-fp8.config.json": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/fixtures/qwen3.8-27b-fp8.config.json",
+      "sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+    },
+    "tests/fixtures/legacy/tests/gpu_runtime.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/gpu_runtime.py",
+      "sha256": "920d26172ea2d16aa3b0854610899ef666ed2c5115b57f764e3924269a18c5c2"
+    },
+    "tests/fixtures/stock/srt/layers/attention/base_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/layers/attention/base_attn_backend.py",
+      "sha256": "d7912f9b66bab506dd51ad9f8a78bcd4de401eaf0bce0da0118bf661418b6e52"
+    },
+    "tests/fixtures/stock/srt/layers/attention/hybrid_linear_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/layers/attention/hybrid_linear_attn_backend.py",
+      "sha256": "d1f43975cb51c0c13e6b29269491664a5333539ea4b1d68f2d9b70d908dcfc0c"
+    },
+    "tests/fixtures/stock/srt/layers/attention/linear/gdn_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/layers/attention/linear/gdn_backend.py",
+      "sha256": "7283e05370d785785681176b2d58cfac6a98ccc34164068991f9f6c2e3aaede2"
+    },
+    "tests/fixtures/stock/srt/layers/radix_attention.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/layers/radix_attention.py",
+      "sha256": "15529683355513768815d53e7cef239d46d3448adbbd522c807492815d912c4b"
+    },
+    "tests/fixtures/stock/srt/managers/schedule_batch.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/managers/schedule_batch.py",
+      "sha256": "9fba713d60cfafa12b110e6b5d4efa20e275b27e11f3d2a7a7ec0e525acdcd98"
+    },
+    "tests/fixtures/stock/srt/managers/scheduler.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/managers/scheduler.py",
+      "sha256": "0f44083605551440015a1ef9f9f9d910b1d83deb65fd57f766d21fd76efca9e8"
+    },
+    "tests/fixtures/stock/srt/managers/scheduler_components/batch_result_processor.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/managers/scheduler_components/batch_result_processor.py",
+      "sha256": "d6274912963ab21acc4a4462bc9cda9e8d938a6e7e9dd808f9c42bb85165cdb0"
+    },
+    "tests/fixtures/stock/srt/managers/scheduler_components/request_receiver.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/managers/scheduler_components/request_receiver.py",
+      "sha256": "4b3d329d502b4a463285f7337ac6198826eeacfd55c517ba44976caa8ee78d23"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/__init__.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/__init__.py",
+      "sha256": "c89351f05411121d0aadcb565ee848d78dd91726a61533f58b43cb7eeae2bddb"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/base.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/base.py",
+      "sha256": "4fa462faf1ca99ba80071dffd5a1a714a54528b30a45112d7311fdd0a303965e"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/hisparse.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/hisparse.py",
+      "sha256": "59e847bed104b27ccc0f6a03cb26f4cde4ea4b9ebf6bbc69f9d3d8e4c6a196ab"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/mamba.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/mamba.py",
+      "sha256": "b3d4561b7f96aa55f615c491b3d5a8c8e72e156fd7e6cf639ee7f87cfd80674c"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/paged.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/paged.py",
+      "sha256": "84256c4a2a0e5f22ac79e4a3f534a72588fe74f52dcc49bf72471794d8f16ba0"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/swa.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/swa.py",
+      "sha256": "43c41e269dd3d8eefd3131c457aff5c0458c37524e1f23242b25e21ceb16429b"
+    },
+    "tests/fixtures/stock/srt/mem_cache/allocator/token.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/allocator/token.py",
+      "sha256": "8e9c936a0e51307eae876dcf175ed91f6e505a77b2c8a3a2e3f390d0440916a9"
+    },
+    "tests/fixtures/stock/srt/mem_cache/base_prefix_cache.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/base_prefix_cache.py",
+      "sha256": "7de1ac2bb4e6eb15668b5f5931d6b0044c42d96db6c12efed710a2f53049ae5a"
+    },
+    "tests/fixtures/stock/srt/mem_cache/common.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/common.py",
+      "sha256": "2dce58dd6f323208e34801e044ae087d6d032464efd01342c604efea3de156df"
+    },
+    "tests/fixtures/stock/srt/mem_cache/mamba_radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/mamba_radix_cache.py",
+      "sha256": "a969b5195c4fb0227d335dd371c7531363363b57bb3b25c0851d0ad1a336efcc"
+    },
+    "tests/fixtures/stock/srt/mem_cache/memory_pool.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/memory_pool.py",
+      "sha256": "7e585c4c5870ac84a048069e61bfd9892f2c638b2d89964e927d2c554f3f951e"
+    },
+    "tests/fixtures/stock/srt/mem_cache/memory_pool_host.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/memory_pool_host.py",
+      "sha256": "135067acf4fdf0d21be0b36e91fd7ed071a3f6169014bffe1fe0e878f13fa1d3"
+    },
+    "tests/fixtures/stock/srt/mem_cache/radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/mem_cache/radix_cache.py",
+      "sha256": "17fef234eb9a14a7b6727b5b7bdfd6b74fd87ab819651861b2ceb14ca941e94c"
+    },
+    "tests/fixtures/stock/srt/model_executor/forward_batch_info.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/model_executor/forward_batch_info.py",
+      "sha256": "307bb0d7d4e1d3837569975f1d2a6d500fd862b8883da7bcb98dd255ed47c35a"
+    },
+    "tests/fixtures/stock/srt/model_executor/model_runner.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/model_executor/model_runner.py",
+      "sha256": "91fcb5873f26679498eec052c68e1d91102af79cdf7d0486dd5aa9f68e839171"
+    },
+    "tests/fixtures/stock/srt/model_executor/model_runner_kv_cache_mixin.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/model_executor/model_runner_kv_cache_mixin.py",
+      "sha256": "ad9b02a62f79ffb4011be87314e7fd5fbf5a511ae36f2d598f575bf7dc37a0f4"
+    },
+    "tests/fixtures/stock/srt/model_executor/pool_configurator.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/model_executor/pool_configurator.py",
+      "sha256": "f3054f9b573d53f5a23fe8c219f8d3aaa9195bde7f3247c210093d9582d8a589"
+    },
+    "tests/fixtures/stock/srt/models/qwen3_5.py": {
+      "donor": "integration-seal",
+      "source": "stock/srt/models/qwen3_5.py",
+      "sha256": "48a8e32043f1bcf711243152e53db5a1bdec0372913a28acd6fd59bc0feedf6b"
+    },
+    "tests/fixtures/stock-v0521/LICENSE": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/LICENSE",
+      "sha256": "1495e1e757ef4d0925a2350563cf5754bb23c51701a8ec4fb3c5cdcbedae6747"
+    },
+    "tests/fixtures/stock-v0521/docker/rocm.Dockerfile": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/docker/rocm.Dockerfile",
+      "sha256": "dfe1bf1584e4f2e7b9fc494d043cf77834d866e16544b85af5b1a4478a615f3a"
+    },
+    "tests/fixtures/stock-v0521/python/pyproject.toml": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/pyproject.toml",
+      "sha256": "577627b0883c4d0890bce8d0b60b48eb140f1f7cf09b9bc9ecfc34e2bd1b886e"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/configs/hybrid_arch.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/configs/hybrid_arch.py",
+      "sha256": "0d8a23c8eb88abd930041c417923b0e2f43ad028a04bceced3784454926a33c3"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/configs/mamba_utils.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/configs/mamba_utils.py",
+      "sha256": "659d941b57b6960f1144e7c6a6e0449ea630b273ea69cb4f89312c10e0a8ff11"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/configs/model_config.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/configs/model_config.py",
+      "sha256": "be3a0168bdd3b4a6b1f7778420b83f95c315535812b44e9422e1b48dd856a11e"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/attention/attention_registry.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/attention/attention_registry.py",
+      "sha256": "dfd9c0b6e85774524f6378ae09278cf6dc000e093ddf6beaadc44d1d20bdacd1"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/attention/base_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/attention/base_attn_backend.py",
+      "sha256": "fdad1a473de751358de57216c48200157ec5e14791dc0dda3eebd9faa9caa628"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py",
+      "sha256": "8339a92ed5e4fd91f306f81f48d29c60f93a9e0e2ae4974cb6916f9f9a46f858"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/attention/linear/gdn_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/attention/linear/gdn_backend.py",
+      "sha256": "c12e054cbe9f85cf15b0590a8ea7e3e175f62121160c3f548e0aa7ce71d1af0d"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/attention/triton_backend.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/attention/triton_backend.py",
+      "sha256": "9924224f0dd4150fe1fc9ef7de6a556c49857608792479379179a973436762c1"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/quantization/__init__.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/quantization/__init__.py",
+      "sha256": "13a9f194ce7693840529647e818fd784cbd221b7120ceafa98a986762a85512c"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/layers/radix_attention.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/layers/radix_attention.py",
+      "sha256": "df6e94b67b61feb4f8e3a7b1fdb0c0444cc56e4bf9d90a622e028bddff31619e"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/managers/schedule_batch.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/managers/schedule_batch.py",
+      "sha256": "b2f78c781de88c36ce27cc5d44b343420338b4da299e885c575665d6fab843ca"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/managers/scheduler.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/managers/scheduler.py",
+      "sha256": "b61df5b750adc748a99ceb381b8494c199fb3f704d793da5a0217bd6bbb606c4"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/managers/scheduler_components/batch_result_processor.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/managers/scheduler_components/batch_result_processor.py",
+      "sha256": "2f5baf667e6879e96b0fd4435750778d3989d03674e01c2963a08bed32091736"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/allocator/base.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/allocator/base.py",
+      "sha256": "17d6ee303f49117695fe42a069bfe1297fef144ddabf7bcbcc6e768b774a9479"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/allocator/mamba.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/allocator/mamba.py",
+      "sha256": "610d6b3b8452741812efb549cca2903aed8f6e4e585f5b34fa23b935116c0e01"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/allocator/paged.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/allocator/paged.py",
+      "sha256": "2b3d08d1b99717a26b6ca83f67a8578faf0445fbd9d9c3115b835a804e684cdc"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/allocator/token.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/allocator/token.py",
+      "sha256": "ee09d0021b69b111e3262811e2fdaf2f495ecfc2cf6ed142070a7f7e95a030ec"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/allocator/unified_mamba.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/allocator/unified_mamba.py",
+      "sha256": "a50c395b82bff413fe4740c684bf4640297af4e02d158595a6c0519a59b5d888"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/base_prefix_cache.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/base_prefix_cache.py",
+      "sha256": "49f20555e6b96af071db38a1bd9829b322ce76381940bd2f340abced151335a9"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/cache_init_params.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/cache_init_params.py",
+      "sha256": "5f8d789f87cfba2d06deccf545df26d23528a015c13fe871ba679cc223ac6b5e"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/common.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/common.py",
+      "sha256": "c7eb492978794bbd4015043199f36927faf591ab4009f90d03455f36ed5f764f"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/hybrid_cache/hybrid_cache_controller.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/hybrid_cache/hybrid_cache_controller.py",
+      "sha256": "c9c3be8ce5fd22cca7ee1ad4325fb92f8ce071c6e02206201ab3fac1d0a772e3"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py",
+      "sha256": "cd47de4732e37074f607b15eacf5316a37d0b4aeb015a3de07e3c7b5b2b0f2d6"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/kv_cache_configurator.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/kv_cache_configurator.py",
+      "sha256": "27ea278a26c178e28b2af5a1bd14db8bae2d7bde6383cec4e6f3a5d8ca965623"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/memory_pool.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/memory_pool.py",
+      "sha256": "47e13954eb8b06836a5279fedd1f79f03dbd40245819ae152af3a02f3887c1ac"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/radix_cache.py",
+      "sha256": "3a98ff02d5bb990fab3ff6700a4acd1ed865f9fc522daa17768f28fc6fe424e6"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/cache_action.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/cache_action.py",
+      "sha256": "cc4ba144976cc39e00beed54763e87ed20fe30c254419088f16e733f08d06d2c"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/component_type.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/component_type.py",
+      "sha256": "df978797a6ddc376477d01931d8bb30b8185499a27fe8c9691db19a429155332"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/__init__.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/__init__.py",
+      "sha256": "ece31aca48073b093036db38be9e6a3e2ccacc2681bdf7417d4ba94d4db8cd41"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/base.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/base.py",
+      "sha256": "63464b635fb5a875678aa73017db729017b77516ff2bdd430bb8b58129220d73"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/full.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/full.py",
+      "sha256": "6380586e6d84ef37c2e2244c807a1c7b5a2e84cb78d0a473f3d34cadd6c673bf"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/mamba.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/components/mamba.py",
+      "sha256": "c1086e3ab077a2f75966f8455b77346ead9510497e9012094805f6dd5f29d9cc"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/tree_core_registry.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/tree_core_registry.py",
+      "sha256": "ab08c6584ab8d0b354a1ec616c81dd5745933a5c585a4c4b9a6c8b8f1c124118"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py",
+      "sha256": "15dbc63a5f5abf734b0cbfd8adf0f73f2ebc0bd460e243d6e5668da30ae2cdfa"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_cache/unified_tree_core_interface.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_cache/unified_tree_core_interface.py",
+      "sha256": "cd2572be5bb89b9250d0c68aa0b7a382a64734b09cd00ab055ed2c82b2814fa8"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/mem_cache/unified_radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/mem_cache/unified_radix_cache.py",
+      "sha256": "c6f1764166c371cf050f05c966daed8ded366365163a69f066569cc74e2575c3"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/model_executor/forward_batch_info.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/model_executor/forward_batch_info.py",
+      "sha256": "ef4426b3ece1b515eeb5223d394de6a8d154d912bcf62e7ed4bae20e17064797"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/model_executor/model_runner.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/model_executor/model_runner.py",
+      "sha256": "36e7a69f345cf09f24699eea36a4ab0a2a305acb8b8a7e9b4e975f3fd09527f3"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py",
+      "sha256": "dc319885d1cd318ba152e8c59f87c976e67a62505fccd98dcdc0707b2a4bf6ea"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/model_executor/model_runner_components/kv_pool_runtime.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/model_executor/model_runner_components/kv_pool_runtime.py",
+      "sha256": "5c138c68c5bb018c0653695ef79c8a6a4f9d97bcc6832c17b95954561649db3e"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/model_executor/pool_configurator.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/model_executor/pool_configurator.py",
+      "sha256": "71f6f84ab82d1cbb2a855fa393123e14cdfb788659238c754a71f413e2163132"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/models/qwen3_5.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/models/qwen3_5.py",
+      "sha256": "9ccff88d991fc492daff984e73b5f88fb4daac62d19a2c19c6c686c9bbe5499c"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/srt/server_args.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/srt/server_args.py",
+      "sha256": "1dc6d150bf7c4ef5c2316c2ce21ca28ea557ac26fcdb150d21ac48fff1a784e6"
+    },
+    "tests/fixtures/stock-v0521/python/sglang/version.py": {
+      "donor": "integration-seal",
+      "source": "stock-v0521/python/sglang/version.py",
+      "sha256": "b10f7d9ea276972352b1e9de0eb0bbb47d8ebe64c29469e15ea016a12019bb22"
+    },
+    "tests/fixtures/build-stock/srt/configs/mamba_utils.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/configs/mamba_utils.py",
+      "sha256": "1853231eebc49e3836f675e00330f638bfa0e4b2bb3ae8a09c657c5c34d816b8"
+    },
+    "tests/fixtures/build-stock/srt/configs/model_config.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/configs/model_config.py",
+      "sha256": "dde4d457b1ddbe9274cc7afb011e202ec01c15cba6efcbc87f91225017183c63"
+    },
+    "tests/fixtures/build-stock/srt/layers/attention/attention_registry.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/layers/attention/attention_registry.py",
+      "sha256": "3bc305efae91c7147357342b1a78203766e07490edfeca3fc8514510095603e6"
+    },
+    "tests/fixtures/build-stock/srt/layers/attention/hybrid_linear_attn_backend.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/layers/attention/hybrid_linear_attn_backend.py",
+      "sha256": "d1f43975cb51c0c13e6b29269491664a5333539ea4b1d68f2d9b70d908dcfc0c"
+    },
+    "tests/fixtures/build-stock/srt/layers/attention/linear/gdn_backend.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/layers/attention/linear/gdn_backend.py",
+      "sha256": "7283e05370d785785681176b2d58cfac6a98ccc34164068991f9f6c2e3aaede2"
+    },
+    "tests/fixtures/build-stock/srt/layers/attention/triton_backend.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/layers/attention/triton_backend.py",
+      "sha256": "c09161c77e4586064c0d70c5dda4f943378510a4facb187590ac31e17b0e6e73"
+    },
+    "tests/fixtures/build-stock/srt/layers/quantization/__init__.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/layers/quantization/__init__.py",
+      "sha256": "491e7efa8c4a927bdc07c8f8568d9994effdae2d8547b812e0cd73690e2c1318"
+    },
+    "tests/fixtures/build-stock/srt/layers/radix_attention.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/layers/radix_attention.py",
+      "sha256": "15529683355513768815d53e7cef239d46d3448adbbd522c807492815d912c4b"
+    },
+    "tests/fixtures/build-stock/srt/managers/schedule_batch.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/managers/schedule_batch.py",
+      "sha256": "9fba713d60cfafa12b110e6b5d4efa20e275b27e11f3d2a7a7ec0e525acdcd98"
+    },
+    "tests/fixtures/build-stock/srt/managers/scheduler.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/managers/scheduler.py",
+      "sha256": "0f44083605551440015a1ef9f9f9d910b1d83deb65fd57f766d21fd76efca9e8"
+    },
+    "tests/fixtures/build-stock/srt/managers/scheduler_components/batch_result_processor.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/managers/scheduler_components/batch_result_processor.py",
+      "sha256": "d6274912963ab21acc4a4462bc9cda9e8d938a6e7e9dd808f9c42bb85165cdb0"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/allocator/base.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/allocator/base.py",
+      "sha256": "4fa462faf1ca99ba80071dffd5a1a714a54528b30a45112d7311fdd0a303965e"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/allocator/token.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/allocator/token.py",
+      "sha256": "8e9c936a0e51307eae876dcf175ed91f6e505a77b2c8a3a2e3f390d0440916a9"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/base_prefix_cache.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/base_prefix_cache.py",
+      "sha256": "7de1ac2bb4e6eb15668b5f5931d6b0044c42d96db6c12efed710a2f53049ae5a"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/common.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/common.py",
+      "sha256": "2dce58dd6f323208e34801e044ae087d6d032464efd01342c604efea3de156df"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/mamba_radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/mamba_radix_cache.py",
+      "sha256": "a969b5195c4fb0227d335dd371c7531363363b57bb3b25c0851d0ad1a336efcc"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/memory_pool.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/memory_pool.py",
+      "sha256": "7e585c4c5870ac84a048069e61bfd9892f2c638b2d89964e927d2c554f3f951e"
+    },
+    "tests/fixtures/build-stock/srt/mem_cache/radix_cache.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/mem_cache/radix_cache.py",
+      "sha256": "17fef234eb9a14a7b6727b5b7bdfd6b74fd87ab819651861b2ceb14ca941e94c"
+    },
+    "tests/fixtures/build-stock/srt/model_executor/model_runner.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/model_executor/model_runner.py",
+      "sha256": "91fcb5873f26679498eec052c68e1d91102af79cdf7d0486dd5aa9f68e839171"
+    },
+    "tests/fixtures/build-stock/srt/model_executor/model_runner_kv_cache_mixin.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/model_executor/model_runner_kv_cache_mixin.py",
+      "sha256": "ad9b02a62f79ffb4011be87314e7fd5fbf5a511ae36f2d598f575bf7dc37a0f4"
+    },
+    "tests/fixtures/build-stock/srt/model_executor/pool_configurator.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/model_executor/pool_configurator.py",
+      "sha256": "f3054f9b573d53f5a23fe8c219f8d3aaa9195bde7f3247c210093d9582d8a589"
+    },
+    "tests/fixtures/build-stock/srt/models/qwen3_5.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/models/qwen3_5.py",
+      "sha256": "48a8e32043f1bcf711243152e53db5a1bdec0372913a28acd6fd59bc0feedf6b"
+    },
+    "tests/fixtures/build-stock/srt/server_args.py": {
+      "donor": "integration-seal",
+      "source": "build-stock/srt/server_args.py",
+      "sha256": "ad470ede790c2b5fdf13d82dbf24ea6821747b8a5c581e81224ed7603bc23710"
+    },
+    "tests/fixtures/reference-u/ultraquant_backend.py": {
+      "donor": "integration-seal",
+      "source": "reference-u/ultraquant_backend.py",
+      "sha256": "399e7babe2c675031d1381f82fe5fc5b3dcfa5f160c49b02193fd1d1d1de1174"
+    },
+    "tests/fixtures/baseline/BUILD-INPUTS.json": {
+      "donor": "integration-seal",
+      "source": "baseline/BUILD-INPUTS.json",
+      "sha256": "8bae73b9c57e642e1cb4cd97d03cc42ac1d842f77ae0ba70447ca0e5b76fdffb"
+    },
+    "tests/fixtures/baseline/DRIVER-COMMAND-PLAN.json": {
+      "donor": "integration-seal",
+      "source": "baseline/DRIVER-COMMAND-PLAN.json",
+      "sha256": "dc5790d6f6c357d9e5c60c18e3b2b72ea5ea36b396da6395736425e2b737a033"
+    },
+    "tests/fixtures/baseline/SOURCE-IDENTITY.json": {
+      "donor": "integration-seal",
+      "source": "baseline/SOURCE-IDENTITY.json",
+      "sha256": "f0e3787ec4d4eb6478745a17c426a53119c129ab51bb738843a750f150ef930a"
+    },
+    "tests/fixtures/baseline/STOCK-INPUTS.json": {
+      "donor": "integration-seal",
+      "source": "baseline/STOCK-INPUTS.json",
+      "sha256": "ecc4dd2b41dda98e2f86befebb0fdd2b56ea4bdd3fd2ac0daa58610993c2dd5b"
+    },
+    "tests/fixtures/original-native/baseline/SOURCE-IDENTITY.json": {
+      "donor": "integration-seal",
+      "source": "original-native/baseline/SOURCE-IDENTITY.json",
+      "sha256": "f0e3787ec4d4eb6478745a17c426a53119c129ab51bb738843a750f150ef930a"
+    },
+    "tests/fixtures/original-native/prototype/codec/codec.h": {
+      "donor": "integration-seal",
+      "source": "original-native/candidate-next/codec/codec.h",
+      "sha256": "852ce3209f934938e87818f77427258e16fd867880e45036a785db9f4e318446"
+    },
+    "tests/fixtures/original-native/prototype/runtime/attention.hip": {
+      "donor": "integration-seal",
+      "source": "original-native/candidate-next/runtime/attention.hip",
+      "sha256": "ab8b167fa0b097153ceba1386fb429e5f1b2c554ad3a75e79c11b49831991029"
+    },
+    "tests/fixtures/original-native/prototype/runtime/bf16_math.h": {
+      "donor": "integration-seal",
+      "source": "original-native/candidate-next/runtime/bf16_math.h",
+      "sha256": "efdfb5f2a8f5d57faa7f461b41ec234e4a27d20cfb644bb8994239af8c663a24"
+    },
+    "tests/fixtures/original-native/prototype/runtime/uq.h": {
+      "donor": "integration-seal",
+      "source": "original-native/candidate-next/runtime/uq.h",
+      "sha256": "e4b278486a8a3434fbd1e90f799cdebc9e240bfa0f2e018524a911aea0ef75cb"
+    },
+    "tests/fixtures/STOCK-INPUTS.json": {
+      "donor": "integration-seal",
+      "source": "STOCK-INPUTS.json",
+      "sha256": "eb52793913aedd874c9b015a9f54ab240557423cf8123e4ae067fa6c4e20b038"
+    },
+    "tests/reference/test_runtime_contract.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_runtime_contract.py",
+      "sha256": "d90e5f3eb54505daf132d6e33963bed3ba5988178a95efc9563673377d09037b"
+    },
+    "tests/reference/test_runtime_evidence.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_runtime_evidence.py",
+      "sha256": "5407db828071b6eba3b0836dfdd5f950c9f0307a3d41fc4806c157d45a73d9c4"
+    },
+    "tests/reference/test_bf16_closure.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_bf16_closure.py",
+      "sha256": "5aa5e16397077d2f54f996ae9e9dd153d35c613acad6c368fad2fcce4b888ec8"
+    },
+    "tests/reference/test_bf16_integration.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_bf16_integration.py",
+      "sha256": "3c5a5b9419bc6ecc5c5ca24d805b86429b8650ecad091d2eaf0af3393281d15d"
+    },
+    "tests/reference/test_cache_lifecycle.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_cache_lifecycle.py",
+      "sha256": "8a6a22da8c32c58387c7f8364fd9e63d61e27ff385c4fe721d62077a12bbdf51"
+    },
+    "tests/reference/test_strided_caller.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_strided_caller.py",
+      "sha256": "8cb95cb2037d2ff01b8bffe651490e1b30648c22c800b40cb31e6246de4ee7bc"
+    },
+    "tests/reference/test_cache0521.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_cache0521.py",
+      "sha256": "4518201cd4f81233ea1e6b8cd9124837efa630f3dcc3e5a5a4942ad8d7f5e5ec"
+    },
+    "tests/reference/test_unified_tree0521.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_unified_tree0521.py",
+      "sha256": "ef1f0b16068b2222decf45fe1ec815f6a936491a019066927398b3d03194e98a"
+    },
+    "tests/reference/test_allocation0521.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_allocation0521.py",
+      "sha256": "8f9e83587e1d06f29b55e50e8973ff185423621cebfb88034b667bf178b0d662"
+    },
+    "tests/reference/test_lifecycle0521.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_lifecycle0521.py",
+      "sha256": "bca6a3aba311f6da14048926ab6303c0d880d04c805f6af70c88accd6c99d52e"
+    },
+    "tests/reference/test_modern_stack.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_modern_stack.py",
+      "sha256": "c357a9f5c8eeb90934b78054dfd4982167ded40e220ccddf494761e949828b0c"
+    },
+    "tests/reference/test_modern_identity.py": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/test_modern_identity.py",
+      "sha256": "e5a3d6c993ce6ec6578963b524d85767076800ebb6ad352355cb3a4bc3b447c7"
+    },
+    "tests/test_kiss_repairs.py": {
+      "donor": "integration-seal",
+      "source": "tests/test_kiss_repairs.py",
+      "sha256": "b624bcb3c631a28c541b6b43cd247d475caa252b804d01bf3956278019f47627"
+    },
+    "tests/test_runner_activation.py": {
+      "donor": "integration-seal",
+      "source": "tests/test_runner_activation.py",
+      "sha256": "db3c3d98cc198fe14f8e7eb23eff30f0082eab3b972897ff3e24156b7db247b3"
+    },
+    "prototype/tests/codec_test.cpp": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/codec_test.cpp",
+      "sha256": "d23d9ce8b08d4a54c7da569b3e33b9c2fa644cd5f1902326b19406df4e75951c"
+    },
+    "prototype/tests/bf16_math_test.cpp": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/bf16_math_test.cpp",
+      "sha256": "4f94331ba1112d54cb7da667ab32c378bc35ae6b4a57221e1b4086430ceff04c"
+    },
+    "prototype/tests/fixtures/Qwen3.8-27B-FP8.LICENSE": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/fixtures/Qwen3.8-27B-FP8.LICENSE",
+      "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a"
+    },
+    "prototype/tests/fixtures/qwen3.8-27b-fp8.config.json": {
+      "donor": "integration-seal",
+      "source": "candidate/tests/fixtures/qwen3.8-27b-fp8.config.json",
+      "sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+    },
+    "LICENSES/SGLang-Apache-2.0.txt": {
+      "donor": "sglang-stock-seal",
+      "source": "source/sglang/LICENSE",
+      "sha256": "1495e1e757ef4d0925a2350563cf5754bb23c51701a8ec4fb3c5cdcbedae6747"
+    },
+    "patches/sglang-kv4.patch": {
+      "donor": "integration-seal",
+      "source": "KV4-IMAGE-RELATIVE5.patch",
+      "sha256": "84f0d85600a79e95eef548fe10ab4a5a5acc6e5a88144d5396a51afa223e7660"
+    },
+    "tools/model_smoke.py": {
+      "donor": "integration-seal",
+      "source": "model-smoke.py",
+      "sha256": "043e15866917d8ce9b68705555db13bf8e255c2170dd75a80004302c23603c4d"
+    }
+  }
+}

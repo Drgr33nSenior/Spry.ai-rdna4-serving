@@ -1,0 +1,32 @@
+{
+  "input_archive_sha256": "1915a291a23359dbcda03057fd2ebc48fe5bfbbe7ba64d78bab4fa7204fde5be",
+  "scope": "Shared actual FP8 runtime repair overlay; not a serving image or build receipt.",
+  "source_files": {
+    "kernels/aot/setup_rocm.py": {
+      "archive_member": "workspace-input/aot/setup_rocm.py",
+      "effective_sha256": "a40711ca16c13362958b0f0bee8d7e32b8ed5b17dabd68e06ea8b945a1f16672",
+      "stock_sha256": "8b8011e36e738f7e6ca15fbe9e0a96e23e4e87a7a97ac0a1b03ceda17304ecf4"
+    },
+    "srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py": {
+      "archive_member": "workspace-input/sglang/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py",
+      "effective_sha256": "52f81e669c769f6fc1d7ae8195f7e203c783952e8ce00879eafb491603266436",
+      "stock_sha256": "a39b1c745c354782e91aaf54ec1673638aeaa7601acb19b35569a22653976570"
+    },
+    "srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4_moe.py": {
+      "archive_member": "workspace-input/sglang/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4_moe.py",
+      "effective_sha256": "06ad26875a2c807ddfcedd38b1b14f6fa9b22739d55e405e8b05b70e55132d58",
+      "stock_sha256": "4c2d03130743075c951a7763df6fe9dea58faa28feffc0abe51dfecde2e034cf"
+    },
+    "srt/layers/quantization/quark/utils.py": {
+      "archive_member": "workspace-input/sglang/python/sglang/srt/layers/quantization/quark/utils.py",
+      "effective_sha256": "bd4e897664a95af5624c6d7410c8e894d84f3637be25846c302a068fbfdfac94",
+      "stock_sha256": "c41d0af790079f118ed5f05c35285d8f73ebfc2cbf39aada6ec5fabb3d31347a"
+    },
+    "srt/layers/quantization/quark_int4fp8_moe.py": {
+      "archive_member": "workspace-input/sglang/python/sglang/srt/layers/quantization/quark_int4fp8_moe.py",
+      "effective_sha256": "2826ebd25e86371e8814411d258b232b2d2ad95004fba4076f1d49996456e3a8",
+      "stock_sha256": "126e381f0d6a17a6ba8358a8e482f8f41d33866fd4a398b7a4ae3bc30a66a7bb"
+    }
+  },
+  "source_revision": "e00930c5489053f26d86b179cee0d087f846acbb"
+}

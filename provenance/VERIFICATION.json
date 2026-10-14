@@ -1,0 +1,85 @@
+{
+  "CLI_checks": {
+    "GPU_execution": false,
+    "checks": {
+      "model-smoke-default-refusal": 1,
+      "prototype/scripts/build_bf16_v2.py:help": 0,
+      "tools/model_smoke.py:help": 0
+    },
+    "native_build": false
+  },
+  "changes_for_publication": "test path bindings, two inert fixture locator labels, repository tooling/docs/profiles",
+  "cpp_sanitizers": {
+    "HIP_compiled": false,
+    "bf16_shared_math": "pass",
+    "codec": "pass",
+    "envelope_seconds": 9.618219000054523,
+    "sanitizers": [
+      "ASan",
+      "UBSan"
+    ]
+  },
+  "cpu": {
+    "errors": 0,
+    "failures": 0,
+    "native_execution": false,
+    "sglang_package_imported": false,
+    "skips": 0,
+    "source_continuity": true,
+    "tests": 112,
+    "torch_imported": false
+  },
+  "cpu_envelope_seconds": 47.37649099994451,
+  "documentation_audit": {
+    "no_findings": true,
+    "regular_markdown_files": 8
+  },
+  "fresh_checkout_IDE_module": "not configured; no environment or package installed",
+  "hash_pinned_dependency_locks": {
+    "build-runtime.lock": "d639205babb7c2e827dcdefe0963eba9a76c75ba54c6a24118e85637e0a7deb6",
+    "runtime-runtime.lock": "6362f44011e8cc81b2df5b6030e3f3de34ef27dabd8a006c4fe4e6ec45096bd6"
+  },
+  "historical_model_smoke": "provenance/MODEL-SMOKE-SUMMARY.json",
+  "model_quality": "unqualified",
+  "new_GPU_or_model_execution": false,
+  "new_native_HIP_build": false,
+  "performance_benchmark": "unrun",
+  "public_Qwen_KV4_admission": "closed",
+  "publication_administrative_corrections": [
+    "The advisory docs CLI requires individual regular Markdown files; directory invocation failed, then all regular files passed.",
+    "The inner smoke default uses SystemExit with its NOT_RUN message (exit1), not argparse exit2. The added check was corrected to that exact source-defined refusal; production source unchanged."
+  ],
+  "python": "3.11.1, existing verification-project SDK",
+  "retained_publication_attempts": [
+    {
+      "attempt": "cpu-1",
+      "result": "105-second work timeout; no assertion failure reported; owned group cleaned"
+    },
+    {
+      "attempt": "cpu-2",
+      "result": "112 cases, one historical fixture baseline-path error; no production change needed"
+    },
+    {
+      "attempt": "cpu-3",
+      "result": "112 pass"
+    },
+    {
+      "attempt": "cpu-4",
+      "result": "112 pass after replacing two private donor-path labels"
+    }
+  ],
+  "runtime_source_bytes": "identical to imported sealed candidate",
+  "serving_deployment": false,
+  "status": "PUBLICATION_CPU_VERIFIED",
+  "whitespace": {
+    "maintained_whitespace_exit": 0,
+    "reason": "Preserve exact unified-patch context and CRLF third-party licence bytes; no validator/configuration was disabled.",
+    "retained_data_warnings": [
+      "patches/common-runtime.patch",
+      "patches/sglang-kv4.patch",
+      "prototype/tests/fixtures/Qwen3.8-27B-FP8.LICENSE",
+      "tests/fixtures/legacy/tests/fixtures/Qwen3.8-27B-FP8.LICENSE"
+    ],
+    "whole_tree_whitespace_exit": 2
+  }
+}

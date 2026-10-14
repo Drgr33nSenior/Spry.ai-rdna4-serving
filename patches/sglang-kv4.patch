@@ -1,0 +1,2171 @@
+--- a/sglang/srt/layers/attention/ultraquant_backend.py
++++ b/sglang/srt/layers/attention/ultraquant_backend.py
+@@ -0,0 +1,584 @@
++"""Local experimental gfx1201 backend. Requires the separately built HIP library.
++
++No JIT build, library-path option, decompressed shadow cache, fallback, or GPU
++execution during import. This backend is not upstream or qualified functionality.
++"""
++import ctypes
++from pathlib import Path
++
++import torch
++
++from sglang.srt.layers.attention.base_attn_backend import AttentionBackend
++from sglang.srt.layers.attention.ultraquant_contract import (
++    MODE, causal_rows, cell_bytes, validate_args, validate_model,
++)
++from sglang.srt.layers.attention.ultraquant_evidence import build_identity, descriptor, emit_receipt
++from sglang.srt.layers.radix_attention import AttentionType
++from sglang.srt.mem_cache.memory_pool import KVCache, KVWriteLoc
++
++
++class Native:
++    def __init__(self, device):
++        self.device = torch.device(device)
++        if self.device.type != "cuda" or not torch.version.hip or torch.cuda.device_count() != 1:
++            raise ValueError("UltraQuant requires exactly one visible ROCm gfx1201 GPU")
++        if torch.cuda.get_device_properties(self.device).gcnArchName.split(":")[0] != "gfx1201":
++            raise ValueError("UltraQuant requires gfx1201")
++        # Fixed package-local build artifact; no user-provided executable path.
++        path = Path(__file__).with_name("libuq_hip.so")
++        if path.is_symlink() or not path.is_file():
++            raise ValueError("the experimental HIP library has not been built")
++        self.build = build_identity()
++        self.lib = ctypes.CDLL(str(path))
++        ptr, integer = ctypes.c_void_p, ctypes.c_int
++        self.lib.uq_device.argtypes = []
++        self.lib.uq_initialize.argtypes = [ptr, ptr, integer, integer, integer, ptr]
++        self.lib.uq_append.argtypes = [ptr, ptr, integer, integer, integer, ptr, ptr, ptr, integer, ptr, ptr]
++        self.lib.uq_attention.argtypes = [ptr, ptr, ptr, integer, integer, integer, integer,
++                                         ptr, integer, ptr, ptr, integer, ctypes.c_float, ptr, ptr, ptr]
++        for name in ("uq_device", "uq_initialize", "uq_append", "uq_attention"):
++            getattr(self.lib, name).restype = integer
++        self.failed = False
++        self.status = torch.empty(1, dtype=torch.int32, device=self.device)
++        self.call("uq_device")
++
++    def stream(self):
++        return torch.cuda.current_stream(self.device).cuda_stream
++
++    def call(self, name, *args):
++        if self.failed:
++            raise RuntimeError("UltraQuant session failed; stop and restart without reusing its cache")
++        with torch.cuda.device(self.device):
++            status = getattr(self.lib, name)(*args)
++        if status:
++            self.failed = True
++            raise RuntimeError(f"UltraQuant {name} refused or failed ({status}); restart required")
++
++    def tensor(self, tensor, dtype, shape):
++        if tensor.device != self.status.device or tensor.dtype != dtype or list(tensor.shape) != list(shape):
++            raise ValueError("unsupported UltraQuant tensor device, dtype or shape")
++        if not tensor.is_contiguous():
++            raise ValueError("UltraQuant native tensors must be contiguous")
++        return tensor.data_ptr()
++
++
++class UltraQuantPool(KVCache):
++    def __init__(self, size, page_size, dtype, head_num, head_dim, layer_num, device,
++                 enable_memory_saver, v_head_dim=None, start_layer=None, end_layer=None,
++                 enable_alt_stream=False, enable_kv_cache_copy=False):
++        if page_size != 1 or dtype != torch.float16 or enable_memory_saver or enable_kv_cache_copy:
++            raise ValueError("unsupported UltraQuant pool configuration")
++        if v_head_dim not in (None, head_dim) or not 1 <= size < 1048576:
++            raise ValueError("unsupported UltraQuant capacity/dimension")
++        cell_bytes(layer_num, head_num, head_dim)
++        super().__init__(size, page_size, torch.uint8, layer_num, device, False, start_layer, end_layer)
++        self.head_num, self.head_dim, self.v_head_dim = head_num, head_dim, head_dim
++        self.native = Native(device)
++        shape = (size + 1, head_num, head_dim // 32 * 17)
++        self.k_buffer = [torch.empty(shape, dtype=torch.uint8, device=device) for _ in range(layer_num)]
++        self.v_buffer = [torch.empty(shape, dtype=torch.uint8, device=device) for _ in range(layer_num)]
++        for k, v in zip(self.k_buffer, self.v_buffer):
++            self.native.call("uq_initialize", k.data_ptr(), v.data_ptr(), size + 1,
++                             head_num, head_dim, self.native.stream())
++        self._finalize_allocation_log(size)
++
++    def get_kv_size_bytes(self):
++        return (sum(x.numel() for x in self.k_buffer), sum(x.numel() for x in self.v_buffer))
++
++    def _layer(self, layer_id):
++        index = layer_id - self.start_layer
++        if not 0 <= index < self.layer_num:
++            raise ValueError("UltraQuant layer out of bounds")
++        return index
++
++    def get_key_buffer(self, layer_id):
++        return self.k_buffer[self._layer(layer_id)]
++
++    def get_value_buffer(self, layer_id):
++        return self.v_buffer[self._layer(layer_id)]
++
++    def get_kv_buffer(self, layer_id):
++        return self.get_key_buffer(layer_id), self.get_value_buffer(layer_id)
++
++    def set_kv_buffer(self, layer, loc, cache_k, cache_v, *args, **kwargs):
++        if args or kwargs:
++            raise ValueError("UltraQuant refuses additional cache scales or layouts")
++        if isinstance(loc, KVWriteLoc):
++            if loc.swa_loc is not None or loc.full_loc is not None:
++                raise ValueError("UltraQuant refuses translated cache locations")
++            loc = loc.loc
++        n = loc.numel()
++        k, v = self.get_kv_buffer(layer.layer_id)
++        self.native.call("uq_append", k.data_ptr(), v.data_ptr(), self.size + 1,
++                         self.head_num, self.head_dim,
++                         self.native.tensor(cache_k, torch.float16, (n, self.head_num, self.head_dim)),
++                         self.native.tensor(cache_v, torch.float16, (n, self.head_num, self.head_dim)),
++                         self.native.tensor(loc, torch.int64, (n,)), n,
++                         self.native.status.data_ptr(), self.native.stream())
++
++    def move_kv_cache(self, *args, **kwargs):
++        raise ValueError("UltraQuant does not support cache copying/offload")
++
++
++class UltraQuantBackend(AttentionBackend):
++    def __init__(self, runner):
++        super().__init__()
++        validate_args(runner.server_args)
++        validate_model(runner.model_config)
++        if runner.dtype != torch.float16 or not isinstance(runner.token_to_kv_pool, UltraQuantPool):
++            raise ValueError("UltraQuant requires its compressed pool and FP16 computation")
++        if runner.mambaish_config or runner.use_mla_backend or runner.is_hybrid_swa or runner.dcp_size != 1:
++            raise ValueError("UltraQuant refuses hybrid/latent/parallel attention")
++        for phase in (runner.server_args.cuda_graph_config.decode, runner.server_args.cuda_graph_config.prefill):
++            if phase.backend != "disabled":
++                raise ValueError("UltraQuant does not support graph capture")
++        self.pool = runner.token_to_kv_pool
++        self.req_to_token = runner.req_to_token_pool.req_to_token
++        self.query_heads = runner.model_config.num_attention_heads
++        self.metadata = None
++        self.receipt_emitted = False
++
++    def init_forward_metadata(self, batch):
++        mode = batch.forward_mode
++        if mode.is_idle():
++            self.metadata = None
++            return
++        if mode.name not in ("DECODE", "EXTEND") or batch.spec_info is not None:
++            raise ValueError("UltraQuant supports ordinary prefill and decode only")
++        reqs = batch.req_pool_indices.cpu().tolist()
++        totals = batch.seq_lens.cpu().tolist()
++        if len(reqs) != len(totals) or len(set(reqs)) != len(reqs):
++            raise ValueError("invalid UltraQuant request rows")
++        if any(type(r) is not int or not 0 <= r < self.req_to_token.shape[0] for r in reqs):
++            raise ValueError("UltraQuant request index out of bounds")
++        if any(type(n) is not int or not 0 < n <= min(131072, self.req_to_token.shape[1]) for n in totals):
++            raise ValueError("UltraQuant sequence length out of bounds")
++        if mode.is_decode():
++            prefixes, extends = [n - 1 for n in totals], [1] * len(totals)
++        else:
++            prefixes = batch.extend_prefix_lens.cpu().tolist()
++            extends = batch.extend_seq_lens.cpu().tolist()
++            starts, cursor = [], 0
++            for n in extends:
++                starts.append(cursor)
++                cursor += n
++            if batch.extend_start_loc.cpu().tolist() != starts:
++                raise ValueError("UltraQuant extend row order mismatch")
++        sequences = [self.req_to_token[r, :n].cpu().tolist() for r, n in zip(reqs, totals)]
++        locations = batch.out_cache_loc.to(dtype=torch.int64).contiguous()
++        indices, starts, lengths = causal_rows(sequences, prefixes, extends,
++                                               locations.cpu().tolist(), self.pool.size + 1)
++        if len(starts) != batch.input_ids.numel():
++            raise ValueError("UltraQuant query/token count mismatch")
++        device = self.pool.native.device
++        self.metadata = (locations, torch.tensor(indices, dtype=torch.int64, device=device),
++                         torch.tensor(starts, dtype=torch.int32, device=device),
++                         torch.tensor(lengths, dtype=torch.int32, device=device))
++
++    def _forward(self, q, k, v, layer, batch, save_kv_cache=True, **kwargs):
++        if kwargs or not save_kv_cache or k is None or v is None or self.metadata is None:
++            raise ValueError("UltraQuant requires an ordinary cache append/read")
++        if (layer.attn_type != AttentionType.DECODER or layer.is_cross_attention or layer.use_irope or
++                layer.sliding_window_size != -1 or layer.logit_cap != 0 or
++                layer.pos_encoding_mode != "NONE" or layer.xai_temperature_len != -1 or
++                layer.tp_q_head_num != self.query_heads or layer.tp_k_head_num != self.pool.head_num or
++                layer.tp_v_head_num != self.pool.head_num or layer.qk_head_dim != self.pool.head_dim or
++                layer.v_head_dim != self.pool.head_dim or layer.k_scale is not None or layer.v_scale is not None):
++            raise ValueError("unsupported UltraQuant attention layer")
++        loc, indices, starts, lengths = self.metadata
++        rows, dim = loc.numel(), self.pool.head_dim
++        q = q.reshape(rows, self.query_heads, dim).contiguous()
++        k = k.reshape(rows, self.pool.head_num, dim).contiguous()
++        v = v.reshape(rows, self.pool.head_num, dim).contiguous()
++        native = self.pool.native
++        native.tensor(q, torch.float16, (rows, self.query_heads, dim))
++        self.pool.set_kv_buffer(layer, loc, k, v)
++        packed_k, packed_v = self.pool.get_kv_buffer(layer.layer_id)
++        output = torch.empty_like(q)
++        native.call("uq_attention", q.data_ptr(), packed_k.data_ptr(), packed_v.data_ptr(),
++                    self.pool.size + 1, self.pool.head_num, self.query_heads, dim,
++                    indices.data_ptr(), indices.numel(), starts.data_ptr(), lengths.data_ptr(), rows,
++                    layer.scaling, output.data_ptr(), native.status.data_ptr(), native.stream())
++        if not self.receipt_emitted:
++            # Both writer and compressed reader completed on the GPU. This is
++            # execution evidence only, not a numerical or model-quality result.
++            self.receipt_emitted = emit_receipt(descriptor(native.build, dim, self.pool.head_num,
++                                                           self.query_heads, torch.version.hip))
++        return output.reshape(rows, self.query_heads * dim)
++
++    def forward_decode(self, q, k, v, layer, forward_batch, save_kv_cache=True, **kwargs):
++        return self._forward(q, k, v, layer, forward_batch, save_kv_cache, **kwargs)
++
++    def forward_extend(self, q, k, v, layer, forward_batch, save_kv_cache=True, **kwargs):
++        return self._forward(q, k, v, layer, forward_batch, save_kv_cache, **kwargs)
++
++    def support_triton(self):
++        return False
++
++class BF16CacheDescriptor(ctypes.Structure):
++    _fields_ = [("k", ctypes.c_void_p), ("v", ctypes.c_void_p),
++                ("bytes_per_buffer", ctypes.c_uint64), ("identity", ctypes.c_uint64 * 4),
++                ("slots", ctypes.c_uint32), ("protected_layer", ctypes.c_uint32)]
++
++
++class BF16Native(Native):
++    """Separate source-only BF16 ABI adapter; no server registration."""
++    def __init__(self, device, identity):
++        self.device = torch.device(device)
++        if self.device.type != "cuda" or not torch.version.hip:
++            raise ValueError("BF16 candidate requires reviewed ROCm execution")
++        if torch.cuda.get_device_properties(self.device).gcnArchName.split(":")[0] != "gfx1201":
++            raise ValueError("BF16 candidate requires gfx1201")
++        path = Path(__file__).with_name("libuq_bf16_v2.so")
++        self.lib = ctypes.CDLL(str(path))
++        self.identity = (ctypes.c_uint64 * 4).from_buffer_copy(bytes.fromhex(identity["sha256"]))
++        self.failed = False
++        ptr, integer, wide = ctypes.c_void_p, ctypes.c_int, ctypes.c_uint64
++        self.lib.uq_bf16_append_v2.argtypes = [ptr, ptr, ptr, ptr, wide, ptr, integer, ptr, ptr]
++        self.lib.uq_bf16_attention_v2.argtypes = [
++            ptr, ptr, ptr, wide, ptr, integer, ptr, ptr, integer, ctypes.c_float, ptr, wide, ptr, ptr]
++        self.lib.uq_bf16_append_v2.restype = integer
++        self.lib.uq_bf16_attention_v2.restype = integer
++        self.status = torch.empty(1, dtype=torch.int32, device=device)
++
++    def descriptor(self, k, v, slots, protected):
++        return BF16CacheDescriptor(k.data_ptr(), v.data_ptr(), k.numel() * k.element_size(),
++                                   self.identity, slots, int(protected))
++
++
++class QwenBF16MixedPool(KVCache):
++    """Full-attention subpool only. GDN allocation and lifecycle stay in parent."""
++    def __init__(self, size, page_size, dtype, head_num, head_dim, layer_num, device,
++                 enable_memory_saver, v_head_dim=None, start_layer=None, end_layer=None,
++                 enable_alt_stream=False, enable_kv_cache_copy=False, *, policy,
++                 quant_method=None, post_capture_active=False, stack_receipt=None,
++                 stack_receipt_sha256=None):
++        from sglang.srt.layers.attention.ultraquant_contract import bf16_pool_policy
++        from sglang.srt.layers.attention.ultraquant_evidence import bf16_build_identity, BF16CacheOwner
++        expected = bf16_pool_policy(rank=policy["rank"], physical_slots=size)
++        if dict(policy) != dict(expected) or (page_size, dtype, head_num, head_dim, layer_num) != (
++            1, torch.bfloat16, 2, 256, 16
++        ) or any((enable_memory_saver, enable_alt_stream, enable_kv_cache_copy,
++                  post_capture_active)) or quant_method is not None or (
++            v_head_dim not in (None, 256) or start_layer not in (None, 0) or end_layer not in (None, 16)
++        ):
++            raise ValueError("unsupported mixed BF16 pool configuration")
++        # Proof is checked BEFORE native loading or device allocation.
++        if stack_receipt is None and stack_receipt_sha256 is None:
++            identity = bf16_build_identity(Path(__file__).parents[3], expected)
++        else:
++            identity = bf16_build_identity(Path(__file__).parents[3], expected,
++                stack_receipt=stack_receipt, stack_receipt_sha256=stack_receipt_sha256)
++        self.identity = identity
++        self.owner = BF16CacheOwner(identity)
++        self.policy = expected
++        super().__init__(size, page_size, torch.bfloat16, layer_num, device, False, start_layer, end_layer)
++        self.native = BF16Native(device, identity)
++        self.head_num, self.head_dim, self.v_head_dim = 2, 256, 256
++        self.k_buffer, self.v_buffer = [], []
++        self.immutable = frozenset()
++        for index in range(16):
++            protected = index in policy["protected"]
++            shape = (size + 1, 2, 256 if protected else 136)
++            # BF16 NaN / packed invalid exponent marks unwritten records.
++            dt = torch.bfloat16 if protected else torch.uint8
++            fill = float("nan") if protected else 255
++            self.k_buffer.append(torch.full(shape, fill, dtype=dt, device=device))
++            self.v_buffer.append(torch.full(shape, fill, dtype=dt, device=device))
++
++    def get_kv_size_bytes(self):
++        return tuple(sum(x.numel() * x.element_size() for x in group)
++                     for group in (self.k_buffer, self.v_buffer))
++
++    def get_key_buffer(self, layer_id):
++        from sglang.srt.layers.attention.ultraquant_contract import qwen_layer_route
++        route = qwen_layer_route(compact_id=layer_id)
++        if not route["protected"]:
++            raise ValueError("packed KV4 cannot be exposed to an ordinary BF16 reader")
++        return self.k_buffer[layer_id]
++
++    def get_value_buffer(self, layer_id):
++        self.get_key_buffer(layer_id)
++        return self.v_buffer[layer_id]
++
++    def get_kv_buffer(self, layer_id):
++        return self.get_key_buffer(layer_id), self.get_value_buffer(layer_id)
++
++    def get_contiguous_buf_infos(self):
++        raise ValueError("mixed pool offload/cache-copy is unsupported")
++
++    def maybe_get_custom_mem_pool(self):
++        return None
++
++    def register_layer_transfer_counter(self, counter):
++        if counter is not None:
++            raise ValueError("mixed pool layer transfer is unsupported")
++
++    def set_kv_buffer(self, layer, loc, cache_k, cache_v, k_scale=1.0, v_scale=1.0,
++                      layer_id_override=None, dcp_kv_mask=None):
++        from sglang.srt.layers.attention.ultraquant_contract import qwen_writer_metadata, bf16_write_slots
++        route = qwen_writer_metadata(layer, loc, cache_k, cache_v, k_scale, v_scale,
++                                    layer_id_override=layer_id_override, dcp_kv_mask=dcp_kv_mask)
++        self.owner.check_process()
++        n = loc.numel()
++        location_pointer = self.native.tensor(loc, torch.int64, (n,))
++        kp = self.native.tensor(cache_k, torch.bfloat16, (n, 2, 256))
++        vp = self.native.tensor(cache_v, torch.bfloat16, (n, 2, 256))
++        bf16_write_slots(loc.cpu().tolist(), self.size + 1, self.immutable)
++        self.owner.check_writable(loc.cpu().tolist())
++        index = route["compact_id"]
++        descriptor = self.native.descriptor(self.k_buffer[index], self.v_buffer[index],
++                                            self.size + 1, route["protected"])
++        self.native.call("uq_bf16_append_v2", ctypes.byref(descriptor), self.native.identity,
++                         kp, vp, n * 1024, location_pointer, n, self.native.status.data_ptr(),
++                         self.native.stream())
++
++    def move_kv_cache(self, *args, **kwargs):
++        raise ValueError("mixed pool cache copy/offload is unsupported")
++
++
++class QwenBF16SourceAdapter(AttentionBackend):
++    """Unregistered full-attention adapter. Caller supplies post-native-MRoPE Q/K."""
++    def __init__(self, pool, req_to_token_pool=None, token_to_kv_pool=None, max_context_len=131072):
++        if not isinstance(pool, QwenBF16MixedPool):
++            raise ValueError("mixed full-attention pool required")
++        self.pool = pool
++        if type(max_context_len) is not int or not 1 <= max_context_len <= 131072:
++            raise ValueError("unsupported BF16 context bound")
++        self.token_to_kv_pool = token_to_kv_pool if token_to_kv_pool is not None else pool
++        # The pinned 0.5.21 hybrid wrapper reads these full-backend attributes.
++        self.data_type = torch.bfloat16
++        self.kv_index_translator = None
++        self.req_to_token_pool = req_to_token_pool
++        self.max_context_len = max_context_len
++        self.needs_cpu_seq_lens = True
++        self.metadata = None
++        self._device_metadata = None
++        self._batch = None
++        self._write_locations = None
++        self._written_layers = set()
++        self._slot_snapshot = None
++        self._map_snapshot = None
++        self.pool.owner.register_adapter(self)
++
++    def invalidate(self):
++        """Discard prepared metadata without releasing slots or recurrent state."""
++        self.metadata = None
++        self._device_metadata = None
++        self._batch = None
++        self._write_locations = None
++        self._written_layers.clear()
++        self._slot_snapshot = None
++        self._map_snapshot = None
++
++    def _eager_mode(self, batch):
++        if batch.forward_mode.name not in ("EXTEND", "DECODE") or batch.spec_info is not None:
++            raise ValueError("BF16 supports ordinary eager extend/decode only")
++        if torch.cuda.is_current_stream_capturing():
++            raise ValueError("BF16 does not support graph capture/replay")
++        return batch.forward_mode.name
++
++    def init_forward_metadata_out_graph(self, forward_batch, in_capture=False):
++        self.invalidate()
++        if in_capture:
++            raise ValueError("BF16 does not support graph capture/replay")
++        mode = self._eager_mode(forward_batch)
++        if self.req_to_token_pool is None:
++            raise ValueError("BF16 requires the request-to-token map")
++        table = self.req_to_token_pool.req_to_token
++        reqs = forward_batch.req_pool_indices.cpu().tolist()
++        totals = forward_batch.seq_lens.cpu().tolist()
++        if len(table.shape) != 2 or not reqs or len(reqs) != len(totals) or len(set(reqs)) != len(reqs):
++            raise ValueError("invalid BF16 request-map metadata")
++        if any(type(req) is not int or not 0 <= req < table.shape[0] for req in reqs) or any(
++            type(total) is not int or not 1 <= total <= min(self.max_context_len, table.shape[1])
++            for total in totals
++        ):
++            raise ValueError("BF16 request-map bounds exceeded")
++        if mode == "DECODE":
++            prefixes, extends = [total - 1 for total in totals], [1] * len(totals)
++        else:
++            prefixes = forward_batch.extend_prefix_lens_cpu
++            extends = forward_batch.extend_seq_lens_cpu
++            if prefixes is None or extends is None:
++                raise ValueError("BF16 requires actual extend prefix/length metadata")
++        if not (len(prefixes) == len(extends) == len(totals)) or any(
++            type(prefix) is not int or type(extend) is not int or prefix + extend != total
++            for prefix, extend, total in zip(prefixes, extends, totals)
++        ):
++            raise ValueError("inconsistent BF16 extend lengths")
++        loc = forward_batch.out_cache_loc
++        self.pool.native.tensor(loc, torch.int64, (sum(extends),))
++        locations = loc.cpu().tolist()
++        sequences = [table[req, :total].cpu().tolist() for req, total in zip(reqs, totals)]
++        # Batch prefixes supplement the owner's cache-wide prefix protection.
++        rows = self.prepare(sequences, prefixes, extends, locations,
++                            self.pool.owner.prefix_key(None), None)
++        self._batch = forward_batch
++        self._write_locations = tuple(locations)
++        self._map_snapshot = (tuple(reqs), tuple(totals), tuple(tuple(row) for row in sequences))
++        return rows
++
++    def init_forward_metadata_in_graph(self, forward_batch):
++        # Eager callers also use this callback. No host copies or allocations.
++        try:
++            self._eager_mode(forward_batch)
++            if self._batch is not forward_batch or self.metadata is None:
++                raise ValueError("BF16 eager metadata is missing or stale")
++        except Exception:
++            self.invalidate()
++            raise
++
++    def init_cuda_graph_state(self, *args, **kwargs):
++        self.invalidate()
++        raise ValueError("BF16 does not support graph capture/replay")
++
++    def init_forward_metadata_capture_cuda_graph(self, *args, **kwargs):
++        self.init_cuda_graph_state()
++
++    def init_forward_metadata_replay_cuda_graph(self, *args, **kwargs):
++        self.init_cuda_graph_state()
++
++    def init_forward_metadata_for_breakable_cuda_graph_capture(self, *args, **kwargs):
++        self.init_cuda_graph_state()
++
++    def prepare_forward_metadata_for_breakable_cuda_graph_replay(self, *args, **kwargs):
++        self.init_cuda_graph_state()
++
++    def forward(self, q, k, v, layer, forward_batch, save_kv_cache=True, **kwargs):
++        self._eager_mode(forward_batch)
++        return super().forward(q, k, v, layer, forward_batch, save_kv_cache, **kwargs)
++
++    def forward_extend(self, q, k, v, layer, forward_batch, save_kv_cache=True, **kwargs):
++        if self._eager_mode(forward_batch) != "EXTEND":
++            raise ValueError("BF16 extend called with another mode")
++        return self._forward(q, k, v, layer, forward_batch, save_kv_cache, kwargs)
++
++    def forward_decode(self, q, k, v, layer, forward_batch, save_kv_cache=True, **kwargs):
++        if self._eager_mode(forward_batch) != "DECODE":
++            raise ValueError("BF16 decode called with another mode")
++        return self._forward(q, k, v, layer, forward_batch, save_kv_cache, kwargs)
++
++    def _forward(self, q, k, v, layer, batch, save_kv_cache, kwargs):
++        import math
++        from sglang.srt.layers.attention.ultraquant_contract import qwen_writer_metadata
++        if self._batch is not batch or self.metadata is None:
++            raise ValueError("BF16 eager metadata is missing or stale")
++        self.pool.owner.validate_snapshot(self._slot_snapshot)
++        reqs, totals, sequences = self._map_snapshot
++        if tuple(batch.req_pool_indices.cpu().tolist()) != reqs or tuple(batch.seq_lens.cpu().tolist()) != totals or tuple(
++            tuple(self.req_to_token_pool.req_to_token[req, :total].cpu().tolist())
++            for req, total in zip(reqs, totals)
++        ) != sequences:
++            self.invalidate()
++            raise ValueError("BF16 request map changed after preparation")
++        if type(save_kv_cache) is not bool or any(name not in ("k_scale", "v_scale", "dcp_kv_mask") for name in kwargs):
++            raise ValueError("unsupported BF16 forward arguments")
++        if tuple(getattr(layer, name, None) for name in (
++            "tp_q_head_num", "tp_k_head_num", "tp_v_head_num", "qk_head_dim", "v_head_dim"
++        )) != (12, 2, 2, 256, 256):
++            raise ValueError("unsupported BF16 layer geometry")
++        scale = layer.scaling
++        if type(scale) not in (int, float) or not math.isfinite(scale) or not 0 < scale <= 1:
++            raise ValueError("unsupported BF16 attention scale")
++        ks = kwargs.get("k_scale", getattr(layer, "k_scale", None))
++        vs = kwargs.get("v_scale", getattr(layer, "v_scale", None))
++        scales = [ks, vs]
++        for index, name in enumerate(("k_scale", "v_scale")):
++            value = scales[index]
++            if name not in kwargs and value is not None and type(value) not in (int, float):
++                unit = getattr(layer, name + "_float", None)
++                if (not isinstance(value, torch.Tensor) or tuple(value.shape) != ()
++                        or value.dtype != torch.float32 or value.device != self.pool.native.status.device
++                        or type(unit) not in (int, float) or not math.isfinite(unit) or unit != 1):
++                    raise ValueError("unsupported implicit BF16 KV scale metadata")
++                scalar = value.item()
++                if type(scalar) not in (int, float) or not math.isfinite(scalar) or scalar != 1:
++                    raise ValueError("BF16 requires unit implicit KV scales")
++                scales[index] = 1.0
++        ks, vs = scales
++        mask = kwargs.get("dcp_kv_mask")
++        qwen_writer_metadata(layer, None, k, v, ks, vs, dcp_kv_mask=mask)
++        n = len(self.metadata[1])
++        native = self.pool.native
++        if not 1 <= n <= 4096:
++            raise ValueError("BF16 input row bound exceeded")
++        if (k is None) != (v is None) or save_kv_cache and k is None:
++            raise ValueError("BF16 requires paired K/V for cache writes")
++        inputs = ((q, 12),) if k is None else ((q, 12), (k, 2), (v, 2))
++        # Validate every view before allocating a temporary or invoking native
++        # code. A split from the gated QKV projection has a non-dense row stride.
++        for tensor, heads in inputs:
++            if tensor.device != native.status.device or tensor.dtype != torch.bfloat16 or tuple(tensor.shape) not in (
++                (n, heads * 256), (n, heads, 256)
++            ):
++                raise ValueError("unsupported BF16 input device, dtype or shape")
++        loc = batch.out_cache_loc
++        native.tensor(loc, torch.int64, (n,))
++        if tuple(loc.cpu().tolist()) != self._write_locations:
++            raise ValueError("BF16 write locations changed after preparation")
++        if save_kv_cache and layer.layer_id in self._written_layers:
++            raise ValueError("BF16 layer already appended for this batch")
++        def shaped(tensor, heads):
++            # At most 4096*(12+2+2)*256*2 = 32 MiB for Q/K/V, within
++            # the existing 2 GiB workspace policy. No cast or host transfer.
++            if not tensor.is_contiguous():
++                tensor = tensor.contiguous()
++            if tuple(tensor.shape) == (n, heads * 256):
++                tensor = tensor.view(n, heads, 256)
++            native.tensor(tensor, torch.bfloat16, (n, heads, 256))
++            return tensor
++        q = shaped(q, 12)
++        if k is not None:
++            k, v = shaped(k, 2), shaped(v, 2)
++        if save_kv_cache:
++            # Preserve parent physical-to-compact translation and its writer ABI.
++            self.token_to_kv_pool.set_kv_buffer(layer, loc, k, v, ks, vs, dcp_kv_mask=mask)
++            self._written_layers.add(layer.layer_id)
++        return self.attention(q, layer.layer_id, scale).view(n, 12 * 256)
++
++    def prepare(self, sequences, prefixes, extends, locations, prefix_key, extra_key):
++        # A refused new batch must not leave a previous batch executable. Keep
++        # existing prefix protection until another preparation succeeds.
++        self.invalidate()
++        self.pool.owner.validate_prefix(prefix_key, extra_key)
++        rows = causal_rows(sequences, prefixes, extends, locations, self.pool.size + 1)
++        snapshot = self.pool.owner.snapshot(rows[0])
++        device_metadata = tuple(
++            torch.tensor(values, dtype=dtype, device=self.pool.native.status.device)
++            for values, dtype in zip(rows, (torch.int64, torch.int32, torch.int32))
++        )
++        # Commit metadata only after all validation; no recurrent-state emulation.
++        immutable = frozenset(slot for seq, prefix in zip(sequences, prefixes) for slot in seq[:prefix])
++        self.pool.immutable = immutable
++        self.metadata = tuple(tuple(row) for row in rows)
++        self._device_metadata = device_metadata
++        self._slot_snapshot = snapshot
++        return self.metadata
++
++    def attention(self, q, physical_layer, scale):
++        import math
++        from sglang.srt.layers.attention.ultraquant_contract import qwen_layer_route
++        if self.metadata is None:
++            raise ValueError("causal metadata required")
++        self.pool.owner.check_process()
++        self.pool.owner.validate_snapshot(self._slot_snapshot)
++        if self._device_metadata is None:
++            raise ValueError("causal metadata required")
++        route = qwen_layer_route(physical_id=physical_layer)
++        if type(scale) not in (int, float) or not math.isfinite(scale) or not 0 < scale <= 1:
++            raise ValueError("unsupported BF16 attention scale")
++        indices, starts, lengths = self.metadata
++        n = len(starts)
++        native = self.pool.native
++        qp = native.tensor(q, torch.bfloat16, (n, 12, 256))
++        device = q.device
++        ids, begin, size = self._device_metadata
++        out = torch.empty((n, 12, 256), dtype=torch.bfloat16, device=device)
++        i = route["compact_id"]
++        descriptor = native.descriptor(self.pool.k_buffer[i], self.pool.v_buffer[i],
++                                       self.pool.size + 1, route["protected"])
++        native.call("uq_bf16_attention_v2", ctypes.byref(descriptor), native.identity, qp, n * 6144,
++                    ids.data_ptr(), len(indices), begin.data_ptr(), size.data_ptr(), n, scale,
++                    out.data_ptr(), n * 6144, native.status.data_ptr(), native.stream())
++        return out
+--- a/sglang/srt/layers/attention/ultraquant_contract.py
++++ b/sglang/srt/layers/attention/ultraquant_contract.py
+@@ -0,0 +1,337 @@
++"""Experimental UltraQuant RDNA4 contract; standard library only.
++
++Added locally; not upstream SGLang functionality. See the sibling experiment's
++codec specification. No model/runtime installation or execution occurs here.
++"""
++
++import hashlib
++import json
++from types import MappingProxyType
++
++MODE = "ultraquant-rdna4-v1"
++BF16_SOURCE_MODE = "ultraquant-qwen27b-bf16-source-v2"
++SOURCE_REVISION = "0b3bb0cbe31873994c9f989fddfe2f87ca839fdd"
++MAX_ROWS = 4096
++MAX_SLOTS = 1048576
++MAX_CONTEXT = 131072
++# Bounded metadata (8 MiB indices), input/outputs at max head count, and kernel
++# scratch allowance. This is a planning reserve, not a measured temporary peak.
++WORKSPACE_RESERVE = 2 * 1024 * 1024 * 1024
++
++# CPU planning only. This name is deliberately absent from the backend registry.
++QWEN_PLANNING_MODE = "ultraquant-qwen27b-kv4-plan-v1"
++QWEN_MODEL = "Qwen/Qwen3.8-27B-FP8"
++QWEN_REVISION = "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a"
++QWEN_CONFIG_SHA256 = "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
++QWEN_FULL_LAYERS = (3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 55, 59, 63)
++QWEN_PROTECTED_LAYERS = (3, 7, 59, 63)
++QWEN_STORAGE = "local-g32-e2m1-ue8m0-interleaved17-v1"
++QWEN_ROTATION = "post-mrope-full256-qk-fp32-wht"
++
++
++def validate_args(args):
++    """Refuse conflicting requested settings before upstream auto adjustment."""
++    names = ("attention_backend", "prefill_attention_backend", "decode_attention_backend")
++    if getattr(args, "_ultraquant_bf16_requested", False) or BF16_SOURCE_MODE in (
++        getattr(args, name, None) for name in names
++    ):
++        raise ValueError("BF16 source candidate is not an admitted executable backend")
++    if getattr(args, "_ultraquant_qwen_planning_requested", False) or QWEN_PLANNING_MODE in (
++        getattr(args, name, None) for name in names
++    ):
++        raise ValueError("Qwen KV4 planning mode cannot authorize native launch")
++    if getattr(args, "_ultraquant_requested", False) and args.attention_backend != MODE:
++        raise ValueError("requested UltraQuant backend was changed during argument resolution")
++    if MODE not in [getattr(args, name, None) for name in names]:
++        return
++    if args.attention_backend != MODE or any(
++        getattr(args, name, None) not in (None, MODE) for name in names[1:]
++    ):
++        raise ValueError("UltraQuant requires the same explicit prefill/decode backend")
++    required = {
++        "tp_size": 1, "pp_size": 1, "dp_size": 1, "nnodes": 1,
++        "attn_cp_size": 1, "dcp_size": 1, "page_size": 1, "dtype": "float16",
++        "kv_cache_dtype": "auto", "disable_overlap_schedule": True,
++        "cuda_graph_backend_decode": "disabled", "cuda_graph_backend_prefill": "disabled",
++        "disaggregation_mode": "null", "cpu_offload_gb": 0,
++    }
++    for name, expected in required.items():
++        if getattr(args, name, None) != expected:
++            raise ValueError(f"UltraQuant requires {name}={expected}")
++    refused = (
++        "enable_torch_compile", "enable_mixed_chunk", "enable_hierarchical_cache",
++        "enable_lmcache", "enable_memory_saver", "enable_pdmux", "enable_two_batch_overlap",
++        "prefill_only_disable_kv_cache", "enable_dp_attention", "enable_dp_lm_head",
++        "enable_page_major_kv_layout", "enable_unified_memory",
++        "enable_hisparse", "enable_deterministic_inference", "enable_return_hidden_states",
++        "speculative_algorithm", "quantization", "torchao_config", "modelopt_quant",
++        "quantize_and_serve", "lora_paths", "enable_lora",
++    )
++    for name in refused:
++        if getattr(args, name, None):
++            raise ValueError(f"UltraQuant does not support {name}")
++    if getattr(args, "cuda_graph_config", None):
++        # The final resolved object is checked separately by the backend.
++        if isinstance(args.cuda_graph_config, (dict, str)):
++            raise ValueError("UltraQuant requires the two explicit disabled graph flags")
++    for name, limit in (("max_total_tokens", MAX_SLOTS - 1), ("context_length", MAX_CONTEXT),
++                        ("chunked_prefill_size", MAX_ROWS), ("max_running_requests", 128)):
++        value = getattr(args, name, None)
++        if type(value) is not int or not 1 <= value <= limit:
++            raise ValueError(f"UltraQuant requires an explicit bounded {name}")
++
++
++def validate_model(model):
++    # An intentional architecture allowlist. The workstation Qwen3.5/3.8 models
++    # are hybrid recurrent models and cannot enter this conventional KV path.
++    if getattr(model.hf_config, "architectures", None) != ["LlamaForCausalLM"]:
++        raise ValueError("UltraQuant v1 supports only conventional LlamaForCausalLM")
++    if getattr(model, "is_encoder_decoder", False) or getattr(model.hf_config, "sliding_window", None):
++        raise ValueError("UltraQuant does not support cross/sliding-window attention")
++    if getattr(model.hf_config, "quantization_config", None):
++        raise ValueError("UltraQuant v1 requires unquantized model weights")
++    dim, qheads, kvheads = model.head_dim, model.num_attention_heads, model.get_num_kv_heads(1)
++    if dim not in (32, 64, 128, 256) or model.v_head_dim != dim:
++        raise ValueError("UltraQuant requires equal supported QK/V dimensions")
++    if not 1 <= kvheads <= 64 or not kvheads <= qheads <= 128 or qheads % kvheads:
++        raise ValueError("UltraQuant requires integral bounded grouped query attention")
++
++
++def cell_bytes(layers, heads, dim):
++    if type(layers) is not int or not 1 <= layers <= 256 or type(heads) is not int or not 1 <= heads <= 64:
++        raise ValueError("invalid UltraQuant layer/head count")
++    if type(dim) is not int or dim not in (32, 64, 128, 256):
++        raise ValueError("unsupported UltraQuant head dimension")
++    return layers * 2 * heads * (dim // 32) * 17
++
++
++def capacity(available_bytes, per_token_bytes):
++    # Include slot zero and the fixed reserve in addition to actual packed bytes.
++    return max(0, min(MAX_SLOTS - 1, (available_bytes - WORKSPACE_RESERVE) // per_token_bytes - 1))
++
++
++def causal_rows(sequences, prefixes, extends, locations, slots):
++    """Build reader spans over packed physical slot indices, without cache data.
++
++    sequences contains the scheduler's logical-to-physical map for each request.
++    The return starts/lengths are one span per Q row. Visible lengths are causal,
++    so initial and continuation prefill never attend future appended tokens.
++    """
++    if not (len(sequences) == len(prefixes) == len(extends)) or not sequences:
++        raise ValueError("inconsistent request metadata")
++    if type(slots) is not int or not 1 < slots <= MAX_SLOTS:
++        raise ValueError("invalid cache capacity")
++    indices, starts, lengths, writes = [], [], [], []
++    for sequence, prefix, extend in zip(sequences, prefixes, extends):
++        if type(prefix) is not int or type(extend) is not int or prefix < 0 or extend <= 0:
++            raise ValueError("invalid prefix/extend lengths")
++        if prefix + extend != len(sequence) or len(sequence) > MAX_CONTEXT:
++            raise ValueError("sequence must equal prefix plus new tokens")
++        if any(type(slot) is not int or not 0 < slot < slots for slot in sequence):
++            raise ValueError("invalid physical cache slot")
++        if len(set(sequence)) != len(sequence):
++            raise ValueError("a request cannot alias its own token slots")
++        starts.extend([len(indices)] * extend)
++        lengths.extend(range(prefix + 1, prefix + extend + 1))
++        indices.extend(sequence)
++        writes.extend(sequence[prefix:])
++    if len(starts) > MAX_ROWS or len(indices) > MAX_SLOTS:
++        raise ValueError("metadata exceeds the experimental bound")
++    if writes != locations or len(set(writes)) != len(writes):
++        raise ValueError("writer locations must match new logical slots exactly")
++    # A new write may not overwrite another request's reused prefix.
++    reused = {slot for sequence, prefix in zip(sequences, prefixes) for slot in sequence[:prefix]}
++    if reused.intersection(writes):
++        raise ValueError("append aliases a reused prefix")
++    return indices, starts, lengths
++
++
++def qwen_planning_metadata(config_bytes, *, model, revision, rank, source_tree_sha256,
++                           engine="sglang", source_revision=SOURCE_REVISION,
++                           tp_size=2, input_dtype="bfloat16", output_dtype="bfloat16",
++                           storage_format=QWEN_STORAGE, rotation_policy=QWEN_ROTATION,
++                           page_size=1, graphs=False, overlap=False, mtp=False):
++    """Validate the fixed FP8 model and return CPU planning metadata only.
++
++    The BF16/FP32 compute policy is a future proposal, not an implemented kernel.
++    Config bytes bind the entire pinned configuration, including FP8 weight scales.
++    """
++    if model != QWEN_MODEL or revision != QWEN_REVISION or source_revision != SOURCE_REVISION:
++        raise ValueError("unknown Qwen model or preparation source identity")
++    if engine != "sglang" or type(source_tree_sha256) is not str or len(source_tree_sha256) != 64 or any(
++        char not in "0123456789abcdef" for char in source_tree_sha256
++    ):
++        raise ValueError("Qwen requires the SGLang source-tree digest")
++    if type(config_bytes) is not bytes or len(config_bytes) > 1024 * 1024:
++        raise ValueError("Qwen requires bounded pinned config bytes")
++    if hashlib.sha256(config_bytes).hexdigest() != QWEN_CONFIG_SHA256:
++        raise ValueError("Qwen config checksum mismatch")
++    if type(tp_size) is not int or tp_size != 2 or type(rank) is not int or rank not in (0, 1):
++        raise ValueError("Qwen planning requires TP2 rank 0 or 1")
++    if type(page_size) is not int or page_size != 1:
++        raise ValueError("Qwen planning requires page size one")
++    if any(type(value) is not bool or value for value in (graphs, overlap, mtp)):
++        raise ValueError("Qwen planning does not support graphs, overlap or MTP")
++    if (input_dtype, output_dtype, storage_format, rotation_policy) != (
++        "bfloat16", "bfloat16", QWEN_STORAGE, QWEN_ROTATION
++    ):
++        raise ValueError("Qwen planning precision or rotation policy mismatch")
++    config = json.loads(config_bytes)
++    text = config["text_config"]
++    layer_types = tuple("full_attention" if i in QWEN_FULL_LAYERS else "linear_attention"
++                        for i in range(64))
++    if config.get("architectures") != ["Qwen3_5ForConditionalGeneration"] or (
++        text.get("num_hidden_layers"), text.get("head_dim"), text.get("num_attention_heads"),
++        text.get("num_key_value_heads"), text.get("dtype"), tuple(text.get("layer_types", ()))
++    ) != (64, 256, 24, 4, "bfloat16", layer_types):
++        raise ValueError("Qwen hybrid layer map or geometry mismatch")
++    quant = config["quantization_config"]
++    if (quant.get("quant_method"), quant.get("fmt"), quant.get("activation_scheme"),
++        quant.get("weight_block_size")) != ("fp8", "e4m3", "dynamic", [128, 128]):
++        raise ValueError("Qwen requires the official FP8 weight contract")
++    rope = text["rope_parameters"]
++    if (rope.get("partial_rotary_factor"), rope.get("mrope_interleaved"),
++        rope.get("mrope_section")) != (0.25, True, [11, 11, 10]):
++        raise ValueError("Qwen partial MRoPE configuration mismatch")
++    prefix_identity = (
++        QWEN_MODEL, QWEN_REVISION, QWEN_CONFIG_SHA256, engine, SOURCE_REVISION, source_tree_sha256,
++        QWEN_PLANNING_MODE, QWEN_STORAGE, input_dtype, output_dtype, "fp32-wht-and-accumulation",
++        "bf16-tile-unpack", QWEN_ROTATION, "v-unrotated", QWEN_PROTECTED_LAYERS, "protected-bf16-unrotated",
++        tp_size, rank, 12, 2, page_size,
++    )
++    return MappingProxyType({
++        "mode": QWEN_PLANNING_MODE, "native_launch_allowed": False, "qualified": False,
++        "model": QWEN_MODEL, "revision": QWEN_REVISION, "config_sha256": QWEN_CONFIG_SHA256,
++        "preparation_source_revision": SOURCE_REVISION, "tp_size": 2, "rank": rank,
++        "source_tree_sha256": source_tree_sha256, "weight_precision": "fp8-e4m3-block128x128",
++        "global_query_heads": 24, "global_kv_heads": 4, "query_heads": 12, "kv_heads": 2,
++        "head_dim": 256, "full_layer_ids": QWEN_FULL_LAYERS, "gdn_layers": 48,
++        "protected_layer_ids": QWEN_PROTECTED_LAYERS, "protected_compact_ids": (0, 1, 14, 15),
++        "protection_status": "hybrid-proposal-unqualified", "input_dtype": input_dtype,
++        "output_dtype": output_dtype, "storage_format": storage_format,
++        "rotation_policy": rotation_policy, "v_rotation": "none", "page_size": 1,
++        "prefix_identity": prefix_identity,
++        "payload_bytes_per_token_per_rank": 12 * 2 * 272 + 4 * 2 * 2 * 256 * 2,
++        "gdn_bytes_per_state_slot_per_rank_at_retained_defaults": 48 * (5120 * 3 * 2 + 24 * 128 * 128 * 4),
++    })
++
++
++def validate_qwen_prefix_identity(metadata, observed_identity):
++    """Reject another model, policy, engine/source, partition or stale prefix."""
++    if type(observed_identity) is not tuple or observed_identity != metadata["prefix_identity"]:
++        raise ValueError("Qwen prefix identity mismatch")
++
++
++def qwen_layer_route(*, physical_id=None, compact_id=None):
++    """Resolve fixed full-attention IDs; protected layers have no WHT."""
++    if physical_id is None and compact_id is None:
++        raise ValueError("Qwen layer identity is required")
++    if physical_id is not None and (type(physical_id) is not int or physical_id not in QWEN_FULL_LAYERS):
++        raise ValueError("Qwen physical layer is not a full-attention layer")
++    if compact_id is not None and (type(compact_id) is not int or not 0 <= compact_id < 16):
++        raise ValueError("Qwen compact full-attention layer is invalid")
++    if physical_id is None:
++        physical_id = QWEN_FULL_LAYERS[compact_id]
++    expected = QWEN_FULL_LAYERS.index(physical_id)
++    if compact_id is not None and compact_id != expected:
++        raise ValueError("conflicting Qwen physical and compact layer IDs")
++    protected = physical_id in QWEN_PROTECTED_LAYERS
++    return {"physical_id": physical_id, "compact_id": expected, "protected": protected,
++            "storage": "bfloat16" if protected else QWEN_STORAGE,
++            "rotation": "none" if protected else QWEN_ROTATION}
++
++
++def qwen_writer_metadata(layer, loc, cache_k, cache_v, k_scale=1.0, v_scale=1.0, *,
++                         layer_id_override=None, dcp_kv_mask=None):
++    """Specify the hybrid full-pool call; no cache allocation or mutation.
++
++    The historical hybrid caller passes layer=None. Pinned 0.5.21 passes the
++    physical layer object and the same compact layer_id_override.
++    Activation tensors and write locations remain opaque at this metadata boundary.
++    Slot ownership is checked by causal_rows before a future writer can mutate data.
++    """
++    for scale in (k_scale, v_scale):
++        if scale is not None and (type(scale) not in (int, float) or scale != 1):
++            raise ValueError("Qwen writer supports only absent or unit scale arguments")
++    if dcp_kv_mask is not None:
++        raise ValueError("Qwen writer does not support dcp_kv_mask")
++    if layer is None and layer_id_override is None:
++        raise ValueError("hybrid Qwen writer requires layer_id_override")
++    physical_id = None if layer is None else getattr(layer, "layer_id", None)
++    if layer is not None and type(physical_id) is not int:
++        raise ValueError("Qwen writer requires an integer physical layer_id")
++    return qwen_layer_route(physical_id=physical_id,
++                            compact_id=layer_id_override)
++
++
++def qwen_payload_bytes(physical_token_slots):
++    """Payload arithmetic only; slot zero is separate and page-one padding is zero."""
++    if type(physical_token_slots) is not int or not 0 <= physical_token_slots < MAX_SLOTS:
++        raise ValueError("invalid Qwen physical token-slot count")
++    per_token = 12 * 2 * 272 + 4 * 2 * 2 * 256 * 2
++    return {"token_payload": physical_token_slots * per_token, "reserved_slot_zero": per_token,
++            "page_padding": 0, "total_payload_with_slot_zero": (physical_token_slots + 1) * per_token}
++
++def bf16_write_slots(locations, slots, immutable=()):
++    """Check the complete physical write set before any native mutation."""
++    if type(slots) is not int or not 2 <= slots <= MAX_SLOTS:
++        raise ValueError("invalid physical slot count")
++    if not 1 <= len(locations) <= MAX_ROWS or any(
++        type(x) is not int or not 0 < x < slots for x in locations
++    ):
++        raise ValueError("invalid physical write locations")
++    if len(set(locations)) != len(locations) or set(locations).intersection(immutable):
++        raise ValueError("duplicate write or immutable shared prefix")
++    return tuple(locations)
++
++
++def bf16_pool_policy(*, rank, physical_slots, page_size=1, graphs=False, overlap=False,
++                     mtp=False, dcp=False, offload=False, cache_copy=False, unified=False):
++    if type(rank) is not int or rank not in (0, 1):
++        raise ValueError("BF16 candidate requires TP2 rank zero or one")
++    if type(physical_slots) is not int or not 1 <= physical_slots < MAX_SLOTS:
++        raise ValueError("fixed physical slot count required")
++    if type(page_size) is not int or page_size != 1 or any(
++        type(x) is not bool or x for x in (graphs, overlap, mtp, dcp, offload, cache_copy, unified)
++    ):
++        raise ValueError("unsupported candidate page/scheduler/pool policy")
++    return MappingProxyType({"rank": rank, "tp": 2, "q_heads": 12, "kv_heads": 2,
++        "head_dim": 256, "slots": physical_slots + 1, "page_size": 1,
++        "protected": (0, 1, 14, 15), "storage": QWEN_STORAGE,
++        "rotation": QWEN_ROTATION, "compute": "bf16-in-out-unpack-fp32-accumulate",
++        "payload": qwen_payload_bytes(physical_slots)["total_payload_with_slot_zero"],
++        "workspace_reserve": WORKSPACE_RESERVE})
++
++
++def bf16_source_request(config_bytes, *, rank, physical_slots, context_length):
++    """Explicit internal source request; no public backend admission."""
++    if type(config_bytes) is not bytes or hashlib.sha256(config_bytes).hexdigest() != QWEN_CONFIG_SHA256:
++        raise ValueError("fixed official FP8 Qwen config required")
++    if type(context_length) is not int or not 1 <= context_length <= MAX_CONTEXT:
++        raise ValueError("unsupported BF16 context bound")
++    return MappingProxyType({"config_bytes": config_bytes,
++        "policy": bf16_pool_policy(rank=rank, physical_slots=physical_slots),
++        "context_length": context_length})
++
++
++def validate_bf16_source_args(args):
++    # Do not change the v1 validator or register this mode. An explicit public
++    # future-mode request still fails before runtime import.
++    validate_args(args)
++    expected = {"tp_size": 2, "pp_size": 1, "dp_size": 1, "nnodes": 1,
++        "attn_cp_size": 1, "dcp_size": 1, "page_size": 1, "dtype": "bfloat16",
++        "kv_cache_dtype": "auto", "disable_overlap_schedule": True,
++        "cuda_graph_backend_decode": "disabled", "cuda_graph_backend_prefill": "disabled",
++        "disaggregation_mode": "null", "cpu_offload_gb": 0}
++    for name, value in expected.items():
++        if getattr(args, name, None) != value:
++            raise ValueError(f"BF16 source path requires {name}={value}")
++    for name in ("enable_unified_memory", "enable_memory_saver", "enable_page_major_kv_layout",
++                 "enable_hierarchical_cache", "enable_lmcache", "enable_two_batch_overlap",
++                 "enable_pdmux", "enable_torch_compile", "speculative_algorithm"):
++        if getattr(args, name, None):
++            raise ValueError(f"BF16 source path does not support {name}")
++    graphs = getattr(args, "cuda_graph_config", None)
++    if graphs is not None and any(getattr(getattr(graphs, phase, None), "backend", None) != "disabled"
++                                  for phase in ("decode", "prefill")):
++        raise ValueError("BF16 source path requires resolved disabled graphs")
+--- a/sglang/srt/layers/attention/ultraquant_evidence.py
++++ b/sglang/srt/layers/attention/ultraquant_evidence.py
+@@ -0,0 +1,403 @@
++"""Stable candidate identity and local process receipt; no qualification claim."""
++import hashlib
++import importlib.metadata
++import json
++import os
++from pathlib import Path
++import stat
++import sys
++import tempfile
++
++from sglang.srt.layers.attention.ultraquant_contract import MODE, SOURCE_REVISION
++
++
++def canonical(value):
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
++
++
++def digest(path):
++    if path.is_symlink() or not path.is_file():
++        raise ValueError("experimental runtime source/binary must be a regular file")
++    value = hashlib.sha256()
++    with path.open("rb") as stream:
++        for chunk in iter(lambda: stream.read(1048576), b""):
++            value.update(chunk)
++    return value.hexdigest()
++
++
++def build_identity():
++    package = Path(__file__).parent
++    manifest = package / "ultraquant-build.json"
++    if manifest.is_symlink() or not manifest.is_file() or manifest.stat().st_size > 8 * 1024 * 1024:
++        raise ValueError("experimental runtime requires a bounded local build manifest")
++    result = json.loads(manifest.read_bytes())
++    if result["source_revision"] != SOURCE_REVISION or result["qualification"] != "unqualified":
++        raise ValueError("experimental runtime build identity mismatch")
++    if digest(package / "libuq_hip.so") != result["binary_sha256"]:
++        raise ValueError("experimental runtime binary changed since compilation")
++    source_root = Path(__file__).parents[5]
++    observed = set()
++    links = {}
++    for path in source_root.rglob("*"):
++        if path.is_symlink():
++            links[path.relative_to(source_root).as_posix()] = str(path.readlink())
++        elif path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc" and path.name not in (
++            "libuq_hip.so", "ultraquant-build.json"
++        ):
++            observed.add(path.relative_to(source_root).as_posix())
++    if observed != set(result["runtime_files"]) or links != result["runtime_links"]:
++        raise ValueError("experimental runtime source file set changed since compilation")
++    source_digest = hashlib.sha256(canonical({"upstream": result["runtime_files"],
++                                            "upstream_links": result["runtime_links"],
++                                            "experiment": result["experiment_files"]})).hexdigest()
++    if source_digest != result["source_tree_sha256"]:
++        raise ValueError("experimental runtime aggregate source identity mismatch")
++    for relative, expected in result["runtime_files"].items():
++        path = Path(relative)
++        if path.is_absolute() or ".." in path.parts or digest(source_root / path) != expected:
++            raise ValueError("experimental runtime source changed since compilation")
++    return result
++
++
++def descriptor(build, dim, kv_heads, query_heads, hip_version):
++    configuration = {
++        "gpu_arch": "gfx1201", "tensor_parallel": 1, "compute_dtype": "float16",
++        "attention": "causal-full", "head_dimension": dim, "kv_heads": kv_heads,
++        "query_heads": query_heads, "page_size": 1, "rotation": "post-rope-qk",
++    }
++    dependencies = {"python": sys.version.split()[0], "hip": hip_version}
++    for name in ("sglang", "torch", "triton", "pytorch-triton-rocm", "sglang-kernel", "transformers"):
++        try:
++            dependencies[name] = importlib.metadata.version(name)
++        except importlib.metadata.PackageNotFoundError:
++            dependencies[name] = None
++    return {
++        "schema": 1, "runtime": "sglang", "source_repository": "sgl-project/sglang",
++        "source_revision": SOURCE_REVISION, "source_tree_sha256": build["source_tree_sha256"],
++        "patch_sha256": build["patch_sha256"], "binary_sha256": build["binary_sha256"],
++        "compiler_revision": build["compiler_revision"],
++        "dependencies_sha256": hashlib.sha256(canonical(dependencies)).hexdigest(),
++        "codec": MODE, "configuration_sha256": hashlib.sha256(canonical(configuration)).hexdigest(),
++        "configuration": configuration, "requested_mode": MODE, "observed_mode": "compressed-gpu",
++        "qualification": "unqualified", "restart_required": True,
++    }
++
++
++def process(pid):
++    # comm may contain spaces or closing parentheses; fields after its last ')'
++    # begin at stat field3. starttime is field22, index19 in this suffix.
++    fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
++    return int(fields[1]), int(fields[19])
++
++
++def emit_receipt(value):
++    pid = os.getpid()
++    parent, start = process(pid)
++    launcher, launcher_start = None, None
++    current = pid
++    for _ in range(64):
++        arguments = Path(f"/proc/{current}/cmdline").read_bytes().split(b"\0")
++        parent, ticks = process(current)
++        if b"sglang.launch_server" in arguments:
++            launcher, launcher_start = current, ticks
++            break
++        if parent <= 0 or parent == current:
++            break
++        current = parent
++    if launcher is None:
++        # Standalone synthetic backend tests are not serving observations.
++        return False
++    root = Path("/tmp/sglang-experimental-kv")
++    root.mkdir(mode=0o700, exist_ok=True)
++    info = root.lstat()
++    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o700:
++        raise ValueError("experimental runtime receipt directory is not private")
++    receipt = {"schema": 1, "pid": pid, "start_ticks": start, "launcher_pid": launcher,
++               "launcher_start_ticks": launcher_start, "descriptor": value}
++    fd, temporary = tempfile.mkstemp(prefix=f".{pid}-", dir=root)
++    # Failed outputs are retained; there is no cleanup of prior evidence.
++    with os.fdopen(fd, "wb") as stream:
++        stream.write(canonical(receipt) + b"\n")
++        stream.flush()
++        os.fsync(stream.fileno())
++    os.replace(temporary, root / f"{pid}.json")
++    directory = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
++    try:
++        os.fsync(directory)
++    finally:
++        os.close(directory)
++    return True
++
++# Separate image-derived v2 identity. Never reuse preparation SOURCE_REVISION.
++BF16_IMAGE = "51f63a2d201ca944a43b8f1a18ac7da73ed9f6743c45bb82bbc40b44e6cf18d2"
++BF16_IMAGE_CONFIG = "8474934b5049db5e3dbd9ee220e41b9d1a397a25ca0daac8a0b38850f2478495"
++BF16_REPAIRS = {
++    "srt/configs/model_config.py": "dadbc11c0b020f6a9b7f2ed71809f06d2ba4a9191f1df4600a8f29ced153534a",
++    "srt/layers/quantization/__init__.py": "0b909ac91199253300f029dc544173067ea10208de69e5789f58f7a7500ec0b2",
++}
++
++
++def bf16_build_identity(package, policy, *, stack_receipt=None, stack_receipt_sha256=None):
++    """Verify installed immutable build proof; no such proof is supplied here."""
++    from types import MappingProxyType
++    package = Path(package)
++    proof = package / "srt/layers/attention/ultraquant-bf16-build.json"
++    if proof.is_symlink() or not proof.is_file() or proof.stat().st_size > 8 * 1024 * 1024:
++        raise ValueError("missing reviewed BF16 build proof")
++    build = json.loads(proof.read_bytes())
++    image, config, repairs = BF16_IMAGE, BF16_IMAGE_CONFIG, BF16_REPAIRS
++    if stack_receipt is not None or stack_receipt_sha256 is not None:
++        from sglang.srt.layers.attention.ultraquant_stack_contract import read_receipt, SOURCE_REVISION
++        common = read_receipt(stack_receipt, stack_receipt_sha256)
++        image, config, repairs = common["image_manifest"], common["image_config"], common["repair_files"]
++        if build.get("stack_receipt_sha256") != stack_receipt_sha256 or build.get("source_revision") != SOURCE_REVISION:
++            raise ValueError("stale modern stack/source identity")
++        if build.get("serving_composition_complete") is not True:
++            raise ValueError("modern runtime requires complete installed serving composition")
++    elif (package.parents[2] / "TARGET-REQUIREMENTS.json").exists():
++        raise ValueError("modern target requires the externally bound shared stack")
++    if (build.get("schema"), build.get("image_manifest"), build.get("image_config"),
++        build.get("qualification"), build.get("repair_files")) != (
++            2, image, config, "build-reviewed-not-serving-qualified", repairs):
++        raise ValueError("stale image/repair/build identity")
++    for name in ("kv_patch_sha256", "source_sha256", "binary_sha256", "review_receipt_sha256"):
++        value = build.get(name)
++        if type(value) is not str or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
++            raise ValueError("missing build digest")
++    if type(build.get("compiler_revision")) is not str or not build["compiler_revision"].strip() or (
++        type(build.get("compiler_flags")) is not list or not build["compiler_flags"] or any(
++            type(flag) is not str or not flag.strip() for flag in build["compiler_flags"]
++        )
++    ):
++        raise ValueError("missing compiler/flags proof")
++    files = build.get("runtime_files")
++    if not isinstance(files, dict) or not files:
++        raise ValueError("missing effective source inventory")
++    excluded = {"srt/layers/attention/libuq_bf16_v2.so", "srt/layers/attention/ultraquant-bf16-build.json"}
++    actual = set()
++    for path in package.rglob("*"):
++        if path.is_symlink():
++            raise ValueError("runtime identity requires separately resolved regular source")
++        if path.is_file() and path.relative_to(package).as_posix() not in excluded:
++            actual.add(path.relative_to(package).as_posix())
++    if actual != set(files):
++        raise ValueError("effective source membership changed")
++    for relative, expected in files.items():
++        path = Path(relative)
++        if path.is_absolute() or ".." in path.parts or digest(package / path) != expected:
++            raise ValueError("effective source hash changed")
++    if hashlib.sha256(canonical(files)).hexdigest() != build["source_sha256"]:
++        raise ValueError("effective source aggregate changed")
++    native_files = build.get("native_sources")
++    required_native = {"runtime/uq.h", "runtime/attention.hip", "runtime/bf16_math.h", "codec/codec.h"}
++    if not isinstance(native_files, dict) or set(native_files) != required_native:
++        raise ValueError("missing native source inventory")
++    native_root = package.parents[2]
++    if any(digest(native_root / name) != expected for name, expected in native_files.items()):
++        raise ValueError("native source changed since build")
++    if any(files.get(path) != value for path, value in repairs.items()):
++        raise ValueError("repair bytes changed")
++    if digest(package / "srt/layers/attention/libuq_bf16_v2.so") != build["binary_sha256"]:
++        raise ValueError("missing or stale BF16 binary")
++    value = {"build": build, "policy": dict(policy), "model_config":
++        "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
++        "model_revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a"}
++    # Canonical immutable bytes avoid shallow nested-dict mutation.
++    encoded = canonical(value)
++    return MappingProxyType({"canonical": encoded, "sha256": hashlib.sha256(encoded).hexdigest()})
++
++
++class BF16CacheOwner:
++    """Local process/cache capability. Prefix tags retain caller/LoRA extra_key."""
++    def __init__(self, identity):
++        import weakref
++        self._identity = bytes(identity["canonical"])
++        self._pid = os.getpid()
++        self._nonce = os.urandom(32)
++        self._capacity = None
++        self._allocator = None
++        self._generations = {}
++        self._pending = set()
++        self._next_generation = 0
++        self._cache = None
++        self._adapters = weakref.WeakSet()
++        self._flushing = False
++
++    def prefix_key(self, extra_key):
++        self.check_process()
++        return (self._identity, self._pid, self._nonce, extra_key)
++
++    def check_process(self):
++        if os.getpid() != self._pid:
++            raise ValueError("cross-process BF16 cache reuse is forbidden")
++
++    def validate_prefix(self, observed, extra_key):
++        if observed != self.prefix_key(extra_key):
++            raise ValueError("stale, mixed, cross-rank or foreign cache prefix")
++
++    def namespace(self, tag):
++        capability = self.prefix_key(None)[:-1]
++        if isinstance(tag, BF16Namespace):
++            if tag.capability != capability:
++                raise ValueError("foreign BF16 cache namespace")
++            return tag
++        return BF16Namespace(capability, tag, _bf16_tag_identity(tag))
++
++    def bind_allocator(self, allocator, capacity):
++        self.check_process()
++        if type(capacity) is not int or not 1 <= capacity < 1048576 or allocator.page_size != 1:
++            raise ValueError("BF16 owner requires the bounded page-one allocator")
++        if self._allocator is not None and self._allocator is not allocator:
++            raise ValueError("BF16 owner already has an allocator")
++        self._allocator, self._capacity = allocator, capacity
++
++    def bind_cache(self, cache):
++        import weakref
++        self.check_process()
++        existing = self._cache() if self._cache is not None else None
++        if self._cache is not None and existing is None:
++            raise ValueError("BF16 prefix cache owner expired")
++        if existing is not None and existing is not cache:
++            raise ValueError("BF16 owner already has a prefix cache")
++        if cache.page_size != 1 or self._capacity is None:
++            raise ValueError("BF16 prefix cache requires page one")
++        if not hasattr(cache, "tree_core") or cache._tree_core_backend != "python":
++            raise ValueError("BF16 requires the Python unified tree core")
++        self._cache = weakref.ref(cache)
++
++    def register_adapter(self, adapter):
++        self.check_process()
++        if len(self._adapters) >= 4:
++            raise ValueError("too many BF16 full-attention components")
++        self._adapters.add(adapter)
++
++    def invalidate(self):
++        self.check_process()
++        for adapter in tuple(self._adapters):
++            adapter.invalidate()
++
++    def _slots(self, values):
++        self.check_process()
++        slots = tuple(values)
++        if self._capacity is None or len(slots) > self._capacity or len(set(slots)) != len(slots) or any(
++            type(slot) is not int or not 1 <= slot <= self._capacity for slot in slots
++        ):
++            raise ValueError("invalid or unbound BF16 physical slots")
++        return slots
++
++    def allocate(self, values):
++        slots = self._slots(values)
++        if self._next_generation + len(slots) >= 2**64:
++            raise ValueError("BF16 slot generation counter exhausted")
++        if any(slot in self._generations or slot in self._pending for slot in slots):
++            raise ValueError("BF16 slot is already owned")
++        if slots:
++            self.invalidate()
++        for slot in slots:
++            self._next_generation += 1
++            self._generations[slot] = self._next_generation
++
++    def snapshot(self, values):
++        slots = self._slots(tuple(dict.fromkeys(values)))
++        if any(slot not in self._generations for slot in slots):
++            raise ValueError("BF16 slot generation is not live")
++        return tuple((slot, self._generations[slot]) for slot in slots)
++
++    def validate_snapshot(self, snapshot):
++        self.check_process()
++        if self._cache is not None and self._cache() is None:
++            raise ValueError("BF16 prefix cache owner expired")
++        if snapshot is None or any(self._generations.get(slot) != generation for slot, generation in snapshot):
++            raise ValueError("stale BF16 slot generation")
++
++    def cached_slots(self):
++        from sglang.srt.mem_cache.unified_cache.component_type import BASE_COMPONENT_TYPE
++        self.check_process()
++        cache = self._cache() if self._cache is not None else None
++        if self._cache is not None and cache is None:
++            raise ValueError("BF16 prefix cache owner expired")
++        if cache is None:
++            return frozenset()
++        if cache._tree_core_backend != "python":
++            raise ValueError("BF16 requires the Python unified tree core")
++        # Walk the actual unified tree without recursion or a concatenated
++        # device tensor. Zero-reference nodes still own their cached slots.
++        slots, seen, stack = set(), set(), list(cache.root_node.children.values())
++        while stack:
++            node = stack.pop()
++            if id(node) in seen:
++                raise ValueError("invalid BF16 prefix ownership tree")
++            seen.add(id(node))
++            value = node.component_data[BASE_COMPONENT_TYPE].value
++            if value is not None:
++                if value.numel() > self._capacity:
++                    raise ValueError("invalid BF16 prefix ownership size")
++                slots.update(value.cpu().tolist())
++                if len(slots) > self._capacity:
++                    raise ValueError("invalid BF16 prefix ownership size")
++            stack.extend(node.children.values())
++        self.snapshot(slots)
++        return frozenset(slots)
++
++    def check_writable(self, values):
++        slots = self._slots(values)
++        self.snapshot(slots)
++        if self.cached_slots().intersection(slots):
++            raise ValueError("BF16 cache-owned prefix is immutable")
++
++    def retire(self, values, deferred=False):
++        slots = self._slots(values)
++        if not slots:
++            return
++        if self._flushing:
++            if not set(slots) <= self._pending:
++                raise ValueError("invalid BF16 grouped free commit")
++            self._pending.difference_update(slots)
++            return
++        self.snapshot(slots)
++        if self.cached_slots().intersection(slots):
++            raise ValueError("BF16 cached slots require actual cache release")
++        self.invalidate()
++        for slot in slots:
++            del self._generations[slot]
++        if deferred:
++            self._pending.update(slots)
++
++    def check_idle_release(self, cache):
++        self.check_process()
++        if self._cache is None or self._cache() is not cache:
++            raise ValueError("foreign BF16 idle cache release")
++        if (self._pending or self._flushing
++                or set(self._generations) != self.cached_slots()):
++            raise ValueError("BF16 idle release has live non-cache or deferred slots")
++
++    def refuse_reset(self):
++        self.check_process()
++        if self._generations or self._pending or self.cached_slots():
++            raise ValueError("BF16 allocator/cache reset with owned slots is unsupported")
++        self.invalidate()
++
++
++from typing import NamedTuple
++
++
++class BF16Namespace(NamedTuple):
++    capability: tuple
++    original_tag: object
++    typed_tag: tuple
++
++
++def _bf16_tag_identity(tag, depth=0, budget=None):
++    budget = [4096] if budget is None else budget
++    budget[0] -= 1 + (len(tag) if type(tag) in (str, bytes) else 0)
++    if budget[0] < 0:
++        raise ValueError("BF16 cache tag exceeds the aggregate bound")
++    if depth > 16:
++        raise ValueError("BF16 cache tag exceeds the depth bound")
++    if type(tag) in (str, bytes, int, bool, type(None)):
++        if isinstance(tag, (str, bytes)) and len(tag) > 4096:
++            raise ValueError("BF16 cache tag exceeds the size bound")
++        return (type(tag).__name__, tag)
++    if type(tag) is tuple and len(tag) <= 64:
++        return ("tuple", tuple(_bf16_tag_identity(value, depth+1, budget) for value in tag))
++    raise ValueError("unsupported mutable or ambiguous BF16 cache tag")
+--- a/sglang/srt/layers/attention/ultraquant_stack_contract.py
++++ b/sglang/srt/layers/attention/ultraquant_stack_contract.py
+@@ -0,0 +1,105 @@
++"""Shared FP8-owner stack receipt for KV4 preparation; stdlib only."""
++import hashlib
++import json
++from pathlib import Path
++
++SOURCE_REVISION = "e00930c5489053f26d86b179cee0d087f846acbb"
++TARGET = {"sglang": "0.5.21", "rocm": "10.1.0", "source_revision": SOURCE_REVISION}
++ROLES = {"hipcc", "clang", "nm", "readelf", "objdump", "objcopy", "bundler"}
++
++
++def canonical(value):
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
++
++
++def hex_digest(value):
++    if type(value) is not str or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
++        raise ValueError("missing or malformed stack digest")
++    return value
++
++
++def checked_paths(files):
++    if type(files) is not dict or not files:
++        raise ValueError("missing stack source/library inventory")
++    for name, value in files.items():
++        if type(name) is not str or "\\" in name or "\0" in name:
++            raise ValueError("unsafe stack source/library path")
++        path = Path(name)
++        if type(name) is not str or path.is_absolute() or not path.parts or any(
++            part in (".", "..") for part in path.parts
++        ) or path.as_posix() != name:
++            raise ValueError("unsafe stack source/library path")
++        hex_digest(value)
++    return files
++
++
++def unique_object(pairs):
++    value = {}
++    for name, item in pairs:
++        if name in value:
++            raise ValueError("duplicate stack receipt key")
++        value[name] = item
++    return value
++
++
++def absolute_path(value):
++    if type(value) is not str or "\\" in value or "\0" in value:
++        raise ValueError("unresolved tool/interpreter path")
++    path = Path(value)
++    if not path.is_absolute() or ".." in path.parts or path.as_posix() != value:
++        raise ValueError("unresolved tool/interpreter path")
++    return path
++
++
++def read_receipt(path, expected_sha256):
++    """Expected digest is an external owner input, never emitted by a producer."""
++    if path is None or expected_sha256 is None:
++        raise ValueError("shared stack receipt and digest must be supplied together")
++    path = Path(path)
++    if not path.is_absolute() or path.is_symlink() or not path.is_file() or path.stat().st_size > 8 * 1024**2:
++        raise ValueError("missing bounded shared stack receipt")
++    raw = path.read_bytes()
++    if hashlib.sha256(raw).hexdigest() != hex_digest(expected_sha256):
++        raise ValueError("shared stack receipt digest changed")
++    value = json.loads(raw, object_pairs_hook=unique_object)
++    if type(value) is not dict or type(value.get("components")) is not dict:
++        raise ValueError("malformed shared stack receipt")
++    if (value.get("schema"), value.get("decision"), value.get("target")) != (
++        1, "accept-common-stack-source-only", TARGET
++    ) or not value.get("owner_handoff"):
++        raise ValueError("unreviewed or incompatible shared stack")
++    for name in ("image_manifest", "image_config", "installed_inventory_sha256"):
++        hex_digest(value.get(name))
++    for name in ("python", "sdk", "hip", "torch", "triton", "rccl", "kernel_packages", "aiter"):
++        component = value.get("components", {}).get(name)
++        if type(component) is not dict or type(component.get("version")) is not str or not component["version"]:
++            raise ValueError("missing matched component identity: " + name)
++        hex_digest(component.get("artifact_sha256"))
++    if value["components"]["sdk"]["version"] != "10.1.0" or "gfx1201" not in value.get("device_targets", []):
++        raise ValueError("wrong SDK or missing explicit gfx1201 dependency support")
++    checked_paths(value.get("stock_files"))
++    checked_paths(value.get("common_files"))
++    repairs = value.get("repair_files")
++    if type(repairs) is not dict or any(value["common_files"].get(p) != h for p, h in repairs.items()):
++        raise ValueError("common repair membership changed")
++    checked_paths(repairs) if repairs else None
++    tools = value.get("tools")
++    if type(tools) is not dict or set(tools) != ROLES:
++        raise ValueError("missing complete tool role mapping")
++    for tool in tools.values():
++        if type(tool) is not dict:
++            raise ValueError("unresolved tool/interpreter path")
++        absolute_path(tool.get("path"))
++        absolute_path(tool.get("interpreter"))
++        absolute_path(tool.get("filesystem_root", "/"))
++        hex_digest(tool.get("sha256"))
++        hex_digest(tool.get("interpreter_sha256"))
++        checked_paths(tool.get("libraries"))
++    env = value.get("compiler_environment")
++    if type(env) is not dict or any(type(k) is not str or type(v) is not str or not v for k, v in env.items()):
++        raise ValueError("missing reviewed lookup environment")
++    if value.get("static_closure_complete") is not True or value.get("dynamic_plugins_reviewed") is not True:
++        raise ValueError("unresolved static or dynamic compiler dependencies")
++    if value.get("installed_protocol_reviewed") is not True or type(value.get("protocol")) is not dict:
++        raise ValueError("installed command syntax remains unreviewed")
++    return value
+--- a/sglang/srt/managers/schedule_batch.py
++++ b/sglang/srt/managers/schedule_batch.py
+@@ -1959,6 +1959,9 @@
+             return
+ 
+     def reset_for_retract(self):
++        owner = getattr(self, "_uq_owner", None)
++        if owner is not None:
++            owner.invalidate()
+         # Increment retraction count before resetting other state. We should not reset this
+         # since we are tracking the total number of retractions for each request.
+         self.retraction_count += 1
+@@ -3655,6 +3658,9 @@
+         chunked_req_to_exclude: Optional[Union[Req, List[Req]]] = None,
+         keep_indices: Optional[List[int]] = None,
+     ):
++        owner = getattr(self.tree_cache, "_uq_owner", None)
++        if owner is not None:
++            owner.invalidate()
+         strip_beam_tail(self)
+         if keep_indices is None:
+             if isinstance(chunked_req_to_exclude, Req):
+@@ -3740,6 +3746,16 @@
+             )
+ 
+     def merge_batch(self, other: ScheduleBatch):
++        owner = getattr(self.tree_cache, "_uq_owner", None)
++        other_owner = getattr(other.tree_cache, "_uq_owner", None)
++        if owner is not other_owner and (owner is not None or other_owner is not None):
++            if owner is not None:
++                owner.invalidate()
++            if other_owner is not None:
++                other_owner.invalidate()
++            raise ValueError("cannot merge foreign BF16 cache owners")
++        if owner is not None:
++            owner.invalidate()
+         strip_beam_tail(self)
+         strip_beam_tail(other)
+         # Penalizer orchestrator must be merged before Batch.reqs is merged. This is because
+--- a/sglang/srt/managers/scheduler.py
++++ b/sglang/srt/managers/scheduler.py
+@@ -5187,6 +5187,16 @@
+     def flush_cache(self, empty_cache: bool = True):
+         """Flush memory pools (e.g., KV cache, Mamba cache) and optionally empty device allocator cache."""
+         if self.is_fully_idle(ignore_waiting=self._engine_paused):
++            if getattr(self.tree_cache, "_uq_owner", None) is not None:
++                # Paused queues may be ignored by the stock idle predicate.
++                # KV4 cannot reset their maps or any still-live cache owner.
++                if self.waiting_queue:
++                    return False
++                try:
++                    self.tree_cache.release_for_idle_bf16_flush()
++                except (ValueError, RuntimeError):
++                    logger.warning("BF16 cache flush refused: ownership release incomplete")
++                    return False
+             self.cur_batch_for_debug = None
+             self.last_batch = None
+             self.tree_cache.reset()
+--- a/sglang/srt/mem_cache/allocator/base.py
++++ b/sglang/srt/mem_cache/allocator/base.py
+@@ -60,6 +60,10 @@
+         self.release_pages = None
+         # None: free right away. A list: hold frees until free_group_end().
+         self.free_group: list[torch.Tensor] | None = None
++        full_pool = getattr(kvcache, "full_kv_pool", kvcache)
++        self._uq_owner = getattr(full_pool, "owner", None)
++        if self._uq_owner is not None:
++            self._uq_owner.bind_allocator(self, size)
+ 
+     @property
+     def size_full(self):
+@@ -197,7 +201,13 @@
+     def free_group_end(self):
+         pending, self.free_group = self.free_group, None
+         if pending:
+-            self.free(torch.cat(pending))
++            if self._uq_owner is not None:
++                self._uq_owner._flushing = True
++            try:
++                self.free(torch.cat(pending))
++            finally:
++                if self._uq_owner is not None:
++                    self._uq_owner._flushing = False
+ 
+     @staticmethod
+     def _copy_for_free_group(free_index: torch.Tensor) -> torch.Tensor:
+@@ -235,6 +245,8 @@
+         raise NotImplementedError("alloc_decode is only for paged allocator")
+ 
+     def resize(self, config) -> None:
++        if self._uq_owner is not None:
++            raise ValueError("BF16 post-capture resize is unsupported")
+         self.size = config.max_total_num_tokens
+         if self.page_size > 1:
+             self.num_pages = config.max_total_num_tokens // self.page_size
+--- a/sglang/srt/mem_cache/allocator/token.py
++++ b/sglang/srt/mem_cache/allocator/token.py
+@@ -40,6 +40,8 @@
+         self.clear()
+ 
+     def clear(self):
++        if self._uq_owner is not None:
++            self._uq_owner.refuse_reset()
+         # The padded slot 0 is used for writing dummy outputs from padded tokens.
+         self.free_pages = torch.arange(
+             1, self.size + 1, dtype=torch.int64, device=self.device
+@@ -52,6 +54,8 @@
+         return len(self.free_pages) + len(self.release_pages)
+ 
+     def alloc(self, need_size: int):
++        if self._uq_owner is not None and (type(need_size) is not int or need_size < 0):
++            raise ValueError("invalid BF16 allocation size")
+         if self.need_sort and need_size > len(self.free_pages):
+             self.merge_and_sort_free()
+ 
+@@ -59,12 +63,19 @@
+             return None
+ 
+         select_index = self.free_pages[:need_size]
++        if self._uq_owner is not None:
++            self._uq_owner.allocate(select_index.cpu().tolist())
+         self.free_pages = self.free_pages[need_size:]
+         return select_index
+ 
+     def free(self, free_index: torch.Tensor):
+         if free_index.numel() == 0:
+             return
++
++        if self._uq_owner is not None:
++            self._uq_owner.retire(
++                free_index.cpu().tolist(), deferred=self.free_group is not None
++            )
+ 
+         if self.free_group is None:
+             if self.need_sort:
+@@ -79,6 +90,8 @@
+         self.free(page_ids)
+ 
+     def get_cpu_copy(self, indices, mamba_indices=None, req_pool_index=None):
++        if self._uq_owner is not None:
++            raise ValueError("BF16 cache offload is unsupported")
+         return self._kvcache.get_cpu_copy(
+             indices,
+             mamba_indices=mamba_indices,
+@@ -88,6 +101,8 @@
+     def load_cpu_copy(
+         self, kv_cache_cpu, indices, mamba_indices=None, req_pool_index=None
+     ):
++        if self._uq_owner is not None:
++            raise ValueError("BF16 cache restore is unsupported")
+         return self._kvcache.load_cpu_copy(
+             kv_cache_cpu,
+             indices,
+--- a/sglang/srt/mem_cache/common.py
++++ b/sglang/srt/mem_cache/common.py
+@@ -292,6 +292,11 @@
+ def release_kv_cache(req: Req, tree_cache: BasePrefixCache, is_insert: bool = True):
+     """Give the request's kv row back; with ``is_insert`` the tree first keeps
+     what it can key."""
++    owner = getattr(tree_cache, "_uq_owner", None)
++    if owner is not None:
++        owner.invalidate()
++        if getattr(req, "_uq_owner", owner) is not owner:
++            raise ValueError("foreign BF16 request release")
+     assert (not req.kv.holds_kv) == req.kv.is_kv_released
+     # A mamba-capable cache may alloc mamba state before alloc KV cache
+     if not req.kv.holds_kv:
+--- a/sglang/srt/mem_cache/kv_cache_configurator.py
++++ b/sglang/srt/mem_cache/kv_cache_configurator.py
+@@ -289,6 +289,123 @@
+     hybrid_kda_config: Optional[Any] = field(init=False)
+     is_hybrid_swa_mtp_draft: bool = field(init=False)
+     draft_swa_full_capacity: bool = field(init=False)
++    # Private source experiment only: no server argument or registry selection.
++    _uq_bf16_request: Optional[Any] = None
++    _uq_bf16_admission: Optional[Any] = field(default=None, init=False)
++    _uq_bf16_budget: Optional[int] = field(default=None, init=False)
++
++    def _validate_bf16_allocation(self):
++        request = self._uq_bf16_request
++        if request is None:
++            return None
++        from pathlib import Path
++        from types import MappingProxyType
++        import json
++        from sglang.srt.layers.attention.ultraquant_contract import (
++            bf16_source_request, qwen_planning_metadata, QWEN_FULL_LAYERS, QWEN_MODEL,
++        )
++        from sglang.srt.layers.attention.ultraquant_evidence import bf16_build_identity
++        if set(request) != {"config_bytes", "policy", "context_length", "stack_receipt", "stack_receipt_sha256"}:
++            raise ValueError("incomplete BF16 allocation request")
++        if request["stack_receipt"] is None or request["stack_receipt_sha256"] is None:
++            raise ValueError("BF16 allocation requires the installed shared stack receipt")
++        parallel = get_parallel()
++        expected = bf16_source_request(request["config_bytes"], rank=parallel.tp_rank,
++            physical_slots=request["policy"]["slots"] - 1, context_length=request["context_length"])
++        if dict(request["policy"]) != dict(expected["policy"]):
++            raise ValueError("foreign BF16 rank or slot policy")
++        pinned = json.loads(request["config_bytes"])
++        text = self.model_config.hf_text_config
++        for key in ("num_hidden_layers", "head_dim", "num_attention_heads", "num_key_value_heads"):
++            if getattr(text, key, None) != pinned["text_config"][key]:
++                raise ValueError("loaded BF16 model configuration differs from pinned config")
++        # The SGLang config may omit layer_types; the exact resolved full-layer map
++        # is still required below. A present raw map must remain identical.
++        layer_types = getattr(text, "layer_types", None)
++        if layer_types is not None and layer_types != pinned["text_config"]["layer_types"]:
++            raise ValueError("loaded BF16 layer types differ from pinned config")
++        rope = getattr(text, "rope_parameters", None)
++        if isinstance(rope, dict):
++            rope = dict(rope)
++            if "type" in rope and "type" not in pinned["text_config"]["rope_parameters"]:
++                if rope.pop("type") != pinned["text_config"]["rope_parameters"]["rope_type"]:
++                    raise ValueError("loaded BF16 rope type alias differs from pinned config")
++        if rope != pinned["text_config"]["rope_parameters"]:
++            raise ValueError("loaded BF16 rope parameters differ from pinned config")
++        if (getattr(self.model_config.hf_config, "quantization_config", None) != pinned["quantization_config"]
++                or self.model_config.context_len != request["context_length"]):
++            raise ValueError("loaded FP8 weights/context configuration mismatch")
++        execution, memory, schedule = get_exec(), get_memory(), get_schedule()
++        if ((parallel.attn_tp_size, parallel.attn_dp_size, parallel.attn_dcp_size, self.pp_size) != (2, 1, 1, 1)
++                or current_platform.is_out_of_tree() or _is_npu
++                or self.model_config.head_dim != 256
++                or self.model_config.get_num_kv_heads(2, 1) != 2
++                or (self.page_size, schedule.page_size) != (1, 1)
++                or self.model_dtype != torch.bfloat16 or self.kv_cache_dtype != torch.bfloat16
++                or self.is_draft_worker or not self.spec_algorithm.is_none()
++                or self.is_hybrid_swa or self.use_mla_backend or self.post_capture_kv_active
++                or self.req_to_token_pool is not None or self.token_to_kv_pool_allocator is not None
++                or memory.enable_unified_memory or memory.enable_hierarchical_cache
++                or not schedule.disable_overlap_schedule or execution.features.enable_memory_saver
++                or execution.mamba.enable_mamba_extra_buffer
++                or get_disagg().disaggregation_mode not in (None, "null")
++                or any(getattr(execution.graph.cuda_graph_config, phase).backend != "disabled"
++                       for phase in ("decode", "prefill"))
++                or self.mambaish_config is None
++                or tuple(self.mambaish_config.full_attention_layer_ids) != QWEN_FULL_LAYERS
++                or (self.layer_info.start_layer, self.layer_info.end_layer) != (0, 64)):
++            raise ValueError("unsupported BF16 allocation configuration")
++        identity = bf16_build_identity(Path(__file__).parents[2], expected["policy"],
++            stack_receipt=request["stack_receipt"], stack_receipt_sha256=request["stack_receipt_sha256"])
++        if self.model_config.model_path != QWEN_MODEL:
++            import os
++            import stat
++            model_dir = Path(self.model_config.model_path)
++            if not model_dir.is_absolute() or model_dir.is_symlink() or not model_dir.is_dir():
++                raise ValueError("unknown local Qwen model directory")
++            config_path = model_dir / "config.json"
++            fd = os.open(config_path, os.O_RDONLY | os.O_NOFOLLOW)
++            try:
++                before = os.fstat(fd)
++                if not stat.S_ISREG(before.st_mode) or before.st_size != len(request["config_bytes"]):
++                    raise ValueError("local Qwen config type or size differs")
++                with os.fdopen(fd, "rb", closefd=False) as stream:
++                    raw = stream.read(len(request["config_bytes"]) + 1)
++                after = os.fstat(fd)
++                current = os.stat(config_path, follow_symlinks=False)
++                stamp = lambda s: (s.st_dev, s.st_ino, s.st_mode, s.st_size, s.st_mtime_ns, s.st_ctime_ns)
++                if stamp(before) != stamp(after) or stamp(after) != stamp(current) or raw != request["config_bytes"]:
++                    raise ValueError("local Qwen config differs from pinned bytes")
++            finally:
++                os.close(fd)
++        qwen_planning_metadata(request["config_bytes"], model=QWEN_MODEL,
++            revision=self.model_config.revision, rank=parallel.tp_rank,
++            source_tree_sha256=json.loads(identity["canonical"])["build"]["source_sha256"])
++        return MappingProxyType({"policy": expected["policy"], "identity": identity,
++            "stack_receipt": request["stack_receipt"], "stack_receipt_sha256": request["stack_receipt_sha256"]})
++
++    def _check_bf16_allocation(self, slots):
++        if self._uq_bf16_request is None:
++            if self._uq_bf16_admission is not None:
++                self._uq_bf16_budget = None
++                raise ValueError("BF16 allocation request removed after preparation")
++            return None
++        try:
++            fresh = self._validate_bf16_allocation()
++        except (ValueError, OSError, KeyError, TypeError):
++            self._uq_bf16_budget = None
++            raise
++        prior = self._uq_bf16_admission
++        if (prior is None or self._uq_bf16_budget is None
++                or fresh["identity"]["canonical"] != prior["identity"]["canonical"]
++                or dict(fresh["policy"]) != dict(prior["policy"])
++                or slots != fresh["policy"]["slots"] - 1):
++            self._uq_bf16_budget = None
++            raise ValueError("stale or unbudgeted BF16 allocation")
++        if self._uq_bf16_budget < fresh["policy"]["payload"] + fresh["policy"]["workspace_reserve"] + 4:
++            self._uq_bf16_budget = None
++            raise ValueError("insufficient bound BF16 allocation budget")
++        return fresh
+ 
+     def __post_init__(self) -> None:
+         self.mambaish_config = mambaish_config(self.model_config)
+@@ -350,6 +467,9 @@
+ 
+     def configure(self, *, pre_model_load_memory: int) -> KVCacheConfigResult:
+         """Apply a resolved MemoryPoolConfig and initialize pools."""
++        self._uq_bf16_admission = None
++        self._uq_bf16_budget = None
++        self._uq_bf16_admission = self._validate_bf16_allocation()
+         if current_platform.is_cpu() and self.kv_cache_dtype == torch.float8_e4m3fn:
+             if self.use_mla_backend:
+                 raise ValueError("CPU FP8 KV cache is only supported for MHA.")
+@@ -484,6 +604,7 @@
+         token_to_kv_pool_allocator: Optional[BaseTokenToKVPoolAllocator],
+     ) -> _InitializedPools:
+         """Initialize the memory pools."""
++        self._check_bf16_allocation(sizes.max_total_num_tokens)
+         token_to_kv_pool = None
+ 
+         # Unified-pool fast path: build req_to_token + token_to_kv pool + allocator
+@@ -1916,6 +2037,15 @@
+             if self.kv_cache_dtype_str == "mxfp8" and not self.use_mla_backend
+             else mha_pool_class
+         )
++        admission = self._check_bf16_allocation(max_total_num_tokens)
++        if admission is not None:
++            if quant_method is not None or extra_args:
++                raise ValueError("BF16 refuses alternate KV quantization/layout")
++            from functools import partial
++            from sglang.srt.layers.attention.ultraquant_backend import QwenBF16MixedPool
++            full_pool_class = partial(QwenBF16MixedPool, policy=admission["policy"],
++                stack_receipt=admission["stack_receipt"],
++                stack_receipt_sha256=admission["stack_receipt_sha256"])
+         from sglang.srt.layers.attention.qsa.config import (
+             parse_qsa_profile,
+         )
+@@ -1924,6 +2054,8 @@
+         )
+ 
+         qsa_profile = parse_qsa_profile(self.model_config.hf_config)
++        if admission is not None and qsa_profile is not None:
++            raise ValueError("BF16 does not support QSA pool substitution")
+         if qsa_profile is None:
+             pool_class = HybridLinearKVPool
+             extra_args["use_mla"] = self.use_mla_backend
+@@ -2368,6 +2500,8 @@
+         """Turn a KV byte budget into a pool config via the configurator, re-applying
+         the external token constraints (user cap, page alignment, PP sync) and the
+         optional ``cap_tokens`` clamp."""
++        if self._uq_bf16_request is not None:
++            self._uq_bf16_budget = None
+         # Local import avoids a pool_configurator import cycle.
+         from sglang.srt.model_executor.pool_configurator import (
+             create_memory_pool_configurator,
+@@ -2397,6 +2531,8 @@
+             config = configurator.calculate_pool_sizes_from_max_tokens(
+                 max_tokens, get_schedule().page_size
+             )
++        if self._uq_bf16_request is not None:
++            self._uq_bf16_budget = budget_bytes
+         return config
+ 
+     def _handle_max_mamba_cache(self, total_rest_memory):
+--- a/sglang/srt/mem_cache/radix_cache.py
++++ b/sglang/srt/mem_cache/radix_cache.py
+@@ -58,7 +58,7 @@
+ class RadixKey:
+     """is_bigram=True: token_ids holds raw tokens (N+1 for N bigrams); slices share one boundary token."""
+ 
+-    __slots__ = ("token_ids", "extra_key", "cache_salt", "is_bigram", "limit")
++    __slots__ = ("token_ids", "extra_key", "cache_salt", "is_bigram", "limit", "kv4_namespace")
+ 
+     def __init__(
+         self,
+@@ -67,6 +67,7 @@
+         is_bigram: bool = False,
+         limit: Optional[int] = None,
+         cache_salt: Optional[str] = None,
++        kv4_namespace=None,
+     ):
+         # token ids sequence (raw ints in both modes)
+         self.token_ids = token_ids
+@@ -74,6 +75,7 @@
+         self.extra_key = extra_key
+         # Namespaces the tree, storage and KV events.
+         self.cache_salt = cache_salt or None
++        self.kv4_namespace = kv4_namespace
+         # bigram view over token_ids: length = max(0, len(token_ids) - 1)
+         self.is_bigram = is_bigram
+         # Optional cap on raw tokens: behave as if token_ids were sliced to
+@@ -132,11 +134,13 @@
+                 self.extra_key,
+                 is_bigram=True,
+                 cache_salt=self.cache_salt,
++                kv4_namespace=self.kv4_namespace,
+             )
+         return RadixKey(
+             self.token_ids[start:stop],
+             self.extra_key,
+             cache_salt=self.cache_salt,
++            kv4_namespace=self.kv4_namespace,
+         )
+ 
+     def __repr__(self) -> str:
+@@ -163,6 +167,8 @@
+         return self, value
+ 
+     def _check_compatible(self, other: RadixKey) -> None:
++        if self.kv4_namespace != other.kv4_namespace:
++            raise ValueError("RadixKey operations require matching KV4 ownership")
+         if self.extra_key != other.extra_key:
+             raise ValueError(
+                 f"RadixKey operations require matching extra_key, but got "
+@@ -241,6 +247,8 @@
+             plain = (
+                 t[offset] if page_size == 1 else tuple(t[offset : offset + page_size])
+             )
++        if self.kv4_namespace is not None:
++            return (self.kv4_namespace, plain)
+         if self.cache_salt is not None:
+             return ((self.extra_key, self.cache_salt), plain)
+         return plain if self.extra_key is None else (self.extra_key, plain)
+@@ -279,6 +287,8 @@
+ 
+ class RadixCache(BasePrefixCache):
+     def __init__(self, params: CacheInitParams):
++        if getattr(params.token_to_kv_pool_allocator, "_uq_owner", None) is not None:
++            raise ValueError("BF16 requires the Python unified cache ownership path")
+         self.disable = params.disable
+         self.req_to_token_pool = params.req_to_token_pool
+         self.token_to_kv_pool_allocator = params.token_to_kv_pool_allocator
+--- a/sglang/srt/mem_cache/unified_cache/unified_tree_core.py
++++ b/sglang/srt/mem_cache/unified_cache/unified_tree_core.py
+@@ -596,6 +596,7 @@
+                 extra_key=node.key.extra_key,
+                 is_bigram=node.key.is_bigram,
+                 cache_salt=node.key.cache_salt,
++                kv4_namespace=node.key.kv4_namespace,
+             ),
+             prefix_keys=(
+                 node.get_prefix_hash_values(parent) if pass_prefix_keys else None
+--- a/sglang/srt/mem_cache/unified_radix_cache.py
++++ b/sglang/srt/mem_cache/unified_radix_cache.py
+@@ -167,6 +167,14 @@
+         self,
+         params: CacheInitParams,
+     ):
++        self._uq_owner = getattr(params.token_to_kv_pool_allocator, "_uq_owner", None)
++        if self._uq_owner is not None:
++            if (params.tree_core_backend != "python" or params.page_size != 1
++                    or params.is_eagle or params.enable_session_radix_cache
++                    or params.enable_mamba_extra_buffer
++                    or params.component_registry_override
++                    or ComponentType.SWA in params.tree_components):
++                raise ValueError("unsupported BF16 unified-cache configuration")
+         self.req_to_token_pool = params.req_to_token_pool
+         self.token_to_kv_pool_allocator = params.token_to_kv_pool_allocator
+         self.disable = params.disable
+@@ -213,6 +221,8 @@
+             params=params,
+             components=self.components,
+         )
++        if self._uq_owner is not None:
++            self._uq_owner.bind_cache(self)
+         # Components execute boundary actions through the tree core.
+         for component in self.components.values():
+             component.tree_core = self.tree_core
+@@ -363,9 +373,46 @@
+ 
+     def init_cache_linker(self, cache_linker: UnifiedCacheLinker) -> None:
+         """Attach an external KV store directly to the device pools."""
++        if self._uq_owner is not None:
++            raise ValueError("BF16 external cache stores are unsupported")
+         self.linker = UnifiedCacheLinkerWrapper(self, cache_linker)
+ 
++    def release_for_idle_bf16_flush(self) -> None:
++        """Release cache ownership through eviction before the stock reset."""
++        owner = self._uq_owner
++        if owner is None:
++            raise ValueError("BF16 idle release requires its cache owner")
++        owner.check_idle_release(self)
++        if (self._tree_core_backend != "python" or self.page_size != 1
++                or self.cache_controller is not None or self.linker is not None
++                or self.enable_storage or self.enable_session_radix_cache
++                or self.buffer_pipeline is not None
++                or self.token_to_kv_pool_allocator.free_group is not None
++                or set(self.tree_components) - {ComponentType.FULL, ComponentType.MAMBA}
++                or any(self.tree_core.component_protected_size(ct) for ct in self.tree_components)):
++            raise ValueError("BF16 idle flush has locked or unsupported cache state")
++        pool = self.req_to_token_pool
++        if len(pool.free_slots) != pool._alloc_size - 1:
++            raise ValueError("BF16 idle flush has live request rows")
++        full_count = self.full_evictable_size()
++        mamba_count = self.mamba_evictable_size()
++        if self.supports_mamba():
++            states = pool.mamba_allocator
++            if (pool.mamba_ckpt_pool is not None or states._alloc_iter is not None
++                    or states.available_size() + mamba_count != states.size):
++                raise ValueError("BF16 idle flush has live or unsupported recurrent state")
++        owner.invalidate()
++        # These actions remove ownership before freeing physical slots. Do not
++        # clear generation maps or weaken reset guards if eviction falls short.
++        self.evict(EvictParams(num_tokens=full_count, mamba_num=mamba_count))
++        owner.refuse_reset()
++        if (self.full_evictable_size() or self.mamba_evictable_size()
++                or (self.supports_mamba() and states.available_size() != states.size)):
++            raise ValueError("BF16 idle cache release is incomplete")
++
+     def reset(self) -> None:
++        if self._uq_owner is not None:
++            self._uq_owner.refuse_reset()
+         if self.linker is not None:
+             self.linker.reset()
+         self._reset_full()
+@@ -402,6 +449,8 @@
+         self.tree_core.kv_events.record_all_cleared()
+ 
+     def init_hicache(self, server_args: ServerArgs, params: CacheInitParams) -> None:
++        if self._uq_owner is not None:
++            raise ValueError("BF16 hierarchical cache is unsupported")
+         """Initialize HiCache infrastructure."""
+         self.host_memory_mode = get_memory().hicache_host_memory_mode
+         if self.host_memory_mode == "buffer_only":
+@@ -545,11 +594,38 @@
+         if self.host_pool_group is not None:
+             self.host_pool_group.destroy()
+ 
++    def _uq_params(self, params):
++        if self._uq_owner is None:
++            return params
++        from dataclasses import replace
++        owner = self._uq_owner
++        owner.invalidate()
++        key = params.key
++        if key.is_bigram:
++            raise ValueError("BF16 bigram cache keys are unsupported")
++        namespace = owner.namespace((key.extra_key, key.cache_salt))
++        if key.kv4_namespace is not None:
++            if owner.namespace(key.kv4_namespace) != namespace:
++                raise ValueError("stale BF16 key namespace")
++        req = getattr(params, "req", None)
++        if req is not None:
++            if getattr(req, "_uq_owner", owner) is not owner:
++                raise ValueError("foreign BF16 request owner")
++            req._uq_owner = owner
++        value = getattr(params, "value", None)
++        if value is not None:
++            owner.snapshot(value.cpu().tolist())
++        return replace(params, key=RadixKey(
++            key.token_ids, key.extra_key, is_bigram=key.is_bigram,
++            limit=key.limit, cache_salt=key.cache_salt, kv4_namespace=namespace,
++        ))
++
+     @rank_consensus(
+         same_params=["params"],
+         same_results=["result.full_kv_hit_length", "result.swa_host_hit_length"],
+     )
+     def match_prefix(self, params: MatchPrefixParams) -> MatchResult:
++        params = self._uq_params(params)
+         result = self.session.try_match_prefix(params)
+         if result is not None:
+             return result
+@@ -578,6 +654,7 @@
+         same_results=["result.prefix_len"],
+     )
+     def insert(self, params: InsertParams) -> InsertResult:
++        params = self._uq_params(params)
+         if self.disable:
+             return InsertResult(prefix_len=0)
+         # Fail fast on re-entrancy without touching the in-flight walk.
+--- a/sglang/srt/model_executor/model_runner.py
++++ b/sglang/srt/model_executor/model_runner.py
+@@ -333,7 +333,14 @@
+         memory_pool_config: Optional[MemoryPoolConfig] = None,
+         draft_model_idx: Optional[int] = None,
+         draft_attention_backend: Optional[str] = None,
++        *,
++        _uq_bf16_request=None,
+     ):
++        self._uq_bf16_request, self._uq_bf16_identity = self._prepare_uq_bf16_request(
++            _uq_bf16_request, server_args=server_args, is_draft_worker=is_draft_worker,
++            req_to_token_pool=req_to_token_pool,
++            token_to_kv_pool_allocator=token_to_kv_pool_allocator,
++        )
+         # Parse args
+         self.mem_fraction_static = mem_fraction_static
+         # Set on target by `_resolve_memory_pool_config`; passed in for draft
+@@ -594,7 +601,48 @@
+             device=self.device,
+         )
+ 
++    @staticmethod
++    def _prepare_uq_bf16_request(request, *, server_args, is_draft_worker,
++                                 req_to_token_pool, token_to_kv_pool_allocator):
++        if request is None:
++            return None, None
++        from pathlib import Path
++        from types import MappingProxyType
++        from sglang.srt.layers.attention.ultraquant_contract import (
++            bf16_source_request, validate_bf16_source_args,
++        )
++        from sglang.srt.layers.attention.ultraquant_evidence import bf16_build_identity
++        if (is_draft_worker or req_to_token_pool is not None
++                or token_to_kv_pool_allocator is not None
++                or set(request) != {"config_bytes", "policy", "context_length",
++                                    "stack_receipt", "stack_receipt_sha256"}):
++            raise ValueError("unsupported private BF16 runner request")
++        validate_bf16_source_args(server_args)
++        expected = bf16_source_request(request["config_bytes"],
++            rank=get_parallel().tp_rank, physical_slots=request["policy"]["slots"] - 1,
++            context_length=request["context_length"])
++        if (dict(expected["policy"]) != dict(request["policy"])
++                or request["stack_receipt"] is None or request["stack_receipt_sha256"] is None):
++            raise ValueError("private BF16 runner requires exact policy and installed stack")
++        frozen = MappingProxyType({**expected,
++            "stack_receipt": str(request["stack_receipt"]),
++            "stack_receipt_sha256": request["stack_receipt_sha256"]})
++        identity = bf16_build_identity(Path(__file__).parents[2], frozen["policy"],
++            stack_receipt=frozen["stack_receipt"],
++            stack_receipt_sha256=frozen["stack_receipt_sha256"])
++        return frozen, identity
++
+     def init_kv_cache_configurator(self):
++        if self._uq_bf16_request is not None:
++            request, identity = self._prepare_uq_bf16_request(
++                self._uq_bf16_request, server_args=self.server_args,
++                is_draft_worker=self.is_draft_worker,
++                req_to_token_pool=self.req_to_token_pool,
++                token_to_kv_pool_allocator=self.token_to_kv_pool_allocator,
++            )
++            if identity["canonical"] != self._uq_bf16_identity["canonical"]:
++                raise ValueError("private BF16 runner identity changed before allocation")
++            self._uq_bf16_request = request
+         # The replica count that shares this KV budget is the deployment's, not
+         # the one a draft scope reports; the pool is allocated outside any scope.
+         self.kv_cache_configurator = KVCacheConfigurator(
+@@ -626,6 +674,7 @@
+             token_to_kv_pool_allocator=self.token_to_kv_pool_allocator,
+             memory_pool_config=self.memory_pool_config,
+             draft_model_idx=self.draft_model_idx,
++            _uq_bf16_request=self._uq_bf16_request,
+         )
+ 
+     def init_mindspore_runner(self):
+--- a/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py
++++ b/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py
+@@ -184,6 +184,9 @@
+     target and draft coexist in one process, so it cannot come from the
+     process-wide config.
+     """
++    if getattr(model_runner, "_uq_bf16_request", None) is not None:
++        from sglang.srt.layers.attention.ultraquant_contract import BF16_SOURCE_MODE
++        return ResolvedAttentionBackendStr(prefill=BF16_SOURCE_MODE, decode=BF16_SOURCE_MODE)
+     is_draft_worker = model_runner.is_draft_worker
+     draft_attn_backend = model_runner.draft_attention_backend
+     if is_draft_worker and draft_attn_backend:
+@@ -204,6 +207,29 @@
+     resolved: ResolvedAttentionBackendStr,
+     init_new_workspace: bool,
+ ) -> AttentionBackend:
++    request = getattr(model_runner, "_uq_bf16_request", None)
++    if request is not None:
++        from pathlib import Path
++        from sglang.srt.layers.attention.ultraquant_backend import (
++            QwenBF16MixedPool, QwenBF16SourceAdapter,
++        )
++        from sglang.srt.layers.attention.ultraquant_contract import BF16_SOURCE_MODE
++        from sglang.srt.layers.attention.ultraquant_evidence import bf16_build_identity
++        pool = model_runner.token_to_kv_pool.full_kv_pool
++        identity = bf16_build_identity(Path(__file__).parents[3], request["policy"],
++            stack_receipt=request["stack_receipt"],
++            stack_receipt_sha256=request["stack_receipt_sha256"])
++        if (not isinstance(pool, QwenBF16MixedPool) or init_new_workspace
++                or resolved.is_draft_override
++                or (resolved.prefill, resolved.decode) != (BF16_SOURCE_MODE, BF16_SOURCE_MODE)
++                or identity["canonical"] != model_runner._uq_bf16_identity["canonical"]
++                or identity["canonical"] != pool.identity["canonical"]):
++            raise ValueError("stale or unsupported private BF16 backend identity")
++        full_backend = QwenBF16SourceAdapter(pool,
++            req_to_token_pool=model_runner.req_to_token_pool,
++            token_to_kv_pool=model_runner.token_to_kv_pool,
++            max_context_len=request["context_length"])
++        return attn_backend_wrapper(model_runner, full_backend)
+     if resolved.is_draft_override:
+         attn_backend = _build_backend_from_str(
+             model_runner=model_runner,
+--- a/sglang/srt/model_executor/model_runner_components/kv_pool_runtime.py
++++ b/sglang/srt/model_executor/model_runner_components/kv_pool_runtime.py
+@@ -55,6 +55,8 @@
+     orchestrator to assign. Takes the live ModelRunner because it reads
+     post-capture GPU memory + the pool objects it must resize in place."""
+     pool = model_runner.token_to_kv_pool
++    if getattr(getattr(pool, "full_kv_pool", pool), "owner", None) is not None:
++        raise ValueError("BF16 post-capture pool resizing is unsupported")
+     torch.cuda.synchronize()
+     free_gb = get_available_gpu_memory(
+         model_runner.device,
+--- a/sglang/srt/model_executor/pool_configurator.py
++++ b/sglang/srt/model_executor/pool_configurator.py
+@@ -1540,9 +1540,39 @@
+         return self._to_config(sizes)
+ 
+ 
++class QwenBF16FixedPoolConfigurator(MemoryPoolConfigurator):
++    """Fixed physical-slot plan after stock GDN reservation; not capacity sizing."""
++
++    def __init__(self, kvc):
++        from sglang.srt.layers.attention.ultraquant_contract import bf16_pool_policy
++        admission = kvc._uq_bf16_admission
++        if admission is None:
++            raise ValueError("BF16 allocation proof must precede memory planning")
++        policy = admission["policy"]
++        expected = bf16_pool_policy(rank=policy["rank"], physical_slots=policy["slots"] - 1)
++        if dict(policy) != dict(expected):
++            raise ValueError("invalid fixed BF16 memory policy")
++        self.slots = expected["slots"] - 1
++        # Payload includes reserved slot zero. Scratch and normalization fit
++        # inside the existing 2 GiB policy; native status is a separate element.
++        self.required_bytes = expected["payload"] + expected["workspace_reserve"] + 4
++
++    def calculate_pool_sizes(self, available_bytes, page_size):
++        if type(available_bytes) is not int or available_bytes < self.required_bytes:
++            raise ValueError("insufficient BF16 KV/workspace memory budget")
++        return self.calculate_pool_sizes_from_max_tokens(self.slots, page_size)
++
++    def calculate_pool_sizes_from_max_tokens(self, max_total_num_tokens, page_size):
++        if type(max_total_num_tokens) is not int or max_total_num_tokens != self.slots or page_size != 1:
++            raise ValueError("fixed BF16 slot constraints require a new policy and identity")
++        return MemoryPoolConfig(max_total_num_tokens=self.slots)
++
++
+ def create_memory_pool_configurator(
+     kvc: KVCacheConfigurator,
+ ) -> MemoryPoolConfigurator:
++    if getattr(kvc, "_uq_bf16_request", None) is not None:
++        return QwenBF16FixedPoolConfigurator(kvc)
+     if is_deepseek_v4(kvc.model_config.hf_config) and kvc.is_hybrid_swa:
+         return DSV4PoolConfigurator(kvc)
+     if kvc.is_hybrid_swa:

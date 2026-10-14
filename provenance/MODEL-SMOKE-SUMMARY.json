@@ -1,0 +1,147 @@
+{
+  "status": "MODEL_SMOKE_PASS",
+  "scope": "One historical private eager TP2/page1/no_buffer model smoke; not rerun for publication",
+  "evidence_seal_sha256": "c5b35b58c9795c3c20a2c7255b1d1eaaf538ea0aede61c5b6e5a004398a33289",
+  "ranks": [
+    {
+      "capacity_after": [
+        4096,
+        2,
+        68
+      ],
+      "capacity_before": [
+        4096,
+        2,
+        68
+      ],
+      "cleanup_errors": [
+
+      ],
+      "failure": null,
+      "owner_cleanup": true,
+      "prefix_hit_tokens": 13,
+      "rank": 0,
+      "stages": [
+        {
+          "finite": true,
+          "logits_max": 10.0625,
+          "logits_min": -16.125,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "initial-prefill",
+          "token": 96752
+        },
+        {
+          "finite": true,
+          "logits_max": 11.25,
+          "logits_min": -15.625,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "continuation",
+          "token": 271
+        },
+        {
+          "finite": true,
+          "logits_max": 11.5,
+          "logits_min": -13.9375,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "decode",
+          "token": 2
+        },
+        {
+          "finite": true,
+          "logits_max": 11.875,
+          "logits_min": -11.125,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "prefix-reuse",
+          "token": 271
+        }
+      ]
+    },
+    {
+      "capacity_after": [
+        4096,
+        2,
+        68
+      ],
+      "capacity_before": [
+        4096,
+        2,
+        68
+      ],
+      "cleanup_errors": [
+
+      ],
+      "failure": null,
+      "owner_cleanup": true,
+      "prefix_hit_tokens": 13,
+      "rank": 1,
+      "stages": [
+        {
+          "finite": true,
+          "logits_max": 10.0625,
+          "logits_min": -16.125,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "initial-prefill",
+          "token": 96752
+        },
+        {
+          "finite": true,
+          "logits_max": 11.25,
+          "logits_min": -15.625,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "continuation",
+          "token": 271
+        },
+        {
+          "finite": true,
+          "logits_max": 11.5,
+          "logits_min": -13.9375,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "decode",
+          "token": 2
+        },
+        {
+          "finite": true,
+          "logits_max": 11.875,
+          "logits_min": -11.125,
+          "logits_shape": [
+            1,
+            248320
+          ],
+          "stage": "prefix-reuse",
+          "token": 271
+        }
+      ]
+    }
+  ],
+  "exits": [
+    0,
+    0
+  ],
+  "groups_observed_absent": [
+    true,
+    true
+  ],
+  "benchmark": false,
+  "model_quality_qualified": false
+}

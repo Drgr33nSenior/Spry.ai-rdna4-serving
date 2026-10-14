@@ -1,0 +1,15 @@
+{
+  "name": "fp8-bf16-kv",
+  "scope": "baseline planning profile; not a launch command or qualified comparison",
+  "model": "Qwen/Qwen3.8-27B-FP8",
+  "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+  "weights": "official FP8; BF16 remaining tensors",
+  "kv_storage": "BF16",
+  "tp": 2,
+  "context": 4096,
+  "page_size": 1,
+  "execution": "eager",
+  "mamba_cache_policy": "no_buffer",
+  "comparison_status": "unrun",
+  "launch_authorized": false
+}

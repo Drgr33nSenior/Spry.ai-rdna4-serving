@@ -1,0 +1,13 @@
+{
+  "target": {
+    "sglang": "0.5.21",
+    "rocm": "10.1.0",
+    "source_revision": "e00930c5489053f26d86b179cee0d087f846acbb"
+  },
+  "image_manifest": null,
+  "image_config": null,
+  "shared_stack_receipt": null,
+  "qualification": "source-only-unreviewed",
+  "scope": "selected-upstream-files-and-unregistered-overlay",
+  "serving_composition_complete": false
+}
