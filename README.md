@@ -54,6 +54,13 @@ an explicit execution flag and hash-bound inputs. It is not a standalone launch
 controller: an authorised outer supervisor must first verify device ownership,
 the complete runtime, model-file identity, resource limits and cleanup.
 
+The [KV4 operator guide](docs/KV4-OPERATIONS.md) covers benchmark readiness,
+ownership, stop conditions and result collection. The current KV4 preparation
+is source-only: fresh physical packaging, loading-time instrumentation and
+explicit two-GPU handover remain required. The guide does not authorize a run
+or supply a physical launcher. The shared FP8 history includes a failed physical
+attempt, not a successful matched comparison.
+
 ## Runtime and precision
 
 The selected stack is SGLang 0.5.21 at
