@@ -187,6 +187,149 @@
     "independent_release_verified": true,
     "matching_output_pairs": 4,
     "measured_requests_per_arm": 3,
+    "memory": {
+      "gpu_metric": "Rounded runtime startup component sizes, free-memory deltas and free-memory snapshots; not a sampled peak",
+      "gpu_peak_measured": false,
+      "groups": {
+        "full_enabled": {
+          "gpu_startup_per_rank": [
+            {
+              "available_after_graph_capture_gib": 10.13,
+              "draft_graph_capture_delta_gib": 0.1,
+              "draft_kv_pool_gib": {
+                "k": 0.08,
+                "tokens": 16416,
+                "v": 0.08
+              },
+              "draft_weight_load_delta_gib": 2.16,
+              "rank": 0,
+              "recurrent_pool": {
+                "conv_state_gib": 0.03,
+                "intermediate_conv_window_gib": 0.01,
+                "intermediate_ssm_state_gib": 1.69,
+                "slots": 19,
+                "ssm_state_gib": 1.41
+              },
+              "target_graph_capture_delta_gib": 0.38,
+              "target_kv_pool_gib": {
+                "k": 0.25,
+                "tokens": 16416,
+                "v": 0.25
+              },
+              "target_weight_load_delta_gib": 14.51
+            },
+            {
+              "available_after_graph_capture_gib": 10.13,
+              "draft_graph_capture_delta_gib": 0.1,
+              "draft_kv_pool_gib": {
+                "k": 0.08,
+                "tokens": 16416,
+                "v": 0.08
+              },
+              "draft_weight_load_delta_gib": 2.16,
+              "rank": 1,
+              "recurrent_pool": {
+                "conv_state_gib": 0.03,
+                "intermediate_conv_window_gib": 0.01,
+                "intermediate_ssm_state_gib": 1.69,
+                "slots": 19,
+                "ssm_state_gib": 1.41
+              },
+              "target_graph_capture_delta_gib": 0.38,
+              "target_kv_pool_gib": {
+                "k": 0.25,
+                "tokens": 16416,
+                "v": 0.25
+              },
+              "target_weight_load_delta_gib": 14.51
+            }
+          ],
+          "host_cgroup": {
+            "limit_bytes": 40802189312,
+            "memory_events": {
+              "high": 0,
+              "low": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_group_kill": 0,
+              "oom_kill": 0,
+              "sock_throttled": 0
+            },
+            "peak_bytes": 25435353088,
+            "peak_gib": 23.688518524169922,
+            "swap_limit_bytes": 0
+          },
+          "source_capture_sha256": {
+            "stderr": "70ce385814ee3f6550af6c94fee8241db3482235a72767ed994c67919d6fd4c6",
+            "stdout": "7c597b7005ebc5743aaa55c9dbc94b44190af1890ebb839251c23e787edb402c"
+          }
+        },
+        "ordinary": {
+          "gpu_startup_per_rank": [
+            {
+              "available_after_graph_capture_gib": 9.11,
+              "rank": 0,
+              "recurrent_pool": {
+                "conv_state_gib": 0.13,
+                "slots": 93,
+                "ssm_state_gib": 6.61
+              },
+              "target_graph_capture_delta_gib": 0.29,
+              "target_kv_pool_gib": {
+                "k": 0.25,
+                "tokens": 16416,
+                "v": 0.25
+              },
+              "target_weight_load_delta_gib": 14.51
+            },
+            {
+              "available_after_graph_capture_gib": 9.11,
+              "rank": 1,
+              "recurrent_pool": {
+                "conv_state_gib": 0.13,
+                "slots": 93,
+                "ssm_state_gib": 6.61
+              },
+              "target_graph_capture_delta_gib": 0.29,
+              "target_kv_pool_gib": {
+                "k": 0.25,
+                "tokens": 16416,
+                "v": 0.25
+              },
+              "target_weight_load_delta_gib": 14.51
+            }
+          ],
+          "host_cgroup": {
+            "limit_bytes": 40802189312,
+            "memory_events": {
+              "high": 0,
+              "low": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_group_kill": 0,
+              "oom_kill": 0,
+              "sock_throttled": 0
+            },
+            "peak_bytes": 19674996736,
+            "peak_gib": 18.323768615722656,
+            "swap_limit_bytes": 0
+          },
+          "source_capture_sha256": {
+            "stderr": "ec8e3ae816564fa1b72ca71c1285195a3e6acfb43b4392a3241bc4be3c73a2df",
+            "stdout": "5e1007d0eb7fec0215c567f77fbda268d7c10cf28fb691b72329b570c9d84930"
+          }
+        }
+      },
+      "host_metric": "Linux cgroup v2 memory.peak over each complete arm; includes charged cache/tmpfs and child processes, not process RSS or GPU VRAM",
+      "limits": [
+        "Recurrent-state capacity differs: ordinary 93 slots, combined 19 slots plus speculative intermediate state. This is not an equal-capacity memory-efficiency comparison.",
+        "GPU component figures are rounded and are not a complete additive accounting. Free-memory snapshots follow graph capture and precede external requests.",
+        "No continuous GPU memory sampling, torch allocator peak, per-request host peak or per-process RSS was retained."
+      ],
+      "native_manifest_sha256": "ff2061124636c6894ea1e037173dd272783d47869ce89b78448f8216e116f3af",
+      "scope": "Completed ordinary/full benchmark, including per-arm startup and warm-up",
+      "unit": "GiB = 2^30 bytes; runtime labels these values GB"
+    },
     "native_manifest_sha256": "ff2061124636c6894ea1e037173dd272783d47869ce89b78448f8216e116f3af",
     "qualification": false,
     "rate_percent": 253.82017144729505,

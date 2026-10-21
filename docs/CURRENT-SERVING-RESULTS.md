@@ -88,6 +88,47 @@ retained source. On R9700, the experimental adapter invokes native decode
 attention with the split selector applied separately to each verification row.
 This is separate from the four-bit KV cache prototype.
 
+### Memory observations from the combined-path benchmark
+
+The retained telemetry includes a host-memory peak for each complete arm and
+GPU startup figures for each rank. The figures below use GiB (2^30 bytes).
+SGLang labels its binary-unit GPU figures as `GB` in the logs. Both ranks
+reported the same rounded GPU values.
+
+| Host-memory metric, whole arm | Ordinary FP8 | DFlash2 + split K/V + aligned GDN |
+| --- | ---: | ---: |
+| Cgroup memory peak, including startup and warm-up | 18.32 GiB | 23.69 GiB |
+| Configured cgroup memory limit | 38 GiB | 38 GiB |
+
+These peaks are Linux cgroup v2 `memory.peak`, including charged page cache,
+tmpfs and child processes. They are not process RSS or GPU VRAM. Swap was
+disabled. Neither arm recorded a memory-limit event, OOM or OOM kill.
+
+| GPU startup metric, per GPU | Ordinary FP8 | DFlash2 + split K/V + aligned GDN |
+| --- | ---: | ---: |
+| Target weight-load free-memory delta | 14.51 GiB | 14.51 GiB |
+| Drafter weight-load free-memory delta | — | 2.16 GiB |
+| Target BF16 KV pool, K + V | 0.25 + 0.25 GiB | 0.25 + 0.25 GiB |
+| Drafter BF16 KV pool, K + V | — | 0.08 + 0.08 GiB |
+| Recurrent-state pool slots | 93 | 19 |
+| Recurrent convolution / SSM state | 0.13 / 6.61 GiB | 0.03 / 1.41 GiB |
+| Speculative intermediate SSM / convolution state | — | 1.69 / 0.01 GiB |
+| Target graph-capture memory delta | 0.29 GiB | 0.38 GiB |
+| Drafter graph-capture memory delta | — | 0.10 GiB |
+| Available GPU memory after graph capture | 9.11 GiB | 10.13 GiB |
+
+Each attention KV pool had 16,416 token slots. The runtime sized the recurrent
+pool differently for speculative execution, which also requires intermediate
+state. The greater free GPU memory in the combined arm therefore does not
+establish better memory efficiency at equal capacity. Both configurations
+completed the measured concurrency-one workload.
+
+GPU figures are rounded startup observations, taken before external requests.
+They are not a complete additive memory accounting or a measured GPU peak.
+No continuous VRAM samples, Torch allocator peaks, per-request host peaks or
+per-process RSS were retained. Exact host peak bytes, per-rank GPU figures and
+capture hashes are included in the sanitised JSON linked below.
+
 ## Evidence identities and limits
 
 | Completed observation | Private local evidence manifest SHA256 |
