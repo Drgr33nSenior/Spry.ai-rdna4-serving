@@ -15,7 +15,7 @@ FLAGS = source.FLAGS
 TOOLS = ("hipcc", "clang", "nm", "readelf", "objdump", "objcopy", "bundler")
 EXPORTS = frozenset({"uq_device", "uq_initialize", "uq_append", "uq_attention",
                      "uq_bf16_append_v2", "uq_bf16_attention_v2"})
-V2_KERNELS = ("validate_write", "write", "validate_read", "read")
+V2_KERNELS = source.V2_KERNELS
 DRIVER_SECONDS = 425
 # Seven tool receipts, one compiler call, seven extraction/inspection calls.
 COMMAND_WORK_SECONDS = 7 * 5 + 180 + 7 * 15

@@ -6,6 +6,11 @@ Do not run historical experiment controllers or treat test fixtures as proof.
 
 ## Shared runtime
 
+The [qualified native FP8 baseline](FP8.md) has a separate exact image/runtime
+identity and stock BF16 KV path. Its profile is historical evidence, not an
+image installer or a KV4 build receipt. Keep its graph-enabled qualification
+separate from the eager comparison plans and the KV4 source overlay below.
+
 Use SGLang 0.5.21 at commit
 `e00930c5489053f26d86b179cee0d087f846acbb`. Obtain and verify the complete upstream
 source separately. `patches/common-runtime.patch` contains the five shared

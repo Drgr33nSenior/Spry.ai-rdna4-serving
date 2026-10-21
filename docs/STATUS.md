@@ -1,6 +1,19 @@
 # Status and evidence
 
-Status: `PRIVATE_TP2_MODEL_SMOKE_PASS_BENCHMARK_PENDING`.
+Status: `EXPERIMENTAL_SOURCE_WITH_BOUNDED_VERIFICATION`.
+
+The later FP8 thinking checks, previous/current stack HTTP benchmark and one
+combined DFlash2/split K/V timing screen are summarised in
+[current serving results](CURRENT-SERVING-RESULTS.md). They do not establish
+general quality or qualify the four-bit cache prototype.
+
+That status describes the KV4 prototype. The separate native FP8/BF16-KV path
+passed bounded 4K C1/C2 compatibility with graph capture `[1,2]` on both ranks.
+See [FP8 baseline](FP8.md) and
+[`FP8-BASELINE-SUMMARY.json`](../provenance/FP8-BASELINE-SUMMARY.json).
+This does not promote the eager KV4 composition, qualify 32K or establish a
+matched performance winner. Published profiles are preparation inputs, not
+transferable launch authority or evidence of a qualified deployment.
 
 The source import is based on a sealed 1127-member private evidence root with
 manifest SHA256
@@ -42,5 +55,6 @@ as passes. The final publication verification reports its own outcomes separatel
 Default FP8 GEMM configuration warnings remain. Transport-to-request identity,
 LoRA serving, graphs, speculative execution, offload and MTP are not qualified.
 The new mode is not publicly registered. No production deployment, service
-benchmark, model-quality comparison or cold-versus-reuse numerical qualification
+benchmark beyond the bounded later HTTP screens, model-quality comparison or
+cold-versus-reuse numerical qualification
 is implied by this source publication.

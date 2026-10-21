@@ -39,8 +39,23 @@ UQ_HOST_DEVICE inline void wht256(float* values) {
 UQ_HOST_DEVICE inline float unpack(const uint8_t* record, int channel) {
   const uint8_t* group=record+(channel/32)*17;
   const uint8_t code=(group[(channel%32)/2] >> (4*(channel%2))) & 15;
-  // Explicit tile-local BF16 rounding, not FP16 reinterpretation.
-  return from_bits(to_bits(uq::decode_fp4_scaled(code,group[16])));
+  // E2M1 times a power of two is exactly BF16-representable until overflow.
+  // Construct those bits directly, including the smallest UE8M0 exponents.
+  constexpr uint16_t magnitude_bits[8] = {
+      0x0000, 0x3f00, 0x3f80, 0x3fc0, 0x4000, 0x4040, 0x4080, 0x40c0};
+  const uint16_t sign = uint16_t(code & 8u) << 12;
+  const uint16_t magnitude = magnitude_bits[code & 7u];
+  if (magnitude == 0) return from_bits(sign);
+  const int exponent = int(magnitude >> 7) + int(group[16]) - 127;
+  if (exponent >= 255) return from_bits(uint16_t(sign | 0x7f80u));
+  if (exponent <= 0) {
+    // This branch implies scale <= 1, so the shift is bounded by six.
+    constexpr uint8_t twice_magnitude[8] = {0, 1, 2, 3, 4, 6, 8, 12};
+    const uint16_t subnormal = uint16_t(
+        uint32_t(twice_magnitude[code & 7u]) << (unsigned(group[16]) + 5u));
+    return from_bits(uint16_t(sign | subnormal));
+  }
+  return from_bits(uint16_t(sign | (uint16_t(exponent) << 7) | (magnitude & 127u)));
 }
 UQ_HOST_DEVICE inline bool record_ok(const uint8_t* record, int bound) {
   for(int g=0;g<8;++g)

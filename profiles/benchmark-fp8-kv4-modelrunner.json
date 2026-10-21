@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "name": "fp8-kv4-modelrunner-screen-v1",
+  "status": "PREPARATION_ONLY_NATIVE_UNRUN",
+  "launch_authorized": false,
+  "scope": "Descriptive matched eager ModelRunner timing; not HTTP serving or model-quality qualification",
+  "arms": ["bf16", "kv4"],
+  "model_starts": 2,
+  "replacement_starts": 0,
+  "model": "Qwen/Qwen3.8-27B-FP8",
+  "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+  "runtime": "Same authenticated private SGLang 0.5.21 composition for both arms",
+  "settings": {
+    "tp": 2,
+    "context": 4096,
+    "physical_kv_slots_per_rank": 4096,
+    "max_running_requests": 2,
+    "execution": "eager",
+    "chunked_prefill_size": -1,
+    "page_size": 1,
+    "mem_fraction_static": 0.8,
+    "mamba_cache_policy": "no_buffer",
+    "overlap_schedule": false,
+    "custom_all_reduce": false,
+    "full_attention_backend": "triton",
+    "fp8_gemm_backend": "triton",
+    "weight_loading": "serial",
+    "outputs_per_request": 32,
+    "temperature": 0,
+    "random_seed": 592137615,
+    "reserved_positions_per_request": 2
+  },
+  "cells": [
+    {"name": "C1-128", "concurrency": 1, "input_tokens": 128},
+    {"name": "C1-1024", "concurrency": 1, "input_tokens": 1024},
+    {"name": "C1-3966", "concurrency": 1, "input_tokens": 3966},
+    {"name": "C2-128", "concurrency": 2, "input_tokens": 128},
+    {"name": "C2-1024", "concurrency": 2, "input_tokens": 1024}
+  ],
+  "warmup_batches_per_cell": 1,
+  "measured_batches_per_cell": 5,
+  "per_arm_counts": {
+    "batches": 30,
+    "measured_batches": 25,
+    "requests": 42,
+    "measured_requests": 35,
+    "input_tokens": 44532,
+    "output_tokens": 1344,
+    "prefill_forwards_per_rank": 30,
+    "decode_forwards_per_rank": 930
+  },
+  "campaign_counts": {
+    "batches": 60,
+    "requests": 84,
+    "input_tokens": 89064,
+    "output_tokens": 2688,
+    "text_forwards_per_rank": 1920
+  },
+  "prompt_policy": "Exact frozen no-template token vectors; distinct C2 counterparts; identical bytes in both arms",
+  "cache_policy": "Fresh private compiler/cache directories per arm; request/cache release and reset after every batch; no accepted cache purge or reuse",
+  "timing": {
+    "clock": "Host monotonic wall with GPU synchronization before and after each operation",
+    "included": ["ForwardBatch construction", "ModelRunner.forward", "sampling", "existing adapter copies, validation and synchronization"],
+    "outside_operation_timer": ["request and scheduler batch preparation", "finite-logit checks", "CPU token/logprob collection", "TP agreement checks", "cache reset"],
+    "rank_aggregation": "Maximum rank time for each aligned operation",
+    "statistics": ["median", "minimum", "maximum", "individual samples"],
+    "warmups": "Retained separately, excluded only from warm-sample statistics",
+    "lazy_compilation": "Any compilation within a measured operation remains included",
+    "http_ttft_measured": false,
+    "http_throughput_measured": false,
+    "production_inter_token_latency_measured": false
+  },
+  "gates": {
+    "finite_correct_shape_logits": true,
+    "actual_batch_size_and_tp_token_agreement": true,
+    "zero_request_prefix_cache_hits": true,
+    "pool_capacities_restored_after_each_batch": true,
+    "authenticated_sources_model_build_and_cleanup": true,
+    "cross_precision_token_equality_required": false,
+    "model_quality_qualified": false
+  },
+  "interpretation": "One fixed-order two-load screen, not an independent-start speed ranking. Compare output scores only for matching tokens and conditioning histories.",
+  "proposed_complete_envelope_seconds": 2100,
+  "proposed_envelope": {
+    "admission": 120,
+    "load_and_warmup_per_arm": 240,
+    "measurements_per_arm": 450,
+    "owned_cleanup_per_arm": 60,
+    "collection_and_independent_release": 180,
+    "sealing": 300
+  },
+  "physical_blocker": "CPU-tested host-process owner adapter exists; an authenticated live read-only platform observer and fresh physical controller/grant bindings are still required. Native Linux ownership and GPU release are unrun."
+}

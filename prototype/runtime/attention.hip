@@ -283,16 +283,29 @@ __global__ void validate_read(uq_bf16_cache_v2 c,const uint16_t* q,const int64_t
     int row=blockIdx.x, start=starts[row],len=lengths[row];
     if(start<0 || len<=0 || len>131072 || start>count || len>count-start) {atomicExch(status,1);return;}
     for(int j=threadIdx.x;j<3072;j+=blockDim.x) if(!uq_bf16::input_ok(q[row*3072+j])) atomicExch(status,1);
-    for(int t=threadIdx.x;t<len;t+=blockDim.x) {
-        int64_t slot=indices[start+t];
-        if(slot<=0 || slot>=c.slots) {atomicExch(status,1);continue;}
-        for(int h=0;h<2;++h) {
-            size_t record=size_t(slot)*2+h;
-            if(c.protected_layer) {
-                for(int d=0;d<256;++d) if(!uq_bf16::input_ok(static_cast<const uint16_t*>(c.k)[record*256+d]) ||
-                    !uq_bf16::input_ok(static_cast<const uint16_t*>(c.v)[record*256+d])) atomicExch(status,1);
-            } else if(!uq_bf16::record_ok(static_cast<const uint8_t*>(c.k)+record*136,139) ||
-                      !uq_bf16::record_ok(static_cast<const uint8_t*>(c.v)+record*136,135)) atomicExch(status,1);
+    // Flatten each token's two heads so adjacent lanes check adjacent values.
+    // At the maximum context, both task counts fit in int (at most 2^26).
+    if(c.protected_layer) {
+        for(int i=threadIdx.x;i<len*512;i+=blockDim.x) {
+            int64_t slot=indices[start+i/512];
+            if(slot<=0 || slot>=c.slots) {atomicExch(status,1);continue;}
+            size_t offset=size_t(slot)*512+i%512;
+            if(!uq_bf16::input_ok(static_cast<const uint16_t*>(c.k)[offset]) ||
+               !uq_bf16::input_ok(static_cast<const uint16_t*>(c.v)[offset])) atomicExch(status,1);
+        }
+    } else {
+        for(int i=threadIdx.x;i<len*256;i+=blockDim.x) {
+            int64_t slot=indices[start+i/256];
+            if(slot<=0 || slot>=c.slots) {atomicExch(status,1);continue;}
+            int within=i%256,byte=within%16;
+            size_t base=(size_t(slot)*2+within/128)*136+(within%128)/16*17;
+            const uint8_t* k=static_cast<const uint8_t*>(c.k)+base;
+            const uint8_t* v=static_cast<const uint8_t*>(c.v)+base;
+            uint8_t kb=k[byte],vb=v[byte];
+            if(!uq::is_canonical_code(kb&15) || !uq::is_canonical_code(kb>>4) ||
+               !uq::is_canonical_code(vb&15) || !uq::is_canonical_code(vb>>4)) atomicExch(status,1);
+            // One lane per group checks both scales; these bounds reject 255.
+            if(byte==0 && (k[16]>139 || v[16]>135)) atomicExch(status,1);
         }
     }
 }
@@ -341,6 +354,72 @@ __global__ void read(uq_bf16_cache_v2 c,const uint16_t* q,const int64_t* indices
         output[(row*12+head)*256+j]=uq_bf16::to_bits(acc[i]/denominator);
     }
 }
+
+// Compact cache only: six waves share one decoded KV head. The per-head
+// dot, softmax and accumulation order is unchanged. 14,408 shared bytes;
+// eight accumulators per lane. All 192 lanes reach every block barrier.
+__global__ void read_grouped(uq_bf16_cache_v2 c,const uint16_t* q,const int64_t* indices,
+                            const int32_t* starts,const int32_t* lengths,float scale,uint16_t* output) {
+    int row=blockIdx.x,kvhead=blockIdx.y,group=threadIdx.x/32,lane=threadIdx.x%32;
+    int head=kvhead*6+group;
+    __shared__ float rotated[6][256],products[6][256],decoded_k[256],decoded_v[256];
+    __shared__ float alpha[6],weight[6],denominator[6];
+    float acc[8]={},maximum=-INFINITY;
+    // phase: query
+    for(int i=0;i<8;++i) {
+        int j=lane+32*i;
+        rotated[group][j]=uq_bf16::from_bits(q[(row*12+head)*256+j]);
+    }
+    __syncthreads();
+    // phase: rotate
+    if(lane==0) {
+        uq_bf16::wht256(rotated[group]);
+        denominator[group]=0;
+    }
+    __syncthreads();
+    for(int t=0;t<lengths[row];++t) {
+        // phase: decode
+        if(group==0) {
+            size_t record=size_t(indices[starts[row]+t])*2+kvhead;
+            for(int i=0;i<8;++i) {
+                int j=lane+32*i;
+                decoded_k[j]=load(c.k,record,j,false);
+                decoded_v[j]=load(c.v,record,j,false);
+            }
+        }
+        __syncthreads();
+        // phase: product
+        for(int i=0;i<8;++i) {
+            int j=lane+32*i;
+            products[group][j]=uq_bf16::mul(rotated[group][j],decoded_k[j]);
+        }
+        __syncthreads();
+        // phase: score
+        if(lane==0) {
+            float score=0;
+            for(int j=0;j<256;++j) score=uq_bf16::add(score,products[group][j]);
+            score=uq_bf16::mul(score,scale);
+            float next=fmaxf(maximum,score);
+            alpha[group]=expf(maximum-next);weight[group]=expf(score-next);
+            denominator[group]=uq_bf16::add(uq_bf16::mul(denominator[group],alpha[group]),weight[group]);
+            maximum=next;
+        }
+        __syncthreads();
+        // phase: accumulate
+        for(int i=0;i<8;++i) {
+            int j=lane+32*i;
+            acc[i]=uq_bf16::add(uq_bf16::mul(acc[i],alpha[group]),
+                uq_bf16::mul(weight[group],decoded_v[j]));
+        }
+        // Do not overwrite decoded_v until all six waves finish consuming it.
+        __syncthreads();
+    }
+    // phase: output
+    for(int i=0;i<8;++i) {
+        int j=lane+32*i;
+        output[(row*12+head)*256+j]=uq_bf16::to_bits(acc[i]/denominator[group]);
+    }
+}
 }
 extern "C" int uq_bf16_append_v2(const uq_bf16_cache_v2* c,const uint64_t* identity,
     const uint16_t* k,const uint16_t* v,uint64_t bytes,const int64_t* loc,int tokens,int* status,void* opaque) {
@@ -371,8 +450,12 @@ extern "C" int uq_bf16_attention_v2(const uq_bf16_cache_v2* c,const uint64_t* id
     int device=uq_device();if(device) return device;
     auto stream=static_cast<hipStream_t>(opaque);
     if(hipMemsetAsync(status,0,4,stream)!=hipSuccess) {(void)hipStreamSynchronize(stream);return 2;}
-    hipLaunchKernelGGL(validate_read,dim3(queries),dim3(32),0,stream,*c,q,indices,count,starts,lengths,status);
+    hipLaunchKernelGGL(validate_read,dim3(queries),dim3(256),0,stream,*c,q,indices,count,starts,lengths,status);
     int checked=checked_status(status,stream);if(checked) return checked;
-    hipLaunchKernelGGL(read,dim3(queries,12),dim3(32),0,stream,*c,q,indices,starts,lengths,scale,out);
+    if(c->protected_layer) {
+        hipLaunchKernelGGL(read,dim3(queries,12),dim3(32),0,stream,*c,q,indices,starts,lengths,scale,out);
+    } else {
+        hipLaunchKernelGGL(read_grouped,dim3(queries,2),dim3(192),0,stream,*c,q,indices,starts,lengths,scale,out);
+    }
     return finish(stream);
 }

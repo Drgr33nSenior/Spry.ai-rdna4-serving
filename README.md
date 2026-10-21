@@ -3,11 +3,21 @@
 Experimental LLM serving on AMD RDNA4 GPUs, with ROCm/SGLang integration, FP8
 model support, four-bit KV caching and reproducible verification.
 
-The current prototype keeps official Qwen3.8-27B-FP8 weights fixed and changes
-the KV cache. FP8 weights and KV4 storage are separate precision choices; this
-is not an MXFP4 weight conversion.
+Official Qwen3.8-27B-FP8 weights stay fixed. The native baseline uses BF16 KV;
+the KV4 prototype changes cache storage. FP8 weights and KV4 storage are separate
+precision choices; this is not an MXFP4 weight conversion.
 
 ## Status
+
+The separate native FP8/BF16-KV baseline passed bounded C1/C2 compatibility at
+4096 tokens on both R9700s. Its graph-enabled profile, exact image/model/source
+identities and sanitised evidence are retained in [FP8 baseline](docs/FP8.md).
+This does not qualify the KV4 composition or establish which configuration is
+fastest. A later short-prompt HTTP comparison found no meaningful regression
+between the previous Torch/ROCm stack and the current Torch 2.14 / SDK 10.2 stack.
+That comparison had DFlash2 disabled. See [current serving results](docs/CURRENT-SERVING-RESULTS.md)
+for the exact scope. A separate DFlash2 + split K/V + aligned GDN benchmark
+measured 86.68 versus 24.50 output tokens/s, a 3.54× increase on one short workload.
 
 The private integration passed a real eager TP2 smoke on two Radeon AI PRO R9700
 GPUs: initial prefill, continuation, decode and a 13-token prefix-reuse hit.
@@ -20,15 +30,16 @@ This is a source prototype, not an installable serving distribution. The retaine
 SGLang files are a selected overlay, not the complete upstream package. Public
 Qwen KV4 admission remains closed. A fresh installation needs a complete, independently
 reviewed runtime/build identity; the historical private smoke does not authorise
-a launch or supply a reusable build proof. Quality, capacity and performance
-benchmarks remain pending. See [status and evidence](docs/STATUS.md).
+a launch or supply a reusable build proof. General quality, capacity and performance
+qualification remains pending. See [status and evidence](docs/STATUS.md).
 
 ## Layout
 
 - `prototype/`: maintained native codec, kernels, SGLang source overlay and v2
   source-identity/build tools.
 - `patches/`: image-relative KV4 delta and shared FP8-runtime repairs.
-- `profiles/`: explicit baseline and KV4 planning configurations.
+- `profiles/`: the qualified 4K FP8 baseline record and separate eager
+  baseline/KV4 comparison plans; none is a launch command.
 - `tests/`: current regressions and declared CPU substitutes. `tests/fixtures/`
   contains historical source snapshots needed to verify compatibility, not a
   second maintained implementation.
@@ -42,11 +53,17 @@ needed for the CPU contract suite. Select your configured interpreter explicitly
 
 ```sh
 make test-cpu PYTHON=/path/to/python3
+make test-fp8 PYTHON=/path/to/python3
+make test-benchmark PYTHON=/path/to/python3
+make test-benchmark-readout PYTHON=/path/to/python3
+make test-host-owner PYTHON=/path/to/python3
+make test-platform-collector PYTHON=/path/to/python3
+make test-benchmark-bindings PYTHON=/path/to/python3
 make test-codec CXX=clang++
 ```
 
-The C++ target enables ASan/UBSan. Neither target builds HIP, loads the native
-library, queries a GPU or starts a model. Test products stay in `.test-build/`.
+The C++ target enables ASan/UBSan. These targets do not build HIP, load the native
+library, query a GPU or start a model. Test products stay in `.test-build/`.
 See [verification](docs/VERIFICATION.md) for fixture and historical-test scope.
 
 `tools/model_smoke.py` retains the reviewed inner GPU-smoke entry. It requires
@@ -58,15 +75,25 @@ The [KV4 operator guide](docs/KV4-OPERATIONS.md) covers benchmark readiness,
 ownership, stop conditions and result collection. The current KV4 preparation
 is source-only: fresh physical packaging, loading-time instrumentation and
 explicit two-GPU handover remain required. The guide does not authorize a run
-or supply a physical launcher. The shared FP8 history includes a failed physical
-attempt, not a successful matched comparison.
+or supply a physical launcher. Earlier shared FP8 attempts failed; later bounded
+HTTP comparisons are documented in [current serving results](docs/CURRENT-SERVING-RESULTS.md).
+
+An [owner-run metadata collector](docs/OWNER-COLLECTION.md) is available for the
+missing platform observations. It is not run by the agent and does not start,
+reserve or authorize GPU work.
+
+The [FP8 performance work order](docs/PERFORMANCE-PLAN.md) prioritizes the native
+cache comparison, active-work and decoded-value reuse, then full-model fusion,
+recurrent-state traffic and TP2 communication. Research gains are not local
+measurements or changes to the numerical contract.
 
 ## Runtime and precision
 
-The selected stack is SGLang 0.5.21 at
+The historical KV4 composition used SGLang 0.5.21 at
 `e00930c5489053f26d86b179cee0d087f846acbb`, ROCm SDK 10.1.0, Python 3.14.4,
 Torch 2.13.0+rocm10.1.0 and RCCL 2.30.7. These pins describe the tested private
-composition, not a claim that this checkout installs it.
+composition, not a claim that this checkout installs it. The later FP8 serving
+checks use Torch 2.14 / SDK 10.2; see the current results for complete versions.
 
 The Qwen proposal uses TP2, head dimension 256, 16 full-attention layers and 48
 GDN layers. Four full-attention layers retain BF16 storage; twelve use local

@@ -184,7 +184,7 @@ def compiler_binding(text, root, attempt, tools, environment):
 TOOL_NAMES = ("hipcc", "clang", "nm", "readelf", "objdump", "objcopy", "bundler")
 EXPORTS = frozenset({"uq_device", "uq_initialize", "uq_append", "uq_attention",
                      "uq_bf16_append_v2", "uq_bf16_attention_v2"})
-V2_KERNELS = ("validate_write", "write", "validate_read", "read")
+V2_KERNELS = ("validate_write", "write", "validate_read", "read", "read_grouped")
 
 
 def commands(root, attempt, tools, device="<enumerated-device-bundle>"):

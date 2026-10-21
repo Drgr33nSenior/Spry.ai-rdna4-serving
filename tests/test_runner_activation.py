@@ -134,8 +134,8 @@ class RunnerActivationTests(unittest.TestCase):
     def test_selected_native_exact_four_pins(self):
         root = SRT.parents[3]
         expected = {
-            "runtime/attention.hip": "ced35705d23a1879322c7c8e670c527e28059e841a544283e6beb41668421a3c",
-            "runtime/bf16_math.h": "0290613cdaf8ddf057e010b9b37f653e96401ef44648e2ce1018b9c6958a0d11",
+            "runtime/attention.hip": "2206e70d233cacd86bea286be36c04a42d504e5807fe05985b2b2fa3319db88d",
+            "runtime/bf16_math.h": "51a8fa0a26d36df5caccbd9ca93aad1f7a1eda6821598aed3ff2c51429ab5b81",
             "runtime/uq.h": "e4b278486a8a3434fbd1e90f799cdebc9e240bfa0f2e018524a911aea0ef75cb",
             "codec/codec.h": "852ce3209f934938e87818f77427258e16fd867880e45036a785db9f4e318446",
         }
