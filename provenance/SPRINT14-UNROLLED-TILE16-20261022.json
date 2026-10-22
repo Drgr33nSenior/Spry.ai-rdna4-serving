@@ -1,0 +1,1032 @@
+{
+  "active_gpu_run": false,
+  "baseline_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+  "cancellations": 2,
+  "candidate_selected": true,
+  "candidate_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+  "comparison": {
+    "K_divisible_by_unroll_step": true,
+    "baseline_configuration": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 64,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "num_stages": 3,
+      "num_warps": 4
+    },
+    "baseline_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "candidate_configuration": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 16,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "num_stages": 1,
+      "num_warps": 4
+    },
+    "candidate_delta": "Exact untuned HIP/BF16 M8 down only: native unrolledx4 with tileM16/stage1, against selected common tileM64/stage3. N/K tiles128 and4warps unchanged.",
+    "candidate_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+    "current_config_observation": "CURRENT-CONFIG-OBSERVATION.json",
+    "global_selector_changed": false,
+    "hardware_scope": "Existing two R9700 gfx1201 cards only; no general HIP qualification.",
+    "native_kernel_ast_equal": true,
+    "numerical_contract": "Exact structured oracle and random baseline equality; no tolerance relaxation.",
+    "schema": 1,
+    "shape": [
+      8,
+      5120,
+      8704
+    ],
+    "shape_derivation": "Retained native missing-config witnesses bind M8 down projection. Source-only helper audit shows missing return. Direct one-shape comparison does not depend on or globally repair that heuristic.",
+    "unroll_K_step": 512
+  },
+  "component_disposition": {
+    "comparisons": 96,
+    "component_only": true,
+    "next_action": "One separately reviewed matched serving pilot; preserve output/cycle gates and current profile.",
+    "scope": "Unrolled tile16/stage1 against common tile64/stage3; synthetic eager timings, not serving throughput.",
+    "selected_source_changed": false,
+    "serving_selected": false,
+    "status": "EXACT_COMPONENT_WIN_SERVING_PREPARATION_ALLOWED",
+    "time_reduction_percent_range": [
+      25.414294592800324,
+      29.836648395520637
+    ],
+    "timed_launches": 64
+  },
+  "component_model_starts": 0,
+  "component_native_seal": {
+    "manifest_sha256": "5137b8fb8f8f34d1ad894050fe422bea578e55d99d7b8abc5484fc49bde68eb0",
+    "members": 165,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-unrolled-tile16-run.82l3d6ou",
+    "verified_utc": "2026-10-22T13:00:08.037075+00:00"
+  },
+  "component_result": {
+    "cases": 4,
+    "cases_detail": [
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.08097999915480614,
+          "1": 0.05754000134766102
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "speedup_unrolled": 1.4073687392796341,
+        "time_reduction_unrolled": 0.2894541621609039
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.07976000010967255,
+          "1": 0.05915999971330166
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "speedup_unrolled": 1.3482082572042193,
+        "time_reduction_unrolled": 0.25827482908782884
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.08085999637842178,
+          "1": 0.060309998691082
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "speedup_unrolled": 1.3407394815675646,
+        "time_reduction_unrolled": 0.25414294592800324
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.0841749981045723,
+          "1": 0.059059999883174896
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "speedup_unrolled": 1.425245483763575,
+        "time_reduction_unrolled": 0.2983664839552064
+      }
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          8704
+        ],
+        "tile_m": 16,
+        "variant": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common tile64/stage3 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 44731392,
+    "model_starts": 0,
+    "payload_seconds": 3.9213655529893003,
+    "physical_seconds": 21.226930632954463,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "status": "M8_DOWN_UNROLLED_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false,
+    "unrolled_speedup_geomean": 1.3799067489036305,
+    "unrolled_speedup_range": [
+      1.3407394815675646,
+      1.425245483763575
+    ],
+    "unrolled_time_reduction_range": [
+      0.25414294592800324,
+      0.2983664839552064
+    ]
+  },
+  "cpu_checks": 37,
+  "date": "2026-10-22",
+  "final_review": {
+    "independent_checks": [
+      "All17fullseals and resultpins",
+      "Exact patch application7c8 to f90",
+      "Exact quality source-pin correction",
+      "Both-order8/8output pairs and164cycles perrequest",
+      "68normalfinalanswers,2cancellations,actualC2,19slots and releases"
+    ],
+    "limits": "Bounded instrumented results. Full-state and sampling-distribution equivalence unverified; prior numerical findings and S11 failed gates remain. Production/endurance unqualified; installed runtime and persistent defaults unchanged. Reliability deferred.",
+    "patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Next experimental session launch only; preserve7c8 rollback.",
+    "selected_source_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+    "status": "APPROVED_NO_BLOCKING_FINDINGS",
+    "verified_roots": 17
+  },
+  "fixed_work_requests": 16,
+  "greedy_detail": {
+    "final_answer_pairs_equal": 4,
+    "full_output_pairs_equal": 3,
+    "functional_passes": 8,
+    "normal_stops": 8,
+    "numerical_equivalence": false,
+    "pairs": [
+      {
+        "case": "coding-running-totals",
+        "final_answer_equal": true,
+        "final_tokens": [
+          41,
+          41
+        ],
+        "reasoning_tokens": [
+          301,
+          329
+        ]
+      },
+      {
+        "case": "coding-unique-last",
+        "final_answer_equal": true,
+        "final_tokens": [
+          95,
+          95
+        ],
+        "reasoning_tokens": [
+          786,
+          786
+        ]
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "final_answer_equal": true,
+        "final_tokens": [
+          763,
+          763
+        ],
+        "reasoning_tokens": [
+          2126,
+          2126
+        ]
+      },
+      {
+        "case": "heldout16k-audit",
+        "final_answer_equal": true,
+        "final_tokens": [
+          821,
+          821
+        ],
+        "reasoning_tokens": [
+          3154,
+          3154
+        ]
+      }
+    ],
+    "requests": 8,
+    "task_quality_gate_passed": true
+  },
+  "installed_runtime_changed": false,
+  "lifecycle_detail": {
+    "actual_c2_groups": 2,
+    "cache_output_pairs": 26,
+    "cancellations": 2,
+    "final_cache_output_pairs_matched": 26,
+    "full_cache_output_pairs_matched": 24,
+    "independent_release_verified": true,
+    "native_group_accounting_passed": true,
+    "normal_stops": 52,
+    "normal_tasks": 52,
+    "quality_passes": 52,
+    "slot_bookkeeping_passed": true
+  },
+  "matched_serving_model_starts": 4,
+  "matched_serving_work_gate_passed": true,
+  "matched_serving_work_gate_scope": "Sprint14comparison only; does not supersede historical Sprint11 failed gates.",
+  "model_starts": 10,
+  "native_root": "fp8-sprint14-unrolled-tile16-run.82l3d6ou",
+  "next_action": "No GPU campaign queued. Select a separate measured tuning lead; reliability remains deferred until tuning is exhausted.",
+  "normal_final_answers": 68,
+  "numerical_mismatch_resolved": false,
+  "package_sha256": "638508ed28a6406763edef504489a4cb8bb4ba57f3b4602a15139966e439a961",
+  "parameter_review": {
+    "all_non_dispatch_definitions_equal": true,
+    "candidate_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+    "cpu_checks": 37,
+    "inherited_controls_review": {
+      "candidate_sha256": "2996734f4b7b25e3de73432ee5e617a4c93a743420954d7baf87d398301ecf2c",
+      "cpu_checks": 36,
+      "findings": "Variant stages, actual compiled names/stages, exact dispatcher guard, selected overrides, native kernel ASTs, protected helpers and resource limits verified.",
+      "limits": "Native compilation, resource fit and parity remain unverified. Bundled unrolled-stage1/common-stage3 comparison; no serving selection or promotion.",
+      "package_sha256": "6eb9db157d161f3a0cd68ad5aeafa317627b041989b9ee8139089682819a345b",
+      "reviewer": "/root/astra_replay_serving_verify",
+      "status": "NO_BLOCKERS_ONE_BOUNDED_MODEL_FREE_ATTEMPT_AFTER_SEAL_AND_EXECUTION_CLONE_CHECKS",
+      "tested_identities_sha256": "7e53d08294b5f72fdba0a6570836eb2168152e888f26ec3099f7a324075e1463"
+    },
+    "limits_unchanged": true,
+    "native_parity_and_performance_verified": false,
+    "new_astra_review_performed": false,
+    "package_sha256": "638508ed28a6406763edef504489a4cb8bb4ba57f3b4602a15139966e439a961",
+    "protected_helpers_unchanged": true,
+    "reviewer": "/root",
+    "scope": "S13-to-S14 parameter-only delta: unrolled M tile64 to16; mode and binding fixtures updated. Selected baseline/common tile64 stage3 remains.",
+    "scope_limits": "One bounded component only; no installed/runtime/source selection. Bundled kernel/stage/tile comparison against the selected route.",
+    "status": "PARAMETER_CHANGE_REVIEW_PASS",
+    "tested_identities_sha256": "5bf718f45c3579de72ebdda4c9f82876dac38605ce300085f153748f516c82fc"
+  },
+  "patch_verification": {
+    "base_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "installed_runtime_changed": false,
+    "patch": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+    "patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f",
+    "result_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+    "selected": false,
+    "status": "PASS"
+  },
+  "pilot_summary": {
+    "advance_to_reverse_preparation": true,
+    "clean_speed_comparison_eligible": true,
+    "independent_release_verified": true,
+    "latency_percent": -1.7441621511057992,
+    "native_seal": {
+      "manifest_sha256": "a54b30dc5ea3a1063015b63cb42351f5e14bce4412c58f0c4a496c9dfcfc049d",
+      "members": 223,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-serving-run.iou_2ebr",
+      "verified_utc": "2026-10-22T13:17:45.517541+00:00"
+    },
+    "numerical_mismatch_resolved": false,
+    "output_pair_count": 4,
+    "output_pairs_matched": 4,
+    "pairs": [
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 0,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": true
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 1,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 2,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 3,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      }
+    ],
+    "production_qualified": false,
+    "rate_percent": 1.77512317770685,
+    "reader_seal": {
+      "manifest_sha256": "2f7f0abada0e7bcf95fb6ce662e22cb5d9c152e025ce0681b05dd5cf43585031",
+      "members": 93,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-serving-reader.zlvbvwxb",
+      "verified_utc": "2026-10-22T13:22:43.463257+00:00"
+    },
+    "readout_correction_review": {
+      "finding": "Original full seal verification and failures preserved; all3identity fields and exact metadata schema checked; other roots unchanged.",
+      "limits": "Metadata-schema compatibility only; no content-hash mismatch or changed output/cycle gate.",
+      "reader_sha256": "609fd01d4b46feb115c312a4e7a70965f324980efc66363d60a8008a84f675d0",
+      "reviewer": "/root/astra_replay_serving_verify",
+      "status": "APPROVED_NO_BLOCKING_FINDINGS",
+      "tests": 13
+    },
+    "result_sha256": "04a88ac7cb7f51f6809eac24a228378ad40c33f6b820523365efae5053a61286",
+    "source_selected": false,
+    "status": "CLEAN_PILOT_WIN_REVERSE_PREPARATION_ALLOWED"
+  },
+  "private_closeout_root": "fp8-sprint14-closeout.3pnps0cp",
+  "production_qualified": false,
+  "quality_campaigns": {
+    "greedy": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "greedy",
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "2429ee881668281bb5b8a2ff207b77013db0d5b7188471cfb42b1b4777f28da8",
+        "members": 226,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-run.cd7r36i6",
+        "verified_utc": "2026-10-22T13:45:47.776768+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "d752c376c059dca60477cf796085d764bdc415297cf9e37a2a8eb2115d3da1d7",
+        "members": 126,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-reader.98i92_t_",
+        "verified_utc": "2026-10-22T13:47:04.021874+00:00"
+      },
+      "requests": 8,
+      "result_name": "QUALITY-RESULTS.json",
+      "result_sha256": "411855f0d46b695140e4b122eaade9ce88712b3464ade9ac81b315f9d63ea05c",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "lifecycle": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "lifecycle",
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "51a8b2a6711bdc4f97f83d55e594991db971a329c3cc52d44ff01d6bafddcbee",
+        "members": 567,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-run.rjppo7b8",
+        "verified_utc": "2026-10-22T14:03:20.293064+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "5157596e036ac790ddfd3791d86561259a9221fca85ebb09b1e1af59f5abe6e7",
+        "members": 444,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-reader.qh70w13l",
+        "verified_utc": "2026-10-22T14:03:38.794953+00:00"
+      },
+      "requests": 54,
+      "result_name": "LIFECYCLE-RESULTS.json",
+      "result_sha256": "92ebc85740381c0756982c54d5c1db4b461f972191cd973089704ab444579e72",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "sampled": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "sampled",
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "58764272eb640e115657e68f840362103378296a0284444c689bc78a975ccab7",
+        "members": 220,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-run.raw600x_",
+        "verified_utc": "2026-10-22T13:54:21.169852+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "5a26c29fb14fd764b94239c624696fa6153e8bc62100abacc0bc29d2cb5aaf12",
+        "members": 123,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-reader.0kmw7op1",
+        "verified_utc": "2026-10-22T13:54:31.443312+00:00"
+      },
+      "requests": 8,
+      "result_name": "QUALITY-RESULTS.json",
+      "result_sha256": "55e934cb5d60c879aa6cc9de4736f08643607ed41b5bf37814efef2ed1965c0d",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    }
+  },
+  "quality_model_starts": 6,
+  "quality_reader_correction": "Exact old-source pin replaced with tested f90 in all three authentication scripts; all other authentication code unchanged, old scripts and greedy refusal retained; reader checks and isolated pin refusal checks pass.",
+  "quality_requests": 70,
+  "reliability_deferred": true,
+  "requests": 86,
+  "reverse_native_root": "fp8-sprint14-reverse-run.j4p7bu2q",
+  "reverse_native_seal": {
+    "manifest_sha256": "d0708f49d5958f34a810c40b6c858c6a61713a8090e9d341af21d18509532a32",
+    "members": 217,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-reverse-run.j4p7bu2q",
+    "verified_utc": "2026-10-22T13:32:07.487002+00:00"
+  },
+  "reverse_order_review": {
+    "packet_checks": 23,
+    "qualification": false,
+    "reader_checks": 13,
+    "reviewer": "/root",
+    "scope": "Reverse execution order only; same reviewed source pair, frozen requests, reader and controls.",
+    "serving_implementation_review": {
+      "acceptance_sha256": "3e7aa56b4b1a9f8db458014e092c03682bed8140443811f1ee0a1017711e72cd",
+      "archive_sha256": "870f867f7945d17efad7235f8a2635041df78d69c739408ea1685dccce5edf80",
+      "findings": "Exact guard, identical witnesses, selected overrides, eight protected helpers, frozen requests, packet limits and both-rank reader route checks verified.",
+      "independent_shape_gate_checks": 5,
+      "limits": "Park on measured output/cycle mismatch or no median latency gain; no automatic retry. Reverse order, affected quality and selection remain separate gates.",
+      "packet_checks": 22,
+      "reader_checks": 10,
+      "reader_sha256": "4137fe27c4ec119dabf2244190764613956673be69996f6c4a2b19eabedbe600",
+      "reviewer": "/root/astra_replay_serving_verify",
+      "scope": "Serving integration review only; no retroactive component prelaunch approval.",
+      "startup_checks": 35,
+      "status": "NO_BLOCKERS_ONE_SERVING_PILOT_AFTER_AUTHOR_SEAL"
+    },
+    "source_pair_unchanged": true,
+    "startup_checks": 35,
+    "status": "ORDER_ONLY_REVIEW_PASS"
+  },
+  "reverse_reader_root": "fp8-sprint14-reverse-reader._t4sbcek",
+  "reverse_reader_seal": {
+    "manifest_sha256": "76f8245f190bc3ca97cee81194153a125228bc868b00afa39fdcdbc4deaca53f",
+    "members": 81,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-reverse-reader._t4sbcek",
+    "verified_utc": "2026-10-22T13:32:09.766882+00:00"
+  },
+  "reverse_source_root": "fp8-sprint14-reverse.shf4ankl",
+  "reverse_source_seal": {
+    "manifest_sha256": "eb7559a0ff01f6968587405208d1f8aa992e52c64efdfca9248a93b85c9fa567",
+    "members": 341,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-reverse.shf4ankl",
+    "verified_utc": "2026-10-22T13:25:10.873424+00:00"
+  },
+  "reverse_summary": {
+    "advance_to_affected_validation": true,
+    "clean_speed_comparison_eligible": true,
+    "independent_release_verified": true,
+    "latency_percent": -1.7851334679537145,
+    "native_seal": {
+      "manifest_sha256": "d0708f49d5958f34a810c40b6c858c6a61713a8090e9d341af21d18509532a32",
+      "members": 217,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-reverse-run.j4p7bu2q",
+      "verified_utc": "2026-10-22T13:32:07.487002+00:00"
+    },
+    "numerical_mismatch_resolved": false,
+    "output_pair_count": 4,
+    "output_pairs_matched": 4,
+    "pairs": [
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 0,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": true
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 1,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 2,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 3,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      }
+    ],
+    "production_qualified": false,
+    "rate_percent": 1.8175796913303843,
+    "reader_seal": {
+      "manifest_sha256": "76f8245f190bc3ca97cee81194153a125228bc868b00afa39fdcdbc4deaca53f",
+      "members": 81,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-reverse-reader._t4sbcek",
+      "verified_utc": "2026-10-22T13:32:09.766882+00:00"
+    },
+    "result_sha256": "3196e3428d1ec4dd3a4af42143022f979ef111b7f3a0237d4a121d086261f28b",
+    "source_selected": false,
+    "status": "BOTH_ORDER_GATES_PASS_AFFECTED_VALIDATION_PENDING"
+  },
+  "rollback_source": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "f8997efb5056230b2e2e6d9afa344e8c3315e4f422d45a4b0f117b40141ba056",
+    "author_root": "fp8-sprint11-3072-greedy.e3bi79fu",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "matched_work_gate_passed": false,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-gateup-stages-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/M8-3072-EXPERIMENTAL-20261022.json",
+    "reference_instrumented_gemm_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "M2047 stage one plus exact untuned M8 gate/up and 3072 stage one; preserve the current stack and other selected optimizations.",
+    "source_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+    "source_patch_sha256": "515e4467908f1580e6a31b3a6c6dfe225482813e53ca3d645cc451b76fb98a0f"
+  },
+  "sampling_distribution_verified": false,
+  "schema": 1,
+  "selected_source": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+    "author_root": "fp8-sprint14-greedy.aaqa_twp",
+    "component_candidate_gemm_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+    "matched_work_gate_passed": true,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/SPRINT14-UNROLLED-TILE16-20261022.json",
+    "reference_instrumented_gemm_sha256": "93e17f8e336ae0a1c2c15c972ac29da3d76e4f966fbf64e1158894b7539497fe",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "Retain selected prefill, gate/up and 3072 stage one; use native unrolled tile16/stage1 for exact untuned HIP/BF16 M8 down (8,5120,8704).",
+    "source_patch": "patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+    "source_patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f"
+  },
+  "selected_source_changed": true,
+  "serving_campaign_prepared": true,
+  "serving_candidate_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+  "serving_native_root": "fp8-sprint14-serving-run.iou_2ebr",
+  "serving_native_seal": {
+    "manifest_sha256": "a54b30dc5ea3a1063015b63cb42351f5e14bce4412c58f0c4a496c9dfcfc049d",
+    "members": 223,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-serving-run.iou_2ebr",
+    "verified_utc": "2026-10-22T13:17:45.517541+00:00"
+  },
+  "serving_preparation": {
+    "initial_fixture_failure_retained": true,
+    "packet_checks": 22,
+    "reader_checks": 10,
+    "startup_checks": 35
+  },
+  "serving_reader_root": "fp8-sprint14-serving-reader.zlvbvwxb",
+  "serving_reader_seal": {
+    "manifest_sha256": "2f7f0abada0e7bcf95fb6ce662e22cb5d9c152e025ce0681b05dd5cf43585031",
+    "members": 93,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-serving-reader.zlvbvwxb",
+    "verified_utc": "2026-10-22T13:22:43.463257+00:00"
+  },
+  "serving_reference_sha256": "93e17f8e336ae0a1c2c15c972ac29da3d76e4f966fbf64e1158894b7539497fe",
+  "serving_review": {
+    "acceptance_sha256": "3e7aa56b4b1a9f8db458014e092c03682bed8140443811f1ee0a1017711e72cd",
+    "archive_sha256": "870f867f7945d17efad7235f8a2635041df78d69c739408ea1685dccce5edf80",
+    "findings": "Exact guard, identical witnesses, selected overrides, eight protected helpers, frozen requests, packet limits and both-rank reader route checks verified.",
+    "independent_shape_gate_checks": 5,
+    "limits": "Park on measured output/cycle mismatch or no median latency gain; no automatic retry. Reverse order, affected quality and selection remain separate gates.",
+    "packet_checks": 22,
+    "reader_checks": 10,
+    "reader_sha256": "4137fe27c4ec119dabf2244190764613956673be69996f6c4a2b19eabedbe600",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Serving integration review only; no retroactive component prelaunch approval.",
+    "startup_checks": 35,
+    "status": "NO_BLOCKERS_ONE_SERVING_PILOT_AFTER_AUTHOR_SEAL"
+  },
+  "serving_source_root": "fp8-sprint14-serving.bmf6d6fk",
+  "serving_source_seal": {
+    "manifest_sha256": "4732bc738c7ce1c403522d31c7201a27d1d665763b12ecdd8dc8b944931e410b",
+    "members": 350,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-serving.bmf6d6fk",
+    "verified_utc": "2026-10-22T13:10:41.253636+00:00"
+  },
+  "source_origin": {
+    "component_donor": {
+      "manifest_sha256": "81440e6391abcd27af4eade59692892a8c3fb90ce770d725cb37d238b9c1acaa",
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint13-unrolled-stage1.z_hcmzu6"
+    },
+    "model_starts": 0,
+    "owner_authority": "User directs continuation of the next smaller-tile candidate; existing scoped sudo owner approval persists.",
+    "scope": "One exact-shape common tile64/stage3 versus unrolled tile16/stage1 component; preserve kernel definitions, guards and resource controls.",
+    "selected_source": {
+      "author_file": "review/GEMM-tail.py",
+      "author_manifest_sha256": "f8997efb5056230b2e2e6d9afa344e8c3315e4f422d45a4b0f117b40141ba056",
+      "author_root": "fp8-sprint11-3072-greedy.e3bi79fu",
+      "hardware_cause_established": false,
+      "instrumented_gemm_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+      "matched_work_gate_passed": false,
+      "numerical_mismatch_resolved": false,
+      "patch_base_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+      "prerequisite_patch": "patches/sglang-gfx1201-m8-gateup-stages-serving.patch",
+      "production_qualified": false,
+      "qualification_record": "provenance/M8-3072-EXPERIMENTAL-20261022.json",
+      "reference_instrumented_gemm_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+      "scope": "Source selection for the next experimental session launch only.",
+      "selection": "M2047 stage one plus exact untuned M8 gate/up and 3072 stage one; preserve the current stack and other selected optimizations.",
+      "source_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+      "source_patch_sha256": "515e4467908f1580e6a31b3a6c6dfe225482813e53ca3d645cc451b76fb98a0f"
+    }
+  },
+  "source_packets": {
+    "greedy": {
+      "launch_authorized": true,
+      "model_starts": 2,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-run.cd7r36i6",
+      "native_seal": {
+        "manifest_sha256": "2429ee881668281bb5b8a2ff207b77013db0d5b7188471cfb42b1b4777f28da8",
+        "members": 226,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-run.cd7r36i6",
+        "verified_utc": "2026-10-22T13:45:47.776768+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-reader.98i92_t_",
+      "reader_seal": {
+        "manifest_sha256": "d752c376c059dca60477cf796085d764bdc415297cf9e37a2a8eb2115d3da1d7",
+        "members": 126,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-reader.98i92_t_",
+        "verified_utc": "2026-10-22T13:47:04.021874+00:00"
+      },
+      "requests": 8,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "greedy",
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "2429ee881668281bb5b8a2ff207b77013db0d5b7188471cfb42b1b4777f28da8",
+          "members": 226,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-run.cd7r36i6",
+          "verified_utc": "2026-10-22T13:45:47.776768+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "d752c376c059dca60477cf796085d764bdc415297cf9e37a2a8eb2115d3da1d7",
+          "members": 126,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-reader.98i92_t_",
+          "verified_utc": "2026-10-22T13:47:04.021874+00:00"
+        },
+        "requests": 8,
+        "result_name": "QUALITY-RESULTS.json",
+        "result_sha256": "411855f0d46b695140e4b122eaade9ce88712b3464ade9ac81b315f9d63ea05c",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy.aaqa_twp",
+      "source_seal": {
+        "manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+        "members": 341,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy.aaqa_twp",
+        "verified_utc": "2026-10-22T13:38:17.087632+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "lifecycle": {
+      "launch_authorized": true,
+      "model_starts": 2,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-run.rjppo7b8",
+      "native_seal": {
+        "manifest_sha256": "51a8b2a6711bdc4f97f83d55e594991db971a329c3cc52d44ff01d6bafddcbee",
+        "members": 567,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-run.rjppo7b8",
+        "verified_utc": "2026-10-22T14:03:20.293064+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-reader.qh70w13l",
+      "reader_seal": {
+        "manifest_sha256": "5157596e036ac790ddfd3791d86561259a9221fca85ebb09b1e1af59f5abe6e7",
+        "members": 444,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-reader.qh70w13l",
+        "verified_utc": "2026-10-22T14:03:38.794953+00:00"
+      },
+      "requests": 54,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "lifecycle",
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "51a8b2a6711bdc4f97f83d55e594991db971a329c3cc52d44ff01d6bafddcbee",
+          "members": 567,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-run.rjppo7b8",
+          "verified_utc": "2026-10-22T14:03:20.293064+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "5157596e036ac790ddfd3791d86561259a9221fca85ebb09b1e1af59f5abe6e7",
+          "members": 444,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-reader.qh70w13l",
+          "verified_utc": "2026-10-22T14:03:38.794953+00:00"
+        },
+        "requests": 54,
+        "result_name": "LIFECYCLE-RESULTS.json",
+        "result_sha256": "92ebc85740381c0756982c54d5c1db4b461f972191cd973089704ab444579e72",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle.tohvupwo",
+      "source_seal": {
+        "manifest_sha256": "e9526b6426bdc0e567e1459571bbff5c3b0a6003a1c63050ab67db2fed4638dc",
+        "members": 347,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle.tohvupwo",
+        "verified_utc": "2026-10-22T13:38:20.407507+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "sampled": {
+      "launch_authorized": true,
+      "model_starts": 2,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-run.raw600x_",
+      "native_seal": {
+        "manifest_sha256": "58764272eb640e115657e68f840362103378296a0284444c689bc78a975ccab7",
+        "members": 220,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-run.raw600x_",
+        "verified_utc": "2026-10-22T13:54:21.169852+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-reader.0kmw7op1",
+      "reader_seal": {
+        "manifest_sha256": "5a26c29fb14fd764b94239c624696fa6153e8bc62100abacc0bc29d2cb5aaf12",
+        "members": 123,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-reader.0kmw7op1",
+        "verified_utc": "2026-10-22T13:54:31.443312+00:00"
+      },
+      "requests": 8,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "sampled",
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "58764272eb640e115657e68f840362103378296a0284444c689bc78a975ccab7",
+          "members": 220,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-run.raw600x_",
+          "verified_utc": "2026-10-22T13:54:21.169852+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "5a26c29fb14fd764b94239c624696fa6153e8bc62100abacc0bc29d2cb5aaf12",
+          "members": 123,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-reader.0kmw7op1",
+          "verified_utc": "2026-10-22T13:54:31.443312+00:00"
+        },
+        "requests": 8,
+        "result_name": "QUALITY-RESULTS.json",
+        "result_sha256": "55e934cb5d60c879aa6cc9de4736f08643607ed41b5bf37814efef2ed1965c0d",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled.1ln2n769",
+      "source_seal": {
+        "manifest_sha256": "535d6a8e78fc838f08bb144dd04bdcb315d596ec9f459ead11c409d69ea127b8",
+        "members": 341,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled.1ln2n769",
+        "verified_utc": "2026-10-22T13:38:24.995593+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    }
+  },
+  "source_root": "fp8-sprint14-unrolled-tile16.w5ub8dyh",
+  "source_seal": {
+    "manifest_sha256": "9a90bb849751a9ae0313551012b7c13a09cd9237ef95c10a10466b03f00763c8",
+    "members": 69,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-unrolled-tile16.w5ub8dyh",
+    "verified_utc": "2026-10-22T12:56:21.953335+00:00"
+  },
+  "status": "SPRINT14_COMPLETE_EXPERIMENTAL_DOWN_TILE16_SELECTED",
+  "tested_identities_sha256": "5bf718f45c3579de72ebdda4c9f82876dac38605ce300085f153748f516c82fc",
+  "tracking": "docs/SPRINT14-UNROLLED-TILE16.md"
+}

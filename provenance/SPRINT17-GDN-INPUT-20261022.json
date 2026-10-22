@@ -1,0 +1,1498 @@
+{
+  "active_gpu_run": false,
+  "active_quality_lane": null,
+  "cancellations": 2,
+  "component_disposition": {
+    "comparisons": 96,
+    "component_only": true,
+    "next_action": "One separately reviewed matched serving pilot;retainoutput/workgates and selectedf90reference.",
+    "selected_source_changed": false,
+    "serving_selected": false,
+    "status": "EXACT_COMPONENT_WIN_SERVING_PREPARATION_ALLOWED",
+    "time_reduction_percent_range": [
+      16.980950905107473,
+      20.869312169737697
+    ],
+    "timed_launches": 64
+  },
+  "component_gpu_campaigns": 1,
+  "component_native_seal": {
+    "manifest_sha256": "ed6452e84e8aff45e4e4b856920fe01d1aca0b95a9728950ea7163dfa2c50138",
+    "members": 164,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-qkvz-run.xailewq1",
+    "verified_utc": "2026-10-22T15:43:17.620886+00:00"
+  },
+  "component_result": {
+    "cases": 4,
+    "cases_detail": [
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.06771999970078468,
+          "1": 0.05622049979865551
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "speedup_unrolled": 1.2045428258964745,
+        "time_reduction_unrolled": 0.16980950905107473
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.06947999820113182,
+          "1": 0.05498000048100948
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "speedup_unrolled": 1.2637322225039038,
+        "time_reduction_unrolled": 0.20869312169737697
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.06759999692440033,
+          "1": 0.05408000014722347
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "speedup_unrolled": 1.249999939725795,
+        "time_reduction_unrolled": 0.19999996142450693
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.0662200003862381,
+          "1": 0.054259998723864555
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "speedup_unrolled": 1.2204202348628754,
+        "time_reduction_unrolled": 0.18061011163719476
+      }
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul_unrolledx4",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 153,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          8192,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common tile64/stage3 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 42128384,
+    "model_starts": 0,
+    "payload_seconds": 4.125728675047867,
+    "physical_seconds": 22.842533726012334,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "status": "M8_QKVZ_UNROLLED_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false,
+    "unrolled_speedup_geomean": 1.234451904655102,
+    "unrolled_speedup_range": [
+      1.2045428258964745,
+      1.2637322225039038
+    ],
+    "unrolled_time_reduction_range": [
+      0.16980950905107473,
+      0.20869312169737697
+    ]
+  },
+  "date": "2026-10-22",
+  "final_gate_verification": {
+    "both_orders_matched_outputs_and_cycles": true,
+    "cancellations": 2,
+    "fixed_work_requests": 16,
+    "installed_runtime_changed": false,
+    "model_starts": 10,
+    "normal_final_answers": 68,
+    "numerical_mismatch_resolved": false,
+    "quality_requests": 70,
+    "reliability_deferred": true,
+    "requests": 86,
+    "retained_refusals": [
+      "Premature read-only admission during active reverse lease; unchanged precheck passed after release.",
+      "Missing frozen grader self-check record;exact sealed prerequisite restored and offline grading resumed without model rerun or rule change."
+    ],
+    "sampling_distribution_verified": false,
+    "status": "ALL_BOUNDED_GATES_PASS_REVIEW_PENDING",
+    "verified_roots": [
+      {
+        "manifest_sha256": "4d3497b7bb854567baa9d519a91d33ba1015c1dd4819cc7f60e772cd97cfc905",
+        "members": 85,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-qkvz.zfzfuoew"
+      },
+      {
+        "manifest_sha256": "ed6452e84e8aff45e4e4b856920fe01d1aca0b95a9728950ea7163dfa2c50138",
+        "members": 164,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-qkvz-run.xailewq1"
+      },
+      {
+        "manifest_sha256": "02c4c1cbc3fd5b28afe7cc649fe60c6578ad6d94ab76aab1df7a91951a41eeed",
+        "members": 344,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving.pe8k7ol4"
+      },
+      {
+        "manifest_sha256": "f60582557456b6663bc4192f1d4f46ecfb053fb3f48fcac0cbb2c9f4411adb6e",
+        "members": 232,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-run.u4w8vch7"
+      },
+      {
+        "manifest_sha256": "653f4367f04fdc3d8e328019692eb30c509ab36bf82acec5cac99c28f20ee796",
+        "members": 81,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-reader.gdq2sx83"
+      },
+      {
+        "manifest_sha256": "87a0138ad9e46c59a78b304ff8b0646b58ba99b129af1e89643e07b66782e59b",
+        "members": 341,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse.nadeavk1"
+      },
+      {
+        "manifest_sha256": "d5d78b33e442eeb76af70f9d0fa1617173b434b6c682f4b3c359b5f192a01a28",
+        "members": 229,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse-run.pvw7ra13"
+      },
+      {
+        "manifest_sha256": "223ce887949741aee056634cc314eec8b85326c358f5aa43c61f872215fd452c",
+        "members": 77,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse-reader.84odv3me"
+      },
+      {
+        "manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+        "members": 341,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy.aaqa_twp"
+      },
+      {
+        "manifest_sha256": "e378d786522c3cd44ac2bc9c8251acc19b812aa29a9b0a9ba166cad3d2eaf104",
+        "members": 348,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy.ggza3rfn"
+      },
+      {
+        "manifest_sha256": "b890e453536e510811a7c22ba6d12893ea4b202cda860450f9c86d879dbc964d",
+        "members": 232,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-run.ifl975qy"
+      },
+      {
+        "manifest_sha256": "eb9459310805eca8fc8f4d99106a97230e91591a3ca10ec2133960846cab6880",
+        "members": 123,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-reader.5e72bdcy"
+      },
+      {
+        "manifest_sha256": "5bd952440d6acc2c6aa7ae6101a2620e0ea30f9c6575a5cb1e1ed01c53acfd5a",
+        "members": 341,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled.0pkfkat9"
+      },
+      {
+        "manifest_sha256": "a45a42f721e55a541d333b11bef74642e6fdd5c664492e3cc8da14400e7d2609",
+        "members": 232,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-run.bmaacfra"
+      },
+      {
+        "manifest_sha256": "01dfebc60043cc8c7717b8cf9462b96d59bab1a1f852fb5d0c68164d29d4bb7a",
+        "members": 120,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-reader.1yj3z9ws"
+      },
+      {
+        "manifest_sha256": "a2c7ffe03886c3cd001810c3402f2170501db7e9962e92ac8e90fd508372b2fe",
+        "members": 347,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle.m7hwllvu"
+      },
+      {
+        "manifest_sha256": "67143e80ccae55193660599af6ddf0a0070cbdb1a52adaa97ee70ab2575f39e7",
+        "members": 579,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-run.auo1ln65"
+      },
+      {
+        "manifest_sha256": "2b98a66c53e66cf15cbc0a9af78d4847ee291f6c02b5dc6e48b2ce3c9315fb71",
+        "members": 440,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-reader.uwbpy5bp"
+      }
+    ]
+  },
+  "final_selection_review": {
+    "findings": "All18roots/fiveresultpinsverify;bothordersalloutputs/164cyclesmatch;all68normalanswers,2cancels,C2,slotsandreleasespass;exactsealedgraderprerequisiterestoredwithunchangedrules.",
+    "limits": "Prior numerical findings,S11failedgates,fullstate/distributionequivalenceandendurance/productionqualificationremainopen;reliabilitydeferred;installedruntimeandpersistentdefaultsunmodified.",
+    "patch_sha256": "26aed66729d59909a4c597c22f56475acf74ffcca479e63f50fa358c3528abc6",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Next experimental session launch only;retainf90rollback.",
+    "selected_source_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "status": "APPROVED_NO_BLOCKING_FINDINGS",
+    "verified_result_pins": 5,
+    "verified_roots": 18
+  },
+  "fixed_work_requests": 16,
+  "installed_runtime_changed": false,
+  "launch_prepared": false,
+  "model_gpu_campaigns": 5,
+  "model_starts": 10,
+  "native_root": "fp8-sprint17-qkvz-run.xailewq1",
+  "next_action": "No GPU campaign queued. Select a separate measured tuning lead;reliability remains deferred until tuning is exhausted.",
+  "normal_final_answers": 68,
+  "numerical_mismatch_resolved": false,
+  "parameter_review": {
+    "advancement": "All four candidate cases valid and lower median than common baseline in everycase,with authentication and release,before separately reviewed serving preparation. Otherwisepark;noautomaticretry.",
+    "candidate_sha256": "9c61cb3c2d6ff24f9d7db2c6574ecc27961e238847496c609171b45ff9a877a0",
+    "cpu_check_invocations": 46,
+    "distinct_cpu_checks": 43,
+    "donor": {
+      "manifest_sha256": "98b66714dbfca064036393e93e873273ccc35b0525f01bfd5fbea220dc39328d",
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint15-unrolled-gateup-r2.icb_cyo6"
+    },
+    "duplicate_check_note": "Three imported dispatcher tests execute twice under unittest discovery;43distinct checks,46invocations.",
+    "native_kernel_bodies_unchanged": true,
+    "no_new_astra_review": true,
+    "numerical_contract": "96finite/exact comparisons including24graph checks;64alternating eager timing launches on both cards. Exact structured oracle;random baseline equality;no tolerance.",
+    "owner_limits_unchanged": true,
+    "package_sha256": "7d5398ea28900d52e081b3c5a5cd6514076300b42c2230cb9751c61b0056390e",
+    "protected_helpers_byte_identical": true,
+    "qualification": false,
+    "review_reuse": "Reviewed Sprint15 model-free comparison machinery; only mode,exact shape and baseline stage parameters changed. Candidate adds one exact guarded dispatcher branch.",
+    "reviewer": "/root",
+    "selected_source": {
+      "author_file": "review/GEMM-tail.py",
+      "author_manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+      "author_root": "fp8-sprint14-greedy.aaqa_twp",
+      "component_candidate_gemm_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+      "hardware_cause_established": false,
+      "instrumented_gemm_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+      "matched_work_gate_passed": true,
+      "numerical_mismatch_resolved": false,
+      "patch_base_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+      "prerequisite_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+      "production_qualified": false,
+      "qualification_record": "provenance/SPRINT14-UNROLLED-TILE16-20261022.json",
+      "reference_instrumented_gemm_sha256": "93e17f8e336ae0a1c2c15c972ac29da3d76e4f966fbf64e1158894b7539497fe",
+      "scope": "Source selection for the next experimental session launch only.",
+      "selection": "Retain selected prefill, gate/up and 3072 stage one; use native unrolled tile16/stage1 for exact untuned HIP/BF16 M8 down (8,5120,8704).",
+      "source_patch": "patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+      "source_patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f"
+    },
+    "selected_source_changed": false,
+    "status": "EXACT_SHAPE_AND_STAGE_PARAMETER_REVIEW_PASS_ONE_COMPONENT_ONLY",
+    "tested_identities_sha256": "598830ee686ffce12ffbbaeb555d55a08468ee0bce00cdb9df082a9fbcaed21f"
+  },
+  "persistent_defaults_changed": false,
+  "pilot_summary": {
+    "advance_to_reverse_preparation": true,
+    "clean_speed_comparison_eligible": true,
+    "independent_release_verified": true,
+    "latency_percent": -0.5434904956358011,
+    "native_seal": {
+      "manifest_sha256": "f60582557456b6663bc4192f1d4f46ecfb053fb3f48fcac0cbb2c9f4411adb6e",
+      "members": 232,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-run.u4w8vch7",
+      "verified_utc": "2026-10-22T15:55:19.999833+00:00"
+    },
+    "numerical_mismatch_resolved": false,
+    "output_pair_count": 4,
+    "output_pairs_matched": 4,
+    "pairs": [
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 0,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": true
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 1,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 2,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 3,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      }
+    ],
+    "production_qualified": false,
+    "rate_percent": 0.5464604562780861,
+    "reader_seal": {
+      "manifest_sha256": "653f4367f04fdc3d8e328019692eb30c509ab36bf82acec5cac99c28f20ee796",
+      "members": 81,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-reader.gdq2sx83",
+      "verified_utc": "2026-10-22T15:55:25.481124+00:00"
+    },
+    "result_sha256": "f8429e37b6bd8e75a69097c2202e531546bf7c92c31817097978d510cf46ac91",
+    "source_selected": false,
+    "status": "CLEAN_PILOT_WIN_REVERSE_PREPARATION_ALLOWED"
+  },
+  "previous_selected_source": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+    "author_root": "fp8-sprint14-greedy.aaqa_twp",
+    "component_candidate_gemm_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+    "matched_work_gate_passed": true,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/SPRINT14-UNROLLED-TILE16-20261022.json",
+    "reference_instrumented_gemm_sha256": "93e17f8e336ae0a1c2c15c972ac29da3d76e4f966fbf64e1158894b7539497fe",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "Retain selected prefill, gate/up and 3072 stage one; use native unrolled tile16/stage1 for exact untuned HIP/BF16 M8 down (8,5120,8704).",
+    "source_patch": "patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+    "source_patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f"
+  },
+  "qualification": false,
+  "quality_campaigns": {
+    "greedy": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "greedy",
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "b890e453536e510811a7c22ba6d12893ea4b202cda860450f9c86d879dbc964d",
+        "members": 232,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-run.ifl975qy",
+        "verified_utc": "2026-10-22T16:12:18.597444+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "eb9459310805eca8fc8f4d99106a97230e91591a3ca10ec2133960846cab6880",
+        "members": 123,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-reader.5e72bdcy",
+        "verified_utc": "2026-10-22T16:13:46.335525+00:00"
+      },
+      "requests": 8,
+      "result_name": "QUALITY-RESULTS.json",
+      "result_sha256": "554c94f6bdce2f6a2f9f5de9427387d72d4a97ebcf9ab3bf32ef5b27b2218194",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "lifecycle": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "lifecycle",
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "67143e80ccae55193660599af6ddf0a0070cbdb1a52adaa97ee70ab2575f39e7",
+        "members": 579,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-run.auo1ln65",
+        "verified_utc": "2026-10-22T16:30:20.840169+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "2b98a66c53e66cf15cbc0a9af78d4847ee291f6c02b5dc6e48b2ce3c9315fb71",
+        "members": 440,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-reader.uwbpy5bp",
+        "verified_utc": "2026-10-22T16:30:39.190650+00:00"
+      },
+      "requests": 54,
+      "result_name": "LIFECYCLE-RESULTS.json",
+      "result_sha256": "cc4f5e656dba121507d5ecb8d0e857604cc6f01385261cbc4b52bcae0f2ac984",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "sampled": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "sampled",
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "a45a42f721e55a541d333b11bef74642e6fdd5c664492e3cc8da14400e7d2609",
+        "members": 232,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-run.bmaacfra",
+        "verified_utc": "2026-10-22T16:21:23.552346+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "01dfebc60043cc8c7717b8cf9462b96d59bab1a1f852fb5d0c68164d29d4bb7a",
+        "members": 120,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-reader.1yj3z9ws",
+        "verified_utc": "2026-10-22T16:21:33.899050+00:00"
+      },
+      "requests": 8,
+      "result_name": "QUALITY-RESULTS.json",
+      "result_sha256": "370d778eee377be8c7479c247842adf569889a888014052afa7475869f358ee8",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    }
+  },
+  "quality_details": {
+    "greedy": {
+      "all_gates_passed": 8,
+      "causal_ab_improvement": false,
+      "final_text_pairs_matched": 4,
+      "full_output_pairs_matched": 4,
+      "functional_failures": 0,
+      "functional_passes": 8,
+      "independent_release_verified": true,
+      "native_seal": "b890e453536e510811a7c22ba6d12893ea4b202cda860450f9c86d879dbc964d",
+      "normal_stops": 8,
+      "numerical_equivalence": false,
+      "per_start_quality_gate_passed": {
+        "control": true,
+        "mtp": true
+      },
+      "qualification": false,
+      "reasoning_effort": "low",
+      "requests": 8,
+      "ringfold_quality_measured": false,
+      "sampling_distribution_verified": false,
+      "sampling_recipe_tested": false,
+      "sampling_route_verified": false,
+      "schema": 1,
+      "source_seal": {
+        "manifest_sha256": "e378d786522c3cd44ac2bc9c8251acc19b812aa29a9b0a9ba166cad3d2eaf104",
+        "members": 348,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy.ggza3rfn"
+      },
+      "starts": 2,
+      "status": "SPRINT11_CANDIDATE_QUALITY_SCREEN_COMPLETE",
+      "sustained_final_rows_passed": 4,
+      "task_quality_gate_passed": true,
+      "temperature": 0.0,
+      "thinking_enabled": true,
+      "thinking_quality_measured": true,
+      "top_k": 1,
+      "top_p": 1.0,
+      "ungraded": 0
+    },
+    "lifecycle": {
+      "actual_c2_groups": 2,
+      "all_screen_gates_passed": true,
+      "cache_output_pairs": [
+        {
+          "arm": "control",
+          "case": "boundary-4095-branch-b",
+          "comparison_case": "boundary-4095-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "boundary-4095-replay-a",
+          "comparison_case": "boundary-4095-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "boundary-4096-branch-b",
+          "comparison_case": "boundary-4096-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "boundary-4096-replay-a",
+          "comparison_case": "boundary-4096-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "boundary-4097-branch-b",
+          "comparison_case": "boundary-4097-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "boundary-4097-replay-a",
+          "comparison_case": "boundary-4097-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "victim-warm-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "victim-replay-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "victim-recovery-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "cancel-recovery-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "control",
+          "case": "concurrent-b",
+          "comparison_case": "boundary-4096-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "control",
+          "case": "final-replay-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4095-branch-b",
+          "comparison_case": "boundary-4095-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4095-replay-a",
+          "comparison_case": "boundary-4095-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4096-branch-b",
+          "comparison_case": "boundary-4096-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4096-replay-a",
+          "comparison_case": "boundary-4096-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4097-branch-b",
+          "comparison_case": "boundary-4097-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4097-replay-a",
+          "comparison_case": "boundary-4097-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "victim-warm-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "victim-replay-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "victim-recovery-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "cancel-recovery-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "concurrent-b",
+          "comparison_case": "boundary-4096-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        },
+        {
+          "arm": "mtp",
+          "case": "final-replay-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": null,
+          "full_output_ids_equal": true
+        }
+      ],
+      "cancellations": 2,
+      "exact_output_equivalence": false,
+      "independent_release_verified": true,
+      "native_group_accounting_passed": true,
+      "native_seal": "67143e80ccae55193660599af6ddf0a0070cbdb1a52adaa97ee70ab2575f39e7",
+      "normal_stops": 52,
+      "normal_tasks": 52,
+      "numerical_state_equivalence": false,
+      "performance_claim": false,
+      "publisher_sampling_recipe_tested": false,
+      "qualification": false,
+      "quality_failures": 0,
+      "quality_passes": 52,
+      "repeatability_qualified": false,
+      "requests": 54,
+      "schema": 1,
+      "slot_bookkeeping_passed": true,
+      "source_seal": {
+        "manifest_sha256": "a2c7ffe03886c3cd001810c3402f2170501db7e9962e92ac8e90fd508372b2fe",
+        "members": 347,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle.m7hwllvu"
+      },
+      "starts": 2,
+      "status": "CURRENT_THINKING_LIFECYCLE_SCREEN_COMPLETE"
+    },
+    "sampled": {
+      "all_gates_passed": 8,
+      "causal_ab_improvement": false,
+      "final_text_pairs_matched": 4,
+      "full_output_pairs_matched": 4,
+      "functional_failures": 0,
+      "functional_passes": 8,
+      "independent_release_verified": true,
+      "native_seal": "a45a42f721e55a541d333b11bef74642e6fdd5c664492e3cc8da14400e7d2609",
+      "normal_stops": 8,
+      "numerical_equivalence": false,
+      "per_start_quality_gate_passed": {
+        "control": true,
+        "mtp": true
+      },
+      "qualification": false,
+      "reasoning_effort": "low",
+      "requests": 8,
+      "ringfold_quality_measured": false,
+      "sampling_distribution_verified": false,
+      "sampling_recipe_tested": true,
+      "sampling_route_verified": true,
+      "schema": 1,
+      "source_seal": {
+        "manifest_sha256": "5bd952440d6acc2c6aa7ae6101a2620e0ea30f9c6575a5cb1e1ed01c53acfd5a",
+        "members": 341,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled.0pkfkat9"
+      },
+      "starts": 2,
+      "status": "SPRINT11_CANDIDATE_QUALITY_SCREEN_COMPLETE",
+      "sustained_final_rows_passed": 4,
+      "task_quality_gate_passed": true,
+      "temperature": 1.0,
+      "thinking_enabled": true,
+      "thinking_quality_measured": true,
+      "top_k": 20,
+      "top_p": 0.95,
+      "ungraded": 0
+    }
+  },
+  "reliability_deferred": true,
+  "requests": 86,
+  "reverse_native_root": "fp8-sprint17-reverse-run.pvw7ra13",
+  "reverse_native_seal": {
+    "manifest_sha256": "d5d78b33e442eeb76af70f9d0fa1617173b434b6c682f4b3c359b5f192a01a28",
+    "members": 229,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse-run.pvw7ra13",
+    "verified_utc": "2026-10-22T16:02:43.222657+00:00"
+  },
+  "reverse_order_review": {
+    "controls_unchanged": true,
+    "forward_dependency": {
+      "advance_to_reverse_preparation": true,
+      "clean_speed_comparison_eligible": true,
+      "independent_release_verified": true,
+      "latency_percent": -0.5434904956358011,
+      "native_seal": {
+        "manifest_sha256": "f60582557456b6663bc4192f1d4f46ecfb053fb3f48fcac0cbb2c9f4411adb6e",
+        "members": 232,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-run.u4w8vch7",
+        "verified_utc": "2026-10-22T15:55:19.999833+00:00"
+      },
+      "numerical_mismatch_resolved": false,
+      "output_pair_count": 4,
+      "output_pairs_matched": 4,
+      "pairs": [
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 0,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": true
+        },
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 1,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": false
+        },
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 2,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": false
+        },
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 3,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": false
+        }
+      ],
+      "production_qualified": false,
+      "rate_percent": 0.5464604562780861,
+      "reader_seal": {
+        "manifest_sha256": "653f4367f04fdc3d8e328019692eb30c509ab36bf82acec5cac99c28f20ee796",
+        "members": 81,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-reader.gdq2sx83",
+        "verified_utc": "2026-10-22T15:55:25.481124+00:00"
+      },
+      "result_sha256": "f8429e37b6bd8e75a69097c2202e531546bf7c92c31817097978d510cf46ac91",
+      "source_selected": false,
+      "status": "CLEAN_PILOT_WIN_REVERSE_PREPARATION_ALLOWED"
+    },
+    "packet_checks": 23,
+    "qualification": false,
+    "reader_checks_reused": 14,
+    "reader_donor_seal": {
+      "manifest_sha256": "653f4367f04fdc3d8e328019692eb30c509ab36bf82acec5cac99c28f20ee796",
+      "members": 81,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-reader.gdq2sx83",
+      "verified_utc": "2026-10-22T15:55:25.481124+00:00"
+    },
+    "reviewer": "/root",
+    "scope": "Reverse order only;same stop/park rule,no extra confirmation orselection.",
+    "serving_implementation_review": {
+      "acceptance_sha256": "7fc5dc2d8acc4b131983e097fabbb7078da3206c066c2bc193f66f623fcbc73a",
+      "archive_sha256": "d7c3b05b4c168ddea24663d99ee3365c3595fc815a55b0280f039b74d57c350e",
+      "findings": "Exact component sources plus identical qkvz metadata addition;kernelbodies/helpers/requests unchanged;bothrank/arm changedshape required;existingdown/gateup cannot substitute.",
+      "independent_shape_checks": 6,
+      "limits": "64members16158720archivebytes32409881combinedbytes255argv65411/65383bindings;existingownerlimitsunchanged.",
+      "packet_checks": 22,
+      "reader_checks": 14,
+      "reader_sha256": "0cb2b9049d9ea20c81ff87e69cc925c8a91f64ab381fc66832c7482848a3bd17",
+      "reviewer": "/root/astra_replay_serving_verify",
+      "startup_checks": 35,
+      "status": "APPROVED_ONE_FORWARD_PILOT_AFTER_AUTHOR_SEAL",
+      "stop_rule": "Parkonphysical/authentication/measuredoutput/workfailureornolowerlatency;noautomaticconfirmationorselection."
+    },
+    "source_pair_and_requests_unchanged": true,
+    "startup_checks": 35,
+    "status": "ORDER_ONLY_REVIEW_PASS_AFTER_AUTHENTICATED_FORWARD_GAIN"
+  },
+  "reverse_reader_seal": {
+    "manifest_sha256": "223ce887949741aee056634cc314eec8b85326c358f5aa43c61f872215fd452c",
+    "members": 77,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse-reader.84odv3me",
+    "verified_utc": "2026-10-22T16:02:49.461741+00:00"
+  },
+  "reverse_source_seal": {
+    "manifest_sha256": "87a0138ad9e46c59a78b304ff8b0646b58ba99b129af1e89643e07b66782e59b",
+    "members": 341,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse.nadeavk1",
+    "verified_utc": "2026-10-22T15:56:15.811627+00:00"
+  },
+  "reverse_summary": {
+    "advance_to_affected_validation": true,
+    "clean_speed_comparison_eligible": true,
+    "independent_release_verified": true,
+    "latency_percent": -0.6425311696130698,
+    "native_seal": {
+      "manifest_sha256": "d5d78b33e442eeb76af70f9d0fa1617173b434b6c682f4b3c359b5f192a01a28",
+      "members": 229,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse-run.pvw7ra13",
+      "verified_utc": "2026-10-22T16:02:43.222657+00:00"
+    },
+    "numerical_mismatch_resolved": false,
+    "output_pair_count": 4,
+    "output_pairs_matched": 4,
+    "pairs": [
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 0,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": true
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 1,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 2,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      },
+      {
+        "candidate_cycles": 164,
+        "first_difference": null,
+        "ordinal": 3,
+        "output_ids_equal": true,
+        "reference_cycles": 164,
+        "verification_cycles_equal": true,
+        "warmup": false
+      }
+    ],
+    "production_qualified": false,
+    "rate_percent": 0.6466863308584703,
+    "reader_seal": {
+      "manifest_sha256": "223ce887949741aee056634cc314eec8b85326c358f5aa43c61f872215fd452c",
+      "members": 77,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-reverse-reader.84odv3me",
+      "verified_utc": "2026-10-22T16:02:49.461741+00:00"
+    },
+    "result_sha256": "12f3d2a57ab72b6a026b3ee551ea0f831c4b9433da86911e698ef1f9aa83788d",
+    "source_selected": false,
+    "status": "BOTH_ORDER_GATES_PASS_AFFECTED_VALIDATION_PENDING"
+  },
+  "schema": 1,
+  "selected_source": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "e378d786522c3cd44ac2bc9c8251acc19b812aa29a9b0a9ba166cad3d2eaf104",
+    "author_root": "fp8-sprint17-greedy.ggza3rfn",
+    "component_candidate_gemm_sha256": "9c61cb3c2d6ff24f9d7db2c6574ecc27961e238847496c609171b45ff9a877a0",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "matched_work_gate_passed": true,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/SPRINT17-GDN-INPUT-20261022.json",
+    "reference_instrumented_gemm_sha256": "741aaec79b7d8c4a936d04e00f9b61de0951bb1128940a0c20e58b009e54823f",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "Retain selected prefill,gate/up,3072 and down routes;use native unrolled tile16/stage1 for exact untuned HIP/BF16 M8 GDN qkvz(8,8192,5120).",
+    "source_patch": "patches/sglang-gfx1201-m8-qkvz-unrolled-tile16-serving.patch",
+    "source_patch_sha256": "26aed66729d59909a4c597c22f56475acf74ffcca479e63f50fa358c3528abc6"
+  },
+  "selected_source_changed": true,
+  "serving_native_root": "fp8-sprint17-serving-run.u4w8vch7",
+  "serving_native_seal": {
+    "manifest_sha256": "f60582557456b6663bc4192f1d4f46ecfb053fb3f48fcac0cbb2c9f4411adb6e",
+    "members": 232,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-run.u4w8vch7",
+    "verified_utc": "2026-10-22T15:55:19.999833+00:00"
+  },
+  "serving_reader_root": "fp8-sprint17-serving-reader.gdq2sx83",
+  "serving_reader_seal": {
+    "manifest_sha256": "653f4367f04fdc3d8e328019692eb30c509ab36bf82acec5cac99c28f20ee796",
+    "members": 81,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving-reader.gdq2sx83",
+    "verified_utc": "2026-10-22T15:55:25.481124+00:00"
+  },
+  "serving_review": {
+    "acceptance_sha256": "7fc5dc2d8acc4b131983e097fabbb7078da3206c066c2bc193f66f623fcbc73a",
+    "archive_sha256": "d7c3b05b4c168ddea24663d99ee3365c3595fc815a55b0280f039b74d57c350e",
+    "findings": "Exact component sources plus identical qkvz metadata addition;kernelbodies/helpers/requests unchanged;bothrank/arm changedshape required;existingdown/gateup cannot substitute.",
+    "independent_shape_checks": 6,
+    "limits": "64members16158720archivebytes32409881combinedbytes255argv65411/65383bindings;existingownerlimitsunchanged.",
+    "packet_checks": 22,
+    "reader_checks": 14,
+    "reader_sha256": "0cb2b9049d9ea20c81ff87e69cc925c8a91f64ab381fc66832c7482848a3bd17",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "startup_checks": 35,
+    "status": "APPROVED_ONE_FORWARD_PILOT_AFTER_AUTHOR_SEAL",
+    "stop_rule": "Parkonphysical/authentication/measuredoutput/workfailureornolowerlatency;noautomaticconfirmationorselection."
+  },
+  "serving_source_root": "fp8-sprint17-serving.pe8k7ol4",
+  "serving_source_seal": {
+    "manifest_sha256": "02c4c1cbc3fd5b28afe7cc649fe60c6578ad6d94ab76aab1df7a91951a41eeed",
+    "members": 344,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-serving.pe8k7ol4",
+    "verified_utc": "2026-10-22T15:48:41.358396+00:00"
+  },
+  "shape_m_n_k": [
+    8,
+    8192,
+    5120
+  ],
+  "source_packets": {
+    "greedy": {
+      "donor_native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-run.cd7r36i6",
+      "donor_native_seal": {
+        "manifest_sha256": "2429ee881668281bb5b8a2ff207b77013db0d5b7188471cfb42b1b4777f28da8",
+        "members": 226,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-run.cd7r36i6",
+        "verified_utc": "2026-10-22T13:45:47.776768+00:00"
+      },
+      "donor_reader_seal": {
+        "manifest_sha256": "d752c376c059dca60477cf796085d764bdc415297cf9e37a2a8eb2115d3da1d7",
+        "members": 126,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy-reader.98i92_t_",
+        "verified_utc": "2026-10-22T13:47:04.021874+00:00"
+      },
+      "donor_source_seal": {
+        "manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+        "members": 341,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-greedy.aaqa_twp",
+        "verified_utc": "2026-10-22T13:38:17.087632+00:00"
+      },
+      "launch_authorized": true,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-run.ifl975qy",
+      "native_seal": {
+        "manifest_sha256": "b890e453536e510811a7c22ba6d12893ea4b202cda860450f9c86d879dbc964d",
+        "members": 232,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-run.ifl975qy",
+        "verified_utc": "2026-10-22T16:12:18.597444+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-reader.5e72bdcy",
+      "reader_seal": {
+        "manifest_sha256": "eb9459310805eca8fc8f4d99106a97230e91591a3ca10ec2133960846cab6880",
+        "members": 123,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-reader.5e72bdcy",
+        "verified_utc": "2026-10-22T16:13:46.335525+00:00"
+      },
+      "reader_source_pins": {
+        "authenticate_quality.before-source-pin.py": "1d7580e1dc7c1c14b4c4e30c4a76f0209e8b50a5ed38fce60d5d086825da334d",
+        "authenticate_quality.py": "46c3ac8baacd9096b00f58f0faac94979b5b0eb230cf73b8f5c3e339305663ce",
+        "cache_witness.py": "f4f7136bc982ddfe7bdaa5339b438452f0013446d64ec0ca613e35aa207e1fbc",
+        "connection.py": "1d885651f2d93b9f019bcce04c2022726a9c8af5676e475dc92035047b947dde",
+        "decode_thinking_finals.before-tokenizer-reference.py": "9ea80a531dc0c6b124f78061026df2f0859249752579325f3252a4078190338f",
+        "decode_thinking_finals.py": "87726206080bcd662670897e089d536fb76bb11633ab2b7b1d2fca690aec31f6",
+        "grade_quality.py": "54b4670ffe6ce4534b687a0ba3fd0902c1f0801cf76ff53ab57536e45b5139a1",
+        "grade_sprint_response.py": "9fef2507a402fe7d34df1fc923561ab42efbadf2b0a6c44c54390a9b03fe293f",
+        "local_commands.py": "71ac3ebfc4eef1c0b373a7a8317c1f72d300a375f307cce1500bbdb0a659711a",
+        "make_sprint_requests.py": "d7e898f5ebc71645f329359ea095b28f2a3f2fce41b74c9b146fce46bee50327",
+        "sampling_host_timing.py": "1e64177be8f5515b733130d0ead53cbccd519af4bf996f8e4cd13dcfb2e62037",
+        "sampling_witness.py": "68f519f6e0e37185f7cdd0fa86ae2b0a8b10f47663227fb9587143f2fe23030c",
+        "seal_evidence.py": "082835dabf0bf1e96d9bba6f08918914b01a1306a5a2cd939a0c9309ad334e18",
+        "sprint_grader.py": "8596d59c72022719e2e9946dc99906234ab1eb50060e6f2282cef788fa8f6a29",
+        "test_evidence_inventory.py": "e65636970fa3acfaf4a30b6e2f61e1b7361316b9c0c5389c5f7cdbffbf3626ca",
+        "test_sampling_witness.py": "bb969ac1c667b3317478aff08b403e38af301996455eb690094e9afdc3e6d2c5",
+        "test_thinking_readout.py": "fb27a486ac01846bc1be7036e05b16d51d02b742c61bdc0c548cf5910620f562",
+        "test_tokenizer_reference.py": "e54c2307c5406ddcff3a7af8ebd59abce54ff049c6ed09a2ed0f3d1fde1bfff6",
+        "thinking_segments.py": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29"
+      },
+      "requests": 8,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "greedy",
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "b890e453536e510811a7c22ba6d12893ea4b202cda860450f9c86d879dbc964d",
+          "members": 232,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-run.ifl975qy",
+          "verified_utc": "2026-10-22T16:12:18.597444+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "eb9459310805eca8fc8f4d99106a97230e91591a3ca10ec2133960846cab6880",
+          "members": 123,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-reader.5e72bdcy",
+          "verified_utc": "2026-10-22T16:13:46.335525+00:00"
+        },
+        "requests": 8,
+        "result_name": "QUALITY-RESULTS.json",
+        "result_sha256": "554c94f6bdce2f6a2f9f5de9427387d72d4a97ebcf9ab3bf32ef5b27b2218194",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy.ggza3rfn",
+      "source_seal": {
+        "manifest_sha256": "e378d786522c3cd44ac2bc9c8251acc19b812aa29a9b0a9ba166cad3d2eaf104",
+        "members": 348,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy.ggza3rfn",
+        "verified_utc": "2026-10-22T16:03:39.547459+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "lifecycle": {
+      "donor_native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-run.rjppo7b8",
+      "donor_native_seal": {
+        "manifest_sha256": "51a8b2a6711bdc4f97f83d55e594991db971a329c3cc52d44ff01d6bafddcbee",
+        "members": 567,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-run.rjppo7b8",
+        "verified_utc": "2026-10-22T14:03:20.293064+00:00"
+      },
+      "donor_reader_seal": {
+        "manifest_sha256": "5157596e036ac790ddfd3791d86561259a9221fca85ebb09b1e1af59f5abe6e7",
+        "members": 444,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle-reader.qh70w13l",
+        "verified_utc": "2026-10-22T14:03:38.794953+00:00"
+      },
+      "donor_source_seal": {
+        "manifest_sha256": "e9526b6426bdc0e567e1459571bbff5c3b0a6003a1c63050ab67db2fed4638dc",
+        "members": 347,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-lifecycle.tohvupwo",
+        "verified_utc": "2026-10-22T13:38:20.407507+00:00"
+      },
+      "launch_authorized": true,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-run.auo1ln65",
+      "native_seal": {
+        "manifest_sha256": "67143e80ccae55193660599af6ddf0a0070cbdb1a52adaa97ee70ab2575f39e7",
+        "members": 579,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-run.auo1ln65",
+        "verified_utc": "2026-10-22T16:30:20.840169+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-reader.uwbpy5bp",
+      "reader_seal": {
+        "manifest_sha256": "2b98a66c53e66cf15cbc0a9af78d4847ee291f6c02b5dc6e48b2ce3c9315fb71",
+        "members": 440,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-reader.uwbpy5bp",
+        "verified_utc": "2026-10-22T16:30:39.190650+00:00"
+      },
+      "reader_source_pins": {
+        "authenticate_lifecycle.before-source-pin.py": "0f610efea83f03159514271ab24a2fa745149512c757b810746725b684b665ee",
+        "authenticate_lifecycle.py": "a29e3f2909ba108b76de6310192c9188d474c02bc1fec25a305253013ec398d1",
+        "cache_witness.py": "f4f7136bc982ddfe7bdaa5339b438452f0013446d64ec0ca613e35aa207e1fbc",
+        "connection.py": "1d885651f2d93b9f019bcce04c2022726a9c8af5676e475dc92035047b947dde",
+        "decode_lifecycle_finals.py": "e75cf2927fa4bc390f7a2fc3ee2c4241f7a6fcd3df50c758db141c7b65fe54dd",
+        "grade_lifecycle.py": "b92a34ac9ca6d7d9f41991169ed297de7b04dbd26241c8e8112f9d8f259ac900",
+        "lifecycle_readout.py": "2da19c08c82fb5065cc471ccccce060fba983eff1ce2566fc58c1d934cc67fde",
+        "local_commands.py": "71ac3ebfc4eef1c0b373a7a8317c1f72d300a375f307cce1500bbdb0a659711a",
+        "seal_evidence.py": "082835dabf0bf1e96d9bba6f08918914b01a1306a5a2cd939a0c9309ad334e18",
+        "test_evidence_inventory.py": "e65636970fa3acfaf4a30b6e2f61e1b7361316b9c0c5389c5f7cdbffbf3626ca",
+        "test_lifecycle_readout.py": "c66a1a6812f53e7226d1e6e9f940e47ae3903353a4de6c5fcc04b8a5d6df2b38",
+        "thinking_segments.py": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29"
+      },
+      "requests": 54,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "lifecycle",
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "67143e80ccae55193660599af6ddf0a0070cbdb1a52adaa97ee70ab2575f39e7",
+          "members": 579,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-run.auo1ln65",
+          "verified_utc": "2026-10-22T16:30:20.840169+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "2b98a66c53e66cf15cbc0a9af78d4847ee291f6c02b5dc6e48b2ce3c9315fb71",
+          "members": 440,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-reader.uwbpy5bp",
+          "verified_utc": "2026-10-22T16:30:39.190650+00:00"
+        },
+        "requests": 54,
+        "result_name": "LIFECYCLE-RESULTS.json",
+        "result_sha256": "cc4f5e656dba121507d5ecb8d0e857604cc6f01385261cbc4b52bcae0f2ac984",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle.m7hwllvu",
+      "source_seal": {
+        "manifest_sha256": "a2c7ffe03886c3cd001810c3402f2170501db7e9962e92ac8e90fd508372b2fe",
+        "members": 347,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle.m7hwllvu",
+        "verified_utc": "2026-10-22T16:03:43.936206+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "sampled": {
+      "donor_native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-run.raw600x_",
+      "donor_native_seal": {
+        "manifest_sha256": "58764272eb640e115657e68f840362103378296a0284444c689bc78a975ccab7",
+        "members": 220,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-run.raw600x_",
+        "verified_utc": "2026-10-22T13:54:21.169852+00:00"
+      },
+      "donor_reader_seal": {
+        "manifest_sha256": "5a26c29fb14fd764b94239c624696fa6153e8bc62100abacc0bc29d2cb5aaf12",
+        "members": 123,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled-reader.0kmw7op1",
+        "verified_utc": "2026-10-22T13:54:31.443312+00:00"
+      },
+      "donor_source_seal": {
+        "manifest_sha256": "535d6a8e78fc838f08bb144dd04bdcb315d596ec9f459ead11c409d69ea127b8",
+        "members": 341,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint14-sampled.1ln2n769",
+        "verified_utc": "2026-10-22T13:38:24.995593+00:00"
+      },
+      "launch_authorized": true,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-run.bmaacfra",
+      "native_seal": {
+        "manifest_sha256": "a45a42f721e55a541d333b11bef74642e6fdd5c664492e3cc8da14400e7d2609",
+        "members": 232,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-run.bmaacfra",
+        "verified_utc": "2026-10-22T16:21:23.552346+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-reader.1yj3z9ws",
+      "reader_seal": {
+        "manifest_sha256": "01dfebc60043cc8c7717b8cf9462b96d59bab1a1f852fb5d0c68164d29d4bb7a",
+        "members": 120,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-reader.1yj3z9ws",
+        "verified_utc": "2026-10-22T16:21:33.899050+00:00"
+      },
+      "reader_source_pins": {
+        "authenticate_quality.before-source-pin.py": "95517811a5406d402a49d5c673d71f9639d529c030e02fda9f9ee761c020318a",
+        "authenticate_quality.py": "53e557271922ca8c58540f2fd2499225d46a34610603bbdf6375e9d3b5d46bf5",
+        "cache_witness.py": "f4f7136bc982ddfe7bdaa5339b438452f0013446d64ec0ca613e35aa207e1fbc",
+        "connection.py": "1d885651f2d93b9f019bcce04c2022726a9c8af5676e475dc92035047b947dde",
+        "decode_thinking_finals.before-tokenizer-reference.py": "9ea80a531dc0c6b124f78061026df2f0859249752579325f3252a4078190338f",
+        "decode_thinking_finals.py": "87726206080bcd662670897e089d536fb76bb11633ab2b7b1d2fca690aec31f6",
+        "grade_quality.py": "b52231976ddb4b104f6fd0a29fa4bb7ffb6b46a1ee48275323d84829f55a8061",
+        "grade_sprint_response.py": "9fef2507a402fe7d34df1fc923561ab42efbadf2b0a6c44c54390a9b03fe293f",
+        "local_commands.py": "71ac3ebfc4eef1c0b373a7a8317c1f72d300a375f307cce1500bbdb0a659711a",
+        "make_sprint_requests.py": "d7e898f5ebc71645f329359ea095b28f2a3f2fce41b74c9b146fce46bee50327",
+        "sampling_host_timing.py": "1e64177be8f5515b733130d0ead53cbccd519af4bf996f8e4cd13dcfb2e62037",
+        "sampling_witness.py": "68f519f6e0e37185f7cdd0fa86ae2b0a8b10f47663227fb9587143f2fe23030c",
+        "seal_evidence.py": "082835dabf0bf1e96d9bba6f08918914b01a1306a5a2cd939a0c9309ad334e18",
+        "sprint_grader.py": "8596d59c72022719e2e9946dc99906234ab1eb50060e6f2282cef788fa8f6a29",
+        "test_evidence_inventory.py": "e65636970fa3acfaf4a30b6e2f61e1b7361316b9c0c5389c5f7cdbffbf3626ca",
+        "test_sampling_witness.py": "bb969ac1c667b3317478aff08b403e38af301996455eb690094e9afdc3e6d2c5",
+        "test_thinking_readout.py": "87b238c9744143908dd1de744ef60a42e3282be3850c431bfb8963db4fa78c8a",
+        "test_tokenizer_reference.py": "e54c2307c5406ddcff3a7af8ebd59abce54ff049c6ed09a2ed0f3d1fde1bfff6",
+        "thinking_segments.py": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29"
+      },
+      "requests": 8,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "sampled",
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "a45a42f721e55a541d333b11bef74642e6fdd5c664492e3cc8da14400e7d2609",
+          "members": 232,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-run.bmaacfra",
+          "verified_utc": "2026-10-22T16:21:23.552346+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "01dfebc60043cc8c7717b8cf9462b96d59bab1a1f852fb5d0c68164d29d4bb7a",
+          "members": 120,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-reader.1yj3z9ws",
+          "verified_utc": "2026-10-22T16:21:33.899050+00:00"
+        },
+        "requests": 8,
+        "result_name": "QUALITY-RESULTS.json",
+        "result_sha256": "370d778eee377be8c7479c247842adf569889a888014052afa7475869f358ee8",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled.0pkfkat9",
+      "source_seal": {
+        "manifest_sha256": "5bd952440d6acc2c6aa7ae6101a2620e0ea30f9c6575a5cb1e1ed01c53acfd5a",
+        "members": 341,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled.0pkfkat9",
+        "verified_utc": "2026-10-22T16:03:49.732708+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    }
+  },
+  "source_root": "fp8-sprint17-qkvz.zfzfuoew",
+  "source_seal": {
+    "manifest_sha256": "4d3497b7bb854567baa9d519a91d33ba1015c1dd4819cc7f60e772cd97cfc905",
+    "members": 85,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-qkvz.zfzfuoew",
+    "verified_utc": "2026-10-22T15:41:19.697355+00:00"
+  },
+  "status": "SPRINT17_COMPLETE_EXPERIMENTAL_QKVZ_TILE16_SELECTED",
+  "tracking": "docs/SPRINT17-GDN-INPUT.md"
+}

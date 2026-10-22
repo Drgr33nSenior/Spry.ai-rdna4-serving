@@ -1,0 +1,42 @@
+{
+  "aligned_gdn_sha256": "fbfd24803574b133fd2ea22063a0010a4c3c5f3e15e5c63df47241f546f7f826",
+  "checks_passed": 7,
+  "decision": "Keep the existing FP32-state aligned recurrent baseline; do not enable the replay flag as an arithmetic-preserving optimisation.",
+  "evidence_scope": "Pinned current runtime source; standard-library AST checks and an illustrative CPU cast only",
+  "findings": {
+    "aligned_beta_expression": "tl.sigmoid(b_b).to(b.dtype.element_ty).to(tl.float32)",
+    "chunked_verify_and_compact_commit": true,
+    "exact_fold_present_but_not_active_verify_launch": true,
+    "replay_beta_expression": "tl.where(mask_s, 1.0 / (1.0 + tl.exp(-b_s)), 0.0)",
+    "separate_verify_dispatch": true,
+    "snapshots_removed": true,
+    "verify_launch_mode": "verify"
+  },
+  "gpu_work": false,
+  "illustrative_beta": {
+    "bf16_rounded_sigmoid": 0.73046875,
+    "fp32_sigmoid": 0.7310585975646973,
+    "input_b": 1.0,
+    "scope": "CPU cast illustration; not native sigmoid or learned-state validation"
+  },
+  "memory": {
+    "historical_intermediate_ssm_gib_per_rank": 1.69,
+    "net_replay_savings_measured": false,
+    "ring_and_residual_allocations_required": true
+  },
+  "qualification": false,
+  "remaining": [
+    "A separately reviewed recurrence/replay implementation that preserves aligned arithmetic.",
+    "Native output/state checks across every accepted prefix, rejection, wrap, reuse, radix tracking and graph replay.",
+    "Matched-capacity memory and end-to-end timing if those checks pass."
+  ],
+  "runtime_changed": false,
+  "schema": 1,
+  "source_pins": {
+    "kernels/ops/attention/fla/gdn_replayssm_spec_decode.py": "83358f6bcd0585a469e6ae545658f10fec7e6a8b3a4622ee9dc94efa0061c596",
+    "srt/layers/attention/linear/gdn_backend.py": "c12e054cbe9f85cf15b0590a8ea7e3e175f62121160c3f548e0aa7ce71d1af0d",
+    "srt/mem_cache/memory_pool.py": "47e13954eb8b06836a5279fedd1f79f03dbd40245819ae152af3a02f3887c1ac"
+  },
+  "source_promotion": false,
+  "status": "PARK_EXISTING_REPLAYSSM_UNDER_EXACT_ARITHMETIC_CONTRACT"
+}

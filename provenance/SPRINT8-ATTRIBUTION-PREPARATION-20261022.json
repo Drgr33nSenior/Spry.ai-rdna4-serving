@@ -1,0 +1,120 @@
+{
+  "actual_packet_size_validation_pending": true,
+  "baseline_source_manifest_sha256": "7d15e20b507e2414be5f2da77d3b7fd538f75cb2a4d15ab9423ad43042c3b5ad",
+  "completed_milestones": [
+    "8.1: bounded host recorder and optional sampled-route derivative; CPU fixtures only"
+  ],
+  "cpu_tests_passed": 24,
+  "date": "2026-10-22",
+  "default_observer_installation_changed": false,
+  "full_enabled_startup_validation_pending": true,
+  "gpu_campaign_scheduled": false,
+  "host_timing_scope": "Monotonic host elapsed time, including recorder bookkeeping but excluding record assembly. Native call can contain device waits; not GPU time or CPU consumption.",
+  "independent_review": {
+    "model_family": "Astra",
+    "remaining": [
+      "Enabled startup",
+      "Native request/replay/acceptance/commit joins",
+      "Device measurements",
+      "Assembled package/transport ceilings"
+    ],
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Sprint8.1 CPU host-only groundwork; no launch approval",
+    "source_pins": {
+      "candidate_helper": "4d83ddfa96078fda98ff88acc9e1b40887d0e41500453e43e74cb0cf08d902d1",
+      "canonical_recorder": "1e64177be8f5515b733130d0ead53cbccd519af4bf996f8e4cd13dcfb2e62037",
+      "frozen_bindings": "d3f72cb8b46c3e37ea97cabeb20ed7d2a92c0843a2783aceaca17c1cee2b7f4c",
+      "integration_tests": "2ea06716a2c25a617d7eb4c0cc6d856fc0fe252d66fe1b99c6fa372d6fd04e92",
+      "public_tests": "0922944a44fa9effff1a9beb7e75d7deebb97b6c434130d1791503e43aba6010"
+    },
+    "status": "APPROVED_NO_BLOCKING_FINDINGS",
+    "verified": [
+      "Canonical recorder AST equality",
+      "Helper definitions unchanged outside SamplingRoute",
+      "Donor identity and frozen schedule",
+      "11 public and13 integration CPU tests",
+      "Native authentication, single delegation, return identity, exception preservation and restoration"
+    ]
+  },
+  "installed_runtime_changed": false,
+  "launch_prepared": false,
+  "model_call_observation_limit": 36864,
+  "native_cycle_join_validation_pending": true,
+  "new_dependencies": 0,
+  "new_gpu_runs": 0,
+  "next_sprints": [
+    {
+      "number": 9,
+      "scope": "One measured optimization and exact native component checks"
+    },
+    {
+      "number": 10,
+      "scope": "Matched serving, reverse order and affected quality/lifecycle checks"
+    }
+  ],
+  "numerical_sources_changed": false,
+  "performance_gain_measured": false,
+  "plan_record": "provenance/POST-SPRINT7-OPTIMIZATION-PLAN-20261022.json",
+  "private_evidence_root": "scratchpad/fp8-sprint8-host-timing.dge3rr2d",
+  "private_evidence_seal": {
+    "manifest_sha256": "f05e76eb5aac68d353060aaa999c0836940c0c687a6297d0ab65547a24fcc755",
+    "members": 31
+  },
+  "protected_helpers_changed": false,
+  "remaining_milestones": [
+    "8.2: graph/eager device hooks, cycle joins, enabled-startup tests, complete package build and review",
+    "8.3: bounded native attribution, quality/release verification and measured branch selection"
+  ],
+  "sample_rows_max_per_rank": 128,
+  "schema": 1,
+  "selected_reference_changed": false,
+  "source": {
+    "canonical_recorder": "prototype/serving/sampling_host_timing.py",
+    "canonical_recorder_sha256": "1e64177be8f5515b733130d0ead53cbccd519af4bf996f8e4cd13dcfb2e62037",
+    "derivation": {
+      "added_definitions": [
+        "SamplingHostTiming"
+      ],
+      "baseline_helper_sha256": "313853c862fdde8c041a049d4b55524f369286b8ebdbfda0b477ba92c2f2f331",
+      "candidate_helper_sha256": "4d83ddfa96078fda98ff88acc9e1b40887d0e41500453e43e74cb0cf08d902d1",
+      "canonical_source": "prototype/serving/sampling_host_timing.py",
+      "canonical_source_sha256": "1e64177be8f5515b733130d0ead53cbccd519af4bf996f8e4cd13dcfb2e62037",
+      "changed_existing_definitions": [
+        "SamplingRoute"
+      ],
+      "gpu_runs": 0,
+      "native_bodies_unchanged": true,
+      "worker_installation_changed": false
+    },
+    "public_tests": "tests/test_sampling_host_timing.py",
+    "public_tests_sha256": "0922944a44fa9effff1a9beb7e75d7deebb97b6c434130d1791503e43aba6010"
+  },
+  "sprint": 8,
+  "status": "SPRINT8_1_CPU_PASS_DEVICE_INTEGRATION_PENDING",
+  "tests": {
+    "02-route-integration": {
+      "command": [
+        "python3",
+        "-B",
+        "<private-evidence-root>/test_sampling_host_timing_integration.py"
+      ],
+      "elapsed_seconds": 0.7971465841401368,
+      "exact_argv_retained_in_private_receipt": true,
+      "exit_code": 0,
+      "receipt_sha256": "ed4c76a0e85bc6d12ccbced7eabb35e14ea205c077833d50d41a762e42a6ca4a",
+      "tests": 13
+    },
+    "03-host-unit-final": {
+      "command": [
+        "make",
+        "test-sampling-host-timing"
+      ],
+      "elapsed_seconds": 0.2518528748769313,
+      "exact_argv_retained_in_private_receipt": true,
+      "exit_code": 0,
+      "receipt_sha256": "ae78c562022ad6f231b55fb43b54715aa184b3fa6c06efaeb8cf662323e6e989",
+      "tests": 11
+    }
+  },
+  "tracking": "docs/SPRINT8-COST-ATTRIBUTION.md"
+}

@@ -1,0 +1,508 @@
+{
+  "baseline_common_across_original_and_followup": {
+    "common": 15,
+    "independence_assumed": false,
+    "total": 16,
+    "uncommon": 1
+  },
+  "checks": {
+    "cpu_acceptance_passed": 21,
+    "graph_and_histogram_relations_consistent": true,
+    "source_runtime_weights_wire_verified": true
+  },
+  "common_matches": 8,
+  "date": "2026-10-21",
+  "exact_equivalence_qualified": false,
+  "flush_added": false,
+  "historical_common_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+  "historical_variant_sha256": "40081e0625ba330c68628bb15da9fc1b84667d38a47dca171e5b1dfbfb71bdbd",
+  "independent_raw_time_recomputation": true,
+  "independent_release_verified": true,
+  "installed_runtime_changed": false,
+  "limitation": "A finite repeatability screen cannot establish determinism or distinguish numerical variability from stale state/cache. Original A/B exact-output gate remains incomplete.",
+  "metadata_witnesses": {
+    "baseline-start1": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ],
+    "baseline-start2": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ]
+  },
+  "model_starts": 2,
+  "native_manifest_sha256": "739715894bec5e2c5ccc18f648b05a5657a12ca911d9ec0d0450475387e72791",
+  "native_owner_elapsed_seconds": 272.60916863102466,
+  "new_hooks": false,
+  "next_diagnostic": {
+    "boundary": "Scheduler.process_batch_result",
+    "executed": false,
+    "extra_model_forwards": false,
+    "implemented": false,
+    "new_gpu_copies": false,
+    "purpose": "Record per-request CPU output-ID suffixes and existing verification/acceptance counters to compare the path before token102 if the variant recurs."
+  },
+  "prior_exact_output_gate": "M2047 A/B remains incomplete: seven of eight paired prefixes matched, candidate8/8 common and baseline7/8 common.",
+  "remote_evidence": {
+    "protected": {
+      "manifest_sha256": "30af28bc752f9ed3eaa548631fda7426006a55a1144cf0e81f17ae99b091ab0d",
+      "members": 31
+    },
+    "workload": {
+      "manifest_sha256": "43ca9fbb3cae8ebe07da66d69ac05c211cc8c86230ca5ab6eb920bca2b6691bd",
+      "members": 143
+    }
+  },
+  "requests": 8,
+  "root_cause": "unknown",
+  "root_owned_closeout_authenticated": true,
+  "samples": [
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.0915636619902216,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start1",
+      "warmup": true
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 1,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.9490131320198998,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start1",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.948531994014047,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start1",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.9505982600385323,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start1",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.085766746022273,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start2",
+      "warmup": true
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 1,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.9501565120299347,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start2",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.944485210988205,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start2",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.9431100590154529,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "baseline-start2",
+      "warmup": false
+    }
+  ],
+  "schema": 1,
+  "software": {
+    "hip": "7.17.26416",
+    "rccl": "2.32.3",
+    "rocm_sdk": "10.2.0.dev20261020+git535d2990",
+    "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+    "triton": "3.8.0"
+  },
+  "source_manifest_sha256": "a5a1a0bd7e2d6bcfe6a6c7ed79bf41ccf4b843aff4d1a5c2030d182799c5f051",
+  "stack_changed": false,
+  "start_medians": [
+    {
+      "output_tokens_per_second": 65.67426247525822,
+      "seconds": 1.9490131320198998,
+      "start": "baseline-start1"
+    },
+    {
+      "output_tokens_per_second": 65.82719131864687,
+      "seconds": 1.944485210988205,
+      "start": "baseline-start2"
+    }
+  ],
+  "startup_metadata": "One capture metadata build across sixteen attention layers per rank in both starts.",
+  "status": "BASELINE_VARIATION_NOT_REPRODUCED_IN_FINITE_SCREEN",
+  "task_quality_qualified": false,
+  "unique_output_hashes": [
+    "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc"
+  ],
+  "workload": {
+    "concurrency": 1,
+    "dflash_block_size": 8,
+    "forced_output_tokens": 128,
+    "gemm_stages": 3,
+    "input_tokens": 2047,
+    "rate_scope": "combined TP2",
+    "reasoning_effort": "low",
+    "server_seed": 12345,
+    "tensor_parallel": 2
+  }
+}

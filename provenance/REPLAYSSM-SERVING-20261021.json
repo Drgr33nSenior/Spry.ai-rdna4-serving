@@ -1,0 +1,570 @@
+{
+  "allocation_increase_explained_exactly_by_persistent_growth_and_ring_minus_snapshots": false,
+  "allocation_increase_per_rank_bytes": 2663920128,
+  "allocator_residual_cause": "unassigned",
+  "allocator_residual_per_rank_bytes": 938496,
+  "analysis_seal_sha256": "09db497703f63bdb21fafe4e06b273b7c7a54aef1a59471ba6cbf5deb8258076",
+  "broader_lifecycle_qualified": false,
+  "candidate_selected_for_production": false,
+  "cpu_acceptance_checks": 43,
+  "current_session_reference_changed": false,
+  "date": "2026-10-21",
+  "git_publication_performed": false,
+  "implementation_review": {
+    "combined_bytes_including_protected_helpers": 33354011,
+    "cpu_checks": 43,
+    "model": "gpt-6-astra",
+    "payload_sha256": "97a75bc97a6177e902e2508cecbef9b906461cac181835168a481b163ed3e176",
+    "prior_refusal_model_starts": 0,
+    "protected_helpers_identical": true,
+    "qualification": false,
+    "reasoning": "max",
+    "recorded_hashes_verified": 283,
+    "remaining": [
+      "serving correctness",
+      "performance",
+      "actual persistent pool capacity",
+      "total VRAM savings"
+    ],
+    "reviewer": "/root/astra_replay_serving_verify",
+    "schema": 1,
+    "serving_sources_unchanged_from_prior_review": true,
+    "status": "APPROVED_FOR_BOUNDED_SERVING_EXPERIMENT",
+    "transport_inspect_archive": "INDEPENDENT_PASS_64_MEMBERS"
+  },
+  "independent_raw_time_recomputation": true,
+  "independent_release_verified": true,
+  "initial_refusal": {
+    "cause": "Unchanged archive member ceiling",
+    "independent_target_and_scope_absence": true,
+    "native_local_seal": "ca95efd7ec21b052d2d808dbb622d57526835d02ce5bc95a4f0033b1b05797ac",
+    "source_seal": "2323816d7fce4e28d0d03096907c1344fb245a767fdb56502d45ab81406cd0fc",
+    "status": "BEFORE_GRANT_NO_GPU_MODEL_STARTS"
+  },
+  "installed_runtime_changed": false,
+  "interpretation": "One-order C1 screen with one excluded warmup and three measured requests per start. Automatic persistent capacity differs. Keep output/memory tradeoffs and incomplete broader qualification explicit.",
+  "latency_change_percent": -2.4221448698537373,
+  "main_tensor_allocation_delta_calculated_bytes": 2662981632,
+  "matched_persistent_capacity_screen_complete": false,
+  "memory_per_rank": [
+    {
+      "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+      "configuration": "snapshot",
+      "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+      "physical_state_slots_including_padding": 20,
+      "rank": 0,
+      "ring_bytes": 0,
+      "snapshot_bytes_from_native_constructor_geometry": 1811939328,
+      "ssm_state_bytes": 1509949440,
+      "startup_allocator": {
+        "allocated_bytes": 22041610240,
+        "driver_free_bytes": 10873733120,
+        "driver_total_bytes": 34208743424,
+        "reported_peak_allocated_bytes": 22076058112,
+        "reported_peak_reserved_bytes": 22357737472,
+        "reserved_bytes": 22334668800
+      },
+      "usable_state_slots": 19
+    },
+    {
+      "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+      "configuration": "snapshot",
+      "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+      "physical_state_slots_including_padding": 20,
+      "rank": 1,
+      "ring_bytes": 0,
+      "snapshot_bytes_from_native_constructor_geometry": 1811939328,
+      "ssm_state_bytes": 1509949440,
+      "startup_allocator": {
+        "allocated_bytes": 22041610240,
+        "driver_free_bytes": 10873733120,
+        "driver_total_bytes": 34208743424,
+        "reported_peak_allocated_bytes": 22076058112,
+        "reported_peak_reserved_bytes": 22357737472,
+        "reserved_bytes": 22334668800
+      },
+      "usable_state_slots": 19
+    },
+    {
+      "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+      "configuration": "ring_fold",
+      "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+      "physical_state_slots_including_padding": 75,
+      "rank": 0,
+      "ring_bytes": 241459200,
+      "snapshot_bytes_from_native_constructor_geometry": 0,
+      "ssm_state_bytes": 5662310400,
+      "startup_allocator": {
+        "allocated_bytes": 24705530368,
+        "driver_free_bytes": 8214544384,
+        "driver_total_bytes": 34208743424,
+        "reported_peak_allocated_bytes": 24739978240,
+        "reported_peak_reserved_bytes": 25016926208,
+        "reserved_bytes": 24993857536
+      },
+      "usable_state_slots": 74
+    },
+    {
+      "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+      "configuration": "ring_fold",
+      "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+      "physical_state_slots_including_padding": 75,
+      "rank": 1,
+      "ring_bytes": 241459200,
+      "snapshot_bytes_from_native_constructor_geometry": 0,
+      "ssm_state_bytes": 5662310400,
+      "startup_allocator": {
+        "allocated_bytes": 24705530368,
+        "driver_free_bytes": 8214544384,
+        "driver_total_bytes": 34208743424,
+        "reported_peak_allocated_bytes": 24739978240,
+        "reported_peak_reserved_bytes": 25016926208,
+        "reserved_bytes": 24993857536
+      },
+      "usable_state_slots": 74
+    }
+  ],
+  "metadata_witnesses": {
+    "ring_fold": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ],
+    "snapshot": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ]
+  },
+  "model_starts": 2,
+  "native_manifest_sha256": "be0bf1bd45e430fdb20eb97c0ff377a14d85a4428693db640834b9147ed59a09",
+  "native_owner_seconds": 273.6204902069876,
+  "next": "Sprint7: matched persistent capacity, reverse order, normal-stop quality, context/C1/C2, sampling, cache reuse, cancellation and repeated lifecycles",
+  "output_rate_change_percent": 2.482269021616812,
+  "paired_output_count": 4,
+  "paired_output_matches": 4,
+  "persistent_slot_growth": 55,
+  "qualification": false,
+  "remote_evidence": {
+    "protected": {
+      "manifest_sha256": "7afae7dd60f54a88d00e26955eb2210a0d3d578857a228f0f60b9991a70c5ecd",
+      "members": 31
+    },
+    "workload": {
+      "manifest_sha256": "ae76c1e8c53fc77ed0b589210d118f5385f4cb8f2b737a3acdf85f61b3a77448",
+      "members": 143
+    }
+  },
+  "requests": 8,
+  "result_review": {
+    "allocator_residual_cause": "unassigned",
+    "allocator_residual_per_rank_bytes": 938496,
+    "independent_native_http_validation": true,
+    "independent_release_verified": true,
+    "limitations": [
+      "one ordered comparison",
+      "one repeated prompt",
+      "three measured requests per arm",
+      "matched-capacity memory savings unestablished",
+      "broader quality and lifecycle behavior unqualified",
+      "repeatable performance gains unestablished"
+    ],
+    "model": "gpt-6-astra",
+    "output_pairs_exact": 4,
+    "qualification": false,
+    "reasoning": "max",
+    "recaptures": 0,
+    "results_sha256": "908018865f37bca0e2fc0672492874e51daecd6194e05099435842105b2834ef",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "schema": 1,
+    "selected_reference_retained": true,
+    "shortlist_for_sprint7": true,
+    "source_and_retained_seals_verified": true,
+    "status": "VERIFIED_BOUNDED_AB_NO_BLOCKING_FINDINGS",
+    "summary_sha256": "5079ab04fbaa740e0d9da6f1dce1142cce05fd7c14565422ff8a307ace5f9a27",
+    "verifications_replays_commits_per_request_rank": 25
+  },
+  "samples": [
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.204817681980785,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "snapshot",
+      "warmup": true
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 1,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.8506532239844091,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "snapshot",
+      "warmup": false
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.8478365550399758,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "snapshot",
+      "warmup": false
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.848953735025134,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "snapshot",
+      "warmup": false
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.1561788319959305,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "ring_fold",
+      "warmup": true
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 1,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.8022300730226561,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "ring_fold",
+      "warmup": false
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.8041693969862536,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "ring_fold",
+      "warmup": false
+    },
+    {
+      "graph_and_commit_deltas": [
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "completed_commits": 25,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.8065140030230395,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "ring_fold",
+      "warmup": false
+    }
+  ],
+  "schema": 1,
+  "source": "Retained native HTTP artifacts authenticated by independent read-only validation",
+  "source_manifest_sha256": "0ef491b6cb58958372d1ec4968538e96ebbf017c55af39dea870aaf933b39795",
+  "stack": {
+    "hip": "7.17.26416",
+    "rccl": "2.32.3",
+    "rocm_sdk": "10.2.0.dev20261020+git535d2990",
+    "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+    "triton": "3.8.0"
+  },
+  "start_medians": [
+    {
+      "configuration": "snapshot",
+      "output_tokens_per_second": 69.22834118305292,
+      "seconds": 1.848953735025134
+    },
+    {
+      "configuration": "ring_fold",
+      "output_tokens_per_second": 70.94677485041903,
+      "seconds": 1.8041693969862536
+    }
+  ],
+  "status": "BOUNDED_REPLAY_SERVING_PASS_MORE_RECURRENT_CAPACITY",
+  "task_quality_qualified": false,
+  "total_vram_saving_demonstrated": false,
+  "unique_output_hashes": [
+    "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc"
+  ],
+  "workload": {
+    "concurrency": 1,
+    "context": 16384,
+    "dflash_width": 8,
+    "forced_output_tokens": 128,
+    "input_tokens": 2047,
+    "kv_pool_tokens": 16416,
+    "m2047_stage1": true,
+    "reasoning_effort": "low",
+    "tensor_parallel": 2
+  }
+}

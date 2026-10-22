@@ -1,0 +1,407 @@
+{
+  "actual_c2_groups": 4,
+  "all_final_answer_pairs_equal": true,
+  "branch_input_tokens": [
+    5460,
+    5461
+  ],
+  "cancel_output_cap": 2048,
+  "cancellations": 4,
+  "checkpoint_boundaries": [
+    4095,
+    4096,
+    4097
+  ],
+  "context": 16384,
+  "date": "2026-10-21",
+  "exact_output_equivalence": false,
+  "full_output_equal_pairs": 42,
+  "full_output_pairs": 52,
+  "independent_release_verified": true,
+  "kv_tokens": 16416,
+  "limitations": [
+    "State observer validates integer slot/request bookkeeping; it does not compare numerical state values or per-node cache ownership.",
+    "Observer reads bounded integer allocator indices outside graphs; instrumented timings are not performance results.",
+    "C2 delegates to native attention because the split adapter requires singleton batches.",
+    "Reasoning-output variations remain; owner experimental-session disposition applies.",
+    "This is bounded lifecycle coverage, not an endurance or stochastic-distribution test."
+  ],
+  "max_observed_normal_output_tokens": 243,
+  "max_running_requests": 2,
+  "normal_correct_finals": 104,
+  "normal_output_cap": 1024,
+  "numerical_state_equivalence": false,
+  "packets": [
+    {
+      "actual_c2_groups": 2,
+      "all_screen_gates_passed": true,
+      "cancellations": 2,
+      "full_output_equal_pairs": 22,
+      "full_output_pairs": 26,
+      "natural_correct_finals": 52,
+      "order": [
+        "snapshot",
+        "ringfold"
+      ],
+      "output_differences": [
+        {
+          "arm": "control",
+          "case": "victim-warm-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "control",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "control",
+          "case": "final-replay-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 121,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        }
+      ],
+      "profiles": [
+        {
+          "c2_per_rank": [
+            {
+              "bs1_replays": 0,
+              "bs2_replays": 41,
+              "completed_commits": 41,
+              "rank": 0,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                41
+              ]
+            },
+            {
+              "bs1_replays": 0,
+              "bs2_replays": 41,
+              "completed_commits": 41,
+              "rank": 1,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                41
+              ]
+            }
+          ],
+          "profile": "snapshot",
+          "slots_per_rank": [
+            {
+              "all_active_requests_released": true,
+              "events": 383,
+              "final_cached_evictable": 12,
+              "final_cached_protected": 0,
+              "final_free_mamba": 7,
+              "integer_indices_read": 3892,
+              "numerical_state_equivalence": false,
+              "rank": 0
+            },
+            {
+              "all_active_requests_released": true,
+              "events": 383,
+              "final_cached_evictable": 12,
+              "final_cached_protected": 0,
+              "final_free_mamba": 7,
+              "integer_indices_read": 3892,
+              "numerical_state_equivalence": false,
+              "rank": 1
+            }
+          ]
+        },
+        {
+          "c2_per_rank": [
+            {
+              "bs1_replays": 0,
+              "bs2_replays": 41,
+              "completed_commits": 41,
+              "rank": 0,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                41
+              ]
+            },
+            {
+              "bs1_replays": 0,
+              "bs2_replays": 41,
+              "completed_commits": 41,
+              "rank": 1,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                41
+              ]
+            }
+          ],
+          "profile": "ring_fold",
+          "slots_per_rank": [
+            {
+              "all_active_requests_released": true,
+              "events": 384,
+              "final_cached_evictable": 11,
+              "final_cached_protected": 0,
+              "final_free_mamba": 8,
+              "integer_indices_read": 3920,
+              "numerical_state_equivalence": false,
+              "rank": 0
+            },
+            {
+              "all_active_requests_released": true,
+              "events": 384,
+              "final_cached_evictable": 11,
+              "final_cached_protected": 0,
+              "final_free_mamba": 8,
+              "integer_indices_read": 3920,
+              "numerical_state_equivalence": false,
+              "rank": 1
+            }
+          ]
+        }
+      ],
+      "requests": 54,
+      "result_sha256": "8c8c564346200218556a0c5fcb1ffbc827e2886ffc69e2ecb71e91675413121b",
+      "seals": {
+        "native": {
+          "manifest_sha256": "4cadb79e20bc0c0d5f094bd5836c6f8e4692c907c22bda6fc20b0f23b94a82d1",
+          "members": 548,
+          "root": "scratchpad/fp8-sprint7-lifecycle-run.kp6d7isw"
+        },
+        "readout": {
+          "manifest_sha256": "6f48019ac7565afd77f317d5758bc235b284dc201a5f7304f3c1cc0bbb73952f",
+          "members": 446,
+          "root": "scratchpad/fp8-sprint7-lifecycle-reader-final.86x0zw3q"
+        },
+        "source": {
+          "manifest_sha256": "f599a65df999c76e75552acf886d6aff11d4a5b39f7dc568f5e0bd8e29b875e7",
+          "members": 348,
+          "root": "scratchpad/fp8-sprint7-lifecycle-accepted.o7sd9ig7"
+        }
+      }
+    },
+    {
+      "actual_c2_groups": 2,
+      "all_screen_gates_passed": true,
+      "cancellations": 2,
+      "full_output_equal_pairs": 20,
+      "full_output_pairs": 26,
+      "natural_correct_finals": 52,
+      "order": [
+        "ringfold",
+        "snapshot"
+      ],
+      "output_differences": [
+        {
+          "arm": "mtp",
+          "case": "boundary-4096-replay-a",
+          "comparison_case": "boundary-4096-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "boundary-4097-replay-a",
+          "comparison_case": "boundary-4097-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 97,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "victim-warm-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "control",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "control",
+          "case": "concurrent-b",
+          "comparison_case": "boundary-4096-isolated-b",
+          "final_answers_equal": true,
+          "first_difference": 12,
+          "full_output_ids_equal": false
+        }
+      ],
+      "profiles": [
+        {
+          "c2_per_rank": [
+            {
+              "bs1_replays": 0,
+              "bs2_replays": 41,
+              "completed_commits": 41,
+              "rank": 0,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                41
+              ]
+            },
+            {
+              "bs1_replays": 0,
+              "bs2_replays": 41,
+              "completed_commits": 41,
+              "rank": 1,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                41
+              ]
+            }
+          ],
+          "profile": "ring_fold",
+          "slots_per_rank": [
+            {
+              "all_active_requests_released": true,
+              "events": 384,
+              "final_cached_evictable": 11,
+              "final_cached_protected": 0,
+              "final_free_mamba": 8,
+              "integer_indices_read": 3838,
+              "numerical_state_equivalence": false,
+              "rank": 0
+            },
+            {
+              "all_active_requests_released": true,
+              "events": 384,
+              "final_cached_evictable": 11,
+              "final_cached_protected": 0,
+              "final_free_mamba": 8,
+              "integer_indices_read": 3838,
+              "numerical_state_equivalence": false,
+              "rank": 1
+            }
+          ]
+        },
+        {
+          "c2_per_rank": [
+            {
+              "bs1_replays": 9,
+              "bs2_replays": 32,
+              "completed_commits": 41,
+              "rank": 0,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                32
+              ]
+            },
+            {
+              "bs1_replays": 9,
+              "bs2_replays": 32,
+              "completed_commits": 41,
+              "rank": 1,
+              "replays": 41,
+              "request_verifier_counts": [
+                41,
+                32
+              ]
+            }
+          ],
+          "profile": "snapshot",
+          "slots_per_rank": [
+            {
+              "all_active_requests_released": true,
+              "events": 384,
+              "final_cached_evictable": 11,
+              "final_cached_protected": 0,
+              "final_free_mamba": 8,
+              "integer_indices_read": 3931,
+              "numerical_state_equivalence": false,
+              "rank": 0
+            },
+            {
+              "all_active_requests_released": true,
+              "events": 384,
+              "final_cached_evictable": 11,
+              "final_cached_protected": 0,
+              "final_free_mamba": 8,
+              "integer_indices_read": 3931,
+              "numerical_state_equivalence": false,
+              "rank": 1
+            }
+          ]
+        }
+      ],
+      "requests": 54,
+      "result_sha256": "132f65a92b1c64c97372347aa4e8e740612eb8fa8eb787f9e0904317b55c95e3",
+      "seals": {
+        "native": {
+          "manifest_sha256": "3fcb3f90bf9dc620e144c7ae4a0380a594769176a81efa3508551ab5bd9483ee",
+          "members": 551,
+          "root": "scratchpad/fp8-sprint7-lifecycle-reverse-run.d4b3mvdc"
+        },
+        "readout": {
+          "manifest_sha256": "951cf2e9b5908b88da7df36dee9564f0abbfe5b15fba3065c8efc89da0855f05",
+          "members": 437,
+          "root": "scratchpad/fp8-sprint7-lifecycle-reverse-reader.x_j8t33p"
+        },
+        "source": {
+          "manifest_sha256": "7d3e8a5693a92dd45d16fd4ca772a380d75763b464848bbbbe66dc4b44f78d0f",
+          "members": 349,
+          "root": "scratchpad/fp8-sprint7-lifecycle-reverse.e8pnd_2h"
+        }
+      }
+    }
+  ],
+  "performance_claim": false,
+  "physical_recurrent_slots": 20,
+  "pressure_cases": 6,
+  "pressure_input_tokens": 8191,
+  "private_evidence_not_distributed": true,
+  "production_qualification": false,
+  "reasoning_effort": "low",
+  "requests": 108,
+  "sampling": {
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "schema": 1,
+  "scope": [
+    "warm/cold reuse and branching",
+    "cache pressure and recovery",
+    "active cancellation and recovery",
+    "native batch-two graph traffic",
+    "repeated bounded starts in both orders"
+  ],
+  "starts": 4,
+  "status": "BOTH_ORDERS_THINKING_LIFECYCLE_SCREEN_PASS",
+  "thinking": true,
+  "usable_recurrent_slots": 19
+}

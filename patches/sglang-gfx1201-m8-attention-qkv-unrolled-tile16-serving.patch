@@ -1,0 +1,48 @@
+--- a/python/sglang/kernels/ops/gemm/fp8_kernel.py
++++ b/python/sglang/kernels/ops/gemm/fp8_kernel.py
+@@ -770,15 +770,15 @@
+     return C
+ 
+ 
+ _m2047_witnessed = set()
+ 
+ 
+ def _record_m2047_shape(M, N, K, native, config, output_dtype):
+-    if M != 2047 and not (M == 8 and (N, K) in ((17408, 5120), (5120, 3072), (5120, 8704), (8192, 5120))):
++    if M != 2047 and not (M == 8 and (N, K) in ((17408, 5120), (5120, 3072), (5120, 8704), (8192, 5120), (7168, 5120))):
+         return
+     key = (M, N, K, native, str(output_dtype), config.get("num_stages"))
+     if key not in _m2047_witnessed:
+         _m2047_witnessed.add(key)
+         print("SPRY_M2047_SHAPE " + json.dumps(dict(pid=os.getpid(), M=M, N=N, K=K,
+               native=native, dtype=str(output_dtype), stages=config.get("num_stages"),
+               block_m=config.get("BLOCK_SIZE_M"), block_n=config.get("BLOCK_SIZE_N"),
+@@ -888,14 +888,28 @@
+         config = {**config, "BLOCK_SIZE_M": 16, "num_stages": 1}
+         kernel = _w8a8_block_fp8_matmul_unrolledx4
+ 
+     # Private component candidate: one exact untuned M8 GDN qkvz shape only.
+     if (
+         _is_hip and not configs and kernel is _w8a8_block_fp8_matmul
+         and (M, N, K) == (8, 8192, 5120)
++        and tuple(block_size) == (128, 128)
++        and output_dtype == torch.bfloat16
++        and config == {
++            "BLOCK_SIZE_M": 64, "BLOCK_SIZE_N": 128, "BLOCK_SIZE_K": 128,
++            "GROUP_SIZE_M": 32, "num_warps": 4, "num_stages": 3,
++        }
++    ):
++        config = {**config, "BLOCK_SIZE_M": 16, "num_stages": 1}
++        kernel = _w8a8_block_fp8_matmul_unrolledx4
++
++    # Private component candidate: one exact untuned M8 attention QKV shape only.
++    if (
++        _is_hip and not configs and kernel is _w8a8_block_fp8_matmul
++        and (M, N, K) == (8, 7168, 5120)
+         and tuple(block_size) == (128, 128)
+         and output_dtype == torch.bfloat16
+         and config == {
+             "BLOCK_SIZE_M": 64, "BLOCK_SIZE_N": 128, "BLOCK_SIZE_K": 128,
+             "GROUP_SIZE_M": 32, "num_warps": 4, "num_stages": 3,
+         }
+     ):

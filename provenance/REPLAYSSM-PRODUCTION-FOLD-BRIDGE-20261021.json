@@ -1,0 +1,168 @@
+{
+  "all_exact": true,
+  "all_finite": true,
+  "cases": 8,
+  "comparisons": 1808,
+  "coverage": [
+    "batches one and two",
+    "structured and seeded random inputs",
+    "accepted prefixes zero through eight",
+    "tracking first/middle/last/masked",
+    "unequal request prefix lengths",
+    "valid zero, null and permuted physical slots",
+    "poisoned rejected tails",
+    "explicit-device graph replay and chained cycles"
+  ],
+  "cpu_checks": 35,
+  "device_allocation_limit_bytes": 268435456,
+  "independent_release_verified": true,
+  "limitations": [
+    "Convolution GPU execution and serving lifecycle remain separate gates.",
+    "No component timing comparison or serving speedup claim.",
+    "No full-model memory or quality qualification."
+  ],
+  "mismatches": 0,
+  "model_starts": 0,
+  "payload_seconds": 20.94,
+  "peak_torch_allocated_bytes": 101927936,
+  "production_fold_sha256": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+  "qualification": false,
+  "ring_verifier_sha256": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+  "schema": 1,
+  "scope": "Two synthetic layers, four physical state slots, BF16 raw K/V and FP32 gates/beta/state; native all-layer fold on both gfx1201 GPUs.",
+  "seals": {
+    "analysis": "f5ffc99ff735479d11cbe9a5509713ab1a772a2ba0e532fb158b44dcef879f54",
+    "author": "b916a296c7ac168fb671e4c8e6944b7845dd49a0b5a769aca84688a4f2b15ed7",
+    "native": "4d9b3033107364d8fa12546a212c2a451d4ab5c87da68d2b682ac1891ae3d4ac"
+  },
+  "source_provenance": {
+    "analysis_inputs_read_only": true,
+    "author": {
+      "manifest_sha256": "b916a296c7ac168fb671e4c8e6944b7845dd49a0b5a769aca84688a4f2b15ed7",
+      "members": 54,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-replay-fold-bridge.c31kn8ug"
+    },
+    "bound_source_count": 23,
+    "cpu_acceptance": {
+      "path": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-replay-fold-bridge.c31kn8ug/CPU-ACCEPTANCE-final02.json",
+      "sha256": "9be90cd3ade645c361c1c2f3cc8755e6b9f4cd6abd691b0ea2d3511060a05055",
+      "tests": 35
+    },
+    "credentials_read": false,
+    "native_report": {
+      "path": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-replay-fold-bridge-run.9o7sq7_x/retained/workload/output/replay-component/REPLAY-FOLD-BRIDGE-RESULT.json",
+      "sha256": "f00488eb5ed0ac1e2f625761c7081201e34a004dd71669daf7fb07a086003d8b"
+    },
+    "package_sha256": "e5179b857c6c989c11a7f84065c00dc3923cd98acc9d2bf5dda34fe677269a5c",
+    "release_phases": [
+      {
+        "authenticated": true,
+        "observed_monotonic": 325138.362648525,
+        "phase": "locked-admission",
+        "platform_clear": true,
+        "root_observer_uid": 0,
+        "scope_absent": false
+      },
+      {
+        "authenticated": true,
+        "observed_monotonic": 325174.740656534,
+        "phase": "release",
+        "platform_clear": true,
+        "root_observer_uid": 0,
+        "scope_absent": true
+      },
+      {
+        "authenticated": true,
+        "observed_monotonic": 325176.110134453,
+        "phase": "independent",
+        "platform_clear": true,
+        "root_observer_uid": 0,
+        "scope_absent": true
+      }
+    ],
+    "retained_trees": {
+      "protected": {
+        "exact_membership": true,
+        "manifest_sha256": "b85fa1c2f52915cda462e0a9af3bb5c59b917d85e8fb3a03f2bcec23678a8acf",
+        "members": 19,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-replay-fold-bridge-run.9o7sq7_x/retained/protected"
+      },
+      "workload": {
+        "exact_membership": true,
+        "manifest_sha256": "41063583be1adaa3e4866d9ee09e7a52cb846c9fe91183d5069d4f69f51eb4e1",
+        "members": 57,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-replay-fold-bridge-run.9o7sq7_x/retained/workload"
+      }
+    },
+    "schema": 1,
+    "sealer_donor": {
+      "manifest_sha256": "5a47b3fec454c702badb2dea6d00936061b6b64499bfee4aca22030e329ac1a9",
+      "members": 43,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-replay-stream-author.ppok59js"
+    },
+    "source_sha256": {
+      "SOURCE-PINS.json": "3f2344c8fff9588ba26957c6b8e2c1bb646379bcc6664891031fb82d2e2f7c5e",
+      "STACK.json": "b385927c2466de48836ae881acf9a13601b02f9d58a135e19ce6a3ed38bbfb85",
+      "candidate-ring-aligned-gdn.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "common.py": "85309134fda559ec8df664397195ad0012683f7e760fd39fba63923e5621e3da",
+      "model-config.json": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+      "native-aligned-gdn.py": "fbfd24803574b133fd2ea22063a0010a4c3c5f3e15e5c63df47241f546f7f826",
+      "native-conv-scatter.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87",
+      "native-fp8.py": "6f7c1ca7e17c9d7b686255f6c4e9fa9830e8ef4f6f898c15c26f0b834722c3da",
+      "native-spec-fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "review/benchmark_artifacts.py": "c53be800cecb9b4a3d11582d0214aeead9227af3ae9f4f0211378f49d1c65520",
+      "review/benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+      "review/benchmark_host_transport.py": "0a30d8e215f925e8b9e98caa626125b8b2b0fe3741c97d65321952aee3f0877a",
+      "review/benchmark_owner_adapter.py": "bd6ba95a3b986b953fa358199572a3c1ba55d7695480ce74c55267996f469ddd",
+      "review/benchmark_physical_controller.py": "2fb382c980375886643c8685b171361b204b987a567c4433e4dccc880e9deca1",
+      "review/benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+      "review/benchmark_resource_gate.py": "4d2456a3dc03d3579999814795e05bd753bd611385f1212ebc6f06de99bb5522",
+      "review/collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+      "review/host_process_owner.py": "b200f9db9c0a6f9b61e0fd903487803ea5d0812ec530725f48ad224c3cd1356f",
+      "root_observe.py": "43eb946679c551cb33e281143f6f084431a44d8800d6b7c959a874ebdf6406cc",
+      "smoke_gate.py": "1d497d80d50269683ce74ed929a0ace4a125a593a02c5c40f7bbeb7f9a79052a",
+      "smoke_owner.py": "f84593f0ef5e61bf7310f03173ce3efbbfef1b9a8b9633e72cf06a7703e1439b",
+      "stack_guard.py": "f76cb03e5bd63a3965794c0af6a57cb9cb882b78e170c27b25cc38db74f797b9",
+      "stage_probe.py": "d63b4ea6a36d46d74e94344055904db527b38dc67613722e72cf0237088051b9"
+    },
+    "transport_receipts": [
+      {
+        "child_reaped": true,
+        "elapsed_seconds": 39.269678542157635,
+        "exit_code": 0,
+        "name": "physical-run",
+        "owned_group_absent": true,
+        "sha256": "b244b475e15b34d4a7c018a97e89fdb41f3dde56b527c0ad69d8e02c58e75521"
+      },
+      {
+        "child_reaped": true,
+        "elapsed_seconds": 0.7776549998670816,
+        "exit_code": 0,
+        "name": "remote-seals",
+        "owned_group_absent": true,
+        "sha256": "06bb68a36b0171ec88b05909f553b5f95a6dcfc216ad1322d825a4803f5eb9de"
+      },
+      {
+        "child_reaped": true,
+        "elapsed_seconds": 0.5130551669280976,
+        "exit_code": 0,
+        "name": "retain-workload",
+        "owned_group_absent": true,
+        "sha256": "0443e4a4e44436715f7526de27b3823095441a83e70ed5ac1a68ac9f0d4ef7a5"
+      },
+      {
+        "child_reaped": true,
+        "elapsed_seconds": 0.4688605419360101,
+        "exit_code": 0,
+        "name": "retain-protected",
+        "owned_group_absent": true,
+        "sha256": "e6064a5c3313341e16b8973e6b9eebbd6e15f41026614717ed0389c9933a5083"
+      }
+    ]
+  },
+  "status": "NATIVE_PRODUCTION_FOLD_COMPONENT_PASS_SERVING_PENDING",
+  "task_quality_measured": false,
+  "warnings": [
+    "Existing invalid-escape SyntaxWarning in unchanged common.py:204."
+  ]
+}

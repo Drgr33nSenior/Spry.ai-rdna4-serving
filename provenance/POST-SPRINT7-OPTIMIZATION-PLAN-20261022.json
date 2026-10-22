@@ -1,0 +1,353 @@
+{
+  "baseline_source_manifest_sha256": "7d15e20b507e2414be5f2da77d3b7fd538f75cb2a4d15ab9423ad43042c3b5ad",
+  "cost_analysis_record": "provenance/POST-SPRINT7-COST-ANALYSIS-20261022.json",
+  "date": "2026-10-22",
+  "first_packet": {
+    "actual_packet_size_validation_pending": true,
+    "archive_bytes_max": 16777216,
+    "archive_members_max": 64,
+    "argv_entries_max": 256,
+    "arms": [
+      "snapshot observer control",
+      "snapshot with phase timing"
+    ],
+    "binding_bytes_max": 65536,
+    "client_timeout_seconds": 1740,
+    "combined_transport_bytes_max": 33554432,
+    "estimate_is_not_a_deadline": true,
+    "estimated_actual_native_minutes": [
+      6,
+      10
+    ],
+    "estimated_preparation_minutes": [
+      45,
+      90
+    ],
+    "model_commit_observation_limit": 36864,
+    "owner_ceiling_seconds": 5400,
+    "requests_per_start": 4,
+    "retained_timing_records_max_per_rank": 128,
+    "starts": 2,
+    "worker_timeout_seconds": 1800
+  },
+  "gpu_campaign_scheduled": false,
+  "independent_review": {
+    "clarifications": [
+      "k20 triggers full Torch plus LSE fallback; tiled helper only eligible at k16 here.",
+      "Freeze stratified samples and restrict conclusions to actual measured cycle/prefix windows."
+    ],
+    "reviewer": "Astra",
+    "scope": "Planning direction only, not launch packet",
+    "status": "APPROVED_WITH_TWO_CLARIFICATIONS_APPLIED",
+    "verification_limit": "Initial review checked the eight retained source hashes and plan. Final correction approval was based on the described edits; implementation and launch packet are unreviewed."
+  },
+  "launch_prepared": false,
+  "new_gpu_runs": 0,
+  "new_runtime_dependencies": 0,
+  "numerical_contract": "Unresolved mismatch retained under owner experimental-session disposition; no broadened acceptance or production qualification.",
+  "parked": [
+    "FP8 target KV",
+    "Width change or adaptive speculation policy",
+    "Sampling/RNG/precision contract changes",
+    "C2 throughput tuning"
+  ],
+  "planning_evidence": {
+    "manifest_sha256": "39193879bb6d7d0609f01eff0417d57acdd82c79a9616706a04af24022a9d3a3",
+    "members": 23,
+    "plan_sha256": "bd09bdaaea586a556ef0d4ef9ace713aaa825b6b6926c3a2ff609e4e457e97dc",
+    "provenance_base_sha256": "bead1603d64e38fd37feee9d7bbd5f3f702cd48ae604bdbf32db1b051ff00718",
+    "root": "scratchpad/fp8-optimization-plan.nwen4z59",
+    "sample_schedule_sha256": "cd3099c4197b4819fc9b436ae3f59663b32e1cf498f7574bc3b1a8acabd153e9",
+    "source_audit_sha256": "9d2a23fea981b7ffc76a1cad9b04b7034ba33c96ab0261e0f28ce2dcf31c704c"
+  },
+  "runtime_source_changed": false,
+  "sample_schedule": {
+    "cases": [
+      {
+        "case": "coding-running-totals",
+        "cycle_indices_1based": [
+          9,
+          10,
+          12,
+          14,
+          15,
+          17,
+          19,
+          20,
+          22,
+          24,
+          25,
+          27,
+          29,
+          30,
+          32,
+          34,
+          35,
+          37,
+          39,
+          40,
+          42,
+          44,
+          45,
+          47,
+          49,
+          50,
+          52,
+          54,
+          55,
+          57,
+          59,
+          61
+        ],
+        "expected_sha256": "9c215924abcc84b8d7b609700348f5d12bae5ffe0a399777d9a818a80080ed08",
+        "ordinal": 0,
+        "reference_input_tokens": 226,
+        "reference_verifier_cycles": 62,
+        "request_path": "FINAL-REQUEST-SAMPLED-0.json",
+        "request_sha256": "8b7d28bf37d98799935d6e91f000221bc17280fe57cf2a309f8dc9ac271665ea"
+      },
+      {
+        "case": "coding-unique-last",
+        "cycle_indices_1based": [
+          9,
+          14,
+          20,
+          26,
+          31,
+          37,
+          43,
+          49,
+          54,
+          60,
+          66,
+          72,
+          77,
+          83,
+          89,
+          95,
+          100,
+          106,
+          112,
+          118,
+          123,
+          129,
+          135,
+          141,
+          146,
+          152,
+          158,
+          164,
+          169,
+          175,
+          181,
+          187
+        ],
+        "expected_sha256": "71c01daa619b2ca4db8b7132b4422aa1ffaddc0e97fe7d664b8bfb4c78b70fb1",
+        "ordinal": 1,
+        "reference_input_tokens": 246,
+        "reference_verifier_cycles": 188,
+        "request_path": "FINAL-REQUEST-SAMPLED-1.json",
+        "request_sha256": "696e6cb4e5284c361af969afc83f56b7c79b4d78c2a4e5456dbad35fa5463be9"
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "cycle_indices_1based": [
+          9,
+          20,
+          31,
+          42,
+          53,
+          64,
+          76,
+          87,
+          98,
+          109,
+          120,
+          132,
+          143,
+          154,
+          165,
+          176,
+          188,
+          199,
+          210,
+          221,
+          232,
+          244,
+          255,
+          266,
+          277,
+          288,
+          300,
+          311,
+          322,
+          333,
+          344,
+          356
+        ],
+        "expected_sha256": "a7a25fc0641980277cfdce60fe33262a485f56bdc23041541c430e1e89c20c2c",
+        "ordinal": 2,
+        "reference_input_tokens": 8176,
+        "reference_verifier_cycles": 357,
+        "request_path": "FINAL-REQUEST-SAMPLED-2.json",
+        "request_sha256": "53fd0ac1d947e38ad18437e52c0cb130e6cd75d15c0f906dd4794f31a2961de7"
+      },
+      {
+        "case": "heldout16k-audit",
+        "cycle_indices_1based": [
+          9,
+          21,
+          33,
+          45,
+          57,
+          69,
+          81,
+          93,
+          106,
+          118,
+          130,
+          142,
+          154,
+          166,
+          178,
+          190,
+          203,
+          215,
+          227,
+          239,
+          251,
+          263,
+          275,
+          287,
+          300,
+          312,
+          324,
+          336,
+          348,
+          360,
+          372,
+          385
+        ],
+        "expected_sha256": "29ba720b5a3f800bcf1a07536b856a05339d640e79524e5e4cae56291aabbb13",
+        "ordinal": 3,
+        "reference_input_tokens": 8176,
+        "reference_verifier_cycles": 386,
+        "request_path": "FINAL-REQUEST-SAMPLED-3.json",
+        "request_sha256": "ad2babfbe6df2c45072d0d7a70d3fd6a6b148728834530c917d5170edae05838"
+      }
+    ],
+    "coverage_policy": "Report actual sampled cycle and sequence/prefix-length ranges by request and rank. Keep unreached or uncollected indices missing and any later tail uncovered. No extension or extra replay to fill samples; no whole-request bottleneck claim from uncovered windows.",
+    "formula": "cycle_j = 9 + floor(j * (reference_verifier_cycles - 10) / 31), j=0..31",
+    "indexing": "1-based request verifier cycles; exclude cycles1..8; exclude reference final cycle",
+    "records_max_per_rank": 128,
+    "schema": 1,
+    "source_authenticated_sha256": "eeb87d636afa1d529a318e6dacf4638fba2a36c3339118c8e99dcd4d43be6911",
+    "source_reader_manifest_sha256": "10e1654f1cf3165899282eea86428478a07f99497591f494dda88de1c46dd0a2",
+    "status": "FROZEN_PLANNING_SCHEDULE_NOT_A_LAUNCH_PACKET"
+  },
+  "schema": 1,
+  "selected_reference_changed": false,
+  "source_audit": {
+    "findings": [
+      {
+        "id": "draft_topk",
+        "observation": "Draft selector uses local topk16 over expected C1 shape7x124160, then topk16 over7x32 merged candidates. Source and latest fallback warnings support active-path attribution; latency unmeasured."
+      },
+      {
+        "id": "sampled_target_topk",
+        "observation": "Publisher topk20/top_p.95 target verification uses top-k-first probability builder over expected8x248320 logits on each rank, then small top-p and dense zero/scatter output. Different from draft topk16."
+      },
+      {
+        "id": "existing_hip_dsa",
+        "observation": "HIP DSA implementation is compiled for k2048 and returns int32 indices. It is not a k16/k20 values-plus-indices replacement."
+      },
+      {
+        "id": "existing_jit",
+        "observation": "JIT fast_topk accepts512/2048 and unspecified output order; not the selector contract."
+      },
+      {
+        "id": "existing_lilicorr",
+        "observation": "Tiled Triton topk/LSE accepts draft k16 but target k20 triggers the non-power-of-two guard and full torch.topk plus LSE. Tiled route computes unused LSE, creates scratch and calls smaller torch.topk. H100 geometry, ties, finite sentinel and padded tails need review; not qualified on gfx1201."
+      },
+      {
+        "id": "sparse_target_existing",
+        "observation": "Target probability builder already applies topk before top_p; do not claim eliminating a nonexistent full-vocabulary top-p sort."
+      },
+      {
+        "id": "observer",
+        "observation": "SamplingRoute validates and hashes complete origin IDs on each successful/attempted selector acceptance. CPU overhead is part of diagnostic time, not an established production bottleneck."
+      }
+    ],
+    "new_gpu_runs": 0,
+    "new_runtime_dependencies": 0,
+    "schema": 1,
+    "sources": [
+      {
+        "functions": {
+          "_jit_fast_topk_module": 21,
+          "fast_topk": 38
+        },
+        "relative": "kernels/ops/attention/fast_topk.py",
+        "sha256": "65eeb1c14a111e651819bdac3ecca3a796f06feec4fb5c03f2ea08a5a65d29e4"
+      },
+      {
+        "functions": {
+          "_tiled_select": 60,
+          "lilicorr_topk_lse": 112
+        },
+        "relative": "kernels/ops/speculative/lilicorr.py",
+        "sha256": "d5165ef6fb7b3357fe67b4af6d7f30bd6325ef661d254fce5b1a3961bacd08fa"
+      },
+      {
+        "functions": {},
+        "relative": "kernels/ops/speculative/dspark/dspark_accept.py",
+        "sha256": "1480fec7496edf7cd8fb3e89ceea2b1d4274a6057babac5c23eb1344217c1232"
+      },
+      {
+        "functions": {},
+        "relative": "kernels/aot/csrc/elementwise/topk.hip",
+        "sha256": "6fa11eb597009b045321f142f0a9a6762bc2d4f0a6115d6bfc77f9aee5ddbb56"
+      },
+      {
+        "functions": {
+          "fast_topk": 6
+        },
+        "relative": "kernels/aot/python/sgl_kernel/top_k.py",
+        "sha256": "5951ab7c97e536e764e9e30d90824506b838049ef2459aa573e36164809309a2"
+      },
+      {
+        "functions": {
+          "_project_candidate_logits": 89,
+          "_radix_topk": 64,
+          "candidate_topk": 105
+        },
+        "relative": "srt/models/dflash.py",
+        "sha256": "10cba6aeac6986537114a7cc26df296d308e45c849c18f690d451bf63a9c4871"
+      },
+      {
+        "functions": {
+          "_SelectorDraftSampler": 238,
+          "_selector_sampling_accept": 1463
+        },
+        "relative": "srt/speculative/dflash_worker_v2.py",
+        "sha256": "99a44f45747a2cfc69423193cf8d2745c9a4ac320e3c200e37fe46395208f91f"
+      },
+      {
+        "functions": {
+          "build_dflash_verify_target_probs": 1130
+        },
+        "relative": "srt/speculative/dflash_utils.py",
+        "sha256": "dbb3bb6d6a9939d888a7c4e1630080ec3c29a2a4277d1c59e6c5a0f75fd4b4d5"
+      }
+    ],
+    "status": "PINNED_SOURCE_AUDIT_COMPLETE_NO_GPU_TEST"
+  },
+  "stages": [
+    "Prepare and review bounded attribution packet; retain exact sampled requests, profile, observer and runtime.",
+    "Measure draft, target, sampled acceptance, commit and CPU intervals over frozen windows on both ranks.",
+    "Select one component experiment from measured exposed cost; no unmeasured speedup estimate.",
+    "If component supports a gain, run matched serving pilot, reverse order and affected quality/lifecycle checks."
+  ],
+  "status": "PLANNING_COMPLETE_ATTRIBUTION_PACKET_NOT_BUILT",
+  "tracking": "docs/NEXT-OPTIMIZATION-PLAN.md"
+}

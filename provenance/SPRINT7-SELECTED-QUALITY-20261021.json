@@ -1,0 +1,285 @@
+{
+  "all_gates_passed": 2,
+  "analysis_manifest_sha256": "f1934f54b4bac4e5d6e17ae67188c8aa74250a5eb00ba66da3acfaa502e664d3",
+  "cases": [
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "format_pass": true,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 6
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 6
+        }
+      ],
+      "input_tokens": 202,
+      "normal_stop": true,
+      "output_tokens": 41,
+      "response_ids_sha256": "1246f3b302df3a5002694185cca6db6050d5352f3f2550d7af82da35cdb246ae",
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": false,
+      "case": "coding-unique-last",
+      "format_pass": null,
+      "functional_pass": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 13
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 13
+        }
+      ],
+      "input_tokens": 222,
+      "normal_stop": true,
+      "output_tokens": 86,
+      "response_ids_sha256": "dfb3af9e99548dd6e7af0cf257318db8f61be951d0000671aec4f946cd63431b",
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": false,
+      "case": "quality16k-audit-threshold",
+      "format_pass": null,
+      "functional_pass": false,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 102
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 102
+        }
+      ],
+      "input_tokens": 15343,
+      "normal_stop": true,
+      "output_tokens": 766,
+      "response_ids_sha256": "3bd7fe1c11fc8087ecbf21e8df13dc15437975f960ea782d8eb458708b61ad18",
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": false,
+      "case": "heldout16k-audit",
+      "format_pass": null,
+      "functional_pass": false,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 109
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 109
+        }
+      ],
+      "input_tokens": 15344,
+      "normal_stop": true,
+      "output_tokens": 815,
+      "response_ids_sha256": "88db34120202c7ef3ff19d4458539653e69b28af990d4d1d11d3bee3a6900833",
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "format_pass": true,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 6
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 6
+        }
+      ],
+      "input_tokens": 202,
+      "normal_stop": true,
+      "output_tokens": 41,
+      "response_ids_sha256": "1246f3b302df3a5002694185cca6db6050d5352f3f2550d7af82da35cdb246ae",
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": false,
+      "case": "coding-unique-last",
+      "format_pass": null,
+      "functional_pass": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 13
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 13
+        }
+      ],
+      "input_tokens": 222,
+      "normal_stop": true,
+      "output_tokens": 86,
+      "response_ids_sha256": "dfb3af9e99548dd6e7af0cf257318db8f61be951d0000671aec4f946cd63431b",
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": false,
+      "case": "quality16k-audit-threshold",
+      "format_pass": null,
+      "functional_pass": false,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 102
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 102
+        }
+      ],
+      "input_tokens": 15343,
+      "normal_stop": true,
+      "output_tokens": 766,
+      "response_ids_sha256": "3bd7fe1c11fc8087ecbf21e8df13dc15437975f960ea782d8eb458708b61ad18",
+      "start": "mtp",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": false,
+      "case": "heldout16k-audit",
+      "format_pass": null,
+      "functional_pass": false,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 109
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 109
+        }
+      ],
+      "input_tokens": 15344,
+      "normal_stop": true,
+      "output_tokens": 815,
+      "response_ids_sha256": "88db34120202c7ef3ff19d4458539653e69b28af990d4d1d11d3bee3a6900833",
+      "start": "mtp",
+      "sustained_512_tokens": true
+    }
+  ],
+  "causal_ab_comparison": false,
+  "coding_ungraded_reason": "unique_last uses a lambda and sort(key=...), refused by the unchanged disclosed sandbox contract; no functional score assigned",
+  "cpu_acceptance_checks": 40,
+  "date": "2026-10-21",
+  "exact_general_equivalence_established": false,
+  "fp8_target_attention_kv": "DEFERRED_OPTIONAL",
+  "functional_failures": 4,
+  "functional_passes": 2,
+  "independent_focused_checks": 6,
+  "independent_release_verified": true,
+  "installed_runtime_changed": false,
+  "interpretation_correction": "The corpus disabled thinking despite prior evidence and the selected thinking-enabled profile. Retain observed failures as nonthinking controls; they do not establish selected-profile regression.",
+  "interpretation_correction_manifest_sha256": "35df039e5543d8012c35aff3f1804f6fb4132c3305b14b59ddcbe86228d887af",
+  "ledger_failures": [
+    {
+      "actual_after": -1,
+      "actual_decision": "accepted",
+      "amount": 31,
+      "before": 34,
+      "case": "quality16k-audit-threshold",
+      "expected_decision": "rejected",
+      "fee": 4,
+      "first_event": "J01"
+    },
+    {
+      "actual_after": -1,
+      "actual_decision": "accepted",
+      "amount": 35,
+      "before": 37,
+      "case": "heldout16k-audit",
+      "expected_decision": "rejected",
+      "fee": 3,
+      "first_event": "H17"
+    }
+  ],
+  "native_manifest_sha256": "e7dae19878400d853d5019c06d2ad8af6582935e6056e2adf0c5b6d4ea2f76a1",
+  "next": "Corrected low-thinking validation completed; see subsequent_thinking_validation_record. This historical nonthinking control remains outside selected-profile qualification.",
+  "normal_stop_and_sustained_output_observed": true,
+  "normal_stops": 8,
+  "output_pairs": [
+    {
+      "case": "coding-running-totals",
+      "first_difference": null,
+      "output_ids_equal": true
+    },
+    {
+      "case": "coding-unique-last",
+      "first_difference": null,
+      "output_ids_equal": true
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "first_difference": null,
+      "output_ids_equal": true
+    },
+    {
+      "case": "heldout16k-audit",
+      "first_difference": null,
+      "output_ids_equal": true
+    }
+  ],
+  "outside_selected_request_profile": true,
+  "prior_thinking_evidence": {
+    "bf16_matched_control_seal": "f5b44d4e6daacc48964f341d14adf44dd42f0d0a0b88a71df3e2097b5a30d70c",
+    "fp8_thinking_evidence_seal": "780765826ccbbdc5bce91064dcf74eb17b3adee78c785100ce705802235e685e",
+    "scope": "Short J01 only; BF16 low thinking pass with failing nonthinking controls; FP8 ordinary serving low/xhigh two passes each. Combined DFlash and longer-context thinking remain unqualified."
+  },
+  "qualification": false,
+  "requests": 8,
+  "requests_scope": "Four retained prompts/oracles; greedy, thinking disabled, native natural stop; no forced output",
+  "required_request_profile": {
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    },
+    "reasoning_effort": "low"
+  },
+  "ringfold_quality": false,
+  "schema": 1,
+  "selected_profile_quality_gate_evaluated": false,
+  "source_manifest_sha256": "c7e021fc869007c55bd81060f6bf3cc2c6745046e838ad97f4ce5f46f5a448ed",
+  "source_scope": "Selected runtime source, flags and kernels with a nonselected nonthinking request profile; two identical starts, C1",
+  "starts": 2,
+  "status": "NONTHINKING_CONTROL_OUTSIDE_SELECTED_REQUEST_PROFILE",
+  "subsequent_thinking_validation_record": "provenance/SPRINT7-THINKING-QUALITY-20261021.json",
+  "task_quality_gate_passed": false,
+  "thinking_quality": false,
+  "ungraded": 2
+}

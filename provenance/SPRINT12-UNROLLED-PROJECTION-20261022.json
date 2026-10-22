@@ -1,0 +1,135 @@
+{
+  "active_gpu_run": false,
+  "component_design": {
+    "cards_tested_sequentially": true,
+    "cases": 4,
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "synthetic_inputs": true,
+    "timed_launches": 64
+  },
+  "cpu_checks": {
+    "errors": 0,
+    "failures": 0,
+    "native_imports": false,
+    "skips": 0,
+    "tests_run": 35
+  },
+  "date": "2026-10-22",
+  "device_tensor_limit_bytes": 268435456,
+  "limits": {
+    "active_seconds": 1200,
+    "cleanup_seconds": 30,
+    "limits": {
+      "cpu": 24,
+      "ram_bytes": 40802189312,
+      "scratch_tmpfs_bytes": 335544320,
+      "tasks": 512,
+      "threads": 2,
+      "trace_aggregate_bytes": 33554432,
+      "trace_per_file_bytes": 16777216
+    },
+    "total_seconds": 1500,
+    "worker_seconds": 600
+  },
+  "model_starts": 0,
+  "name": "Exact-shape native unrolled projection",
+  "native_campaigns": 1,
+  "native_seal": {
+    "manifest_sha256": "fb19e3aeae029e5f3a681c5ca8fab019f67431da0853d5da094fe8d084575387",
+    "members": 150,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint12-unrolled-run.z_l8y4by",
+    "verified_utc": "2026-10-22T11:45:36.206555+00:00"
+  },
+  "next_action": "Stage3 unrolled configuration parked after shared-memory compilation refusal. No automatic retry. A different launch configuration would require a separately reviewed component. Owner-requested3072experimental qualification is next.",
+  "numerical_mismatch_resolved": false,
+  "owner_sudo_authorization_reused": true,
+  "package_sha256": "ba2b87c33c7770cd52966bfa855b0e50a1752ed5d8d00ea46ba58771de7e5507",
+  "production_qualified": false,
+  "result": {
+    "baseline_exact_checks": 24,
+    "candidate_comparison_passed": false,
+    "candidate_exact_checks": 0,
+    "candidate_selected": false,
+    "candidate_timed_launches": 0,
+    "cases_complete": 2,
+    "cases_expected": 4,
+    "cases_started": 2,
+    "compile_refusals": [
+      "OutOfResources: out of resource: shared memory, Required: 197120, Hardware limit: 65536. Reducing block sizes or `num_stages` may help.",
+      "OutOfResources: out of resource: shared memory, Required: 197120, Hardware limit: 65536. Reducing block sizes or `num_stages` may help."
+    ],
+    "devices_tested": [
+      0
+    ],
+    "hardware_shared_limit_bytes": 65536,
+    "independent_release_verified": true,
+    "model_starts": 0,
+    "performance_claim": false,
+    "physical_exit_code": 1,
+    "physical_seconds": 24.74636918003671,
+    "qualification": false,
+    "remote_seals": {
+      "protected": {
+        "manifest_sha256": "b9edcf73aab606752c5112d885f27638b3a7b1200ed7ed2a0b676acb4b8eaad7",
+        "member_count": 19,
+        "root": "/var/tmp/fp8-stage-depth-source.02f2104479d1e57e"
+      },
+      "workload": {
+        "manifest_sha256": "fa033b17cb4ff2a2bda332f541e35029ef049e4bad10ac70927fb4a033d4360a",
+        "member_count": 50,
+        "root": "/home/developer/fp8-kv-benchmark.02f2104479d1e57e"
+      }
+    },
+    "required_shared_bytes": 197120,
+    "retry_authorized": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "stack_changed": false,
+    "status": "UNROLLED_STAGE3_COMPILE_REJECTED_INCOMPLETE_CARD_COVERAGE",
+    "terminal_guard": "ProbeFailure: previous-device tensors remain live",
+    "terminal_guard_cause": "Unresolved within-worker allocation liveness after compilation refusal; no second card or further device test attempted.",
+    "unresolved": false
+  },
+  "schema": 1,
+  "selected_source_changed": false,
+  "source_proof": {
+    "K_divisible_by_unroll_step": true,
+    "baseline_configuration": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 64,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "num_stages": 3,
+      "num_warps": 4
+    },
+    "baseline_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "candidate_delta": "Only exact untuned HIP/BF16 M8 down routes to existing native unrolledx4; same tile64/stage3,128block scales,4warps.",
+    "candidate_sha256": "4b24a7d78f53a2fdacc1c7c4a39036aea4252481e250b7a0cd306fe4815f6cfd",
+    "current_config_observation": "CURRENT-CONFIG-OBSERVATION-NEW.json",
+    "global_selector_changed": false,
+    "hardware_scope": "Existing two R9700 gfx1201 cards only; no general HIP qualification.",
+    "native_kernel_ast_equal": true,
+    "numerical_contract": "Exact structured oracle and random baseline equality; no tolerance relaxation.",
+    "schema": 1,
+    "shape": [
+      8,
+      5120,
+      8704
+    ],
+    "shape_derivation": "Retained native missing-config witnesses bind M8 down projection. Source-only helper audit shows missing return. Direct one-shape comparison does not depend on or globally repair that heuristic.",
+    "unroll_K_step": 512
+  },
+  "source_root": "fp8-sprint12-unrolled.gkt_o9ul",
+  "source_seal": {
+    "manifest_sha256": "62d05c270174f74939a7670e25c29438518a49daa80d603c106321d57e0816e3",
+    "members": 71,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint12-unrolled.gkt_o9ul",
+    "verified_utc": "2026-10-22T11:41:38.762003+00:00"
+  },
+  "sprint": 12,
+  "status": "UNROLLED_STAGE3_COMPILE_REJECTED_INCOMPLETE_CARD_COVERAGE",
+  "tracking": "docs/SPRINT12-UNROLLED-PROJECTION.md"
+}

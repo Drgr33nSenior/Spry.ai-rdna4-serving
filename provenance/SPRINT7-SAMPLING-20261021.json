@@ -1,0 +1,207 @@
+{
+  "all_applicable_quality_gate_passes": 8,
+  "cases": [
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "final_answer_tokens": 41,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 226,
+      "normal_stop": true,
+      "output_tokens": 333,
+      "reasoning_tokens": 290,
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-unique-last",
+      "final_answer_tokens": 68,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 246,
+      "normal_stop": true,
+      "output_tokens": 1101,
+      "reasoning_tokens": 1031,
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "quality16k-audit-threshold",
+      "final_answer_tokens": 763,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 8176,
+      "normal_stop": true,
+      "output_tokens": 2693,
+      "reasoning_tokens": 1928,
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "heldout16k-audit",
+      "final_answer_tokens": 821,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 8176,
+      "normal_stop": true,
+      "output_tokens": 2868,
+      "reasoning_tokens": 2045,
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "final_answer_tokens": 41,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 226,
+      "normal_stop": true,
+      "output_tokens": 333,
+      "reasoning_tokens": 290,
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-unique-last",
+      "final_answer_tokens": 68,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 246,
+      "normal_stop": true,
+      "output_tokens": 1101,
+      "reasoning_tokens": 1031,
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "quality16k-audit-threshold",
+      "final_answer_tokens": 763,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 8176,
+      "normal_stop": true,
+      "output_tokens": 2680,
+      "reasoning_tokens": 1915,
+      "start": "mtp",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "heldout16k-audit",
+      "final_answer_tokens": 821,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 8176,
+      "normal_stop": true,
+      "output_tokens": 4052,
+      "reasoning_tokens": 3229,
+      "start": "mtp",
+      "sustained_512_tokens": true
+    }
+  ],
+  "commit_observation_limit": 36864,
+  "concurrency": 1,
+  "context_tokens": 16384,
+  "cpu_acceptance_checks": 68,
+  "date": "2026-10-21",
+  "external_route_records": 16,
+  "failures": 0,
+  "full_output_pairs": 4,
+  "full_output_pairs_equal": 2,
+  "functional_passes": 8,
+  "graph_recaptures": 0,
+  "helper_sha256": "313853c862fdde8c041a049d4b55524f369286b8ebdbfda0b477ba92c2f2f331",
+  "independent_focused_checks": 8,
+  "independent_release_verified": true,
+  "input_tokens": [
+    226,
+    246,
+    8176,
+    8176
+  ],
+  "installed_defaults_changed": false,
+  "internal_reserve_tokens": 16,
+  "ledger_filler_reduced": true,
+  "limitations": [
+    "Four tasks, one fresh start per profile; no stochastic distribution or seed sweep.",
+    "Non-greedy full-output differences are retained; this is not an exact-output comparison.",
+    "8K ledger inputs preserve task evidence but reduce filler from the separately qualified12K greedy corpus.",
+    "Current reference remains selected; this recipe is a separately tested request profile.",
+    "Sampling exercised C1 only; the separate actual C2 lifecycle screen used greedy requests."
+  ],
+  "max_observed_output_tokens": 4052,
+  "native_route": "DFlashWorkerV2._selector_sampling_accept -> DSpark.accept_sampling",
+  "native_sampled_accept_sha256": "1480fec7496edf7cd8fb3e89ceea2b1d4274a6057babac5c23eb1344217c1232",
+  "native_worker_sha256": "99a44f45747a2cfc69423193cf8d2745c9a4ac320e3c200e37fe46395208f91f",
+  "normal_stops": 8,
+  "numerical_equivalence": false,
+  "output_cap": 8192,
+  "performance_claim": false,
+  "private_evidence_not_distributed": true,
+  "production_qualification": false,
+  "reader_checks": 8,
+  "reasoning_effort": "low",
+  "request_seed_present": false,
+  "requests": 8,
+  "result_sha256": "9d5843b980c23ba2383f715984ae59c4de8f36de7007086d154a5bd1f49b379b",
+  "route_per_profile": [
+    {
+      "external_successful_route_records": 8,
+      "other_records": 0,
+      "profile": "snapshot",
+      "ranks": 2,
+      "requests_per_rank": 4,
+      "sampling_distribution_verified": false
+    },
+    {
+      "external_successful_route_records": 8,
+      "other_records": 0,
+      "profile": "ring_fold",
+      "ranks": 2,
+      "requests_per_rank": 4,
+      "sampling_distribution_verified": false
+    }
+  ],
+  "sampled_c2_tested": false,
+  "sampling": {
+    "min_p": 0.0,
+    "presence_penalty": 0.0,
+    "repetition_penalty": 1.0,
+    "temperature": 1.0,
+    "top_k": 20,
+    "top_p": 0.95
+  },
+  "sampling_distribution_verified": false,
+  "schema": 1,
+  "seals": {
+    "native": {
+      "manifest_sha256": "ea3e8d6464e7c428e6bf2b688db911c6d817528594f3971cbf66e2154c97026e",
+      "members": 207,
+      "root": "scratchpad/fp8-sprint7-sampling-run.ay2ow7n9"
+    },
+    "readout": {
+      "manifest_sha256": "10e1654f1cf3165899282eea86428478a07f99497591f494dda88de1c46dd0a2",
+      "members": 113,
+      "root": "scratchpad/fp8-sprint7-sampling-reader.pvenpl3d"
+    },
+    "source": {
+      "manifest_sha256": "c5f31ce5b6ac30b9407ad78710d3c5f115feffef393d4c5a0bf961930b012574",
+      "members": 341,
+      "root": "scratchpad/fp8-sprint7-sampling-ready._wg8qzg_"
+    }
+  },
+  "server_seed": 12345,
+  "starts": 2,
+  "status": "PUBLISHER_SAMPLING_SCREEN_PASS",
+  "task_facts_questions_oracles_unchanged": true,
+  "thinking": true,
+  "ungraded": 0,
+  "unique_tasks": 4
+}

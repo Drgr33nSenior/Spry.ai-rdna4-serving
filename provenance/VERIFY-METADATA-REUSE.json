@@ -1,0 +1,165 @@
+{
+  "candidate_path": "prototype/serving/verify_decode_adapter.py",
+  "candidate_sha256": "f62a549fa6b1db802d965f1b821866d590505045d916b180aded998544471128",
+  "changes": [
+    "Reuse causal metadata within one explicitly initialized forward",
+    "Keep eight independent native singleton split selections",
+    "Record preparation once per capture and recompute device values on graph replay",
+    "Retain per-layer native KV writes and decode attention"
+  ],
+  "focused_cpu_tests": 12,
+  "installed_runtime_changed": false,
+  "native_candidate_run": true,
+  "native_selector_sha256": "10d4f1ac194e1fd999b58bbfcb2d1ad09bc25df289128925d2945108173afdc0",
+  "native_validation": {
+    "both_ranks_metadata_witnesses": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ],
+    "candidate_sha256": "f62a549fa6b1db802d965f1b821866d590505045d916b180aded998544471128",
+    "groups": {
+      "full_enabled": {
+        "max_seconds": 1.4692824819940142,
+        "median_output_tokens_per_second": 87.29453769542273,
+        "median_seconds": 1.4663002219749615,
+        "min_seconds": 1.4642619289807044,
+        "samples": [
+          {
+            "ordinal": 0,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 77.90751819532908,
+            "seconds": 1.642973656009417,
+            "warmup": true
+          },
+          {
+            "ordinal": 1,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 87.29453769542273,
+            "seconds": 1.4663002219749615,
+            "warmup": false
+          },
+          {
+            "ordinal": 2,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 87.11735256401258,
+            "seconds": 1.4692824819940142,
+            "warmup": false
+          },
+          {
+            "ordinal": 3,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 87.4160540997626,
+            "seconds": 1.4642619289807044,
+            "warmup": false
+          }
+        ]
+      },
+      "ordinary": {
+        "max_seconds": 5.237276388972532,
+        "median_output_tokens_per_second": 24.473416884296476,
+        "median_seconds": 5.230164656008128,
+        "min_seconds": 5.210762485978194,
+        "samples": [
+          {
+            "ordinal": 0,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 23.512596757277276,
+            "seconds": 5.443890409951564,
+            "warmup": true
+          },
+          {
+            "ordinal": 1,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 24.44018426629409,
+            "seconds": 5.237276388972532,
+            "warmup": false
+          },
+          {
+            "ordinal": 2,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 24.473416884296476,
+            "seconds": 5.230164656008128,
+            "warmup": false
+          },
+          {
+            "ordinal": 3,
+            "output_ids_sha256": "2b4defe939746ee72faf72e36662502d5ddedd952a3f331ceb90694b4f562218",
+            "output_tokens_per_second": 24.564543163201023,
+            "seconds": 5.210762485978194,
+            "warmup": false
+          }
+        ]
+      }
+    },
+    "historical_full_output_pairs_matched": 4,
+    "historical_full_tokens_per_second": 86.68403201427913,
+    "historical_rate_change_percent": 0.7042885142249045,
+    "independent_raw_time_recomputation": true,
+    "independent_release_verified": true,
+    "limits": [
+      "One ordinary/candidate pair; no matched old-adapter/new-adapter reverse-order comparison.",
+      "Native coverage is short-context C1; CPU replay coverage through 32768 tokens is not native long-context qualification.",
+      "Host witness counters describe warm-up/capture invocations and do not count each graph replay.",
+      "Matching truncated output prefixes does not establish broad quality or full hidden/state equivalence."
+    ],
+    "native_manifest_sha256": "2dc999e0d649c59bb43bf29ed30d1ef05d90fe4a688146aa054965ce3fb05fe5",
+    "output_pairs_matched": 4,
+    "performance_gain_established": false,
+    "qualification": false,
+    "remote_evidence": {
+      "protected": {
+        "manifest_sha256": "3cf7775b25a6274841b6a72f924b796cd33fc8559da41fa8b6ebb75b42061fe8",
+        "members": 31
+      },
+      "workload": {
+        "manifest_sha256": "7439cb82468d510bbca720e567b721c1e1400aa8ccb850ddf5175a52e3024a28",
+        "members": 143
+      }
+    },
+    "same_run_full_vs_ordinary_speedup": 3.5669125446653847,
+    "schema": 1,
+    "scope": {
+      "concurrency": 1,
+      "gpu_count": 2,
+      "ignore_eos": true,
+      "input_tokens": 451,
+      "measured_requests_per_arm": 3,
+      "metric": "Output tokens divided by local non-stream HTTP request-to-terminal time",
+      "output_tokens": 128,
+      "tensor_parallel": 2,
+      "thinking": "low",
+      "warmups_per_arm": 1
+    },
+    "source_manifest_sha256": "414523e6eb41e9499540985adc0fca3a7b15da0a5db12c4e53182309c7c7e02e",
+    "status": "BOUNDED_NATIVE_METADATA_REUSE_PASS",
+    "task_quality_measured": false
+  },
+  "original_adapter_sha256": "ef340d6ed335b50638033d93834d194db3da6c2568ab3f5fac10beee1d83c465",
+  "original_benchmark_native_manifest_sha256": "ff2061124636c6894ea1e037173dd272783d47869ce89b78448f8216e116f3af",
+  "original_source_manifest_sha256": "b2378466616fd6262f6b3f5aab0c2d13063a6e9d85b54bdb979c7db5f77f8c24",
+  "performance_gain_established": false,
+  "qualification": false,
+  "retention_decision": {
+    "additional_throughput_gain_established": false,
+    "authority": "Explicit owner instruction",
+    "date": "2026-10-21",
+    "decision": "KEEP_IN_EXPERIMENTAL_CANDIDATE",
+    "installed_runtime_changed": false
+  },
+  "schema": 1,
+  "scope": "dflash8-singleton-metadata-reuse-candidate",
+  "status": "BOUNDED_NATIVE_METADATA_REUSE_PASS",
+  "throughput_gain_measured": false
+}

@@ -1,0 +1,394 @@
+{
+  "active_gpu_run": false,
+  "analysis_root": "fp8-sprint16-closeout.ounokrgn",
+  "analysis_sha256": "7e065eef2f2839e508ae818cd28cae309de0542b8bd31a166727f83b1870127c",
+  "coverage": [
+    {
+      "actual_cycles_after_last_target_sample": 13,
+      "case": "coding-running-totals",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        332,
+        489
+      ],
+      "target_selected_cycles": [
+        22,
+        49
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 42,
+      "case": "coding-unique-last",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        559,
+        1032
+      ],
+      "target_selected_cycles": [
+        54,
+        146
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 64,
+      "case": "quality16k-audit-threshold",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        8829,
+        10253
+      ],
+      "target_selected_cycles": [
+        98,
+        277
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 150,
+      "case": "heldout16k-audit",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        8831,
+        10347
+      ],
+      "target_selected_cycles": [
+        106,
+        300
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 13,
+      "case": "coding-running-totals",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        332,
+        489
+      ],
+      "target_selected_cycles": [
+        22,
+        49
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 42,
+      "case": "coding-unique-last",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        559,
+        1032
+      ],
+      "target_selected_cycles": [
+        54,
+        146
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 64,
+      "case": "quality16k-audit-threshold",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        8829,
+        10253
+      ],
+      "target_selected_cycles": [
+        98,
+        277
+      ]
+    },
+    {
+      "actual_cycles_after_last_target_sample": 150,
+      "case": "heldout16k-audit",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        8831,
+        10347
+      ],
+      "target_selected_cycles": [
+        106,
+        300
+      ]
+    }
+  ],
+  "date": "2026-10-22",
+  "installed_runtime_changed": false,
+  "launch_prepared": false,
+  "limits": [
+    "Four long completed samples per rank, not whole-request attribution.",
+    "Nested groups and ranks are not additive; projection forward includes quantization, launch/wait and possible collectives.",
+    "Matched response work allows descriptive instrumentation overhead only; one fixed control-first order does not isolate causal overhead.",
+    "Full-state and sampling-distribution equivalence unverified; numerical findings and Sprint11 failed gates retained; reliability deferred."
+  ],
+  "model_starts": 2,
+  "native_root": "fp8-sprint16-profile-run.2t02ubm3",
+  "native_seal": {
+    "manifest_sha256": "e13237f4b2fa61435eb64b02e4fcede263f7a57d08170833a0466cc2419cdab1",
+    "members": 220,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint16-profile-run.2t02ubm3",
+    "verified_utc": "2026-10-22T15:16:05.867443+00:00"
+  },
+  "next_lead": {
+    "before_future_launch": "Bind fresh live dispatch/config absence and preserve all selected f90 routes; exact/finite and graph checks on both ranks, then timing gate before serving.",
+    "current_untuned_cpu_dispatch": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 64,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "kernel_name": "common",
+      "needs_masking": false,
+      "num_stages": 3,
+      "num_warps": 4
+    },
+    "geometry_basis": "Authenticated source/config/TP2 derivation; not a live qkvz weight-shape witness.",
+    "gpu_component_launched": false,
+    "gpu_component_prepared": false,
+    "previous_stage1_only_trial": "Sprint11 common-kernel stage1 was mixed; retain that finding.",
+    "proposed_candidate": "Native unrolled M tile16/stage1 at this exact shape only.",
+    "shape_m_n_k": [
+      8,
+      8192,
+      5120
+    ],
+    "source_pins": {
+      "config": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+      "linear": "9783c249d2e2283496f3f118e656b95b34aed80cc8776a6ccb9b16f7b8e6955d",
+      "model": "9ccff88d991fc492daff984e73b5f88fb4daac62d19a2c19c6c686c9bbe5499c"
+    }
+  },
+  "numerical_mismatch_resolved": false,
+  "owner_wall_seconds": 383.53143,
+  "per_rank": {
+    "0": {
+      "interval_medians_ms": {
+        "accept": 0.3401219993829727,
+        "attention": 4.3762944638729095,
+        "comm": 3.479730491526425,
+        "cycle": 55.82428169250488,
+        "draft.1.graph": 7.199579954147339,
+        "gdn": 10.868366971611977,
+        "mlp": 20.056585982441902,
+        "projection": 29.21659643482417,
+        "target.1.gather": 0.15682099759578705,
+        "target.1.graph": 46.49939727783203,
+        "target.1.head": 2.051437497138977
+      },
+      "long_complete_samples": 4,
+      "projection_group_medians_ms": {
+        "down_proj": 5.642006486654282,
+        "gate_up_proj": 13.436807975172997,
+        "in_proj_ba": 1.1958884950727224,
+        "in_proj_qkvz": 4.5737784914672375,
+        "o_proj": 0.7482259981334209,
+        "out_proj": 2.2654389832168818,
+        "qkv_proj": 1.3509509973227978
+      }
+    },
+    "1": {
+      "interval_medians_ms": {
+        "accept": 0.346062496304512,
+        "attention": 4.361212983727455,
+        "comm": 3.5118429893627763,
+        "cycle": 55.909751892089844,
+        "draft.1.graph": 7.366374969482422,
+        "gdn": 10.851962469518185,
+        "mlp": 20.057149961590767,
+        "projection": 29.213101394474506,
+        "target.1.gather": 0.15778149664402008,
+        "target.1.graph": 46.499860763549805,
+        "target.1.head": 2.050815463066101
+      },
+      "long_complete_samples": 4,
+      "projection_group_medians_ms": {
+        "down_proj": 5.643360994756222,
+        "gate_up_proj": 13.43762293457985,
+        "in_proj_ba": 1.1938704941421747,
+        "in_proj_qkvz": 4.571635477244854,
+        "o_proj": 0.7454444952309132,
+        "out_proj": 2.2570219933986664,
+        "qkv_proj": 1.3547104895114899
+      }
+    }
+  },
+  "qualification": false,
+  "reader_root": "fp8-sprint16-profile-reader.lcbgfo8j",
+  "reader_seal": {
+    "manifest_sha256": "9c5928c4f25e24e3da016347d5e3e3bf9735b87681c9669f3175777d00d4bcfb",
+    "members": 128,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint16-profile-reader.lcbgfo8j",
+    "verified_utc": "2026-10-22T15:16:15.584882+00:00"
+  },
+  "reliability_deferred": true,
+  "requests": 8,
+  "response_pairs": [
+    {
+      "case": "coding-running-totals",
+      "control_seconds": 3.6823103289934807,
+      "elapsed_change_percent": 7.301006459480797,
+      "final_text_equal": true,
+      "instrumented_seconds": 3.951156043971423,
+      "output_tokens": 333,
+      "reasoning_tokens": 290
+    },
+    {
+      "case": "coding-unique-last",
+      "control_seconds": 9.629896213009488,
+      "elapsed_change_percent": 7.589124418536652,
+      "final_text_equal": true,
+      "instrumented_seconds": 10.360721017990727,
+      "output_tokens": 1101,
+      "reasoning_tokens": 1031
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "control_seconds": 20.879509119025897,
+      "elapsed_change_percent": 6.534547307635008,
+      "final_text_equal": true,
+      "instrumented_seconds": 22.24389052001061,
+      "output_tokens": 2590,
+      "reasoning_tokens": 1825
+    },
+    {
+      "case": "heldout16k-audit",
+      "control_seconds": 26.006798274000175,
+      "elapsed_change_percent": 6.721346328849531,
+      "final_text_equal": true,
+      "instrumented_seconds": 27.754805255040992,
+      "output_tokens": 3352,
+      "reasoning_tokens": 2529
+    }
+  ],
+  "schema": 1,
+  "selected_source": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+    "author_root": "fp8-sprint14-greedy.aaqa_twp",
+    "component_candidate_gemm_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+    "matched_work_gate_passed": true,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/SPRINT14-UNROLLED-TILE16-20261022.json",
+    "reference_instrumented_gemm_sha256": "93e17f8e336ae0a1c2c15c972ac29da3d76e4f966fbf64e1158894b7539497fe",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "Retain selected prefill, gate/up and 3072 stage one; use native unrolled tile16/stage1 for exact untuned HIP/BF16 M8 down (8,5120,8704).",
+    "source_patch": "patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+    "source_patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f"
+  },
+  "selected_source_changed": false,
+  "source_origin": {
+    "budget": "Existing5400owner/1800worker/1740client;64members16MiBarchive32MiBcombined256argv64KiBbindings.",
+    "changes": "Selected GEMM-tail identity and exact fixtures only. Classifier,hooks,schedules,requests,grading,precision,flags and ownerlimits unchanged.",
+    "qualification": false,
+    "reader_donor": {
+      "manifest_sha256": "e43c09e649d012bc7f0e66d15c022b2a4c988228f32004aa75c13831f5ce01c7",
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-reader.1qjy7bfx"
+    },
+    "scope": "One selected snapshot/snapshot classifier refresh,2starts8natural-stop sampled requests,8devicewindows/rank.",
+    "selected_source": {
+      "author_file": "review/GEMM-tail.py",
+      "author_manifest_sha256": "4f1f70da42cbf8b4d7ca8b1db4741b25878f668b5c842bd1346f4202dbc6e89d",
+      "author_root": "fp8-sprint14-greedy.aaqa_twp",
+      "component_candidate_gemm_sha256": "1dd4e6ddee75ce33ec6a6233d0e4b0af624c68b8dfc3c70ab5a3c04a932cb373",
+      "hardware_cause_established": false,
+      "instrumented_gemm_sha256": "f90f4779c13cc04b0d1b6040e8847195523845e08c1d25dfcd08eb6b92459fa0",
+      "matched_work_gate_passed": true,
+      "numerical_mismatch_resolved": false,
+      "patch_base_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+      "prerequisite_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+      "production_qualified": false,
+      "qualification_record": "provenance/SPRINT14-UNROLLED-TILE16-20261022.json",
+      "reference_instrumented_gemm_sha256": "93e17f8e336ae0a1c2c15c972ac29da3d76e4f966fbf64e1158894b7539497fe",
+      "scope": "Source selection for the next experimental session launch only.",
+      "selection": "Retain selected prefill, gate/up and 3072 stage one; use native unrolled tile16/stage1 for exact untuned HIP/BF16 M8 down (8,5120,8704).",
+      "source_patch": "patches/sglang-gfx1201-m8-down-unrolled-tile16-serving.patch",
+      "source_patch_sha256": "e2ce5b5910d24043081121034549fd4c5e33e5d5f9b76dba92f3c6f90ecc3f5f"
+    },
+    "source_donor": {
+      "manifest_sha256": "bac6d676e000247337f6a2c1682ebdca86dcddde99cad430cd2416dff2455524",
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-recovery.0ntu1ci3"
+    }
+  },
+  "source_review": {
+    "classifier_and_all_other_runtime_helpers_byte_identical": true,
+    "current_cpu_checks": 115,
+    "existing_classifier_review_reused": {
+      "manifest_sha256": "bac6d676e000247337f6a2c1682ebdca86dcddde99cad430cd2416dff2455524",
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-recovery.0ntu1ci3"
+    },
+    "helper_sha256": "b4219b77e1755f7af835d036321015bd73fba78bbd68e74ccbdb06cfa9c409bc",
+    "isolated_pin_boundary_checks": 3,
+    "limits_unchanged": true,
+    "metrics": {
+      "archive_bytes": 16721920,
+      "archive_members": 64,
+      "argv_entries": {
+        "bf16": 255,
+        "kv4": 255
+      },
+      "binding_bytes": {
+        "control": 65411,
+        "mtp": 65391
+      },
+      "combined_transport_bytes": 33539309
+    },
+    "new_astra_review_performed": false,
+    "packet_checks": 69,
+    "reader_checks": 15,
+    "reader_identity_literal_only": true,
+    "requests_and_schedule_byte_identical": true,
+    "retained_failures": "Preparation layout assertion, missing frozen provenance and stale source fixtures, then fixture indentation refusal; all before any GPU launch and retained. Exact identity fixtures corrected, no acceptance relaxation.",
+    "reviewer": "/root",
+    "scope": "One same-classifier current profile refresh; no implementation or sampling/quality/evidence/control changes.",
+    "selected_source_changed": false,
+    "startup_checks": 46,
+    "status": "CURRENT_SELECTED_SOURCE_SUBSTITUTION_REVIEW_PASS",
+    "unchanged_public_checks_reused": 39
+  },
+  "source_root": "fp8-sprint16-profile-refresh.1di9yoh6",
+  "source_seal": {
+    "manifest_sha256": "2821c158434601de1728339f1f4f2d183d86e71fd265b4e0dd1bb4cf51b2f9c4",
+    "members": 359,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint16-profile-refresh.1di9yoh6",
+    "verified_utc": "2026-10-22T15:06:33.638928+00:00"
+  },
+  "status": "SPRINT16_COMPLETE_CURRENT_PROFILE_ANALYZED",
+  "summary": {
+    "complete_samples_per_rank": {
+      "0": 8,
+      "1": 8
+    },
+    "final_text_pairs_equal": 4,
+    "full_output_id_pairs_equal": 4,
+    "independent_release_verified": true,
+    "model_starts": 2,
+    "native_seal": {
+      "manifest_sha256": "e13237f4b2fa61435eb64b02e4fcede263f7a57d08170833a0466cc2419cdab1",
+      "members": 220,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint16-profile-run.2t02ubm3",
+      "verified_utc": "2026-10-22T15:16:05.867443+00:00"
+    },
+    "numerical_mismatch_resolved": false,
+    "phase_result_sha256": "ca926d24fb7c855de5825cd3b42b5544458f12f22505830c63b666282a342e05",
+    "qualification": false,
+    "quality_gates_passed": 8,
+    "quality_result_sha256": "9be5b15cf4fd8b7195551c332ccebd20f5507b8a47619144354482d13f764726",
+    "reader_seal": {
+      "manifest_sha256": "9c5928c4f25e24e3da016347d5e3e3bf9735b87681c9669f3175777d00d4bcfb",
+      "members": 128,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint16-profile-reader.lcbgfo8j",
+      "verified_utc": "2026-10-22T15:16:15.584882+00:00"
+    },
+    "requests": 8,
+    "selected_source_changed": false,
+    "source_selected": false,
+    "status": "SPRINT16_COMPLETE_CURRENT_PROFILE_ANALYZED",
+    "target_costs_sha256": "05d3363c3cf1a585cc11d79e89b3cf8bd478e3f209e7460223b499400a800b52"
+  },
+  "tracking": "docs/SPRINT16-CURRENT-PROFILE.md"
+}

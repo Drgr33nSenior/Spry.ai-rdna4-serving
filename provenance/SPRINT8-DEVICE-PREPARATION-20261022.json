@@ -1,0 +1,99 @@
+{
+  "baseline_source_manifest_sha256": "7d15e20b507e2414be5f2da77d3b7fd538f75cb2a4d15ab9423ad43042c3b5ad",
+  "check_counts": {
+    "enabled_runtime_startup": 9,
+    "event_and_readout": 15,
+    "host_regression": 11,
+    "packet_and_retained_components": 69
+  },
+  "checks": [
+    "make test-device-phase-timing",
+    "make test-sampling-host-timing",
+    "private test_phase_runtime.py",
+    "private check_serving_package.py",
+    "private prepare_model_ab_launcher.py"
+  ],
+  "client_timeout_seconds": 1740,
+  "cpu_checks_passed": 104,
+  "date": "2026-10-22",
+  "executed": false,
+  "handoff_root": "scratchpad/fp8-sprint8-run.eyemdvyo",
+  "identity_contract": "Join frozen request, both graph roles, acceptance and completed commit; authenticate raw campaign/worker/host summary before sample readout",
+  "independent_review": {
+    "checked": {
+      "archive_members": 64,
+      "cpu_checks": 104,
+      "protected_helpers": 8,
+      "tested_input_hashes": 293
+    },
+    "model_family": "Astra",
+    "pins": {
+      "accepted_results_sha256": "d2fbb3d519924d2927a4a8c2b0dcd846140102dff7c1c5d64a797889d2442483",
+      "archive_sha256": "46d611fa40dc034ee6e7ab1f7f9450d525b03f2a016e6f1cdfa406dea8c00cd2",
+      "manifest_sha256": "b919634be817f07fd10066ac94ebdfaf23c6d46434bfd2e31e7466116a2ee2f4",
+      "readout_sha256": "87804a54bbbda393e90e3e70ae40b2d8ca77b70b85fb318fe68035ef26360520"
+    },
+    "remaining": [
+      "Physical admission and model startup",
+      "Runtime samples, complete aggregate coverage and route/commit joins",
+      "Quality grades and independent release",
+      "Measured cost decision; no speedup claim"
+    ],
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "CPU implementation and complete two-start packet; native results and aggregate coverage unverified",
+    "status": "APPROVED_BOUNDED_PREPARATION_NO_REMAINING_BLOCKER"
+  },
+  "installed_runtime_changed": false,
+  "launcher_prepared": true,
+  "limitations": [
+    "CPU substitutes do not prove device execution or native startup",
+    "Per-sample readout validation does not establish aggregate request coverage",
+    "Existing numerical mismatch remains unresolved under owner session-use disposition",
+    "No performance gain or dominant subphase established"
+  ],
+  "metrics": {
+    "archive_bytes": 16711680,
+    "archive_members": 64,
+    "argv_entries": {
+      "bf16": 255,
+      "kv4": 255
+    },
+    "binding_bytes": {
+      "control": 65411,
+      "mtp": 65391
+    },
+    "combined_transport_bytes": 33514674
+  },
+  "milestone": "8.2",
+  "new_gpu_runs": 0,
+  "next_step": "8.3: human starts existing privileged one-use owner; then authenticate and grade all8 final answers, samples and release",
+  "numerical_sources_unchanged": true,
+  "owner_ceiling_seconds": 5400,
+  "physical_admission_performed": false,
+  "prior_milestone_record": "provenance/SPRINT8-ATTRIBUTION-PREPARATION-20261022.json",
+  "private_evidence_root": "scratchpad/fp8-sprint8-ready.0il_rl0h",
+  "private_evidence_seal": {
+    "manifest_sha256": "54b790189ec9b84df2db92b5fe0153950c307d1e4f674c4b134f2395b5294185",
+    "members": 359
+  },
+  "protected_helpers_unchanged": true,
+  "schema": 1,
+  "selected_reference_changed": false,
+  "source_pins": {
+    "prototype/serving/device_phase_timing.py": "b4d03f0ceb0c49dd61bfd054263c18541580fa0181162d046882f17f56749d5c",
+    "prototype/serving/phase_timing_readout.py": "87804a54bbbda393e90e3e70ae40b2d8ca77b70b85fb318fe68035ef26360520",
+    "tests/test_device_phase_timing.py": "2f9b37f5eb561c5e5cfa30194a5e097e33ebaa7d47bf88622f4803973830a365",
+    "tests/test_phase_timing_readout.py": "46667803527b99dcdd93dd7e0a7daf05fcd6a6f34f28f1efd055d03fcd455910"
+  },
+  "source_profile": "selected snapshot in both starts; timing only in second arm",
+  "source_refinements": [
+    "target_probs measures scaling, topk20, top-p/softmax and dense allocation/scatter as one group",
+    "draft candidate_total includes projection, local topk16 and candidate exchange/merge; remaining graph time is not pure backbone time"
+  ],
+  "sprint": 8,
+  "status": "DEVICE_PACKET_PREPARED_CPU_REVIEW_PASS_NATIVE_RUN_PENDING",
+  "tracking": "docs/SPRINT8-COST-ATTRIBUTION.md",
+  "upload_verified": true,
+  "uploaded": true,
+  "worker_timeout_seconds": 1800
+}

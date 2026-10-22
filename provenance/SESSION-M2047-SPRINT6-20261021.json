@@ -1,0 +1,903 @@
+{
+  "baseline_investigation": "Deferred by owner unless concerning results recur",
+  "capture_scope": "Both graph buckets1/2 were observed during startup. External requests tested C1 only; graph bucket2 is not C2 traffic qualification.",
+  "common_matches": 7,
+  "cpu_acceptance_checks": 28,
+  "exact_equivalence_qualified": false,
+  "flush_added": false,
+  "gather_records": {
+    "control": [
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      }
+    ],
+    "mtp": [
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      }
+    ]
+  },
+  "historical_common_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+  "historical_variant_sha256": "40081e0625ba330c68628bb15da9fc1b84667d38a47dca171e5b1dfbfb71bdbd",
+  "independent_raw_time_recomputation": true,
+  "independent_release_verified": true,
+  "installed_runtime_changed": false,
+  "limitation": "Startup gather metadata establishes geometry and native FP32 fallback, not exposed transfer time or link traffic. Original A/B exact-output gate remains incomplete; owner selected session use.",
+  "metadata_witnesses": {
+    "session-start1": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ],
+    "session-start2": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ]
+  },
+  "model_starts": 2,
+  "native_manifest_sha256": "2307b68add5d25d59e0fcc9c019f1b5176875035e77311cc2e79bf1a4702df06",
+  "native_owner_elapsed_seconds": 271.4827091000043,
+  "new_hooks": true,
+  "remote_evidence": {
+    "protected": {
+      "manifest_sha256": "f20145572629fc781e6709f2ef477c1c25461d8321d0676bd37f0bf64df96f18",
+      "members": 31
+    },
+    "workload": {
+      "manifest_sha256": "baed1b5ab0492d923e628a55487f23f6b464b09d125934433ebb57944136d16d",
+      "members": 143
+    }
+  },
+  "requests": 8,
+  "root_cause": "unknown",
+  "root_owned_closeout_authenticated": true,
+  "samples": [
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.187739535002038,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start1",
+      "warmup": true
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 1,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.8487954009906389,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start1",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.8487406579661183,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start1",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.8559678100282326,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start1",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.165484760014806,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start2",
+      "warmup": true
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [
+        124
+      ],
+      "first_difference_from_common": 124,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": false,
+      "matches_historical_variant": false,
+      "ordinal": 1,
+      "output_ids_sha256": "97eaa8948df77218955b732c3d2bb7132f2c548c44a3c21f0c08b8c6c2d5ca7b",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.8526351789478213,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6114285714285714,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          3,
+          2,
+          2,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 107,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start2",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.8525121239945292,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start2",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.8490271010086872,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "session-start2",
+      "warmup": false
+    }
+  ],
+  "schema": 1,
+  "session_m2047_selected": true,
+  "session_selection": "M2047 remains active for the current session per owner instruction; exact-output gate remains incomplete.",
+  "source_manifest_sha256": "9abab4dfc3f679e5229be86678c09a9ead477e0bac11ff116ecd6ab026f17969",
+  "sprint6": {
+    "c1_verify_gathered_result_bytes_per_rank": 7946240,
+    "c1_verify_local_tensor_bytes_per_rank": 3973120,
+    "exposed_latency_measured": false,
+    "link_level_bytes_measured": false,
+    "new_communication_optimization": false,
+    "next": "Keep existing communication settings. Broader qualification belongs to Sprint7; revisit shard-max only with exposed-cost attribution.",
+    "status": "CURRENT_FP32_GATHER_GEOMETRY_OBSERVED_NO_TUNING_SELECTED"
+  },
+  "stack_changed": false,
+  "start_medians": [
+    {
+      "output_tokens_per_second": 69.23427001787967,
+      "seconds": 1.8487954009906389,
+      "start": "session-start1"
+    },
+    {
+      "output_tokens_per_second": 69.09536425812779,
+      "seconds": 1.8525121239945292,
+      "start": "session-start2"
+    }
+  ],
+  "status": "SESSION_OUTPUT_VARIATION_OBSERVED",
+  "task_quality_qualified": false,
+  "unique_output_hashes": [
+    "97eaa8948df77218955b732c3d2bb7132f2c548c44a3c21f0c08b8c6c2d5ca7b",
+    "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc"
+  ],
+  "variation_details": [
+    {
+      "exact_output_match": false,
+      "indices": [
+        124
+      ],
+      "ordinal": 1,
+      "start": "session-start2",
+      "task_quality_inferred": false,
+      "text_equal_after_casefold": true,
+      "token_pairs": [
+        {
+          "common": 2483,
+          "index": 124,
+          "observed": 12296
+        }
+      ]
+    }
+  ],
+  "workload": {
+    "concurrency": 1,
+    "dflash_block_size": 8,
+    "gemm_stages": 1,
+    "input_tokens": 2047,
+    "output_tokens": 128,
+    "reasoning_effort": "low",
+    "tensor_parallel": 2
+  }
+}

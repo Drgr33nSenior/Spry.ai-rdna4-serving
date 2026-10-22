@@ -51,7 +51,9 @@ This is a whole-stack comparison, not an attribution to Torch, HIP or RCCL alone
 
 The rate is output tokens divided by local non-stream HTTP request-to-terminal
 time. It includes prefill and protocol completion. It is not isolated decode
-throughput, TTFT or ITL. `ignore_eos=true` forces the fixed output count; these
+throughput, TTFT or ITL. All throughput figures describe one request served by
+both GPUs together in TP2; they are not per-card rates. `ignore_eos=true` forces
+the fixed output count; these
 truncated responses were not graded as completed task answers. Long contexts,
 concurrent traffic, sustained load, power and thermal behavior remain untested.
 
@@ -129,6 +131,119 @@ No continuous VRAM samples, Torch allocator peaks, per-request host peaks or
 per-process RSS were retained. Exact host peak bytes, per-rank GPU figures and
 capture hashes are included in the sanitised JSON linked below.
 
+### Metadata reuse validation, 2026-10-21
+
+A subsequent candidate reuses causal metadata across the 16 attention layers
+while preserving all eight singleton split selections. Both GPU ranks recorded
+one metadata build during capture across 16 eligible attention calls. All eight
+requests completed, with zero cached tokens and zero retractions. All four
+ordinary/candidate output pairs matched, as did all four comparisons against
+the earlier combined-path outputs.
+
+| Current validation configuration | Median output tokens/s | Median request time |
+| --- | ---: | ---: |
+| Ordinary FP8 reference | 24.47 | 5.2302 s |
+| Combined path with metadata reuse | 87.29 | 1.4663 s |
+
+The workload and timing metric match the short C1 screen above. These are
+combined TP2 rates, not per-card rates. The approximately 0.70 percent increase
+over the earlier 86.68 tokens/s is descriptive: there was no matched
+old-adapter/new-adapter comparison in reversed order. No additional throughput
+gain is established. Source, native/wire, raw timing and independent cleanup
+checks passed. See [metadata reuse](METADATA-REUSE.md) and its
+[sanitised validation record](../provenance/VERIFY-METADATA-REUSE.json) for
+capture counters, evidence identities and scope limits.
+
+### M2047 prefill-tail component validation, 2026-10-21
+
+The one-stage M2047 candidate passed all 360 exact comparisons across 20
+synthetic cases on the current Torch 2.14 / SDK 10.2 stack. Both GPUs were tested
+sequentially. Stage 1 was 1.311–1.575 times faster than stage 3, with a geometric
+mean of 1.429 across the cases. There were 320 timed launches and 40 warm-ups.
+Structured outputs matched an analytical oracle; random outputs matched the
+stage-3 baseline. Input immutability and finite-output checks passed.
+
+The owned run took 47.81 seconds and its native payload took 29.70 seconds.
+Independent release and both evidence seals verified. These are component
+kernel measurements, not TP2 serving rates or a request-level speedup. Matched
+serving A/B is recorded below. See the [component record](../provenance/M2047-COMPONENT-20261021.json)
+and [current sprint list](SERVING-SPRINTS.md).
+
+### M2047 matched serving A/B, 2026-10-21
+
+Both orders showed about 4.9 percent lower median request latency for stage 1.
+Forward medians were 1.9487 s versus 1.8536 s; reverse medians were 1.9454 s
+versus 1.8501 s. These are combined TP2 measurements at C1 with 2,047 input
+tokens and 128 forced output tokens. Each model start had one excluded warm-up
+and three measured requests. The two orders used four starts and 16 requests.
+All five changed M2047 shapes were observed on both ranks.
+
+The exact output gate is incomplete. Seven of eight paired prefixes matched;
+the candidate was repeatable in eight of eight requests, while one baseline
+response first differed at output index 102. Its 23 verification cycles differ
+from the common 25-cycle path. The record preserves that response and timing.
+These observations do not establish clean performance attribution or task
+quality. The owner subsequently selected M2047 for current-session use, with
+the unresolved variation retained for review if concerning results recur.
+The current stack and installed runtime remain unchanged. See the
+[sanitised serving record](../provenance/M2047-SERVING-20261021.json) and
+[current sprint list](SERVING-SPRINTS.md).
+
+### Baseline repeatability follow-up, 2026-10-21
+
+Two fresh stage-3 baseline starts replayed the same four requests each. All
+eight outputs matched the historical common prefix, with 25 verification
+replays per rank and no graph recapture. Measured request medians were 1.9490 s
+and 1.9445 s. Warm-up outputs were compared but excluded from timing.
+Source, runtime, weight, HTTP and independent release checks passed.
+
+The earlier variant was not reproduced. This finite screen does not identify
+its cause or complete the M2047 exact-output gate. The owner subsequently
+selected current-session use; see the
+[current selection](../provenance/CURRENT-SESSION-SELECTION.json).
+The stack and installed runtime remain unchanged. See the
+[repeatability record](../provenance/BASELINE-REPEATABILITY-20261021.json) for
+all samples, speculative histograms and per-rank graph deltas.
+
+### Current-session M2047 activation and Sprint 6, 2026-10-21
+
+M2047 stage 1 is selected for this session. Two fresh starts with both arms
+enabled completed eight requests. Measured request medians were 1.8488 s and
+1.8525 s, approximately 69.23 and 69.10 output tokens/s combined TP2. Each
+start excluded one warm-up from timing. All five changed M2047 shapes reached
+both ranks. All requests used 25 verification replays per rank and no
+recaptures. The 28 CPU checks and source/runtime/weight/wire/release checks
+passed. The current stack and installed defaults remain unchanged.
+
+Seven outputs matched the common prefix exactly. One differed only in the
+capitalization of `Required` at output index 124. The exact mismatch remains
+in the record, and the owner selected continued session use. These forced
+128-token outputs are not a task-quality qualification.
+
+The startup census observed a 3.79 MiB FP32 local shard and 7.58 MiB gathered
+result per rank for a C1 verification block. Exposed latency and link-level
+traffic were not measured. Retain current communication settings and continue
+Sprint 7 combined-profile qualification. See the
+[session and census record](../provenance/SESSION-M2047-SPRINT6-20261021.json).
+
+### Remaining optimization screens, 2026-10-21
+
+The fresh width comparison retained DFlash8: median request latency was
+1.8474 s (69.29 tokens/s combined TP2) versus 2.5137 s (50.92 tokens/s) at
+width four. Both used equivalent singleton split attention and metadata reuse.
+The output prefixes differed; this was a forced-output C1 screen with no task
+grading. All eight requests and independent release checks completed.
+
+The aligned ReplaySSM component passed all 1,032 exact comparisons in sixteen
+cases on both GPUs. It is ready for serving integration, not full-model
+qualification. Component storage formulas and timings do not establish
+whole-model VRAM savings or a serving speedup. Adaptive-policy prerequisites
+were audited; no adaptive policy was implemented or GPU-tested.
+
+Keep M2047 stage 1 + metadata reuse + DFlash8 as the Sprint 7 reference.
+Aligned ReplaySSM remains a separate integration candidate. See the
+[screening results and limits](OPTIMIZATION-CANDIDATES.md).
+
 ## Evidence identities and limits
 
 | Completed observation | Private local evidence manifest SHA256 |
@@ -136,6 +251,7 @@ capture hashes are included in the sanitised JSON linked below.
 | FP8 low/xhigh verification | `780765826ccbbdc5bce91064dcf74eb17b3adee78c785100ce705802235e685e` |
 | Previous/current HTTP benchmark | `47f91427c597fdec16f374686bcd4e17ed338a3c383a4a5b0c6cd8e4ef433fd0` |
 | Combined-path native benchmark | `ff2061124636c6894ea1e037173dd272783d47869ce89b78448f8216e116f3af` |
+| Metadata-reuse native validation | `2dc999e0d649c59bb43bf29ed30d1ef05d90fe4a688146aa054965ce3fb05fe5` |
 
 Sanitised measurements and source/native evidence identities are retained in
 [SERVING-RESULTS-20261021.json](../provenance/SERVING-RESULTS-20261021.json).
@@ -146,3 +262,306 @@ were independently recomputed from retained monotonic timestamps. These hashes
 identify private evidence; they are not portable runtime/build proofs or launch
 authority. Optional TVM Torch C DLPack and Python 3.14 TorchScript warnings remain.
 No production deployment or broad quality qualification was performed.
+
+## Aligned ReplaySSM serving screen, 2026-10-21
+
+The aligned ring-fold candidate passed 43 CPU checks and eight native C1
+requests after independent Astra implementation review. All four paired
+output-ID vectors matched exactly. Both arms used DFlash8, singleton split
+attention with metadata reuse, M2047 stage one and the current stack and
+precision. Each request used 2,047 input tokens and 128 forced output tokens.
+
+Median request latency was 1.8490 s for the snapshot reference and 1.8042 s
+for ring-fold, a 2.42% reduction. Combined TP2 output rate was 69.23 versus
+70.95 tokens/s. This is one order, with one excluded warmup and three measured
+requests per start. Per-request native commits, graph replays and verifier
+cycles all matched at 25 on each rank. Independent release passed.
+
+Automatic recurrent capacity increased from 19 to 74 usable slots per card.
+Startup Torch allocation rose from 20.53 to 23.01 GiB per card. That screen did
+not measure matched-capacity savings or reverse order; the follow-up below
+covers both. Carry this candidate into broader Sprint 7 qualification
+alongside the current reference. Normal-stop quality, longer contexts, C1/C2,
+sampling, reuse and repeated lifecycles remain incomplete.
+See the [serving record](../provenance/REPLAYSSM-SERVING-20261021.json)
+and [screening list](OPTIMIZATION-CANDIDATES.md).
+
+## Sprint 7 matched-capacity comparison, 2026-10-21
+
+Both execution orders completed at 19 usable recurrent slots per card, with
+45 CPU checks per packet and sixteen native requests across four starts.
+Ring-fold reduced median request latency by 2.32% and 2.47% in the two orders.
+Startup Torch allocation fell from 20.53 to 18.90 GiB per card in both orders.
+The 2 MiB residual between the measured allocation change and the main tensor
+calculation remains unassigned. These counters describe startup after graph
+setup, not whole-device peak VRAM.
+
+Seven of eight output pairs matched exactly. One reference response repeated
+the earlier capitalization variant at token 124; all eight candidate outputs
+matched the historical common output. All requests used 25 verification
+replays and completed commits per rank, with no recaptures. Independent
+release passed. These short C1 timings are descriptive combined-TP2 figures;
+normal-stop quality and broader lifecycle qualification remain incomplete.
+See the [two-order record](../provenance/SPRINT7-MATCHED-CAPACITY-20261021.json)
+and [remaining Sprint 7 gates](SPRINT7-QUALIFICATION.md).
+
+## Explicit BF16 draft KV and owner disposition, 2026-10-21
+
+The explicit `--speculative-draft-kv-cache-dtype bf16` override completed two
+fresh GPU starts and eight C1 requests. Both ranks confirmed actual BF16 target
+and draft K/V buffers in both starts. All eight forced 128-token outputs matched
+the historical common response. Source, weight, HTTP, graph and independent
+release checks passed after 38 CPU package checks and Astra implementation review.
+
+Median full HTTP output rates were 69.15 and 69.31 tokens/s for combined TP2.
+There was no flag-off control, isolated decode measurement or task-quality grade.
+This screen did not test FP8 target KV or establish a mismatch fix.
+
+The owner selected this configuration for the current session and directed us
+to move on, backtracking if more strange behavior occurs. The mismatch diagnosis
+is closed as unresolved. Earlier capitalization variants and the later stage-3
+variation from token 16 remain retained; exact reproducibility and broader task
+quality are not qualified. Continue with the selected snapshot reference and
+explicit BF16 draft override in both future KV arms. No installed default or
+persistent server was changed. See the [override validation and owner decision](../provenance/BF16-DRAFT-KV-OVERRIDE-20261021.json).
+
+The owner deferred FP8 target attention KV to a [separate optional work item](SERVING-SPRINTS.md#optional-fp8-target-attention-kv). Keep the current FP8 weights and BF16 target/draft caches. The next active work is Sprint 7 normal-stop quality and sustained-output validation.
+
+
+## Combined low-thinking task screen, 2026-10-21
+
+The selected M2047 stage 1 + metadata reuse + DFlash8 snapshot passed four tasks
+in each of two fresh starts with thinking enabled at low effort. All eight
+responses stopped naturally and passed applicable final-answer task and format
+checks. The two ledger finals contained 763 and 821 tokens and matched all 28
+expected events, including the earlier J01/H17 fee-boundary cases. All four
+output-ID pairs matched exactly. Independent GPU resource release was verified.
+
+Ledger inputs were 12272 tokens, with a 4096-token total output cap inside the
+existing 16K context. Inert filler was reduced; task facts and oracles stayed
+fixed. This is a bounded greedy-profile result, not a mode-only comparison,
+publisher-recipe qualification or general quality guarantee. Ring-fold and
+other Sprint 7 gates remain pending. See the
+[thinking quality record](../provenance/SPRINT7-THINKING-QUALITY-20261021.json)
+and [validation skill](../.agents/skills/aithreadripper-serving-validation/SKILL.md).
+
+## Sprint 7 matched thinking quality, 2026-10-21
+
+Snapshot and ring-fold each passed four natural-stop tasks in one fresh start:
+8/8 applicable task, format and sustained-final-output checks. All final texts
+and token segments matched the two prior selected-profile starts. Two of four
+full output-ID pairs matched; the ledger reasoning paths differed. Exact-output
+equivalence and the earlier mismatch remain unresolved.
+
+Both profiles observed 19 usable/20 physical recurrent slots per card and BF16
+target/draft attention caches. Ring-fold again reduced startup Torch allocation
+by 1.63 GiB per card. Zero request recaptures and equal per-rank commit/replay/verify
+counts were authenticated, along with independent release. This is a bounded
+quality result with one start per profile and no speedup or repeatability claim.
+See the [record](../provenance/SPRINT7-RINGFOLD-THINKING-QUALITY-20261021.json).
+C2, reuse/branching, cancellation and repeated lifecycle coverage remain pending.
+
+## Both-order thinking lifecycle screen, 21 October 2026
+
+Both profiles completed four fresh starts and 108 planned requests in both
+orders. All 104 normal final answers were correct, and four active streaming
+cancellations completed with correct recovery. Each start showed real batch-two
+graph traffic on both ranks. Verifier counts, singleton/batch-two replays and
+completed commits reconcile. All active request rows were released; free plus
+evictable cached slots accounted for all 19 usable recurrent slots per rank.
+
+The schedule covered prefix-boundary reuse and branches, cache pressure,
+victim recovery, cancellation, concurrency and final replay. Integer allocator
+observations establish slot bookkeeping, not numerical state equivalence or
+per-node cache ownership. Full output IDs matched 42/52 cache comparisons; all
+52 final-answer comparisons passed. Retain the ten reasoning-output differences
+and the unresolved exact-output contract. Independent release passed after both
+packets. These instrumented runs establish bounded lifecycle behavior and task
+quality; their timings are not performance claims. See the
+[lifecycle record](../provenance/SPRINT7-LIFECYCLE-20261021.json).
+
+## Sprint 7 sampled screen and closeout, 21 October 2026
+
+The final publisher-recipe screen passed 8/8 natural final answers on snapshot
+and ring-fold. It used low thinking, temperature 1.0, top-p 0.95 and top-k 20.
+All 16 external request/rank witnesses joined a successful native DFlash
+selector-sampling return to the frozen request. All coding finals passed the
+unchanged Linux grader; all ledger finals passed the full event oracles and
+exceeded 512 final tokens. Independent release passed.
+
+The ledger inputs were 8176 tokens, with an 8192-token total output cap and a
+16-token reserve: 16384 tokens in total, within the selected context. Only inert
+filler was reduced. This is a small functional sampling screen, not a distribution test
+or a performance benchmark. See the [sampled result](../provenance/SPRINT7-SAMPLING-20261021.json).
+
+The [bounded Sprint 7 closeout](../provenance/SPRINT7-CLOSEOUT-20261021.json)
+retains the snapshot reference, the separately screened ring-fold option and
+the unresolved exact-output exception. General numerical equivalence and
+production qualification remain incomplete. No persistent server or installed
+default was replaced.
+
+## Offline cost attribution, 2026-10-22
+
+The [current cost analysis](CURRENT-COST-ANALYSIS.md) uses the latest sampled
+quality telemetry, a separate greedy counter crosscheck and the earlier
+short-C1 device timing. Generation is the dominant service phase on the long
+requests. Current GPU shares for drafting, target verification and commit are
+not measured. The draft selector's large-vocabulary top-k fallback is a concrete
+untimed candidate. No models were started and no new speedup was established.
+
+## Sprint 8 native cost attribution, 22 October 2026
+
+The corrected snapshot control/timing packet passed all eight natural final
+answers, authenticated 126 completed samples per card and verified independent
+release. It preserved the selected stack, flags, FP8 weights and BF16 caches.
+All final-answer texts matched; one held-out reasoning length differed by eight
+tokens. The prior numerical mismatch remains unresolved.
+
+On the long requests, the target graph took about 44.85 ms within a 54.06–54.09 ms
+sampled cycle on each rank, about 83% of that interval. About 42.64 ms remained
+after the output head and final gather. Draft local top-k was only 0.068–0.071 ms.
+These are per-rank instrumented windows, with missing and uncovered cycles
+retained. They do not establish a whole-request share or speedup. Sprint 9 first
+classifies the target graph through a bounded trace before choosing a component.
+See the [attribution and coverage record](SPRINT8-COST-ATTRIBUTION.md).
+
+## Sprint 9 target graph classification, 22 October 2026
+
+The two-start diagnostic passed 8/8 final-answer gates and independent release,
+with eight completed timing samples per card. In four long-request samples per
+rank, projection methods total a median 30.757/30.730 ms within a 48.334/48.339 ms
+target graph. MLP gate/up projections total 13.775/13.777 ms across layers. These
+nested, instrumented intervals select an M8 gate/up component comparison; they
+are not a clean serving benchmark. Three of four full output-ID pairs match;
+all final answers match. The held-out reasoning variation remains recorded.
+See [Sprint 9 tracking](SPRINT9-TARGET-GRAPH.md) for coverage gaps, overhead and
+remaining gates. The stack, runtime flags and selected numerical profile remain
+unchanged; no new optimization is qualified.
+
+The M8 stage-depth component subsequently passed 96/96 exact comparisons,
+including 24 graph replays across both cards. Stage 1 reduced eager component
+median time by 6.61–13.06% across four structured/random cases. The first attempt's
+capture-stream harness failure remains sealed; the corrected run passed both
+cards and independent release. The experimental patch is recorded but remains
+uninstalled. Sprint 9's component exit is complete after independent review;
+Sprint 10 subsequently completed matched serving validation below. See the
+[component record](../provenance/SPRINT9-M8-COMPONENT-20261022.json).
+
+
+## Sprint 10 matched M8 serving, 22 October 2026
+
+M8 gate/up stage one is selected for the next experimental profile launch after
+Astra review. On fixed 2,047-input/1,024-output C1 work, median client latency
+fell 0.6023% forward and 0.3479% in reverse order. Combined TP2 rates rose
+0.6059% and 0.3491%. All six measured pairs match output IDs and 164 verifier
+cycles; each start's first request is excluded. Existing observers remain equal
+and additional classification timing events are disabled.
+
+Repeated candidate screens passed greedy 8/8 and publisher-sampled 8/8 final-answer
+gates, then lifecycle 52/52 natural answers plus two cancellations/recoveries,
+actual C2 and slot accounting. Greedy finals all match between starts; two
+reasoning sequences differ. Lifecycle full outputs match 24/26 cache pairs and
+all 26 finals match. The numerical mismatch remains unresolved; this is bounded
+qualification on the current snapshot/BF16 profile. Startup allocation is
+20.52785 GiB/card, reserved 20.80078 GiB/card. Installed runtime and production
+defaults remain unchanged. See [Sprint 10](SPRINT10-M8-SERVING.md) and its
+[result index](../provenance/SPRINT10-M8-SERVING-20261022.json).
+
+
+## Sprint 14 smaller unrolled tile, 22 October 2026
+
+The exact untuned M8 down projection now selects native unrolled tile16/stage1
+for the next experimental session launch, after Astra review. Both matched
+orders passed all eight output-ID pairs and 164 verifier cycles per request.
+Median client latency fell 1.7442% forward and 1.7851% in reverse, reaching
+115.1192 and 115.1496 combined TP2 output tokens/s across both cards.
+The workload uses C1, 2,047 input tokens and 1,024 forced output tokens with
+low thinking. Each start's first request is excluded. Rates include prefill;
+they are not decode-only or final-answer throughput.
+
+Natural-stop screens passed greedy8/8, sampled8/8 and lifecycle52/52 final
+answers, plus two cancellations/recoveries, actual C2, 19-slot accounting and
+independent release. Greedy3/4 and cache24/26 full-output pairs matched; all
+paired final answers matched. Sampling route execution passed on both ranks,
+without establishing sampling-distribution equivalence. Earlier numerical
+findings and Sprint 11 failed work gates remain unresolved under the owner's
+experimental-session disposition. Reliability remains deferred; installed
+runtime and production defaults are unchanged. Retain the previous selected
+source for rollback. See [Sprint 14](SPRINT14-UNROLLED-TILE16.md) and its
+[evidence index](../provenance/SPRINT14-UNROLLED-TILE16-20261022.json).
+
+## Sprint 17 GDN input projection, 22 October 2026
+
+The exact untuned M8 GDN qkvz projection `(8,8192,5120)` now selects native
+unrolled tile16/stage1 for the next experimental session launch, after Astra
+review. Both matched orders passed all eight output-ID pairs and 164 verifier
+cycles per request. Median client latency fell 0.5435% forward and 0.6425% in
+reverse, reaching 115.7085 and 115.7343 combined TP2 output tokens/s across both
+cards. These rates include prefill on C1 work with 2,047 input tokens and 1,024
+forced output tokens, low thinking and one excluded warmup per start. They are
+not isolated decode or final-answer throughput measurements.
+
+Greedy8/8, sampled8/8 and lifecycle52/52 normal final answers passed, plus two
+cancellations/recoveries, actual C2, 19-slot accounting and independent release.
+Greedy and sampled each matched all four full output pairs. Lifecycle matched
+24/26 full cache-output pairs and all 26 final-answer pairs; retain the two
+`concurrent-a` reasoning variants. Sampling route execution was verified on both
+ranks without establishing distribution equivalence.
+
+The current stack, FP8 weights, BF16 target/draft caches, FP32 state/head, flags,
+DFlash8, metadata reuse and earlier selected routes remain unchanged. Preserve
+Sprint 14 source for rollback, earlier numerical findings and Sprint 11 failed
+gates. Reliability remains deferred; installed runtime and persistent defaults
+are unchanged. See [Sprint 17](SPRINT17-GDN-INPUT.md) and its
+[evidence index](../provenance/SPRINT17-GDN-INPUT-20261022.json).
+
+## Sprint 18 attention QKV, 22 October 2026
+
+The exact `(8,7168,5120)` unrolled tile16/stage1 option remains unselected after
+Astra review. Component checks passed 96/96 with 16.25–18.25% less kernel time.
+Both matched serving median gates passed at 0.1948–0.2237% lower latency; all
+eight output pairs and 164 cycles/request matched. Candidate rates were
+116.0174–116.0459 combined TP2 output tokens/s on the same C1, 2047-input/
+1024-forced-output low-thinking workload, with one excluded warmup/start.
+Rates include prefill; they are not decode-only or final-answer rates.
+
+One reverse measured candidate request was 1.3016% slower. Including every sample,
+the pooled mean was 0.0574% higher. Overall service benefit is inconclusive;
+these descriptive results do not replace the selected Sprint 17 benchmark.
+Greedy passed 8/8 final answers, with 4/4 paired final texts and 3/4 full output pairs
+matching. Retain the audit-threshold reasoning variant. Prepared sampled and
+lifecycle screens were not launched. Current source, stack, flags and precision
+remain selected; reliability stays deferred. See [Sprint 18](SPRINT18-ATTENTION-QKV.md)
+and its [evidence index](../provenance/SPRINT18-ATTENTION-QKV-20261022.json).
+
+
+## Sprint 19 matched ring-fold, 22 October 2026
+
+Both orders matched eight full-output ID pairs and 164 verification cycles
+per request per rank. Ring-fold measured 120.3602 versus 115.6911 combined TP2 output
+tokens/s forward and 120.2798 versus 115.6689 in reverse; median latency fell
+3.87926% and 3.83348%, respectively. All six measured candidate requests were
+faster, without a statistical significance claim. These C1 rates include
+prefill on 2047-input/1024-forced-output, greedy low-thinking requests, with one
+excluded warmup and three measured requests per start.
+
+With 19 usable and 20 physical recurrent slots per card, startup allocation
+after graph setup fell from 22,041,610,240 to 20,296,157,184 bytes on each
+card in both orders: 1.62558 GiB per card. This is not whole-device or
+process-lifetime peak memory. Geometry predicts 1,747,550,208 bytes of savings;
+the 2,097,152-byte residual is unassigned. The saving is attributed to recurrent
+ring-fold; the split-KV computational adapter retains BF16 caches.
+
+Greedy natural-stop quality passed 8/8 final answers, with 4/4 full-output ID
+pairs and 4/4 final-text pairs matching across profiles. The two long ledger
+finals reached 763 and 821 tokens, above the 512-token gate. Source, native,
+HTTP, cache, work and release evidence was authenticated. Publisher-sampled
+quality passed 8/8 final answers, with 4/4 final-text and 2/4 full-output pairs
+matching. Two ledger reasoning outputs differed; the native selector-sampling
+route was verified on both ranks and arms without establishing distribution
+equivalence. Lifecycle quality is active. The selected Sprint 17 snapshot and
+GEMM remain unchanged; ring-fold awaits lifecycle and final review. Earlier
+numerical findings, Sprint 11 failed gates and the owner experimental-session
+disposition remain. Reliability and
+endurance remain deferred, and installed runtime and persistent defaults remain
+unchanged. See [Sprint 19](SPRINT19-MATCHED-RINGFOLD.md).

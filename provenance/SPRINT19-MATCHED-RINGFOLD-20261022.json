@@ -1,0 +1,715 @@
+{
+  "active_gpu_run": true,
+  "affected_review": {
+    "archive_pins": {
+      "greedy": "2b28519556a6a674a94941e45bf66100bd4e56afdbc6c6bd50bcfe9bde51aadc",
+      "lifecycle": "d83bd4af54589dc3f3878fc076a5f18263b18e82655fe99b9bd3a8b90e9b4ad5",
+      "sampled": "594b6419639476deb64248c94de853e8b093921b7dff49c98efd77fd481163fd"
+    },
+    "execution_order": [
+      "greedy",
+      "sampled",
+      "lifecycle"
+    ],
+    "legacy_status_label_retained_for_compatibility": true,
+    "native_authorization_source_identity_fields": 3,
+    "packet_checks": {
+      "greedy": 18,
+      "lifecycle": 65,
+      "sampled": 18
+    },
+    "qualification": false,
+    "quality_metadata_corrected": true,
+    "reader_checks": {
+      "greedy": 21,
+      "lifecycle": 18,
+      "sampled": 22
+    },
+    "reviewer": "/root/astra_replay_serving_verify",
+    "runtime_delta": "Candidate aligned ring-fold activation only; selected GEMM unchanged both arms.",
+    "startup_checks": {
+      "greedy": 35,
+      "lifecycle": "included",
+      "sampled": 35
+    },
+    "status": "APPROVED_CONDITIONAL_ON_REVERSE_AND_RELEASE",
+    "stop_rule": "Stop on new failure; no automatic retry; no promotion before final review.",
+    "unchanged_requests_and_graders": true
+  },
+  "forced_work_requests_completed": 16,
+  "forward_disposition": {
+    "advance_to_reverse_preparation": true,
+    "all_three_measured_candidate_requests_faster": true,
+    "mean_latency_change_percent": -3.914834288345548,
+    "median_latency_change_percent": -3.8792645082953214,
+    "median_rate_change_percent": 4.035824828483658,
+    "memory": [
+      {
+        "allocated_reduction_bytes": 1745453056,
+        "allocated_reduction_gib": 1.625579833984375,
+        "rank": 0
+      },
+      {
+        "allocated_reduction_bytes": 1745453056,
+        "allocated_reduction_gib": 1.625579833984375,
+        "rank": 1
+      }
+    ],
+    "normal_stop_quality_measured": false,
+    "numerical_mismatch_resolved": false,
+    "output_pairs_matched": 4,
+    "qualification": false,
+    "results_sha256": "8bda561ca7848a3908c50cf1e018ee4e58bc82b9f6950fdf9ab6095c5f46e288",
+    "selection_changed": false,
+    "status": "CLEAN_FORWARD_GAIN_REVERSE_ORDER_NEXT",
+    "verification_cycles_per_request": 164
+  },
+  "forward_result_sha256": "8bda561ca7848a3908c50cf1e018ee4e58bc82b9f6950fdf9ab6095c5f46e288",
+  "forward_summary": [
+    {
+      "max_client_seconds": 8.854580871004146,
+      "median_client_seconds": 8.851158082019538,
+      "median_output_tokens_per_client_second": 115.6910757339403,
+      "memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "snapshot",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 0,
+          "snapshot_bytes_from_native_constructor_geometry": 1811939328,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22041610240,
+            "driver_free_bytes": 10869538816,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22076058112,
+            "reported_peak_reserved_bytes": 22357737472,
+            "reserved_bytes": 22334668800
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "snapshot",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 0,
+          "snapshot_bytes_from_native_constructor_geometry": 1811939328,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22041610240,
+            "driver_free_bytes": 10869538816,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22076058112,
+            "reported_peak_reserved_bytes": 22357737472,
+            "reserved_bytes": 22334668800
+          },
+          "usable_state_slots": 19
+        }
+      ],
+      "min_client_seconds": 8.85058722901158,
+      "stack": "snapshot"
+    },
+    {
+      "max_client_seconds": 8.508058091974817,
+      "median_client_seconds": 8.50779824797064,
+      "median_output_tokens_per_client_second": 120.36016489275049,
+      "memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 20296157184,
+            "driver_free_bytes": 12614369280,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 20330605056,
+            "reported_peak_reserved_bytes": 20612907008,
+            "reserved_bytes": 20589838336
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 20296157184,
+            "driver_free_bytes": 12614369280,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 20330605056,
+            "reported_peak_reserved_bytes": 20612907008,
+            "reserved_bytes": 20589838336
+          },
+          "usable_state_slots": 19
+        }
+      ],
+      "min_client_seconds": 8.500833678990602,
+      "stack": "ring_fold"
+    }
+  ],
+  "greedy_disposition": {
+    "all_required_gates_passed": true,
+    "final_answers_passed": 8,
+    "final_text_pairs_matched": 4,
+    "full_output_pairs_matched": 4,
+    "numerical_mismatch_resolved": false,
+    "pairs": [
+      {
+        "case": "coding-running-totals",
+        "final_text_equal": true,
+        "final_tokens": [
+          41,
+          41
+        ],
+        "first_difference": null,
+        "output_ids_equal": true,
+        "reasoning_tokens": [
+          309,
+          309
+        ]
+      },
+      {
+        "case": "coding-unique-last",
+        "final_text_equal": true,
+        "final_tokens": [
+          95,
+          95
+        ],
+        "first_difference": null,
+        "output_ids_equal": true,
+        "reasoning_tokens": [
+          786,
+          786
+        ]
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "final_text_equal": true,
+        "final_tokens": [
+          763,
+          763
+        ],
+        "first_difference": null,
+        "output_ids_equal": true,
+        "reasoning_tokens": [
+          2126,
+          2126
+        ]
+      },
+      {
+        "case": "heldout16k-audit",
+        "final_text_equal": true,
+        "final_tokens": [
+          821,
+          821
+        ],
+        "first_difference": null,
+        "output_ids_equal": true,
+        "reasoning_tokens": [
+          3154,
+          3154
+        ]
+      }
+    ],
+    "qualification": false,
+    "results_sha256": "22d8c56ab4cd351fb9b3dc1ad2c21f5a2ec64b098c5f45dce40876b0f484f3c5",
+    "selection_changed": false,
+    "source_and_cache_capacity_authenticated": true,
+    "status": "GREEDY_QUALITY_PASS_SAMPLED_NEXT"
+  },
+  "greedy_result": {
+    "checks": {
+      "packet": 18,
+      "reader": 21,
+      "startup": 35
+    },
+    "disposition": {
+      "all_required_gates_passed": true,
+      "final_answers_passed": 8,
+      "final_text_pairs_matched": 4,
+      "full_output_pairs_matched": 4,
+      "numerical_mismatch_resolved": false,
+      "pairs": [
+        {
+          "case": "coding-running-totals",
+          "final_text_equal": true,
+          "final_tokens": [
+            41,
+            41
+          ],
+          "first_difference": null,
+          "output_ids_equal": true,
+          "reasoning_tokens": [
+            309,
+            309
+          ]
+        },
+        {
+          "case": "coding-unique-last",
+          "final_text_equal": true,
+          "final_tokens": [
+            95,
+            95
+          ],
+          "first_difference": null,
+          "output_ids_equal": true,
+          "reasoning_tokens": [
+            786,
+            786
+          ]
+        },
+        {
+          "case": "quality16k-audit-threshold",
+          "final_text_equal": true,
+          "final_tokens": [
+            763,
+            763
+          ],
+          "first_difference": null,
+          "output_ids_equal": true,
+          "reasoning_tokens": [
+            2126,
+            2126
+          ]
+        },
+        {
+          "case": "heldout16k-audit",
+          "final_text_equal": true,
+          "final_tokens": [
+            821,
+            821
+          ],
+          "first_difference": null,
+          "output_ids_equal": true,
+          "reasoning_tokens": [
+            3154,
+            3154
+          ]
+        }
+      ],
+      "qualification": false,
+      "results_sha256": "22d8c56ab4cd351fb9b3dc1ad2c21f5a2ec64b098c5f45dce40876b0f484f3c5",
+      "selection_changed": false,
+      "source_and_cache_capacity_authenticated": true,
+      "status": "GREEDY_QUALITY_PASS_SAMPLED_NEXT"
+    },
+    "donor_native_seal": {
+      "manifest_sha256": "b890e453536e510811a7c22ba6d12893ea4b202cda860450f9c86d879dbc964d",
+      "members": 232,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-run.ifl975qy",
+      "verified_utc": "2026-10-22T16:12:18.597444+00:00"
+    },
+    "donor_reader_seal": {
+      "manifest_sha256": "eb9459310805eca8fc8f4d99106a97230e91591a3ca10ec2133960846cab6880",
+      "members": 123,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy-reader.5e72bdcy",
+      "verified_utc": "2026-10-22T16:13:46.335525+00:00"
+    },
+    "donor_source_seal": {
+      "manifest_sha256": "e378d786522c3cd44ac2bc9c8251acc19b812aa29a9b0a9ba166cad3d2eaf104",
+      "members": 348,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-greedy.ggza3rfn",
+      "verified_utc": "2026-10-22T16:03:39.547459+00:00"
+    },
+    "failed_initial_packet_receipt": "02-packet-check",
+    "launch_authorized": true,
+    "matched_capacity_checks": 6,
+    "model_starts_executed": 2,
+    "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy-run.g9zdsv3a",
+    "native_seal": {
+      "manifest_sha256": "7356756b572f404a3fee09883a6ee25faa33af574cef4da343f7b772c1ae0cc6",
+      "members": 230,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy-run.g9zdsv3a",
+      "verified_utc": "2026-10-22T18:22:06.850214+00:00"
+    },
+    "reader": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy-reader.l29p6ov3",
+    "reader_seal": {
+      "manifest_sha256": "799845ae1851cfd42702f8ef5c994e8d2ffd8db711fec5db942e18abbeb72fb0",
+      "members": 127,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy-reader.l29p6ov3",
+      "verified_utc": "2026-10-22T18:23:03.957703+00:00"
+    },
+    "requests": 8,
+    "source": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy.oiripzcc",
+    "source_seal": {
+      "manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+      "members": 344,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy.oiripzcc",
+      "verified_utc": "2026-10-22T18:12:54.062784+00:00"
+    },
+    "status": "COMPLETE_PASS",
+    "successful_packet_receipt": "02b-packet-check"
+  },
+  "launch_prepared": true,
+  "memory_comparison_scope": "Startup Torch allocated bytes at19usable20physicalslots/card; not whole-device/process-lifetime peak or an engine comparison. Split attention still uses BF16 KV.",
+  "model_starts_completed": 8,
+  "native_root": "fp8-sprint19-forward-run.evw1sksb",
+  "native_seal": {
+    "manifest_sha256": "904dc82fb8dbf38e8758753e953a1f89601dab040df685a2e4f9649b9226ee04",
+    "members": 232,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-forward-run.evw1sksb",
+    "verified_utc": "2026-10-22T18:03:05.848905+00:00"
+  },
+  "natural_final_answers_completed": 16,
+  "numerical_mismatch_resolved": false,
+  "production_qualified": false,
+  "profile": {
+    "concurrency": 1,
+    "draft_attention_kv": "bf16",
+    "excluded_warmup_per_start": 1,
+    "forced_output_tokens": 1024,
+    "input_tokens": 2047,
+    "measured_requests_per_start": 3,
+    "model": "Qwen3.8-27B-FP8",
+    "model_starts_per_benchmark_campaign": 2,
+    "physical_recurrent_slots_per_card": 20,
+    "reasoning_effort": "low",
+    "requests_per_benchmark_campaign": 8,
+    "target_attention_kv": "bf16",
+    "temperature": 0,
+    "thinking": true,
+    "top_k": 1,
+    "top_p": 1,
+    "usable_recurrent_slots_per_card": 19
+  },
+  "quality_gates_remaining": [
+    "boundedcache/C2/cancellation/slot screen",
+    "finalindependentreview"
+  ],
+  "quality_lane_active": "lifecycle",
+  "quality_status": {
+    "greedy": "COMPLETE_PASS",
+    "lifecycle": "ACTIVE_NO_RESULT_YET",
+    "sampled": "COMPLETE_PASS"
+  },
+  "reader_root": "fp8-sprint19-ringfold-reader.i7rrryia",
+  "reader_seal": {
+    "manifest_sha256": "d93032e0d7fe9cbaef345e3648e8ef4b2e4553cf21381c2e2cae5570a2b1324b",
+    "members": 83,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-ringfold-reader.i7rrryia",
+    "verified_utc": "2026-10-22T18:03:49.941940+00:00"
+  },
+  "reliability_deferred": true,
+  "requests_completed": 32,
+  "reverse_disposition": {
+    "advance_to_affected_quality_preparation": true,
+    "all_three_measured_candidate_requests_faster": true,
+    "mean_latency_change_percent": -3.879249290508524,
+    "median_latency_change_percent": -3.833480438350556,
+    "median_rate_change_percent": 3.986294248585165,
+    "memory": [
+      {
+        "allocated_reduction_bytes": 1745453056,
+        "allocated_reduction_gib": 1.625579833984375,
+        "rank": 0
+      },
+      {
+        "allocated_reduction_bytes": 1745453056,
+        "allocated_reduction_gib": 1.625579833984375,
+        "rank": 1
+      }
+    ],
+    "normal_stop_quality_measured": false,
+    "numerical_mismatch_resolved": false,
+    "output_pairs_matched": 4,
+    "qualification": false,
+    "results_sha256": "ecb3e4ce62520a639e9e283fd2d731439bbd7bb9ddc021aa31f0e7be4fb88345",
+    "selected_profile_changed": false,
+    "status": "BOTH_ORDERS_CLEAN_GAIN_AFFECTED_QUALITY_NEXT",
+    "verification_cycles_per_request": 164
+  },
+  "reverse_native_root": "fp8-sprint19-reverse-run.p34bn4du",
+  "reverse_native_seal": {
+    "manifest_sha256": "56576ba1ba127388db4a51bc40c8778f705b4831ad2586ea8b6d4002efee6ab4",
+    "members": 226,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-reverse-run.p34bn4du",
+    "verified_utc": "2026-10-22T18:12:17.878791+00:00"
+  },
+  "reverse_reader_seal": {
+    "manifest_sha256": "160551fc243ad255c7cc7bf3212729b3dd4dd20325e6106349ab70d655cb2b1f",
+    "members": 81,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-reverse-reader.f2woy_0i",
+    "verified_utc": "2026-10-22T18:12:52.932075+00:00"
+  },
+  "reverse_source_seal": {
+    "manifest_sha256": "a67ca70f12802629071db191815690cf76a728f6f889f687b9c06fea24330a4f",
+    "members": 343,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-reverse.l7mp5rjs",
+    "verified_utc": "2026-10-22T18:05:10.708403+00:00"
+  },
+  "reverse_summary": [
+    {
+      "max_client_seconds": 8.519107696018182,
+      "median_client_seconds": 8.513480336987413,
+      "median_output_tokens_per_client_second": 120.27983380089104,
+      "memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 20296157184,
+            "driver_free_bytes": 12614369280,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 20330605056,
+            "reported_peak_reserved_bytes": 20612907008,
+            "reserved_bytes": 20589838336
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 20296157184,
+            "driver_free_bytes": 12614369280,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 20330605056,
+            "reported_peak_reserved_bytes": 20612907008,
+            "reserved_bytes": 20589838336
+          },
+          "usable_state_slots": 19
+        }
+      ],
+      "min_client_seconds": 8.496230873977765,
+      "stack": "ring_fold"
+    },
+    {
+      "max_client_seconds": 8.854996510024648,
+      "median_client_seconds": 8.852852714015171,
+      "median_output_tokens_per_client_second": 115.66892990085333,
+      "memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "snapshot",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 0,
+          "snapshot_bytes_from_native_constructor_geometry": 1811939328,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22041610240,
+            "driver_free_bytes": 10869538816,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22076058112,
+            "reported_peak_reserved_bytes": 22357737472,
+            "reserved_bytes": 22334668800
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "snapshot",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 0,
+          "snapshot_bytes_from_native_constructor_geometry": 1811939328,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22041610240,
+            "driver_free_bytes": 10869538816,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22076058112,
+            "reported_peak_reserved_bytes": 22357737472,
+            "reserved_bytes": 22334668800
+          },
+          "usable_state_slots": 19
+        }
+      ],
+      "min_client_seconds": 8.851263889984693,
+      "stack": "snapshot"
+    }
+  ],
+  "sampled_result": {
+    "checks": {
+      "packet": 18,
+      "reader": 22,
+      "startup": 35
+    },
+    "disposition": {
+      "all_required_gates_passed": true,
+      "final_answers_passed": 8,
+      "final_text_pairs_matched": 4,
+      "full_output_pairs_matched": 2,
+      "numerical_mismatch_resolved": false,
+      "pairs": [
+        {
+          "case": "coding-running-totals",
+          "final_text_equal": true,
+          "final_tokens": [
+            41,
+            41
+          ],
+          "first_difference": null,
+          "output_ids_equal": true,
+          "reasoning_tokens": [
+            290,
+            290
+          ]
+        },
+        {
+          "case": "coding-unique-last",
+          "final_text_equal": true,
+          "final_tokens": [
+            68,
+            68
+          ],
+          "first_difference": null,
+          "output_ids_equal": true,
+          "reasoning_tokens": [
+            1031,
+            1031
+          ]
+        },
+        {
+          "case": "quality16k-audit-threshold",
+          "final_text_equal": true,
+          "final_tokens": [
+            763,
+            763
+          ],
+          "first_difference": 137,
+          "output_ids_equal": false,
+          "reasoning_tokens": [
+            2429,
+            2227
+          ]
+        },
+        {
+          "case": "heldout16k-audit",
+          "final_text_equal": true,
+          "final_tokens": [
+            821,
+            821
+          ],
+          "first_difference": 2,
+          "output_ids_equal": false,
+          "reasoning_tokens": [
+            2394,
+            2535
+          ]
+        }
+      ],
+      "qualification": false,
+      "results_sha256": "aa7a1b9f1ffb35151a8ebdb4742f88ec09972ce98d6e75663525075fd40484f6",
+      "sampling_distribution_verified": false,
+      "sampling_route_verified": true,
+      "selection_changed": false,
+      "source_and_cache_capacity_authenticated": true,
+      "status": "SAMPLED_QUALITY_PASS_LIFECYCLE_NEXT"
+    },
+    "donor_native_seal": {
+      "manifest_sha256": "a45a42f721e55a541d333b11bef74642e6fdd5c664492e3cc8da14400e7d2609",
+      "members": 232,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-run.bmaacfra",
+      "verified_utc": "2026-10-22T16:21:23.552346+00:00"
+    },
+    "donor_reader_seal": {
+      "manifest_sha256": "01dfebc60043cc8c7717b8cf9462b96d59bab1a1f852fb5d0c68164d29d4bb7a",
+      "members": 120,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled-reader.1yj3z9ws",
+      "verified_utc": "2026-10-22T16:21:33.899050+00:00"
+    },
+    "donor_source_seal": {
+      "manifest_sha256": "5bd952440d6acc2c6aa7ae6101a2620e0ea30f9c6575a5cb1e1ed01c53acfd5a",
+      "members": 341,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-sampled.0pkfkat9",
+      "verified_utc": "2026-10-22T16:03:49.732708+00:00"
+    },
+    "failed_initial_packet_receipt": "02-packet-check",
+    "launch_authorized": true,
+    "matched_capacity_checks": 6,
+    "model_starts_executed": 2,
+    "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled-run.qery1it6",
+    "native_seal": {
+      "manifest_sha256": "719c5fade2ccd8fa3d5b0325cb1e0b332b9a3aeae9685081921109962daf60be",
+      "members": 230,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled-run.qery1it6",
+      "verified_utc": "2026-10-22T18:30:53.918080+00:00"
+    },
+    "reader": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled-reader.6tn_y0s7",
+    "reader_seal": {
+      "manifest_sha256": "a7347f35dc17981754cbfe318eb3edceb2ae64f8331be037eb628185bed90c1f",
+      "members": 127,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled-reader.6tn_y0s7",
+      "verified_utc": "2026-10-22T18:32:02.449346+00:00"
+    },
+    "requests": 8,
+    "source": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled.v6p0_iji",
+    "source_seal": {
+      "manifest_sha256": "2f16d1f39c6dbf80b0d4f2d46b21eadaf2e5abe90a697ffebfe5c300baa337bc",
+      "members": 344,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled.v6p0_iji",
+      "verified_utc": "2026-10-22T18:23:05.081677+00:00"
+    },
+    "status": "COMPLETE_PASS",
+    "successful_packet_receipt": "02b-packet-check"
+  },
+  "schema": 1,
+  "scope": "Both-order serving, greedy and publisher-sampled quality complete; bounded lifecycle active. No candidate promotion yet.",
+  "selected_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+  "selected_profile_changed": false,
+  "selected_source_changed": false,
+  "source_root": "fp8-sprint19-ringfold.xv5i90co",
+  "source_seal": {
+    "manifest_sha256": "a0e447fa0cba1ac8c923afbd8c3fbde5fd042c3fb76b50719f6be0e2b57603e7",
+    "members": 360,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-ringfold.xv5i90co",
+    "verified_utc": "2026-10-22T17:56:22.038264+00:00"
+  },
+  "status": "SPRINT19_LIFECYCLE_PHYSICAL_ACTIVE",
+  "updated_utc": "2026-10-22T18:33:19.730468+00:00"
+}

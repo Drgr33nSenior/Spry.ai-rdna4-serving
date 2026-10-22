@@ -1,0 +1,110 @@
+{
+  "analysis_manifest_sha256": "8e1e248d3a03bfaa8f09a7014507ec89b3427bb4ae63dadbe316eadecc8d2b74",
+  "blockers": [
+    "No retained per-cycle lattice scores joined to accepted-prefix labels.",
+    "Current repeated frozen prompt does not establish out-of-sample policy quality.",
+    "Native target and draft runners capture a fixed per-request width. Adaptive compute savings require separately reviewed graph/capacity/metadata integration; capping acceptance in a width8 graph retains width8 compute."
+  ],
+  "decision": "Keep fixed width for Sprint7. Park adaptive policy as unimplemented research, not a failed or completed GPU screen.",
+  "executed_native_width_guard_cases": 10,
+  "findings": {
+    "active_selector_builds_lattice": true,
+    "fixed_capture_width_mismatch_falls_back_to_eager": true,
+    "greedy_q_is_point_mass": true,
+    "lattice_scores_not_retained_by_sampler": true,
+    "persisted_per_position_confidence_available": false
+  },
+  "gpu_work": false,
+  "inspected_requests": 8,
+  "label_scope": "Join each cycle acceptance length; label accepted prefix and first rejection only. Later positions have rejected history and are not valid labels.",
+  "numerical_qualification": false,
+  "policy_implemented": false,
+  "policy_tested": false,
+  "proposed_feature_scope": "Pre-one-hot conditional candidate-lattice margins/entropy at temperature1 are restricted features, not full-vocabulary probabilities or calibrated confidence.",
+  "qualification": false,
+  "retained_speculation_fields": [
+    "spec_accept_length",
+    "spec_accept_rate",
+    "spec_block_accept_length",
+    "spec_cap_length",
+    "spec_cap_lens_histogram",
+    "spec_correct_drafts_histogram",
+    "spec_num_correct_drafts",
+    "spec_num_proposed_drafts",
+    "spec_verify_ct"
+  ],
+  "retained_telemetry_manifest_sha256": "a2217ea2168603f9fab17257a7bbd07f02176608d98e1fc780cac31f953e91fd",
+  "runtime_changed": false,
+  "schema": 1,
+  "source_checks": 5,
+  "source_pins": {
+    "kernels/ops/speculative/dflash.py": "21f11619531f493bbe9f71d465912ca707f2d722991832e446ff65aecb40528c",
+    "srt/model_executor/runner/decode_cuda_graph_runner.py": "1ec64d53550012a006d2fb7acbcabeefb6d3a3729864373d870314aed19f94cd",
+    "srt/models/dflash.py": "10cba6aeac6986537114a7cc26df296d308e45c849c18f690d451bf63a9c4871",
+    "srt/speculative/dflash_worker_v2.py": "99a44f45747a2cfc69423193cf8d2745c9a4ac320e3c200e37fe46395208f91f",
+    "srt/speculative/frozen_kv_mtp_cuda_graph_runner.py": "b8dfb7ca74882eb82d793c8beb7d8e001639c2fbc86ea2b5279c0ed80593f408"
+  },
+  "status": "PREREQUISITES_AUDITED_ADAPTIVE_POLICY_NOT_TESTED",
+  "width_guard_results": [
+    {
+      "observations": [
+        {
+          "allowed_by_width_guard": true,
+          "captured": 8,
+          "requested": 8
+        },
+        {
+          "allowed_by_width_guard": true,
+          "captured": 4,
+          "requested": 4
+        },
+        {
+          "allowed_by_width_guard": false,
+          "captured": 8,
+          "requested": 4
+        },
+        {
+          "allowed_by_width_guard": false,
+          "captured": 4,
+          "requested": 8
+        },
+        {
+          "allowed_by_width_guard": true,
+          "captured": 8,
+          "requested": 0
+        }
+      ],
+      "source": "srt/model_executor/runner/decode_cuda_graph_runner.py"
+    },
+    {
+      "observations": [
+        {
+          "allowed_by_width_guard": true,
+          "captured": 8,
+          "requested": 8
+        },
+        {
+          "allowed_by_width_guard": true,
+          "captured": 4,
+          "requested": 4
+        },
+        {
+          "allowed_by_width_guard": false,
+          "captured": 8,
+          "requested": 4
+        },
+        {
+          "allowed_by_width_guard": false,
+          "captured": 4,
+          "requested": 8
+        },
+        {
+          "allowed_by_width_guard": true,
+          "captured": 8,
+          "requested": 0
+        }
+      ],
+      "source": "srt/speculative/frozen_kv_mtp_cuda_graph_runner.py"
+    }
+  ]
+}

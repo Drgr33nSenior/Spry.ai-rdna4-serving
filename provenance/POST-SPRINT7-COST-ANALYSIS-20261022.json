@@ -1,0 +1,487 @@
+{
+  "analysis_json_sha256": "c58c7e54e65c906289abead8f7b6acf10660ee61132bd1b440a35f6cfc9d2a64",
+  "analysis_manifest_sha256": "2722ce84b9dae997b73ad95b963eb062cd0e306e8e69f5dd8d6623b339a840fb",
+  "analysis_members": 34,
+  "analysis_root": "scratchpad/fp8-post-sprint7-cost-analysis.p5pzfent",
+  "conclusions": [
+    {
+      "confidence": "high",
+      "finding": "Latest long requests spend most server elapsed time after decode is already underway; repeated generation is the dominant service phase."
+    },
+    {
+      "confidence": "high within older short-C1 timing only",
+      "finding": "About95% of measured target-graph interval is outside output-head and output-gather subintervals; no model-body kernel attribution exists."
+    },
+    {
+      "confidence": "high",
+      "finding": "Latest client-minus-server difference is2.3\u20135.7ms; API/transport difference is small, but internal CPU scheduling remains included in server time."
+    },
+    {
+      "confidence": "candidate only",
+      "finding": "Native DFlash2 selector uses a large-vocabulary torch.topk fallback in the draft graph. Its cost is not timed; it cannot be called dominant or a demonstrated2x opportunity."
+    },
+    {
+      "confidence": "not established",
+      "finding": "Latest draft versus target versus acceptance/commit GPU shares, and GEMM versus GDN versus attention versus layer-collective shares, are not measured."
+    },
+    {
+      "confidence": "scope limitation",
+      "finding": "The latest SamplingRoute witness validates and hashes input IDs on every sampled acceptance call. Its CPU cost is included in server time and has not been isolated."
+    }
+  ],
+  "date": "2026-10-22",
+  "greedy_crosscheck": {
+    "limitations": [
+      "Counters and whole-request timings; no stage GPU timers.",
+      "Counter-to-emitted-token residual is retained; counters can include accepted work beyond terminal emission and prefill boundary differences.",
+      "Different workload from sampled packet; no mode speed comparison."
+    ],
+    "long_mean_tokens_per_cycle_range": [
+      7.392193308550186,
+      7.552356020942408
+    ],
+    "rows": [
+      {
+        "case": "coding-running-totals",
+        "client_minus_server_ms": 2.467872924171388,
+        "client_seconds": 3.2164810099639,
+        "counter_to_emitted_token_residual": 1,
+        "draft_acceptance_rate": 0.7070217917675545,
+        "input_tokens": 226,
+        "mean_emitted_tokens_per_cycle": 5.966101694915254,
+        "normal_stop": true,
+        "output_tokens": 352,
+        "profile": "snapshot",
+        "reported_spec_accept_length": 5.966101694915254,
+        "verifier_cycles": 59
+      },
+      {
+        "case": "coding-unique-last",
+        "client_minus_server_ms": 2.600433013867587,
+        "client_seconds": 8.055283748020884,
+        "counter_to_emitted_token_residual": 0,
+        "draft_acceptance_rate": 0.6870300751879699,
+        "input_tokens": 246,
+        "mean_emitted_tokens_per_cycle": 5.809210526315789,
+        "normal_stop": true,
+        "output_tokens": 883,
+        "profile": "snapshot",
+        "reported_spec_accept_length": 5.809210526315789,
+        "verifier_cycles": 152
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "client_minus_server_ms": 6.428227003198117,
+        "client_seconds": 25.541298065974843,
+        "counter_to_emitted_token_residual": 0,
+        "draft_acceptance_rate": 0.9270910436713545,
+        "input_tokens": 12272,
+        "mean_emitted_tokens_per_cycle": 7.489637305699482,
+        "normal_stop": true,
+        "output_tokens": 2891,
+        "profile": "snapshot",
+        "reported_spec_accept_length": 7.489637305699482,
+        "verifier_cycles": 386
+      },
+      {
+        "case": "heldout16k-audit",
+        "client_minus_server_ms": 6.733006972353905,
+        "client_seconds": 30.74323868198553,
+        "counter_to_emitted_token_residual": 0,
+        "draft_acceptance_rate": 0.9294425087108014,
+        "input_tokens": 12272,
+        "mean_emitted_tokens_per_cycle": 7.5060975609756095,
+        "normal_stop": true,
+        "output_tokens": 3693,
+        "profile": "snapshot",
+        "reported_spec_accept_length": 7.5060975609756095,
+        "verifier_cycles": 492
+      },
+      {
+        "case": "coding-running-totals",
+        "client_minus_server_ms": 2.3825750104151666,
+        "client_seconds": 3.1091871240059845,
+        "counter_to_emitted_token_residual": 1,
+        "draft_acceptance_rate": 0.7070217917675545,
+        "input_tokens": 226,
+        "mean_emitted_tokens_per_cycle": 5.966101694915254,
+        "normal_stop": true,
+        "output_tokens": 352,
+        "profile": "ring_fold",
+        "reported_spec_accept_length": 5.966101694915254,
+        "verifier_cycles": 59
+      },
+      {
+        "case": "coding-unique-last",
+        "client_minus_server_ms": 2.3029939620755613,
+        "client_seconds": 7.781344179995358,
+        "counter_to_emitted_token_residual": 0,
+        "draft_acceptance_rate": 0.6870300751879699,
+        "input_tokens": 246,
+        "mean_emitted_tokens_per_cycle": 5.809210526315789,
+        "normal_stop": true,
+        "output_tokens": 883,
+        "profile": "ring_fold",
+        "reported_spec_accept_length": 5.809210526315789,
+        "verifier_cycles": 152
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "client_minus_server_ms": 6.587356037925929,
+        "client_seconds": 24.62502137798583,
+        "counter_to_emitted_token_residual": 0,
+        "draft_acceptance_rate": 0.9360508601346298,
+        "input_tokens": 12272,
+        "mean_emitted_tokens_per_cycle": 7.552356020942408,
+        "normal_stop": true,
+        "output_tokens": 2885,
+        "profile": "ring_fold",
+        "reported_spec_accept_length": 7.552356020942408,
+        "verifier_cycles": 382
+      },
+      {
+        "case": "heldout16k-audit",
+        "client_minus_server_ms": 6.6923959529958665,
+        "client_seconds": 32.31984602496959,
+        "counter_to_emitted_token_residual": 0,
+        "draft_acceptance_rate": 0.9131704726500266,
+        "input_tokens": 12272,
+        "mean_emitted_tokens_per_cycle": 7.392193308550186,
+        "normal_stop": true,
+        "output_tokens": 3977,
+        "profile": "ring_fold",
+        "reported_spec_accept_length": 7.392193308550186,
+        "verifier_cycles": 538
+      }
+    ],
+    "sampling": "greedy0/1/1",
+    "schema": 1,
+    "source_analysis_manifest_sha256": "54f83bb28db4146ccaa0e8c238c35f6909b98420ac5ecf96ae225756c8697dcf",
+    "status": "GREEDY_QUALITY_TELEMETRY_CROSSCHECK",
+    "thinking": "low"
+  },
+  "http_rate_interpretation": "Derived completion-token count divided by whole client request time; not native decode-only rate.",
+  "independent_review": "Astra approved timing interpretation with sampled/greedy scope correction applied",
+  "input_seals": [
+    {
+      "manifest_sha256": "ea3e8d6464e7c428e6bf2b688db911c6d817528594f3971cbf66e2154c97026e",
+      "members": 207,
+      "root": "scratchpad/fp8-sprint7-sampling-run.ay2ow7n9"
+    },
+    {
+      "manifest_sha256": "10e1654f1cf3165899282eea86428478a07f99497591f494dda88de1c46dd0a2",
+      "members": 113,
+      "root": "scratchpad/fp8-sprint7-sampling-reader.pvenpl3d"
+    },
+    {
+      "manifest_sha256": "951cf2e9b5908b88da7df36dee9564f0abbfe5b15fba3065c8efc89da0855f05",
+      "members": 437,
+      "root": "scratchpad/fp8-sprint7-lifecycle-reverse-reader.x_j8t33p"
+    },
+    {
+      "manifest_sha256": "54f83bb28db4146ccaa0e8c238c35f6909b98420ac5ecf96ae225756c8697dcf",
+      "members": 53,
+      "root": "scratchpad/fp8-sprint7-ring-thinking-result.wzffswql"
+    },
+    {
+      "manifest_sha256": "f87727fce783f0377d65a9678e1f5662c693b0b24c7c28d3949408683f65eace",
+      "members": 285,
+      "root": "scratchpad/fp8-head-gather-timing.u6i7he1g"
+    },
+    {
+      "manifest_sha256": "e712a0d7531814013684b1883906227bbe0e87a5a57d9da3e886ff40896eb2a9",
+      "members": 203,
+      "root": "scratchpad/fp8-head-gather-run.wz_bfd_l"
+    }
+  ],
+  "latest_long_request_summary": {
+    "client_seconds_range": [
+      21.833908746019006,
+      30.983119204000104
+    ],
+    "draft_acceptance_rate_range": [
+      0.9185788304959289,
+      0.9347739095638256
+    ],
+    "fraction_elapsed_after_decode_already_underway_lower_bound_range": [
+      0.7575288281561197,
+      0.857166394687314
+    ],
+    "ideal_cycle_count_reduction_fraction_range": [
+      0.05602240896358546,
+      0.06994818652849744
+    ],
+    "mean_emitted_tokens_per_cycle_range": [
+      7.430051813471502,
+      7.543417366946779
+    ]
+  },
+  "latest_request_rows": [
+    {
+      "case": "coding-running-totals",
+      "client_minus_server_ms": 2.2718760301359,
+      "client_seconds": 3.8449617350124754,
+      "client_seconds_per_cycle_ms": 62.015511855039925,
+      "draft_acceptance_rate": 0.6244239631336406,
+      "final_tokens": 41,
+      "first_decode_log_line": 229,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.1119559570670001,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.32258064516129037,
+      "ideal_eight_token_cycle_count": 42,
+      "input_tokens": 226,
+      "mean_emitted_tokens_per_cycle": 5.370967741935484,
+      "no_retractions": true,
+      "output_tokens": 333,
+      "profile": "snapshot",
+      "reasoning_tokens": 290,
+      "reported_http_output_tokens_per_second": 86.60684369565502,
+      "server_e2e_seconds": 3.8426898589823395,
+      "server_seconds_after_first_decode_log_lower_bound": 0.43021202087402344,
+      "verifier_cycles": 62
+    },
+    {
+      "case": "coding-unique-last",
+      "client_minus_server_ms": 2.366978907957673,
+      "client_seconds": 10.017444665951189,
+      "client_seconds_per_cycle_ms": 53.284280138038234,
+      "draft_acceptance_rate": 0.6937689969604863,
+      "final_tokens": 68,
+      "first_decode_log_line": 231,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.846710317093331,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.26595744680851063,
+      "ideal_eight_token_cycle_count": 138,
+      "input_tokens": 246,
+      "mean_emitted_tokens_per_cycle": 5.8563829787234045,
+      "no_retractions": true,
+      "output_tokens": 1101,
+      "profile": "snapshot",
+      "reasoning_tokens": 1031,
+      "reported_http_output_tokens_per_second": 109.9082686967312,
+      "server_e2e_seconds": 10.015077687043231,
+      "server_seconds_after_first_decode_log_lower_bound": 8.479869604110718,
+      "verifier_cycles": 188
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "client_minus_server_ms": 5.317403003573418,
+      "client_seconds": 22.508488751016557,
+      "client_seconds_per_cycle_ms": 63.048988098085594,
+      "draft_acceptance_rate": 0.9347739095638256,
+      "final_tokens": 763,
+      "first_decode_log_line": 240,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.8007087102984932,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.05602240896358546,
+      "ideal_eight_token_cycle_count": 337,
+      "input_tokens": 8176,
+      "mean_emitted_tokens_per_cycle": 7.543417366946779,
+      "no_retractions": true,
+      "output_tokens": 2693,
+      "profile": "snapshot",
+      "reasoning_tokens": 1928,
+      "reported_http_output_tokens_per_second": 119.64374995537518,
+      "server_e2e_seconds": 22.503171348012984,
+      "server_seconds_after_first_decode_log_lower_bound": 18.01848530769348,
+      "verifier_cycles": 357
+    },
+    {
+      "case": "heldout16k-audit",
+      "client_minus_server_ms": 5.644207005389035,
+      "client_seconds": 23.463079028995708,
+      "client_seconds_per_cycle_ms": 60.7851788315951,
+      "draft_acceptance_rate": 0.9185788304959289,
+      "final_tokens": 821,
+      "first_decode_log_line": 253,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.7892923495759143,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.06994818652849744,
+      "ideal_eight_token_cycle_count": 359,
+      "input_tokens": 8176,
+      "mean_emitted_tokens_per_cycle": 7.430051813471502,
+      "no_retractions": true,
+      "output_tokens": 2868,
+      "profile": "snapshot",
+      "reasoning_tokens": 2045,
+      "reported_http_output_tokens_per_second": 122.23459659560118,
+      "server_e2e_seconds": 23.45743482199032,
+      "server_seconds_after_first_decode_log_lower_bound": 18.514773845672607,
+      "verifier_cycles": 386
+    },
+    {
+      "case": "coding-running-totals",
+      "client_minus_server_ms": 2.618732047267258,
+      "client_seconds": 3.714784016017802,
+      "client_seconds_per_cycle_ms": 59.91587122609358,
+      "draft_acceptance_rate": 0.6244239631336406,
+      "final_tokens": 41,
+      "first_decode_log_line": 224,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.25701907053693285,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.32258064516129037,
+      "ideal_eight_token_cycle_count": 42,
+      "input_tokens": 226,
+      "mean_emitted_tokens_per_cycle": 5.370967741935484,
+      "no_retractions": true,
+      "output_tokens": 333,
+      "profile": "ring_fold",
+      "reasoning_tokens": 290,
+      "reported_http_output_tokens_per_second": 89.64181997234161,
+      "server_e2e_seconds": 3.712165283970535,
+      "server_seconds_after_first_decode_log_lower_bound": 0.9540972709655762,
+      "verifier_cycles": 62
+    },
+    {
+      "case": "coding-unique-last",
+      "client_minus_server_ms": 2.456925984006375,
+      "client_seconds": 9.684912826982327,
+      "client_seconds_per_cycle_ms": 51.51549376054429,
+      "draft_acceptance_rate": 0.6937689969604863,
+      "final_tokens": 68,
+      "first_decode_log_line": 226,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.895614157575778,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.26595744680851063,
+      "ideal_eight_token_cycle_count": 138,
+      "input_tokens": 246,
+      "mean_emitted_tokens_per_cycle": 5.8563829787234045,
+      "no_retractions": true,
+      "output_tokens": 1101,
+      "profile": "ring_fold",
+      "reasoning_tokens": 1031,
+      "reported_http_output_tokens_per_second": 113.68197315443004,
+      "server_e2e_seconds": 9.68245590099832,
+      "server_seconds_after_first_decode_log_lower_bound": 8.671744585037231,
+      "verifier_cycles": 188
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "client_minus_server_ms": 5.284192971885204,
+      "client_seconds": 21.833908746019006,
+      "client_seconds_per_cycle_ms": 61.15940825215408,
+      "draft_acceptance_rate": 0.9295718287314926,
+      "final_tokens": 763,
+      "first_decode_log_line": 235,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.7575288281561197,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.06162464985994398,
+      "ideal_eight_token_cycle_count": 335,
+      "input_tokens": 8176,
+      "mean_emitted_tokens_per_cycle": 7.507002801120448,
+      "no_retractions": true,
+      "output_tokens": 2680,
+      "profile": "ring_fold",
+      "reasoning_tokens": 1915,
+      "reported_http_output_tokens_per_second": 122.74485668942106,
+      "server_e2e_seconds": 21.82862455304712,
+      "server_seconds_after_first_decode_log_lower_bound": 16.535812377929688,
+      "verifier_cycles": 357
+    },
+    {
+      "case": "heldout16k-audit",
+      "client_minus_server_ms": 5.68323495099321,
+      "client_seconds": 30.983119204000104,
+      "client_seconds_per_cycle_ms": 57.270090950092616,
+      "draft_acceptance_rate": 0.927119091629258,
+      "final_tokens": 821,
+      "first_decode_log_line": 248,
+      "fraction_server_interval_after_first_decode_log_lower_bound": 0.857166394687314,
+      "graph_recaptures": 0,
+      "ideal_cycle_count_reduction_fraction": 0.06284658040665436,
+      "ideal_eight_token_cycle_count": 507,
+      "input_tokens": 8176,
+      "mean_emitted_tokens_per_cycle": 7.489833641404806,
+      "no_retractions": true,
+      "output_tokens": 4052,
+      "profile": "ring_fold",
+      "reasoning_tokens": 3229,
+      "reported_http_output_tokens_per_second": 130.78089308312323,
+      "server_e2e_seconds": 30.97743596904911,
+      "server_seconds_after_first_decode_log_lower_bound": 26.55281710624695,
+      "verifier_cycles": 541
+    }
+  ],
+  "latest_workload": {
+    "context": 16384,
+    "draft_kv": "BF16",
+    "requests": 8,
+    "sampling": "publisher1/.95/20",
+    "sampling_observer_overhead_measured": false,
+    "scope": "Instrumented qualification requests, not a balanced performance benchmark",
+    "starts": 2,
+    "target_kv": "BF16",
+    "target_weights": "FP8",
+    "thinking": "low"
+  },
+  "new_gpu_runs": 0,
+  "next_measurement": {
+    "requirements": [
+      "Keep total graph intervals and nested subintervals separate.",
+      "Measure each rank separately and report overlap/waiting rather than sum ranks.",
+      "Retain exact request/source/output/graph evidence and unchanged numerical contract.",
+      "Use existing owner/resource procedure and reviewed finite budget before launch.",
+      "Account explicitly for SamplingRoute CPU request-ID validation and canonical input hashing on every selector acceptance call."
+    ],
+    "scope": "Preserve the latest publisher-sampled snapshot request/profile to attribute its costs. Use one bounded warmed C1 request with intervals for draft graph, candidate projection/topk, target graph, sampled acceptance and commit, plus CPU observer/scheduler intervals. A greedy probe is a separate baseline and cannot explain sampled acceptance.",
+    "status": "NOT_PREPARED_OR_LAUNCHED"
+  },
+  "numerical_equivalence_claim": false,
+  "older_device_timing": {
+    "do_not_scale_to_latest_requests": true,
+    "do_not_sum_ranks": true,
+    "explicit_bf16_draft_override_same_as_latest": false,
+    "includes_waiting": true,
+    "ranks": [
+      {
+        "complete_measured_replay_samples": 74,
+        "fraction_outside_head_and_gather_median": 0.949659675015079,
+        "gather_fraction_median": 0.0035753050149797236,
+        "gather_ms_median": 0.15688050538301468,
+        "graph_ms_median": 43.87112808227539,
+        "head_fraction_median": 0.046757455652795835,
+        "head_ms_median": 2.05132794380188,
+        "rank": 0
+      },
+      {
+        "complete_measured_replay_samples": 74,
+        "fraction_outside_head_and_gather_median": 0.9496684496349113,
+        "gather_fraction_median": 0.003569375642462232,
+        "gather_ms_median": 0.1565600037574768,
+        "graph_ms_median": 43.86846733093262,
+        "head_fraction_median": 0.04675372840282968,
+        "head_ms_median": 2.051245927810669,
+        "rank": 1
+      }
+    ],
+    "scope": "Per-rank device stream intervals in an instrumented target verification graph, not whole request fractions or pure transport time. Includes waiting. Ranks must not be added.",
+    "workload": {
+      "concurrency": 1,
+      "dflash_block_size": 8,
+      "forced_output_tokens": 128,
+      "gemm_stages": 1,
+      "input_tokens": 2047,
+      "model_starts": 2,
+      "reasoning_effort": "low",
+      "requests": 8,
+      "tensor_parallel": 2
+    }
+  },
+  "performance_gain_claim": false,
+  "private_evidence_not_distributed": true,
+  "schema": 1,
+  "selector_source_evidence": {
+    "fallback_observed_both_profiles_and_ranks": true,
+    "local_vocab": 124160,
+    "measured_topk_latency": false,
+    "model_sha256": "10cba6aeac6986537114a7cc26df296d308e45c849c18f690d451bf63a9c4871",
+    "primary_topk_input_elements_per_rank": 869120,
+    "proposals_per_c1_cycle": 7,
+    "selector_candidates": 16,
+    "selector_captured_in_draft_graph": true,
+    "small_merged_topk_input_elements_per_rank": 224,
+    "warning_speedup_claim_verified": false,
+    "worker_sha256": "99a44f45747a2cfc69423193cf8d2745c9a4ac320e3c200e37fe46395208f91f"
+  },
+  "status": "OFFLINE_COST_ANALYSIS_COMPLETE_SUBPHASE_BOTTLENECK_UNRESOLVED"
+}

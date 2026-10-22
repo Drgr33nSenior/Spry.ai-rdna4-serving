@@ -1,0 +1,405 @@
+{
+  "active_seconds": 1200,
+  "component_correctness_scope": "Four synthetic eager/graph cases on both sequential cards; not model-distribution equivalence",
+  "corrected_cpu_checks": 31,
+  "corrected_source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-ready.ums448w5",
+  "cpu_checks": 31,
+  "date": "2026-10-22",
+  "dispatch_proof": {
+    "candidate_delta": "Only change num_stages3 to1 for this exact default M8 shape; preserve existing M2047 handling",
+    "configuration": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 64,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "num_stages": 3,
+      "num_warps": 4
+    },
+    "derivation": [
+      "C1 DFlash block8 target graph uses eight verifier rows.",
+      "Both-rank native warnings report no tuned config for this N/K/device. Config lookup is keyed by N/K/device, independent of M.",
+      "Pinned HIP selector use_w8a8_block_fp8_matmul_unrolledx4 has no return; it is falsy, selecting the common native kernel.",
+      "Hardware gfx1201 excludes gfx1250; M2047-only override excludes M8."
+    ],
+    "kernel": "_w8a8_block_fp8_matmul",
+    "native_kernel_ast_equal": true,
+    "native_seal": "74740cfa751be51786b7b740974aa7b31d1c7accb5352aabcd3115ed0052ffb6",
+    "observed_default_config_warnings": [
+      {
+        "lines": [
+          "[2026-10-22 07:17:33 TP0] Using default W8A8 Block FP8 kernel config. Performance might be sub-optimal! Config file not found at /mnt/composition/image-source/python/sglang/kernels/ops/gemm/configs/N=17408,K=5120,device_name=AMD_Radeon_AI_PRO_R9700,dtype=fp8_w8a8,block_shape=[128, 128].json",
+          "[2026-10-22 07:17:33 TP1] Using default W8A8 Block FP8 kernel config. Performance might be sub-optimal! Config file not found at /mnt/composition/image-source/python/sglang/kernels/ops/gemm/configs/N=17408,K=5120,device_name=AMD_Radeon_AI_PRO_R9700,dtype=fp8_w8a8,block_shape=[128, 128].json"
+        ],
+        "owner": "bf16",
+        "sha256": "8a447a76aa04d5601b98121c7976fb6a7537c4301a7eecd475a52ca80c15d8aa",
+        "stream": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-run.7qpfl04f/collected/workload/fp8-kv-benchmark.57fbfb07a468329f/results/bf16-capture/stderr.raw"
+      },
+      {
+        "lines": [
+          "[2026-10-22 07:20:10 TP1] Using default W8A8 Block FP8 kernel config. Performance might be sub-optimal! Config file not found at /mnt/composition/image-source/python/sglang/kernels/ops/gemm/configs/N=17408,K=5120,device_name=AMD_Radeon_AI_PRO_R9700,dtype=fp8_w8a8,block_shape=[128, 128].json",
+          "[2026-10-22 07:20:10 TP0] Using default W8A8 Block FP8 kernel config. Performance might be sub-optimal! Config file not found at /mnt/composition/image-source/python/sglang/kernels/ops/gemm/configs/N=17408,K=5120,device_name=AMD_Radeon_AI_PRO_R9700,dtype=fp8_w8a8,block_shape=[128, 128].json"
+        ],
+        "owner": "kv4",
+        "sha256": "94a8591a5077fb02c4017740ab95a0a60dbe7ad84a100af0eae1d1abf3ec21a6",
+        "stream": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-run.7qpfl04f/collected/workload/fp8-kv-benchmark.57fbfb07a468329f/results/kv4-capture/stderr.raw"
+      }
+    ],
+    "schema": 1,
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "source_seal": "06cc04c7bea6089c99a864b9655641ada4dfad7fba927039bb087f6eb3331c8e"
+  },
+  "end_to_end_speedup": false,
+  "experimental_patch": "patches/sglang-gfx1201-m8-gateup-stages.patch",
+  "independent_review": {
+    "comparisons": 96,
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "native_report_sha256": "f7c5ca30b279c066631b8973ebc52c4e3157c8e18c3c5ff7104b053eaf11fd50",
+    "qualification": false,
+    "result_summary_sha256": "7ec4f6de417de79d207bc1fe91b6f1da767a186b1d927b6c9c9732e365b2f045",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "serving_gain_established": false,
+    "source_promotion": false,
+    "status": "APPROVED_SPRINT9_COMPONENT_EXIT",
+    "timed_launches": 64
+  },
+  "initial_preparation_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-ready.0au6p3p9",
+  "limits": {
+    "cpu": 24,
+    "ram_bytes": 40802189312,
+    "scratch_tmpfs_bytes": 335544320,
+    "tasks": 512,
+    "threads": 2,
+    "trace_aggregate_bytes": 33554432,
+    "trace_per_file_bytes": 16777216
+  },
+  "milestone": "9.2 M8 gate/up stage-depth component",
+  "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-corrected-run.ubhzqta8",
+  "native_seal": {
+    "manifest_sha256": "6aa6c3d805be78ae373ddee00c6bec9e321c83cd14c00b633df34af6bb35c2d5",
+    "members": 169,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-corrected-run.ubhzqta8",
+    "verified_utc": "2026-10-22T07:56:03.630329+00:00"
+  },
+  "native_worker_seconds": 600,
+  "next_step": "Sprint10 matched serving pilot and reverse order if supported; installed/current selection unchanged",
+  "package_sha256": "59da0a98b90e4ffe7f31f1b580cad7b2443e854dbbea13fe0375bdb99f915d40",
+  "patch_sha256": "efbc700c11f41726021b12b2764c5f2749fa5aa36471609211325dd7309edad3",
+  "preparation_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-ready.ums448w5",
+  "prior_failed_campaign": {
+    "manifest_sha256": "2edfa16ee3e02fc71877fd5fe3e2a468763aced6d20daee542601ee1244d1569",
+    "members": 176,
+    "result": {
+      "candidate_qualified": false,
+      "cases_complete": 2,
+      "cases_expected": 4,
+      "cases_started": 3,
+      "complete": false,
+      "completed_exact_comparisons": 66,
+      "diagnosis": "Pinned torch.cuda.graph caches one process-wide default capture stream; it was created on device0 and reused on device1.",
+      "failed_case_device": 1,
+      "failed_case_pattern": "structured",
+      "failure": "ValueError: Pointer argument (at 361912000) cannot be accessed from Triton (cpu tensor?)",
+      "independent_release_verified": true,
+      "optimization_gain_established": false,
+      "physical_elapsed_seconds": 23.6563257619855,
+      "planned_fix": "Pass an explicit stream allocated for the selected device into torch.cuda.graph; bind and check its device before capture.",
+      "qualification": false,
+      "serving_quality_failure": false,
+      "source_promoted": false,
+      "status": "HARNESS_GRAPH_STREAM_FAILURE_RETAINED",
+      "torch_graphs_source_sha256": "2ce9b12b17d39bba15e4f36dac0a6f2153f8ed40dd6464d0e188053732b7dbdf",
+      "unresolved": false
+    },
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-run.igsm_t3l"
+  },
+  "qualification": false,
+  "result": {
+    "cases": 4,
+    "cases_detail": [
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.1751205027103424,
+          "3": 0.20143049955368042
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.150239386229127,
+        "time_reduction_stage1": 0.1306157553182581
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.17215099930763245,
+          "3": 0.18434100598096848
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.0708099675422307,
+        "time_reduction_stage1": 0.06612748264265489
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.18014100193977356,
+          "3": 0.1985655054450035
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.1022782337548551,
+        "time_reduction_stage1": 0.09278803719678774
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.18332049995660782,
+          "3": 0.20035099983215332
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.0929001387164918,
+        "time_reduction_stage1": 0.08500331862487842
+      }
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 3
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 3
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 3
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 3
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "stage": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the current stage3 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 90522112,
+    "model_starts": 0,
+    "payload_seconds": 4.652813218999654,
+    "physical_seconds": 22.510153940995224,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "stage1_speedup_geomean": 1.1036797850352642,
+    "stage1_speedup_range": [
+      1.0708099675422307,
+      1.150239386229127
+    ],
+    "stage1_time_reduction_range": [
+      0.06612748264265489,
+      0.1306157553182581
+    ],
+    "status": "M8_GATEUP_STAGE_DEPTH_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false
+  },
+  "schema": 1,
+  "scope": {
+    "cases": 4,
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "model_starts": 0,
+    "patterns": [
+      "structured",
+      "random"
+    ],
+    "serving_requests": 0,
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "stages": [
+      3,
+      1
+    ],
+    "timed_matmuls": 64
+  },
+  "selected_serving_source_unchanged": true,
+  "source_promoted": false,
+  "source_seal": {
+    "manifest_sha256": "1a2bc0c3b8e73d4e8885eae44fdd1612dfceda1ce791a93d4e32e407d154f41c",
+    "members": 56,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-ready.ums448w5",
+    "verified_utc": "2026-10-22T07:51:42.980363+00:00"
+  },
+  "source_sha256": {
+    "GEMM-M8-candidate.py": "82a18c01b42ab86578bc486448b38503d0fba36ea3546d9ae2d60f63df4c3da4",
+    "GEMM-selected.py": "2308ff1492efd4c5ff734d23e9d35d21e1c4216b5fa250905be6a5ffbf297b9b",
+    "stage_probe.py": "da4cbf677938bed81059eb137fff4dc46033130156f205a249ca2b068d8919ad"
+  },
+  "sprint": 9,
+  "sprint_exit_met": true,
+  "status": "SPRINT9_COMPONENT_EXIT_MET_SERVING_PILOT_PENDING",
+  "total_seconds": 1500
+}

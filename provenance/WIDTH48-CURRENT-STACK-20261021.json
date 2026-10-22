@@ -1,0 +1,1318 @@
+{
+  "adapter_source_sha256": "2bae5f414a70eb15fc505280feabf71cb4ae39cda722f0c270b0f3a86a338f04",
+  "analysis_manifest_sha256": "1750716bb7156af6fbd5b87e3c021adcc3d5a20923f7c1c63045ab042c8c9a4d",
+  "attention_scope": "Both arms use the native singleton split selector independently for each causal row and metadata reuse across16attention layers. Width4 does not fall back to extend attention in the exercised C1 graph.",
+  "common_matches": 4,
+  "cpu_acceptance_checks": 48,
+  "disposition": "Keep width8 for the screened C1 profile; width4 slower with different output prefixes. No adaptive or task-quality qualification.",
+  "exact_equivalence_qualified": false,
+  "exact_output_qualification": false,
+  "flush_added": false,
+  "gather_records": {
+    "control": [
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          16,
+          124160
+        ],
+        "local_tensor_bytes": 7946240,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          16,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 15892480,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "control",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      }
+    ],
+    "mtp": [
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          4,
+          124160
+        ],
+        "local_tensor_bytes": 1986560,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          4,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 3973120,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          4,
+          124160
+        ],
+        "local_tensor_bytes": 1986560,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          4,
+          248320
+        ],
+        "qualification": false,
+        "rank": 1,
+        "result_tensor_bytes": 3973120,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          8,
+          124160
+        ],
+        "local_tensor_bytes": 3973120,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          8,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 7946240,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 2,
+        "capture": false,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          4,
+          124160
+        ],
+        "local_tensor_bytes": 1986560,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          4,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 3973120,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      },
+      {
+        "arm": "mtp",
+        "calls": 1,
+        "capture": true,
+        "dtype": "torch.float32",
+        "extra_model_forwards": 0,
+        "extra_tensor_operations": 0,
+        "hooks_restored": true,
+        "input_shape": [
+          4,
+          124160
+        ],
+        "local_tensor_bytes": 1986560,
+        "native_fp32_fallback": true,
+        "output_dtype": "torch.float32",
+        "output_shape": [
+          4,
+          248320
+        ],
+        "qualification": false,
+        "rank": 0,
+        "result_tensor_bytes": 3973120,
+        "source_sha256": "10ca394d39189c74b1458012694c5dbad2e43f32f6217dbc1aed2f06c2ac5a4d"
+      }
+    ]
+  },
+  "historical_common_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+  "historical_variant_sha256": "40081e0625ba330c68628bb15da9fc1b84667d38a47dca171e5b1dfbfb71bdbd",
+  "independent_raw_time_recomputation": true,
+  "independent_release_verified": true,
+  "installed_runtime_changed": false,
+  "interpretation": "Finite one-order current-stack static-width screen, not an adaptive-policy evaluation or broad quality qualification. Preserve all output differences and native speculative counters.",
+  "latency_change_width4_percent": 36.067998430156536,
+  "limitation": "Startup gather metadata establishes geometry and native FP32 fallback, not exposed transfer time or link traffic. Original A/B exact-output gate remains incomplete; owner selected session use.",
+  "metadata_witnesses": {
+    "width4": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ],
+    "width8": [
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 0
+      },
+      {
+        "capture_host_calls": 16,
+        "metadata_build_host_calls": 3,
+        "metadata_capture_build_host_calls": 1,
+        "metadata_reuse_host_calls": 45,
+        "rank": 1
+      }
+    ]
+  },
+  "model_starts": 2,
+  "native_manifest_sha256": "6dc725ee963adc45697c8f61d7df6e5a839419f161d24937d74c9dc36d221e70",
+  "native_owner_elapsed_seconds": 275.0938861310133,
+  "new_hooks": true,
+  "output_difference_scope": "All four width8 responses match the historical common prefix. Width4 responses match one another, differ first at index16 and at109positions from width8. Width change changes proposals and model batch geometry; no cause isolation or quality judgment.",
+  "paired_output_matches": 0,
+  "prior_incomplete_packets": [
+    {
+      "cause": "Builder retained width8 CLI values for the width4 contract; refused before candidate model load.",
+      "native_manifest_sha256": "153ae754c65cd10aea747216b06e6962de2e1c5587c8d4608d5fa71a28e7d53a"
+    },
+    {
+      "cause": "GDN observer retained historical width8 checks; refused after width4 graph startup and before external requests.",
+      "native_manifest_sha256": "b4717282849d96548b0249818e092e8f5a57bb3c6f32146167384e368673b194"
+    }
+  ],
+  "rate_change_width4_percent": -26.507333720110672,
+  "remote_evidence": {
+    "protected": {
+      "manifest_sha256": "83c381c573ccb615ce07a6d206034b3aebefc44564007a8919cce6ae94174320",
+      "members": 31
+    },
+    "workload": {
+      "manifest_sha256": "f3407e0531b6e04177d96910c31adebb08238ff8aa3e87b3459a1c04d8aff1d6",
+      "members": 143
+    }
+  },
+  "requests": 8,
+  "root_cause": "not_investigated",
+  "root_owned_closeout_authenticated": true,
+  "samples": [
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 0,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.201737846015021,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "width8",
+      "warmup": true
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 1,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 1.848472422978375,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "width8",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 2,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 1.847411957976874,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "width8",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [],
+      "first_difference_from_common": null,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 25
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 25
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": true,
+      "matches_historical_variant": false,
+      "ordinal": 3,
+      "output_ids_sha256": "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 1.8468974200077355,
+      "speculation": {
+        "spec_accept_length": 5.12,
+        "spec_accept_rate": 0.6228571428571429,
+        "spec_correct_drafts_histogram": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1,
+          9
+        ],
+        "spec_num_correct_drafts": 109,
+        "spec_num_proposed_drafts": 175,
+        "spec_verify_ct": 25
+      },
+      "start": "width8",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "first_difference_from_common": 16,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 39
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 39
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": false,
+      "matches_historical_variant": false,
+      "ordinal": 0,
+      "output_ids_sha256": "ebfeebb8158d1cc7aed13e5badd2e1b2c255b87e8c4c7d4cde6e98bcecb58f35",
+      "request_sha256": "88f5e608a4e9500e631c0e9ced6745aa0184096866e5bd1c4bcc13de8b93ae86",
+      "seconds": 2.8636672499706037,
+      "speculation": {
+        "spec_accept_length": 3.282051282051282,
+        "spec_accept_rate": 0.7777777777777778,
+        "spec_correct_drafts_histogram": [
+          6,
+          3,
+          2,
+          28
+        ],
+        "spec_num_correct_drafts": 91,
+        "spec_num_proposed_drafts": 117,
+        "spec_verify_ct": 39
+      },
+      "start": "width4",
+      "warmup": true
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "first_difference_from_common": 16,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 39
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 39
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": false,
+      "matches_historical_variant": false,
+      "ordinal": 1,
+      "output_ids_sha256": "ebfeebb8158d1cc7aed13e5badd2e1b2c255b87e8c4c7d4cde6e98bcecb58f35",
+      "request_sha256": "524ca6c80f33d5f378d3350bda8eabd8c707e43bcd31cebde55bee85afe0cac4",
+      "seconds": 2.5080923070199788,
+      "speculation": {
+        "spec_accept_length": 3.282051282051282,
+        "spec_accept_rate": 0.7777777777777778,
+        "spec_correct_drafts_histogram": [
+          6,
+          3,
+          2,
+          28
+        ],
+        "spec_num_correct_drafts": 91,
+        "spec_num_proposed_drafts": 117,
+        "spec_verify_ct": 39
+      },
+      "start": "width4",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "first_difference_from_common": 16,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 39
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 39
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": false,
+      "matches_historical_variant": false,
+      "ordinal": 2,
+      "output_ids_sha256": "ebfeebb8158d1cc7aed13e5badd2e1b2c255b87e8c4c7d4cde6e98bcecb58f35",
+      "request_sha256": "c943f2087a5f25685d09f9d60e18828932ff10758f74e8e20c0b705d8bb3927d",
+      "seconds": 2.514990910945926,
+      "speculation": {
+        "spec_accept_length": 3.282051282051282,
+        "spec_accept_rate": 0.7777777777777778,
+        "spec_correct_drafts_histogram": [
+          6,
+          3,
+          2,
+          28
+        ],
+        "spec_num_correct_drafts": 91,
+        "spec_num_proposed_drafts": 117,
+        "spec_verify_ct": 39
+      },
+      "start": "width4",
+      "warmup": false
+    },
+    {
+      "consistency": {
+        "histogram_count_matches_verify": true,
+        "histogram_weighted_count_matches_correct": true,
+        "no_recaptures": true,
+        "replays_match_verifications": true
+      },
+      "differing_positions_from_common": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "first_difference_from_common": 16,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 39
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 39
+        }
+      ],
+      "input_ids_sha256": "e5d664b45883fa533a9ee9d7cadb4e7b645195df1de876baed732520e78d68ef",
+      "matches_historical_common": false,
+      "matches_historical_variant": false,
+      "ordinal": 3,
+      "output_ids_sha256": "ebfeebb8158d1cc7aed13e5badd2e1b2c255b87e8c4c7d4cde6e98bcecb58f35",
+      "request_sha256": "d25b1341e36891a1cb3d5bee7b3368dc5b27b397a9fe24f0e36d1c70506dc76e",
+      "seconds": 2.513736473978497,
+      "speculation": {
+        "spec_accept_length": 3.282051282051282,
+        "spec_accept_rate": 0.7777777777777778,
+        "spec_correct_drafts_histogram": [
+          6,
+          3,
+          2,
+          28
+        ],
+        "spec_num_correct_drafts": 91,
+        "spec_num_proposed_drafts": 117,
+        "spec_verify_ct": 39
+      },
+      "start": "width4",
+      "warmup": false
+    }
+  ],
+  "schema": 1,
+  "source_manifest_sha256": "468344e9ebf65956f356f2894904476abd6fb96f136002b8d93310988fa8f87b",
+  "stack_changed": false,
+  "start_medians": [
+    {
+      "configuration": "width8",
+      "output_tokens_per_second": 69.28611642211872,
+      "seconds": 1.847411957976874
+    },
+    {
+      "configuration": "width4",
+      "output_tokens_per_second": 50.92021432040331,
+      "seconds": 2.513736473978497
+    }
+  ],
+  "status": "WIDTH48_OUTPUT_DIFFERENCES_OBSERVED",
+  "task_quality_qualified": false,
+  "unique_output_hashes": [
+    "e26b7f38431a9fb17640217a094727c6dd25b5eb81cfa301a9dda89a017812dc",
+    "ebfeebb8158d1cc7aed13e5badd2e1b2c255b87e8c4c7d4cde6e98bcecb58f35"
+  ],
+  "workload": {
+    "concurrency": 1,
+    "context": 16384,
+    "forced_output_tokens": 128,
+    "input_tokens": 2047,
+    "m2047_stage1": true,
+    "pool_tokens": 16416,
+    "reasoning_effort": "low",
+    "tensor_parallel": 2,
+    "width_by_arm": {
+      "control": 8,
+      "mtp": 4
+    }
+  }
+}

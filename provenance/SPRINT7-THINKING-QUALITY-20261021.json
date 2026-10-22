@@ -1,0 +1,300 @@
+{
+  "all_applicable_quality_gate_passes": 8,
+  "analysis_manifest_sha256": "6ee044fe6c87ca45dc8fd200a7dc5727fc9bfd22d9ceb18783d8432ea3e1be0a",
+  "cases": [
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "client_elapsed_seconds": 3.215871145017445,
+      "final_answer_tokens": 41,
+      "format_pass": true,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 59
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 59
+        }
+      ],
+      "input_tokens": 226,
+      "normal_stop": true,
+      "output_tokens": 352,
+      "reasoning_tokens": 309,
+      "response_ids_sha256": "929fa6e4c0c097a15c500b47e2ac395444b0493a2d11b7a55a8c83a5aea18a2e",
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-unique-last",
+      "client_elapsed_seconds": 8.05731706903316,
+      "final_answer_tokens": 95,
+      "format_pass": true,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 152
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 152
+        }
+      ],
+      "input_tokens": 246,
+      "normal_stop": true,
+      "output_tokens": 883,
+      "reasoning_tokens": 786,
+      "response_ids_sha256": "76618317b484c6e7240603f9b722abc54be80e3051750dd484248351edd6c39d",
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "quality16k-audit-threshold",
+      "client_elapsed_seconds": 25.517695590038784,
+      "final_answer_tokens": 763,
+      "format_pass": null,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 386
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 386
+        }
+      ],
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 2891,
+      "reasoning_tokens": 2126,
+      "response_ids_sha256": "36d6108c5f889c07245bf3fcc51c07e352722aaa1b20fcd81191d24c3176d838",
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "heldout16k-audit",
+      "client_elapsed_seconds": 33.293618826020975,
+      "final_answer_tokens": 821,
+      "format_pass": null,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 538
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 538
+        }
+      ],
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 3977,
+      "reasoning_tokens": 3154,
+      "response_ids_sha256": "be973f4eb0cfdef67e8977261e60ba620188d0d211ec6e2b8f9586663b63a26f",
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "client_elapsed_seconds": 3.215088104014285,
+      "final_answer_tokens": 41,
+      "format_pass": true,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 59
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 59
+        }
+      ],
+      "input_tokens": 226,
+      "normal_stop": true,
+      "output_tokens": 352,
+      "reasoning_tokens": 309,
+      "response_ids_sha256": "929fa6e4c0c097a15c500b47e2ac395444b0493a2d11b7a55a8c83a5aea18a2e",
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-unique-last",
+      "client_elapsed_seconds": 8.063585534982849,
+      "final_answer_tokens": 95,
+      "format_pass": true,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 152
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 152
+        }
+      ],
+      "input_tokens": 246,
+      "normal_stop": true,
+      "output_tokens": 883,
+      "reasoning_tokens": 786,
+      "response_ids_sha256": "76618317b484c6e7240603f9b722abc54be80e3051750dd484248351edd6c39d",
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "quality16k-audit-threshold",
+      "client_elapsed_seconds": 25.527502726006787,
+      "final_answer_tokens": 763,
+      "format_pass": null,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 386
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 386
+        }
+      ],
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 2891,
+      "reasoning_tokens": 2126,
+      "response_ids_sha256": "36d6108c5f889c07245bf3fcc51c07e352722aaa1b20fcd81191d24c3176d838",
+      "start": "mtp",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "heldout16k-audit",
+      "client_elapsed_seconds": 33.22339177998947,
+      "final_answer_tokens": 821,
+      "format_pass": null,
+      "functional_pass": true,
+      "graph_deltas": [
+        {
+          "captures": 0,
+          "rank": 0,
+          "replays": 537
+        },
+        {
+          "captures": 0,
+          "rank": 1,
+          "replays": 537
+        }
+      ],
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 3977,
+      "reasoning_tokens": 3154,
+      "response_ids_sha256": "be973f4eb0cfdef67e8977261e60ba620188d0d211ec6e2b8f9586663b63a26f",
+      "start": "mtp",
+      "sustained_512_tokens": true
+    }
+  ],
+  "causal_mode_only_comparison": false,
+  "context_tokens": 16384,
+  "cpu_acceptance_checks": 46,
+  "date": "2026-10-21",
+  "functional_failures": 0,
+  "functional_passes": 8,
+  "general_qualification": false,
+  "grade_scope": "Decoded final answers only, authenticated against full output IDs and raw HTTP text. Final token counts exclude thinking and terminal special tokens.",
+  "graph_recaptures": 0,
+  "independent_packet_checks": 8,
+  "independent_readout_checks": 4,
+  "independent_release_verified": true,
+  "internal_reserve_tokens": 16,
+  "key_events": [
+    {
+      "after": 34,
+      "before": 34,
+      "case": "quality16k-audit-threshold",
+      "decision": "rejected",
+      "fee": 0,
+      "id": "J01",
+      "reason": "insufficient_funds"
+    },
+    {
+      "after": 37,
+      "before": 37,
+      "case": "heldout16k-audit",
+      "decision": "rejected",
+      "fee": 0,
+      "id": "H17",
+      "reason": "insufficient_funds"
+    }
+  ],
+  "ledger_inert_filler_reduced": true,
+  "ledger_input_tokens": 12272,
+  "limitations": [
+    "Four unique tasks, each repeated twice, on the selected snapshot only.",
+    "Ledger input filler shrank from about15344 to12272 tokens to reserve4096 output tokens; this is not a mode-only matched comparison.",
+    "Greedy sampling differs from the publisher thinking recipe.",
+    "Maximum total output3977 leaves119 tokens below this4096 cap; no general reasoning-budget guarantee.",
+    "Ring-fold thinking quality, C2, sampling, reuse and lifecycle gates remain pending.",
+    "Earlier mismatch remains unresolved; observed pair equality does not establish general numerical equivalence."
+  ],
+  "native_manifest_sha256": "b4f24e435b798c3716147960814938068d372f966f1242f9b5f5c1fb6add95d1",
+  "next_step": "Validate the separate ring-fold candidate on the corrected thinking corpus with its matched-capacity requirements; retain all other pending Sprint7 gates.",
+  "normal_stops": 8,
+  "official_guidance": "https://huggingface.co/Qwen/Qwen3.8-27B#best-practices",
+  "paired_output_count": 4,
+  "paired_output_ids_exact": 4,
+  "performance_claim": false,
+  "precision_only_comparison": false,
+  "prior_non_thinking_control": "provenance/SPRINT7-SELECTED-QUALITY-20261021.json",
+  "publisher_sampling_recipe_tested": false,
+  "readout_behavior_checks": 4,
+  "related_report_establishes_local_root_cause": false,
+  "related_user_report": "https://github.com/QwenLM/Qwen3.8/issues/236",
+  "request_profile": {
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    },
+    "ignore_eos": false,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "low",
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "requests": 8,
+  "runtime_profile": "Selected M2047stage1, metadata reuse, DFlash2 block8, singleton split decode, aligned GDN; FP8 target weights, BF16 target/draft attention KV, FP32 recurrent state/head",
+  "schema": 1,
+  "source_manifest_sha256": "98696a5a789a3374543d81ca78ad6ca5f2cfe3d15a090984094a7afea52547b5",
+  "starts": 2,
+  "startup_bf16_cache_witnesses": 4,
+  "status": "SELECTED_REFERENCE_LOW_THINKING_QUALITY_SCREEN_PASS",
+  "task_facts_questions_oracles_unchanged": true,
+  "task_quality_screen_passed": true,
+  "ungraded": 0,
+  "unique_tasks": 4
+}

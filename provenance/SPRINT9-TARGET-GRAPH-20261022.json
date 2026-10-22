@@ -1,0 +1,289 @@
+{
+  "component_comparison_complete": true,
+  "component_optimization_complete": false,
+  "component_record": "provenance/SPRINT9-M8-COMPONENT-20261022.json",
+  "coverage": [
+    {
+      "actual_cycles_after_last_target_sample": 13,
+      "case": "coding-running-totals",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        332,
+        489
+      ],
+      "target_selected_cycles": [
+        22,
+        49
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 42,
+      "case": "coding-unique-last",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        559,
+        1032
+      ],
+      "target_selected_cycles": [
+        54,
+        146
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 64,
+      "case": "quality16k-audit-threshold",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        8829,
+        10253
+      ],
+      "target_selected_cycles": [
+        98,
+        277
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 198,
+      "case": "heldout16k-audit",
+      "rank": 0,
+      "target_sampled_prefix_range": [
+        8862,
+        10386
+      ],
+      "target_selected_cycles": [
+        106,
+        300
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 13,
+      "case": "coding-running-totals",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        332,
+        489
+      ],
+      "target_selected_cycles": [
+        22,
+        49
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 42,
+      "case": "coding-unique-last",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        559,
+        1032
+      ],
+      "target_selected_cycles": [
+        54,
+        146
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 64,
+      "case": "quality16k-audit-threshold",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        8829,
+        10253
+      ],
+      "target_selected_cycles": [
+        98,
+        277
+      ],
+      "target_unreached_cycles": []
+    },
+    {
+      "actual_cycles_after_last_target_sample": 198,
+      "case": "heldout16k-audit",
+      "rank": 1,
+      "target_sampled_prefix_range": [
+        8862,
+        10386
+      ],
+      "target_selected_cycles": [
+        106,
+        300
+      ],
+      "target_unreached_cycles": []
+    }
+  ],
+  "date": "2026-10-22",
+  "historical_source_seal": {
+    "manifest_sha256": "06cc04c7bea6089c99a864b9655641ada4dfad7fba927039bb087f6eb3331c8e",
+    "members": 357,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-ready.omcpmltu"
+  },
+  "method": "Selective graph events at native method boundaries; two selected cycles per frozen request per rank",
+  "milestone": "9.1 classification;9.2 native component exit",
+  "native_elapsed_seconds": 394.0677885841578,
+  "native_seal": {
+    "manifest_sha256": "74740cfa751be51786b7b740974aa7b31d1c7accb5352aabcd3115ed0052ffb6",
+    "members": 237,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-run.7qpfl04f",
+    "verified_utc": "2026-10-22T07:22:52.359696+00:00"
+  },
+  "output_difference": {
+    "case": "heldout16k-audit",
+    "final_answer_text_equal": true,
+    "final_answer_tokens": [
+      821,
+      821
+    ],
+    "first_difference": 130,
+    "reasoning_tokens": [
+      2529,
+      2936
+    ],
+    "verifier_cycles": [
+      450,
+      498
+    ]
+  },
+  "preparation": {
+    "cpu_checks": 119,
+    "helper_sha256": "b4219b77e1755f7af835d036321015bd73fba78bbd68e74ccbdb06cfa9c409bc",
+    "metrics": {
+      "archive_bytes": 16721920,
+      "archive_members": 64,
+      "argv_entries": {
+        "bf16": 255,
+        "kv4": 255
+      },
+      "binding_bytes": {
+        "control": 65411,
+        "mtp": 65391
+      },
+      "combined_transport_bytes": 33538130
+    },
+    "new_gpu_runs": 0,
+    "numerical_source_pins": {
+      "GEMM-tail.py": "2308ff1492efd4c5ff734d23e9d35d21e1c4216b5fa250905be6a5ffbf297b9b",
+      "capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "verify_decode_adapter.py": "c72ed853f8bb405c49fd15cfd5855100fa10e1e3385ab31fd92cc55141806917"
+    },
+    "protected_helper_pins": {
+      "benchmark_artifacts.py": "400855e791e7f2c91d140b20c66bd7e4b26f2c720560932b3e78adf7b56a5a65",
+      "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+      "benchmark_host_transport.py": "c3490cc989454af9f1c620fd424d853f1dd40641970488b19a3e40c56182606c",
+      "benchmark_owner_adapter.py": "4e9fed1646e09260913e4b471f87da9f7b88b31872e8b3b4a3ee751e1c580aad",
+      "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+      "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+      "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+      "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+    },
+    "status": "SPRINT9_PACKET_CPU_PASS_PENDING_PHYSICAL",
+    "target_class_sha256": "944007d401aa71180fda9b4bb8e3d0736cc8a2d18519a87221bd6fd18b6b6cf4"
+  },
+  "qualification": false,
+  "reader_cpu_checks": 15,
+  "reader_seal": {
+    "manifest_sha256": "e43c09e649d012bc7f0e66d15c022b2a4c988228f32004aa75c13831f5ce01c7",
+    "members": 135,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-reader.1qjy7bfx"
+  },
+  "result": {
+    "all_quality_gates_passed": 8,
+    "complete_samples_per_rank": 8,
+    "final_answer_pairs_equal": 4,
+    "full_output_pairs": 4,
+    "full_output_pairs_equal": 3,
+    "independent_release_verified": true,
+    "long_samples_per_rank": 4,
+    "long_window_medians_ms": {
+      "0": {
+        "attention": 4.602890953421593,
+        "comm": 3.5589604880660772,
+        "cycle": 57.66037940979004,
+        "gate_up_proj": 13.775307469069958,
+        "gdn": 11.468114458024502,
+        "mlp": 20.888394460082054,
+        "projection": 30.757418959401548,
+        "target.1.gather": 0.15636099874973297,
+        "target.1.graph": 48.33395004272461,
+        "target.1.head": 2.0511529445648193
+      },
+      "1": {
+        "attention": 4.579643979668617,
+        "comm": 3.6435574935749173,
+        "cycle": 57.61002540588379,
+        "gate_up_proj": 13.7766814827919,
+        "gdn": 11.42780701071024,
+        "mlp": 20.872043535113335,
+        "projection": 30.730282448232174,
+        "target.1.gather": 0.15822099894285202,
+        "target.1.graph": 48.339494705200195,
+        "target.1.head": 2.052012085914612
+      }
+    },
+    "measured_parts_per_rank": 561,
+    "next_component": "Native M8 gate/up FP8 launch-stage comparison, exact output parity required",
+    "qualification": false,
+    "sprint9_complete": false,
+    "status": "SPRINT9_1_CLASSIFICATION_COMPLETE"
+  },
+  "result_scope_note": "The embedded9.1 result summary is the sealed classification snapshot; the later component record completes the Sprint9exit.",
+  "schema": 1,
+  "scope": {
+    "draft_kv": "bf16",
+    "max_retained_device_samples_per_rank": 8,
+    "native_starts": 2,
+    "numerical_mismatch": "Unresolved under owner experimental-session disposition",
+    "output_cap": 8192,
+    "reasoning_effort": "low",
+    "reference": "snapshot",
+    "requests_per_start": 4,
+    "target_kv": "bf16",
+    "target_weights": "fp8",
+    "temperature": 1.0,
+    "thinking": true,
+    "top_k": 20,
+    "top_p": 0.95
+  },
+  "serving_optimization_applied": false,
+  "source_recovery": {
+    "all_original_member_hashes_match": true,
+    "consumed_nonce_must_not_be_reused": true,
+    "extra_bytecode_matches_compiled_original_helper": true,
+    "extra_files": {
+      "__pycache__/seal_evidence.cpython-311.pyc": "904eab1eff2760267b21fd95bf5c3b9989ae18c41f6e92c9fc8461dda538d61f"
+    },
+    "historical_full_seal_valid_now": false,
+    "historical_manifest_sha256": "06cc04c7bea6089c99a864b9655641ada4dfad7fba927039bb087f6eb3331c8e",
+    "historical_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-ready.omcpmltu",
+    "launch_allowed": false,
+    "native_artifacts_changed": false,
+    "original_evidence_preserved": true,
+    "original_member_count": 357,
+    "reason": "A local component-preparation import omitted -B and created a bytecode cache after the sealed serving readout had completed.",
+    "recovery_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-recovery.0ntu1ci3",
+    "status": "SOURCE_SNAPSHOT_RECOVERED_WITHOUT_EDITING_ORIGINAL"
+  },
+  "source_seal": {
+    "manifest_sha256": "bac6d676e000247337f6a2c1682ebdca86dcddde99cad430cd2416dff2455524",
+    "members": 359,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-recovery.0ntu1ci3",
+    "verified_utc": "2026-10-22T08:01:33.399536+00:00"
+  },
+  "sprint": 9,
+  "sprint_complete": true,
+  "status": "SPRINT9_COMPLETE_CLASSIFICATION_AND_COMPONENT_EXIT",
+  "tool_audit_seal": {
+    "manifest_sha256": "9372f2eb37671242b85939c7c42e37991c792303c4956855f468330f694dddd0",
+    "members": 54,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-tool-audit.dvfk1k78"
+  }
+}

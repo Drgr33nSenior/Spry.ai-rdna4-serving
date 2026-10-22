@@ -1,0 +1,2942 @@
+{
+  "baseline_to_ring_component_time_ratio_geomean": 1.97565190505307,
+  "baseline_to_ring_component_time_ratio_range": [
+    1.6749522836352018,
+    2.2919761679950565
+  ],
+  "cases": 16,
+  "cases_detail": [
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.034840499982237816,
+          "snapshot": 0.0667404979467392
+        },
+        "4": {
+          "ring": 0.03558049909770489,
+          "snapshot": 0.06455999985337257
+        },
+        "8": {
+          "ring": 0.03852050006389618,
+          "snapshot": 0.06451999954879284
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 127367744,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12381696,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 28651008,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.03560100123286247,
+            "snapshot": 0.119159996509552
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03440000116825104,
+            "snapshot": 0.06680099666118622
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.035041000694036484,
+            "snapshot": 0.06620000302791595
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03463999927043915,
+            "snapshot": 0.06667999923229218
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03447999805212021,
+            "snapshot": 0.06260000169277191
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0371600016951561,
+            "snapshot": 0.06735999882221222
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.034359999001026154,
+            "snapshot": 0.06136000156402588
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036681000143289566,
+            "snapshot": 0.06651999801397324
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03748000040650368,
+            "snapshot": 0.061799999326467514
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0400409996509552,
+            "snapshot": 0.06723999977111816
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03720000013709068,
+            "snapshot": 0.061760999262332916
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03956099972128868,
+            "snapshot": 0.06752000004053116
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.033239999786019325,
+          "snapshot": 0.06416099891066551
+        },
+        "4": {
+          "ring": 0.03447999991476536,
+          "snapshot": 0.06658000126481056
+        },
+        "8": {
+          "ring": 0.0375209990888834,
+          "snapshot": 0.06484000012278557
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 128547392,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12185088,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 28847616,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.035280000418424606,
+            "snapshot": 0.08263999968767166
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03215999901294708,
+            "snapshot": 0.06164100021123886
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.034040000289678574,
+            "snapshot": 0.06644099950790405
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03243999928236008,
+            "snapshot": 0.06188099831342697
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03539999946951866,
+            "snapshot": 0.06728000193834305
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.033560000360012054,
+            "snapshot": 0.06736099720001221
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.033560000360012054,
+            "snapshot": 0.061799999326467514
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03564099967479706,
+            "snapshot": 0.06588000059127808
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03680099919438362,
+            "snapshot": 0.06204000115394592
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03863999992609024,
+            "snapshot": 0.06716100126504898
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03680000081658363,
+            "snapshot": 0.06260000169277191
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03824099898338318,
+            "snapshot": 0.06707999855279922
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.03374049998819828,
+          "snapshot": 0.06415999867022038
+        },
+        "4": {
+          "ring": 0.03667999990284443,
+          "snapshot": 0.06637999787926674
+        },
+        "8": {
+          "ring": 0.03941999934613705,
+          "snapshot": 0.06653999909758568
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 127367744,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12381696,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 28651008,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.03683999925851822,
+            "snapshot": 0.0854400023818016
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03243999928236008,
+            "snapshot": 0.06191999837756157
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.034561000764369965,
+            "snapshot": 0.06611999869346619
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.032919999212026596,
+            "snapshot": 0.062199998646974564
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036639999598264694,
+            "snapshot": 0.06675999611616135
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036559998989105225,
+            "snapshot": 0.06703999638557434
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03680000081658363,
+            "snapshot": 0.06576099991798401
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036720000207424164,
+            "snapshot": 0.06599999964237213
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03711999952793121,
+            "snapshot": 0.06216000020503998
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03984000161290169,
+            "snapshot": 0.06719999760389328
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03959999978542328,
+            "snapshot": 0.06644000113010406
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039239998906850815,
+            "snapshot": 0.06663999706506729
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.034260500222444534,
+          "snapshot": 0.06658000126481056
+        },
+        "4": {
+          "ring": 0.03418000042438507,
+          "snapshot": 0.06392000056803226
+        },
+        "8": {
+          "ring": 0.03830000013113022,
+          "snapshot": 0.06656000018119812
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 128547392,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12185088,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 28847616,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.04076100140810013,
+            "snapshot": 0.11339999735355377
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03384000062942505,
+            "snapshot": 0.06672000139951706
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03432000055909157,
+            "snapshot": 0.06623999774456024
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0342009998857975,
+            "snapshot": 0.06644000113010406
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03415999934077263,
+            "snapshot": 0.06247999891638756
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.035599999129772186,
+            "snapshot": 0.06675999611616135
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03420000150799751,
+            "snapshot": 0.06536000221967697
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03392000123858452,
+            "snapshot": 0.061039999127388
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03776000067591667,
+            "snapshot": 0.06679999828338623
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03680000081658363,
+            "snapshot": 0.06252100318670273
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038839999586343765,
+            "snapshot": 0.06692100316286087
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03895999863743782,
+            "snapshot": 0.06632000207901001
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.039319999516010284,
+          "snapshot": 0.09012050181627274
+        },
+        "4": {
+          "ring": 0.04106000065803528,
+          "snapshot": 0.08772049844264984
+        },
+        "8": {
+          "ring": 0.044080499559640884,
+          "snapshot": 0.08942000195384026
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 165447232,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24964608,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 42938880,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.039239998906850815,
+            "snapshot": 0.17920100688934326
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04039999842643738,
+            "snapshot": 0.09140100330114365
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036639999598264694,
+            "snapshot": 0.0820000022649765
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039400000125169754,
+            "snapshot": 0.08884000033140182
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03920000046491623,
+            "snapshot": 0.08196000009775162
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.041439998894929886,
+            "snapshot": 0.08931999653577805
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.040800001472234726,
+            "snapshot": 0.0878399983048439
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04131999984383583,
+            "snapshot": 0.08760099858045578
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.043719999492168427,
+            "snapshot": 0.08907999843358994
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04432100057601929,
+            "snapshot": 0.08972000330686569
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04383999854326248,
+            "snapshot": 0.08912000060081482
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04452100023627281,
+            "snapshot": 0.09003999829292297
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.038839999586343765,
+          "snapshot": 0.08892099931836128
+        },
+        "4": {
+          "ring": 0.04079999960958958,
+          "snapshot": 0.08721999824047089
+        },
+        "8": {
+          "ring": 0.04375999979674816,
+          "snapshot": 0.08940050005912781
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 166626880,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24768000,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 43135488,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.04108000174164772,
+            "snapshot": 0.13896100223064423
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03760100156068802,
+            "snapshot": 0.07311999797821045
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038920000195503235,
+            "snapshot": 0.0888810008764267
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038759998977184296,
+            "snapshot": 0.08896099776029587
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039080001413822174,
+            "snapshot": 0.0830800011754036
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.041359998285770416,
+            "snapshot": 0.08900000154972076
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04075999930500984,
+            "snapshot": 0.08687999844551086
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04083999991416931,
+            "snapshot": 0.08755999803543091
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04363999888300896,
+            "snapshot": 0.08848000317811966
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04340000078082085,
+            "snapshot": 0.0894009992480278
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.043880000710487366,
+            "snapshot": 0.08940000087022781
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.043960001319646835,
+            "snapshot": 0.08959999680519104
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.03968000039458275,
+          "snapshot": 0.08928100019693375
+        },
+        "4": {
+          "ring": 0.04134050011634827,
+          "snapshot": 0.08814049884676933
+        },
+        "8": {
+          "ring": 0.044280000030994415,
+          "snapshot": 0.08994049951434135
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 165447232,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24964608,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 42938880,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.04200100153684616,
+            "snapshot": 0.15024100244045258
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038600001484155655,
+            "snapshot": 0.08551999926567078
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03951999917626381,
+            "snapshot": 0.08960100263357162
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03984000161290169,
+            "snapshot": 0.08896099776029587
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04148000106215477,
+            "snapshot": 0.08812099695205688
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03892099857330322,
+            "snapshot": 0.0828000009059906
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04128099977970123,
+            "snapshot": 0.08816000074148178
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0414000004529953,
+            "snapshot": 0.08876000344753265
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04408099874854088,
+            "snapshot": 0.08987999707460403
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.044319998472929,
+            "snapshot": 0.08951999992132187
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.044360000640153885,
+            "snapshot": 0.09000100195407867
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04424000158905983,
+            "snapshot": 0.0902009978890419
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 0,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.036720000207424164,
+          "snapshot": 0.08300099894404411
+        },
+        "4": {
+          "ring": 0.03838000074028969,
+          "snapshot": 0.081300999969244
+        },
+        "8": {
+          "ring": 0.04134000092744827,
+          "snapshot": 0.08264049887657166
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 166626880,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24768000,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 43135488,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.04104100167751312,
+            "snapshot": 0.13911999762058258
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03548000007867813,
+            "snapshot": 0.08088099956512451
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03675999864935875,
+            "snapshot": 0.0827609971165657
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03668000176548958,
+            "snapshot": 0.08324100077152252
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03863999992609024,
+            "snapshot": 0.08320099860429764
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038120001554489136,
+            "snapshot": 0.08024100214242935
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03968000039458275,
+            "snapshot": 0.08236099779605865
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.037480998784303665,
+            "snapshot": 0.07959999889135361
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.041120000183582306,
+            "snapshot": 0.08240099996328354
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04064000025391579,
+            "snapshot": 0.08008100092411041
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04179999977350235,
+            "snapshot": 0.0830409973859787
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04156000167131424,
+            "snapshot": 0.08287999778985977
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.035080499947071075,
+          "snapshot": 0.06886100023984909
+        },
+        "4": {
+          "ring": 0.03774000145494938,
+          "snapshot": 0.06906049698591232
+        },
+        "8": {
+          "ring": 0.03968000039458275,
+          "snapshot": 0.06718000024557114
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 127367744,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12381696,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 28651008,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.0350009985268116,
+            "snapshot": 0.09839999675750732
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03455999866127968,
+            "snapshot": 0.06592100113630295
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.035760000348091125,
+            "snapshot": 0.06960099935531616
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03516000136733055,
+            "snapshot": 0.06812100112438202
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03815999999642372,
+            "snapshot": 0.06955999881029129
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03784000128507614,
+            "snapshot": 0.06939999759197235
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03764000162482262,
+            "snapshot": 0.0687209963798523
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03764000162482262,
+            "snapshot": 0.06827999651432037
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04027999937534332,
+            "snapshot": 0.06719999760389328
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03739999979734421,
+            "snapshot": 0.06312000006437302
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039319999516010284,
+            "snapshot": 0.06716000288724899
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04004000127315521,
+            "snapshot": 0.06735999882221222
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.034220000728964806,
+          "snapshot": 0.06672000139951706
+        },
+        "4": {
+          "ring": 0.036200499162077904,
+          "snapshot": 0.06650000065565109
+        },
+        "8": {
+          "ring": 0.0388604998588562,
+          "snapshot": 0.06709999963641167
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 128547392,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12185088,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 28847616,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.036400001496076584,
+            "snapshot": 0.09307999908924103
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0342399999499321,
+            "snapshot": 0.06672000139951706
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03240000084042549,
+            "snapshot": 0.06251999735832214
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03420000150799751,
+            "snapshot": 0.06672000139951706
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036159999668598175,
+            "snapshot": 0.06712000072002411
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036320000886917114,
+            "snapshot": 0.066880002617836
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03624099865555763,
+            "snapshot": 0.06611999869346619
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.034279998391866684,
+            "snapshot": 0.061879999935626984
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03943999856710434,
+            "snapshot": 0.06768099963665009
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038759998977184296,
+            "snapshot": 0.06716000288724899
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03731999918818474,
+            "snapshot": 0.06356000155210495
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03896100074052811,
+            "snapshot": 0.06703999638557434
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.03527999855577946,
+          "snapshot": 0.06695999950170517
+        },
+        "4": {
+          "ring": 0.037299999967217445,
+          "snapshot": 0.0670199990272522
+        },
+        "8": {
+          "ring": 0.039820000529289246,
+          "snapshot": 0.0671204999089241
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 127367744,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12381696,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 28651008,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.03668000176548958,
+            "snapshot": 0.08551999926567078
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03463999927043915,
+            "snapshot": 0.06672000139951706
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03551999852061272,
+            "snapshot": 0.06664100289344788
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0350399985909462,
+            "snapshot": 0.06719999760389328
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03743999823927879,
+            "snapshot": 0.0676800012588501
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.036959998309612274,
+            "snapshot": 0.06759999692440033
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0371600016951561,
+            "snapshot": 0.06571999937295914
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03743999823927879,
+            "snapshot": 0.06644000113010406
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04016000032424927,
+            "snapshot": 0.06672099977731705
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039480000734329224,
+            "snapshot": 0.06752000004053116
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038040999323129654,
+            "snapshot": 0.06300000101327896
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04032000154256821,
+            "snapshot": 0.06803999841213226
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 1,
+      "comparisons": 64,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.034199999645352364,
+          "snapshot": 0.06716050207614899
+        },
+        "4": {
+          "ring": 0.03622099943459034,
+          "snapshot": 0.06650049984455109
+        },
+        "8": {
+          "ring": 0.038019999861717224,
+          "snapshot": 0.06529999896883965
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 128547392,
+        "input_bytes": 82832,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 12582912,
+        "snapshot_minus_ring_bytes": 12185088,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 28847616,
+      "peak_reserved_bytes": 69206016,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.035760000348091125,
+            "snapshot": 0.08139999955892563
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03303999826312065,
+            "snapshot": 0.06272000074386597
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03412000089883804,
+            "snapshot": 0.06772100180387497
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.034279998391866684,
+            "snapshot": 0.066600002348423
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0363209992647171,
+            "snapshot": 0.06703999638557434
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03643999993801117,
+            "snapshot": 0.06688100099563599
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03612099960446358,
+            "snapshot": 0.06576000154018402
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03612000122666359,
+            "snapshot": 0.06611999869346619
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03700000047683716,
+            "snapshot": 0.06328000128269196
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038600001484155655,
+            "snapshot": 0.06776099652051926
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039159998297691345,
+            "snapshot": 0.06731999665498734
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03743999823927879,
+            "snapshot": 0.0631600022315979
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.038739999756217,
+          "snapshot": 0.0862405002117157
+        },
+        "4": {
+          "ring": 0.04224000126123428,
+          "snapshot": 0.08951999992132187
+        },
+        "8": {
+          "ring": 0.043700000271201134,
+          "snapshot": 0.09028049930930138
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 165447232,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24964608,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 42938880,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.03976000100374222,
+            "snapshot": 0.1398400068283081
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03771999850869179,
+            "snapshot": 0.08320099860429764
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03991999849677086,
+            "snapshot": 0.08928000181913376
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03771999850869179,
+            "snapshot": 0.07332000136375427
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.042840998619794846,
+            "snapshot": 0.09040000289678574
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04224000126123428,
+            "snapshot": 0.09015999734401703
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04224000126123428,
+            "snapshot": 0.08823999762535095
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04156000167131424,
+            "snapshot": 0.08888000249862671
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04315999895334244,
+            "snapshot": 0.0902400016784668
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04204000160098076,
+            "snapshot": 0.0838410034775734
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04424000158905983,
+            "snapshot": 0.09032099694013596
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04424099996685982,
+            "snapshot": 0.09059999883174896
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.039300499483942986,
+          "snapshot": 0.08914000168442726
+        },
+        "4": {
+          "ring": 0.04161999933421612,
+          "snapshot": 0.08845999836921692
+        },
+        "8": {
+          "ring": 0.04430000111460686,
+          "snapshot": 0.09066049754619598
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 166626880,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24768000,
+        "state_bytes": 4718592
+      },
+      "pattern": "structured",
+      "peak_allocated_bytes": 43135488,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.0414000004529953,
+            "snapshot": 0.1408810019493103
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0379600003361702,
+            "snapshot": 0.08287999778985977
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039799999445676804,
+            "snapshot": 0.0891600027680397
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03880099952220917,
+            "snapshot": 0.08912000060081482
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04227999970316887,
+            "snapshot": 0.08944100141525269
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.041919998824596405,
+            "snapshot": 0.08856000006198883
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04131999984383583,
+            "snapshot": 0.08835999667644501
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04123999923467636,
+            "snapshot": 0.08788000047206879
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.042479999363422394,
+            "snapshot": 0.08444000035524368
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04416000097990036,
+            "snapshot": 0.0915210023522377
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.044519998133182526,
+            "snapshot": 0.09059999883174896
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.044440001249313354,
+            "snapshot": 0.090720996260643
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.039659999310970306,
+          "snapshot": 0.0894399993121624
+        },
+        "4": {
+          "ring": 0.04195999912917614,
+          "snapshot": 0.0891599990427494
+        },
+        "8": {
+          "ring": 0.04439999908208847,
+          "snapshot": 0.09015999734401703
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 165447232,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 201216,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24964608,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 42938880,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.03968000039458275,
+            "snapshot": 0.13835999369621277
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03759999945759773,
+            "snapshot": 0.08299999684095383
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.040160998702049255,
+            "snapshot": 0.08931999653577805
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039639998227357864,
+            "snapshot": 0.08956000208854675
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.042319998145103455,
+            "snapshot": 0.08923999965190887
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0421999990940094,
+            "snapshot": 0.08960100263357162
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04171999916434288,
+            "snapshot": 0.0881199985742569
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.0416410006582737,
+            "snapshot": 0.08907999843358994
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04447999969124794,
+            "snapshot": 0.08959999680519104
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04240100085735321,
+            "snapshot": 0.08395999670028687
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.045079998672008514,
+            "snapshot": 0.09071999788284302
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.044319998472929,
+            "snapshot": 0.09120000153779984
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "bf16"
+    },
+    {
+      "all_exact": true,
+      "batch": 2,
+      "comparisons": 65,
+      "gpu": 1,
+      "median_ms_by_prefix": {
+        "1": {
+          "ring": 0.039780499413609505,
+          "snapshot": 0.08985999971628189
+        },
+        "4": {
+          "ring": 0.04163999855518341,
+          "snapshot": 0.08907999843358994
+        },
+        "8": {
+          "ring": 0.04319999925792217,
+          "snapshot": 0.0875600017607212
+        }
+      },
+      "memory": {
+        "conservative_allocator_bytes": 166626880,
+        "input_bytes": 165520,
+        "limit_bytes": 268435456,
+        "raw_ring_bytes": 397824,
+        "scope": "one synthetic GDN layer; allocator storage, not full-model or driver memory",
+        "snapshot_bytes": 25165824,
+        "snapshot_minus_ring_bytes": 24768000,
+        "state_bytes": 4718592
+      },
+      "pattern": "random",
+      "peak_allocated_bytes": 43135488,
+      "peak_reserved_bytes": 73400320,
+      "raw_graph_timing_pairs": [
+        {
+          "milliseconds": {
+            "ring": 0.04075999930500984,
+            "snapshot": 0.1364009976387024
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03751999884843826,
+            "snapshot": 0.08280099928379059
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.039680998772382736,
+            "snapshot": 0.09019999951124191
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 1,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.03988000005483627,
+            "snapshot": 0.08951999992132187
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 1,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04171999916434288,
+            "snapshot": 0.08912000060081482
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04163999855518341,
+            "snapshot": 0.09064099937677383
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.038920000195503235,
+            "snapshot": 0.08124099671840668
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 4,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04163999855518341,
+            "snapshot": 0.08903999626636505
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 4,
+          "repeat": 3
+        },
+        {
+          "milliseconds": {
+            "ring": 0.042160000652074814,
+            "snapshot": 0.08339999616146088
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 0
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04399999976158142,
+            "snapshot": 0.09108000248670578
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 1
+        },
+        {
+          "milliseconds": {
+            "ring": 0.042399998754262924,
+            "snapshot": 0.08404000103473663
+          },
+          "order": [
+            "snapshot",
+            "ring"
+          ],
+          "prefix": 8,
+          "repeat": 2
+        },
+        {
+          "milliseconds": {
+            "ring": 0.04439999908208847,
+            "snapshot": 0.09136100113391876
+          },
+          "order": [
+            "ring",
+            "snapshot"
+          ],
+          "prefix": 8,
+          "repeat": 3
+        }
+      ],
+      "ring_dtype": "fp32"
+    }
+  ],
+  "comparisons": 1032,
+  "cpu_checks": 30,
+  "disposition": "Candidate for serving integration; not selected as a usable Sprint7 serving profile yet.",
+  "exact_comparisons": 1032,
+  "hip": "7.17.26416",
+  "independent_release_verified": true,
+  "limitations": [
+    "Synthetic one-layer inputs and small slot pool; no learned model state or full serving memory measurement.",
+    "Snapshot commit uses Torch gather/index_copy; these ratios do not compare the fused serving commit and are not an end-to-end speedup.",
+    "Both GPUs tested sequentially, not under TP2 inference.",
+    "Rotated ring fixture covers fold addressing; production circular writer, slot reuse and radix tracking are not integrated.",
+    "Serving integration and normal-stop/context/cache/cancellation/lifecycle qualification remain required.",
+    "Initial packet stopped during second-GPU capture after eight exact cases; corrected packet binds explicit per-device streams. Both attempts retained."
+  ],
+  "measured_torch_peak_bytes_range": [
+    28651008,
+    43135488
+  ],
+  "memory_scope": "one layer synthetic storage and peak Torch allocation; excludes driver/compiler residency and serving lifecycle",
+  "mismatches": 0,
+  "model_starts": 0,
+  "native_analysis_manifest_sha256": "1a7ad5ffb82bb630457f1b71e922f5a3b7dc1f1ea3be69a59f716a6e4e4b0f1d",
+  "owner_seconds": 30.884224620007444,
+  "partial_packet_manifest_sha256": "11bf79c930c2bb2371fcf1dbc16ecba4e9017871e357b95d07ec17293031f452",
+  "payload_seconds": 12.592689872952178,
+  "qualification": false,
+  "remote_evidence": {
+    "protected": {
+      "manifest_sha256": "d83a3764e2f8e991cdde00b4cefb47ebef35cff45d6ccf9f9d6e75e7b4074922",
+      "member_count": 19
+    },
+    "workload": {
+      "manifest_sha256": "75a3a3c5343392afd6fc7069362c47e61b7c4c9dc2822a446c40df34017f6bf8",
+      "member_count": 64
+    }
+  },
+  "runtime_changed": false,
+  "schema": 1,
+  "sdk": "10.2.0.dev20261020+git535d2990",
+  "serving_integration_tested": false,
+  "source_manifest_sha256": "5a47b3fec454c702badb2dea6d00936061b6b64499bfee4aca22030e329ac1a9",
+  "source_pins": {
+    "baseline": "fbfd24803574b133fd2ea22063a0010a4c3c5f3e15e5c63df47241f546f7f826",
+    "candidate": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+    "fold": "83358f6bcd0585a469e6ae545658f10fec7e6a8b3a4622ee9dc94efa0061c596"
+  },
+  "source_promoted": false,
+  "status": "REPLAYSSM_ALIGNED_EXACT_FOLD_COMPONENT_PASS",
+  "timed_graph_path_pairs": 192,
+  "timing_scope": "captured aligned verify + Torch snapshot gather/index_copy reference commit versus captured aligned ring verify + native sequential fold; reset/copy/readback outside events",
+  "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+  "triton": "3.8.0"
+}

@@ -1,0 +1,778 @@
+{
+  "active_gpu_run": false,
+  "analysis": {
+    "manifest_sha256": "3d34ad06fecda3aa7a3119cd387b087865f99d2493d2441acbbba3a506031e8d",
+    "members": 135,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint8-corrected-reader.7c7r9psu"
+  },
+  "cpu_checks": 107,
+  "date": "2026-10-22",
+  "elapsed_seconds": 383.8839891250245,
+  "independent_release_verified": true,
+  "independent_review": {
+    "checked": [
+      "source/native seals and reader hashes",
+      "release,126 COMPLETE samples/rank,8quality gates",
+      "all summary arithmetic independently recomputed",
+      "3/4fulloutputs and identical finaltexts"
+    ],
+    "coverage_clarification": "Threshold last retained cycle333,actual341:8unmeasured trailing cycles despite schedule-based uncovered_tail_cycles0.",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Sampled windows; target remainder includes communication/waits; no selected kernel, speedup or whole-request claim.",
+    "status": "NO_BLOCKER_TO_CLOSING_BOUNDED_ATTRIBUTION_SCREEN",
+    "summary_sha256": "036310460e73eabef51e3260d7c571d086f35d4a6b15f5183133ad8e685cda8e"
+  },
+  "interpretation": {
+    "coverage_counter_definition": "Producer uncovered_tail_cycles counts only cycles beyond the last frozen scheduled index. Actual cycles after last retained sample are1,1,8,63 by request on both ranks.",
+    "nested_intervals_are_not_additive": true,
+    "numerical_equivalence": false,
+    "observer_overhead": "Equal-ID pairs differ -0.086%, +0.103%, +0.221% latency. One start/arm; descriptive, no causally isolated overhead or speedup.",
+    "performance_improvement_claimed": false,
+    "ranks_are_separate": true,
+    "reasoning_variation": "Heldout reasoning length differs by8tokens; first full-output ID difference at2520. No claim that only8positions differ.",
+    "sampling_distribution_verified": false,
+    "target_graph_largest_measured_interval": true,
+    "whole_request_bottleneck_established": false
+  },
+  "known_numerical_mismatch": "Unresolved under owner experimental-session disposition.",
+  "native": {
+    "manifest_sha256": "ef0f80bd1345f93a9f2dc80ee3ff03920e40cedffae883cbc2b80c7c4006fd43",
+    "members": 224,
+    "root": "scratchpad/fp8-sprint8-corrected-run.w4051jg4"
+  },
+  "next_sprint": {
+    "candidates_to_classify": [
+      "FP8 projections and quantization",
+      "GDN",
+      "full attention",
+      "layer collectives and waits"
+    ],
+    "first_step": "Classify the target verification graph using at most eight complete verifier cycles on both ranks, with an existing compatible trace tool or selective events.",
+    "number": 9,
+    "optimization_selected": false,
+    "prerequisites": [
+      "Read-only installed tool/version/graph-support check",
+      "Freeze source, commands, finite artifact/time limits and review before launch"
+    ],
+    "trace_launched": false
+  },
+  "offline_readout_checks": 10,
+  "per_rank": [
+    {
+      "coverage": [
+        {
+          "actual_cycles_after_last_retained_sample": 1,
+          "attempted_cycles": 62,
+          "case": "coding-running-totals",
+          "complete_samples": 32,
+          "dispositions": {
+            "COMPLETE": 32,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [],
+          "sampled_cycles": [
+            9,
+            10,
+            12,
+            14,
+            15,
+            17,
+            19,
+            20,
+            22,
+            24,
+            25,
+            27,
+            29,
+            30,
+            32,
+            34,
+            35,
+            37,
+            39,
+            40,
+            42,
+            44,
+            45,
+            47,
+            49,
+            50,
+            52,
+            54,
+            55,
+            57,
+            59,
+            61
+          ],
+          "sampled_prefix_range": [
+            265,
+            544
+          ],
+          "successful_calls": 62,
+          "uncovered_tail_cycles": 1
+        },
+        {
+          "actual_cycles_after_last_retained_sample": 1,
+          "attempted_cycles": 188,
+          "case": "coding-unique-last",
+          "complete_samples": 32,
+          "dispositions": {
+            "COMPLETE": 32,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [],
+          "sampled_cycles": [
+            9,
+            14,
+            20,
+            26,
+            31,
+            37,
+            43,
+            49,
+            54,
+            60,
+            66,
+            72,
+            77,
+            83,
+            89,
+            95,
+            100,
+            106,
+            112,
+            118,
+            123,
+            129,
+            135,
+            141,
+            146,
+            152,
+            158,
+            164,
+            169,
+            175,
+            181,
+            187
+          ],
+          "sampled_prefix_range": [
+            297,
+            1336
+          ],
+          "successful_calls": 188,
+          "uncovered_tail_cycles": 1
+        },
+        {
+          "actual_cycles_after_last_retained_sample": 8,
+          "attempted_cycles": 341,
+          "case": "quality16k-audit-threshold",
+          "complete_samples": 30,
+          "dispositions": {
+            "COMPLETE": 30,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [
+            344,
+            356
+          ],
+          "sampled_cycles": [
+            9,
+            20,
+            31,
+            42,
+            53,
+            64,
+            76,
+            87,
+            98,
+            109,
+            120,
+            132,
+            143,
+            154,
+            165,
+            176,
+            188,
+            199,
+            210,
+            221,
+            232,
+            244,
+            255,
+            266,
+            277,
+            288,
+            300,
+            311,
+            322,
+            333
+          ],
+          "sampled_prefix_range": [
+            8214,
+            10701
+          ],
+          "successful_calls": 341,
+          "uncovered_tail_cycles": 0
+        },
+        {
+          "actual_cycles_after_last_retained_sample": 63,
+          "attempted_cycles": 448,
+          "case": "heldout16k-audit",
+          "complete_samples": 32,
+          "dispositions": {
+            "COMPLETE": 32,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [],
+          "sampled_cycles": [
+            9,
+            21,
+            33,
+            45,
+            57,
+            69,
+            81,
+            93,
+            106,
+            118,
+            130,
+            142,
+            154,
+            166,
+            178,
+            190,
+            203,
+            215,
+            227,
+            239,
+            251,
+            263,
+            275,
+            287,
+            300,
+            312,
+            324,
+            336,
+            348,
+            360,
+            372,
+            385
+          ],
+          "sampled_prefix_range": [
+            8198,
+            11012
+          ],
+          "successful_calls": 448,
+          "uncovered_tail_cycles": 63
+        }
+      ],
+      "derived": {
+        "target_graph_fraction_of_cycle_percent_median": 83.03573782014861,
+        "target_graph_remainder_after_head_and_gather_ms_median": 42.641300439834595
+      },
+      "long_request_complete_samples": 62,
+      "long_request_device_intervals_ms": {
+        "accept": {
+          "maximum": 0.370602011680603,
+          "median": 0.34942199289798737,
+          "minimum": 0.3401620090007782
+        },
+        "cycle": {
+          "maximum": 54.90912628173828,
+          "median": 54.06315040588379,
+          "minimum": 53.69298553466797
+        },
+        "draft.1.candidate_total": {
+          "maximum": 2.2969369888305664,
+          "median": 2.2639964818954468,
+          "minimum": 2.2391769886016846
+        },
+        "draft.1.graph": {
+          "maximum": 8.134815216064453,
+          "median": 7.280783414840698,
+          "minimum": 7.128972053527832
+        },
+        "draft.1.local_topk": {
+          "maximum": 0.07671999931335449,
+          "median": 0.06796000152826309,
+          "minimum": 0.06580100208520889
+        },
+        "draft.1.projection": {
+          "maximum": 2.15413498878479,
+          "median": 2.1310750246047974,
+          "minimum": 2.1030540466308594
+        },
+        "draft.1.selector_walk": {
+          "maximum": 0.010200000368058681,
+          "median": 0.009960000403225422,
+          "minimum": 0.009599999524652958
+        },
+        "draft_append": {
+          "maximum": 0.6337239742279053,
+          "median": 0.6270245015621185,
+          "minimum": 0.6206049919128418
+        },
+        "mamba_commit": {
+          "maximum": 0.30368199944496155,
+          "median": 0.2982819974422455,
+          "minimum": 0.2956019937992096
+        },
+        "next_input": {
+          "maximum": 0.0038799999747425318,
+          "median": 0.003640000009909272,
+          "minimum": 0.0034799999557435513
+        },
+        "target.1.gather": {
+          "maximum": 0.1586810052394867,
+          "median": 0.15674100071191788,
+          "minimum": 0.15348100662231445
+        },
+        "target.1.graph": {
+          "maximum": 45.07703399658203,
+          "median": 44.850215911865234,
+          "minimum": 44.64415740966797
+        },
+        "target.1.head": {
+          "maximum": 2.0574140548706055,
+          "median": 2.0511554479599,
+          "minimum": 2.0419740676879883
+        },
+        "target_probs": {
+          "maximum": 0.23756200075149536,
+          "median": 0.22874200344085693,
+          "minimum": 0.2189210057258606
+        }
+      },
+      "rank": 0
+    },
+    {
+      "coverage": [
+        {
+          "actual_cycles_after_last_retained_sample": 1,
+          "attempted_cycles": 62,
+          "case": "coding-running-totals",
+          "complete_samples": 32,
+          "dispositions": {
+            "COMPLETE": 32,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [],
+          "sampled_cycles": [
+            9,
+            10,
+            12,
+            14,
+            15,
+            17,
+            19,
+            20,
+            22,
+            24,
+            25,
+            27,
+            29,
+            30,
+            32,
+            34,
+            35,
+            37,
+            39,
+            40,
+            42,
+            44,
+            45,
+            47,
+            49,
+            50,
+            52,
+            54,
+            55,
+            57,
+            59,
+            61
+          ],
+          "sampled_prefix_range": [
+            265,
+            544
+          ],
+          "successful_calls": 62,
+          "uncovered_tail_cycles": 1
+        },
+        {
+          "actual_cycles_after_last_retained_sample": 1,
+          "attempted_cycles": 188,
+          "case": "coding-unique-last",
+          "complete_samples": 32,
+          "dispositions": {
+            "COMPLETE": 32,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [],
+          "sampled_cycles": [
+            9,
+            14,
+            20,
+            26,
+            31,
+            37,
+            43,
+            49,
+            54,
+            60,
+            66,
+            72,
+            77,
+            83,
+            89,
+            95,
+            100,
+            106,
+            112,
+            118,
+            123,
+            129,
+            135,
+            141,
+            146,
+            152,
+            158,
+            164,
+            169,
+            175,
+            181,
+            187
+          ],
+          "sampled_prefix_range": [
+            297,
+            1336
+          ],
+          "successful_calls": 188,
+          "uncovered_tail_cycles": 1
+        },
+        {
+          "actual_cycles_after_last_retained_sample": 8,
+          "attempted_cycles": 341,
+          "case": "quality16k-audit-threshold",
+          "complete_samples": 30,
+          "dispositions": {
+            "COMPLETE": 30,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [
+            344,
+            356
+          ],
+          "sampled_cycles": [
+            9,
+            20,
+            31,
+            42,
+            53,
+            64,
+            76,
+            87,
+            98,
+            109,
+            120,
+            132,
+            143,
+            154,
+            165,
+            176,
+            188,
+            199,
+            210,
+            221,
+            232,
+            244,
+            255,
+            266,
+            277,
+            288,
+            300,
+            311,
+            322,
+            333
+          ],
+          "sampled_prefix_range": [
+            8214,
+            10701
+          ],
+          "successful_calls": 341,
+          "uncovered_tail_cycles": 0
+        },
+        {
+          "actual_cycles_after_last_retained_sample": 63,
+          "attempted_cycles": 448,
+          "case": "heldout16k-audit",
+          "complete_samples": 32,
+          "dispositions": {
+            "COMPLETE": 32,
+            "FINAL_UNCOLLECTED": 0,
+            "NOT_READY": 0
+          },
+          "missing_scheduled_cycles": [],
+          "sampled_cycles": [
+            9,
+            21,
+            33,
+            45,
+            57,
+            69,
+            81,
+            93,
+            106,
+            118,
+            130,
+            142,
+            154,
+            166,
+            178,
+            190,
+            203,
+            215,
+            227,
+            239,
+            251,
+            263,
+            275,
+            287,
+            300,
+            312,
+            324,
+            336,
+            348,
+            360,
+            372,
+            385
+          ],
+          "sampled_prefix_range": [
+            8198,
+            11012
+          ],
+          "successful_calls": 448,
+          "uncovered_tail_cycles": 63
+        }
+      ],
+      "derived": {
+        "target_graph_fraction_of_cycle_percent_median": 83.01950654996219,
+        "target_graph_remainder_after_head_and_gather_ms_median": 42.64247719198465
+      },
+      "long_request_complete_samples": 62,
+      "long_request_device_intervals_ms": {
+        "accept": {
+          "maximum": 0.37400200963020325,
+          "median": 0.3540619909763336,
+          "minimum": 0.3425619900226593
+        },
+        "cycle": {
+          "maximum": 54.78309631347656,
+          "median": 54.089603424072266,
+          "minimum": 53.727073669433594
+        },
+        "draft.1.candidate_total": {
+          "maximum": 2.2980148792266846,
+          "median": 2.263954520225525,
+          "minimum": 2.2398130893707275
+        },
+        "draft.1.graph": {
+          "maximum": 7.754128932952881,
+          "median": 7.181890487670898,
+          "minimum": 7.126768112182617
+        },
+        "draft.1.local_topk": {
+          "maximum": 0.08584000170230865,
+          "median": 0.07082049921154976,
+          "minimum": 0.06708099693059921
+        },
+        "draft.1.projection": {
+          "maximum": 2.1654551029205322,
+          "median": 2.1313740015029907,
+          "minimum": 2.0904529094696045
+        },
+        "draft.1.selector_walk": {
+          "maximum": 0.010119999758899212,
+          "median": 0.009920000098645687,
+          "minimum": 0.009519999846816063
+        },
+        "draft_append": {
+          "maximum": 0.6260030269622803,
+          "median": 0.6170240044593811,
+          "minimum": 0.6092439889907837
+        },
+        "mamba_commit": {
+          "maximum": 0.3741619884967804,
+          "median": 0.3473219871520996,
+          "minimum": 0.34404200315475464
+        },
+        "next_input": {
+          "maximum": 0.003800000064074993,
+          "median": 0.003599999938160181,
+          "minimum": 0.0034799999557435513
+        },
+        "target.1.gather": {
+          "maximum": 0.15960100293159485,
+          "median": 0.1573610007762909,
+          "minimum": 0.15491999685764313
+        },
+        "target.1.graph": {
+          "maximum": 45.07691955566406,
+          "median": 44.851741790771484,
+          "minimum": 44.642845153808594
+        },
+        "target.1.head": {
+          "maximum": 2.0557730197906494,
+          "median": 2.0510129928588867,
+          "minimum": 2.048892021179199
+        },
+        "target_probs": {
+          "maximum": 0.2330009937286377,
+          "median": 0.22624099254608154,
+          "minimum": 0.21804200112819672
+        }
+      },
+      "rank": 1
+    }
+  ],
+  "profile": {
+    "both_arms": "selected snapshot",
+    "context_tokens": 16384,
+    "dflash_block": 8,
+    "draft_kv": "bf16",
+    "head": "fp32",
+    "input_tokens": [
+      226,
+      246,
+      8176,
+      8176
+    ],
+    "min_p": 0.0,
+    "natural_stops": true,
+    "presence_penalty": 0.0,
+    "reasoning_effort": "low",
+    "recurrent_state": "fp32",
+    "repetition_penalty": 1.0,
+    "target_kv": "bf16",
+    "target_weights": "fp8",
+    "temperature": 1.0,
+    "thinking": true,
+    "top_k": 20,
+    "top_p": 0.95,
+    "total_output_cap": 8192
+  },
+  "qualification": false,
+  "quality": {
+    "all_final_answer_texts_equal": true,
+    "all_task_gates_passed": 8,
+    "full_output_id_pairs": 4,
+    "full_output_id_pairs_equal": 3,
+    "functional_failures": 0,
+    "heldout_output_tokens": {
+      "control": 3352,
+      "timing": 3344
+    },
+    "heldout_reasoning_tokens": {
+      "control": 2529,
+      "timing": 2521
+    },
+    "heldout_verifier_cycles": {
+      "control": 450,
+      "timing": 448
+    },
+    "ledger_final_tokens": [
+      763,
+      821
+    ],
+    "normal_stops": 8,
+    "ungraded": 0
+  },
+  "repeats_per_arm": 1,
+  "requests": 8,
+  "requests_description": [
+    {
+      "case": "coding-running-totals",
+      "causal_observer_overhead_isolated": false,
+      "control_output_tokens": 333,
+      "control_seconds": 3.8162571839638986,
+      "control_verifier_cycles": 62,
+      "descriptive_latency_change_percent": -0.08609726200651258,
+      "output_ids_equal": true,
+      "timing_output_tokens": 333,
+      "timing_seconds": 3.812971491017379,
+      "timing_verifier_cycles": 62
+    },
+    {
+      "case": "coding-unique-last",
+      "causal_observer_overhead_isolated": false,
+      "control_output_tokens": 1101,
+      "control_seconds": 10.034137609996833,
+      "control_verifier_cycles": 188,
+      "descriptive_latency_change_percent": 0.10294592768125277,
+      "output_ids_equal": true,
+      "timing_output_tokens": 1101,
+      "timing_seconds": 10.044467346044257,
+      "timing_verifier_cycles": 188
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "causal_observer_overhead_isolated": false,
+      "control_output_tokens": 2590,
+      "control_seconds": 21.590512961964123,
+      "control_verifier_cycles": 341,
+      "descriptive_latency_change_percent": 0.2210994391449672,
+      "output_ids_equal": true,
+      "timing_output_tokens": 2590,
+      "timing_seconds": 21.63824946503155,
+      "timing_verifier_cycles": 341
+    },
+    {
+      "case": "heldout16k-audit",
+      "causal_observer_overhead_isolated": false,
+      "control_output_tokens": 3352,
+      "control_seconds": 27.00598215701757,
+      "control_verifier_cycles": 450,
+      "descriptive_latency_change_percent": -0.32447386475450424,
+      "output_ids_equal": false,
+      "timing_output_tokens": 3344,
+      "timing_seconds": 26.918354802997783,
+      "timing_verifier_cycles": 448
+    }
+  ],
+  "retained_failure": {
+    "correction_native_validated": true,
+    "earlier_native_campaign_success": false,
+    "record": "provenance/SPRINT8-NATIVE-FAILURE-20261022.json"
+  },
+  "schema": 1,
+  "scope": "Four-task sampled C1 snapshot control/timing screen; one start per arm, two ranks.",
+  "selected_reference_unchanged": true,
+  "source": {
+    "manifest_sha256": "4c01e8a97ce146ee5318a8daf5decfa07eac30d7f9f2b928506803267414280d",
+    "members": 354,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint8-corrected-ready.km1zgyvt"
+  },
+  "source_runtime_unchanged": true,
+  "starts": 2,
+  "status": "SPRINT8_ATTRIBUTION_COMPLETE_TARGET_GRAPH_BRANCH_SELECTED",
+  "transport": {
+    "archive_bytes": 16711680,
+    "archive_members": 64,
+    "argv_entries": {
+      "bf16": 255,
+      "kv4": 255
+    },
+    "binding_bytes": {
+      "control": 65411,
+      "mtp": 65391
+    },
+    "combined_transport_bytes": 33515264
+  },
+  "unique_tasks": 4
+}

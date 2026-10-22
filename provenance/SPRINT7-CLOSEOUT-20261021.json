@@ -1,0 +1,49 @@
+{
+  "additional_profile": "Aligned ring-fold at19usable recurrent slots, separately screened experimental option",
+  "all_planned_bounded_screens_complete": true,
+  "completion_kind": "Bounded screen closeout under existing owner experimental-session disposition",
+  "date": "2026-10-21",
+  "exact_output_gate_passed": false,
+  "gates": {
+    "actual_c2": "PASS_FOUR_GROUPS_BOTH_RANKS_NATIVE_ATTENTION",
+    "cache_reuse_branch_pressure": "PASS_FINAL_ANSWERS_AND_SLOT_BOOKKEEPING_FULL_OUTPUTS_VARY",
+    "cancellation_recovery_repeated_starts": "PASS_4_CANCELS_104_NORMAL_FINALS_4_STARTS",
+    "exact_output_equivalence": "OPEN_OWNER_SESSION_DISPOSITION_RETAINED",
+    "greedy_normal_stop_and_sustained_quality": "PASS_BOTH_PROFILES_8_OF_8",
+    "longer_contexts": "PASS_BOUNDED_12272_INPUT_GREEDY_CORPUS",
+    "matched_capacity_both_orders": "PASS_WITH_RETAINED_REFERENCE_OUTPUT_EXCEPTION",
+    "publisher_sampling": "PASS_8_OF_8_AND_16_EXTERNAL_NATIVE_ROUTE_WITNESSES"
+  },
+  "installed_defaults_changed": false,
+  "limitations": [
+    "No general model-quality, statistical performance, sampling-distribution or production qualification.",
+    "State-slot instrumentation verifies bookkeeping, not numerical state equality.",
+    "No deployment or new GPU campaign is granted by this closeout."
+  ],
+  "next_sprint_defined": false,
+  "numerical_equivalence": false,
+  "optional_separate_work": [
+    "FP8target attentionKV deferred byowner",
+    "Adaptive speculation unimplemented",
+    "Target shard-max unimplemented"
+  ],
+  "owner_disposition_record": "provenance/BF16-DRAFT-KV-OVERRIDE-20261021.json",
+  "persistent_server_started": false,
+  "production_qualification": false,
+  "records": [
+    "provenance/SPRINT7-MATCHED-CAPACITY-20261021.json",
+    "provenance/SPRINT7-THINKING-QUALITY-20261021.json",
+    "provenance/SPRINT7-RINGFOLD-THINKING-QUALITY-20261021.json",
+    "provenance/SPRINT7-LIFECYCLE-20261021.json",
+    "provenance/SPRINT7-SAMPLING-20261021.json"
+  ],
+  "reference": "Snapshot M2047stage1 + metadata reuse + DFlash2block8; FP8weights/BF16target anddraft KV; FP32state/head",
+  "schema": 1,
+  "selected_reference_unchanged": true,
+  "status": "BOUNDED_SPRINT7_SCREENS_COMPLETE_EXACT_OUTPUT_EXCEPTION_RETAINED",
+  "suggested_follow_up": [
+    "Define a reproducible installable serving package and runtime identity.",
+    "Plan longer mixed-workload and endurance checks before deployment.",
+    "Preserve unresolved exact-output variation; reopen on concerning behavior."
+  ]
+}

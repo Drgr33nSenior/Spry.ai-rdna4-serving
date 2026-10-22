@@ -1,0 +1,311 @@
+{
+  "active_gpu_run": false,
+  "bounded_totals": {
+    "actual_c2_groups": 2,
+    "campaigns": 3,
+    "cancellations": 2,
+    "independent_release_verified": true,
+    "model_starts": 6,
+    "normal_answer_passes": 68,
+    "requests": 70
+  },
+  "closeout_root": "fp8-3072-experimental-closeout.x9u9vgn8",
+  "date": "2026-10-22",
+  "final_review": {
+    "candidate_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+    "findings": [
+      "All nine seals verify. Greedy8, sampled8 and lifecycle52 normal answers pass, plus two cancellations and both actual C2 groups.",
+      "C2 accounting closes at41 batch-two replays/commits per rank/start. All request slots release; final accounting is8 free plus11 cached equals19.",
+      "Tokenizer-reference correction preserves authenticated donor metadata, tokenizer-byte checks and full wire decoding. Failed decoder evidence remains retained.",
+      "Patch applies exactly from CAF to the reviewed candidate."
+    ],
+    "limits": "Retain both failed forward matched-work gates, unknown numerical/hardware cause and full-output/state exceptions. The113.09\u2013113.27combinedTP2tokens/s range remains descriptive. No installed-runtime, production, distribution or endurance qualification follows.",
+    "patch_sha256": "515e4467908f1580e6a31b3a6c6dfe225482813e53ca3d645cc451b76fb98a0f",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "rollback_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "status": "APPROVED_EXPERIMENTAL_SESSION_SELECTION_NO_BLOCKING_FINDINGS"
+  },
+  "hardware_cause_established": false,
+  "installed_runtime_changed": false,
+  "matched_work_gate_passed": false,
+  "next_action": "No additional GPU campaign queued. Reliability remains deferred until tuning is exhausted.",
+  "numerical_mismatch_resolved": false,
+  "owner_requested_promotion": true,
+  "performance_claim": "Descriptive 1.7\u20131.8% latency signal only; both-order clean-work requirement remains incomplete.",
+  "physical_campaigns_started": 3,
+  "production_qualified": false,
+  "quality_campaigns": {
+    "greedy": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "greedy",
+      "matched_work_gate_passed": false,
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "e77fa68e1d1b4a877e01eb4dd693c8886afad27d834c33b3f30c92b5ec539f05",
+        "members": 223,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-greedy-run.h_chnr35",
+        "verified_utc": "2026-10-22T11:55:17.340177+00:00"
+      },
+      "reader_correction": "Tokenizer-reference dependency restored from verified donor; failed04receipt retained,04bdecoder and15reader tests passed.",
+      "reader_seal": {
+        "manifest_sha256": "c3aa261108a020bc7b1f9bf7111b50d9ba7cd21fa1ac68fbe4140aed3a0c740c",
+        "members": 124,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy-reader.k0qh43z8",
+        "verified_utc": "2026-10-22T11:59:32.022893+00:00"
+      },
+      "requests": 8,
+      "result_name": "QUALITY-RESULTS.json",
+      "result_sha256": "001cdf20f2f40c3536b3980f9baa16bdea8366a7483b48492f97ad877dace2b8",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "lifecycle": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "lifecycle",
+      "matched_work_gate_passed": false,
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "7a4cc43245dc60a7916e70cea3ff47762df8c0f0be4ac1cdcf3902fdc93420af",
+        "members": 564,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-lifecycle-run.kk7u5_6w",
+        "verified_utc": "2026-10-22T12:16:00.323647+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "94212ef920347404777627534a0a96952ce660bed715452ac4c6ecad54777dc8",
+        "members": 439,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle-reader.2_efgja7",
+        "verified_utc": "2026-10-22T12:16:16.854516+00:00"
+      },
+      "requests": 54,
+      "result_name": "LIFECYCLE-RESULTS.json",
+      "result_sha256": "c96fa862a317be5d0c433af71b18e9fd77d1e4217178497ac815825505f22127",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "sampled": {
+      "all_gates_passed": true,
+      "hardware_cause_established": false,
+      "lane": "sampled",
+      "matched_work_gate_passed": false,
+      "model_starts": 2,
+      "native_seal": {
+        "manifest_sha256": "ad59e7506b08ad177592eab3da1907029f7fa72b556335acbb8ce1b856da14e4",
+        "members": 217,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-sampled-run.uvbr_4i4",
+        "verified_utc": "2026-10-22T12:06:43.351264+00:00"
+      },
+      "reader_seal": {
+        "manifest_sha256": "4d0701ab23cff5f873975511d713ca6373a6c0309f2e61afca3eac0ba97c9c40",
+        "members": 127,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled-reader.v1a65jyv",
+        "verified_utc": "2026-10-22T12:06:53.969211+00:00"
+      },
+      "requests": 8,
+      "result_name": "QUALITY-RESULTS.json",
+      "result_sha256": "2e0675adf8fbcb2dcfb75aabe2627ece809a4f9b6bc8145daeaaae6ed521aa88",
+      "source_selected": false,
+      "status": "BOUNDED_GATES_PASS"
+    }
+  },
+  "reader_validation": "Greedy15 and sampled16 focused checks passed; tokenizer metadata refusal tests and actual full wire decoding passed. Greedy failed04 receipt retained and04b succeeded.",
+  "rollback_source_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+  "schema": 1,
+  "selected_for": "Next experimental session launch only",
+  "selected_source_changed": true,
+  "source_packets": {
+    "greedy": {
+      "admission_passed": true,
+      "launch_authorized": true,
+      "model_starts": 2,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-greedy-run.h_chnr35",
+      "native_seal": {
+        "manifest_sha256": "e77fa68e1d1b4a877e01eb4dd693c8886afad27d834c33b3f30c92b5ec539f05",
+        "members": 223,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-greedy-run.h_chnr35",
+        "verified_utc": "2026-10-22T11:55:17.340177+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy-reader.k0qh43z8",
+      "reader_seal": {
+        "manifest_sha256": "c3aa261108a020bc7b1f9bf7111b50d9ba7cd21fa1ac68fbe4140aed3a0c740c",
+        "members": 124,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy-reader.k0qh43z8",
+        "verified_utc": "2026-10-22T11:59:32.022893+00:00"
+      },
+      "requests": 8,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "greedy",
+        "matched_work_gate_passed": false,
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "e77fa68e1d1b4a877e01eb4dd693c8886afad27d834c33b3f30c92b5ec539f05",
+          "members": 223,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-greedy-run.h_chnr35",
+          "verified_utc": "2026-10-22T11:55:17.340177+00:00"
+        },
+        "reader_correction": "Tokenizer-reference dependency restored from verified donor; failed04receipt retained,04bdecoder and15reader tests passed.",
+        "reader_seal": {
+          "manifest_sha256": "c3aa261108a020bc7b1f9bf7111b50d9ba7cd21fa1ac68fbe4140aed3a0c740c",
+          "members": 124,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy-reader.k0qh43z8",
+          "verified_utc": "2026-10-22T11:59:32.022893+00:00"
+        },
+        "requests": 8,
+        "result_name": "QUALITY-RESULTS.json",
+        "result_sha256": "001cdf20f2f40c3536b3980f9baa16bdea8366a7483b48492f97ad877dace2b8",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy.e3bi79fu",
+      "source_seal": {
+        "manifest_sha256": "f8997efb5056230b2e2e6d9afa344e8c3315e4f422d45a4b0f117b40141ba056",
+        "members": 349,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy.e3bi79fu",
+        "verified_utc": "2026-10-22T11:47:21.321869+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "lifecycle": {
+      "admission_passed": true,
+      "launch_authorized": true,
+      "model_starts": 2,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-lifecycle-run.kk7u5_6w",
+      "native_seal": {
+        "manifest_sha256": "7a4cc43245dc60a7916e70cea3ff47762df8c0f0be4ac1cdcf3902fdc93420af",
+        "members": 564,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-lifecycle-run.kk7u5_6w",
+        "verified_utc": "2026-10-22T12:16:00.323647+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle-reader.2_efgja7",
+      "reader_seal": {
+        "manifest_sha256": "94212ef920347404777627534a0a96952ce660bed715452ac4c6ecad54777dc8",
+        "members": 439,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle-reader.2_efgja7",
+        "verified_utc": "2026-10-22T12:16:16.854516+00:00"
+      },
+      "requests": 54,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "lifecycle",
+        "matched_work_gate_passed": false,
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "7a4cc43245dc60a7916e70cea3ff47762df8c0f0be4ac1cdcf3902fdc93420af",
+          "members": 564,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-lifecycle-run.kk7u5_6w",
+          "verified_utc": "2026-10-22T12:16:00.323647+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "94212ef920347404777627534a0a96952ce660bed715452ac4c6ecad54777dc8",
+          "members": 439,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle-reader.2_efgja7",
+          "verified_utc": "2026-10-22T12:16:16.854516+00:00"
+        },
+        "requests": 54,
+        "result_name": "LIFECYCLE-RESULTS.json",
+        "result_sha256": "c96fa862a317be5d0c433af71b18e9fd77d1e4217178497ac815825505f22127",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle.afi1v0z5",
+      "source_seal": {
+        "manifest_sha256": "e389b9b81da7796d4dc680b341e3e2fa0fd32b08be705cedcd9b67ae15f60889",
+        "members": 372,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle.afi1v0z5",
+        "verified_utc": "2026-10-22T11:47:22.056044+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    },
+    "sampled": {
+      "admission_passed": true,
+      "launch_authorized": true,
+      "model_starts": 2,
+      "model_starts_executed": 2,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-sampled-run.uvbr_4i4",
+      "native_seal": {
+        "manifest_sha256": "ad59e7506b08ad177592eab3da1907029f7fa72b556335acbb8ce1b856da14e4",
+        "members": 217,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-sampled-run.uvbr_4i4",
+        "verified_utc": "2026-10-22T12:06:43.351264+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled-reader.v1a65jyv",
+      "reader_seal": {
+        "manifest_sha256": "4d0701ab23cff5f873975511d713ca6373a6c0309f2e61afca3eac0ba97c9c40",
+        "members": 127,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled-reader.v1a65jyv",
+        "verified_utc": "2026-10-22T12:06:53.969211+00:00"
+      },
+      "requests": 8,
+      "result": {
+        "all_gates_passed": true,
+        "hardware_cause_established": false,
+        "lane": "sampled",
+        "matched_work_gate_passed": false,
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "ad59e7506b08ad177592eab3da1907029f7fa72b556335acbb8ce1b856da14e4",
+          "members": 217,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-3072-experimental-sampled-run.uvbr_4i4",
+          "verified_utc": "2026-10-22T12:06:43.351264+00:00"
+        },
+        "reader_seal": {
+          "manifest_sha256": "4d0701ab23cff5f873975511d713ca6373a6c0309f2e61afca3eac0ba97c9c40",
+          "members": 127,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled-reader.v1a65jyv",
+          "verified_utc": "2026-10-22T12:06:53.969211+00:00"
+        },
+        "requests": 8,
+        "result_name": "QUALITY-RESULTS.json",
+        "result_sha256": "2e0675adf8fbcb2dcfb75aabe2627ece809a4f9b6bc8145daeaaae6ed521aa88",
+        "source_selected": false,
+        "status": "BOUNDED_GATES_PASS"
+      },
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled.j54y5yr0",
+      "source_seal": {
+        "manifest_sha256": "1b18127de243a544fa1bc7b88ded3976d32bec339dd1f22334f975062c07afa2",
+        "members": 349,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled.j54y5yr0",
+        "verified_utc": "2026-10-22T11:47:21.677384+00:00"
+      },
+      "status": "BOUNDED_GATES_PASS"
+    }
+  },
+  "source_patch": "patches/sglang-gfx1201-m8-3072-stages-serving.patch",
+  "source_patch_sha256": "515e4467908f1580e6a31b3a6c6dfe225482813e53ca3d645cc451b76fb98a0f",
+  "source_sha256": "7c8fa3cb33169be35edd21553fa66f7d6d71f3799dc54767fad9fc53ce130d88",
+  "status": "BOUNDED_SCREENS_COMPLETE_EXPERIMENTAL_3072_SELECTED",
+  "tracking": "docs/M8-3072-EXPERIMENTAL.md",
+  "validation_commands": [
+    "python3 -B finish_packet.py sampled",
+    "python3 -B finish_packet.py lifecycle",
+    "python3 -B verify_completed_packets.py",
+    "python3 -B prepare_selection.py"
+  ]
+}

@@ -1,0 +1,2365 @@
+{
+  "active_gpu_run": false,
+  "affected_bounded_quality_gates": "NOT_RUN_PREDECLARED_CONFIRMATION_STOP_CONDITION",
+  "affected_preparation": {
+    "greedy": {
+      "admission_passed": false,
+      "launch_authorized": false,
+      "model_starts": 2,
+      "model_starts_executed": 0,
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy-reader.k0qh43z8",
+      "requests": 8,
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-greedy.e3bi79fu",
+      "status": "PARKED_UNLAUNCHED_CONFIRMATION_GATE_FAILED"
+    },
+    "lifecycle": {
+      "admission_passed": false,
+      "launch_authorized": false,
+      "model_starts": 2,
+      "model_starts_executed": 0,
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle-reader.2_efgja7",
+      "requests": 54,
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-lifecycle.afi1v0z5",
+      "status": "PARKED_UNLAUNCHED_CONFIRMATION_GATE_FAILED"
+    },
+    "sampled": {
+      "admission_passed": false,
+      "launch_authorized": false,
+      "model_starts": 2,
+      "model_starts_executed": 0,
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled-reader.v1a65jyv",
+      "requests": 8,
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-sampled.j54y5yr0",
+      "status": "PARKED_UNLAUNCHED_CONFIRMATION_GATE_FAILED"
+    }
+  },
+  "all_completed_native_releases_verified": true,
+  "baseline": {
+    "combined_tp2_rates": [
+      {
+        "median_output_tokens_per_second": 111.44082002263059,
+        "median_request_seconds": 9.188733534014318,
+        "order": [
+          "reference",
+          "candidate"
+        ]
+      },
+      {
+        "median_output_tokens_per_second": 111.38218474746898,
+        "median_request_seconds": 9.193570788018405,
+        "order": [
+          "candidate",
+          "reference"
+        ]
+      }
+    ],
+    "concurrency": 1,
+    "forced_output_tokens": 1024,
+    "input_tokens": 2047,
+    "reasoning_effort": "low",
+    "source_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "sprint10_record": "provenance/SPRINT10-M8-SERVING-20261022.json",
+    "thinking": true,
+    "timing_scope": "Client request to terminal completion, including prefill; output IDs include reasoning.",
+    "warmup_excluded": true
+  },
+  "candidate_selected": false,
+  "completed_component_campaigns": 5,
+  "completed_component_exact_comparisons": 480,
+  "completed_component_timed_launches": 320,
+  "completed_native_campaigns": 9,
+  "component_owner_seconds": 110.57563445100095,
+  "component_owner_seconds_scope": "Sum of five separate owner elapsed times; not GPU-only execution or aggregate budget qualification.",
+  "component_packet": {
+    "active_seconds": 1200,
+    "cases": 4,
+    "cleanup_seconds": 30,
+    "device_tensor_limit_bytes": 268435456,
+    "eager_comparisons": 72,
+    "gpus_tested_sequentially": 2,
+    "graph_comparisons": 24,
+    "mode": "fp8-m8-down-stage-depth-v1",
+    "model_starts": 0,
+    "owner_limits": {
+      "cpu": 24,
+      "ram_bytes": 40802189312,
+      "scratch_tmpfs_bytes": 335544320,
+      "tasks": 512,
+      "threads": 2,
+      "trace_aggregate_bytes": 33554432,
+      "trace_per_file_bytes": 16777216
+    },
+    "package_sha256": "2da3168a4fe9c68bbb00287705bb2f87fd701de7d12a2e12923d501c0e30a9ad",
+    "sources": 20,
+    "timed_launches": 64,
+    "total_seconds": 1500,
+    "worker_seconds": 600
+  },
+  "component_results": [
+    {
+      "native_root": "fp8-sprint11-run.b_rnq8cv",
+      "native_seal": {
+        "manifest_sha256": "84cbee0993282f1d97d2bd134b18c0a68cf92466f02d9e17aa310c447824b06c",
+        "members": 155,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-run.b_rnq8cv",
+        "verified_utc": "2026-10-22T10:23:20.498107+00:00"
+      },
+      "remote_seals": {
+        "protected": {
+          "manifest_sha256": "0271a066f1f135c65a55921a636c3034d52f4fee1414e784c1ea0d275a224797",
+          "member_count": 19,
+          "root": "/var/tmp/fp8-stage-depth-source.8c3282fd990e0017"
+        },
+        "workload": {
+          "manifest_sha256": "90a89b7bc3c0c7ac33e4c8e457331f0f07312ae5e5a9cca72ca114309c2740a2",
+          "member_count": 54,
+          "root": "/home/developer/fp8-kv-benchmark.8c3282fd990e0017"
+        }
+      },
+      "result": {
+        "cases": 4,
+        "cases_detail": [
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.08871499821543694,
+              "3": 0.08279500156641006
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "speedup_stage1": 0.9332694948079618,
+            "time_reduction_stage1": -0.07150186046289786
+          },
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.08475999906659126,
+              "3": 0.08420999720692635
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "speedup_stage1": 0.9935110681250384,
+            "time_reduction_stage1": -0.006531313120856863
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.08768000081181526,
+              "3": 0.0842754989862442
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "speedup_stage1": 0.9611712842831966,
+            "time_reduction_stage1": -0.04039729063042108
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.08870000019669533,
+              "3": 0.08164000138640404
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "speedup_stage1": 0.9204058760469505,
+            "time_reduction_stage1": -0.08647720100929623
+          }
+        ],
+        "comparisons": 96,
+        "compiler_resources": [
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              8704
+            ],
+            "stage": 1
+          }
+        ],
+        "eager_comparisons": 72,
+        "graph_comparisons": 24,
+        "independent_release_verified": true,
+        "limitations": [
+          "Synthetic component inputs, not retained model operands.",
+          "Random exactness is against the current stage3 baseline; structured exactness uses an independent analytical oracle.",
+          "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+          "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+          "No end-to-end serving gain or model-quality conclusion.",
+          "Runtime warnings, if any, remain in the retained raw execution logs."
+        ],
+        "max_allocated_bytes": 44731392,
+        "model_starts": 0,
+        "payload_seconds": 4.168789948977064,
+        "physical_seconds": 22.791613715002313,
+        "qualification": false,
+        "runtime_changed": false,
+        "source_promoted": false,
+        "stage1_speedup_geomean": 0.9516779074493961,
+        "stage1_speedup_range": [
+          0.9204058760469505,
+          0.9935110681250384
+        ],
+        "stage1_time_reduction_range": [
+          -0.08647720100929623,
+          -0.006531313120856863
+        ],
+        "status": "M8_DOWN_STAGE_DEPTH_COMPONENT_PASS",
+        "timed_launches": 64,
+        "unresolved": false
+      },
+      "shape": [
+        8,
+        5120,
+        8704
+      ],
+      "status": "PARKED_SLOWER"
+    },
+    {
+      "native_root": "fp8-sprint11-8192.02018qp9",
+      "native_seal": {
+        "manifest_sha256": "cb277e87fbeaf103dcfa556e17d8d2e1a2634e36edb5c8c51870a310c445b6e6",
+        "members": 154,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-8192.02018qp9",
+        "verified_utc": "2026-10-22T10:23:20.721264+00:00"
+      },
+      "remote_seals": {
+        "protected": {
+          "manifest_sha256": "29a739ec94518b962c5e9ab03b9a1afce14bc6accfbffb24eb7485643c315109",
+          "member_count": 19,
+          "root": "/var/tmp/fp8-stage-depth-source.cea5b7dea7c94d3a"
+        },
+        "workload": {
+          "manifest_sha256": "b316d4b087cae1576c483d4ef24a3eac86b7388e606bf0a42ef82ddfc9ba6e42",
+          "member_count": 54,
+          "root": "/home/developer/fp8-kv-benchmark.cea5b7dea7c94d3a"
+        }
+      },
+      "result": {
+        "cases": 4,
+        "cases_detail": [
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.06858500093221664,
+              "3": 0.06988000124692917
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "speedup_stage1": 1.018881683999573,
+            "time_reduction_stage1": 0.018531772919357703
+          },
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.06879499927163124,
+              "3": 0.06746049970388412
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "speedup_stage1": 0.9806017939984568,
+            "time_reduction_stage1": -0.019781940151716304
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.06700050085783005,
+              "3": 0.06825999915599823
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "speedup_stage1": 1.0187983415353974,
+            "time_reduction_stage1": 0.01845148423295151
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.06716000288724899,
+              "3": 0.06773999705910683
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "speedup_stage1": 1.00863600576122,
+            "time_reduction_stage1": 0.00856206372952395
+          }
+        ],
+        "comparisons": 96,
+        "compiler_resources": [
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              8192,
+              5120
+            ],
+            "stage": 1
+          }
+        ],
+        "eager_comparisons": 72,
+        "graph_comparisons": 24,
+        "independent_release_verified": true,
+        "limitations": [
+          "Synthetic component inputs, not retained model operands.",
+          "Random exactness is against the current stage3 baseline; structured exactness uses an independent analytical oracle.",
+          "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+          "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+          "No end-to-end serving gain or model-quality conclusion.",
+          "Runtime warnings, if any, remain in the retained raw execution logs."
+        ],
+        "max_allocated_bytes": 42128384,
+        "model_starts": 0,
+        "payload_seconds": 3.8815079409978352,
+        "physical_seconds": 20.693935653020162,
+        "qualification": false,
+        "runtime_changed": false,
+        "source_promoted": false,
+        "stage1_speedup_geomean": 1.006606623678013,
+        "stage1_speedup_range": [
+          0.9806017939984568,
+          1.018881683999573
+        ],
+        "stage1_time_reduction_range": [
+          -0.019781940151716304,
+          0.018531772919357703
+        ],
+        "status": "M8_8192_STAGE_DEPTH_COMPONENT_PASS",
+        "timed_launches": 64,
+        "unresolved": false
+      },
+      "shape": [
+        8,
+        8192,
+        5120
+      ],
+      "status": "PARKED_MIXED"
+    },
+    {
+      "delta": "Tile64 to32, stage1 fixed",
+      "native_root": "fp8-sprint11-tile32-run.r4s9a_xk",
+      "native_seal": {
+        "manifest_sha256": "193eb7ee03a5ac22db84301166df9639b64cccd0d35e9bd36dd6304f020b360b",
+        "members": 152,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-tile32-run.r4s9a_xk",
+        "verified_utc": "2026-10-22T10:23:20.804266+00:00"
+      },
+      "remote_seals": {
+        "protected": {
+          "manifest_sha256": "bc48d35e19ff21b74c67b65c882ec1bab79776da948e43e4c10a8e1da802a393",
+          "member_count": 19,
+          "root": "/var/tmp/fp8-stage-depth-source.38036cdee64580ce"
+        },
+        "workload": {
+          "manifest_sha256": "b37d0269541d4d545cb401f7b2c683af1f299384ab1ef82cd885e7da3fad99f5",
+          "member_count": 54,
+          "root": "/home/developer/fp8-kv-benchmark.38036cdee64580ce"
+        }
+      },
+      "result": {
+        "cases": 4,
+        "cases_detail": [
+          {
+            "device": 0,
+            "median_ms": {
+              "0": 0.18425999581813812,
+              "1": 0.18258000165224075
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "speedup_tile32": 1.0092014139045593,
+            "time_reduction_tile32": 0.009117519830812881
+          },
+          {
+            "device": 0,
+            "median_ms": {
+              "0": 0.18476000428199768,
+              "1": 0.18271999806165695
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "speedup_tile32": 1.011164657629059,
+            "time_reduction_tile32": 0.011041384353006833
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "0": 0.18367999792099,
+              "1": 0.18307999521493912
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "speedup_tile32": 1.0032772707107975,
+            "time_reduction_tile32": 0.003266565292041057
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "0": 0.18533999472856522,
+              "1": 0.18348000198602676
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "speedup_tile32": 1.01013730500548,
+            "time_reduction_tile32": 0.010035571357722595
+          }
+        ],
+        "comparisons": 96,
+        "compiler_resources": [
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "num_stages": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 64,
+            "variant": 0
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "num_stages": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 145,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 32,
+            "variant": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "num_stages": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 64,
+            "variant": 0
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "num_stages": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 145,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 32,
+            "variant": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "num_stages": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 64,
+            "variant": 0
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "num_stages": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 145,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 32,
+            "variant": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "num_stages": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 64,
+            "variant": 0
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "num_stages": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 145,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              17408,
+              5120
+            ],
+            "tile_m": 32,
+            "variant": 1
+          }
+        ],
+        "eager_comparisons": 72,
+        "graph_comparisons": 24,
+        "independent_release_verified": true,
+        "limitations": [
+          "Synthetic component inputs, not retained model operands.",
+          "Random exactness is against the selected tile64/stage1 baseline; structured exactness uses an independent analytical oracle.",
+          "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+          "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+          "No end-to-end serving gain or model-quality conclusion.",
+          "Runtime warnings, if any, remain in the retained raw execution logs."
+        ],
+        "max_allocated_bytes": 90522112,
+        "model_starts": 0,
+        "payload_seconds": 4.072535043000244,
+        "physical_seconds": 22.417109914997127,
+        "qualification": false,
+        "runtime_changed": false,
+        "source_promoted": false,
+        "status": "M8_GATEUP_TILE32_COMPONENT_PASS",
+        "tile32_speedup_geomean": 1.0084404995887966,
+        "tile32_speedup_range": [
+          1.0032772707107975,
+          1.011164657629059
+        ],
+        "tile32_time_reduction_range": [
+          0.003266565292041057,
+          0.011041384353006833
+        ],
+        "timed_launches": 64,
+        "unresolved": false
+      },
+      "shape": [
+        8,
+        17408,
+        5120
+      ],
+      "status": "PARKED_NO_ELIGIBLE_SERVING_WIN"
+    },
+    {
+      "native_root": "fp8-sprint11-7168-run.jqeczbuq",
+      "native_seal": {
+        "manifest_sha256": "1bdbbb5488f7dba3e29cb28781bad6ada7630ed2a9b717059dff668b142b0d91",
+        "members": 152,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-7168-run.jqeczbuq",
+        "verified_utc": "2026-10-22T10:47:19.601817+00:00"
+      },
+      "result": {
+        "cases": 4,
+        "cases_detail": [
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.06606050208210945,
+              "3": 0.0635799989104271
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "speedup_stage1": 0.9624510396757319,
+            "time_reduction_stage1": -0.03901389138393885
+          },
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.06262100115418434,
+              "3": 0.06233999878168106
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "speedup_stage1": 0.9955126496331255,
+            "time_reduction_stage1": -0.0045075774461813545
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.0615605004131794,
+              "3": 0.06408550031483173
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "speedup_stage1": 1.041016559071241,
+            "time_reduction_stage1": 0.03940048668182061
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.06486000120639801,
+              "3": 0.06105999834835529
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "speedup_stage1": 0.9414122296120483,
+            "time_reduction_stage1": -0.0622339168167545
+          }
+        ],
+        "comparisons": 96,
+        "compiler_resources": [
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              7168,
+              5120
+            ],
+            "stage": 1
+          }
+        ],
+        "eager_comparisons": 72,
+        "graph_comparisons": 24,
+        "independent_release_verified": true,
+        "limitations": [
+          "Synthetic component inputs, not retained model operands.",
+          "Random exactness is against the current stage3 baseline; structured exactness uses an independent analytical oracle.",
+          "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+          "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+          "No end-to-end serving gain or model-quality conclusion.",
+          "Runtime warnings, if any, remain in the retained raw execution logs."
+        ],
+        "max_allocated_bytes": 37916672,
+        "model_starts": 0,
+        "payload_seconds": 4.1033139459905215,
+        "physical_seconds": 23.124464444990736,
+        "qualification": false,
+        "runtime_changed": false,
+        "source_promoted": false,
+        "stage1_speedup_geomean": 0.9843866733582762,
+        "stage1_speedup_range": [
+          0.9414122296120483,
+          1.041016559071241
+        ],
+        "stage1_time_reduction_range": [
+          -0.0622339168167545,
+          0.03940048668182061
+        ],
+        "status": "M8_7168_STAGE_DEPTH_COMPONENT_PASS",
+        "timed_launches": 64,
+        "unresolved": false
+      },
+      "shape": [
+        8,
+        7168,
+        5120
+      ],
+      "status": "PARKED_MIXED"
+    },
+    {
+      "native_root": "fp8-sprint11-3072-run.ryo_pdde",
+      "native_seal": {
+        "manifest_sha256": "462c63694df51547bf03627f87f79b38742368488b581cb9496aa35b437ef08c",
+        "members": 152,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-run.ryo_pdde",
+        "verified_utc": "2026-10-22T10:47:19.681267+00:00"
+      },
+      "result": {
+        "cases": 4,
+        "cases_detail": [
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.04487999901175499,
+              "3": 0.04876049980521202
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "speedup_stage1": 1.0864639233267508,
+            "time_reduction_stage1": 0.07958287566696032
+          },
+          {
+            "device": 0,
+            "median_ms": {
+              "1": 0.04842500016093254,
+              "3": 0.049639999866485596
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "speedup_stage1": 1.0250903397318576,
+            "time_reduction_stage1": 0.02447622298188923
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.04547999985516071,
+              "3": 0.050420500338077545
+            },
+            "pattern": "structured",
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "speedup_stage1": 1.108630178070597,
+            "time_reduction_stage1": 0.09798594718001574
+          },
+          {
+            "device": 1,
+            "median_ms": {
+              "1": 0.047160498797893524,
+              "3": 0.048185501247644424
+            },
+            "pattern": "random",
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "speedup_stage1": 1.0217343428478896,
+            "time_reduction_stage1": 0.02127200969609111
+          }
+        ],
+        "comparisons": 96,
+        "compiler_resources": [
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 0,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "structured",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 1
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 256,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 3,
+              "metadata.num_warps": 4,
+              "metadata.shared": 49664
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 3
+          },
+          {
+            "compilation_errors": [],
+            "device": 1,
+            "pattern": "random",
+            "resources": {
+              "compiled.n_regs": 238,
+              "compiled.n_spills": 0,
+              "metadata.num_stages": 1,
+              "metadata.num_warps": 4,
+              "metadata.shared": 16384
+            },
+            "shape": [
+              8,
+              5120,
+              3072
+            ],
+            "stage": 1
+          }
+        ],
+        "eager_comparisons": 72,
+        "graph_comparisons": 24,
+        "independent_release_verified": true,
+        "limitations": [
+          "Synthetic component inputs, not retained model operands.",
+          "Random exactness is against the current stage3 baseline; structured exactness uses an independent analytical oracle.",
+          "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+          "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+          "No end-to-end serving gain or model-quality conclusion.",
+          "Runtime warnings, if any, remain in the retained raw execution logs."
+        ],
+        "max_allocated_bytes": 16890368,
+        "model_starts": 0,
+        "payload_seconds": 3.4721906060003676,
+        "physical_seconds": 21.548510722990613,
+        "qualification": false,
+        "runtime_changed": false,
+        "source_promoted": false,
+        "stage1_speedup_geomean": 1.0598039518178322,
+        "stage1_speedup_range": [
+          1.0217343428478896,
+          1.108630178070597
+        ],
+        "stage1_time_reduction_range": [
+          0.02127200969609111,
+          0.09798594718001574
+        ],
+        "status": "M8_3072_STAGE_DEPTH_COMPONENT_PASS",
+        "timed_launches": 64,
+        "unresolved": false
+      },
+      "shape": [
+        8,
+        5120,
+        3072
+      ],
+      "status": "PARKED_UNQUALIFIED_SERVING_SIGNAL_CONFIRMATION_GATE_FAILED"
+    }
+  ],
+  "cpu_checks": {
+    "errors": 0,
+    "failures": 0,
+    "native_imports": false,
+    "skips": 0,
+    "tests": 34
+  },
+  "current_candidate": {
+    "baseline_configuration": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 64,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "num_stages": 3,
+      "num_warps": 4
+    },
+    "baseline_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "candidate_delta": "Only num_stages3 to1 for exact untuned HIP/BF16 M8 N5120/K3072; preserve selected gate/up stage1 and all other shapes.",
+    "candidate_sha256": "c384cc2b50b51e0d8099df80e7993d30946d3da213ed1dbc33920774d13a0305",
+    "config_observation": "CURRENT-CONFIG-OBSERVATION.json",
+    "dispatch_status": "SELECTED_SOURCE_AND_CONFIG_ABSENCE_BOUND",
+    "hardware_scope": "Two existing R9700 gfx1201 cards; inherited HIP guard is not architecture-specific.",
+    "kernel": "_w8a8_block_fp8_matmul",
+    "native_kernel_ast_equal": true,
+    "native_warnings": "NATIVE-DISPATCH-WITNESSES.json",
+    "numerical_contract": "No split-K, precision, rounding or kernel-body change; exact native component comparisons required.",
+    "schema": 1,
+    "shape": [
+      8,
+      5120,
+      3072
+    ],
+    "shape_derivation": "C1 block8 uses M8. Both-rank authenticated N5120/K3072 fallback warnings and current absence observation imply default tile64/stage3 under selected cafc15 source."
+  },
+  "current_candidate_root": "fp8-sprint11-3072.tcfw4rwf",
+  "current_native_root": "fp8-sprint11-3072-confirm-run.rd2jyh8g",
+  "current_pilot_model_starts_authorized": 0,
+  "date": "2026-10-22",
+  "deferred": [
+    "Reliability/endurance testing by owner direction.",
+    "Ring-fold/M8 combined comparison remains a separate candidate.",
+    "FP8 target KV, adaptive speculation and C2 throughput tuning remain separate."
+  ],
+  "donor_seals": {
+    "classification": {
+      "manifest_sha256": "bac6d676e000247337f6a2c1682ebdca86dcddde99cad430cd2416dff2455524",
+      "members": 359,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-target-recovery.0ntu1ci3"
+    },
+    "closeout": {
+      "manifest_sha256": "e15115940bc7978d62f6506e81399941ceffd19c8dd733c3cef6ebc0aef7c590",
+      "members": 49,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint10-closeout.cfi6jvlc"
+    },
+    "component": {
+      "manifest_sha256": "1a2bc0c3b8e73d4e8885eae44fdd1612dfceda1ce791a93d4e32e407d154f41c",
+      "members": 56,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint9-m8-ready.ums448w5"
+    },
+    "selected": {
+      "manifest_sha256": "6942ab55577cf29057dfa5549bb0044ecc44ff6d10028c2b2cd3f3543f1927fc",
+      "members": 337,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint10-greedy-ready.ibu26j_5"
+    }
+  },
+  "excluded_warmup_requests": 8,
+  "execution_root": "fp8-sprint11-run.b_rnq8cv",
+  "final_3072_comparison": {
+    "all_orders_clean_speed_comparison_eligible": false,
+    "all_releases_verified": true,
+    "interpretation": "Descriptive medians retain every sample. A reverse result cannot retroactively qualify the failed forward clean-work gate. No source selection follows from this aggregate alone.",
+    "measured_cycle_pairs_matched": 7,
+    "measured_requests": 18,
+    "model_starts": 6,
+    "numerical_mismatch_resolved": false,
+    "order_pair_count": 12,
+    "orders": [
+      {
+        "candidate_seconds": 9.040335330995731,
+        "candidate_tok_s": 113.27013462532848,
+        "clean_speed_comparison_eligible": false,
+        "descriptive_latency_change_percent": -1.7402736862017765,
+        "descriptive_rate_change_percent": 1.7710955968309072,
+        "order": [
+          "target-stage3",
+          "target-stage1"
+        ],
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 165,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": false,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          }
+        ],
+        "reader_seal": {
+          "manifest_sha256": "dc65179867c6e51ea0dbaa53fed762f996bf3f370dfedf3c3fb03232ab3c1ce4",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reader.kig5lg15",
+          "verified_utc": "2026-10-22T11:02:05.428920+00:00"
+        },
+        "reference_seconds": 9.200448311981745,
+        "reference_tok_s": 111.29892427811856,
+        "result_sha256": "21013bb94bac6e783198892f6f8f3cd34fad20e6d6de0a69dca795ee702fb4a1",
+        "samples": [
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.21104198799003,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.6847316497457077,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.368882516981103,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.040335330995731,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.7233871049913252,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.198867426021025,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 165,
+            "candidate_seconds": 9.094954189960845,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.1567609501084597,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.201392302988097,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.039927599020302,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.744705339547381,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.200448311981745,
+            "warmup": false
+          }
+        ]
+      },
+      {
+        "candidate_seconds": 9.054347632976715,
+        "candidate_tok_s": 113.09484034724973,
+        "clean_speed_comparison_eligible": true,
+        "descriptive_latency_change_percent": -1.7607599573604027,
+        "descriptive_rate_change_percent": 1.7923183817343924,
+        "order": [
+          "target-stage1",
+          "target-stage3"
+        ],
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          }
+        ],
+        "reader_seal": {
+          "manifest_sha256": "4640aab692309f0a814f59631454e6179641f257b19b6f29f05be08b6d86936f",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-reader.zst_secu",
+          "verified_utc": "2026-10-22T11:13:40.065552+00:00"
+        },
+        "reference_seconds": 9.216630369948689,
+        "reference_tok_s": 111.10351168457468,
+        "result_sha256": "7f456fc4030207aeb35f3a90c6a908561f1099cbfc8dd48c59169c8261bcce64",
+        "samples": [
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.222240272036288,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.5548459770614365,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.367896636016667,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.070606642984785,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.6147238265720398,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.219475714024156,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.054152552969754,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.7628765661331314,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.216630369948689,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.054347632976715,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.6378727088474432,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.205115711025428,
+            "warmup": false
+          }
+        ]
+      },
+      {
+        "candidate_seconds": 9.041194254998118,
+        "candidate_tok_s": 113.25937383038931,
+        "clean_speed_comparison_eligible": false,
+        "descriptive_latency_change_percent": -1.6779949391335314,
+        "descriptive_rate_change_percent": 1.7066321400735829,
+        "order": [
+          "target-stage3",
+          "target-stage1"
+        ],
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 167,
+            "verification_cycles_equal": false,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          }
+        ],
+        "reader_seal": {
+          "manifest_sha256": "27602bbd5d05b43b989f883a975ba4c74c5271c9867feb479bcd0564fb51afc3",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm-reader.evu8wp4v",
+          "verified_utc": "2026-10-22T11:24:45.899814+00:00"
+        },
+        "reference_seconds": 9.195494182000402,
+        "reference_tok_s": 111.35888726942106,
+        "result_sha256": "790c183e6dd1e19783b049f4afc736ccea109318bef77f820bfc8e960dbd6684",
+        "samples": [
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.209059178014286,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.4951175437100561,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.348835254029837,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.056622263975441,
+            "differing_output_positions": 0,
+            "latency_change_percent": -3.2033749075243256,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 167,
+            "reference_seconds": 9.35634094197303,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.041194254998118,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.6779949391335314,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.195494182000402,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "candidate_seconds": 9.033467129978817,
+            "differing_output_positions": 0,
+            "latency_change_percent": -1.7598881733682181,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "reference_seconds": 9.195294021978043,
+            "warmup": false
+          }
+        ]
+      }
+    ],
+    "output_pairs_matched": 12,
+    "production_qualified": false,
+    "requests": 24,
+    "schema": 1,
+    "selected_source_changed": false,
+    "task_quality_measured": false,
+    "warmup_requests": 6
+  },
+  "final_disposition": "Park every Sprint11 candidate. Keep cafc15 selected. The3072 candidate has a consistent descriptive timing signal but failed the predeclared forward confirmation work gate.",
+  "final_review": {
+    "confirmation_result_sha256": "790c183e6dd1e19783b049f4afc736ccea109318bef77f820bfc8e960dbd6684",
+    "further_BB_launches_permitted": false,
+    "new_correctness_blocker": false,
+    "numerical_root_cause_reopened": false,
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "STOP_AND_PARK_RETAIN_CAFC15"
+  },
+  "first_candidate": {
+    "baseline_configuration": {
+      "BLOCK_SIZE_K": 128,
+      "BLOCK_SIZE_M": 64,
+      "BLOCK_SIZE_N": 128,
+      "GROUP_SIZE_M": 32,
+      "num_stages": 3,
+      "num_warps": 4
+    },
+    "baseline_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "candidate_delta": "num_stages 3 to 1 for exact untuned HIP/BF16 M8 down shape only; preserve gate/up stage1 and M2047",
+    "candidate_sha256": "b1f6276273ed6d2031c24a2eb6c5fbe8c088a965f34f6bc0f1106edda7ea460f",
+    "config_observation": "CURRENT-CONFIG-OBSERVATION.json",
+    "dispatch_status": "SOURCE_AND_NATIVE_WARNING_DERIVATION_COMPLETE_CURRENT_CONFIGS_ABSENT",
+    "hardware_scope": "Two existing R9700 gfx1201 cards; inherited HIP guard is not architecture-specific.",
+    "kernel": "_w8a8_block_fp8_matmul",
+    "native_kernel_ast_equal": true,
+    "native_warnings": "NATIVE-DISPATCH-WITNESSES.json",
+    "numerical_contract": "No split-K, precision, rounding or kernel-body change; exact native component comparisons required.",
+    "schema": 1,
+    "shape": [
+      8,
+      5120,
+      8704
+    ],
+    "shape_derivation": "C1 block-eight verifier uses M8; the recorded TP2 MLP down-projection N/K configuration is absent, so the selected source uses default stage3 for this shape."
+  },
+  "fixed_work_requests": 32,
+  "independent_review": {
+    "calculated_tensor_upper_bound_bytes": 53117760,
+    "candidate_sha256": "b1f6276273ed6d2031c24a2eb6c5fbe8c088a965f34f6bc0f1106edda7ea460f",
+    "cpu_checks": 34,
+    "execution_tested_identities_sha256": "ff650364a9e1a5dfc2895b8a777f67ee14d3b4151756560f60516c4fd7c78a07",
+    "human_launch_required_under_current_AGENTS": true,
+    "native_parity_and_performance_measured": false,
+    "package_sha256": "2da3168a4fe9c68bbb00287705bb2f87fd701de7d12a2e12923d501c0e30a9ad",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Exact one-line stage-depth dispatch extension, unchanged kernel and protected helpers; owner limits unchanged; structured oracle and mutable execution-root test receipts verified.",
+    "status": "NO_TECHNICAL_BLOCKER_FOR_BOUNDED_COMPONENT_ATTEMPT"
+  },
+  "launch_prepared": false,
+  "launch_status": "All nine physical campaigns complete and independently released. No B/B launches or persistent server.",
+  "measured_fixed_work_requests": 24,
+  "milestones": [
+    {
+      "name": "11.1 Authenticate selected baseline, inventory fallback shapes and prepare first component",
+      "status": "CPU_AND_REVIEW_COMPLETE"
+    },
+    {
+      "name": "11.2 Run exact component comparisons and native timing on both cards",
+      "status": "FIVE_COMPONENT_CAMPAIGNS_480_EXACT_CHECKS_COMPLETE"
+    },
+    {
+      "name": "11.3 Advance a measured component win to matched serving, or park it and choose next bounded configuration",
+      "status": "PARKED_CANDIDATES_FORWARD_CONFIRMATION_GATE_FAILED_NO_BB_LAUNCH"
+    }
+  ],
+  "model_starts": 8,
+  "name": "Remaining projection tuning",
+  "native_campaigns": 9,
+  "native_dispatch_donor": {
+    "manifest_sha256": "a070ab6689c0e4c629cfaf7a9d678219032372917ec15cec9cf6bc7a1baaeb20",
+    "members": 226,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint10-greedy-run.a9zdilx5"
+  },
+  "native_failures": 0,
+  "next_action": "Next tuning opportunity: an isolated exact-shape common-versus-native-unrolled component. No GPU campaign prepared or reserved. The 3072 option remains unqualified.",
+  "next_source_opportunity": {
+    "cases": [
+      {
+        "M": 8,
+        "N": 5120,
+        "helper_return": null,
+        "selected_kernel": "common"
+      },
+      {
+        "M": 8,
+        "N": 7168,
+        "helper_return": null,
+        "selected_kernel": "common"
+      },
+      {
+        "M": 8,
+        "N": 8192,
+        "helper_return": null,
+        "selected_kernel": "common"
+      },
+      {
+        "M": 8,
+        "N": 17408,
+        "helper_return": null,
+        "selected_kernel": "common"
+      }
+    ],
+    "cpu_fixture": "Actual helper/selector AST with declared cdiv and64-core-count substitute; not a native hardware observation.",
+    "findings": "The pinned HIP helper computes its workgroup predicate but has no return; this selector therefore always chooses the common kernel. Intent and performance of the alternate kernel remain unverified.",
+    "gpu_work": false,
+    "helper": "use_w8a8_block_fp8_matmul_unrolledx4",
+    "helper_source": "def use_w8a8_block_fp8_matmul_unrolledx4(M, N, META):\n        # Use manually unrolledx4 kernel on AMD GPU when the grid size is small.\n        # Empirical testing shows the sweet spot lies when it's less than the # of\n        # compute units available on the device.\n        num_workgroups = triton.cdiv(M, META[\"BLOCK_SIZE_M\"]) * triton.cdiv(\n            N, META[\"BLOCK_SIZE_N\"]\n        )\n        num_workgroups <= get_device_core_count()",
+    "native_framework_imports": false,
+    "recommended_scope": "Next tuning sprint: isolated exact-shape common versus native unrolledx4 component, same stack/precision and bounded owner. Do not apply a global return fix or enable all low-grid shapes without evidence.",
+    "runtime_changed": false,
+    "source_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+    "status": "SOURCE_OPPORTUNITY_IDENTIFIED_NOT_GPU_TESTED"
+  },
+  "numerical_mismatch_resolved": false,
+  "owner_direction": "Exhaust tuning before reliability/endurance testing.",
+  "owner_sudo_continuation_authorized": true,
+  "preparation_root": "fp8-sprint11-author.awcw0why",
+  "preparation_seal": {
+    "manifest_sha256": "70714d0c187e0043ffd2b900dbea352156c997f2e878319416e56ca19a48e78b",
+    "members": 97,
+    "root": "fp8-sprint11-author.awcw0why"
+  },
+  "preserved_profile": {
+    "additional_profile_timing_events": false,
+    "context_length": 16384,
+    "dflash_block_size": 8,
+    "draft_attention_kv": "bf16",
+    "draft_kv_override": "--speculative-draft-kv-cache-dtype bf16",
+    "graph_buckets": [
+      1,
+      2
+    ],
+    "head": "fp32",
+    "kv_token_slots": 16416,
+    "m2047_stage1": true,
+    "metadata_reuse": true,
+    "other_runtime_flags": "unchanged",
+    "recurrent_path": "snapshot",
+    "recurrent_physical_slots_per_card": 20,
+    "recurrent_state": "fp32",
+    "recurrent_usable_slots_per_card": 19,
+    "target_attention_kv": "bf16",
+    "target_weights": "fp8"
+  },
+  "production_qualified": false,
+  "provenance_corrections": [
+    "The sealed 8192 component retains inherited down-projection wording and nonlocal descriptive references in DISPATCH-PROOF.json. Its explicit shape, candidate source, driver, tests and native results bind (8,8192,5120). This correction does not alter that sealed evidence.",
+    "Tile32 startup fixtures initially expected a pre-Sprint10 source. The retained failed receipt was corrected to the selected cafc15 source; other model-source equality checks remained enforced before launch.",
+    "Tile32 measured output pair 1 differs in 691 positions over the full 1024-token continuation. Its first divergence repeats the known index124 token pair; the full continuation is not merely a capitalization-only difference.",
+    "Reverse3072 startup fixture originally required forward owner mapping. The failed receipt remains; only expected order and test name changed before passing35startup and23packet checks.",
+    "Greedy/sampled B/B read-only admission refused the active confirmation marker; receipts retained under PRE-WAIT-ADMISSION. Lifecycle source donor lacked its native-root admission helper; the initial invocation refusal, added identical read-only helper,65passing checks, exclusive accepted-results refusal and rebuilt unused launcher are retained. No B/B physical work occurred.",
+    "Astra found an inherited sampled-reader timed-arm label in the B/B lane. It now reports per-start quality gates for both starts with the global gate unchanged; a control-pass/mtp-fail test passed. No native results were collected by that reader."
+  ],
+  "reverse_exploratory_preparation": {
+    "forward_reader_seal": {
+      "manifest_sha256": "dc65179867c6e51ea0dbaa53fed762f996bf3f370dfedf3c3fb03232ab3c1ce4",
+      "members": 82,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reader.kig5lg15",
+      "verified_utc": "2026-10-22T11:02:05.428920+00:00"
+    },
+    "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-run.40p2411s",
+    "orchestration_donor": {
+      "manifest_sha256": "3abf2e15b7569047c65607bda2cbbaa893a8f78bb145476d7c02ff27e41e368f",
+      "members": 223,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-serving-run.9hc4j0d4"
+    },
+    "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-reader.zst_secu",
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse.vp_low7b",
+    "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse.vp_low7b",
+    "source_seal": {
+      "manifest_sha256": "f8bddc3e195028e58547d51c9b943b02459cc4a3c5fd94b7c7789585feeda520",
+      "members": 348,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse.vp_low7b"
+    },
+    "status": "REVERSE_EXPLORATORY_RUNNING"
+  },
+  "schema": 1,
+  "scope": "Five sequential exact-shape projection component comparisons, tile32 serving pilot, and three 3072 serving comparisons including one predeclared forward confirmation. The latter stop condition ended candidate advancement.",
+  "selected_runtime_changed": false,
+  "serving_native_root": "fp8-sprint11-3072-confirm-run.rd2jyh8g",
+  "serving_pilot_source_root": "fp8-sprint11-3072-confirm.0mlowibb",
+  "serving_pilots": [
+    {
+      "candidate": "gateup_tile32",
+      "disposition": {
+        "baseline_sha256": "cafc15b03fbbafa1824b85120e66a355de47ff150694ee43c1ef8e14ed927e1c",
+        "candidate_sha256": "0dfe13d9a29649131126a834828a95a4dd7deac77b618154a06a80fdae1422fa",
+        "clean_speed_comparison_eligible": false,
+        "independent_release_verified": true,
+        "latency_change_percent": 0.2742633947754314,
+        "median_candidate_seconds": 9.234656895045191,
+        "median_candidate_tok_s": 110.8866319169283,
+        "median_reference_seconds": 9.209398885024711,
+        "median_reference_tok_s": 111.1907533579758,
+        "model_starts": 2,
+        "native_seal": {
+          "manifest_sha256": "fbaa94de5d32f389320217b12770fa0045d6223761b5f74c2b67b53b268c018d",
+          "members": 224,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-serving-run.7pt0l5y0",
+          "verified_utc": "2026-10-22T10:34:06.135557+00:00"
+        },
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "different_output_positions": 0,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 166,
+            "different_output_positions": 691,
+            "first_difference": 124,
+            "ordinal": 1,
+            "output_ids_equal": false,
+            "reference_cycles": 164,
+            "verification_cycles_equal": false,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 163,
+            "different_output_positions": 0,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": false,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 165,
+            "different_output_positions": 0,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": false,
+            "warmup": false
+          }
+        ],
+        "rate_change_percent": -0.2735132480561453,
+        "reader_root": "fp8-sprint11-serving-reader.ddkht_e7",
+        "reader_seal": {
+          "manifest_sha256": "698238a990c7fda354b55a9ebb15954c46670ada58343590afb92539d34a99df",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-serving-reader.ddkht_e7",
+          "verified_utc": "2026-10-22T10:38:27.937433+00:00"
+        },
+        "requests": 8,
+        "result_sha256": "47db3aa189ee4302f6744e769484941cdfdd5f2a9059d3b892ba551b7de5ba33",
+        "source_promoted": false,
+        "status": "PARKED_NO_ELIGIBLE_SERVING_WIN"
+      }
+    },
+    {
+      "active_gpu_run": false,
+      "candidate": "m8_5120_3072_stage1",
+      "disposition": {
+        "clean_speed_comparison_eligible": false,
+        "independent_release_verified": true,
+        "latency_change_percent": -1.7402736862017765,
+        "median_candidate_seconds": 9.040335330995731,
+        "median_candidate_tok_s": 113.27013462532848,
+        "median_reference_seconds": 9.200448311981745,
+        "median_reference_tok_s": 111.29892427811856,
+        "model_starts": 2,
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 165,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": false,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          }
+        ],
+        "rate_change_percent": 1.7710955968309072,
+        "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reader.kig5lg15",
+        "reader_seal": {
+          "manifest_sha256": "dc65179867c6e51ea0dbaa53fed762f996bf3f370dfedf3c3fb03232ab3c1ce4",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reader.kig5lg15",
+          "verified_utc": "2026-10-22T11:02:05.428920+00:00"
+        },
+        "requests": 8,
+        "result_sha256": "21013bb94bac6e783198892f6f8f3cd34fad20e6d6de0a69dca795ee702fb4a1",
+        "source_promoted": false,
+        "status": "AUTHENTICATED_SIGNAL_FORWARD_CLEAN_WORK_GATE_FAILED_REVERSE_EXPLORATORY_NEXT",
+        "task_quality_measured": false
+      },
+      "independent_release_verified": true,
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-serving-run.9hc4j0d4",
+      "native_seal": {
+        "manifest_sha256": "3abf2e15b7569047c65607bda2cbbaa893a8f78bb145476d7c02ff27e41e368f",
+        "members": 223,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-serving-run.9hc4j0d4",
+        "verified_utc": "2026-10-22T10:59:24.469809+00:00"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reader.kig5lg15",
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-serving.0kta797a",
+      "source_seal": {
+        "manifest_sha256": "a0c11b999522975d2fd18b843e1d359928ba6395e87ba38152e5e9c1f39742ca",
+        "members": 340,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-serving.0kta797a"
+      },
+      "status": "AUTHENTICATED_SIGNAL_FORWARD_CLEAN_WORK_GATE_FAILED_REVERSE_EXPLORATORY_NEXT"
+    },
+    {
+      "candidate": "m8_5120_3072_stage1_reverse_exploratory",
+      "disposition": {
+        "clean_speed_comparison_eligible": true,
+        "independent_release_verified": true,
+        "latency_change_percent": -1.7607599573604027,
+        "median_candidate_seconds": 9.054347632976715,
+        "median_candidate_tok_s": 113.09484034724973,
+        "median_reference_seconds": 9.216630369948689,
+        "median_reference_tok_s": 111.10351168457468,
+        "model_starts": 2,
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          }
+        ],
+        "rate_change_percent": 1.7923183817343924,
+        "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-reader.zst_secu",
+        "reader_seal": {
+          "manifest_sha256": "4640aab692309f0a814f59631454e6179641f257b19b6f29f05be08b6d86936f",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-reader.zst_secu",
+          "verified_utc": "2026-10-22T11:13:40.065552+00:00"
+        },
+        "requests": 8,
+        "result_sha256": "7f456fc4030207aeb35f3a90c6a908561f1099cbfc8dd48c59169c8261bcce64",
+        "source_promoted": false,
+        "status": "REVERSE_CLEAN_ONE_FORWARD_CONFIRMATION_NEXT",
+        "task_quality_measured": false
+      },
+      "forward_reader_seal": {
+        "manifest_sha256": "dc65179867c6e51ea0dbaa53fed762f996bf3f370dfedf3c3fb03232ab3c1ce4",
+        "members": 82,
+        "qualification": false,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reader.kig5lg15",
+        "verified_utc": "2026-10-22T11:02:05.428920+00:00"
+      },
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-run.40p2411s",
+      "orchestration_donor": {
+        "manifest_sha256": "3abf2e15b7569047c65607bda2cbbaa893a8f78bb145476d7c02ff27e41e368f",
+        "members": 223,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-serving-run.9hc4j0d4"
+      },
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse-reader.zst_secu",
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse.vp_low7b",
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse.vp_low7b",
+      "source_seal": {
+        "manifest_sha256": "f8bddc3e195028e58547d51c9b943b02459cc4a3c5fd94b7c7789585feeda520",
+        "members": 348,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-reverse.vp_low7b"
+      },
+      "status": "REVERSE_CLEAN_ONE_FORWARD_CONFIRMATION_NEXT"
+    },
+    {
+      "attempts_authorized": 1,
+      "candidate": "m8_5120_3072_stage1_forward_confirmation",
+      "disposition": {
+        "clean_speed_comparison_eligible": false,
+        "independent_release_verified": true,
+        "latency_change_percent": -1.6779949391335314,
+        "median_candidate_seconds": 9.041194254998118,
+        "median_candidate_tok_s": 113.25937383038931,
+        "median_reference_seconds": 9.195494182000402,
+        "median_reference_tok_s": 111.35888726942106,
+        "model_starts": 2,
+        "pairs": [
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 0,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": true
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 1,
+            "output_ids_equal": true,
+            "reference_cycles": 167,
+            "verification_cycles_equal": false,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 2,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          },
+          {
+            "candidate_cycles": 164,
+            "first_difference": null,
+            "ordinal": 3,
+            "output_ids_equal": true,
+            "reference_cycles": 164,
+            "verification_cycles_equal": true,
+            "warmup": false
+          }
+        ],
+        "rate_change_percent": 1.7066321400735829,
+        "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm-reader.evu8wp4v",
+        "reader_seal": {
+          "manifest_sha256": "27602bbd5d05b43b989f883a975ba4c74c5271c9867feb479bcd0564fb51afc3",
+          "members": 82,
+          "qualification": false,
+          "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm-reader.evu8wp4v",
+          "verified_utc": "2026-10-22T11:24:45.899814+00:00"
+        },
+        "requests": 8,
+        "result_sha256": "790c183e6dd1e19783b049f4afc736ccea109318bef77f820bfc8e960dbd6684",
+        "source_promoted": false,
+        "status": "PARKED_PREDECLARED_CONFIRMATION_GATE_FAILED",
+        "task_quality_measured": false
+      },
+      "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm-run.rd2jyh8g",
+      "reader_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm-reader.evu8wp4v",
+      "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm.0mlowibb",
+      "source_seal": {
+        "manifest_sha256": "b15b42a12f3a767e21c6c5999abdd440fa61b05d8e4de43acc3851d4d6939a02",
+        "members": 340,
+        "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm.0mlowibb"
+      },
+      "status": "PARKED_PREDECLARED_CONFIRMATION_GATE_FAILED"
+    }
+  ],
+  "serving_source_seal": {
+    "manifest_sha256": "b15b42a12f3a767e21c6c5999abdd440fa61b05d8e4de43acc3851d4d6939a02",
+    "members": 340,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint11-3072-confirm.0mlowibb"
+  },
+  "sprint": 11,
+  "stack": {
+    "hip": "7.17.26416",
+    "rocm_sdk": "10.2.0.dev20261020+git535d2990",
+    "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+    "triton": "3.8"
+  },
+  "status": "SPRINT11_BOUNDED_SCREENS_CLOSED_NO_NEW_SOURCE_SELECTED",
+  "tracking": "docs/SPRINT11-PROJECTION-TUNING.md"
+}

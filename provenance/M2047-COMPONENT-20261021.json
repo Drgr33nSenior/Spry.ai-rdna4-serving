@@ -1,0 +1,447 @@
+{
+  "cleanup_errors": [],
+  "compiler_resources": [
+    {
+      "reported_resources": {
+        "compiled.n_regs": 238,
+        "compiled.n_spills": 0,
+        "metadata.num_stages": 1,
+        "metadata.num_warps": 4,
+        "metadata.shared": 16384
+      },
+      "stage": 1
+    },
+    {
+      "reported_resources": {
+        "compiled.n_regs": 256,
+        "compiled.n_spills": 0,
+        "metadata.num_stages": 3,
+        "metadata.num_warps": 4,
+        "metadata.shared": 49664
+      },
+      "stage": 3
+    }
+  ],
+  "date": "2026-10-21",
+  "end_to_end_gain_established": false,
+  "evidence": {
+    "complete_stack_inventory_authenticated": true,
+    "package_sha256": "51969086a8ed0eaba4364c8c28b311ac830274a3899e3c2bfd3d726cffb56183",
+    "protected_manifest_sha256": "43bffe44cb045cf6e167c09fdc45df0c7a829599b9584ebe119a1f7a8c3a7a23",
+    "protected_members": 19,
+    "root_owned_closeout_authenticated": true,
+    "workload_manifest_sha256": "3db49729adcafd4b26c2166ff9a4996869d1ab5a8bf542f7377539ef81e8854b",
+    "workload_members": 67
+  },
+  "independent_release_verified": true,
+  "limitations": [
+    "Synthetic component inputs, not retained model operands.",
+    "Random exactness is against the current stage3 baseline; structured exactness uses an independent analytical oracle.",
+    "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+    "Both GPUs tested sequentially, not under TP2 execution.",
+    "No end-to-end serving gain or model-quality conclusion.",
+    "Runtime warnings, if any, remain in the retained raw execution logs."
+  ],
+  "memory": {
+    "device_tensor_limit_bytes": 268435456,
+    "max_torch_allocated_bytes": 172311040,
+    "max_torch_reserved_bytes": 184549376,
+    "scope": "Component allocator observations; not serving or complete GPU memory peaks"
+  },
+  "next_step": "Matched equal-pool serving A/B with width eight, metadata reuse and aligned GDN in both arms; confirm actual M2047 dispatch and reverse a promising result.",
+  "numerical": {
+    "all_comparisons_exact": true,
+    "all_outputs_finite": true,
+    "inputs_unchanged": true,
+    "native_kernel_changed": false,
+    "random_reference": "Stage-3 output for identical inputs",
+    "structured_reference": "Independent analytical oracle"
+  },
+  "qualification": false,
+  "quality_qualified": false,
+  "runtime": {
+    "hip": "7.17.26416",
+    "rocm_sdk": "10.2.0.dev20261020+git535d2990",
+    "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+    "triton": "3.8.0"
+  },
+  "runtime_changed": false,
+  "schema": 1,
+  "scope": {
+    "architecture": "gfx1201",
+    "cases": 20,
+    "exact_comparisons": 360,
+    "execution": "Each GPU tested sequentially; eager component launches, no TP2 model execution",
+    "gpu_count": 2,
+    "gpu_family": "R9700",
+    "model_starts": 0,
+    "patterns": [
+      "structured",
+      "random"
+    ],
+    "repeats_per_stage": 8,
+    "serving_requests": 0,
+    "shapes": [
+      [
+        2047,
+        17408,
+        5120
+      ],
+      [
+        2047,
+        5120,
+        8704
+      ],
+      [
+        2047,
+        8192,
+        5120
+      ],
+      [
+        2047,
+        7168,
+        5120
+      ],
+      [
+        2047,
+        5120,
+        3072
+      ]
+    ],
+    "stages": [
+      3,
+      1
+    ],
+    "timed_launches": 320,
+    "warmup_launches": 40
+  },
+  "source_promoted": false,
+  "source_sha256": {
+    "accepted_dispatcher": "287ecf2cc39995da7abcd1159617f47cfe57ac14ddb89cfcafcb3aec45743c87",
+    "candidate_dispatcher": "31006f732f8dcea87756ae8c315ccdad8cca0edc80b11d36f2db482be8fced18",
+    "native_kernel": "6f7c1ca7e17c9d7b686255f6c4e9fa9830e8ef4f6f898c15c26f0b834722c3da",
+    "physical_identity": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df"
+  },
+  "status": "CURRENT_STACK_M2047_COMPONENT_PASS_SERVING_PENDING",
+  "survivors": [],
+  "timing": {
+    "cases": [
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 2.0131055116653442,
+          "3": 3.170628070831299
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.5749934876530105,
+        "time_reduction_stage1": 0.3650767397837573
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 2.1264160871505737,
+          "3": 3.304168462753296
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.553867318216599,
+        "time_reduction_stage1": 0.3564444091998037
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.940742015838623,
+          "3": 1.3728229999542236
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          5120,
+          8704
+        ],
+        "speedup_stage1": 1.459298061361087,
+        "time_reduction_stage1": 0.3147390334587985
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.994621992111206,
+          "3": 1.3998830318450928
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          5120,
+          8704
+        ],
+        "speedup_stage1": 1.4074523215334007,
+        "time_reduction_stage1": 0.2894963582776906
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 1.0764219760894775,
+          "3": 1.4114435315132141
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          8192,
+          5120
+        ],
+        "speedup_stage1": 1.3112362650201856,
+        "time_reduction_stage1": 0.2373609343510602
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 1.0528429746627808,
+          "3": 1.4286839962005615
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          8192,
+          5120
+        ],
+        "speedup_stage1": 1.3569772801667412,
+        "time_reduction_stage1": 0.26306798601880566
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.7883020043373108,
+          "3": 1.197702944278717
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          7168,
+          5120
+        ],
+        "speedup_stage1": 1.519345298741909,
+        "time_reduction_stage1": 0.3418217696608874
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.8287819921970367,
+          "3": 1.2178429961204529
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          7168,
+          5120
+        ],
+        "speedup_stage1": 1.4694370866964008,
+        "time_reduction_stage1": 0.31946729189460754
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.3508809953927994,
+          "3": 0.4883610010147095
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          5120,
+          3072
+        ],
+        "speedup_stage1": 1.3918137699877586,
+        "time_reduction_stage1": 0.2815130719616352
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "1": 0.3678005039691925,
+          "3": 0.5016815066337585
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          5120,
+          3072
+        ],
+        "speedup_stage1": 1.3640044024403515,
+        "time_reduction_stage1": 0.266864536352748
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 2.260293960571289,
+          "3": 3.2971359491348267
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.4587199747688906,
+        "time_reduction_stage1": 0.31446746647969015
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 2.2225840091705322,
+          "3": 3.227065920829773
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          17408,
+          5120
+        ],
+        "speedup_stage1": 1.451943282015294,
+        "time_reduction_stage1": 0.3112678626041079
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.9543415009975433,
+          "3": 1.385862946510315
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          5120,
+          8704
+        ],
+        "speedup_stage1": 1.4521666982539434,
+        "time_reduction_stage1": 0.31137382422942195
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 1.0057820081710815,
+          "3": 1.4201025366783142
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          5120,
+          8704
+        ],
+        "speedup_stage1": 1.4119386956032698,
+        "time_reduction_stage1": 0.2917539528352281
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 1.064482033252716,
+          "3": 1.4205624461174011
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          8192,
+          5120
+        ],
+        "speedup_stage1": 1.3345104959419722,
+        "time_reduction_stage1": 0.25066156988585997
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 1.067821979522705,
+          "3": 1.4453429579734802
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          8192,
+          5120
+        ],
+        "speedup_stage1": 1.3535429928306209,
+        "time_reduction_stage1": 0.2611981996163032
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.7989014983177185,
+          "3": 1.2085825204849243
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          7168,
+          5120
+        ],
+        "speedup_stage1": 1.512805424736202,
+        "time_reduction_stage1": 0.3389764581427406
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.841141015291214,
+          "3": 1.227981984615326
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          7168,
+          5120
+        ],
+        "speedup_stage1": 1.4599002572596969,
+        "time_reduction_stage1": 0.31502169752538567
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.35843999683856964,
+          "3": 0.5074809789657593
+        },
+        "pattern": "structured",
+        "shape": [
+          2047,
+          5120,
+          3072
+        ],
+        "speedup_stage1": 1.415804551505766,
+        "time_reduction_stage1": 0.2936878194546987
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "1": 0.3694800138473511,
+          "3": 0.49768100678920746
+        },
+        "pattern": "random",
+        "shape": [
+          2047,
+          5120,
+          3072
+        ],
+        "speedup_stage1": 1.3469768001979723,
+        "time_reduction_stage1": 0.2575967159545549
+      }
+    ],
+    "metric": "Stage-3 median event milliseconds divided by stage-1 median event milliseconds",
+    "native_payload_seconds": 29.703378412988968,
+    "physical_owner_charged_seconds": 48,
+    "physical_owner_seconds": 47.807007602998056,
+    "stage1_speedup_geomean": 1.428523194667562,
+    "stage1_speedup_range": [
+      1.3112362650201856,
+      1.5749934876530105
+    ],
+    "stage1_time_reduction_range": [
+      0.2373609343510602,
+      0.3650767397837573
+    ]
+  },
+  "warnings": [
+    "Preserved pre-existing Python 3.14 SyntaxWarning for an escaped regex in the component wrapper."
+  ]
+}

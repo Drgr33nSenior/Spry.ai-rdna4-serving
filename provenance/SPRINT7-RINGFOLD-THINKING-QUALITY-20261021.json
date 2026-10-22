@@ -1,0 +1,207 @@
+{
+  "all_applicable_quality_gate_passes": 8,
+  "all_final_text_and_token_segments_match_both_prior_selected_starts": true,
+  "analysis_manifest_sha256": "54f83bb28db4146ccaa0e8c238c35f6909b98420ac5ecf96ae225756c8697dcf",
+  "authenticated_reader_manifest_sha256": "fe8c3d2cabb851fba4d88ed34d3b6d4b22b214e110d2f251e834299c4bfaa447",
+  "cases": [
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "final_answer_tokens": 41,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 226,
+      "normal_stop": true,
+      "output_tokens": 352,
+      "reasoning_tokens": 309,
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-unique-last",
+      "final_answer_tokens": 95,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 246,
+      "normal_stop": true,
+      "output_tokens": 883,
+      "reasoning_tokens": 786,
+      "start": "control",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "quality16k-audit-threshold",
+      "final_answer_tokens": 763,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 2891,
+      "reasoning_tokens": 2126,
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "heldout16k-audit",
+      "final_answer_tokens": 821,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 3693,
+      "reasoning_tokens": 2870,
+      "start": "control",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-running-totals",
+      "final_answer_tokens": 41,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 226,
+      "normal_stop": true,
+      "output_tokens": 352,
+      "reasoning_tokens": 309,
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "coding-unique-last",
+      "final_answer_tokens": 95,
+      "format_pass": true,
+      "functional_pass": true,
+      "input_tokens": 246,
+      "normal_stop": true,
+      "output_tokens": 883,
+      "reasoning_tokens": 786,
+      "start": "mtp",
+      "sustained_512_tokens": null
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "quality16k-audit-threshold",
+      "final_answer_tokens": 763,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 2885,
+      "reasoning_tokens": 2120,
+      "start": "mtp",
+      "sustained_512_tokens": true
+    },
+    {
+      "all_applicable_quality_gates_passed": true,
+      "case": "heldout16k-audit",
+      "final_answer_tokens": 821,
+      "format_pass": null,
+      "functional_pass": true,
+      "input_tokens": 12272,
+      "normal_stop": true,
+      "output_tokens": 3977,
+      "reasoning_tokens": 3154,
+      "start": "mtp",
+      "sustained_512_tokens": true
+    }
+  ],
+  "context_tokens": 16384,
+  "cpu_acceptance_checks": 63,
+  "date": "2026-10-21",
+  "exact_output_gate_passed": false,
+  "failures_preserved": [
+    "two preparatory test-expectation failures; no GPUs launched",
+    "offline reader missing unchanged grading helper; fixed before sandbox execution",
+    "single CPU-grader SSH timeout; connectivity check passed; label-only retry graded same coding finals"
+  ],
+  "full_output_ids_pairs_exact": 2,
+  "functional_failures": 0,
+  "functional_passes": 8,
+  "general_qualification": false,
+  "grade_scope": "Only authenticated final segments; full decoded output joined to HTTP; coding executed in unchanged network-free Linux sandbox; full28-event ledger oracles;reasoning excluded from512finaltoken threshold",
+  "graph_recaptures": 0,
+  "independent_packet_checks": 8,
+  "independent_readout_review": "No blockers; no new concerning task-quality regression. Keep unresolved equivalence disposition.",
+  "independent_release_verified": true,
+  "installed_defaults_changed": false,
+  "internal_reserve_tokens": 16,
+  "ledger_input_tokens": 12272,
+  "limitations": [
+    "one fresh start per profile",
+    "full-output equivalence incomplete;reasoning paths differ",
+    "small greedy task suite",
+    "3977/4096 longest output leaves119tokens",
+    "C2/cache/state-slot reuse/cancellation/repeated lifecycle and publisher sampling remain pending"
+  ],
+  "matched_usable_recurrent_slots_per_card": 19,
+  "mismatch_resolved": false,
+  "native_manifest_sha256": "1f124d8694ec6693ef74f12470dee4a95bc28d011ee8673af308221e9b38018a",
+  "next_step": "Review and validate current thinking-enabled lifecycle packet, then bounded native C2/reuse/cancel/repeated-start coverage within existing resource limits.",
+  "normal_stops": 8,
+  "numerical_equivalence": false,
+  "owner_seconds": 395.83360116695985,
+  "paired_outputs": 4,
+  "pairs": [
+    {
+      "case": "coding-running-totals",
+      "first_difference": null,
+      "output_ids_equal": true
+    },
+    {
+      "case": "coding-unique-last",
+      "first_difference": null,
+      "output_ids_equal": true
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "first_difference": 378,
+      "output_ids_equal": false
+    },
+    {
+      "case": "heldout16k-audit",
+      "first_difference": 493,
+      "output_ids_equal": false
+    }
+  ],
+  "per_rank_native_commit_replay_verifier_equality": true,
+  "performance_claim": false,
+  "physical_recurrent_slots_including_padding": 20,
+  "publication_performed": false,
+  "publisher_sampling_recipe_tested": false,
+  "quality_results_sha256": "48b07af68a5e20d2edd2cbc0dbb352384245f78b320c71454c2a3173b1fe5841",
+  "readout_behavior_checks": 4,
+  "reasoning_variations_retained": true,
+  "repeatability_qualified": false,
+  "request_bytes_and_token_vectors_reused_from": "SPRINT7-THINKING-QUALITY-20261021.json",
+  "request_profile": {
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    },
+    "ignore_eos": false,
+    "max_completion_tokens": 4096,
+    "reasoning_effort": "low",
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "requests": 8,
+  "runtime_profile": "Current Torch2.14/SDK10.2;FP8 target weights;BF16 target and explicit BF16 draft attentionKV;FP32 recurrent state/head;DFlash8;singleton split decode;metadata reuse;M2047stage1;graphs[1,2]",
+  "schema": 1,
+  "selected_reference_changed": false,
+  "source_manifest_sha256": "190a1584c36ebfc704d1a1cdb501ba761e52fccf03b891f24ac8e91ca16eff7e",
+  "starts": 2,
+  "starts_per_profile": 1,
+  "startup_bf16_cache_witnesses": 4,
+  "startup_torch_allocated_bytes_per_card": {
+    "reduction": 1745453056,
+    "ringfold": 20296157184,
+    "snapshot": 22041610240
+  },
+  "status": "SNAPSHOT_AND_RINGFOLD_LOW_THINKING_C1_QUALITY_SCREEN_PASS",
+  "ungraded": 0,
+  "unique_tasks": 4
+}

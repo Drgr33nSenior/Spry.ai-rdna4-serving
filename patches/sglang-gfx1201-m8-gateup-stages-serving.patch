@@ -1,0 +1,31 @@
+--- a/python/sglang/kernels/ops/gemm/fp8_kernel.py
++++ b/python/sglang/kernels/ops/gemm/fp8_kernel.py
+@@ -774,7 +774,7 @@
+ 
+ 
+ def _record_m2047_shape(M, N, K, native, config, output_dtype):
+-    if M != 2047:
++    if M != 2047 and (M, N, K) != (8, 17408, 5120):
+         return
+     key = (M, N, K, native, str(output_dtype), config.get("num_stages"))
+     if key not in _m2047_witnessed:
+@@ -852,6 +852,19 @@
+         and kernel is _w8a8_block_fp8_matmul
+         and M in (2016, 2047, 2048)
+         and (N, K) in ((17408, 5120), (5120, 8704), (8192, 5120), (7168, 5120), (5120, 3072))
++        and tuple(block_size) == (128, 128)
++        and output_dtype == torch.bfloat16
++        and config == {
++            "BLOCK_SIZE_M": 64, "BLOCK_SIZE_N": 128, "BLOCK_SIZE_K": 128,
++            "GROUP_SIZE_M": 32, "num_warps": 4, "num_stages": 3,
++        }
++    ):
++        config = {**config, "num_stages": 1}
++
++    # Private M8 gate/up launch candidate; preserve every other dispatch.
++    if (
++        _is_hip and not configs and kernel is _w8a8_block_fp8_matmul
++        and (M, N, K) == (8, 17408, 5120)
+         and tuple(block_size) == (128, 128)
+         and output_dtype == torch.bfloat16
+         and config == {

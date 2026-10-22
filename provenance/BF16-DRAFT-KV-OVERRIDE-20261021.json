@@ -1,0 +1,52 @@
+{
+  "accepted_numerical_fix": false,
+  "completed_requests": 8,
+  "cpu_acceptance_checks": 38,
+  "date": "2026-10-21",
+  "draft_attention_kv": "BF16 (explicit override)",
+  "evidence": {
+    "analysis_manifest_sha256": "c3712e1c7d306621d96e8253dcc518ddeb3142c55f7abc43aac534335c3c3193",
+    "native_manifest_sha256": "eb3d0f639234cad88637e0e25d25bf2e5fb3aa6c5f96d965a901a925a167fe4f",
+    "source_manifest_sha256": "7d15e20b507e2414be5f2da77d3b7fd538f75cb2a4d15ab9423ad43042c3b5ad"
+  },
+  "evidence_limit": "Hashes identify private bounded evidence; they are not portable runtime/build proof or launch authority.",
+  "exact_output_gate_passed": false,
+  "flag": "--speculative-draft-kv-cache-dtype bf16",
+  "fp8_target_kv_test": false,
+  "fresh_starts": 2,
+  "historical_common_output_matches": 8,
+  "independent_prelaunch_astra_review": true,
+  "independent_release_verified": true,
+  "installed_runtime_replaced": false,
+  "mismatch_investigation": "Closed as unresolved by owner; resume if further concerning behavior occurs.",
+  "mismatch_root_cause_resolved": false,
+  "owner_decision": "I'm happy to move on with this config and backtrack if more strange behaviour occurs",
+  "prior_findings_retained": "Capitalization variants and a stage3 variant first differing at token16, with112 differing positions. No originating operation identified.",
+  "production_default_changed": false,
+  "ranks_per_start": 2,
+  "schema": 1,
+  "startup_cache_records": 4,
+  "status": "NATIVE_BF16_DRAFT_OVERRIDE_VERIFIED_OWNER_SELECTED_FOR_CURRENT_SESSION",
+  "target_attention_kv": "BF16 (native auto)",
+  "target_weights": "official FP8 checkpoint",
+  "task_quality_qualified": false,
+  "timing": [
+    {
+      "median_http_output_tokens_per_second_combined_tp2": 69.14594651134803,
+      "median_http_seconds": 1.8511569579713978
+    },
+    {
+      "median_http_output_tokens_per_second_combined_tp2": 69.30848047362956,
+      "median_http_seconds": 1.8468158459872939
+    }
+  ],
+  "timing_scope": "Non-stream full HTTP request-to-terminal output rate; not isolated decode or per-card rate. No flag-off control.",
+  "workload": {
+    "concurrency": 1,
+    "forced_output_tokens": 128,
+    "input_tokens": 2047,
+    "measured_requests_per_start": 3,
+    "tensor_parallel_size": 2,
+    "warmups_per_start": 1
+  }
+}

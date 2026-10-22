@@ -1,0 +1,25 @@
+--- a/sglang/kernels/ops/gemm/fp8_kernel.py
++++ b/sglang/kernels/ops/gemm/fp8_kernel.py
+@@ -829,6 +829,22 @@
+     else:
+         kernel = select_w8a8_block_fp8_matmul_kernel(M, N, config)
+ 
++    # Private gfx1201 candidate: accepted shapes plus proposed M2047 tails.
++    # Preserve tuned configurations, decode shapes, other kernels and arithmetic.
++    if (
++        _is_hip
++        and kernel is _w8a8_block_fp8_matmul
++        and M in (2016, 2047, 2048)
++        and (N, K) in ((17408, 5120), (5120, 8704), (8192, 5120), (7168, 5120), (5120, 3072))
++        and tuple(block_size) == (128, 128)
++        and output_dtype == torch.bfloat16
++        and config == {
++            "BLOCK_SIZE_M": 64, "BLOCK_SIZE_N": 128, "BLOCK_SIZE_K": 128,
++            "GROUP_SIZE_M": 32, "num_warps": 4, "num_stages": 3,
++        }
++    ):
++        config = {**config, "num_stages": 1}
++
+     split_k = config.get("SPLIT_K", 1) if hopper_tuned else 1
+     if split_k > 1:
+         assert split_k & (split_k - 1) == 0

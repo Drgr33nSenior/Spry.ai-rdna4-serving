@@ -1,0 +1,66 @@
+{
+  "active_gpu_run": false,
+  "automatic_retry": false,
+  "control_quality_graded": false,
+  "control_responses": 4,
+  "correction": {
+    "astra_review": "OFFLINE_CORRECTION_APPROVED_NATIVE_PENDING",
+    "before_after_cpu_reproduction": true,
+    "description": "Allocate eager timing events after capture on the native selected device; pin the capture device and refuse later device changes.",
+    "focused_cpu_checks": 38,
+    "native_validation_pending": true,
+    "new_package_built": false
+  },
+  "date": "2026-10-22",
+  "elapsed_seconds": 383.81295720813796,
+  "evidence": {
+    "analysis": {
+      "manifest_sha256": "917d8d6c31850c5eda73c3f27bb4de57667f07ea252244f6402714935968715b",
+      "members": 38,
+      "root": "scratchpad/fp8-sprint8-reader.eeb960zj"
+    },
+    "correction": {
+      "manifest_sha256": "c737e9fcf421390786d0ddba430a5760ec84a0859368bbca9f08147d30f9b936",
+      "members": 171,
+      "root": "scratchpad/fp8-sprint8-event-device-fix.j___0phg"
+    },
+    "native": {
+      "manifest_sha256": "f29dd006047d4cd8de615c9138f2c87db8123ec10e2516e44fe7083ef2ebcc2b",
+      "members": 192,
+      "root": "scratchpad/fp8-sprint8-run.eyemdvyo"
+    }
+  },
+  "failure": {
+    "case": "coding-running-totals",
+    "cycle": 9,
+    "error": "RuntimeError: Event device",
+    "explanation": "Constructor records eager events before native ModelRunner selects the worker GPU. The first selected cycle then records rank1 events on a different device.",
+    "location": "DevicePhaseEvents.begin -> eager cycle start event.record",
+    "rank": 1
+  },
+  "independent_release_verified": true,
+  "known_numerical_mismatch": "Unresolved; experimental session-use disposition retained.",
+  "milestone": "8.3",
+  "next_bounded_action": "Build and review a fresh one-use control/timing packet from the corrected source, recheck transport ceilings, then perform native validation.",
+  "qualification": false,
+  "readout": {
+    "astra_review": true,
+    "cost_attribution_complete": false,
+    "offline_checks": 10,
+    "successful_campaign_reader_blocked": true,
+    "valid_completed_phase_samples": 0
+  },
+  "resource_scopes_absent": true,
+  "schema": 1,
+  "selected_numerical_source_unchanged": true,
+  "selected_runtime_unchanged": true,
+  "source_preparation": {
+    "manifest_sha256": "54b790189ec9b84df2db92b5fe0153950c307d1e4f674c4b134f2395b5294185",
+    "members": 359,
+    "root": "scratchpad/fp8-sprint8-ready.0il_rl0h"
+  },
+  "sprint": 8,
+  "starts": 2,
+  "status": "NATIVE_TIMING_OBSERVER_FAILED_RELEASE_VERIFIED_OFFLINE_FIX_PASS_GPU_VALIDATION_PENDING",
+  "survivors": []
+}
