@@ -559,9 +559,17 @@ HTTP, cache, work and release evidence was authenticated. Publisher-sampled
 quality passed 8/8 final answers, with 4/4 final-text and 2/4 full-output pairs
 matching. Two ledger reasoning outputs differed; the native selector-sampling
 route was verified on both ranks and arms without establishing distribution
-equivalence. Lifecycle quality is active. The selected Sprint 17 snapshot and
-GEMM remain unchanged; ring-fold awaits lifecycle and final review. Earlier
+equivalence. Lifecycle passed 52/52 normal final answers, two cancellations,
+actual C2, slot bookkeeping and release. Of 26 cache-output pairs, 24 matched
+full IDs and all 26 matched final text; both arms retain the `concurrent-a`
+versus `victim-cold-a` reasoning difference at index 149. Ten starts covered 86
+requests: 16 forced-output, 68 natural-stop and two cancellations. All 15
+evidence roots passed closeout verification. Astra final review supports
+selecting aligned ring-fold for the next experimental session only. The Sprint
+17 GEMM remains unchanged and the paired snapshot control is retained for
+rollback. Earlier
 numerical findings, Sprint 11 failed gates and the owner experimental-session
 disposition remain. Reliability and
-endurance remain deferred, and installed runtime and persistent defaults remain
-unchanged. See [Sprint 19](SPRINT19-MATCHED-RINGFOLD.md).
+endurance remain deferred, no GPU campaign is queued, and installed runtime and
+persistent defaults remain unchanged. This is not production, numerical, state
+or distribution qualification. See [Sprint 19](SPRINT19-MATCHED-RINGFOLD.md).

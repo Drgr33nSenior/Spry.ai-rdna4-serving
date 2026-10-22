@@ -3,9 +3,11 @@
 Status: both serving orders matched eight full-output ID pairs and 164
 verification cycles per request per rank. Ring-fold reduced median latency by
 3.87926% forward and 3.83348% in reverse. Greedy and publisher-sampled quality
-each passed all eight final answers. Lifecycle quality is active. Ring-fold
-remains unselected pending lifecycle and final review; the Sprint 17 snapshot
-and source `3f28660b26d0…` stay selected.
+each passed all eight final answers. Lifecycle passed 52/52 normal final answers,
+two cancellations, actual C2, slot and release checks. After Astra final review,
+aligned ring-fold is selected for the next experimental session only. The Sprint
+17 GEMM `3f28660b26d0…` is unchanged; the paired snapshot control remains
+available for rollback. Status: `SPRINT19_COMPLETE_EXPERIMENTAL_RINGFOLD_SELECTED`.
 
 Compare snapshot and aligned ring-fold with identical selected kernels, current
 Torch 2.14 / ROCm SDK 10.2, FP8 target weights, BF16 target/draft attention KV,
@@ -26,8 +28,9 @@ Authenticate the current source, runtime, worker, weight, wire, cache, graph,
 commit and resource-release evidence. Require matched measured output IDs and
 verification work before interpreting a speed comparison. Preserve every
 sample, failure and output difference. Both serving orders completed with
-independent release. Astra approved the conditional serial quality campaign after both orders and release. No source
-promotion follows from the performance results alone.
+independent release. Astra approved the conditional serial quality campaign after both orders and release. Final review
+supports experimental recurrent-profile selection; the performance results alone
+do not establish the quality gates.
 
 ## Matched serving results
 
@@ -72,7 +75,15 @@ Both profiles produced 763 and 821 final tokens for those ledger cases. The
 native selector-sampling route was verified on both ranks and arms; this does
 not establish distribution equivalence.
 
-Lifecycle quality is active. Local packet/startup/reader checks passed 18/35/21
+Lifecycle passed 52/52 normal final answers, both cancellation and recovery
+checks, actual C2, slot bookkeeping and independent release. Of 26 cache-output
+pairs, 24 matched full output IDs and all 26 matched final text. In both arms,
+`concurrent-a` differed from `victim-cold-a` first at output token index 149;
+retain these reasoning differences. Across the campaign, ten starts covered 86
+requests: 16 forced-output, 68 natural-stop and two cancellations. The closeout
+verified all 15 source, native and reader roots.
+
+Local packet/startup/reader checks passed 18/35/21
 for greedy, 18/35/22 for sampled, and 65 packet plus 18 reader checks for
 lifecycle. These checks do not replace native quality evidence.
 
@@ -85,5 +96,5 @@ restored byte-for-byte from its sealed donor before launch.
 Sprint 7's 128-output results do not establish current 1024-output performance.
 The earlier numerical findings and owner experimental-session disposition
 remain. Full state and distribution equivalence remain unverified; no new
-production qualification is claimed. Reliability and endurance remain deferred. Installed
-runtime and persistent defaults are unchanged. See the [evidence index](../provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json).
+production qualification is claimed. Reliability and endurance remain deferred; no GPU
+campaign is queued. Installed runtime and persistent defaults are unchanged. See the [evidence index](../provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json).

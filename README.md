@@ -23,8 +23,11 @@ A later [Sprint 19 candidate](docs/SPRINT19-MATCHED-RINGFOLD.md) measured
 120.28–120.36 combined TP2 output tokens/s at C1 with 2047 input and 1024 forced
 output tokens and low thinking. Both matched serving orders passed output/work
 checks, and greedy and publisher-sampled quality each passed 8/8 final answers.
-Lifecycle quality is active. The Sprint 17 snapshot remains selected while the
-candidate awaits lifecycle results and final review.
+Lifecycle passed 52/52 normal final answers, two cancellations and C2/slot
+checks. After final review, aligned ring-fold is selected for the next
+experimental session; the Sprint 17 GEMM remains unchanged and the paired
+snapshot control remains available for rollback. This does not change the
+installed runtime or production defaults.
 
 The private integration passed a real eager TP2 smoke on two Radeon AI PRO R9700
 GPUs: initial prefill, continuation, decode and a 13-token prefix-reuse hit.

@@ -1,20 +1,7 @@
 {
-  "active_sprint": {
-    "benchmark_candidate_rate_combined_tp2_tokens_per_second": [
-      120.27983380089104,
-      120.36016489275049
-    ],
-    "benchmark_candidate_selected": false,
-    "greedy_quality": "8/8naturalanswers;4/4fulloutputandfinaltextpairsmatch",
-    "memory_allocated_reduction_bytes_per_card": 1745453056,
-    "next_bounded_action": "Complete boundedlifecycle/C2/cancellation/slot screen;finalreviewbeforeselectingringfold.",
-    "number": 19,
-    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
-    "sampled_quality": "8/8naturalanswers;4/4finaltextpairs;2/4fulloutputpairs;retainedledgerreasoningvariation;native sampledrouteverified",
-    "selected_source_changed": false,
-    "status": "SPRINT19_LIFECYCLE_PHYSICAL_ACTIVE"
-  },
+  "active_sprint": null,
   "additional_baseline_investigation": "Closed as unresolved by owner; reopen if more concerning behavior occurs.",
+  "aligned_ring_fold_selected": true,
   "baseline_variant_root_cause": "unknown",
   "completed_m8_3072_experimental": {
     "active_gpu_run": false,
@@ -138,6 +125,57 @@
     "status": "SPRINT18_COMPLETE_OPTION_LEFT_UNSELECTED",
     "tracking": "docs/SPRINT18-ATTENTION-QKV.md"
   },
+  "completed_sprint19": {
+    "active_gpu_run": false,
+    "benchmark_rate_combined_tp2_tokens_per_second": [
+      120.27983380089104,
+      120.36016489275049
+    ],
+    "completed_milestone": "Both orders 3.83\u20133.88% lower median latency and 120.28\u2013120.36 combined TP2 tokens/s; startup allocation saves 1.62558 GiB/card at matched capacity. All 68 normal final answers, two cancellations, actual C2, slots and release pass; final independent review approves experimental selection.",
+    "date": "2026-10-22",
+    "final_review": {
+      "blocking_findings": [],
+      "independent_releases_verified": true,
+      "limitations": [
+        "Two finite serving orders with three measured requests per profile per order; observed gains are not a broad speed guarantee.",
+        "Sampled and cache reasoning variations remain; no exact-output, recurrent-state or sampling-distribution equivalence.",
+        "Original numerical findings and owner session-use exception remain; no hardware cause or mismatch fix established.",
+        "Prior Sprint11 failed matched-work gates remain unchanged.",
+        "Reliability/endurance and production qualification remain deferred.",
+        "Branch evidence is authenticated source plus live metadata inference, not captured device constexpr."
+      ],
+      "model_starts": 10,
+      "normal_final_answers_passed": 68,
+      "report_root": "fp8-sprint19-astra-review.e9bnwyga",
+      "report_sha256": "2bbb127ddaadee117583b2ac6c2c2c00332cf7abacc6d40489bafd717d73a352",
+      "review_status": "APPROVED",
+      "reviewed_utc": "2026-10-22T18:50:36.040294+00:00",
+      "reviewed_working_snapshot_sha256": "177bd8074e79ec2fd66360dbdab179b17088e45a811b67f9ed035a247b6bf632",
+      "reviewer": "/root/astra_replay_serving_verify",
+      "reviewer_local_verification_note": "An initial supplementary assertion mistakenly treated generic capture.remote_release_proven as the campaign release field. The unchanged producer initializes that capture field to false. Final checks use campaign.independent_release_verified and the authenticated observation/supervision/cgroup joins required by the retained verifier; no evidence or gate was changed.",
+      "scope": "Next experimental session launch only; no production, state or distribution qualification.",
+      "status": "APPROVED_EXPERIMENTAL_SESSION_SELECTION",
+      "verified_roots": 15
+    },
+    "launch_prepared": false,
+    "memory_allocated_reduction_bytes_per_card": 1745453056,
+    "name": "Aligned ring-fold on selected kernels",
+    "next_bounded_action": "No GPU campaign queued. Carry selected recurrent profile into both arms of future kernel trials unless it is the stated A/B variable; reliability remains deferred until tuning is exhausted.",
+    "number": 19,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "retained_limitations": [
+      "Sampled full output IDs match 2/4 pairs; final answers match 4/4.",
+      "Lifecycle full IDs match 24/26 cache comparisons; both arms vary at concurrent-a versus victim-cold-a, first difference149; all26 final answers match.",
+      "Original numerical mismatch unresolved and owner session-use exception retained; no hardware cause established.",
+      "No exact-output, recurrent-state, sampling-distribution or production qualification.",
+      "No process-lifetime or whole-device memory peak measurement or vLLM comparison.",
+      "Owner defers reliability/endurance until tuning is exhausted."
+    ],
+    "selected_profile_changed": true,
+    "selected_source_changed": false,
+    "status": "SPRINT19_COMPLETE_EXPERIMENTAL_RINGFOLD_SELECTED",
+    "tracking": "docs/SPRINT19-MATCHED-RINGFOLD.md"
+  },
   "date": "2026-10-22",
   "draft_kv_cache_dtype": "bf16",
   "draft_kv_override_flag": "--speculative-draft-kv-cache-dtype bf16",
@@ -164,17 +202,18 @@
   "m8_gateup_stage1_selected": true,
   "m8_qkvz_rollback": "Restore recorded f90 source;preserve current stack,precision,flags and all earlier selected routes.",
   "m8_qkvz_unrolled_tile16_stage1_selected": true,
-  "m8_rollback": "Restore the recorded 2308ff reference. Preserve the current stack, BF16 KV, snapshot and flags; reopen the numerical investigation if concerning behavior recurs.",
+  "m8_rollback": "Restore the recorded 2308ff reference. Preserve the current stack, BF16 KV, selected recurrent profile and remaining flags; reopen the numerical investigation if concerning behavior recurs.",
   "next_sprint": {
-    "additional_candidate": "Aligned ring-fold passed matched-capacity, greedy quality, lifecycle and publisher sampling screens at19usable slots; remains a separate experimental option.",
+    "additional_candidate": "Historical Sprint7 ring-fold option; refreshed on selected kernels and selected for next experimental session by Sprint19. Historical output exceptions remain.",
     "closure_record": "provenance/SPRINT7-CLOSEOUT-20261021.json",
     "completed": true,
     "current_gate": null,
+    "current_recurrent_profile_record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
     "exact_output_gate_passed": false,
     "lifecycle_record": "provenance/SPRINT7-LIFECYCLE-20261021.json",
     "matched_capacity": "Both orders complete;19usable slots/card;16requests;latency -2.32%/-2.47%;startupTorch allocation -1.63GiB/card;7/8exactpairs with known referencecapitalizationvariant.",
     "matched_capacity_record": "provenance/SPRINT7-MATCHED-CAPACITY-20261021.json",
-    "next_bounded_action": "Complete boundedlifecycle/C2/cancellation/slot screen;finalreviewbeforeselectingringfold.",
+    "next_bounded_action": "No GPU campaign queued. Carry selected recurrent profile into both arms of future kernel trials unless it is the stated A/B variable; reliability remains deferred until tuning is exhausted.",
     "nonthinking_control_record": "provenance/SPRINT7-SELECTED-QUALITY-20261021.json",
     "number": 7,
     "production_qualification": false,
@@ -210,12 +249,13 @@
     "tracking": "docs/SPRINT7-QUALIFICATION.md"
   },
   "optimization_plan": {
-    "current_stage": "AttentionQKVoptionparked;selectedSprint17sourceunchanged;noGPUcampaignqueued.",
+    "current_stage": "Aligned ring-fold selected for next experimental session; Sprint17 GEMM unchanged. No GPU campaign queued.",
     "launch_prepared": false,
-    "new_gpu_runs": 4,
-    "progress_record": "provenance/SPRINT18-ATTENTION-QKV-20261022.json",
+    "model_starts": 10,
+    "new_gpu_runs": 5,
+    "progress_record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
     "record": "provenance/POST-SPRINT7-OPTIMIZATION-PLAN-20261022.json",
-    "status": "SPRINT18_COMPLETE_OPTION_LEFT_UNSELECTED",
+    "status": "SPRINT19_COMPLETE_EXPERIMENTAL_RINGFOLD_SELECTED",
     "tracking": "docs/NEXT-OPTIMIZATION-PLAN.md"
   },
   "optional_work": {
@@ -304,7 +344,37 @@
     "A concerning task-quality regression",
     "Repeated or materially different unexplained output variation"
   ],
+  "ringfold_rollback": "Use snapshot control arm from the same paired author with the same selected GEMM and 19 usable/20 physical slots; disable enable_linear_replayssm_spec, keep original compact enable_linear_replayssm disabled. Preserve stack, precision, pools, other flags and owner controls.",
   "rollback": "Retain the prior sealed snapshot and reproduce new strange behavior before changing one variable at a time. Stage3 also varied and is not a demonstrated numerical fix. Installed runtime remains unchanged.",
+  "rollback_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": false,
+    "logical_arm": "control",
+    "name": "snapshot",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Recurrent-profile rollback only; preserve the selected GEMM, stack, precision, capacity and owner controls.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
   "rollback_source_before_m8_3072": {
     "author_manifest_sha256": "6942ab55577cf29057dfa5549bb0044ecc44ff6d10028c2b2cd3f3543f1927fc",
     "author_root": "fp8-sprint10-greedy-ready.ibu26j_5",
@@ -363,6 +433,35 @@
   },
   "schema": 1,
   "scope": "Current AIThreadripper diagnostic/serving session",
+  "selected_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": true,
+    "logical_arm": "mtp",
+    "name": "aligned_ring_fold",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Next experimental session launch only.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
   "selected_source": {
     "author_file": "review/GEMM-tail.py",
     "author_manifest_sha256": "e378d786522c3cd44ac2bc9c8251acc19b812aa29a9b0a9ba166cad3d2eaf104",

@@ -45,7 +45,16 @@ functional, format, ungraded and sustained-final-output results.
 Use the selected stack, precision, flags, kernels, pools and owner controls.
 FP8 target **weights** do not imply FP8 attention KV. Both attention caches remain
 BF16; preserve the explicit BF16 draft-KV override. FP8 target KV is a deferred
-optional work item. Ring-fold remains a separate candidate.
+optional work item. Read the selected recurrent profile separately from the
+GEMM source: the same GEMM can run with snapshot or aligned ring-fold. Carry
+that profile into both arms unless it is the stated A/B variable. Keep the
+original compact `--enable-linear-replayssm` flag disabled.
+
+The split-KV verification adapter changes attention computation; it does not
+compress the BF16 cache. Attribute ring-fold savings to recurrent-state storage
+at matched usable capacity. Startup allocator counters do not establish
+whole-device peak memory or a memory advantage over another serving engine.
+See [Sprint 19](../../../docs/SPRINT19-MATCHED-RINGFOLD.md) for the measured scope.
 
 Identical repeated outputs establish observed repeatability, not correctness or
 a causal speedup. Forced fixed-token benchmarks do not grade normal completion.

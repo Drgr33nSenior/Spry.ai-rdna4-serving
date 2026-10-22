@@ -83,16 +83,21 @@ Sprint 17 remained selected at the Sprint 18 closeout.
 all eight output/work pairs match, median latency fell 3.87926% forward and
 3.83348% in reverse, and startup allocation fell 1.62558 GiB per card at equal
 capacity. Greedy and publisher-sampled quality each passed 8/8 final answers;
-sampled full outputs matched two of four pairs. Lifecycle quality is active.
-Ring-fold remains unselected pending lifecycle and final review. Earlier
-numerical findings, Sprint 11 failed gates and the owner experimental-session
-disposition remain; endurance stays deferred.
+sampled full outputs matched two of four pairs. Lifecycle passed 52/52 normal
+final answers, both cancellations, C2, slots and release; 24/26 cache full-ID
+pairs and all final-text pairs match. Astra final review supports selecting
+aligned ring-fold for the next experimental session only; the Sprint 17 GEMM is
+unchanged and the paired snapshot control remains available for rollback.
+Earlier numerical findings, Sprint 11 failed gates and the owner experimental-
+session disposition remain; endurance stays deferred and no GPU campaign is
+queued.
 
-Optimize warmed C1 latency on the current model and numerical profile first.
-Keep aggregate C2 throughput as a separate objective. The first implementation
-is a bounded attribution packet; no optimization is selected before its result.
-This plan prepares no launch command and reserves no GPU resources. Attribute
-the latest sampled recipe; retain the selected greedy validation lane separately.
+For future comparisons, carry the separately selected recurrent profile in both
+arms unless recurrence is the stated A/B variable. A GEMM hash alone does not
+identify the recurrent profile. Optimize warmed C1 latency on the current model
+and numerical profile first; keep aggregate C2 throughput as a separate
+objective. The historical attribution plan below prepares no launch or GPU
+reservation. Retain the selected greedy validation lane separately.
 The numerical mismatch remains unresolved under the owner's session-use
 disposition. This plan does not expand that numerical contract.
 
@@ -125,7 +130,7 @@ back to full `torch.topk` plus LSE. It is not a tiled target-k=20 alternative.
 Ties, finite sentinels and masked tails need review.
 No new library installation is proposed.
 
-## 1. Attribute one representative sampled packet
+## 1. Historical attribution packet
 
 Reuse the frozen four-task publisher sampling requests from the successful
 screen: inputs 226/246/8176/8176, per-request total output cap 8192, temperature 1.0,

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIThreadripper serving validation"
+  short_description: "Resume thinking-enabled RDNA4 serving validation"
+  default_prompt: "Use $aithreadripper-serving-validation to resume the selected serving validation and record the evidence."

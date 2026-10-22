@@ -1,5 +1,5 @@
 {
-  "active_gpu_run": true,
+  "active_gpu_run": false,
   "affected_review": {
     "archive_pins": {
       "greedy": "2b28519556a6a674a94941e45bf66100bd4e56afdbc6c6bd50bcfe9bde51aadc",
@@ -35,6 +35,110 @@
     "status": "APPROVED_CONDITIONAL_ON_REVERSE_AND_RELEASE",
     "stop_rule": "Stop on new failure; no automatic retry; no promotion before final review.",
     "unchanged_requests_and_graders": true
+  },
+  "all_bounded_gates_passed": true,
+  "cancellations_completed": 2,
+  "evidence_roots_verified": [
+    {
+      "manifest_sha256": "a0e447fa0cba1ac8c923afbd8c3fbde5fd042c3fb76b50719f6be0e2b57603e7",
+      "members": 360,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-ringfold.xv5i90co"
+    },
+    {
+      "manifest_sha256": "904dc82fb8dbf38e8758753e953a1f89601dab040df685a2e4f9649b9226ee04",
+      "members": 232,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-forward-run.evw1sksb"
+    },
+    {
+      "manifest_sha256": "d93032e0d7fe9cbaef345e3648e8ef4b2e4553cf21381c2e2cae5570a2b1324b",
+      "members": 83,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-ringfold-reader.i7rrryia"
+    },
+    {
+      "manifest_sha256": "a67ca70f12802629071db191815690cf76a728f6f889f687b9c06fea24330a4f",
+      "members": 343,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-reverse.l7mp5rjs"
+    },
+    {
+      "manifest_sha256": "56576ba1ba127388db4a51bc40c8778f705b4831ad2586ea8b6d4002efee6ab4",
+      "members": 226,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-reverse-run.p34bn4du"
+    },
+    {
+      "manifest_sha256": "160551fc243ad255c7cc7bf3212729b3dd4dd20325e6106349ab70d655cb2b1f",
+      "members": 81,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-reverse-reader.f2woy_0i"
+    },
+    {
+      "manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+      "members": 344,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy.oiripzcc"
+    },
+    {
+      "manifest_sha256": "7356756b572f404a3fee09883a6ee25faa33af574cef4da343f7b772c1ae0cc6",
+      "members": 230,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy-run.g9zdsv3a"
+    },
+    {
+      "manifest_sha256": "799845ae1851cfd42702f8ef5c994e8d2ffd8db711fec5db942e18abbeb72fb0",
+      "members": 127,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-greedy-reader.l29p6ov3"
+    },
+    {
+      "manifest_sha256": "2f16d1f39c6dbf80b0d4f2d46b21eadaf2e5abe90a697ffebfe5c300baa337bc",
+      "members": 344,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled.v6p0_iji"
+    },
+    {
+      "manifest_sha256": "719c5fade2ccd8fa3d5b0325cb1e0b332b9a3aeae9685081921109962daf60be",
+      "members": 230,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled-run.qery1it6"
+    },
+    {
+      "manifest_sha256": "a7347f35dc17981754cbfe318eb3edceb2ae64f8331be037eb628185bed90c1f",
+      "members": 127,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-sampled-reader.6tn_y0s7"
+    },
+    {
+      "manifest_sha256": "479880085f5953d9f884185db4cabaf8c78f28d61ec5ef21c78e0256355f5f24",
+      "members": 350,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle.g3_b8ah0"
+    },
+    {
+      "manifest_sha256": "8c3ed046db84dfb36a7041a07f6ae334ea3d13a09d643983017345f6167e935d",
+      "members": 571,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle-run.8b3b146m"
+    },
+    {
+      "manifest_sha256": "54d5ca4c4624f2fa42bb311027033ecb76860a540499750a981d7424616edc90",
+      "members": 442,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle-reader.1l_386nd"
+    }
+  ],
+  "exact_output_equivalence_established": false,
+  "final_review": {
+    "blocking_findings": [],
+    "independent_releases_verified": true,
+    "limitations": [
+      "Two finite serving orders with three measured requests per profile per order; observed gains are not a broad speed guarantee.",
+      "Sampled and cache reasoning variations remain; no exact-output, recurrent-state or sampling-distribution equivalence.",
+      "Original numerical findings and owner session-use exception remain; no hardware cause or mismatch fix established.",
+      "Prior Sprint11 failed matched-work gates remain unchanged.",
+      "Reliability/endurance and production qualification remain deferred.",
+      "Branch evidence is authenticated source plus live metadata inference, not captured device constexpr."
+    ],
+    "model_starts": 10,
+    "normal_final_answers_passed": 68,
+    "report_root": "fp8-sprint19-astra-review.e9bnwyga",
+    "report_sha256": "2bbb127ddaadee117583b2ac6c2c2c00332cf7abacc6d40489bafd717d73a352",
+    "review_status": "APPROVED",
+    "reviewed_utc": "2026-10-22T18:50:36.040294+00:00",
+    "reviewed_working_snapshot_sha256": "177bd8074e79ec2fd66360dbdab179b17088e45a811b67f9ed035a247b6bf632",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "reviewer_local_verification_note": "An initial supplementary assertion mistakenly treated generic capture.remote_release_proven as the campaign release field. The unchanged producer initializes that capture field to false. Final checks use campaign.independent_release_verified and the authenticated observation/supervision/cgroup joins required by the retained verifier; no evidence or gate was changed.",
+    "scope": "Next experimental session launch only; no production, state or distribution qualification.",
+    "status": "APPROVED_EXPERIMENTAL_SESSION_SELECTION",
+    "verified_roots": 15
   },
   "forced_work_requests_completed": 16,
   "forward_disposition": {
@@ -364,9 +468,133 @@
     "status": "COMPLETE_PASS",
     "successful_packet_receipt": "02b-packet-check"
   },
-  "launch_prepared": true,
+  "launch_prepared": false,
+  "lifecycle_disposition": {
+    "actual_c2_accounting_passed": true,
+    "all_required_gates_passed": true,
+    "cache_final_text_pairs_matched": 26,
+    "cache_full_output_pairs_matched": 24,
+    "cache_output_pair_count": 26,
+    "cancellations": 2,
+    "final_answers_passed": 52,
+    "numerical_mismatch_resolved": false,
+    "qualification": false,
+    "results_sha256": "f9201069e787195db8e4aae0da0e3ab28c6c5af21e1ac41fe438abb6d644b517",
+    "retained_cache_output_variations": [
+      {
+        "arm": "control",
+        "case": "concurrent-a",
+        "comparison_case": "victim-cold-a",
+        "final_answers_equal": true,
+        "first_difference": 149,
+        "full_output_ids_equal": false
+      },
+      {
+        "arm": "mtp",
+        "case": "concurrent-a",
+        "comparison_case": "victim-cold-a",
+        "final_answers_equal": true,
+        "first_difference": 149,
+        "full_output_ids_equal": false
+      }
+    ],
+    "selected_profile_changed": false,
+    "slot_bookkeeping_passed": true,
+    "status": "LIFECYCLE_PASS_ALL_BOUNDED_GATES_COMPLETE"
+  },
+  "lifecycle_result": {
+    "checks": {
+      "packet": 65,
+      "reader": 18
+    },
+    "disposition": {
+      "actual_c2_accounting_passed": true,
+      "all_required_gates_passed": true,
+      "cache_final_text_pairs_matched": 26,
+      "cache_full_output_pairs_matched": 24,
+      "cache_output_pair_count": 26,
+      "cancellations": 2,
+      "final_answers_passed": 52,
+      "numerical_mismatch_resolved": false,
+      "qualification": false,
+      "results_sha256": "f9201069e787195db8e4aae0da0e3ab28c6c5af21e1ac41fe438abb6d644b517",
+      "retained_cache_output_variations": [
+        {
+          "arm": "control",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        }
+      ],
+      "selected_profile_changed": false,
+      "slot_bookkeeping_passed": true,
+      "status": "LIFECYCLE_PASS_ALL_BOUNDED_GATES_COMPLETE"
+    },
+    "donor_native_seal": {
+      "manifest_sha256": "67143e80ccae55193660599af6ddf0a0070cbdb1a52adaa97ee70ab2575f39e7",
+      "members": 579,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-run.auo1ln65",
+      "verified_utc": "2026-10-22T16:30:20.840169+00:00"
+    },
+    "donor_reader_seal": {
+      "manifest_sha256": "2b98a66c53e66cf15cbc0a9af78d4847ee291f6c02b5dc6e48b2ce3c9315fb71",
+      "members": 440,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle-reader.uwbpy5bp",
+      "verified_utc": "2026-10-22T16:30:39.190650+00:00"
+    },
+    "donor_source_seal": {
+      "manifest_sha256": "a2c7ffe03886c3cd001810c3402f2170501db7e9962e92ac8e90fd508372b2fe",
+      "members": 347,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint17-lifecycle.m7hwllvu",
+      "verified_utc": "2026-10-22T16:03:43.936206+00:00"
+    },
+    "failed_initial_packet_receipt": "02-packet-check",
+    "launch_authorized": true,
+    "matched_capacity_checks": 6,
+    "model_starts_executed": 2,
+    "native_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle-run.8b3b146m",
+    "native_seal": {
+      "manifest_sha256": "8c3ed046db84dfb36a7041a07f6ae334ea3d13a09d643983017345f6167e935d",
+      "members": 571,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle-run.8b3b146m",
+      "verified_utc": "2026-10-22T18:42:26.752200+00:00"
+    },
+    "reader": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle-reader.1l_386nd",
+    "reader_seal": {
+      "manifest_sha256": "54d5ca4c4624f2fa42bb311027033ecb76860a540499750a981d7424616edc90",
+      "members": 442,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle-reader.1l_386nd",
+      "verified_utc": "2026-10-22T18:44:13.057364+00:00"
+    },
+    "requests": 54,
+    "source": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle.g3_b8ah0",
+    "source_seal": {
+      "manifest_sha256": "479880085f5953d9f884185db4cabaf8c78f28d61ec5ef21c78e0256355f5f24",
+      "members": 350,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-lifecycle.g3_b8ah0",
+      "verified_utc": "2026-10-22T18:32:04.042891+00:00"
+    },
+    "status": "COMPLETE_PASS",
+    "successful_packet_receipt": "02b-packet-check"
+  },
   "memory_comparison_scope": "Startup Torch allocated bytes at19usable20physicalslots/card; not whole-device/process-lifetime peak or an engine comparison. Split attention still uses BF16 KV.",
-  "model_starts_completed": 8,
+  "model_starts_completed": 10,
   "native_root": "fp8-sprint19-forward-run.evw1sksb",
   "native_seal": {
     "manifest_sha256": "904dc82fb8dbf38e8758753e953a1f89601dab040df685a2e4f9649b9226ee04",
@@ -375,8 +603,28 @@
     "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-forward-run.evw1sksb",
     "verified_utc": "2026-10-22T18:03:05.848905+00:00"
   },
-  "natural_final_answers_completed": 16,
+  "natural_final_answers_completed": 68,
+  "next_bounded_action": "No GPU campaign queued. Carry selected recurrent profile into both arms of future kernel trials unless it is the stated A/B variable; reliability remains deferred until tuning is exhausted.",
   "numerical_mismatch_resolved": false,
+  "preparation_corrections": {
+    "forward": [
+      "two fixed1024 settings predicates",
+      "exact62package-files/63archive-members expectations",
+      "restored S7 arm-dependent ring fixtures"
+    ],
+    "lifecycle_tokenizer_reference_sha256": "c511bcff327264684e533a667b2e4a22b936b38a32b772c492bf9d8aa0dc88b0",
+    "new_gpu_work_for_corrections": false,
+    "quality": [
+      "test-only parenthesis typo corrected with failed receipts retained",
+      "result metadata derives ringfold/matched-profile from authenticated stacks; legacy status label retained for consumer compatibility; grading rules unchanged",
+      "metadata fixtures without stack use defensive lookup; failed receipt retained",
+      "lifecycle published tokenizer reference restored exactly from sealed donor before native launch; static decoder/grader prerequisite closure checked"
+    ],
+    "reverse": [
+      "restored sealed bootstrap helper required by launcher before upload"
+    ],
+    "scope": "Retained preparation corrections; no native retry, weaker gates or numerical-source change."
+  },
   "production_qualified": false,
   "profile": {
     "concurrency": 1,
@@ -397,14 +645,11 @@
     "top_p": 1,
     "usable_recurrent_slots_per_card": 19
   },
-  "quality_gates_remaining": [
-    "boundedcache/C2/cancellation/slot screen",
-    "finalindependentreview"
-  ],
-  "quality_lane_active": "lifecycle",
+  "quality_gates_remaining": [],
+  "quality_lane_active": null,
   "quality_status": {
     "greedy": "COMPLETE_PASS",
-    "lifecycle": "ACTIVE_NO_RESULT_YET",
+    "lifecycle": "COMPLETE_PASS",
     "sampled": "COMPLETE_PASS"
   },
   "reader_root": "fp8-sprint19-ringfold-reader.i7rrryia",
@@ -415,8 +660,9 @@
     "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-ringfold-reader.i7rrryia",
     "verified_utc": "2026-10-22T18:03:49.941940+00:00"
   },
+  "recurrent_state_equivalence_established": false,
   "reliability_deferred": true,
-  "requests_completed": 32,
+  "requests_completed": 86,
   "reverse_disposition": {
     "advance_to_affected_quality_preparation": true,
     "all_three_measured_candidate_requests_faster": true,
@@ -566,6 +812,35 @@
       "stack": "snapshot"
     }
   ],
+  "rollback_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": false,
+    "logical_arm": "control",
+    "name": "snapshot",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Recurrent-profile rollback only; preserve the selected GEMM, stack, precision, capacity and owner controls.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
   "sampled_result": {
     "checks": {
       "packet": 18,
@@ -697,10 +972,42 @@
     "status": "COMPLETE_PASS",
     "successful_packet_receipt": "02b-packet-check"
   },
+  "sampling_distribution_verified": false,
   "schema": 1,
-  "scope": "Both-order serving, greedy and publisher-sampled quality complete; bounded lifecycle active. No candidate promotion yet.",
+  "scope": "Both serving orders, greedy, publisher sampling and lifecycle complete. Aligned ring-fold selected for next experimental session only after final independent review.",
+  "selected_gemm_changed": false,
   "selected_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
-  "selected_profile_changed": false,
+  "selected_profile_changed": true,
+  "selected_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": true,
+    "logical_arm": "mtp",
+    "name": "aligned_ring_fold",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Next experimental session launch only.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
+  "selected_source_change_scope": "selected_source identifies the unchanged GEMM; selected_recurrent_profile identifies recurrent activation.",
   "selected_source_changed": false,
   "source_root": "fp8-sprint19-ringfold.xv5i90co",
   "source_seal": {
@@ -710,6 +1017,6 @@
     "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/fp8-sprint19-ringfold.xv5i90co",
     "verified_utc": "2026-10-22T17:56:22.038264+00:00"
   },
-  "status": "SPRINT19_LIFECYCLE_PHYSICAL_ACTIVE",
-  "updated_utc": "2026-10-22T18:33:19.730468+00:00"
+  "status": "SPRINT19_COMPLETE_EXPERIMENTAL_RINGFOLD_SELECTED",
+  "updated_utc": "2026-10-22T18:51:15.816823+00:00"
 }
