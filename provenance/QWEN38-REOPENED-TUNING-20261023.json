@@ -18,7 +18,7 @@
     {
       "sprint": 36,
       "name": "Prefill chunk sizing",
-      "status": "SOURCE_AUDIT_COMPLETE_COMPARISON_QUEUED",
+      "status": "BOUNDED_BOTH_ORDER_SCREEN_COMPLETE_2048_RETAINED",
       "source_audit": {
         "selected_prefill_m_rows": [
           2016,
@@ -29,6 +29,15 @@
         "actual_dispatch_and_peak_memory_required": true,
         "separate_packet_and_fixtures_required": true,
         "performance_gain_established": false
+      },
+      "result": "provenance/SPRINT36-PREFILL-CHUNKS-20261023.json",
+      "selected_chunk_tokens": 2048,
+      "strict_sre_passes": 8,
+      "sre_requests": 8,
+      "unselected_followup": {
+        "name": "M4096 stage1 GEMM route",
+        "status": "SOURCE_LEAD_UNTESTED",
+        "source": "Observed M4096 remained stage3 while M2048 used selected stage1; separate tuning experiment required."
       }
     },
     {
@@ -114,5 +123,5 @@
   "resource_limits_changed": false,
   "runtime_defaults_changed": false,
   "tracking": "docs/QWEN38-REOPENED-TUNING.md",
-  "next_sprint": 36
+  "next_sprint": 37
 }

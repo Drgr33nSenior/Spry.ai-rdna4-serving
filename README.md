@@ -33,6 +33,8 @@ The [64K SRE screen](docs/SPRINT33-LONG-CONTEXT64.md) completed 14 normal-stop r
 
 The [Qwen3.8 experimental baseline](docs/QWEN38-FROZEN-BASELINE.md) remains the reference for [reopened tuning](docs/QWEN38-REOPENED-TUNING.md). The [first reopened prefix-reuse screen](docs/SPRINT35-LONG-PREFIX-REUSE.md) passed 10/10 strict SRE responses and observed 24,576 cached tokens on warm long-document requests. The owner has [parked Flash-Next and lower-bit checkpoint work](docs/QWEN-NEXT-WEIGHT-CANDIDATES.md) to wait for an official Qwen4 27B dense checkpoint; no release date or final configuration is assumed.
 
+The [Sprint 36 prefill comparison](docs/SPRINT36-PREFILL-CHUNKS.md) retained 2048-token chunks after both orders completed 12 normal finals and passed 8/8 strict SRE responses. The 4096 configuration had higher observed request times and allocator peaks; generated work differed, so the timings remain descriptive.
+
 The private integration passed a real eager TP2 smoke on two Radeon AI PRO R9700
 GPUs: initial prefill, continuation, decode and a 13-token prefix-reuse hit.
 Both ranks produced finite logits and agreed on sampled tokens. KV, request and

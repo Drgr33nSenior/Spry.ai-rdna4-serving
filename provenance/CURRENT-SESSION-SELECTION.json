@@ -1,11 +1,11 @@
 {
   "active_sprint": {
-    "number": 36,
-    "status": "SOURCE_AUDIT_COMPLETE_COMPARISON_QUEUED",
+    "number": 37,
+    "status": "FEASIBILITY_QUEUED",
     "record": "provenance/QWEN38-REOPENED-TUNING-20261023.json",
     "gpu_active": false,
     "launch_prepared": false,
-    "name": "Qwen3.8 prefill chunk sizing"
+    "name": "Qwen3.8 optional FP8 target-KV feasibility"
   },
   "additional_baseline_investigation": "Closed as unresolved by owner; reopen if more concerning behavior occurs.",
   "aligned_ring_fold_selected": true,
@@ -1022,6 +1022,20 @@
     "warm_cached_tokens": 24576,
     "selected_source_unchanged": true,
     "causal_speedup_established": false,
+    "qualification": false
+  },
+  "sprint36_prefill_chunks": {
+    "status": "BOUNDED_BOTH_ORDER_SCREEN_COMPLETE_2048_RETAINED",
+    "record": "provenance/SPRINT36-PREFILL-CHUNKS-20261023.json",
+    "normal_decoded_finals": 12,
+    "strict_sre_passes": 8,
+    "sre_requests": 8,
+    "unique_sre_task_families": 2,
+    "selected_chunked_prefill_size": 2048,
+    "larger_chunk_promoted": false,
+    "selected_source_unchanged": true,
+    "causal_speedup_established": false,
+    "numerical_mismatch_resolved": false,
     "qualification": false
   }
 }

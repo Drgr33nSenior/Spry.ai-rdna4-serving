@@ -1,0 +1,2711 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "sprint": 36,
+  "status": "BOUNDED_BOTH_ORDER_SCREEN_COMPLETE_2048_RETAINED",
+  "reference": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+  "reference_record_sha256": "c155ee3468c7917766cf58818e5092a344a9f05032b25bf7903be307dd0ed16c",
+  "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "variable": "chunked_prefill_size",
+  "profiles": {
+    "A": {
+      "chunked_prefill_size": 2048
+    },
+    "B": {
+      "chunked_prefill_size": 4096
+    }
+  },
+  "planned_orders": [
+    "AB",
+    "BA"
+  ],
+  "planned_campaigns": 2,
+  "planned_fresh_starts": 4,
+  "requests_per_start": 3,
+  "concurrency": 1,
+  "frozen_request_source": "provenance/SPRINT35-LONG-PREFIX-REUSE-20261023.json",
+  "requests": [
+    {
+      "case": "warmup",
+      "input_tokens": 2040,
+      "graded_sre": false
+    },
+    {
+      "case": "cold-a",
+      "input_tokens": 25991,
+      "graded_sre": true
+    },
+    {
+      "case": "isolated-b-cold",
+      "input_tokens": 25978,
+      "graded_sre": true
+    }
+  ],
+  "same_native_tokenized_bodies_and_oracles": true,
+  "expected_cached_tokens": 0,
+  "context_length": 32768,
+  "pool_tokens": 32800,
+  "total_output_cap_tokens": 4096,
+  "internal_reserve_tokens": 32,
+  "thinking": true,
+  "reasoning_effort": "low",
+  "generation": "greedy natural stop",
+  "recurrent_profile": "aligned_ring_fold",
+  "target_weight_dtype": "fp8",
+  "target_kv_dtype": "bf16",
+  "draft_kv_dtype": "bf16",
+  "explicit_bf16_draft_override": true,
+  "recurrent_state_dtype": "fp32",
+  "head_arithmetic_dtype": "fp32",
+  "dflash_width": 8,
+  "usable_recurrent_slots": 19,
+  "physical_recurrent_slots": 20,
+  "observer": {
+    "design_review": "ASTRA_APPROVED_CPU_IMPLEMENTATION_PENDING_PACKET_REVIEW",
+    "hooks": [
+      "Target ModelRunner.forward",
+      "Existing post-dispatch-selection GEMM witness hook"
+    ],
+    "request_rank_phase_and_source_joins_required": true,
+    "kernel_source_unchanged": true,
+    "no_new_device_tensor_operations": true,
+    "success_credit": "Only after enclosing native forward returns successfully",
+    "allocator_scope": "Optional cumulative allocator counters at host return; no sync/reset/mem_get_info",
+    "overhead_measured": false,
+    "http_timings_instrumented": true,
+    "logical_lengths_entry_rows_and_gemm_m_separate": true,
+    "entry_rows_may_precede_native_padding": true
+  },
+  "timing_scope": {
+    "http_request_to_terminal": true,
+    "ttft_measured": false,
+    "native_prefill_device_time_measured": false,
+    "isolated_decode_measured": false,
+    "triton_cache": "Isolated per-start output tmpfs",
+    "bulk_shape_compilation_warmness_separately_established": false,
+    "remaining_compilation_included": true
+  },
+  "direction_sha256": "a728ff9e596e2efb8196adf04b2cbbbea155ce21549d015553fa787d49711f87",
+  "observer_direction_sha256": "d795f22a86dcaf52e1f2244e89bd9328b2504d07b73d5bceaa6a5d713d86074c",
+  "physical_campaigns_started": 3,
+  "gpu_active": false,
+  "launch_prepared": false,
+  "performance_result_available": true,
+  "runtime_defaults_changed": false,
+  "selected_kernels_changed": false,
+  "numerical_mismatch_resolved": false,
+  "qualification": false,
+  "production_qualified": false,
+  "prior_failures_retained": true,
+  "next_model_work_remains_parked": true,
+  "reliability_and_endurance": "DEFERRED_UNTIL_TUNING_EXHAUSTED",
+  "tracking": "docs/SPRINT36-PREFILL-CHUNKS.md",
+  "observation_scope_clarification_sha256": "122968ca948b328bd680063e16625b5d4223713ae3742696aa94e283c099d94c",
+  "cpu_checks": {
+    "author_acceptance_per_order": 129,
+    "observer_cases_included": 43,
+    "tested_hashes_per_order": 297,
+    "reader_focused_per_order": 26,
+    "real_composed_regressions_included": 14
+  },
+  "reader_ready_sha256": {
+    "AB": "fad1e7a38fd5601fdb8f22a51d4c3b3fa3d194ea7fd1416549113d74abfea6ce",
+    "BA": "46ee49ffd91ef843fc406220fc62c9cbf1ede206cc11d5283502160f3fb2fac9"
+  },
+  "retained_cpu_failures": {
+    "initial_author_seals": {
+      "AB": {
+        "root": "fp8-sprint36-ab.2l_lapuy",
+        "manifest_sha256": "bbcb9ad96638cbf9c2bf22426758ea2b32c34b068e87c15e87562f1213b6caaa",
+        "members": 342
+      },
+      "BA": {
+        "root": "fp8-sprint36-ba.0gpeel_i",
+        "manifest_sha256": "e867981ac5dc683eccfa0135112c0f4ece816b5bca1b06873ac1851872f4fa0a",
+        "members": 333
+      }
+    },
+    "bounded_author_seals": {
+      "AB": {
+        "root": "fp8-sprint36-ab-bounded.sgj4si_y",
+        "manifest_sha256": "c1896687b865a54e8c6c9490f09c3574f26d5b5f04deff42b045d35ca153a99d",
+        "members": 326
+      },
+      "BA": {
+        "root": "fp8-sprint36-ba-bounded.wk02c90a",
+        "manifest_sha256": "6dbee58fe1316e5f6e5a7165c9e315ecf77482cae7d02ca7fcba26af92c94a3a",
+        "members": 326
+      }
+    },
+    "physical_attempts": 0,
+    "successor_author_seals": {
+      "AB": {
+        "manifest_sha256": "91e59ae761e5cf35a2fa17382f1b88af78c672bca46e9703c73037da07555909",
+        "members": 342,
+        "root": "fp8-sprint36-ab-integration.cc1azh5n"
+      },
+      "BA": {
+        "manifest_sha256": "1c5198dda0dc0cbfff27c9003f30d594db4aac06547b83800e3ad88b31b5f1a9",
+        "members": 333,
+        "root": "fp8-sprint36-ba-integration.fp362e3n"
+      }
+    },
+    "unexecuted_initial_ba_seal": {
+      "root": "fp8-sprint36-ba-final.dyc2hlvm",
+      "manifest_sha256": "5725bcf7795aeac65b4514863bd78a730a30cd92bcce81127e954d692844f7bd",
+      "members": 339
+    }
+  },
+  "prelaunch_review": "ASTRA_APPROVED_AB_THEN_BA_SUBJECT_TO_SEPARATE_ADMISSION_AND_AB_GATES",
+  "planned_successor_campaigns": 2,
+  "maximum_total_physical_campaigns": 3,
+  "diagnosed_successor_direction_sha256": "15002c7d4d76e4404fa92a1432d8ae8cbbf0f0420dedcf200ef6e45879bf3a42",
+  "initial_prepared_packets": {
+    "AB": {
+      "root": "fp8-sprint36-ab-final.krzefx1w",
+      "ready_sha256": "7e6f92658d2eadb136ed6e71c6e089b57d384e9133216d54952e0009ec4f8f76",
+      "package": {
+        "archive_bytes": 16701440,
+        "archive_members": 64,
+        "archive_sha256": "ad12af1cb4a0751ea798bc8ddce0d98e7022fc5ef129d8cce9194183a6b2f3fb",
+        "argv_lengths": {
+          "bf16": 255,
+          "kv4": 255
+        },
+        "binding_bytes": {
+          "control": 65497,
+          "mtp": 65477
+        },
+        "combined_transport_bytes": 33496201,
+        "files": 63,
+        "manifest_sha256": "54b2771b791127598e5235b909199940a6ddaff3a76bca94edf3931282347ca5",
+        "nonce": "c09f8f3c1459d9b3",
+        "package_sha256": "d20ae7da44a93d69c7fc0fa11f00c37e5e354dc0a6a5daaff3f4bab2f041b4b9"
+      }
+    },
+    "BA": {
+      "root": "fp8-sprint36-ba-final.dyc2hlvm",
+      "ready_sha256": "f6291da848085bc230f4b4d7bc13d94bf1bafb622cb1d03000f1ec51c96daa3d",
+      "package": {
+        "archive_bytes": 16701440,
+        "archive_members": 64,
+        "archive_sha256": "0095ed10e5e445388d1d0f2a0a3e4a4d2c50d82cc8ac7e2366bd565ec7ef5a9e",
+        "argv_lengths": {
+          "bf16": 255,
+          "kv4": 255
+        },
+        "binding_bytes": {
+          "control": 65497,
+          "mtp": 65477
+        },
+        "combined_transport_bytes": 33496201,
+        "files": 63,
+        "manifest_sha256": "d9b46af04f50291df5bcec6c1c53fccacce2718b2bcc892dd0261b815b20092d",
+        "nonce": "07c33f3ba0fab852",
+        "package_sha256": "a506248433a599bedd06c0387ad193a5227f5fd19d83a8bcd7dc31f86cdfb76b"
+      }
+    }
+  },
+  "initial_source_seals": {
+    "AB": {
+      "root": "fp8-sprint36-ab-final.krzefx1w",
+      "manifest_sha256": "dd993c4b77b42fdb94480e30bb5bbaaaf9efc8cbf3d067afc260f916974f3082",
+      "members": 344
+    }
+  },
+  "initial_failed_campaign": {
+    "native": {
+      "root": "fp8-sprint36-ab-run.nwtpi7o_",
+      "manifest_sha256": "90a24674ee3e7772c0adf61776bb8fc8f3534dba47898c96f1be89791253258b",
+      "members": 162
+    },
+    "launch_elapsed_seconds": 193.4545153339859,
+    "physical_success": false,
+    "independent_release_verified": true,
+    "cleanup_errors": [],
+    "unresolved": false,
+    "model_starts": 1,
+    "normal_responses": 3,
+    "valid_complete_responses": 3,
+    "answers_graded": false,
+    "observer_complete_both_ranks": true,
+    "hooks_restored_both_ranks": true,
+    "observed_chunk_counts": [
+      1,
+      13,
+      13
+    ],
+    "input_token_totals": [
+      2040,
+      25991,
+      25978
+    ],
+    "candidate4096_started": false,
+    "reverse_order_started": false,
+    "root_cause": "Legacy non-J01 integration guard rejected explicitS36token_probe before realwireparse.",
+    "fix": "ExplicitS36 observation branch followed by mandatory source/worker/RID/wire validation and composed regression tests.",
+    "excluded_from_completed_comparison": true,
+    "automatic_retry": false
+  },
+  "prepared_packets": {
+    "AB": {
+      "root": "fp8-sprint36-ab-wirejoin.lppxw8p9",
+      "ready_sha256": "2940dc1756c38e8de43f2866ce33caf8ea9a8e4d2310a5d6f612f81ecc9f47e5",
+      "package": {
+        "archive_bytes": 16701440,
+        "archive_members": 64,
+        "archive_sha256": "d918c406d08ddca92530b27a7641258a11467c92d64297bda118833467cf4a99",
+        "argv_lengths": {
+          "bf16": 255,
+          "kv4": 255
+        },
+        "binding_bytes": {
+          "control": 65497,
+          "mtp": 65477
+        },
+        "combined_transport_bytes": 33497626,
+        "files": 63,
+        "manifest_sha256": "837aa3fdd653aa403a29e4161aa54fa83a18c7f284a91f55965ebe5f6f3b5fa4",
+        "nonce": "bb31e4b83b0a35b8",
+        "package_sha256": "df85bc805f82717c5af424ca59969d8f8d0076f6fdb9814cf23c9e6f7e2bdc07"
+      }
+    },
+    "BA": {
+      "root": "fp8-sprint36-ba-wirejoin.cknyegu0",
+      "ready_sha256": "63dd63fc3eedb0d83fb9c829fa8094e67c11fa6449d537e66ff77ca5ae78383f",
+      "package": {
+        "archive_bytes": 16701440,
+        "archive_members": 64,
+        "archive_sha256": "bf5960e714bae8292b45b88f0b2f6f8a2113f5ddc4e07c588715b43fdf7b6d99",
+        "argv_lengths": {
+          "bf16": 255,
+          "kv4": 255
+        },
+        "binding_bytes": {
+          "control": 65497,
+          "mtp": 65477
+        },
+        "combined_transport_bytes": 33497626,
+        "files": 63,
+        "manifest_sha256": "72f3d8e282bf9663286918a9a810fd0e4531e4612bc004b5d6c7dba608ee2943",
+        "nonce": "879d867de23cb921",
+        "package_sha256": "23daf2745e2276639bfc4d4ababb3ebef71fbc42af2affd21887cf8d61ae4bab"
+      }
+    }
+  },
+  "source_seals": {
+    "AB": {
+      "root": "fp8-sprint36-ab-wirejoin.lppxw8p9",
+      "manifest_sha256": "5bac583c6e0a4b283e10bbc98214502ec96089604ad503865eb3b9d4562f8997",
+      "members": 351
+    },
+    "BA": {
+      "root": "fp8-sprint36-ba-wirejoin.cknyegu0",
+      "manifest_sha256": "03550487c591411fc9c2eb5a5b7d9ce11d5c767af6865bd28731c27fef0b32a6",
+      "members": 349
+    }
+  },
+  "consumer_fix": {
+    "serving_integration_sha256": "68de87ac07376213cf87380e361fa2216b611a78371831b3d65bd9b53cd84130",
+    "composed_test_sha256": "485a3853e3dce701c30e5f8509f3d3d365e8ef12e525faa53cbe76ca40dfee95",
+    "independent_review": "APPROVED_WITH_ALL_LEGACY_REFUSALS_PRESERVED",
+    "validators_mocked": false
+  },
+  "completed_comparison_campaigns": 2,
+  "completed_comparison_starts": 4,
+  "normal_decoded_comparison_finals": 12,
+  "strict_sre_passes": 8,
+  "sre_requests": 8,
+  "unique_sre_task_families": 2,
+  "results": {
+    "AB": {
+      "starts": [
+        {
+          "order": "AB",
+          "position": 0,
+          "logical_arm": "control",
+          "chunked_prefill_size": 2048,
+          "samples": [
+            {
+              "cached_tokens": 0,
+              "case": "warmup",
+              "client_elapsed_seconds": 0.9874002890428528,
+              "input_tokens": 2040,
+              "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+              "output_tokens": 33,
+              "verifier_cycles": 6
+            },
+            {
+              "cached_tokens": 0,
+              "case": "cold-a",
+              "client_elapsed_seconds": 15.37689552694792,
+              "input_tokens": 25991,
+              "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+              "output_tokens": 673,
+              "verifier_cycles": 105
+            },
+            {
+              "cached_tokens": 0,
+              "case": "isolated-b-cold",
+              "client_elapsed_seconds": 13.418613322020974,
+              "input_tokens": 25978,
+              "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+              "output_tokens": 523,
+              "verifier_cycles": 79
+            }
+          ],
+          "prefill_geometry": {
+            "allocator_scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+            "chunked_prefill_size": 2048,
+            "input_rows_scope": "forward-entry input_ids.shape[0] before native eager padding/normalization; GEMM M and operand metadata independently describe consumed GEMM geometry",
+            "ranks": [
+              {
+                "credited_gemm_calls": 6912,
+                "forward_wrapper_calls": 142,
+                "gemm_hook_calls": 7168,
+                "ignored_forward_calls": 115,
+                "rank": 0,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 27
+              },
+              {
+                "credited_gemm_calls": 6912,
+                "forward_wrapper_calls": 142,
+                "gemm_hook_calls": 7168,
+                "ignored_forward_calls": 115,
+                "rank": 1,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 27
+              }
+            ]
+          },
+          "block_fp8_gemm_dispatch": [
+            {
+              "M": 2040,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "warmup": 256
+              }
+            },
+            {
+              "M": 1415,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 256
+              }
+            },
+            {
+              "M": 2048,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 1,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 3072,
+                "isolated-b-cold": 3072
+              }
+            },
+            {
+              "M": 1402,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "isolated-b-cold": 256
+              }
+            }
+          ],
+          "gemm_dispatch_scope": "rank0 signatures; complete original both-rank observations retained privately and validated",
+          "allocator_observations": [
+            {
+              "rank": 0,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21284340736,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251096576,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              }
+            },
+            {
+              "rank": 1,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21284340736,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251096576,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              }
+            }
+          ],
+          "startup_memory": [
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 0,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            },
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 1,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            }
+          ],
+          "host_cgroup": {
+            "scope": "fresh per-start cgroup including startup/pagecache/tmpfs/children; not RSS or GPU VRAM",
+            "memory_peak_bytes": 21746708480,
+            "memory_events": {
+              "high": 0,
+              "low": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_group_kill": 0,
+              "oom_kill": 0,
+              "sock_throttled": 0
+            }
+          }
+        },
+        {
+          "order": "AB",
+          "position": 1,
+          "logical_arm": "mtp",
+          "chunked_prefill_size": 4096,
+          "samples": [
+            {
+              "cached_tokens": 0,
+              "case": "warmup",
+              "client_elapsed_seconds": 0.9843598590232432,
+              "input_tokens": 2040,
+              "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+              "output_tokens": 33,
+              "verifier_cycles": 6
+            },
+            {
+              "cached_tokens": 0,
+              "case": "cold-a",
+              "client_elapsed_seconds": 16.95637471304508,
+              "input_tokens": 25991,
+              "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+              "output_tokens": 673,
+              "verifier_cycles": 103
+            },
+            {
+              "cached_tokens": 0,
+              "case": "isolated-b-cold",
+              "client_elapsed_seconds": 15.136552147974726,
+              "input_tokens": 25978,
+              "output_ids_sha256": "d81308c9ae473ed4b70608ed0a55b573e73ab7fc8790b79a597233bf103083df",
+              "output_tokens": 504,
+              "verifier_cycles": 84
+            }
+          ],
+          "prefill_geometry": {
+            "allocator_scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+            "chunked_prefill_size": 4096,
+            "input_rows_scope": "forward-entry input_ids.shape[0] before native eager padding/normalization; GEMM M and operand metadata independently describe consumed GEMM geometry",
+            "ranks": [
+              {
+                "credited_gemm_calls": 3840,
+                "forward_wrapper_calls": 128,
+                "gemm_hook_calls": 4096,
+                "ignored_forward_calls": 113,
+                "rank": 0,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 15
+              },
+              {
+                "credited_gemm_calls": 3840,
+                "forward_wrapper_calls": 128,
+                "gemm_hook_calls": 4096,
+                "ignored_forward_calls": 113,
+                "rank": 1,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 15
+              }
+            ]
+          },
+          "block_fp8_gemm_dispatch": [
+            {
+              "M": 2040,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "warmup": 256
+              }
+            },
+            {
+              "M": 1415,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 256
+              }
+            },
+            {
+              "M": 4096,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 1536,
+                "isolated-b-cold": 1536
+              }
+            },
+            {
+              "M": 1402,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "isolated-b-cold": 256
+              }
+            }
+          ],
+          "gemm_dispatch_scope": "rank0 signatures; complete original both-rank observations retained privately and validated",
+          "allocator_observations": [
+            {
+              "rank": 0,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21389313024,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251192320,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              }
+            },
+            {
+              "rank": 1,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21389313024,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251192320,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              }
+            }
+          ],
+          "startup_memory": [
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 0,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            },
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 1,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            }
+          ],
+          "host_cgroup": {
+            "scope": "fresh per-start cgroup including startup/pagecache/tmpfs/children; not RSS or GPU VRAM",
+            "memory_peak_bytes": 23822999552,
+            "memory_events": {
+              "high": 0,
+              "low": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_group_kill": 0,
+              "oom_kill": 0,
+              "sock_throttled": 0
+            }
+          }
+        }
+      ],
+      "across_arm_pairs": [
+        {
+          "case": "warmup",
+          "first_difference": null,
+          "output_ids_equal": true,
+          "verifier_cycles_equal": true
+        },
+        {
+          "case": "cold-a",
+          "first_difference": null,
+          "output_ids_equal": true,
+          "verifier_cycles_equal": false
+        },
+        {
+          "case": "isolated-b-cold",
+          "first_difference": 0,
+          "output_ids_equal": false,
+          "verifier_cycles_equal": false
+        }
+      ],
+      "readout_sha256": {
+        "AUTHENTICATED.json": "50caf2762b9487aa444f372b77a997422bfdada4bd30e5f465805b9cdf0379e0",
+        "FINALS.json": "29dac8a869a8b1909df580f1b245753d2cf7b113271e09ee2d3a9645df7ea450",
+        "QUALITY-RESULTS.json": "1817ac9ef3b383adec26a0842dab69c882efb3d0aeea553df324cbe51a3a49fe",
+        "RESULT-SUMMARY.json": "4d426a666da51ccfda994d66c08f803bf45448e00b078e32863d96a15077cba9"
+      },
+      "normal_decoded_finals": 6,
+      "strict_sre_passes": 4,
+      "sre_requests": 4,
+      "independent_release_verified": true,
+      "source_seal": {
+        "manifest_sha256": "5bac583c6e0a4b283e10bbc98214502ec96089604ad503865eb3b9d4562f8997",
+        "members": 351,
+        "root": "fp8-sprint36-ab-wirejoin.lppxw8p9"
+      },
+      "native_seal": {
+        "manifest_sha256": "ebebc7737261f724ee4b4efcc4a3356ba4a0bb2849c79eb5643968275ca89e55",
+        "members": 197,
+        "root": "fp8-sprint36-ab-integration-run.z8l8jvf1"
+      },
+      "reader_seal": {
+        "manifest_sha256": "193d2dbf8464137ab7caea409e8e9f2677acd3f0f7b3bee0781358e7a899e197",
+        "members": 119,
+        "root": "fp8-sprint36-ab-reader.v_q5amnl"
+      },
+      "final_review_record_sha256": "972f7b344c7337f2c4ad46d6e12f935e551cccbf82f4c481bc11272f322acbb7"
+    },
+    "BA": {
+      "starts": [
+        {
+          "order": "BA",
+          "position": 0,
+          "logical_arm": "mtp",
+          "chunked_prefill_size": 4096,
+          "samples": [
+            {
+              "cached_tokens": 0,
+              "case": "warmup",
+              "client_elapsed_seconds": 0.9831870159832761,
+              "input_tokens": 2040,
+              "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+              "output_tokens": 33,
+              "verifier_cycles": 6
+            },
+            {
+              "cached_tokens": 0,
+              "case": "cold-a",
+              "client_elapsed_seconds": 15.723816954006907,
+              "input_tokens": 25991,
+              "output_ids_sha256": "d08efac802a7c42b25f00a3d03fdcf8db8df367d77dfe623a73899c3e835ab6a",
+              "output_tokens": 519,
+              "verifier_cycles": 80
+            },
+            {
+              "cached_tokens": 0,
+              "case": "isolated-b-cold",
+              "client_elapsed_seconds": 15.141075192019343,
+              "input_tokens": 25978,
+              "output_ids_sha256": "d81308c9ae473ed4b70608ed0a55b573e73ab7fc8790b79a597233bf103083df",
+              "output_tokens": 504,
+              "verifier_cycles": 84
+            }
+          ],
+          "prefill_geometry": {
+            "allocator_scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+            "chunked_prefill_size": 4096,
+            "input_rows_scope": "forward-entry input_ids.shape[0] before native eager padding/normalization; GEMM M and operand metadata independently describe consumed GEMM geometry",
+            "ranks": [
+              {
+                "credited_gemm_calls": 3840,
+                "forward_wrapper_calls": 105,
+                "gemm_hook_calls": 4096,
+                "ignored_forward_calls": 90,
+                "rank": 0,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 15
+              },
+              {
+                "credited_gemm_calls": 3840,
+                "forward_wrapper_calls": 105,
+                "gemm_hook_calls": 4096,
+                "ignored_forward_calls": 90,
+                "rank": 1,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 1792,
+                    "entry_input_rows": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "logical_chunk_count": 7,
+                    "logical_chunk_tokens": [
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      4096,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      4096
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      4096,
+                      8192,
+                      12288,
+                      16384,
+                      20480,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 15
+              }
+            ]
+          },
+          "block_fp8_gemm_dispatch": [
+            {
+              "M": 2040,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "warmup": 256
+              }
+            },
+            {
+              "M": 1415,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 256
+              }
+            },
+            {
+              "M": 4096,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 1536,
+                "isolated-b-cold": 1536
+              }
+            },
+            {
+              "M": 1402,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "isolated-b-cold": 256
+              }
+            }
+          ],
+          "gemm_dispatch_scope": "rank0 signatures; complete original both-rank observations retained privately and validated",
+          "allocator_observations": [
+            {
+              "rank": 0,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21389313024,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251192320,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              }
+            },
+            {
+              "rank": 1,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21389313024,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251192320,
+                "peak_allocated_bytes": 21931433472,
+                "peak_reserved_bytes": 22408069120,
+                "reserved_bytes": 22408069120
+              }
+            }
+          ],
+          "startup_memory": [
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 0,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            },
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 1,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            }
+          ],
+          "host_cgroup": {
+            "scope": "fresh per-start cgroup including startup/pagecache/tmpfs/children; not RSS or GPU VRAM",
+            "memory_peak_bytes": 30192988160,
+            "memory_events": {
+              "high": 0,
+              "low": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_group_kill": 0,
+              "oom_kill": 0,
+              "sock_throttled": 0
+            }
+          }
+        },
+        {
+          "order": "BA",
+          "position": 1,
+          "logical_arm": "control",
+          "chunked_prefill_size": 2048,
+          "samples": [
+            {
+              "cached_tokens": 0,
+              "case": "warmup",
+              "client_elapsed_seconds": 0.9848611649940722,
+              "input_tokens": 2040,
+              "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+              "output_tokens": 33,
+              "verifier_cycles": 6
+            },
+            {
+              "cached_tokens": 0,
+              "case": "cold-a",
+              "client_elapsed_seconds": 15.420534536009654,
+              "input_tokens": 25991,
+              "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+              "output_tokens": 673,
+              "verifier_cycles": 105
+            },
+            {
+              "cached_tokens": 0,
+              "case": "isolated-b-cold",
+              "client_elapsed_seconds": 13.452955633983947,
+              "input_tokens": 25978,
+              "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+              "output_tokens": 523,
+              "verifier_cycles": 79
+            }
+          ],
+          "prefill_geometry": {
+            "allocator_scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+            "chunked_prefill_size": 2048,
+            "input_rows_scope": "forward-entry input_ids.shape[0] before native eager padding/normalization; GEMM M and operand metadata independently describe consumed GEMM geometry",
+            "ranks": [
+              {
+                "credited_gemm_calls": 6912,
+                "forward_wrapper_calls": 142,
+                "gemm_hook_calls": 7168,
+                "ignored_forward_calls": 115,
+                "rank": 0,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 27
+              },
+              {
+                "credited_gemm_calls": 6912,
+                "forward_wrapper_calls": 142,
+                "gemm_hook_calls": 7168,
+                "ignored_forward_calls": 115,
+                "rank": 1,
+                "requests": [
+                  {
+                    "case": "warmup",
+                    "credited_gemm_calls": 256,
+                    "entry_input_rows": [
+                      2040
+                    ],
+                    "logical_chunk_count": 1,
+                    "logical_chunk_tokens": [
+                      2040
+                    ],
+                    "observed_gemm_m": [
+                      2040
+                    ],
+                    "prefix_tokens": [
+                      0
+                    ]
+                  },
+                  {
+                    "case": "cold-a",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1415
+                    ],
+                    "observed_gemm_m": [
+                      1415,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  },
+                  {
+                    "case": "isolated-b-cold",
+                    "credited_gemm_calls": 3328,
+                    "entry_input_rows": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "logical_chunk_count": 13,
+                    "logical_chunk_tokens": [
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      2048,
+                      1402
+                    ],
+                    "observed_gemm_m": [
+                      1402,
+                      2048
+                    ],
+                    "prefix_tokens": [
+                      0,
+                      2048,
+                      4096,
+                      6144,
+                      8192,
+                      10240,
+                      12288,
+                      14336,
+                      16384,
+                      18432,
+                      20480,
+                      22528,
+                      24576
+                    ]
+                  }
+                ],
+                "successful_prefill_forwards": 27
+              }
+            ]
+          },
+          "block_fp8_gemm_dispatch": [
+            {
+              "M": 2040,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "warmup": 256
+              }
+            },
+            {
+              "M": 1415,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 256
+              }
+            },
+            {
+              "M": 2048,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 1,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "cold-a": 3072,
+                "isolated-b-cold": 3072
+              }
+            },
+            {
+              "M": 1402,
+              "config": {
+                "BLOCK_SIZE_K": 128,
+                "BLOCK_SIZE_M": 64,
+                "BLOCK_SIZE_N": 128,
+                "GROUP_SIZE_M": 32,
+                "num_stages": 3,
+                "num_warps": 4
+              },
+              "kernel_name": "_w8a8_block_fp8_matmul",
+              "kernel_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+              "native": true,
+              "output_dtype": "torch.bfloat16",
+              "N_K_shapes": [
+                [
+                  5120,
+                  3072
+                ],
+                [
+                  5120,
+                  8704
+                ],
+                [
+                  7168,
+                  5120
+                ],
+                [
+                  8192,
+                  5120
+                ],
+                [
+                  17408,
+                  5120
+                ]
+              ],
+              "input_dtypes": {
+                "A": "torch.float8_e4m3fn",
+                "As": "torch.float32",
+                "B": "torch.float8_e4m3fn",
+                "Bs": "torch.float32"
+              },
+              "calls_by_case": {
+                "isolated-b-cold": 256
+              }
+            }
+          ],
+          "gemm_dispatch_scope": "rank0 signatures; complete original both-rank observations retained privately and validated",
+          "allocator_observations": [
+            {
+              "rank": 0,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21284340736,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251096576,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              }
+            },
+            {
+              "rank": 1,
+              "scope": "cumulative PyTorch allocator counters at successful target-prefill host return; no synchronization/reset; not request or whole-device peak",
+              "maximum_observed_values": {
+                "allocated_bytes": 21284340736,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              },
+              "final_prefill_host_return": {
+                "allocated_bytes": 21251096576,
+                "peak_allocated_bytes": 21554863616,
+                "peak_reserved_bytes": 21913141248,
+                "reserved_bytes": 21913141248
+              }
+            }
+          ],
+          "startup_memory": [
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 0,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            },
+            {
+              "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+              "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+              "configuration": "ring_fold",
+              "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+              "physical_state_slots_including_padding": 20,
+              "rank": 1,
+              "ring_bytes": 64389120,
+              "snapshot_bytes_from_native_constructor_geometry": 0,
+              "ssm_state_bytes": 1509949440,
+              "startup_allocator": {
+                "allocated_bytes": 21008233472,
+                "driver_free_bytes": 11886657536,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 21039535616,
+                "reported_peak_reserved_bytes": 21319647232,
+                "reserved_bytes": 21317550080
+              },
+              "usable_state_slots": 19
+            }
+          ],
+          "host_cgroup": {
+            "scope": "fresh per-start cgroup including startup/pagecache/tmpfs/children; not RSS or GPU VRAM",
+            "memory_peak_bytes": 22090199040,
+            "memory_events": {
+              "high": 0,
+              "low": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_group_kill": 0,
+              "oom_kill": 0,
+              "sock_throttled": 0
+            }
+          }
+        }
+      ],
+      "across_arm_pairs": [
+        {
+          "case": "warmup",
+          "first_difference": null,
+          "output_ids_equal": true,
+          "verifier_cycles_equal": true
+        },
+        {
+          "case": "cold-a",
+          "first_difference": 18,
+          "output_ids_equal": false,
+          "verifier_cycles_equal": false
+        },
+        {
+          "case": "isolated-b-cold",
+          "first_difference": 0,
+          "output_ids_equal": false,
+          "verifier_cycles_equal": false
+        }
+      ],
+      "readout_sha256": {
+        "AUTHENTICATED.json": "b432fdae256d0c86aa02c06155ed00d5814f321ddba9983e060d93e6d9115524",
+        "FINALS.json": "a552175d3034c70b23c601095a1163eb6ac3d99b1970b66561953100a4970012",
+        "QUALITY-RESULTS.json": "1f7a06bd0e50478777369684d172249dd8470eb07afe14a928b9f7d05b199b15",
+        "RESULT-SUMMARY.json": "8fd1879bf31ac3e12a9e286c2603a7c117458c1e6aa6f9dec33c0863428c731b"
+      },
+      "normal_decoded_finals": 6,
+      "strict_sre_passes": 4,
+      "sre_requests": 4,
+      "independent_release_verified": true,
+      "source_seal": {
+        "manifest_sha256": "03550487c591411fc9c2eb5a5b7d9ce11d5c767af6865bd28731c27fef0b32a6",
+        "members": 349,
+        "root": "fp8-sprint36-ba-wirejoin.cknyegu0"
+      },
+      "native_seal": {
+        "manifest_sha256": "7f994a4db81e1e187808f7795927caf7f7c812b6f0d46129d5a1d3b629865065",
+        "members": 197,
+        "root": "fp8-sprint36-ba-integration-run.b1z3px3s"
+      },
+      "reader_seal": {
+        "manifest_sha256": "09de7717100dff571c4beed896fa643217346bae1abf9bcb9a6b4c6b4a521a59",
+        "members": 116,
+        "root": "fp8-sprint36-ba-reader._mzcoena"
+      },
+      "final_review_record_sha256": "429d6de5d4efbebee585c9ae808f6ba92ecbfe54961f7d75151b902786554f50"
+    }
+  },
+  "same_configuration_across_order_pairs": [
+    {
+      "chunked_prefill_size": 2048,
+      "case": "warmup",
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true,
+      "first_difference": null
+    },
+    {
+      "chunked_prefill_size": 2048,
+      "case": "cold-a",
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true,
+      "first_difference": null
+    },
+    {
+      "chunked_prefill_size": 2048,
+      "case": "isolated-b-cold",
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true,
+      "first_difference": null
+    },
+    {
+      "chunked_prefill_size": 4096,
+      "case": "warmup",
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true,
+      "first_difference": null
+    },
+    {
+      "chunked_prefill_size": 4096,
+      "case": "cold-a",
+      "output_ids_equal": false,
+      "verifier_cycles_equal": false,
+      "first_difference": 18
+    },
+    {
+      "chunked_prefill_size": 4096,
+      "case": "isolated-b-cold",
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true,
+      "first_difference": null
+    }
+  ],
+  "selected_chunk_tokens": 2048,
+  "larger_chunk_promoted": false,
+  "selection_reason": "Retain selected2048;4096 did not establish a benefit in this bounded instrumented screen. Generatedwork differs; no matched-speedup claim.",
+  "native_seals": {
+    "AB": {
+      "root": "fp8-sprint36-ab-integration-run.z8l8jvf1",
+      "manifest_sha256": "ebebc7737261f724ee4b4efcc4a3356ba4a0bb2849c79eb5643968275ca89e55",
+      "members": 197
+    },
+    "BA": {
+      "root": "fp8-sprint36-ba-integration-run.b1z3px3s",
+      "manifest_sha256": "7f994a4db81e1e187808f7795927caf7f7c812b6f0d46129d5a1d3b629865065",
+      "members": 197
+    }
+  },
+  "reader_seals": {
+    "AB": {
+      "root": "fp8-sprint36-ab-reader.v_q5amnl",
+      "manifest_sha256": "193d2dbf8464137ab7caea409e8e9f2677acd3f0f7b3bee0781358e7a899e197",
+      "members": 119
+    },
+    "BA": {
+      "root": "fp8-sprint36-ba-reader._mzcoena",
+      "manifest_sha256": "09de7717100dff571c4beed896fa643217346bae1abf9bcb9a6b4c6b4a521a59",
+      "members": 116
+    }
+  },
+  "final_review": "ASTRA_APPROVED_BOUNDED_BOTH_ORDER_CLOSEOUT",
+  "causal_speedup_established": false,
+  "next_sprint": 37,
+  "unselected_followup": "M4096stage1GEMMroute; observeddispatchdifference, attributionrequiresseparateexperiment.",
+  "all_successful_campaigns_released": true,
+  "initial_failed_campaign_released": true
+}
