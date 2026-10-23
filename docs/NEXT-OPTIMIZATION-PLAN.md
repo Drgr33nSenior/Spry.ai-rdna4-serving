@@ -406,3 +406,5 @@ Sprint 33 completed the bounded 64K screen: both frozen SRE gates scored 10/12 a
 Qwen3.8-Flash-Next [feasibility preflight](QWEN-NEXT-FEASIBILITY.md) found the official FP8 tensors exceed combined physical RAM and VRAM. The checkpoint and memory route remain undecided; the baseline and later optimizations are design only.
 
 The [UltraQuant assessment](QWEN-NEXT-FEASIBILITY.md#ultraquant-assessment) found a KV-cache-only scope and an expected Next admission refusal; the FP8 weight shortfall remains.
+
+The owner parked Flash-Next checkpoint and engine work and will wait for Qwen4 dense 27B. No model release date or final architecture is assumed. The selected Qwen3.8 27B experimental baseline remains frozen.

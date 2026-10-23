@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "PARKED_BY_OWNER_WAIT_QWEN4_DENSE27B",
+  "search_evidence": {
+    "root": "qwen-next-weight-search.pxar_1d2",
+    "candidates_sha256": "75c6060462fe467807374f37e8eb2c50bfbf80a780137abc6a9320aac96f793e",
+    "manifest_sha256": "9945f7a55994aff26a279cc0e5ae50f4af482c7c50d8e300dee58973682e6daa",
+    "members": 65,
+    "search_assessment_sha256": "d94d1653b49d2f4c31c19420ea2c4f1ca17ac0defbb7a1e3e312a45b7bb075b2",
+    "source_assessment_sha256": "bdc85e470d95fdeb7f6c0f38806e57549fa0becaa5bd1c42878ac1708f9c9e58"
+  },
+  "alternatives": [
+    {
+      "repository": "unsloth/Qwen3.8-Flash-Next-GGUF",
+      "revision": "766911a6b7369840a91dbcd95f9f997acaab6cd6",
+      "variant": "UD-IQ4_XS",
+      "download_bytes": 93682584224,
+      "files": 3,
+      "requires": "GGUF-capable runtime and offload; current SGLang HIP GGUF path unverified."
+    },
+    {
+      "repository": "HaberstrohSystems/Qwen3.8-Flash-Next-int2-mixed-AutoRound-24GB-SGLang",
+      "revision": "1199caf239e61da9230b5ba7ba88d29304c9a309",
+      "safetensors_bytes": 38785867240,
+      "ple_bytes": 51200245760,
+      "limitations": "NVIDIA-specific 34-file SGLang patch and 2-bit MoE unpacking; no MTP or vision."
+    },
+    {
+      "repository": "leoncca/Qwen3.8-Flash-Next-AWQ-g32",
+      "revision": "c6d84ec547717f71710f82ec3783027b61bbfc49",
+      "download_bytes": 137073254002,
+      "scope": "Excludes optional MTP."
+    },
+    {
+      "repository": "cyankiwi/Qwen3.8-Flash-Next-AWQ-INT4",
+      "revision": "07af8c4a56c0e3620ed70069916be044282654f9",
+      "download_bytes": 188286106928
+    }
+  ],
+  "references": {
+    "radiance_image": "https://hub.docker.com/r/stilldeadcode/radiance",
+    "unsloth_card": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF",
+    "retained_card": "https://huggingface.co/StillDeadcode/qwen3.8-next-flash-fp8-iq4r-moe"
+  },
+  "limitations": [
+    "Sizes are download sizes, not measured resident memory.",
+    "No checkpoint or engine selected, installed, downloaded or launched.",
+    "Publisher claims and ROCm 10.2 compatibility remain unverified locally.",
+    "Radiance source web retrieval was restricted; source review and build remain incomplete.",
+    "No general quality or performance claim."
+  ],
+  "metadata_source_review": {
+    "status": "COMPLETED",
+    "reviewers": [
+      "root",
+      "fp8_spec_followup_map"
+    ],
+    "scope": "Metadata and bounded source assessment; no checkpoint qualification."
+  },
+  "source_findings": {
+    "autoround_metadata_bits": [
+      2,
+      3,
+      4,
+      8
+    ],
+    "autoround_fused_moe_bits": [
+      4,
+      8
+    ],
+    "compressed_tensors_moe_bits": [
+      4,
+      8
+    ],
+    "hip_triton_int4": "Source lead only; complete checkpoint compatibility unproven.",
+    "gguf": "HIP warning and no HIP GGML imports found in inspected source."
+  },
+  "owner_disposition": {
+    "decision": "PARKED_BY_OWNER_WAIT_QWEN4_DENSE27B",
+    "candidate_engine_work_queued": false,
+    "candidate_or_engine_selected": false,
+    "earlier_engine_preference_question": "Closed by owner decision to park.",
+    "qwen4_release_date_or_final_architecture_established": false
+  },
+  "retained_research_lead": {
+    "repository": "StillDeadcode/qwen3.8-next-flash-fp8-iq4r-moe",
+    "revision": "8267a67384583f6be309981baf878b09ff900a9a",
+    "file": "qwen3.8-next-flash-fp8-iq4r-moe.rad",
+    "bytes": 121969901568,
+    "lfs_sha256": "0af5e96244e80c21ac8edca1719dae49b8a201b94a2f3994c3e24026ceaa4d20",
+    "format": "Radiance .rad, not SGLang",
+    "publisher_claims": "Calibrated nonuniform 4-bit routed experts, INT8 trunk/head, ten protected BF16 experts, FP8 PLE; reports 2 R9700 and tiered experts with about 32 GB free RAM.",
+    "local_fit_accuracy_speed_verified": false,
+    "engine_selected_or_installed": false,
+    "lfs_sha256_scope": "Publisher/API identity; artifact not downloaded or locally verified.",
+    "active_recommendation": false
+  },
+  "device_validation_performed": false,
+  "device_validation_queued": false
+}

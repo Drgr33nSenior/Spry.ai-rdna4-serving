@@ -1,0 +1,16 @@
+# Qwen3.8-Flash-Next lower-bit weight candidates
+
+The owner parked lower-bit checkpoint work and will wait for Qwen4 dense 27B. No release date or final architecture is established here. The retained search identified one candidate for possible future assessment: [StillDeadcode's FP8-IQ4R MoE](https://huggingface.co/StillDeadcode/qwen3.8-next-flash-fp8-iq4r-moe), revision `8267a67384583f6be309981baf878b09ff900a9a`. Its `.rad` file is 121,969,901,568 bytes (113.59 GiB). The publisher describes calibrated nonuniform 4-bit routed experts, an INT8 trunk and head, ten protected BF16 experts, and FP8 PLE. The publisher identifies the official Qwen model as its base.
+
+This format requires [Radiance](https://hub.docker.com/r/stilldeadcode/radiance), not the current SGLang path. The publisher reports two R9700s, tiered experts and about 32 GB of free host RAM; local fit, accuracy, speed and compatibility with the current ROCm 10.2 build are unverified. The engine source could not be retrieved for review, so its build and source compatibility are not established. The file hash is the publisher/API LFS identity; the file has not been downloaded or independently hashed. No engine or checkpoint has been installed or selected. No engine assessment is queued; the earlier engine-choice question is closed by the owner’s decision to park this work.
+
+Other candidates have different format and loader requirements:
+
+| Candidate | Download size | Assessment boundary |
+| --- | ---: | --- |
+| [Unsloth UD-IQ4_XS GGUF](https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF) | 93,682,584,224 bytes across three files | Requires a compatible GGUF runtime and offload. The current SGLang path has a HIP GGUF warning; HIP GGML imports were not found in the inspected source. |
+| [AutoRound INT2 mixed](https://huggingface.co/HaberstrohSystems/Qwen3.8-Flash-Next-int2-mixed-AutoRound-24GB-SGLang) | 38,785,867,240 bytes in safetensors plus 51,200,245,760 bytes PLE | Requires an NVIDIA-specific SGLang patch and 2-bit MoE unpacking; MTP and vision are excluded. The search did not recommend it as a first port. |
+| [leoncca AWQ g32](https://huggingface.co/leoncca/Qwen3.8-Flash-Next-AWQ-g32) | 137,073,254,002 bytes, excluding optional MTP | Total size includes more than the 4-bit expert label implies; local fit is not qualified. |
+| [cyankiwi AWQ INT4](https://huggingface.co/cyankiwi/Qwen3.8-Flash-Next-AWQ-INT4) | 188,286,106,928 bytes | Download size and runtime fit are separate; no local fit is qualified. |
+
+All sizes are artifact download sizes, not measured resident memory. The inspected AutoRound metadata path accepts 2-, 3-, 4- and 8-bit configurations, but its fused MoE delegate supports only 4 and 8 bits. The compressed-tensors MoE path also supports 4 and 8 bits; its explicit HIP Triton route is an INT4 lead, not proof for a whole checkpoint. None of these candidates has a locally established loader, fit, quality or performance result. [Feasibility](QWEN-NEXT-FEASIBILITY.md) records the official FP8 weight shortfall and the separate UltraQuant KV-cache admission result; the frozen 27B profile remains unchanged. See the [candidate provenance](../provenance/QWEN-NEXT-WEIGHT-CANDIDATES-20261023.json) for pinned identities.
