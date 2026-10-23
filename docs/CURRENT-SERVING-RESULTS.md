@@ -789,3 +789,7 @@ Two repeated starts completed 14 normal stops and seven equal output-ID and veri
 ## Frozen Qwen3.8 baseline
 
 The selected experimental profile and its bounded results are recorded in the [frozen baseline](QWEN38-FROZEN-BASELINE.md). The 64K grading failures and earlier numerical variation remain unresolved; the next phase is Qwen3.8-Flash-Next feasibility.
+
+## Qwen3.8-Flash-Next feasibility
+
+The [metadata and source preflight](QWEN-NEXT-FEASIBILITY.md) found that fully resident official FP8 tensors exceed combined physical RAM and VRAM. Source paths exist for ROCm, but device execution is unverified. The checkpoint decision and a separately reviewed baseline remain pending; the frozen 27B selection is unchanged.

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "STEP2_PREFLIGHT_COMPLETE_CHECKPOINT_DECISION_PENDING",
+  "independent_review_pending": false,
+  "freeze_commit": "d4454ee740e835611802430d0b878e33452801a2",
+  "evidence": {
+    "root": "qwen-next-preflight.bw08ylue",
+    "sha256": {
+      "FEASIBILITY.json": "20f819d929d8ce91b7bceb256321f36f0efb010feee615ac224766ac2584ed3d",
+      "SOURCE-ASSESSMENT.json": "50f8d502e175ca2e138fb8609e35c905efc321483d9ac51cae4c3d3fb2c196c3",
+      "MODEL-METADATA.json": "3430d28d75533afeefb59cebce3fa5ae3a52662e4081ce7746454f4b718754b2",
+      "BASELINE-PROTOCOL.json": "02673e2e740a5c74c872f31ee15b67086daca777f7125af7c5d91c0c72ad4063"
+    },
+    "manifest_sha256": "a782a262fb44ca7647ca8c412bbb466d3b2967da487ba7d07239bbc695934697",
+    "members": 93
+  },
+  "models": {
+    "official_fp8": {
+      "repository": "Qwen/Qwen3.8-Flash-Next-FP8",
+      "revision": "236dfdf285828023ca3bcd3f37366c58a3469b13",
+      "indexed_tensor_bytes": 185502232570
+    },
+    "official_bf16": {
+      "repository": "Qwen/Qwen3.8-Flash-Next",
+      "revision": "de4b8e4d43b917e7706784d8bb445c9af86a3540",
+      "indexed_tensor_bytes": 359999963128
+    }
+  },
+  "capacity_observation": {
+    "combined_physical_bytes": 135129354240,
+    "gpu_total_bytes": 68417486848,
+    "host_physical_bytes": 66711867392,
+    "existing_host_limit_bytes": 40802189312,
+    "swap_bytes": 0,
+    "disk_available_bytes": 954838409216,
+    "fully_resident_official_fp8_fits_combined_physical": false,
+    "offload_or_lower_bit_viability_established": false
+  },
+  "source_assessment": {
+    "sglang_version": "0.5.21",
+    "upstream_commit": null,
+    "runtime_inventory_sha256": "7fa89573674b948cc44d65874251d076d91770d35dae90c269f4ed9692937726",
+    "rocm_jit_and_hip_qsa_decode_present": true,
+    "gfx1201_execution_verified": false,
+    "file_ple_host_page_table_capability_guard_tested": false
+  },
+  "baseline_design": {
+    "status": "DESIGN_ONLY_NOT_A_LAUNCH_PACKAGE",
+    "starts": 2,
+    "warmups_per_start": 1,
+    "unique_tasks": 4,
+    "total_requests": 10,
+    "concurrency": 1,
+    "speculation": false,
+    "thinking": "enabled, low subject to authenticated template support",
+    "sampling": "greedy",
+    "grading": "Predeclared exact typed values and arrays, natural stop and authenticated final."
+  },
+  "later_design": [
+    "Context expansion after baseline and memory evidence",
+    "Cost profile",
+    "Cold/warm shared-prefix GPU reuse",
+    "Prefill chunk dispatch audit and comparison",
+    "Compatible embedded MTP subject to top-k 1 and width at most 4",
+    "Slot reuse and mask review"
+  ],
+  "limitations": [
+    "Checkpoint and memory route remain undecided.",
+    "No Next model weights loaded or GPU model run; no installed runtime change.",
+    "No automatic reuse of DFlash8 or model-specific 27B patches.",
+    "No Next quality, capacity, performance or production qualification.",
+    "Frozen 27B numerical uncertainty and quality limitations remain."
+  ],
+  "primary_references": {
+    "official_fp8_model_card": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next-FP8",
+    "qwen_readme": "https://github.com/QwenLM/Qwen3.8-Flash-Next",
+    "sglang_cookbook": "https://docs.sglang.io/cookbook/autoregressive/Qwen/Qwen3.8-Flash-Next",
+    "cookbook_amd_scope": "MI350X/MI355X, not R9700"
+  },
+  "independent_review": {
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "APPROVED_CONSERVATIVE_STEP2_CLOSEOUT",
+    "findings": [],
+    "report_sha256": "fb0a34af3a0989414a7210a30f6233da567c8537cc552f4d8b1d135a3b006467",
+    "scope": "Source and metadata feasibility findings only; no baseline or device execution."
+  }
+}
