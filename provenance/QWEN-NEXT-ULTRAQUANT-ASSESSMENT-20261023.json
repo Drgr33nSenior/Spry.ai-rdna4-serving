@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "ULTRAQUANT_ASSESSED_NOT_A_NEXT_WEIGHT_FIT_SOLUTION",
+  "assessment": {
+    "root": "qwen-next-ultraquant-assessment.5zk3_ewm",
+    "manifest_sha256": "4019e2a2e7167190acb7742dbeba131e9226f816dca5b4d5e02bd7fb157b4e4f",
+    "members": 10,
+    "assessment_sha256": "8bb9f6d9cc139d874059f7583ecca1ccce99078b6aa3f1fda80800b67c1a4ff1",
+    "admission_result_sha256": "060b39bb5a4b040e4a68fea20f0ea6689657086a07577ac02fc509b7ceaa5e22"
+  },
+  "scope": "KV cache storage, not model-weight quantization",
+  "admission": {
+    "status": "NEXT_REFUSED_BY_UNMODIFIED_ULTRAQUANT_CONTRACT",
+    "contract_sha256": "00376eff68440a1be5c75dcb64d537debdb75ccf8734d80c91c13bb135b453a9",
+    "expected_refusal": "UltraQuant v1 supports only conventional LlamaForCausalLM",
+    "gpu_failure": false,
+    "guard_changed": false
+  },
+  "zero_kv_lower_bound": {
+    "official_fp8_indexed_weight_bytes": 185502232570,
+    "combined_physical_bytes": 135129354240,
+    "remaining_weight_deficit_bytes": 50372878330
+  },
+  "limitations": [
+    "Prior private Qwen 27B KV-cache path is distinct and unverified for Next QSA, PLE and graphs.",
+    "No Next weight format selected, model weights loaded, GPU run, accuracy or speed result.",
+    "Offload and lower-bit model-weight viability remain unproven."
+  ],
+  "primary_paper": "https://arxiv.org/abs/2606.20474v3"
+}

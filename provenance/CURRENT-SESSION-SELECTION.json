@@ -1,8 +1,8 @@
 {
   "active_sprint": {
     "number": 34,
-    "status": "STEP2_PREFLIGHT_COMPLETE_CHECKPOINT_DECISION_PENDING",
-    "record": "provenance/QWEN-NEXT-FEASIBILITY-20261023.json",
+    "status": "ULTRAQUANT_ASSESSED_NOT_A_NEXT_WEIGHT_FIT_SOLUTION",
+    "record": "provenance/QWEN-NEXT-ULTRAQUANT-ASSESSMENT-20261023.json",
     "gpu_active": false,
     "launch_prepared": false,
     "name": "Qwen3.8-Flash-Next feasibility"

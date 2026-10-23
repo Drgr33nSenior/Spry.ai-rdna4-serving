@@ -404,3 +404,5 @@ Sprint 31 parked W8 at the component gate and W2 after its serving median gate f
 Sprint 33 completed the bounded 64K screen: both frozen SRE gates scored 10/12 and failed, and the two format failures remain. Independent review approved the conservative closeout. Those findings remain available as later optimization leads. The owner has frozen the current Qwen3.8 baseline and prioritized Qwen3.8-Flash-Next feasibility, then a baseline, then separately reviewed thread-inspired optimizations. Shape-specific patches do not transfer automatically.
 
 Qwen3.8-Flash-Next [feasibility preflight](QWEN-NEXT-FEASIBILITY.md) found the official FP8 tensors exceed combined physical RAM and VRAM. The checkpoint and memory route remain undecided; the baseline and later optimizations are design only.
+
+The [UltraQuant assessment](QWEN-NEXT-FEASIBILITY.md#ultraquant-assessment) found a KV-cache-only scope and an expected Next admission refusal; the FP8 weight shortfall remains.
