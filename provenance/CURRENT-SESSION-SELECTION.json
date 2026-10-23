@@ -1,8 +1,8 @@
 {
   "active_sprint": {
     "number": 33,
-    "status": "SPRINT33_COMPLETE_BOUNDED_SCREEN_QUALITY_GATE_FAILED",
-    "record": "provenance/SPRINT33-LONG-CONTEXT64-20261023.json",
+    "status": "QWEN38_EXPERIMENTAL_BASELINE_FROZEN",
+    "record": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
     "gpu_active": false,
     "launch_prepared": false
   },
@@ -998,5 +998,12 @@
     "starts": 2,
     "variant": "One capitalization token at zero-based output index124; no other output-ID differences.",
     "verification_cycles_per_request": 25
+  },
+  "qwen38_frozen_baseline": {
+    "status": "QWEN38_EXPERIMENTAL_BASELINE_FROZEN",
+    "record": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+    "gpu_active": false,
+    "launch_prepared": false,
+    "next": "Qwen3.8-Flash-Next feasibility"
   }
 }

@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "QWEN38_EXPERIMENTAL_BASELINE_FROZEN",
+  "scope": "Evidence checkpoint for experimental use; no runtime installation, default change or production qualification.",
+  "selected_source": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "6ac26e4003cd189363023e08b46ce23c9c1233546c1eb5dfce43892897735297",
+    "author_members": 352,
+    "author_root": "fp8-sprint22-completion-lifecycle.pq2bsh79",
+    "component_candidate_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "matched_work_gate_passed": true,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-gateup-common-tile16-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/SPRINT22-GDN-OUTPUT-M16-20261022.json",
+    "reference_instrumented_gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "Retain all selected routes; use common M16/stage1 for exact untuned HIP/BF16 M8 GDN output (8,5120,3072), with N128/K128, group32 and four warps.",
+    "source_patch": "patches/sglang-gfx1201-m8-gdnout-common-tile16-serving.patch",
+    "source_patch_sha256": "4d540d73cb6de18184c52918240a0fe0bf94c6b3abd112a948406d311c8facf5"
+  },
+  "rollback_source_before_m8_gdnout_common_tile16": {
+    "author_file": "review/GEMM-tail.py",
+    "author_manifest_sha256": "f308b513e2ef73b3b4c6baefe1e20d1edb47a6b4095531f29ace0319322e1690",
+    "author_root": "fp8-sprint21-greedy._jmxsimr",
+    "component_candidate_gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "hardware_cause_established": false,
+    "instrumented_gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "matched_work_gate_passed": true,
+    "numerical_mismatch_resolved": false,
+    "patch_base_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "prerequisite_patch": "patches/sglang-gfx1201-m8-qkvz-unrolled-tile16-serving.patch",
+    "production_qualified": false,
+    "qualification_record": "provenance/SPRINT21-COMMON-M16-20261022.json",
+    "reference_instrumented_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "scope": "Source selection for the next experimental session launch only.",
+    "selection": "Retain all selected routes; use common M16/stage1 for exact untuned HIP/BF16 M8 gate/up (8,17408,5120), with N128/K128, group32 and four warps.",
+    "source_patch": "patches/sglang-gfx1201-m8-gateup-common-tile16-serving.patch",
+    "source_patch_sha256": "01f6cf5c2b1b7689e62dd026446196d6f0a1afaae0b104fc709d99a6f8948f92"
+  },
+  "selected_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": true,
+    "logical_arm": "mtp",
+    "name": "aligned_ring_fold",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Next experimental session launch only.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
+  "rollback_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": false,
+    "logical_arm": "control",
+    "name": "snapshot",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Recurrent-profile rollback only; preserve the selected GEMM, stack, precision, capacity and owner controls.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
+  "stack": {
+    "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+    "rocm_sdk": "10.2.0.dev20261020+git535d2990",
+    "target_weights": "fp8",
+    "target_kv": "bf16",
+    "draft_kv": "bf16",
+    "dflash_width": 8,
+    "split_kv_metadata_reuse": true,
+    "recurrent_state": "fp32",
+    "head_arithmetic": "fp32; not a claim about resident weight storage",
+    "compact_replayssm": false,
+    "speculative_replayssm": true,
+    "usable_recurrent_slots": 19,
+    "physical_recurrent_slots": 20,
+    "hip": "7.17.26416",
+    "rccl": "2.32.3",
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    },
+    "reasoning_effort": "low"
+  },
+  "short_workload": {
+    "source": "SPRINT22-GDN-OUTPUT-M16-20261022.json",
+    "combined_tp2_tokens_per_second": [
+      121.17524343160586,
+      121.24282247023977
+    ],
+    "concurrency": 1,
+    "input_tokens": 2047,
+    "forced_output_tokens": 1024,
+    "thinking": "low",
+    "quality_screens": {
+      "normal_final_answers": 68,
+      "cancellations": 2,
+      "actual_c2": true,
+      "slot_accounting": true,
+      "independent_release": true
+    }
+  },
+  "ringfold_memory": {
+    "source": "SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "startup_allocated_saving_bytes_per_card": 1745453056,
+    "scope": "Matched capacity after graph setup; not whole-device or lifetime peak."
+  },
+  "long_context": {
+    "source": "SPRINT33-LONG-CONTEXT64-20261023.json",
+    "context": 65536,
+    "long_input_tokens": 59999,
+    "actual_output_range": [
+      567,
+      849
+    ],
+    "normal_stops": 14,
+    "literal_passes": 10,
+    "factual_passes": 10,
+    "graded": 12,
+    "both_gates_passed": false,
+    "sprint32_exception_applies": false,
+    "optional_guard_patch_is_global_default": false,
+    "sealed_evidence": {
+      "source": {
+        "root": "fp8-sprint33-serving.5aowa2oc",
+        "manifest_sha256": "433aa9e938229ee8bd704ea3b01b007afa74f15f496a3639ba3475da8824ce55",
+        "members": 370
+      },
+      "native": {
+        "root": "fp8-sprint33-run.66xouz47",
+        "manifest_sha256": "b645330bf45eab872717a99519f4b0315e4075b6950a5154e0c0e693c406e157",
+        "members": 264
+      },
+      "reader": {
+        "root": "fp8-sprint33-reader.x0412kzi",
+        "manifest_sha256": "b314d87989b954c480d6993c88e428ae34f4696855a23c8e45c3a9ade822a07d",
+        "members": 164,
+        "result_summary_sha256": "3c4c13375b6baf71733a80ed2ce39ad300cebb5a8fdc54a30ec5900bba3c01a8",
+        "quality_results_sha256": "f74bda669d3d38b7d503a68dc44e2353641b3a22f2535c7865694692f3c44d58",
+        "format_exceptions_sha256": "61b249e039875915cedf43bc77694708d14f8eb3168145a88aa9adb18c3741bd"
+      },
+      "tokenizer": {
+        "root": "fp8-sprint33-tokenizer.ist7n8ef",
+        "manifest_sha256": "f5441abd0ee0c5d4668b5c708f88a211c19a5e9df7b366867d075b4187ef1d77",
+        "members": 54
+      }
+    }
+  },
+  "retained_limitations": [
+    "Original numerical variation and cause remain unresolved.",
+    "Sprint 11 failed matched-work gates remain recorded.",
+    "Sprint 32 strict 2/12 failure and owner-accepted lexical exceptions remain separate from Sprint 33 failures.",
+    "Endurance has not been run; no production, general numerical or sampling-distribution qualification."
+  ],
+  "next": [
+    "Qwen3.8-Flash-Next feasibility",
+    "Qwen3.8-Flash-Next baseline",
+    "Separately reviewed thread-inspired optimizations"
+  ],
+  "next_model_shape_patches_transfer_automatically": false,
+  "record_sha256": {
+    "SPRINT19-MATCHED-RINGFOLD-20261022.json": "6ce4cab45b4a67e4a42bf4f6eda10201ccf7a73368c592051b5615928f73cc3c",
+    "SPRINT22-GDN-OUTPUT-M16-20261022.json": "ae4e0426f1ff413971da550de4dd5e93c78dcade33cab4ecd7cf30d39698def5",
+    "SPRINT32-LONG-CONTEXT-20261023.json": "e64e927109f8dfd6769ca10524761174273a9b6013408075fcee0f87605f852b",
+    "SPRINT33-LONG-CONTEXT64-20261023.json": "9a1c4f7b9042ecfaae9bdecf6c62a285244173e4d6e3ad4f03cab7992a929938"
+  },
+  "prior_public_checkpoint": "cc89011981698bdc5733f09c61e6fbb26fd87c91"
+}

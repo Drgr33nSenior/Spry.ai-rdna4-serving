@@ -291,3 +291,5 @@ Sprint 31: [W2 and W8 parked](SPRINT31-GATEUP-WARPS.md). W2 failed its serving m
 Sprint 32: [32K long-context screen](SPRINT32-LONG-CONTEXT.md). All 14 requests stopped normally; strict SRE grading passed 2/12, with owner-accepted lexical exceptions and a retained retrospective audit. The 64K adapter preflight and a separate device screen followed in Sprint 33.
 
 Sprint 33: [64K long-context screen](SPRINT33-LONG-CONTEXT64.md). All 14 responses stopped normally; both frozen SRE gates scored 10/12 and failed, with two retained format failures. Independent review approved the conservative closeout.
+
+The [Qwen3.8 experimental baseline](QWEN38-FROZEN-BASELINE.md) is frozen. The next phase is Qwen3.8-Flash-Next feasibility, followed by its baseline and separately reviewed optimizations.

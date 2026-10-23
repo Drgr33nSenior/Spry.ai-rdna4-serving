@@ -785,3 +785,7 @@ Two selected-profile 32K starts completed 14 normal responses and seven identica
 ## Sprint 33 64K long-context screen
 
 Two repeated starts completed 14 normal stops and seven equal output-ID and verifier-cycle pairs. The literal and factual SRE gates each scored 10/12 and failed; two answers used a string for an action-order array that the prompt had not explicitly requested. Both failures remain. Long inputs were 59,999 tokens and outputs were 567–849 tokens, so the full output boundary was not exercised. [Sprint 33](SPRINT33-LONG-CONTEXT64.md) records memory, release and scope; independent review approved the conservative closeout.
+
+## Frozen Qwen3.8 baseline
+
+The selected experimental profile and its bounded results are recorded in the [frozen baseline](QWEN38-FROZEN-BASELINE.md). The 64K grading failures and earlier numerical variation remain unresolved; the next phase is Qwen3.8-Flash-Next feasibility.

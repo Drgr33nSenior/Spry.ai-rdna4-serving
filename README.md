@@ -31,6 +31,8 @@ variations remain recorded. Installed runtime and production defaults are unchan
 
 The [64K SRE screen](docs/SPRINT33-LONG-CONTEXT64.md) completed 14 normal-stop responses; its literal and factual grading gates each scored 10/12 and failed. The two format failures and the bounded input/output scope remain in the record. Independent review approved the conservative closeout.
 
+The [Qwen3.8 experimental baseline](docs/QWEN38-FROZEN-BASELINE.md) is now frozen with its observed results and unresolved limitations. Qwen3.8-Flash-Next feasibility is the next phase.
+
 The private integration passed a real eager TP2 smoke on two Radeon AI PRO R9700
 GPUs: initial prefill, continuation, decode and a 13-token prefix-reuse hit.
 Both ranks produced finite logits and agreed on sampled tokens. KV, request and
