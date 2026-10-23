@@ -1,0 +1,618 @@
+{
+  "active_gpu_run": false,
+  "candidate": {
+    "cpu_dispatch_fallback_body_identity_required": true,
+    "group_k": 128,
+    "group_m": 32,
+    "group_n": 128,
+    "implementation": "Guarded Triton JIT wrapper forwards five literal scalars to unchanged common JIT body.",
+    "k_tile": 128,
+    "m_tile": 16,
+    "n_tile": 128,
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "stages": 1,
+    "warps": 4
+  },
+  "compiler_proof": {
+    "dot_count": 1,
+    "five_scalar_arguments_unused_or_removed": true,
+    "integer_division_or_remainder_in_loop": false,
+    "k_loop_end": 40,
+    "k_loop_start": 0,
+    "k_loop_step": 1,
+    "raw_ir_retained": true,
+    "required_in_all_cases": true,
+    "unsupported_renamed_nested_or_unrolled_forms": "fail proof"
+  },
+  "component": {
+    "advance_if_all_exact_proof_and_all_four_candidate_medians_lower": true,
+    "alternating_eager_timed_launches": 64,
+    "automatic_retry_or_promotion": false,
+    "cases": 4,
+    "device_execution": "sequential",
+    "eager_checks": 72,
+    "exact_checks": 96,
+    "graph_checks": 24,
+    "random_oracle": "baseline",
+    "resource_and_independent_release_required": true,
+    "structured_oracle": "independent"
+  },
+  "cpu_checks": {
+    "full_composed": 52,
+    "targeted": 32
+  },
+  "dispatch_evidence_scope": "CPU dispatcher and fallback checks; native component kernel execution. Full candidate serving route not authenticated.",
+  "disposition": {
+    "model_starts": 0,
+    "numerical_mismatch_resolved": false,
+    "reason": "All96 comparisons and allfour specialization proofs pass; GPU0 random-input median0.7091477% higher, so allfour timing requirement fails.",
+    "result_summary_sha256": "8007703a999210df6ec5afda29218393bbc28202161fe4d03b15bfa647adc4c6",
+    "retry_planned": false,
+    "runtime_warning": "Inherited common.py invalid-escape SyntaxWarning retained; execution and analysis exit0.",
+    "selected_source_changed": false,
+    "serving_preparation_allowed": false,
+    "source_selected": false,
+    "status": "PARKED_ONE_CASE_TIMING_GATE_FAILED"
+  },
+  "disposition_sha256": "cdeeba56084c486a511961828f1cb832dcc319ffddf897c5e88e709f0b4314e0",
+  "endurance_deferred": true,
+  "gpu_reserved": false,
+  "independent_result_review_pending": false,
+  "independent_review": {
+    "disposition_sha256": "cdeeba56084c486a511961828f1cb832dcc319ffddf897c5e88e709f0b4314e0",
+    "findings": [],
+    "result_sha256": "8007703a999210df6ec5afda29218393bbc28202161fe4d03b15bfa647adc4c6",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "APPROVED_BOUNDED_RESULTS_AND_PARKING",
+    "verified_seals": 4
+  },
+  "launch_prepared": false,
+  "limits": {
+    "active_seconds": 1200,
+    "archive_members": 128,
+    "cleanup_seconds": 30,
+    "cpu": 24,
+    "output_aggregate_mib": 32,
+    "output_per_file_mib": 16,
+    "ram_gib": 38,
+    "seal_seconds": 300,
+    "tasks": 512,
+    "threads": 2,
+    "tmpfs_mib": 320,
+    "total_seconds": 1500,
+    "worker_seconds": 600
+  },
+  "model_starts": 0,
+  "native_seal": {
+    "manifest_sha256": "95dae6eaf14e56de943bde16a76e42aabf45106c3070c06f13e4ec73ae489bfc",
+    "members": 193,
+    "root": "fp8-sprint30-gateup-static-run.d9lc6vx5"
+  },
+  "next_proposal": "Bounded warp-count component only after source and resource review; none prepared or queued.",
+  "numerical_mismatch_resolved": false,
+  "outer_seconds": 26.4633,
+  "payload_seconds": 4.46621,
+  "performance_claim": false,
+  "physical_seconds": 22.01838,
+  "precision": {
+    "draft_kv": "bfloat16",
+    "lm_head": "float32",
+    "recurrent_state": "float32",
+    "target_kv": "bfloat16",
+    "target_weights": "fp8"
+  },
+  "production_qualification": false,
+  "record_date": "2026-10-23",
+  "result_summary_sha256": "8007703a999210df6ec5afda29218393bbc28202161fe4d03b15bfa647adc4c6",
+  "results": {
+    "advance_to_serving_preparation": false,
+    "candidate_faster_all_cases": false,
+    "cases": 4,
+    "cases_detail": [
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": true,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": true
+          }
+        },
+        "device": 0,
+        "median_ms": {
+          "0": 0.18617550283670425,
+          "1": 0.1843005046248436
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_static_scalars": 1.0101735923929094,
+        "time_reduction_static_scalars": 0.010071132792939141,
+        "ttgir_findings": [
+          {
+            "loop_bounds": [
+              0,
+              null,
+              1
+            ],
+            "loop_div_rem": 1,
+            "reason": "loop bounds",
+            "scalar_uses": {
+              "K": 1,
+              "M": 4,
+              "N": 4,
+              "group_k": 1,
+              "group_n": 1
+            },
+            "specialization_verified": false,
+            "supported": false,
+            "ttgir_sha256": "92eaaf04938983707e86bd589e217583f7e6b06945f11809317bd3709c27b1f8"
+          },
+          {
+            "loop_bounds": [
+              0,
+              40,
+              1
+            ],
+            "loop_div_rem": 0,
+            "reason": null,
+            "scalar_uses": {
+              "K": 0,
+              "M": 0,
+              "N": 0,
+              "group_k": 0,
+              "group_n": 0
+            },
+            "specialization_verified": true,
+            "supported": true,
+            "ttgir_sha256": "5e0efd87f40f4670117ad0da16fef822b5a686d26e7d62689cde3affba29158e"
+          }
+        ]
+      },
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": true,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": true
+          }
+        },
+        "device": 0,
+        "median_ms": {
+          "0": 0.18479999899864197,
+          "1": 0.1861105039715767
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_static_scalars": 0.9929584577712236,
+        "time_reduction_static_scalars": -0.007091477164696158,
+        "ttgir_findings": [
+          {
+            "loop_bounds": [
+              0,
+              null,
+              1
+            ],
+            "loop_div_rem": 1,
+            "reason": "loop bounds",
+            "scalar_uses": {
+              "K": 1,
+              "M": 4,
+              "N": 4,
+              "group_k": 1,
+              "group_n": 1
+            },
+            "specialization_verified": false,
+            "supported": false,
+            "ttgir_sha256": "92eaaf04938983707e86bd589e217583f7e6b06945f11809317bd3709c27b1f8"
+          },
+          {
+            "loop_bounds": [
+              0,
+              40,
+              1
+            ],
+            "loop_div_rem": 0,
+            "reason": null,
+            "scalar_uses": {
+              "K": 0,
+              "M": 0,
+              "N": 0,
+              "group_k": 0,
+              "group_n": 0
+            },
+            "specialization_verified": true,
+            "supported": true,
+            "ttgir_sha256": "5e0efd87f40f4670117ad0da16fef822b5a686d26e7d62689cde3affba29158e"
+          }
+        ]
+      },
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": true,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": true
+          }
+        },
+        "device": 1,
+        "median_ms": {
+          "0": 0.18549500405788422,
+          "1": 0.1846810057759285
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_static_scalars": 1.0044075906915046,
+        "time_reduction_static_scalars": 0.004388249085682694,
+        "ttgir_findings": [
+          {
+            "loop_bounds": [
+              0,
+              null,
+              1
+            ],
+            "loop_div_rem": 1,
+            "reason": "loop bounds",
+            "scalar_uses": {
+              "K": 1,
+              "M": 4,
+              "N": 4,
+              "group_k": 1,
+              "group_n": 1
+            },
+            "specialization_verified": false,
+            "supported": false,
+            "ttgir_sha256": "92eaaf04938983707e86bd589e217583f7e6b06945f11809317bd3709c27b1f8"
+          },
+          {
+            "loop_bounds": [
+              0,
+              40,
+              1
+            ],
+            "loop_div_rem": 0,
+            "reason": null,
+            "scalar_uses": {
+              "K": 0,
+              "M": 0,
+              "N": 0,
+              "group_k": 0,
+              "group_n": 0
+            },
+            "specialization_verified": true,
+            "supported": true,
+            "ttgir_sha256": "5e0efd87f40f4670117ad0da16fef822b5a686d26e7d62689cde3affba29158e"
+          }
+        ]
+      },
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": true,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": true
+          }
+        },
+        "device": 1,
+        "median_ms": {
+          "0": 0.18599549680948257,
+          "1": 0.18543049693107605
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_static_scalars": 1.0030469630818954,
+        "time_reduction_static_scalars": 0.0030377072998990506,
+        "ttgir_findings": [
+          {
+            "loop_bounds": [
+              0,
+              null,
+              1
+            ],
+            "loop_div_rem": 1,
+            "reason": "loop bounds",
+            "scalar_uses": {
+              "K": 1,
+              "M": 4,
+              "N": 4,
+              "group_k": 1,
+              "group_n": 1
+            },
+            "specialization_verified": false,
+            "supported": false,
+            "ttgir_sha256": "92eaaf04938983707e86bd589e217583f7e6b06945f11809317bd3709c27b1f8"
+          },
+          {
+            "loop_bounds": [
+              0,
+              40,
+              1
+            ],
+            "loop_div_rem": 0,
+            "reason": null,
+            "scalar_uses": {
+              "K": 0,
+              "M": 0,
+              "N": 0,
+              "group_k": 0,
+              "group_n": 0
+            },
+            "specialization_verified": true,
+            "supported": true,
+            "ttgir_sha256": "5e0efd87f40f4670117ad0da16fef822b5a686d26e7d62689cde3affba29158e"
+          }
+        ]
+      }
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_gateup_static",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_gateup_static",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_gateup_static",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_gateup_static",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      }
+    ],
+    "compiler_specialization_verified_all_cases": true,
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common N128/stage1 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 90522112,
+    "model_starts": 0,
+    "no_effective_code_change_for_review": false,
+    "payload_seconds": 4.466207769990433,
+    "physical_seconds": 22.01837688899832,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "static_scalars_speedup_geomean": 1.0026274394507448,
+    "static_scalars_speedup_range": [
+      0.9929584577712236,
+      1.0101735923929094
+    ],
+    "static_scalars_time_reduction_range": [
+      -0.007091477164696158,
+      0.010071132792939141
+    ],
+    "status": "M8_GATEUP_STATIC_SCALARS_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false
+  },
+  "schema": 1,
+  "scope": "Exact-shape guarded Triton JIT scalar specialization; model-free component only after review.",
+  "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "selected_recurrent_profile": "aligned_ring_fold",
+  "selected_source_changed": false,
+  "serving_preparation_allowed": false,
+  "source_preparation_root": "fp8-sprint30-gateup-static.6tnqpirt",
+  "source_seal": {
+    "manifest_sha256": "5765a1afb3750a3edccb05648cb95c752f6cc5fb922aaf4070c1a7029af0de09",
+    "members": 79,
+    "root": "fp8-sprint30-gateup-static.6tnqpirt"
+  },
+  "status": "SPRINT30_COMPLETE_CANDIDATE_PARKED"
+}

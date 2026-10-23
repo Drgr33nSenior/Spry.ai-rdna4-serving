@@ -5,6 +5,40 @@ the official FP8 weights, cache formats, model configuration and numerical
 acceptance gates fixed unless a later experiment explicitly changes them.
 KV4 refers to cache storage, not FP4 model weights.
 
+The [current serving sprint list](SERVING-SPRINTS.md) records the 21 October
+decisions and remaining work. Metadata reuse is retained in the experimental
+candidate. Fixed width eight remains selected. The existing ReplaySSM path is
+parked because it does not preserve the aligned GDN arithmetic. Both M2047
+serving orders are complete, with about 4.9 percent lower median latency. One baseline output varied, so the exact gate remains incomplete.
+The owner selected M2047 for current-session use and deferred further variant
+diagnosis unless concerning results recur. The Sprint 6 current-path census
+confirmed the FP32 gather payload. The subsequent C1 timing screen retained
+existing communication settings. The [optimization screening results](OPTIMIZATION-CANDIDATES.md)
+select the current M2047/metadata/DFlash8 reference for Sprint 7 and identify
+aligned ReplaySSM as a separate serving integration candidate. Adaptive policy
+remains unimplemented and untested.
+These BF16-cache serving candidates are separate from the KV4 cache-path work below.
+
+## Current-profile cost attribution
+
+The [post-Sprint 7 analysis](CURRENT-COST-ANALYSIS.md) identifies repeated
+generation as the dominant service phase in the latest sampled quality packet.
+It does not isolate the current GPU bottleneck. Prioritize a bounded phase-timing
+measurement of target-body execution, draft vocabulary projection/top-k and
+acceptance/commit, including CPU observer cost. Keep the sampled and greedy
+profiles distinct. No new profiling campaign is queued by this analysis.
+
+The [next optimization plan](NEXT-OPTIMIZATION-PLAN.md) separates draft top-k=16
+from sampled target top-k=20, freezes timing coverage across each request and
+sets conditional component and serving gates. Astra reviewed the planning
+direction. The corrected Sprint 8 packet passed 107 CPU checks,8/8 final answers
+and independent release. Its126 completed samples/card place the target graph
+at about 83% of measured long-request cycle intervals. Sprint 9 first classifies
+that graph through a bounded trace before choosing one component. See the
+[native attribution record](SPRINT8-COST-ATTRIBUTION.md) for coverage gaps,
+reasoning variation and descriptive observer overhead. No serving speedup is
+claimed.
+
 ## 1. Establish the cache-path comparison
 
 The [decoder and validator candidate](CACHE-PATH.md) completed its native cache
@@ -60,6 +94,13 @@ review even when the mathematical expression is unchanged.
 
 ## 4. Investigate recurrent state and TP2 communication
 
+The 21 October [candidate screens](OPTIMIZATION-CANDIDATES.md) retain the
+current M2047/metadata/DFlash8 reference. Width four was slower on the current
+stack. The aligned ReplaySSM component passed 1,032 exact comparisons and is
+the next serving integration candidate. Adaptive policy remains unimplemented;
+its source and telemetry audit does not qualify it. The C1 gather interval was
+too small to select shard-max integration for that scope.
+
 Measure Gated DeltaNet state traffic and tensor-parallel synchronization in a
 full-model run before proposing a change. These operations are absent from the
 standalone cache test and cannot explain its timings.
@@ -101,3 +142,13 @@ dependencies, change device settings or overwrite the installed runtime.
 Rollback is non-adoption: retain the unchanged baseline library, model and
 runtime. Research candidates do not alter serving defaults. GPU execution,
 model qualification, quality and speed require their own observed evidence.
+
+Sprint 9 completed the current-stack target-graph classification and a native
+M8 gate/up stage-depth component comparison. All 96 exact comparisons passed on
+both cards; stage 1 reduced synthetic component median time 6.61–13.06%. The
+[tracking record](SPRINT9-TARGET-GRAPH.md) retains the corrected harness failure,
+source-snapshot recovery and measurement limits. The patch remains experimental
+and uninstalled. [Sprint 10](SPRINT10-M8-SERVING.md) subsequently observed
+0.35–0.60% lower median latency in both matched orders and passed affected
+bounded quality/lifecycle gates. M8 stage one is selected for the next
+experimental profile launch; the installed runtime remains unchanged.

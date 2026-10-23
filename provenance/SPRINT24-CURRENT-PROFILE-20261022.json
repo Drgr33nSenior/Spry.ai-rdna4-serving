@@ -1,0 +1,772 @@
+{
+  "analysis": {
+    "nested_groups_are_not_additive": true,
+    "output_variations_sha256": "f1ad95e623c155a2540f805504be4e5d31747dbd7bed5e1cb067b0abba2bf94f",
+    "phase_result_sha256": "b862d39919486addadeff0a869551e01b7191569f2b559cffcf4f60736635686",
+    "quality_result_sha256": "486f2b48d89abeaaa19b5d932b87b171132f248cd6bc9480cfaa7f05ae57ce13",
+    "ranks_are_separate": true,
+    "rows": [
+      {
+        "complete_samples": 8,
+        "coverage": [
+          {
+            "actual_cycles_after_last_target_sample": 13,
+            "case": "coding-running-totals",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 62,
+              "case": "coding-running-totals",
+              "missing_scheduled_cycles": [],
+              "sampled_cycles": [
+                9,
+                10,
+                12,
+                14,
+                15,
+                17,
+                19,
+                20,
+                22,
+                24,
+                25,
+                27,
+                29,
+                30,
+                32,
+                34,
+                35,
+                37,
+                39,
+                40,
+                42,
+                44,
+                45,
+                47,
+                49,
+                50,
+                52,
+                54,
+                55,
+                57,
+                59,
+                61
+              ],
+              "sampled_prefix_range": [
+                265,
+                544
+              ],
+              "successful_calls": 62,
+              "uncovered_tail_cycles": 1
+            },
+            "target_sampled_prefix_range": [
+              332,
+              489
+            ],
+            "target_selected_cycles": [
+              22,
+              49
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 42,
+            "case": "coding-unique-last",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 188,
+              "case": "coding-unique-last",
+              "missing_scheduled_cycles": [],
+              "sampled_cycles": [
+                9,
+                14,
+                20,
+                26,
+                31,
+                37,
+                43,
+                49,
+                54,
+                60,
+                66,
+                72,
+                77,
+                83,
+                89,
+                95,
+                100,
+                106,
+                112,
+                118,
+                123,
+                129,
+                135,
+                141,
+                146,
+                152,
+                158,
+                164,
+                169,
+                175,
+                181,
+                187
+              ],
+              "sampled_prefix_range": [
+                297,
+                1336
+              ],
+              "successful_calls": 188,
+              "uncovered_tail_cycles": 1
+            },
+            "target_sampled_prefix_range": [
+              559,
+              1032
+            ],
+            "target_selected_cycles": [
+              54,
+              146
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 64,
+            "case": "quality16k-audit-threshold",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 341,
+              "case": "quality16k-audit-threshold",
+              "missing_scheduled_cycles": [
+                344,
+                356
+              ],
+              "sampled_cycles": [
+                9,
+                20,
+                31,
+                42,
+                53,
+                64,
+                76,
+                87,
+                98,
+                109,
+                120,
+                132,
+                143,
+                154,
+                165,
+                176,
+                188,
+                199,
+                210,
+                221,
+                232,
+                244,
+                255,
+                266,
+                277,
+                288,
+                300,
+                311,
+                322,
+                333
+              ],
+              "sampled_prefix_range": [
+                8214,
+                10701
+              ],
+              "successful_calls": 341,
+              "uncovered_tail_cycles": 0
+            },
+            "target_sampled_prefix_range": [
+              8829,
+              10253
+            ],
+            "target_selected_cycles": [
+              98,
+              277
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 150,
+            "case": "heldout16k-audit",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 450,
+              "case": "heldout16k-audit",
+              "missing_scheduled_cycles": [],
+              "sampled_cycles": [
+                9,
+                21,
+                33,
+                45,
+                57,
+                69,
+                81,
+                93,
+                106,
+                118,
+                130,
+                142,
+                154,
+                166,
+                178,
+                190,
+                203,
+                215,
+                227,
+                239,
+                251,
+                263,
+                275,
+                287,
+                300,
+                312,
+                324,
+                336,
+                348,
+                360,
+                372,
+                385
+              ],
+              "sampled_prefix_range": [
+                8198,
+                11001
+              ],
+              "successful_calls": 450,
+              "uncovered_tail_cycles": 65
+            },
+            "target_sampled_prefix_range": [
+              8831,
+              10347
+            ],
+            "target_selected_cycles": [
+              106,
+              300
+            ]
+          }
+        ],
+        "expected_device_samples": 8,
+        "long_samples": 4,
+        "long_window_median_ms": {
+          "accept": 0.34360599517822266,
+          "attention": 4.318404987454414,
+          "comm": 3.250684494152665,
+          "cycle": 53.21061706542969,
+          "draft.1.graph": 7.185168027877808,
+          "gdn": 10.368621990084648,
+          "mlp": 18.4688009172678,
+          "projection": 27.233915451914072,
+          "target.1.gather": 0.1568629965186119,
+          "target.1.graph": 44.11063575744629,
+          "target.1.head": 2.0511995553970337
+        },
+        "projection_forward_median_ms": {
+          "down_proj": 5.656311471015215,
+          "gate_up_proj": 11.83908698707819,
+          "in_proj_ba": 1.1934649907052517,
+          "in_proj_qkvz": 4.378565490245819,
+          "o_proj": 0.6938520018011332,
+          "out_proj": 2.11048199608922,
+          "qkv_proj": 1.3537669964134693
+        },
+        "rank": 0
+      },
+      {
+        "complete_samples": 8,
+        "coverage": [
+          {
+            "actual_cycles_after_last_target_sample": 13,
+            "case": "coding-running-totals",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 62,
+              "case": "coding-running-totals",
+              "missing_scheduled_cycles": [],
+              "sampled_cycles": [
+                9,
+                10,
+                12,
+                14,
+                15,
+                17,
+                19,
+                20,
+                22,
+                24,
+                25,
+                27,
+                29,
+                30,
+                32,
+                34,
+                35,
+                37,
+                39,
+                40,
+                42,
+                44,
+                45,
+                47,
+                49,
+                50,
+                52,
+                54,
+                55,
+                57,
+                59,
+                61
+              ],
+              "sampled_prefix_range": [
+                265,
+                544
+              ],
+              "successful_calls": 62,
+              "uncovered_tail_cycles": 1
+            },
+            "target_sampled_prefix_range": [
+              332,
+              489
+            ],
+            "target_selected_cycles": [
+              22,
+              49
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 42,
+            "case": "coding-unique-last",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 188,
+              "case": "coding-unique-last",
+              "missing_scheduled_cycles": [],
+              "sampled_cycles": [
+                9,
+                14,
+                20,
+                26,
+                31,
+                37,
+                43,
+                49,
+                54,
+                60,
+                66,
+                72,
+                77,
+                83,
+                89,
+                95,
+                100,
+                106,
+                112,
+                118,
+                123,
+                129,
+                135,
+                141,
+                146,
+                152,
+                158,
+                164,
+                169,
+                175,
+                181,
+                187
+              ],
+              "sampled_prefix_range": [
+                297,
+                1336
+              ],
+              "successful_calls": 188,
+              "uncovered_tail_cycles": 1
+            },
+            "target_sampled_prefix_range": [
+              559,
+              1032
+            ],
+            "target_selected_cycles": [
+              54,
+              146
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 64,
+            "case": "quality16k-audit-threshold",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 341,
+              "case": "quality16k-audit-threshold",
+              "missing_scheduled_cycles": [
+                344,
+                356
+              ],
+              "sampled_cycles": [
+                9,
+                20,
+                31,
+                42,
+                53,
+                64,
+                76,
+                87,
+                98,
+                109,
+                120,
+                132,
+                143,
+                154,
+                165,
+                176,
+                188,
+                199,
+                210,
+                221,
+                232,
+                244,
+                255,
+                266,
+                277,
+                288,
+                300,
+                311,
+                322,
+                333
+              ],
+              "sampled_prefix_range": [
+                8214,
+                10701
+              ],
+              "successful_calls": 341,
+              "uncovered_tail_cycles": 0
+            },
+            "target_sampled_prefix_range": [
+              8829,
+              10253
+            ],
+            "target_selected_cycles": [
+              98,
+              277
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 150,
+            "case": "heldout16k-audit",
+            "complete_samples": 2,
+            "schedule_coverage": {
+              "attempted_cycles": 450,
+              "case": "heldout16k-audit",
+              "missing_scheduled_cycles": [],
+              "sampled_cycles": [
+                9,
+                21,
+                33,
+                45,
+                57,
+                69,
+                81,
+                93,
+                106,
+                118,
+                130,
+                142,
+                154,
+                166,
+                178,
+                190,
+                203,
+                215,
+                227,
+                239,
+                251,
+                263,
+                275,
+                287,
+                300,
+                312,
+                324,
+                336,
+                348,
+                360,
+                372,
+                385
+              ],
+              "sampled_prefix_range": [
+                8198,
+                11001
+              ],
+              "successful_calls": 450,
+              "uncovered_tail_cycles": 65
+            },
+            "target_sampled_prefix_range": [
+              8831,
+              10347
+            ],
+            "target_selected_cycles": [
+              106,
+              300
+            ]
+          }
+        ],
+        "expected_device_samples": 8,
+        "long_samples": 4,
+        "long_window_median_ms": {
+          "accept": 0.3481069952249527,
+          "attention": 4.302020475268364,
+          "comm": 3.334277492016554,
+          "cycle": 53.20262908935547,
+          "draft.1.graph": 7.132198333740234,
+          "gdn": 10.340514965355396,
+          "mlp": 18.467363491654396,
+          "projection": 27.20550844538957,
+          "target.1.gather": 0.1563830003142357,
+          "target.1.graph": 44.11456298828125,
+          "target.1.head": 2.051998496055603
+        },
+        "projection_forward_median_ms": {
+          "down_proj": 5.6554619781672955,
+          "gate_up_proj": 11.84478447586298,
+          "in_proj_ba": 1.1899999929592013,
+          "in_proj_qkvz": 4.370839484035969,
+          "o_proj": 0.6903534978628159,
+          "out_proj": 2.10725948959589,
+          "qkv_proj": 1.3508435003459454
+        },
+        "rank": 1
+      }
+    ],
+    "seal_status": "SEALED_INDEPENDENTLY_REVIEWED",
+    "selection_rule": "Completed target samples from case ordinals 2 and 3; median per rank. Family and projection values sum their enclosed intervals per sample before taking the median.",
+    "sha256": "eec766bcc414cc4337a115121345a688aa10b8e15f5b3952239e6e1da5429753",
+    "target_costs_sha256": "1ef2f50563611082846eeefc9f5044d1ff76c301961c8442c3d67879c54aed6c"
+  },
+  "analysis_seal": {
+    "manifest_sha256": "d0b7cca96b5ec468d8ad2b599d3fb2ac9ddb4914781efb042f88d760f3b5cfcb",
+    "members": 18,
+    "root": "fp8-sprint24-analysis.rIhKcpsV"
+  },
+  "analysis_sha256": "eec766bcc414cc4337a115121345a688aa10b8e15f5b3952239e6e1da5429753",
+  "cpu_checks": {
+    "packet": 69,
+    "preflight": 1,
+    "procfs": 10,
+    "reader": 22,
+    "startup": 51
+  },
+  "endurance": "deferred",
+  "independent_readout_review": {
+    "complete_selected_device_windows_per_rank": 8,
+    "final_id_pairs_matched": 3,
+    "final_text_pairs_matched": 3,
+    "full_output_pairs_matched": 1,
+    "long_windows_per_rank": 4,
+    "median_recomputation": "Every family/projection long median recomputed from per-sample sums separately per rank.",
+    "next_candidate_scope": "N64 gate/up is source-feasible only; uncompiled, unlaunched and not prepared.",
+    "numerical_mismatch_resolved": false,
+    "qualification": false,
+    "quality_passes": 8,
+    "reviewed_utc": "2026-10-22T22:55:40.129050+00:00",
+    "reviewer": "/root/sprint19_compatibility",
+    "scope": "Eight selected target device windows per rank; not every request cycle. Target tails13/42/64/150, host heldout65 uncovered tail cycles, threshold planned cycles344/356 beyond341 actual. Unmatched work supports no overhead or causal claim.",
+    "status": "INDEPENDENT_READOUT_ARITHMETIC_AND_SCOPE_VERIFIED",
+    "verified_members": {
+      "native": 226,
+      "reader": 136,
+      "source": 367
+    },
+    "verified_seals": 3,
+    "work_pairs_matched": 1
+  },
+  "independent_release_verified": true,
+  "interpretation": "No overhead attribution or causal speedup from unequal work; sparse sampled windows are not whole-request fractions.",
+  "model_starts": 2,
+  "native_fault": false,
+  "native_launch_duration_seconds": 384.0676577,
+  "native_seal": {
+    "manifest_sha256": "af88c7462dfc36ddcdab25c84449f589a882cea18f263af2c654454fbb21a06a",
+    "members": 226,
+    "root": "fp8-sprint24-profile-run.1ie1z8pc"
+  },
+  "next_proposal": {
+    "block_k": 128,
+    "block_m": 16,
+    "block_n": 64,
+    "block_scale": 128,
+    "execution_authorized": false,
+    "group": 32,
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "stage": 1,
+    "status": "SOURCE_FEASIBLE_UNCOMPILED_UNVERIFIED_NOT_PREPARED_OR_QUEUED",
+    "warps": 4
+  },
+  "normal_stops": 8,
+  "numerical_mismatch_resolved": false,
+  "output_variations": {
+    "final_id_pairs_equal": 3,
+    "final_text_pairs_equal": 3,
+    "full_output_pairs_equal": 1,
+    "global_novelty_established": false,
+    "hardware_cause_established": false,
+    "numerical_mismatch_resolved": false,
+    "rows": [
+      {
+        "all_task_gates_passed": true,
+        "case": "coding-running-totals",
+        "final_ids_equal": true,
+        "final_text_equal": true,
+        "first_difference_in_reasoning": false,
+        "first_full_difference": null,
+        "full_output_ids_equal": true,
+        "historical_s20_full_output_matches": {
+          "control": [
+            "control",
+            "mtp"
+          ],
+          "mtp": [
+            "control",
+            "mtp"
+          ]
+        },
+        "output_tokens": {
+          "control": 333,
+          "mtp": 333
+        },
+        "reasoning_ids_equal": true,
+        "verification_cycles": {
+          "control": 62,
+          "mtp": 62
+        }
+      },
+      {
+        "all_task_gates_passed": true,
+        "case": "coding-unique-last",
+        "final_ids_equal": false,
+        "final_text_equal": false,
+        "first_difference_in_reasoning": true,
+        "first_full_difference": 148,
+        "full_output_ids_equal": false,
+        "historical_s20_full_output_matches": {
+          "control": [],
+          "mtp": [
+            "control",
+            "mtp"
+          ]
+        },
+        "output_tokens": {
+          "control": 1304,
+          "mtp": 1101
+        },
+        "reasoning_ids_equal": false,
+        "verification_cycles": {
+          "control": 247,
+          "mtp": 188
+        }
+      },
+      {
+        "all_task_gates_passed": true,
+        "case": "quality16k-audit-threshold",
+        "final_ids_equal": true,
+        "final_text_equal": true,
+        "first_difference_in_reasoning": true,
+        "first_full_difference": 16,
+        "full_output_ids_equal": false,
+        "historical_s20_full_output_matches": {
+          "control": [],
+          "mtp": [
+            "control",
+            "mtp"
+          ]
+        },
+        "output_tokens": {
+          "control": 2558,
+          "mtp": 2590
+        },
+        "reasoning_ids_equal": false,
+        "verification_cycles": {
+          "control": 345,
+          "mtp": 341
+        }
+      },
+      {
+        "all_task_gates_passed": true,
+        "case": "heldout16k-audit",
+        "final_ids_equal": true,
+        "final_text_equal": true,
+        "first_difference_in_reasoning": true,
+        "first_full_difference": 2,
+        "full_output_ids_equal": false,
+        "historical_s20_full_output_matches": {
+          "control": [],
+          "mtp": [
+            "control",
+            "mtp"
+          ]
+        },
+        "output_tokens": {
+          "control": 3371,
+          "mtp": 3352
+        },
+        "reasoning_ids_equal": false,
+        "verification_cycles": {
+          "control": 446,
+          "mtp": 450
+        }
+      }
+    ],
+    "scope": "Novel full outputs relative to S20 only. All timed outputs match both historical S20 arms; three current controls do not. Task checks do not validate reasoning or establish general equivalence. Unmatched work does not support overhead attribution."
+  },
+  "previous_clean_s22_combined_tp2_tokens_per_second": [
+    121.18,
+    121.24
+  ],
+  "qualification": false,
+  "quality_passes": 8,
+  "reader_seal": {
+    "manifest_sha256": "3d8101ef521c576956b30f1fc4b2e8d74ddaa03943a56a1365b35add6d69d93d",
+    "members": 136,
+    "root": "fp8-sprint24-profile-reader.08mqaj80"
+  },
+  "request_profile": {
+    "concurrency": 1,
+    "context_length": 16384,
+    "ignore_eos": false,
+    "input_tokens": [
+      226,
+      246,
+      8176,
+      8176
+    ],
+    "max_completion_tokens": 8192,
+    "reasoning_effort": "low",
+    "repeats_per_task": 2,
+    "temperature": 1.0,
+    "thinking": true,
+    "top_k": 20,
+    "top_p": 0.95,
+    "unique_tasks": 4
+  },
+  "requests": 8,
+  "retained_cpu_corrections": [
+    "Sealed S20 grade metadata correction postdated original tests; fresh reader fixture lacked stack and failed 3 tests; corrected only fixture, grader unchanged.",
+    "Initial startup omitted top-level test-only timing bindings; restored exact donor fixture.",
+    "Initial packet check omitted test-only provenance fixtures; restored exact donor files, preserved failed acceptance receipt.",
+    "Parent supplementary review initially expected procfs test to be a new file; equal file sets and exact selected test bytes then verified. No source/package change or native preparation occurred before correction.",
+    "Pre-execution analysis syntax error corrected before analysis; original error retained.",
+    "Original analysis report/helper retained before renaming the inherited overhead field and explicitly excluding unmatched-work overhead attribution; arithmetic and native data unchanged."
+  ],
+  "retry": false,
+  "sampling_distribution_verified": false,
+  "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "selected_profile_changed": false,
+  "selected_recurrent_profile": "aligned_ring_fold",
+  "selected_source_changed": false,
+  "source_seal": {
+    "manifest_sha256": "df88015fd98ad95690075247005361eaa5070f330fe2ae15b55d698d1feb213d",
+    "members": 367,
+    "root": "fp8-sprint24-profile-refresh.lzfr7dx9"
+  },
+  "status": "CURRENT_SELECTED_PROFILE_WINDOWS_ANALYZED",
+  "work_pairs_equal": 1
+}

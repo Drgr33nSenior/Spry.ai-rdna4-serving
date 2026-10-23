@@ -1,0 +1,577 @@
+{
+  "active_gpu_run": false,
+  "analysis": {
+    "all_scheduled_device_samples_complete": true,
+    "causal_speedup": false,
+    "client_overhead_descriptive": [
+      {
+        "case": "coding-running-totals",
+        "client_time_change_percent": 2.8304255327768146,
+        "control_output_tokens": 333,
+        "control_seconds": 3.641593598993495,
+        "control_verification_cycles": 62,
+        "output_ids_equal": true,
+        "timed_output_tokens": 333,
+        "timed_seconds": 3.7446661940193735,
+        "timed_verification_cycles": 62
+      },
+      {
+        "case": "coding-unique-last",
+        "client_time_change_percent": 8.267147425899267,
+        "control_output_tokens": 1101,
+        "control_seconds": 9.177564870973583,
+        "control_verification_cycles": 188,
+        "output_ids_equal": true,
+        "timed_output_tokens": 1101,
+        "timed_seconds": 9.936287688964512,
+        "timed_verification_cycles": 188
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "client_time_change_percent": 6.515446954430537,
+        "control_output_tokens": 2590,
+        "control_seconds": 20.130387633980718,
+        "control_verification_cycles": 341,
+        "output_ids_equal": true,
+        "timed_output_tokens": 2590,
+        "timed_seconds": 21.441972361993976,
+        "timed_verification_cycles": 341
+      },
+      {
+        "case": "heldout16k-audit",
+        "client_time_change_percent": 7.018497841015292,
+        "control_output_tokens": 3352,
+        "control_seconds": 25.05194894701708,
+        "control_verification_cycles": 450,
+        "output_ids_equal": true,
+        "timed_output_tokens": 3352,
+        "timed_seconds": 26.81021944299573,
+        "timed_verification_cycles": 450
+      }
+    ],
+    "full_output_pairs_equal": 4,
+    "instrumentation_scope": "One fixed control-first order; all four output-ID pairs and verification-cycle counts match. Elapsed differences remain descriptive, not causally isolated overhead. Intervals apply only to completed sampled windows.",
+    "native_seal": {
+      "manifest_sha256": "5757294fe451f91c2af96e5ec9834def603d656ab23cc708349148acbe1dd185",
+      "members": 233,
+      "qualification": false,
+      "root": "fp8-sprint20-profile-run.c0vejmfs",
+      "verified_utc": "2026-10-22T19:09:22.703631+00:00"
+    },
+    "nested_groups_are_not_additive": true,
+    "numerical_mismatch_resolved": false,
+    "phase_result_sha256": "501d42d6fd50a0a7a9ef0c70f4559f781ca812006cf5607e3ee76efc95dad27f",
+    "projection_scope": "Linear forward intervals include quantization, launches, waits and any enclosed collectives; not isolated GEMM time.",
+    "qualification": false,
+    "quality_gates_passed": 8,
+    "quality_result_sha256": "370e776e3325589d0fdaf8c591d866985c0016bd618dae5e890a7726a2dc195e",
+    "ranks_are_separate": true,
+    "rows": [
+      {
+        "complete_samples": 8,
+        "coverage": [
+          {
+            "actual_cycles_after_last_target_sample": 13,
+            "case": "coding-running-totals",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              332,
+              489
+            ],
+            "target_selected_cycles": [
+              22,
+              49
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 42,
+            "case": "coding-unique-last",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              559,
+              1032
+            ],
+            "target_selected_cycles": [
+              54,
+              146
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 64,
+            "case": "quality16k-audit-threshold",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              8829,
+              10253
+            ],
+            "target_selected_cycles": [
+              98,
+              277
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 150,
+            "case": "heldout16k-audit",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              8831,
+              10347
+            ],
+            "target_selected_cycles": [
+              106,
+              300
+            ]
+          }
+        ],
+        "expected_device_samples": 8,
+        "long_samples": 4,
+        "long_window_median_ms": {
+          "accept": 0.3434624969959259,
+          "attention": 4.371631979942322,
+          "comm": 3.2522254986688495,
+          "cycle": 53.55928993225098,
+          "draft.1.graph": 7.237696409225464,
+          "gdn": 10.536480963230133,
+          "mlp": 18.58715996146202,
+          "projection": 27.550386889837682,
+          "target.1.gather": 0.15710150450468063,
+          "target.1.graph": 44.44479179382324,
+          "target.1.head": 2.0506759881973267
+        },
+        "projection_forward_median_ms": {
+          "down_proj": 5.667510986328125,
+          "gate_up_proj": 11.939424961805344,
+          "in_proj_ba": 1.1961894948035479,
+          "in_proj_qkvz": 4.3835534900426865,
+          "o_proj": 0.7463834956288338,
+          "out_proj": 2.2636529859155416,
+          "qkv_proj": 1.3499124981462955
+        },
+        "rank": 0
+      },
+      {
+        "complete_samples": 8,
+        "coverage": [
+          {
+            "actual_cycles_after_last_target_sample": 13,
+            "case": "coding-running-totals",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              332,
+              489
+            ],
+            "target_selected_cycles": [
+              22,
+              49
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 42,
+            "case": "coding-unique-last",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              559,
+              1032
+            ],
+            "target_selected_cycles": [
+              54,
+              146
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 64,
+            "case": "quality16k-audit-threshold",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              8829,
+              10253
+            ],
+            "target_selected_cycles": [
+              98,
+              277
+            ]
+          },
+          {
+            "actual_cycles_after_last_target_sample": 150,
+            "case": "heldout16k-audit",
+            "complete_samples": 2,
+            "target_sampled_prefix_range": [
+              8831,
+              10347
+            ],
+            "target_selected_cycles": [
+              106,
+              300
+            ]
+          }
+        ],
+        "expected_device_samples": 8,
+        "long_samples": 4,
+        "long_window_median_ms": {
+          "accept": 0.34838199615478516,
+          "attention": 4.347968503832817,
+          "comm": 3.3630289947614074,
+          "cycle": 53.53055000305176,
+          "draft.1.graph": 7.128968000411987,
+          "gdn": 10.50968599319458,
+          "mlp": 18.557166934013367,
+          "projection": 27.51630385685712,
+          "target.1.gather": 0.1574609950184822,
+          "target.1.graph": 44.44581604003906,
+          "target.1.head": 2.0512335300445557
+        },
+        "projection_forward_median_ms": {
+          "down_proj": 5.654058486223221,
+          "gate_up_proj": 11.931718982756138,
+          "in_proj_ba": 1.1896664947271347,
+          "in_proj_qkvz": 4.376910001039505,
+          "o_proj": 0.7415454927831888,
+          "out_proj": 2.2648534905165434,
+          "qkv_proj": 1.3486279994249344
+        },
+        "rank": 1
+      }
+    ],
+    "selected_profile_changed": false,
+    "source_seal": {
+      "manifest_sha256": "d9dede0c3d41dbcf486c8cee94c7482b2c05fe08b8f6f723a33f06d189cc4917",
+      "members": 372,
+      "qualification": false,
+      "root": "fp8-sprint20-profile-refresh.mt8n_exy",
+      "verified_utc": "2026-10-22T19:01:21.908456+00:00"
+    },
+    "status": "CURRENT_SELECTED_PROFILE_WINDOWS_ANALYZED",
+    "target_costs_sha256": "746e56061ea9bf76d4c0cda603d057536f4455585e220fc2aabc0efb41bdbbdd",
+    "whole_request_bottleneck_established": false
+  },
+  "analysis_sha256": "255ae1abd48aeb6ba404fff481ee67063c2860dc43790934a953b17228f3335d",
+  "cpu_checks": {
+    "packet": 69,
+    "reader": 22,
+    "startup": 51
+  },
+  "date": "2026-10-22",
+  "exact_output_equivalence_established": false,
+  "independent_readout_review": {
+    "complete_scheduled_windows_per_rank": 8,
+    "correction": "Generic changed-output/work phrasing corrected before closeout sealing; original analysis retained. Source/native/reader seals remain unchanged.",
+    "full_output_pairs_matched": 4,
+    "matched_ring_capacity_both_arms_and_ranks": true,
+    "next_candidate_distinct_from_prior_trials": true,
+    "qualification": false,
+    "quality_passes": 8,
+    "reviewer": "/root/sprint19_compatibility",
+    "status": "INDEPENDENT_READOUT_ARITHMETIC_AND_SCOPE_VERIFIED",
+    "verified_long_windows_per_rank": 4
+  },
+  "last_clean_benchmark": {
+    "combined_tp2_tokens_per_second": [
+      120.27983380089104,
+      120.36016489275049
+    ],
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "scope": "2047 input/1024 forced output, C1, greedy low thinking; this attribution is not a new speed benchmark."
+  },
+  "launch_prepared": false,
+  "model_starts": 2,
+  "native_seal": {
+    "manifest_sha256": "5757294fe451f91c2af96e5ec9834def603d656ab23cc708349148acbe1dd185",
+    "members": 233,
+    "qualification": false,
+    "root": "fp8-sprint20-profile-run.c0vejmfs",
+    "verified_utc": "2026-10-22T19:09:22.703631+00:00"
+  },
+  "next_bounded_action": "Propose one model-free common M16/stage1 gate/up component at (8,17408,5120), preserving all other selected routes and ring-fold. No GPU campaign prepared or reserved; compile/exact/graph/timing gates required before serving. Reliability remains deferred.",
+  "next_candidate": {
+    "candidate": "Same common kernel and exact gate/up shape; M16, retaining N128/K128/group32/four warps/stage1.",
+    "condition": "Only consider if Sprint20 authenticated current windows still identify MLP gate/up as the dominant projection interval.",
+    "condition_satisfied_by_current_windows": true,
+    "current_component_correctness_verified": false,
+    "current_component_performance_verified": false,
+    "gpu_campaign_prepared": false,
+    "gpu_campaign_reserved": false,
+    "guard": "Exact untuned HIP/BF16 common gate/up (8,17408,5120),128x128 blocks and expected selected stage1 config; do not change 3072, tuned configs, other shapes or non-HIP/dtype routes.",
+    "novelty": "S11 tested common M32/stage1; S15 tested unrolled M16/stage1. This common M16 candidate is distinct in the bounded inspected records.",
+    "qualification": false,
+    "reference": "Selected common M64/N128/K128, group32, four warps, stage1.",
+    "required_future_gates": [
+      "Legal compile and both-card finite/exact structured/random eager and graph comparisons, canaries and scale semantics.",
+      "A timing win earns a separately prepared matched serving pilot, not automatic adoption."
+    ],
+    "reviewer": "/root/sprint19_compatibility",
+    "shape_m_n_k": [
+      8,
+      17408,
+      5120
+    ],
+    "source": "fp8-sprint17-greedy.ggza3rfn/review/GEMM-tail.py",
+    "source_observation": "Common kernel wraps input rows modulo M and masks output stores. N and K divide128. Tile changes may still alter compiler/layout/tl.dot behavior.",
+    "source_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "status": "CONDITIONAL_SOURCE_FEASIBILITY_ONLY_NOT_PREPARED_OR_LAUNCHED"
+  },
+  "numerical_mismatch_resolved": false,
+  "owner_wall_seconds": 385.3009789579082,
+  "package_metrics": {
+    "archive_bytes": 16721920,
+    "archive_members": 64,
+    "argv_entries": {
+      "bf16": 255,
+      "kv4": 255
+    },
+    "binding_bytes": {
+      "control": 65443,
+      "mtp": 65423
+    },
+    "combined_transport_bytes": 33539891,
+    "member_payload_bytes": 16666465
+  },
+  "production_qualified": false,
+  "qualification": false,
+  "quality": {
+    "full_output_pairs_equal": 4,
+    "independent_release_verified": true,
+    "normal_stops": 8,
+    "passed": 8,
+    "rows": [
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "coding-running-totals",
+        "final_answer_tokens": 41,
+        "input_tokens": 226,
+        "output_tokens": 333,
+        "reasoning_tokens": 290,
+        "start": "control"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "coding-unique-last",
+        "final_answer_tokens": 68,
+        "input_tokens": 246,
+        "output_tokens": 1101,
+        "reasoning_tokens": 1031,
+        "start": "control"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "quality16k-audit-threshold",
+        "final_answer_tokens": 763,
+        "input_tokens": 8176,
+        "output_tokens": 2590,
+        "reasoning_tokens": 1825,
+        "start": "control"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "heldout16k-audit",
+        "final_answer_tokens": 821,
+        "input_tokens": 8176,
+        "output_tokens": 3352,
+        "reasoning_tokens": 2529,
+        "start": "control"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "coding-running-totals",
+        "final_answer_tokens": 41,
+        "input_tokens": 226,
+        "output_tokens": 333,
+        "reasoning_tokens": 290,
+        "start": "mtp"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "coding-unique-last",
+        "final_answer_tokens": 68,
+        "input_tokens": 246,
+        "output_tokens": 1101,
+        "reasoning_tokens": 1031,
+        "start": "mtp"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "quality16k-audit-threshold",
+        "final_answer_tokens": 763,
+        "input_tokens": 8176,
+        "output_tokens": 2590,
+        "reasoning_tokens": 1825,
+        "start": "mtp"
+      },
+      {
+        "all_applicable_quality_gates_passed": true,
+        "case": "heldout16k-audit",
+        "final_answer_tokens": 821,
+        "input_tokens": 8176,
+        "output_tokens": 3352,
+        "reasoning_tokens": 2529,
+        "start": "mtp"
+      }
+    ],
+    "sampling_distribution_verified": false,
+    "sampling_route_verified": true
+  },
+  "reader_seal": {
+    "manifest_sha256": "4c6273bd76008dafdbfa77a986530b02eff0983b85bcfb27ab5eb09b0d0dad8b",
+    "members": 138,
+    "qualification": false,
+    "root": "fp8-sprint20-profile-reader.nu0l2k25",
+    "verified_utc": "2026-10-22T19:10:13.706037+00:00"
+  },
+  "recurrent_state_equivalence_established": false,
+  "reliability_deferred": true,
+  "request_profile": {
+    "concurrency": 1,
+    "context_length": 16384,
+    "ignore_eos": false,
+    "input_tokens": [
+      226,
+      246,
+      8176,
+      8176
+    ],
+    "max_completion_tokens": 8192,
+    "reasoning_effort": "low",
+    "temperature": 1.0,
+    "thinking": true,
+    "top_k": 20,
+    "top_p": 0.95
+  },
+  "requests": 8,
+  "result": {
+    "complete_samples_per_rank": {
+      "0": 8,
+      "1": 8
+    },
+    "full_output_pairs_equal": 4,
+    "model_starts": 2,
+    "numerical_mismatch_resolved": false,
+    "phase_result_sha256": "501d42d6fd50a0a7a9ef0c70f4559f781ca812006cf5607e3ee76efc95dad27f",
+    "qualification": false,
+    "quality_gates_passed": 8,
+    "quality_result_sha256": "370e776e3325589d0fdaf8c591d866985c0016bd618dae5e890a7726a2dc195e",
+    "requests": 8,
+    "selected_profile_changed": false,
+    "status": "SPRINT20_PROFILE_READOUT_COMPLETE",
+    "target_costs_sha256": "746e56061ea9bf76d4c0cda603d057536f4455585e220fc2aabc0efb41bdbbdd"
+  },
+  "retained_corrections": [
+    "CPU setup/path/fixture refusals retained before native launch; no acceptance or resource weakening.",
+    "Parent supplementary check initially used the native binding schema for an HTTP envelope; corrected validator, no packet change.",
+    "Readout-only ringfold_quality_measured inherited false and was corrected from authenticated stack labels; grading AST unchanged.",
+    "Analysis generic output/work wording corrected before closeout sealing; all four pairs and work counts match; original report retained."
+  ],
+  "schema": 1,
+  "scope": "Two-start/eight-request selected-profile cost attribution; control and timing use selected GEMM and aligned ring-fold. Existing classifier enabled only in timing arm.",
+  "selected_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+  "selected_profile_changed": false,
+  "selected_recurrent_profile": {
+    "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+    "author_members": 344,
+    "author_relative_source_sha256": {
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+      "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+    },
+    "author_root": "fp8-sprint19-greedy.oiripzcc",
+    "draft_attention_kv_dtype": "bf16",
+    "enable_linear_replayssm": false,
+    "enable_linear_replayssm_spec": true,
+    "logical_arm": "mtp",
+    "name": "aligned_ring_fold",
+    "numerical_mismatch_resolved": false,
+    "physical_slots_per_card": 20,
+    "production_qualified": false,
+    "qualification": false,
+    "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+    "recurrent_state_dtype": "fp32",
+    "sampling_distribution_verified": false,
+    "scope": "Next experimental session launch only.",
+    "target_attention_kv_dtype": "bf16",
+    "usable_slots_per_card": 19
+  },
+  "selected_source_changed": false,
+  "source_seal": {
+    "manifest_sha256": "d9dede0c3d41dbcf486c8cee94c7482b2c05fe08b8f6f723a33f06d189cc4917",
+    "members": 372,
+    "qualification": false,
+    "root": "fp8-sprint20-profile-refresh.mt8n_exy",
+    "verified_utc": "2026-10-22T19:01:21.908456+00:00"
+  },
+  "source_substitution_review": {
+    "classifier_sha256": "b4219b77e1755f7af835d036321015bd73fba78bbd68e74ccbdb06cfa9c409bc",
+    "cpu_checks": {
+      "packet": 69,
+      "reader": 22,
+      "startup": 51
+    },
+    "existing_review_reused": "Sprint16 source substitution review and previously reviewed S9 classifier; selected S19 ring-fold review. No classifier or mathematical implementation change.",
+    "limits_unchanged": true,
+    "live_obligation": "Authenticate graph/capture wrapper restoration, completed events and request/cycle/work joins with ring-fold in both arms before interpreting timing.",
+    "metrics": {
+      "archive_bytes": 16721920,
+      "archive_members": 64,
+      "argv_entries": {
+        "bf16": 255,
+        "kv4": 255
+      },
+      "binding_bytes": {
+        "control": 65443,
+        "mtp": 65423
+      },
+      "combined_transport_bytes": 33539891,
+      "member_payload_bytes": 16666465
+    },
+    "new_astra_review_required": false,
+    "numerical_and_protected_helpers_unchanged": true,
+    "qualification": false,
+    "reader_changes": "Require current GEMM and ring-fold for both arms, authenticate19/20 capacity on both ranks, derive fold from strict boolean with arm-identity join; preserve grading and sampling checks.",
+    "requests_and_schedule_unchanged": true,
+    "retained_preparation_refusals": "Setup/path/fixture refusals and parent supplementary HTTP-envelope schema assumption retained; no native work or gate relaxation.",
+    "reviewer": "/root",
+    "runtime_delta_from_sprint16": [
+      "GEMM-tail.py",
+      "benchmark_physical_controller.py",
+      "mtp_contract.py"
+    ],
+    "scope": "One two-start/eight-request diagnostic on unchanged selected GEMM and ring-fold profile; existing classifier only in timing arm.",
+    "selected_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "selected_profiles_match": true,
+    "selected_recurrent_profile": {
+      "author_manifest_sha256": "43fbb639d08922cde0c22cf0f727084d4fe88cadf6d9c4fae9435109a0915ba5",
+      "author_members": 344,
+      "author_relative_source_sha256": {
+        "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+        "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+        "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+        "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+        "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+        "source-evidence/replay/kernels/ops/attention/fla/gdn_replayssm_spec_fold.py": "fb79ad9e12ec1e485cc65e12d6394debee69fb21a14c50e1bb84a809f6a46e28",
+        "source-evidence/replay/kernels/ops/mamba/mamba_state_scatter_triton.py": "0ebe3d57a1ca4f0ee8300961fb0df4484e39e9e98f0a9b2cee557b355ac96c87"
+      },
+      "author_root": "fp8-sprint19-greedy.oiripzcc",
+      "draft_attention_kv_dtype": "bf16",
+      "enable_linear_replayssm": false,
+      "enable_linear_replayssm_spec": true,
+      "logical_arm": "mtp",
+      "name": "aligned_ring_fold",
+      "numerical_mismatch_resolved": false,
+      "physical_slots_per_card": 20,
+      "production_qualified": false,
+      "qualification": false,
+      "record": "provenance/SPRINT19-MATCHED-RINGFOLD-20261022.json",
+      "recurrent_state_dtype": "fp32",
+      "sampling_distribution_verified": false,
+      "scope": "Next experimental session launch only.",
+      "target_attention_kv_dtype": "bf16",
+      "usable_slots_per_card": 19
+    },
+    "status": "APPROVED_SELECTED_PROFILE_REFRESH",
+    "stop_rule": "Stop on native/authentication/device/quality failure; preserve evidence and independent release; no automatic retry, new kernel trial or promotion.",
+    "tested_hashes_verified": 295
+  },
+  "status": "SPRINT20_COMPLETE_CURRENT_PROFILE_ANALYZED",
+  "updated_utc": "2026-10-22T19:12:10.408915+00:00"
+}

@@ -2,11 +2,12 @@ PYTHON ?= python3
 CXX ?= c++
 CPU_FLAGS = -std=c++17 -O1 -g -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -ffp-contract=off -fno-fast-math
 
-.PHONY: test test-cpu test-fp8 test-benchmark test-benchmark-profile test-benchmark-readout test-host-owner test-platform-collector test-benchmark-bindings test-codec test-cache-validator test-cache-gpu test-grouped-reader test-cache-native-inspection test-cache-phase-profile
-test: test-cpu test-fp8 test-benchmark test-benchmark-profile test-benchmark-readout test-host-owner test-platform-collector test-benchmark-bindings test-codec test-cache-validator test-cache-gpu test-grouped-reader test-cache-native-inspection test-cache-phase-profile
+.PHONY: test test-target-graph-timing test-device-phase-timing test-sampling-host-timing test-cpu test-fp8 test-benchmark test-benchmark-profile test-benchmark-readout test-host-owner test-platform-collector test-benchmark-bindings test-codec test-cache-validator test-cache-gpu test-grouped-reader test-cache-native-inspection test-cache-phase-profile
+test: test-target-graph-timing test-device-phase-timing test-sampling-host-timing test-cpu test-fp8 test-benchmark test-benchmark-profile test-benchmark-readout test-host-owner test-platform-collector test-benchmark-bindings test-codec test-cache-validator test-cache-gpu test-grouped-reader test-cache-native-inspection test-cache-phase-profile
 
 test-cpu:
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tools/test_cpu.py
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_verify_metadata_reuse.py
 
 test-fp8:
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tools/test_fp8_baseline.py
@@ -67,3 +68,13 @@ test-cache-gpu:
 test-cache-phase-profile:
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_cache_phase_projection.py
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_cache_phase_readout.py
+
+test-sampling-host-timing:
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_sampling_host_timing.py
+
+test-device-phase-timing:
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_device_phase_timing.py
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_phase_timing_readout.py
+
+test-target-graph-timing:
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_target_graph_timing.py

@@ -1,0 +1,99 @@
+{
+  "comparison_deferred": true,
+  "comparison_requirements": [
+    "Freeze selected kernel; Sprint 31 final review approved parking both warp candidates.",
+    "Review memory budget, loader and identities.",
+    "Use fixed-output performance and natural-stop quality; do not require bitwise output or work identity across weight precisions."
+  ],
+  "current_bf16_fit_proven": false,
+  "current_priority": "32K BF16-KV quality and context baseline; 64K only if fit and quality support it.",
+  "date": "2026-10-23",
+  "future_sequence": [
+    "32K BF16-KV quality and context baseline",
+    "64K BF16-KV baseline conditional on fit and quality",
+    "BF16 versus FP8 weight comparison deferred",
+    "Optional FP8 target-KV feasibility",
+    "Optional adaptive speculation feasibility",
+    "Endurance after selection"
+  ],
+  "headers": {
+    "additional_bf16_scale_entries": 407,
+    "architecture_tokenizer_shared_config_match": true,
+    "bf16_to_f8_e4m3_weights": 407,
+    "checkpoints_available": true,
+    "common_names_and_shapes": 1199,
+    "fp8_has_quantization_config": true,
+    "head_runtime_scope": "FP32 arithmetic, logits and gather; BF16 hidden states and weights permitted with FP32 output. Actual resident storage and temporaries remain unverified.",
+    "head_shape": [
+      248320,
+      5120
+    ],
+    "heads_ondisk_dtype": "BF16",
+    "remain_bf16": 792
+  },
+  "historical_bf16": {
+    "host_limit_exceeded": true,
+    "http_responses": 1,
+    "limit_bytes": 40802189312,
+    "memory_max_events": 6316,
+    "oom_events": 0,
+    "peak_bytes": 40802975744
+  },
+  "host_observation_bytes": {
+    "available": 60199911424,
+    "fit_proven": false,
+    "swap": 0,
+    "total": 66711867392
+  },
+  "memory_assessment": {
+    "context": 16384,
+    "dflash": 8,
+    "draft_k_v_bytes_each": 84055040,
+    "host_cap_bytes": 40802189312,
+    "host_peak_candidate_bytes": 21627940864,
+    "host_peak_control_bytes": 21625712640,
+    "kv_capacity": 16416,
+    "loader": "serial mmap without prefetch, per-shard cache drop",
+    "max_and_oom_events": 0,
+    "members": 2,
+    "root": "fp8-weight-memory-readiness.getvkc0l",
+    "rounded_per_rank_startup_log_gb": {
+      "available_after_graphs": 11.75,
+      "draft": 2.16,
+      "draft_graphs": 0.1,
+      "intermediate_convolution": 0.01,
+      "recurrent_convolution": 0.03,
+      "ssm": 1.41,
+      "target": 14.51,
+      "target_graphs": 0.38
+    },
+    "scope": "Startup logs are not an allocator peak, additive budget or BF16 fit proof.",
+    "seal_sha256": "818a1e8100ee7665a825b524eb5709156ca2d792197e75347052699a1ee2e7fb",
+    "static_fraction": 0.92,
+    "target_k_v_bytes_each": 268976128,
+    "usable_physical_slots": [
+      19,
+      20
+    ]
+  },
+  "model_comparison_started": false,
+  "observation": {
+    "gpu_or_model_execution": false,
+    "header_bytes": 353864,
+    "header_comparison_sha256": "0f1ad4b42ce8f80a40b89a2f613f5fa16f364a3e36f5950a460b93451426def0",
+    "members": 18,
+    "root": "fp8-weight-comparison-readiness.zm0v22ub",
+    "seal_sha256": "ced831993a6cb25c7f0b3eae38d290df0238ae8f35d56b45a53d74109944808b",
+    "shards": 84,
+    "tensor_payload_reads": false
+  },
+  "schema": "bf16-fp8-weight-readiness-v1",
+  "selected_profile_changed": false,
+  "status": "HEADERS_COMPATIBLE_MEMORY_BUDGET_REQUIRED",
+  "storage_payload_bytes": {
+    "bf16": 55562855904,
+    "fp8": 30866663264,
+    "scope": "Storage, not measured VRAM or per-rank memory."
+  },
+  "ultraquant": "parked"
+}

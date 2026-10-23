@@ -1,0 +1,796 @@
+{
+  "candidate_sha256": "a19b38e86bdd8366ffdb8f35ca7dbf1aa6845f7cfde1aa55f1f60aa606bcb9ef",
+  "component_disposition_at_component_closeout": {
+    "advance_to_serving_preparation": true,
+    "independent_release_verified": true,
+    "qualification": false,
+    "result_sha256": "6b09270afa85a21cb362159f6467eee184a2a0e95ac8bfcc7e25f0102afccdca",
+    "scope": "One N64 component; all-four-cases exact and median-faster rule retained. No automatic retry or source selection. Owner requests numerical reassessment after Sprint25 result.",
+    "selected_source_changed": false,
+    "source_selected": false,
+    "status": "COMPONENT_ALL_FOUR_CASES_ADVANCE_ELIGIBLE_PENDING_NUMERICAL_ASSESSMENT"
+  },
+  "component_native_seal": {
+    "manifest_sha256": "6d0957a53c298ed69bd6fea6b1411eb3364ab57998781597e269abe466d23d9f",
+    "members": 194,
+    "qualification": false,
+    "root": "fp8-sprint25-gateup-n64-run.9faxr9_t",
+    "verified_utc": "2026-10-22T23:07:37.013897+00:00"
+  },
+  "component_result": {
+    "cases": 4,
+    "cases_detail": [
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.1878660023212433,
+          "1": 0.18685100227594376
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_n64": 1.0054321359422016,
+        "time_reduction_common_n64": 0.005402787267298703
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.1867309957742691,
+          "1": 0.1855110004544258
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_n64": 1.0065764041854919,
+        "time_reduction_common_n64": 0.006533437658727492
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.1833610013127327,
+          "1": 0.18234100192785263
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_n64": 1.0055939112656826,
+        "time_reduction_common_n64": 0.005562793492496221
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.1887959986925125,
+          "1": 0.18694599717855453
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_n64": 1.0098959140173032,
+        "time_reduction_common_n64": 0.009798944505021168
+      }
+    ],
+    "common_n64_speedup_geomean": 1.0068729869703907,
+    "common_n64_speedup_range": [
+      1.0054321359422016,
+      1.0098959140173032
+    ],
+    "common_n64_time_reduction_range": [
+      0.005402787267298703,
+      0.009798944505021168
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 91,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 8192
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 64,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 91,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 8192
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 64,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 91,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 8192
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 64,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 91,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 8192
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 64,
+        "variant": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common N128/stage1 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 90522112,
+    "model_starts": 0,
+    "payload_seconds": 4.438836182001978,
+    "physical_seconds": 24.104179408052005,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "status": "M8_GATEUP_COMMON_N64_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false
+  },
+  "component_source_seal": {
+    "manifest_sha256": "2e4ffb22e989b455eb20779e3f4c5fb8505ac70f8be68c40b0aebdb1d8291108",
+    "members": 81,
+    "qualification": false,
+    "root": "fp8-sprint25-gateup-n64.bwkf8_8z",
+    "verified_utc": "2026-10-22T23:06:46.616812+00:00"
+  },
+  "endurance": "deferred",
+  "host_observation_seal": {
+    "manifest_sha256": "7aeb9164741d2cc539c44127defdba2b10530c8c8a19ca559b25cb6fde5ef3c8",
+    "members": 28,
+    "qualification": false,
+    "root": "fp8-sprint25-host-observation.24nlk_9u",
+    "verified_utc": "2026-10-22T23:05:20.379113+00:00"
+  },
+  "independent_closeout_review": {
+    "baseline_median_seconds": 8.464983627025504,
+    "candidate_median_seconds": 8.468573758029379,
+    "caps_verified": true,
+    "cycles_per_request": 164,
+    "independent_release_verified": true,
+    "latency_percent": 0.042411552840015965,
+    "lower_median_gate_passed": false,
+    "numerical_mismatch_resolved": false,
+    "numerical_wording_supported": true,
+    "qualification": false,
+    "result_sha256": "9a21ab92a9c3fd29e27ae6acb51dd50d25b37462f15e6c4bf90651e6cc51d810",
+    "reviewed_utc": "2026-10-22T23:23:50.309799+00:00",
+    "sampling_distribution_verified": false,
+    "scope": "Verified source/native/reader seals and core RESULTS, release and caps. Park N64; no reverse, retry, quality campaign or selection advancement. Missing RNG/input fingerprints prevent causal attribution.",
+    "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "selected_recurrent_profile": "aligned_ring_fold",
+    "significant_slowdown_established": false,
+    "status": "APPROVED_CLOSEOUT_PARK_N64",
+    "verified_four_exact_output_and_work_pairs": true,
+    "verified_seals": 3,
+    "warmups_retained": true
+  },
+  "numerical_assessment": {
+    "analysis_seal": {
+      "manifest_sha256": "d0b7cca96b5ec468d8ad2b599d3fb2ac9ddb4914781efb042f88d760f3b5cfcb",
+      "members": 18,
+      "qualification": false,
+      "root": "fp8-sprint24-analysis.rIhKcpsV",
+      "verified_utc": "2026-10-22T22:55:40.213680+00:00"
+    },
+    "cause_established": false,
+    "final_review": {
+      "numerical_wording_supported": true,
+      "qualification": false,
+      "status": "APPROVED_CLOSEOUT_PARK_N64"
+    },
+    "independent_source_audit": {
+      "qualification": false,
+      "status": "VERIFIED_S24_SEALS_SIX_HASHES_ACCEPT_DELEGATE_AND_WORDING"
+    },
+    "missing_evidence": [
+      "Default device RNG state/offset at first selector call for each request and rank.",
+      "Actual startup and prior-request draw consumption.",
+      "Matched selector input logits/probabilities and draws before the first output divergence."
+    ],
+    "new_gpu_launch_authorized_by_this_record": false,
+    "next_small_diagnostic": "First ascertain supported RNG state/counter access for actual native accept path. If still needed after Sprint25, predeclare one bounded same-source, same-profile sampled comparison with authenticated first-selector RNG fingerprints and relevant input/draw hashes before divergence. Preserve thinking-low recipe and measure observer effects; no precision/flag changes or greedy substitute for sampled diagnosis.",
+    "numerical_error_established_by_s24": false,
+    "numerical_mismatch_resolved": false,
+    "observed_s24": {
+      "final_text_pairs_equal": 3,
+      "first_differences": [
+        148,
+        16,
+        2
+      ],
+      "full_output_pairs_equal": 1,
+      "quality_passes": 8,
+      "work_pairs_equal": 1
+    },
+    "qualification": false,
+    "reader_seal": {
+      "manifest_sha256": "3d8101ef521c576956b30f1fc4b2e8d74ddaa03943a56a1365b35add6d69d93d",
+      "members": 136,
+      "qualification": false,
+      "root": "fp8-sprint24-profile-reader.08mqaj80",
+      "verified_utc": "2026-10-22T22:51:33.262422+00:00"
+    },
+    "recorded_utc": "2026-10-22T23:22:07.527714+00:00",
+    "sampling_distribution_equivalence_established": false,
+    "sampling_seed_evidence": {
+      "accept_source_reference": "Authenticated CURRENT-dspark_accept.py:87\u2013145; j01_probe.py:1263\u20131278 pins this native delegate.",
+      "accept_source_sha256": "1480fec7496edf7cd8fb3e89ceea2b1d4274a6057babac5c23eb1344217c1232",
+      "default_device_generator_calls": 2,
+      "explicit_generator_passed": false,
+      "per_request_seed_present": false,
+      "server_seed": 12345,
+      "source_fact": "Two torch.rand calls on candidates.device have no explicit generator or request seed. Preceding calls in the same process consume default device RNG draws. The downstream deterministic=True does not freeze those input random draws."
+    },
+    "scope": "Source and retained-output analysis only. S24 sampled differences alone cannot establish numerical error or RNG cause. Earlier numerical findings remain unresolved; current N64 exact component does not resolve them.",
+    "source_file_sha256": {
+      "review/BENCHMARK-SPEC2.json": "78672c3a8c83d37153ff2d87d8c4b352e336665753691f0ea63e96ea47050704",
+      "review/FINAL-REQUESTS.zlib": "ba07630294d829d5dbd30ea9996aedf09e7274839014315b4b8cf1ae7565eb95",
+      "review/dflash_worker_candidate.py": "8702620c2d6c7101d0682ec21d3dff57f636446620eb9250ba084014a41c810f",
+      "review/j01_probe.py": "b4219b77e1755f7af835d036321015bd73fba78bbd68e74ccbdb06cfa9c409bc",
+      "review/serving_contract.py": "4f2a79dc8b01d27bdb205d788655fd4dfecf44eae99c8e2f2aa3a108219f185f",
+      "review/serving_entry.py": "3996ae94cc12b9da9ec37be7792c2b2ee94a23f43500abda8f9c644000211553"
+    },
+    "source_seal": {
+      "manifest_sha256": "df88015fd98ad95690075247005361eaa5070f330fe2ae15b55d698d1feb213d",
+      "members": 367,
+      "qualification": false,
+      "root": "fp8-sprint24-profile-refresh.lzfr7dx9",
+      "verified_utc": "2026-10-22T22:41:56.860333+00:00"
+    },
+    "sprint25_all_four_greedy_output_and_work_pairs_equal": true,
+    "sprint25_candidate_source_selected": false,
+    "sprint25_numerical_resolution": false,
+    "status": "OFFLINE_TRIAGE_WITHOUT_CAUSE_ATTRIBUTION"
+  },
+  "numerical_assessment_seal": {
+    "manifest_sha256": "de9153c9c95ca1d2b124e44cf0556a6ae1007fe79dfaf0a2eb7905e0c817f039",
+    "members": 5,
+    "qualification": false,
+    "root": "fp8-sprint25-numerical-assessment.3m6t_et0",
+    "verified_utc": "2026-10-22T23:23:50.397713+00:00"
+  },
+  "qualification": false,
+  "record_date": "2026-10-23",
+  "recurrent_profile": "aligned_ring_fold",
+  "schema": 1,
+  "selected_source_changed": false,
+  "selected_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "serving": {
+    "bounds": {
+      "archive_bytes": 16128000,
+      "archive_members": 64,
+      "binding_bytes": {
+        "control": 65463,
+        "mtp": 65423
+      },
+      "combined_transport_bytes": 32348440,
+      "package_files": 63,
+      "workload_argv_counts": {
+        "bf16": 255,
+        "kv4": 255
+      }
+    },
+    "cpu_checks": {
+      "preflight": 1,
+      "procfs": 10,
+      "reader": 20,
+      "replay": 18,
+      "startup": 22,
+      "tested_hashes_verified": 290
+    },
+    "criteria": {
+      "automatic_retry_authorized": false,
+      "qualification": false,
+      "quality_qualification": false,
+      "require_affected_shape_both_ranks_and_arms": true,
+      "require_all_four_output_and_verification_cycle_pairs_equal": true,
+      "require_candidate_lower_median_client_latency": true,
+      "retain_all_warmups_and_outliers": true,
+      "scope": "One forward control-then-N64 matched pilot. Existing user sprint tuning authority; separately reviewed packet required before launch.",
+      "source_selection_authorized": false
+    },
+    "disposition": {
+      "all_four_output_and_cycle_pairs_equal": true,
+      "candidate_lower_median": false,
+      "causal_speedup_established": false,
+      "future_gpu_campaign_queued": false,
+      "numerical_mismatch_resolved": false,
+      "qualification": false,
+      "reason": "Component exact and faster, but single forward serving candidate median +0.04241155284%; required lower median failed. No reverse, retry, natural-stop candidate screen or selection.",
+      "selected_recurrent_profile_changed": false,
+      "selected_source_changed": false,
+      "significant_slowdown_established": false,
+      "source_selected": false,
+      "status": "PARKED_SERVING_MEDIAN_GATE_FAILED"
+    },
+    "native_seal": {
+      "manifest_sha256": "d51996bbe3b99a0148f233ca2a194444e35244c8806835c85b1f0c6cbb1112f9",
+      "members": 217,
+      "qualification": false,
+      "root": "fp8-sprint25-forward-run.ypm_aoh6",
+      "verified_utc": "2026-10-22T23:21:12.797547+00:00"
+    },
+    "reader_seal": {
+      "manifest_sha256": "e5ea6f8a14d8f2ea2fd3c446848a041e94fc29df64deb46d4cd28b43af0ce0d6",
+      "members": 83,
+      "qualification": false,
+      "root": "fp8-sprint25-serving-reader.406a8cdz",
+      "verified_utc": "2026-10-22T23:22:07.527123+00:00"
+    },
+    "result_summary": {
+      "all_samples": [
+        {
+          "logical_arm": "control",
+          "samples": [
+            {
+              "client_seconds": 8.803370831999928,
+              "ordinal": 0,
+              "output_tokens_per_client_second": 116.31908044561725,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": true
+            },
+            {
+              "client_seconds": 8.464983627025504,
+              "ordinal": 1,
+              "output_tokens_per_client_second": 120.96892860262054,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": false
+            },
+            {
+              "client_seconds": 8.465817071031779,
+              "ordinal": 2,
+              "output_tokens_per_client_second": 120.95701943571515,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": false
+            },
+            {
+              "client_seconds": 8.458072684006765,
+              "ordinal": 3,
+              "output_tokens_per_client_second": 121.06777019500734,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": false
+            }
+          ]
+        },
+        {
+          "logical_arm": "mtp",
+          "samples": [
+            {
+              "client_seconds": 8.853781391051598,
+              "ordinal": 0,
+              "output_tokens_per_client_second": 115.65679733576249,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": true
+            },
+            {
+              "client_seconds": 8.479816281993408,
+              "ordinal": 1,
+              "output_tokens_per_client_second": 120.75733317176082,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": false
+            },
+            {
+              "client_seconds": 8.468573758029379,
+              "ordinal": 2,
+              "output_tokens_per_client_second": 120.91764555148455,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": false
+            },
+            {
+              "client_seconds": 8.467129838012625,
+              "ordinal": 3,
+              "output_tokens_per_client_second": 120.9382659284164,
+              "response_ids_sha256": "920c453ebb10d211f42d4aa282f5450f90740c6114c6d3f123a2c9762a0423c5",
+              "spec_tokens_details": {
+                "spec_accept_length": 6.2439024390243905,
+                "spec_accept_rate": 0.7491289198606271,
+                "spec_block_accept_length": 0.0,
+                "spec_cap_length": 0.0,
+                "spec_cap_lens_histogram": [],
+                "spec_correct_drafts_histogram": [
+                  20,
+                  11,
+                  5,
+                  5,
+                  7,
+                  7,
+                  2,
+                  107
+                ],
+                "spec_num_correct_drafts": 860,
+                "spec_num_proposed_drafts": 1148,
+                "spec_verify_ct": 164
+              },
+              "warmup": false
+            }
+          ]
+        }
+      ],
+      "changed_shape_exercised_both_arms": true,
+      "independent_release_verified": true,
+      "native_launch_seconds": 325.9260835419409,
+      "numerical_mismatch_resolved": false,
+      "output_pair_count": 4,
+      "output_pairs_matched": 4,
+      "pairs": [
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 0,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": true
+        },
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 1,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": false
+        },
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 2,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": false
+        },
+        {
+          "candidate_cycles": 164,
+          "first_difference": null,
+          "ordinal": 3,
+          "output_ids_equal": true,
+          "reference_cycles": 164,
+          "verification_cycles_equal": true,
+          "warmup": false
+        }
+      ],
+      "physical_complete": true,
+      "qualification": false,
+      "result_sha256": "9a21ab92a9c3fd29e27ae6acb51dd50d25b37462f15e6c4bf90651e6cc51d810",
+      "rows": [
+        {
+          "logical_arm": "control",
+          "max_client_seconds": 8.465817071031779,
+          "median_client_seconds": 8.464983627025504,
+          "median_output_tokens_per_client_second": 120.96892860262054,
+          "min_client_seconds": 8.458072684006765
+        },
+        {
+          "logical_arm": "mtp",
+          "max_client_seconds": 8.479816281993408,
+          "median_client_seconds": 8.468573758029379,
+          "median_output_tokens_per_client_second": 120.91764555148455,
+          "min_client_seconds": 8.467129838012625
+        }
+      ],
+      "tail_vs_baseline_latency_percent": 0.042411552840015965,
+      "tail_vs_baseline_rate_percent": -0.042393573067378565,
+      "task_quality_measured": false
+    },
+    "retained_preparation_failures": [
+      "Startup fixture pointed to Sprint22 component; retained failed receipt and accepted-results, corrected test fixture only.",
+      "Replay fixture pointed to Sprint22 component; retained failed receipt, corrected test fixture only, reran startup to refresh tested hashes.",
+      "Offline launch receipt lookup used launch.json instead of native-launch.json; corrected without artifact or native changes."
+    ],
+    "source_seal": {
+      "manifest_sha256": "80ed781b48a51d9869457223a5c9a7f393a91d51902ac92263763ff6868035e3",
+      "members": 358,
+      "qualification": false,
+      "root": "fp8-sprint25-serving.ehfcdvti",
+      "verified_utc": "2026-10-22T23:13:54.645451+00:00"
+    },
+    "status": "COMPLETE_PARKED_SERVING_MEDIAN_GATE_FAILED"
+  },
+  "status": "PARKED_SERVING_MEDIAN_GATE_FAILED"
+}

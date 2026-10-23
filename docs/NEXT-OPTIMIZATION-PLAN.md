@@ -89,8 +89,121 @@ pairs and all final-text pairs match. Astra final review supports selecting
 aligned ring-fold for the next experimental session only; the Sprint 17 GEMM is
 unchanged and the paired snapshot control remains available for rollback.
 Earlier numerical findings, Sprint 11 failed gates and the owner experimental-
-session disposition remain; endurance stays deferred and no GPU campaign is
-queued.
+session disposition remain; endurance stays deferred.
+
+[Sprint 20](SPRINT20-CURRENT-PROFILE.md) completed its two-start,
+eight-request classifier refresh on the selected GEMM and ring-fold profile:
+8/8 final answers, 4/4 full-output pairs, eight complete windows per rank and
+independent release. Gate/up forward medians were 11.939/11.932 ms on ranks
+0/1. These nested intervals include quantization and waits, not isolated GEMM
+time. [Sprint 21](SPRINT21-COMMON-M16.md) then passed 96 exact component
+comparisons for common M16/stage1 gate/up `(8,17408,5120)`. Both matched serving
+orders passed 8/8 output/work pairs and reduced median latency by 0.38064% and
+0.28794%; candidate rates were 120.304 and 120.368 combined TP2 tokens/s, with one
+excluded warmup and three measured requests per start. The
+pooled mean latency change was −0.29775%, descriptively. Greedy and sampled repeated-candidate
+screens each passed 8/8 final answers and 4/4 full-output pairs, with independent
+release. The sampled route was verified, but its distribution was not. The
+lifecycle screen passed 52/52 final answers, two cancellations, actual C2, slots
+and release. Cache full outputs matched 24/26 pairs and all 26 final texts matched.
+Astra selected the M16 GEMM for the next experimental session only, retaining the
+previous GEMM for rollback and ring-fold unchanged. Endurance remains deferred. See the [Sprint 21 provenance](../provenance/SPRINT21-COMMON-M16-20261022.json).
+
+[Sprint 22](SPRINT22-GDN-OUTPUT-M16.md) tested common M16/stage1 at GDN output
+`(8,5120,3072)`. All 96 component checks and eight serving output/work pairs
+passed. Both serving orders reduced median latency by 0.814–0.892%, reaching
+121.175–121.243 combined TP2 tokens/s; the pooled mean latency fell 0.96771%,
+descriptively. Greedy passed all eight answers and four full-output pairs.
+The initial sampled campaign stopped during second-arm process-identity
+observation; its four first-arm HTTP responses remain ungraded. The owner then
+authorized completion with diagnostic messages added to existing refusals,
+preserving all identity decisions and read ordering. Fresh sampled validation
+passed 8/8 answers and 4/4 full-output pairs. Lifecycle passed 52/52 normal
+answers, two cancellations, actual C2, slots and release. The same two cache
+reasoning variations at index 149 remain; all 26 final-text pairs match.
+A timed-out evidence transfer was recovered through a separately reviewed,
+bounded compressed collection, with no GPU rerun. Astra approved M16 GDN output
+for the next experimental session, keeping the previous GEMM for rollback and
+ring-fold unchanged. The initial observation cause and earlier numerical
+findings remain unresolved. Endurance stays deferred; no further GPU campaign
+is queued.
+
+[Sprint 23](SPRINT23-ATTENTION-COMMON-M16.md) compared common M64 and M16 at
+attention QKV `(8,7168,5120)`, holding stage three fixed. All 96 component
+comparisons passed. Three timing cases improved 1.64–8.03%, but GPU 0's random
+case was 2.60% slower. The all-four-cases timing gate failed, so the candidate
+is parked without serving or quality runs. Independent release passed after
+one model-free attempt. The selected Sprint 22 GEMM and ring-fold remain
+unchanged. At that closeout, a short cost refresh on the selected profile was
+proposed before choosing another tuning lever.
+Earlier numerical findings and deferred endurance remain.
+
+[Sprint 24](SPRINT24-CURRENT-PROFILE.md) completed that short refresh on the
+selected Sprint 22 GEMM and ring-fold. All eight natural final answers,
+sampling-route checks and independent release passed. Each rank completed its
+eight selected device windows, including four long-case windows. Projection
+forward medians remain 27.234/27.206 ms within 44.111/44.115 ms target graphs;
+gate/up remains largest at 11.839/11.845 ms. These inclusive, overlapping
+intervals do not isolate GEMM time or establish whole-request fractions.
+Full outputs and verification work matched only 1/4 pairs; final text and IDs
+matched 3/4. Preserve the passing but different coding final and the ledger
+reasoning variations. Unmatched work supports no overhead or speedup claim.
+
+At the Sprint 24 closeout, the proposed component was common gate/up
+`(8,17408,5120)` N128-to-N64, retaining
+M16, K128, stage one, group 32, four warps and 128-wide block scales. Source
+indexing supported the candidate; compilation, exactness and timing were
+unverified at that point. Keep the selected profile and
+earlier numerical limits; endurance remains deferred.
+
+[Sprint 25](SPRINT25-GATEUP-N64.md) completed that component and one forward
+serving pilot. All 96 component comparisons passed, with medians 0.540–0.980%
+lower in all four cases. Serving output IDs and verification cycles matched
+all four pairs, including warmup, but candidate median latency was 0.04241%
+higher. The required lower-median gate failed. Park N64 with no reverse,
+retry or candidate quality screens; retain the selected Sprint 22 GEMM and
+ring-fold. This small single-order timing difference establishes no significant
+slowdown. Independent release passed.
+
+[Sprint 26](SPRINT26-SAMPLER-STATE.md) examined the sampled path using
+first-acceptance observations and two full traces. The same-ring and
+snapshot/ring-fold full traces each matched every observed event and all four
+output/work pairs under synchronous observation. Earlier intermittent
+first-acceptance and output differences remain unresolved; the first two
+phases captured host-prefix metadata, not the actual GPU prefix. No numerical
+resolution or ring-fold causal conclusion follows. The bounded campaign is
+complete; its cause remains unknown. No blind repeat is queued without a
+source-backed discriminator. If the variation recurs naturally, retain the
+actual GPU prefix and lossless values. Preserve the selected profile and defer
+endurance.
+
+[Sprint 27](SPRINT27-GATEUP-COST.md) measured activation quantization and
+GEMM at four selected gate/up sites. GEMM accounted for median per-window
+shares of 91.06%/91.00% on ranks 0/1; independent review approved the results.
+At Sprint 27 closeout, the proposed component changed the current common
+M16/N128/K128 gate/up shape from stage one to stage two, keeping the kernel
+body and scales unchanged. Sprint 28 completed and parked that component.
+The four-site observation does not describe all 64 gate/up calls.
+
+[Sprint 28](SPRINT28-GATEUP-STAGE2.md) completed the proposed stage-two
+component: all 96 exact comparisons passed, but two of four timing cases
+were slower. The candidate is parked and independent review approved the closeout. The
+subsequent Sprint 29 CPU examination covered the retained compiler artifacts
+and scheduling; no GPU campaign or source change follows automatically.
+
+[Sprint 29](SPRINT29-COMPILER-REVIEW.md) reviewed the retained stage-one and
+stage-two compiler artifacts on CPU. Its proposed next candidate specializes
+five runtime scalars only for the current exact gate/up shape through a guarded
+Triton JIT wrapper forwarding literals to the unchanged native body. Preserve
+strides, masks, wrapped rows and dot/scale/add order; require compiled IR to
+prove constant propagation. At Sprint 29 closeout it had not been implemented
+or compiled. Sprint 30 subsequently passed exactness and compiler proof but parked the candidate after
+one timing case was slower. Independent review approved the Sprint 30 parking disposition.
+
+[Sprint 30](SPRINT30-GATEUP-STATIC-SCALARS.md) proved the intended scalar
+specialization and passed 96 exact component comparisons. One of four timing
+cases was slower, so the candidate is parked. At Sprint 30 closeout, a bounded warp-count component was a proposed next lead.
+Sprint 31 completed that screen and parked both candidates.
 
 For future comparisons, carry the separately selected recurrent profile in both
 arms unless recurrence is the stated A/B variable. A GEMM hash alone does not
@@ -285,3 +398,5 @@ missing return. Its intent and performance remain unverified. The isolated
 configuration before any candidate launch. Another stage depth or tile needs a
 separate reviewed component; do not enable the alternate route globally on a
 source finding alone.
+
+Sprint 31 parked W8 at the component gate and W2 after its serving median gate failed. Independent review approved the closeout; the selected profile remains unchanged. The current priority is a 32K BF16-KV quality and context baseline, followed by 64K only if fit and quality support it. UltraQuant is parked and the [BF16 versus FP8 weight comparison](BF16-FP8-WEIGHT-COMPARISON.md) is deferred. FP8 target-KV and adaptive speculation remain optional later feasibility work; endurance follows selection.

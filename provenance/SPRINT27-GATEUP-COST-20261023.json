@@ -1,0 +1,276 @@
+{
+  "acceptance": [
+    "CPU source, reader and package checks and independent review",
+    "Frozen request, precision and source identity",
+    "Capture call order and restoration",
+    "Actual shapes, weight sources and honest window coverage",
+    "Natural-stop grading and independent release"
+  ],
+  "active_gpu_run": false,
+  "archive_sha256": "25bef357a3ca724f549dd185225398239139811c9ecacc914f95ab4d7271b6d0",
+  "atomic_phase_frames": {
+    "body_limit_bytes": 1048576,
+    "message_limit": 64,
+    "wire_limit_bytes_per_worker": 7340032
+  },
+  "bounds": {
+    "archive_bytes": 16721920,
+    "archive_members": 64,
+    "archive_sha256": "25bef357a3ca724f549dd185225398239139811c9ecacc914f95ab4d7271b6d0",
+    "argv": {
+      "bf16": 255,
+      "kv4": 255
+    },
+    "bindings": {
+      "control": 65443,
+      "mtp": 65423
+    },
+    "combined_transport_bytes": 33543256,
+    "s27-02-source-tests": [
+      "64"
+    ],
+    "s27-03-package-checks": [
+      "69"
+    ],
+    "transport_limit": 33554432
+  },
+  "candidate_decision": {
+    "block_k": 128,
+    "block_m": 16,
+    "block_n": 128,
+    "group_m": 32,
+    "kernel_and_scales_unchanged": true,
+    "performance_claim": false,
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "stages": [
+      1,
+      2
+    ],
+    "status": "PROPOSED_NOT_PREPARED",
+    "warps": 4
+  },
+  "cpu_checks": {
+    "package": 69,
+    "reader": 59,
+    "source": 64
+  },
+  "cpu_readout_fixture_failures_retained": true,
+  "diagnostic_comment_compaction": {
+    "manifest_sha256": "bc2bd1a4c94e048d9edd77ea252c98a2364f5ae1677a6b2fa9a596b3ccc45efd",
+    "members": 5,
+    "scope": "Four diagnostic files: comment or blank-line changes only; AST unchanged."
+  },
+  "endurance_deferred": true,
+  "final_review": {
+    "analysis_sha256": "ea2ae34d271a768abf9398f4b41f66f02936fb50582dc2a65b8b749009abda24",
+    "findings": [],
+    "independent_release_verified": true,
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "Four sites; nominal payload rates only. Stage two remains a proposal requiring separate component review; no new run, selection or performance qualification.",
+    "status": "APPROVED_BOUNDED_RESULTS_AND_DOCUMENTATION",
+    "summary_sha256": "3bcf34dfb0f1912169436c5298a12a7b840950608327baf0fee136580de9a700"
+  },
+  "future_gpu_campaign_queued": false,
+  "independent_result_review_pending": false,
+  "launch_prepared": false,
+  "local_staging_recovery": {
+    "failure_preserved": true,
+    "gpu_retry": false,
+    "initial_error": "KeyError: old donor authorization omitted quality_lane; stopped after source seal and before upload.",
+    "recovery_sha256": "1b69781cd412db5acdc91c6bd4defd8e4d718b055c1dbbf5d392b0e3b58b77dd",
+    "review_status": "APPROVED_LOCAL_STAGING_RECOVERY",
+    "source_mutation": false
+  },
+  "native": {
+    "manifest_sha256": "71601391159d54a2ea79b050443ebdbbecece891f420d4b0559b132bbcaf0826",
+    "members": 218,
+    "root": "fp8-sprint27-gateup-run.w6s87maw"
+  },
+  "native_command_seconds": 385.1742827,
+  "native_root": "fp8-sprint27-gateup-run.w6s87maw",
+  "native_sealed": true,
+  "numerical_mismatch_resolved": false,
+  "performance_claim": false,
+  "plan": {
+    "actual_shapes_and_weight_sources_require_runtime_observation": true,
+    "cases": 4,
+    "control": "Selected stack without new event instrumentation",
+    "instrumented": "Capture-only activation-quantization and GEMM intervals",
+    "maximum_windows_per_case": 2,
+    "maximum_windows_per_rank": 8,
+    "mlp_indices": [
+      0,
+      21,
+      42,
+      63
+    ],
+    "model_starts": 2,
+    "nominal_payload_per_time_is_measured_vram_bandwidth": false,
+    "requests": 8,
+    "rng_or_arithmetic_change": false,
+    "sampled_layers_only": true,
+    "thinking": "low"
+  },
+  "precision": {
+    "draft_kv": "bfloat16",
+    "lm_head": "float32",
+    "recurrent_state": "float32",
+    "target_kv": "bfloat16",
+    "target_weights": "fp8"
+  },
+  "prelaunch_review_status": "APPROVED_ONE_GATEUP_ATTRIBUTION_DIAGNOSTIC",
+  "preparation_ready_sha256": "8dac97efab8d998c079a4469efb65668184c44083b8459bd3d39772271ea7de4",
+  "production_qualification": false,
+  "protected_helpers_unchanged": 8,
+  "reader": {
+    "manifest_sha256": "e0e44c858438a84ce0b2769fe2fbdd3199602a1115a829da27d2e89a320a3c6e",
+    "members": 167,
+    "root": "fp8-sprint27-parts-reader.f3jz9399"
+  },
+  "reader_preparation_root": "fp8-sprint27-parts-reader.f3jz9399",
+  "record_date": "2026-10-23",
+  "results": {
+    "active_batch": "C1",
+    "analysis_sha256": "ea2ae34d271a768abf9398f4b41f66f02936fb50582dc2a65b8b749009abda24",
+    "c2_scope": "capture geometry only",
+    "complete_windows_per_rank": {
+      "0": 8,
+      "1": 8
+    },
+    "fp8_weight_shape": [
+      17408,
+      5120
+    ],
+    "functional_passes": 8,
+    "independent_release_verified": true,
+    "normal_stops": 8,
+    "output_and_work_pairs": [
+      {
+        "case": "coding-running-totals",
+        "cycles": [
+          62,
+          62
+        ],
+        "full_output_equal": true,
+        "verifier_cycles_equal": true
+      },
+      {
+        "case": "coding-unique-last",
+        "cycles": [
+          188,
+          188
+        ],
+        "full_output_equal": true,
+        "verifier_cycles_equal": true
+      },
+      {
+        "case": "quality16k-audit-threshold",
+        "cycles": [
+          341,
+          341
+        ],
+        "full_output_equal": true,
+        "verifier_cycles_equal": true
+      },
+      {
+        "case": "heldout16k-audit",
+        "cycles": [
+          450,
+          450
+        ],
+        "full_output_equal": true,
+        "verifier_cycles_equal": true
+      }
+    ],
+    "output_tokens": [
+      333,
+      1101,
+      2590,
+      3352
+    ],
+    "rank_summaries": [
+      {
+        "bandwidth_saturation_established": false,
+        "interval_medians_ms": {
+          "activation_quantization_ms": 0.025800000177696347,
+          "gemm_ms": 0.7287854924798012,
+          "parent_ms": 0.8000664934515953,
+          "signed_parent_minus_children_ms": 0.045579998288303614
+        },
+        "long_window_count": 4,
+        "measured_memory_traffic": false,
+        "median_window_percent_of_selected_parent": {
+          "activation_quantization_ms": 3.219801666032801,
+          "gemm_ms": 91.06047685110205,
+          "signed_parent_minus_children_ms": 5.707444596267852
+        },
+        "nominal_rate_divided_by_vendor_peak": 0.7643627129315226,
+        "nominal_weight_payload_gigabytes_per_second": 489.19213627617444,
+        "rank": 0,
+        "selected_layers": [
+          0,
+          21,
+          42,
+          63
+        ]
+      },
+      {
+        "bandwidth_saturation_established": false,
+        "interval_medians_ms": {
+          "activation_quantization_ms": 0.025819999864324927,
+          "gemm_ms": 0.7259645089507103,
+          "parent_ms": 0.7980645075440407,
+          "signed_parent_minus_children_ms": 0.04608050943352282
+        },
+        "long_window_count": 4,
+        "measured_memory_traffic": false,
+        "median_window_percent_of_selected_parent": {
+          "activation_quantization_ms": 3.239250120506212,
+          "gemm_ms": 91.00011947046845,
+          "signed_parent_minus_children_ms": 5.767957051246236
+        },
+        "nominal_rate_divided_by_vendor_peak": 0.7673335111158266,
+        "nominal_weight_payload_gigabytes_per_second": 491.09344711412905,
+        "rank": 1,
+        "selected_layers": [
+          0,
+          21,
+          42,
+          63
+        ]
+      }
+    ],
+    "review_pending": false,
+    "scale_bytes_per_rank_per_call": 21760,
+    "weight_bytes_per_rank_per_call": 89128960
+  },
+  "schema": 1,
+  "scope": "Bounded selected-profile gate/up activation-quantization and GEMM cost isolation.",
+  "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "selected_recurrent_profile": "aligned_ring_fold",
+  "selected_source_changed": false,
+  "source_donor": {
+    "manifest_sha256": "df88015fd98ad95690075247005361eaa5070f330fe2ae15b55d698d1feb213d",
+    "members": 367,
+    "root": "fp8-sprint24-profile-refresh.lzfr7dx9"
+  },
+  "source_preparation_root": "fp8-sprint27-gateup-parts.t14yd1em",
+  "source_seal": {
+    "manifest_sha256": "0ddcbf21e343ab20d308f54e09c9e3c6c373f40b37aabf66654ff21fe0b29bd4",
+    "members": 359,
+    "root": "fp8-sprint27-gateup-parts.t14yd1em"
+  },
+  "status": "SPRINT27_COMPLETE_BOUNDED_COST_CLASSIFICATION",
+  "subspan_consistency_tolerance_ms": 0.01,
+  "subspan_tolerance_scope": "Analytical consistency only.",
+  "tested_hashes_verified": 296,
+  "vendor_reference": {
+    "advertised_gb_per_second": 640,
+    "scope": "Reference only; nominal payload/time is not measured VRAM traffic or proof of saturation.",
+    "url": "https://www.amd.com/content/dam/amd/en/documents/partner-hub/radeon-pro/radeon-ai-pro-r9700-datasheet.pdf"
+  }
+}

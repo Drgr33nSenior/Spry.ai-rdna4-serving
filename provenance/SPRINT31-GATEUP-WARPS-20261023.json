@@ -1,0 +1,259 @@
+{
+  "active_gpu_run": false,
+  "component_cpu_checks": {
+    "full": 53,
+    "prior_harness_corrections_retained": true,
+    "targeted": 33
+  },
+  "component_limits": {
+    "active_seconds": 1200,
+    "aggregate_mib": 32,
+    "cleanup_seconds": 30,
+    "cpus": 24,
+    "members": 128,
+    "memory_gib": 38,
+    "per_file_mib": 16,
+    "planned_sources": 21,
+    "seal_seconds": 300,
+    "tasks": 512,
+    "threads": 2,
+    "tmpfs_mib": 320,
+    "total_seconds": 1500,
+    "worker_seconds": 600
+  },
+  "current_priority": "32K BF16-KV quality and context baseline, then 64K conditional on fit and quality; weight comparison deferred and UltraQuant parked.",
+  "date": "2026-10-23",
+  "future_sequence_at_sprint31_closeout": [
+    "Matched BF16 versus FP8 weights with BF16 KV caches and DFlash 8.",
+    "FP8 target-KV feasibility.",
+    "Adaptive speculation feasibility.",
+    "Endurance after selection."
+  ],
+  "historical_bf16_host_memory_gate": "Failed despite one completed HTTP response.",
+  "host_observation": {
+    "members": 18,
+    "root": "fp8-sprint31-host-observation.5jbpfb8_",
+    "same_boot_and_config_absence_observed": true,
+    "seal_sha256": "3360c15c32841a4238b8b7394b4e3514ee576299c386f84c0649ac826f85c84e"
+  },
+  "independent_final_review": {
+    "findings": [],
+    "result_sha256": "5de7be133ad3a3f6cb7f96438a6067a3ddfccd96df0636de3b00e9afe8cd92c8",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "APPROVED_SPRINT31_CLOSEOUT",
+    "verified_seals": 5
+  },
+  "independent_final_review_pending": false,
+  "launch_prepared": false,
+  "limitations": [
+    "Sprint 26 numerical finding unresolved.",
+    "Reliability and endurance testing deferred.",
+    "No serving gain, source promotion or general performance claim."
+  ],
+  "result": {
+    "candidate_dispositions": {
+      "1": {
+        "arm_and_baseline_64_comparisons": true,
+        "disposition": "PREPARE_FOR_REVIEW",
+        "faster_all_cases": true,
+        "per_case": [
+          {
+            "baseline_ms": 0.18351999670267105,
+            "candidate_ms": 0.1813810020685196,
+            "device": 0,
+            "pattern": "structured",
+            "status": "VALID"
+          },
+          {
+            "baseline_ms": 0.18288049846887589,
+            "candidate_ms": 0.18129999935626984,
+            "device": 0,
+            "pattern": "random",
+            "status": "VALID"
+          },
+          {
+            "baseline_ms": 0.1832204982638359,
+            "candidate_ms": 0.18164049834012985,
+            "device": 1,
+            "pattern": "structured",
+            "status": "VALID"
+          },
+          {
+            "baseline_ms": 0.18268099427223206,
+            "candidate_ms": 0.1820800006389618,
+            "device": 1,
+            "pattern": "random",
+            "status": "VALID"
+          }
+        ],
+        "valid_all_cases": true,
+        "warps": 2
+      },
+      "2": {
+        "arm_and_baseline_64_comparisons": true,
+        "disposition": "PARK",
+        "faster_all_cases": false,
+        "per_case": [
+          {
+            "baseline_ms": 0.18351999670267105,
+            "candidate_ms": 0.18532000482082367,
+            "device": 0,
+            "pattern": "structured",
+            "status": "VALID"
+          },
+          {
+            "baseline_ms": 0.18288049846887589,
+            "candidate_ms": 0.18526050448417664,
+            "device": 0,
+            "pattern": "random",
+            "status": "VALID"
+          },
+          {
+            "baseline_ms": 0.1832204982638359,
+            "candidate_ms": 0.18608099967241287,
+            "device": 1,
+            "pattern": "structured",
+            "status": "VALID"
+          },
+          {
+            "baseline_ms": 0.18268099427223206,
+            "candidate_ms": 0.18660049885511398,
+            "device": 1,
+            "pattern": "random",
+            "status": "VALID"
+          }
+        ],
+        "valid_all_cases": true,
+        "warps": 8
+      }
+    },
+    "disposition_sha256": "135cca136a22e040175a1c3f85e408be42375c494a744bae8267f29fd60bb350",
+    "eager_checks": 156,
+    "exact_checks": 192,
+    "graph_checks": 36,
+    "independent_review": "W2 eligible for separately reviewed serving preparation; W8 parked.",
+    "model_starts": 0,
+    "native_members": 228,
+    "native_root": "fp8-sprint31-gateup-warps-run.494wcd8j",
+    "native_seal_sha256": "287a4f377521adc6ebfd354989fa83fbdd353cbb35f766b1d70214e76fae2546",
+    "registers_w4_w2_w8": [
+      114,
+      170,
+      92
+    ],
+    "result_sha256": "0f4690a852cfac6731325003d9ee64b68d94c5ff9d7e2072b2017eeae58395e9",
+    "shared_bytes": 16384,
+    "spills": 0,
+    "timed_launches": 144
+  },
+  "schema": "sprint31-gateup-warps-v1",
+  "screen": {
+    "baseline": "selected b101 common W4",
+    "baseline_valid_required": true,
+    "candidate_gate": "Each candidate independently requires all four cases and 64 exact candidate checks against 64 baseline checks, complete compiler warp/stage/resource evidence and raw artifacts, four lower candidate medians, and clean release.",
+    "candidates": [
+      "W2",
+      "W8"
+    ],
+    "cases": "both cards sequentially, structured and random",
+    "expected_eager_checks": 156,
+    "expected_exact_checks": 192,
+    "expected_graph_checks": 36,
+    "expected_timed_launches": 144,
+    "graph_checks_per_configuration_per_case": 3,
+    "group": 32,
+    "native_scope": "direct common kernel launches; CPU dispatcher proof separate",
+    "order": "all six permutations repeated twice",
+    "refusal_policy": "Retain compile or numerical refusal without preventing assessment of the other candidate. No automatic retry, model run or selection.",
+    "scope": "untuned HIP/BF16 gate/up only; candidate warp assignment only",
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "stages": 1,
+    "tiles": [
+      16,
+      128,
+      128
+    ],
+    "timings_per_configuration_per_case": 12,
+    "warmups_per_configuration_per_case": 1
+  },
+  "selected_profile": {
+    "benchmark_sprint": 31,
+    "gemm": "b101",
+    "head_arithmetic_and_recurrent_state": "FP32",
+    "historical_sprint22_qualified_rate": [
+      121.18,
+      121.24
+    ],
+    "kv": "BF16",
+    "latest_clean_combined_tp2_tokens_per_second": [
+      120.730629682
+    ],
+    "recurrent": "aligned ring-fold",
+    "weights": "FP8"
+  },
+  "serving_limits_seconds": {
+    "client": 1740,
+    "native_wrapper": 5480,
+    "owner": 5400,
+    "worker": 1800
+  },
+  "serving_preparation": {
+    "checks": {
+      "preflight": 1,
+      "procfs": 10,
+      "reader": 22,
+      "replay": 18,
+      "startup": 22,
+      "tested_hashes": 290
+    },
+    "model_launch": true,
+    "root": "fp8-sprint31-serving.xny2n0f6",
+    "source_and_reader_review_pending": false
+  },
+  "serving_result": {
+    "candidate_combined_tp2_tokens_per_second": 120.712232383,
+    "candidate_latency_change_percent": 0.0152406259,
+    "candidate_median_seconds": 8.482984531,
+    "candidate_rate_change_percent": -0.0152383035,
+    "control_combined_tp2_tokens_per_second": 120.730629682,
+    "control_median_seconds": 8.481691868,
+    "cycles_per_request": 164,
+    "dispatch_source_runtime_cache_head_capacity_release_authenticated": true,
+    "disposition": "PARKED_SERVING_MEDIAN_GATE_FAILED",
+    "excluded_warmups_per_arm": 1,
+    "full_output_and_cycle_pairs_matching": 4,
+    "interpretation": "Small single-order sample; no significant or general slowdown claim.",
+    "measured_requests_per_arm": 3,
+    "native": {
+      "members": 221,
+      "root": "fp8-sprint31-forward-run.ova_zwhq",
+      "seal_sha256": "779b0425ca69970332f4700e323df92b8eee7c2fcd85ddbe3c9b31d498b8d893"
+    },
+    "native_elapsed_seconds": 319.9218,
+    "reader": {
+      "members": 86,
+      "results_sha256": "5de7be133ad3a3f6cb7f96438a6067a3ddfccd96df0636de3b00e9afe8cd92c8",
+      "root": "fp8-sprint31-serving-reader.0rz1714s",
+      "seal_sha256": "f2d11d4032205afd4139e81a87c3ed822dfd9606cc2de78c4046d83127d3b6b1"
+    },
+    "requests": 8,
+    "retry_reverse_quality_or_promotion": false,
+    "source": {
+      "members": 355,
+      "root": "fp8-sprint31-serving.xny2n0f6",
+      "seal_sha256": "0716f527b598745b73c52e0e0c117c2176e2a36186b761b467b704a12ec0ae5b"
+    },
+    "starts": 2,
+    "tokens_per_request": 1024
+  },
+  "source": {
+    "members": 111,
+    "root": "fp8-sprint31-gateup-warps.iox8c1am",
+    "seal_sha256": "b80e3d0d938428bdf7a58d1d58917485c656903e020a20c54f2023a39738da2f"
+  },
+  "status": "SPRINT31_COMPLETE_WARP_CANDIDATES_PARKED"
+}

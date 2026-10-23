@@ -1,0 +1,451 @@
+{
+  "active_gpu_run": false,
+  "advancement": "All exact checks and lower candidate median in all four cases; successful component only permits separate serving review.",
+  "baseline_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "candidate_gemm_sha256": "b5932645fa992ed71165f0ca9a296c65b0bb062b35926d8cbadfd3d2f707ed07",
+  "component": {
+    "alternating_timed_launches": 64,
+    "candidate_delta": "Only num_stages in existing exact-shape guard.",
+    "cases": 4,
+    "eager_checks": 72,
+    "exact_checks": 96,
+    "explicit_device_graph_stream": true,
+    "graph_checks": 24,
+    "group": 32,
+    "k": 128,
+    "m": 16,
+    "missing_resources": "unknown",
+    "n": 128,
+    "random_oracle": "baseline",
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "stages": [
+      1,
+      2
+    ],
+    "structured_oracle": "independent",
+    "ttgir_equality_alone_is_failure": false,
+    "warps": 4
+  },
+  "cpu_checks": {
+    "full": 49,
+    "targeted": 29
+  },
+  "dispatch_evidence": "CPU tests proved the guarded candidate dispatcher; the native component invoked the same selected common kernel under stage-one and stage-two launch parameters.",
+  "disposition": {
+    "model_starts": 0,
+    "numerical_checks": "96 exact including 24 graph checks; scope limited to component inputs.",
+    "numerical_mismatch_resolved": false,
+    "reason": "Candidate median slower in two of four cases; predeclared all-case timing gate failed.",
+    "result_summary_sha256": "a39ca775171712c9305877c177c0fd4aabf272069a438b9ec382bd348afc97df",
+    "retry_planned": false,
+    "runtime_warning": "Retained common.py SyntaxWarning for invalid escape sequence; execution and analysis exit zero.",
+    "selected_source_changed": false,
+    "serving_preparation_allowed": false,
+    "source_selected": false,
+    "status": "PARKED_MIXED_COMPONENT_TIMINGS"
+  },
+  "disposition_sha256": "cca807c263aadf963bb25d2edc0cec0cf0047d2f2605401968bce25c47f3466d",
+  "endurance_deferred": true,
+  "gpu_reserved": false,
+  "independent_result_review_pending": false,
+  "independent_review": {
+    "disposition_sha256": "cca807c263aadf963bb25d2edc0cec0cf0047d2f2605401968bce25c47f3466d",
+    "findings": [],
+    "independent_release_verified": true,
+    "result_summary_sha256": "a39ca775171712c9305877c177c0fd4aabf272069a438b9ec382bd348afc97df",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "APPROVED_BOUNDED_CLOSEOUT_AND_PARKING",
+    "verified_seals": 4
+  },
+  "launch_prepared": false,
+  "limits": {
+    "active_seconds": 1200,
+    "archive_members": 128,
+    "cleanup_seconds": 30,
+    "cpu": 24,
+    "output_aggregate_mib": 32,
+    "output_per_file_mib": 16,
+    "ram_gib": 38,
+    "seal_seconds": 300,
+    "tasks": 512,
+    "threads": 2,
+    "tmpfs_mib": 320,
+    "total_seconds": 1500,
+    "worker_seconds": 600
+  },
+  "model_starts": 0,
+  "native_seal": {
+    "manifest_sha256": "0cffd87ba0dc0a68896231908722688cb7e04101f628e933a8864528eef426ef",
+    "members": 194,
+    "root": "fp8-sprint28-gateup-stage2-run.r94bm3ii"
+  },
+  "numerical_mismatch_resolved": false,
+  "outer_seconds": 26.9411,
+  "production_qualification": false,
+  "protected_helpers_unchanged": 9,
+  "record_date": "2026-10-23",
+  "remote_seals": {
+    "protected": {
+      "manifest_sha256": "38ef1c9555cc3528f6bd9b06a5be4828f1973995142b9443b888aded983c1f5f",
+      "members": 19
+    },
+    "workload": {
+      "manifest_sha256": "ac0221d2a84bf48998aae55b316020283b6642a4e143d37b6e5570d283a0a14f",
+      "members": 54
+    }
+  },
+  "result_summary_sha256": "a39ca775171712c9305877c177c0fd4aabf272069a438b9ec382bd348afc97df",
+  "results": {
+    "candidate_faster_all_cases": false,
+    "cases": 4,
+    "cases_detail": [
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": false,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": false
+          }
+        },
+        "device": 0,
+        "median_ms": {
+          "0": 0.2202650010585785,
+          "1": 0.19680050015449524
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_stage2": 1.1192298845056938,
+        "time_reduction_common_stage2": 0.10652850335420727
+      },
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": false,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": false
+          }
+        },
+        "device": 0,
+        "median_ms": {
+          "0": 0.18731050193309784,
+          "1": 0.18766000121831894
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_stage2": 0.9981375930781621,
+        "time_reduction_common_stage2": -0.0018658819533030613
+      },
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": false,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": false
+          }
+        },
+        "device": 1,
+        "median_ms": {
+          "0": 0.18535549938678741,
+          "1": 0.18721050024032593
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_stage2": 0.9900913631919299,
+        "time_reduction_common_stage2": -0.010007800468156747
+      },
+      {
+        "compilation_comparison": {
+          "artifact_hashes_equal": {
+            "amdgcn": false,
+            "hsaco": false,
+            "ttgir": false
+          },
+          "no_effective_code_change_for_review": false,
+          "resource_attributes_equal": {
+            "compiled.n_regs": false,
+            "compiled.n_spills": true,
+            "metadata.num_warps": true,
+            "metadata.shared": false
+          }
+        },
+        "device": 1,
+        "median_ms": {
+          "0": 0.19198549538850784,
+          "1": 0.18984100222587585
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "speedup_common_stage2": 1.0112962591720858,
+        "time_reduction_common_stage2": 0.011170079064006022
+      }
+    ],
+    "common_stage2_speedup_geomean": 1.0284089459656762,
+    "common_stage2_speedup_range": [
+      0.9900913631919299,
+      1.1192298845056938
+    ],
+    "common_stage2_time_reduction_range": [
+      -0.010007800468156747,
+      0.10652850335420727
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 2,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 106,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 2,
+          "metadata.num_warps": 4,
+          "metadata.shared": 18944
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 2,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 106,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 2,
+          "metadata.num_warps": 4,
+          "metadata.shared": 18944
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 2,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 106,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 2,
+          "metadata.num_warps": 4,
+          "metadata.shared": 18944
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 2,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 106,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 2,
+          "metadata.num_warps": 4,
+          "metadata.shared": 18944
+        },
+        "shape": [
+          8,
+          17408,
+          5120
+        ],
+        "tile_m": 16,
+        "tile_n": 128,
+        "variant": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common N128/stage1 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 90522112,
+    "model_starts": 0,
+    "no_effective_code_change_for_review": false,
+    "payload_seconds": 4.601685722998809,
+    "physical_seconds": 22.769901805964764,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "status": "M8_GATEUP_COMMON_STAGE2_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false
+  },
+  "schema": 1,
+  "scope": "One model-free exact-shape stage-one versus stage-two gate/up component.",
+  "selected_recurrent_profile": "aligned_ring_fold",
+  "selected_source_changed": false,
+  "serving_preparation_allowed": false,
+  "source_donor": {
+    "manifest_sha256": "2e4ffb22e989b455eb20779e3f4c5fb8505ac70f8be68c40b0aebdb1d8291108",
+    "members": 81,
+    "root": "fp8-sprint25-gateup-n64.bwkf8_8z"
+  },
+  "source_preparation_root": "fp8-sprint28-gateup-stage2.cv5mf2mv",
+  "source_seal": {
+    "manifest_sha256": "a1108ce17fdca5855c1c5327153d9a887709969d37b44ebca90a9a23868ee093",
+    "members": 80,
+    "root": "fp8-sprint28-gateup-stage2.cv5mf2mv"
+  },
+  "status": "SPRINT28_COMPLETE_CANDIDATE_PARKED"
+}

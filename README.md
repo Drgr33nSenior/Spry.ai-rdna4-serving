@@ -19,15 +19,15 @@ That comparison had DFlash2 disabled. See [current serving results](docs/CURRENT
 for the exact scope. A separate DFlash2 + split K/V + aligned GDN benchmark
 measured 86.68 versus 24.50 output tokens/s, a 3.54× increase on one short workload.
 
-A later [Sprint 19 candidate](docs/SPRINT19-MATCHED-RINGFOLD.md) measured
-120.28–120.36 combined TP2 output tokens/s at C1 with 2047 input and 1024 forced
-output tokens and low thinking. Both matched serving orders passed output/work
-checks, and greedy and publisher-sampled quality each passed 8/8 final answers.
-Lifecycle passed 52/52 normal final answers, two cancellations and C2/slot
-checks. After final review, aligned ring-fold is selected for the next
-experimental session; the Sprint 17 GEMM remains unchanged and the paired
-snapshot control remains available for rollback. This does not change the
-installed runtime or production defaults.
+The selected [Sprint 22 profile](docs/SPRINT22-GDN-OUTPUT-M16.md) measured
+121.18–121.24 combined TP2 output tokens/s at C1 with 2047 input and 1024 forced
+output tokens and low thinking. Both matched serving orders passed all eight
+output/work pairs. Greedy and publisher-sampled quality each passed 8/8 final
+answers; lifecycle passed 52/52 normal answers, two cancellations, actual C2,
+slot accounting and release. Astra approved common M16 GDN output for the next
+experimental session, retaining the previous GEMM for rollback and aligned
+ring-fold unchanged. The initial observation failure and existing reasoning
+variations remain recorded. Installed runtime and production defaults are unchanged.
 
 The private integration passed a real eager TP2 smoke on two Radeon AI PRO R9700
 GPUs: initial prefill, continuation, decode and a 13-token prefix-reuse hit.

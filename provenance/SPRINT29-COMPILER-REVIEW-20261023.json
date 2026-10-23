@@ -1,0 +1,96 @@
+{
+  "active_gpu_run": false,
+  "analyzer_sha256": "adf5e864611d46e77b0426602624f889903a105887544449ed8df26e26c360a8",
+  "backup_proposal": "A launch-only num_warps change is untested in bounded public history, but no best count or benefit is established.",
+  "bounded_public_history_scope": "Sprint 11\u201328 public records only; no scalar-constexpr or two/eight-warp experiment found; not exhaustive private history.",
+  "candidate_compiled": false,
+  "candidate_implemented": false,
+  "case_records_verified": 4,
+  "endurance_deferred": true,
+  "exact_shape": {
+    "BLOCK_SIZE_K": 128,
+    "BLOCK_SIZE_M": 16,
+    "BLOCK_SIZE_N": 128,
+    "GROUP_SIZE_M": 32,
+    "K": 5120,
+    "M": 8,
+    "N": 17408,
+    "group_k": 128,
+    "group_n": 128,
+    "k_iterations": 40,
+    "num_stages": 1,
+    "num_warps": 4,
+    "programs": 136
+  },
+  "gpu_reserved": false,
+  "independent_review": {
+    "findings": [],
+    "reviewer": "/root/astra_replay_serving_verify",
+    "scope": "CPU findings and proposal only; no documentation verification or launch grant.",
+    "status": "APPROVED_CPU_FINDINGS_AND_SPECIALIZATION_PROPOSAL"
+  },
+  "independent_review_pending": false,
+  "input_native_seal": "0cffd87ba0dc0a68896231908722688cb7e04101f628e933a8864528eef426ef",
+  "input_source_seal": "a1108ce17fdca5855c1c5327153d9a887709969d37b44ebca90a9a23868ee093",
+  "integer_multiply_scope": "Integer multiply counts exclude floating-point s_mul_f32.",
+  "ir_static_divisions": 7,
+  "ir_static_remainders": 7,
+  "limitations": [
+    "Static instruction counts are textual code structure, not executed instruction counts, cycle costs, occupancy or bottleneck attribution.",
+    "Known group ordering being equivalent does not mean current dynamic-dimension compiled code has eliminated its indexing operations.",
+    "No HSACO bytes retained: only its compiler-reported hash and length are available. TTGIR and AMDGCN text bytes are retained.",
+    "Compile-time scalar specialization can alter compiler choices; output exactness and numerical equivalence remain unverified until a fresh reviewed native component.",
+    "Current component numerical parity is limited to its retained synthetic structured/random inputs; earlier numerical findings remain unresolved.",
+    "No speedup or serving-quality conclusion; no device work, model starts, source selection or stack changes in this CPU review."
+  ],
+  "model_starts": 0,
+  "numerical_mismatch_resolved": false,
+  "performance_claim": false,
+  "primary_proposal": "Exact-shape guarded Triton JIT wrapper forwards literal M/N/K/group_n/group_k to unchanged native JIT body; Python wrapper alone is insufficient. Preserve strides, masks, wrapped M16 input rows, dot/scale/add sequence, stage one and four warps; compiled IR must prove constant propagation. If not, separately consider narrow annotated same-body AST.",
+  "production_qualification": false,
+  "record_date": "2026-10-23",
+  "report_sha256": "8b9054d15a42e9b132264648552890d611e9653ab9d5b76c6f1530c29cc97a31",
+  "review_root": "fp8-sprint29-compiler-review.pke9sk9c",
+  "review_seal": {
+    "manifest_sha256": "74cb5e5f5622ce42d341e2007c5c0b00d2d48af33a3ec3fc5b3203bd7f016268",
+    "members": 20
+  },
+  "review_seal_pending": false,
+  "runtime_scalar_parameters": [
+    "M",
+    "N",
+    "K",
+    "group_n",
+    "group_k"
+  ],
+  "scale_step_remainders_in_loop": 1,
+  "schema": 1,
+  "scope": "CPU review of retained Sprint28 compiler artifacts; no new candidate or device work.",
+  "selected_source_changed": false,
+  "stage1_resources": {
+    "registers": 114,
+    "shared_bytes": 16384,
+    "spills": 0
+  },
+  "stage2_resources": {
+    "registers": 106,
+    "shared_bytes": 18944,
+    "spills": 0
+  },
+  "static_assembly_lines": {
+    "function": [
+      743,
+      952
+    ],
+    "loop": [
+      153,
+      131
+    ],
+    "loop_scope": "Header through conditional backedge inclusive; excludes exit-only instructions.",
+    "wmma_in_each_loop": 16
+  },
+  "static_count_scope": "Textual structure, not executed counts, cycles, occupancy or bottleneck proof.",
+  "status": "SPRINT29_COMPLETE_CPU_REVIEW",
+  "unique_compilations": 2,
+  "variant_records_verified": 8
+}

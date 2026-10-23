@@ -1,0 +1,359 @@
+{
+  "baseline_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "block_k": 128,
+  "block_n": 128,
+  "candidate_gemm_sha256": "f02ef47fc5ed25cfcd3d59eda57bf8769efb2029bdf7293fa797f1802356cd2c",
+  "component": {
+    "cases": 4,
+    "cases_detail": [
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.07226499915122986,
+          "1": 0.06646000221371651
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "speedup_common_m16": 1.0873457229033205,
+        "time_reduction_common_m16": 0.08032930195384302
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.06133999861776829,
+          "1": 0.0629350021481514
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "speedup_common_m16": 0.9746563362844032,
+        "time_reduction_common_m16": -0.026002666552409792
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.06627500057220459,
+          "1": 0.06518999859690666
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "speedup_common_m16": 1.01664368766146,
+        "time_reduction_common_m16": 0.016371210349758525
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.0626394972205162,
+          "1": 0.06009949930012226
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "speedup_common_m16": 1.0422632126718696,
+        "time_reduction_common_m16": 0.04054946213013377
+      }
+    ],
+    "common_m16_speedup_geomean": 1.0294169969265086,
+    "common_m16_speedup_range": [
+      0.9746563362844032,
+      1.0873457229033205
+    ],
+    "common_m16_time_reduction_range": [
+      -0.026002666552409792,
+      0.08032930195384302
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 123,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 37376
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 123,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 37376
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 123,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 37376
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 256,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 49664
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 3,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 123,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 3,
+          "metadata.num_warps": 4,
+          "metadata.shared": 37376
+        },
+        "shape": [
+          8,
+          7168,
+          5120
+        ],
+        "tile_m": 16,
+        "variant": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common tile64/stage3 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 37916672,
+    "model_starts": 0,
+    "payload_seconds": 4.073640960035846,
+    "physical_seconds": 23.6047047660104,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "status": "M8_ATTENTION_COMMON_M16_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false
+  },
+  "cpu_checks": {
+    "composed": 45,
+    "focused": 25
+  },
+  "disposition": {
+    "advance_to_serving_preparation": false,
+    "independent_release_verified": true,
+    "qualification": false,
+    "result_sha256": "3b14b87f20fa00dd6440efadf81a808df4b13d71c438d99ebadcf65be82c7029",
+    "scope": "One component; all-four-cases exact and median-faster rule retained. No automatic retry or source selection.",
+    "selected_source_changed": false,
+    "source_selected": false,
+    "status": "COMPONENT_PARKED_NO_SERVING_ADVANCEMENT"
+  },
+  "geometry_scope": "Fresh source/config-derived TP2 attention geometry; no live weight witness or new model measurement.",
+  "group_m": 32,
+  "hardware_cause_established": false,
+  "host_observation_seal": {
+    "manifest_sha256": "5d19b43747da9814a12bc6d14578f85406229bc69ff4ac9cbf3b02f1fe593f06",
+    "members": 31,
+    "root": "fp8-sprint23-host-observation.rpu0yo17"
+  },
+  "independent_verification": {
+    "all_four_cases_faster": false,
+    "comparisons": 96,
+    "eager_comparisons": 72,
+    "finding": "Exact completion and distinct common M64/M16 stage3 specializations confirmed. GPU0 random case slower; mandatory all-four-cases advancement gate fails. No source selection or serving-speed conclusion.",
+    "graph_comparisons": 24,
+    "hardware_cause_established": false,
+    "independent_release_verified": true,
+    "native_seal": {
+      "manifest_sha256": "d03e0ce4a850c02a8580182e52eea315c9de3c0083d5d03b1514c2601d2b118c",
+      "members": 189
+    },
+    "numerical_mismatch_resolved": false,
+    "qualification": false,
+    "reviewed_utc": "2026-10-22T22:34:49.270557+00:00",
+    "reviewer": "/root/sprint19_compatibility",
+    "scope": "Read-only independent source/native seal and result verification; no test or GPU rerun.",
+    "slower_case": {
+      "device": 0,
+      "latency_change_percent": 2.600266655240979,
+      "pattern": "random"
+    },
+    "source_seal": {
+      "manifest_sha256": "004f94e2a97ebddaba10b86180fc4ac24415226814c81d1f9248723536ea4f45",
+      "members": 76
+    },
+    "status": "CONFIRMED_COMPONENT_PARKED",
+    "timed_launches": 64,
+    "verified_seals": 2
+  },
+  "lifecycle_attempted": false,
+  "native_seal": {
+    "manifest_sha256": "d03e0ce4a850c02a8580182e52eea315c9de3c0083d5d03b1514c2601d2b118c",
+    "members": 189,
+    "root": "fp8-sprint23-attention-common-m16-run.jle9bu31"
+  },
+  "numerical_mismatch_resolved": false,
+  "qualification": false,
+  "quality_attempted": false,
+  "reliability_deferred": true,
+  "schema": 1,
+  "selected_recurrent_profile_changed": false,
+  "selected_source_changed": false,
+  "serving_attempted": false,
+  "shape": [
+    8,
+    7168,
+    5120
+  ],
+  "source_seal": {
+    "manifest_sha256": "004f94e2a97ebddaba10b86180fc4ac24415226814c81d1f9248723536ea4f45",
+    "members": 76,
+    "root": "fp8-sprint23-attention-common-m16.1hhxb48m"
+  },
+  "source_selected": false,
+  "stages": [
+    3,
+    3
+  ],
+  "status": "COMPONENT_PARKED_NO_SERVING_ADVANCEMENT",
+  "tile_m": [
+    64,
+    16
+  ],
+  "warps": 4
+}

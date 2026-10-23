@@ -1,0 +1,571 @@
+{
+  "active_gpu_run": false,
+  "baseline_gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+  "campaign": {
+    "cancellations": 0,
+    "completed_http_responses": 28,
+    "fixed_work_responses": 16,
+    "gpu_attempts": 5,
+    "greedy_responses": 8,
+    "model_free_component_attempts": 1,
+    "model_starts_established": 7,
+    "retry": false,
+    "sampled_ungraded_responses": 4,
+    "scope": "Initial stopped attempt only"
+  },
+  "candidate_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "completion": {
+    "all_attempts_counts": {
+      "established_model_starts": 11,
+      "gpu_attempts": 7,
+      "initial_second_sampled_start": "not established; absence not proven",
+      "model_free_attempts": 1,
+      "requests": 90
+    },
+    "authority": "Separate user authorization following initial stopped closeout.",
+    "bounded_evidence_counts": {
+      "cancelled": 2,
+      "fixed": 16,
+      "model_starts": 10,
+      "normal": 68,
+      "requests": 86
+    },
+    "diagnostic_scope": "Two mismatch exceptions only; identity acceptance and read order preserved; resource handler unchanged.",
+    "lifecycle": {
+      "actual_c2_group_accounting_passed": true,
+      "cache_comparisons": 26,
+      "cache_final_text_pairs_matched": 26,
+      "cache_full_output_pairs_matched": 24,
+      "cancellations": 2,
+      "collection_recovery": {
+        "affected_checks_rerun": 8,
+        "caps_raised": false,
+        "compressed_workload_bytes": 8531734,
+        "distinct_cpu_checks": 27,
+        "elapsed_seconds": 26.96658220794052,
+        "failed_receipt_sha256": "b85e1e87c3281c280037efdf65fb2ec6d00e9e80fba58c0d68601564f4f7dd27",
+        "gpu_rerun": false,
+        "initial_timeout_seconds": 60,
+        "partial_archive_bytes": 42663936,
+        "raw_workload_bytes": 50667520,
+        "read_only": true,
+        "recovery_record_sha256": "e0118a94cb20892b416e213c7ccb168fbe628c1f4dc8b3ede4f7ef6381dfa611",
+        "successful_receipt_sha256": "4cd79f27038cc829d87bb4a899746982e197820fdea4768a76cdfa2c8c142167"
+      },
+      "first_difference_index": 149,
+      "independent_release_verified": true,
+      "native_seal": {
+        "manifest_sha256": "3fbe7dfd74ba6c8d95192eb1c5f6c5209f3abc47e977457953d6350828f1bb2c",
+        "members": 579,
+        "root": "fp8-sprint22-completion-lifecycle-run.0a6s4ghn"
+      },
+      "normal_finals": 52,
+      "reader_seal": {
+        "manifest_sha256": "62c5e8b44cdfa77496552889228105f5f9432908215be762f4fb4989f76e7828",
+        "members": 450,
+        "root": "fp8-sprint22-collection-recovery-reader.jfn6480z"
+      },
+      "results_sha256": "7767bae1fc42a073cc261bcaace9ad83c759e0e12420bda04cefc8821bb3ed4a",
+      "slot_checks_passed": true,
+      "source_seal": {
+        "manifest_sha256": "6ac26e4003cd189363023e08b46ce23c9c1233546c1eb5dfce43892897735297",
+        "members": 352,
+        "root": "fp8-sprint22-completion-lifecycle.pq2bsh79"
+      },
+      "status": "PASS",
+      "unused_prepared_reader_seal": {
+        "manifest_sha256": "24b0d817e9ffe7fe2b0a165d87b959cc387d97f354cb3f8593d3e312305928e4",
+        "members": 18,
+        "root": "fp8-sprint22-completion-lifecycle-reader.9eatoije"
+      },
+      "variation_pattern_matches_sprint21": true
+    },
+    "original_process_observation_cause_resolved": false,
+    "procfs_checks_per_packet": 10,
+    "qualification": false,
+    "sampled": {
+      "full_output_pairs_matched": 4,
+      "independent_release_verified": true,
+      "native_seal": {
+        "manifest_sha256": "f8a24582f102115df880ed4ee07f93eea4d918db834225e9097470a8ee8e1cb0",
+        "members": 223,
+        "root": "fp8-sprint22-completion-sampled-run.dpizaxti"
+      },
+      "normal_answers_passed": 8,
+      "reader_seal": {
+        "manifest_sha256": "02f4e15b8b633bad54f356953b38489e205b4981f8f095047f78a1ab0efe8a3c",
+        "members": 119,
+        "root": "fp8-sprint22-completion-sampled-reader.zl710rnm"
+      },
+      "results_sha256": "9969d1b2da8d1089abbaf57c81f4b39afd17d45c3444c99a630136ba32e946c7",
+      "sampling_distribution_verified": false,
+      "sampling_route_and_recipe_verified": true,
+      "source_seal": {
+        "manifest_sha256": "ab721361d3c9197de004c7122b67489566a1a85e04e49ca61e66a3e24a023051",
+        "members": 346,
+        "root": "fp8-sprint22-completion-sampled.bt4f82jb"
+      },
+      "status": "PASS",
+      "task_checks_passed": 8
+    },
+    "status": "ALL_BOUNDED_GATES_PASS_SELECTED_NEXT_EXPERIMENTAL_SESSION"
+  },
+  "component": {
+    "cases": 4,
+    "cases_detail": [
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.045060500502586365,
+          "1": 0.03680050000548363
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "speedup_common_m16": 1.2244534855741611,
+        "time_reduction_common_m16": 0.1833091156328508
+      },
+      {
+        "device": 0,
+        "median_ms": {
+          "0": 0.04425999894738197,
+          "1": 0.03659999929368496
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "speedup_common_m16": 1.2092896120634267,
+        "time_reduction_common_m16": 0.17306822945937084
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.05142499879002571,
+          "1": 0.0476400014013052
+        },
+        "pattern": "structured",
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "speedup_common_m16": 1.0794499848317975,
+        "time_reduction_common_m16": 0.07360228444875805
+      },
+      {
+        "device": 1,
+        "median_ms": {
+          "0": 0.04412049986422062,
+          "1": 0.03706049919128418
+        },
+        "pattern": "random",
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "speedup_common_m16": 1.190499340996378,
+        "time_reduction_common_m16": 0.16001633468939291
+      }
+    ],
+    "common_m16_speedup_geomean": 1.1744947356059772,
+    "common_m16_speedup_range": [
+      1.0794499848317975,
+      1.2244534855741611
+    ],
+    "common_m16_time_reduction_range": [
+      0.07360228444875805,
+      0.1833091156328508
+    ],
+    "comparisons": 96,
+    "compiler_resources": [
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 0,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "structured",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 16,
+        "variant": 1
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 238,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 64,
+        "variant": 0
+      },
+      {
+        "compilation_errors": [],
+        "device": 1,
+        "kernel_name": "_w8a8_block_fp8_matmul",
+        "num_stages": 1,
+        "pattern": "random",
+        "resources": {
+          "compiled.n_regs": 114,
+          "compiled.n_spills": 0,
+          "metadata.num_stages": 1,
+          "metadata.num_warps": 4,
+          "metadata.shared": 16384
+        },
+        "shape": [
+          8,
+          5120,
+          3072
+        ],
+        "tile_m": 16,
+        "variant": 1
+      }
+    ],
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "independent_release_verified": true,
+    "limitations": [
+      "Synthetic component inputs, not retained model operands.",
+      "Random exactness is against the selected common tile64/stage1 baseline; structured exactness uses an independent analytical oracle.",
+      "GPU event intervals include submission effects; no hardware occupancy or bandwidth counters collected.",
+      "Both GPUs tested sequentially, not under TP2 execution. Graph replay checked exactness; timing uses eager launches.",
+      "No end-to-end serving gain or model-quality conclusion.",
+      "Runtime warnings, if any, remain in the retained raw execution logs."
+    ],
+    "max_allocated_bytes": 16890368,
+    "model_starts": 0,
+    "payload_seconds": 3.5493035090039484,
+    "physical_seconds": 23.043969260994345,
+    "qualification": false,
+    "runtime_changed": false,
+    "source_promoted": false,
+    "status": "M8_GDNOUT_COMMON_M16_COMPONENT_PASS",
+    "timed_launches": 64,
+    "unresolved": false
+  },
+  "cpu_checks_final_live": 45,
+  "final_review": {
+    "finding": "Component, both serving orders, 68 normal final answers, two cancellations, actual C2, slots and release pass. Prior failure and identical reasoning variations retained; compressed read-only collection authenticated.",
+    "numerical_mismatch_resolved": false,
+    "original_observation_cause_resolved": false,
+    "production_qualified": false,
+    "qualification": false,
+    "report_root": "fp8-sprint22-final-astra-review.ud2hmf9b",
+    "report_sha256": "2824b75fcf9520c02308723ada752114884afa1db95470abcec1b332c31c771c",
+    "review_seal": {
+      "manifest_sha256": "6b759a12f20f9e5b8f6f348ccfca4a9b23261452392f216336b1ecd63915b32c",
+      "members": 1
+    },
+    "reviewed_utc": "2026-10-22T22:19:34.775478+00:00",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "ring_profile_unchanged": true,
+    "rollback_gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "sampling_distribution_verified": false,
+    "scope": "Source selection for the next experimental session only. Keep ceec rollback and selected aligned ring-fold; no installed runtime or production default mutation.",
+    "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "selection_approved": true,
+    "status": "APPROVED_NEXT_EXPERIMENTAL_SESSION_SELECTION",
+    "verified_seals": 13
+  },
+  "host_observation_seal": {
+    "manifest_sha256": "787a9b217c7a600c29e1828c3e312e6a7637598b65a94c7a8be5381e88ab9ac2",
+    "members": 25
+  },
+  "initial_closeout_review": {
+    "candidate_disposition": "PARKED_PENDING_COMPLETE_QUALITY",
+    "deeper_process_observation_cause_established": false,
+    "finding": "Both serving orders and greedy pass. Sampled observation refusal leaves quality incomplete; lifecycle unlaunched. All resources released. Keep ceec and ring-fold selected.",
+    "hardware_cause_established": false,
+    "new_native_work_approved": false,
+    "numerical_cause_established": false,
+    "qualification": false,
+    "report_root": "fp8-sprint22-astra-closeout-review.hju190t1",
+    "report_sha256": "137988be2f55b50668d8927225ebf31f821472fefb75af1c1ffe436088ef9cec",
+    "retry_approved": false,
+    "review_seal": {
+      "manifest_sha256": "f5253315504080d794be17ce2101310ac3567c90d324a87828692ec260ce2dd5",
+      "members": 1
+    },
+    "reviewed_utc": "2026-10-22T21:30:58.757747+00:00",
+    "reviewer": "/root/astra_replay_serving_verify",
+    "selection_approved": false,
+    "status": "APPROVED_CONSERVATIVE_CLOSEOUT",
+    "verified_remote_seals": 2,
+    "verified_roots": 18
+  },
+  "initial_closeout_seal": {
+    "manifest_sha256": "5ad7961e12b99f3078c55cbcef6853e03a5581992196ac322a3e645da54f2004",
+    "members": 24,
+    "root": "fp8-sprint22-closeout.uq4dum8o"
+  },
+  "native_seal": {
+    "manifest_sha256": "8ffda4a9f3218311dac9d90f682d7ef3c7258241134248d0ff76e5e3f46d3c48",
+    "members": 214
+  },
+  "prior_findings": "Sprint11 3072 confirmation work-parity failure remains recorded; no cause or resolution established. The currently selected stage1 is the baseline.",
+  "private_patch_proof": {
+    "patch_sha256": "4d540d73cb6de18184c52918240a0fe0bf94c6b3abd112a948406d311c8facf5",
+    "path": "patches/sglang-gfx1201-m8-gdnout-common-tile16-serving.patch",
+    "proof_members": 8,
+    "proof_seal_sha256": "ed981be7363a67606a85e1ba24a01b0abfa2bf85218915897ee1f7dcd51b4181",
+    "published": true,
+    "selected": true
+  },
+  "qualification": false,
+  "quality": {
+    "active_lane": null,
+    "cpu_checks": {
+      "greedy": {
+        "packet": 18,
+        "reader": 22,
+        "startup": 35
+      },
+      "lifecycle": {
+        "reader": 19,
+        "source": 65
+      },
+      "sampled": {
+        "packet": 18,
+        "reader": 23,
+        "startup": 35
+      }
+    },
+    "design": "Repeated b101 and ring-fold in both arms; not a baseline comparison.",
+    "greedy": {
+      "full_output_pairs_matched": 4,
+      "independent_release_verified": true,
+      "normal_answers": 8,
+      "reader_seal": {
+        "manifest_sha256": "fa06d8593e7bc48b5f481876a61175f05cd6a2d71a17be760b6e2c30d0d1eb9a",
+        "members": 123,
+        "root": "fp8-sprint22-greedy-reader.dtssxdzw"
+      },
+      "readout_order_error": "Grader ran before decoded finals existed; unchanged decoder and grader subsequently passed. No native retry.",
+      "results_sha256": "c5d797d8ef7b777da9ab3a10045a586be608503701ebbcb11d0513ec46659cd9",
+      "status": "PASS",
+      "task_checks_passed": 8
+    },
+    "lifecycle": {
+      "admission_performed": false,
+      "reader_seal": {
+        "manifest_sha256": "96f797320c5fb953ef89bbc973d0423607bd0eb94a535e7a59199aada949b015",
+        "members": 18,
+        "root": "fp8-sprint22-lifecycle-reader.zlv1500n"
+      },
+      "source_seal": {
+        "manifest_sha256": "21baa6ba5ce8b60893cab634e9b8b8470175b6be0cdd7749c05c9c5f715f5a7a",
+        "members": 345,
+        "root": "fp8-sprint22-lifecycle.z0j25itj"
+      },
+      "status": "UNLAUNCHED"
+    },
+    "qualification": false,
+    "quality_outcome_claimed": false,
+    "sampled": {
+      "completed_http_responses": 4,
+      "established_model_starts": 1,
+      "first_failure": "process changed during namespace observation during second-arm startup",
+      "graded_responses": 0,
+      "independent_release_verified": true,
+      "native_seal": {
+        "manifest_sha256": "3e3a7c07b0c4eddc72e71f5880dba46a744b99710aab4f81edebe4c4374f2b74",
+        "members": 189,
+        "root": "fp8-sprint22-sampled-run.0ju29w2m"
+      },
+      "no_survivors": true,
+      "reader_seal": {
+        "manifest_sha256": "bc4645bdb221f3fa64b961f4f603d9bc068c30b62d3642516abf3fdafc079a3c",
+        "members": 30,
+        "root": "fp8-sprint22-sampled-reader.nr1gawpa"
+      },
+      "second_arm_model_start_established": false,
+      "secondary_failure": "missing bounded V2 artifact bundle after owner termination",
+      "status": "HARNESS_FAILURE_UNGRADED"
+    },
+    "scope": "Initial stopped attempt only",
+    "screen_review": "APPROVED_SERIAL_REPEATED_CANDIDATE_SCREENS",
+    "status": "INCOMPLETE_STOPPED"
+  },
+  "reliability_deferred": true,
+  "retained_preparation_refusals": [
+    "Existing compiler-source directory blocked an observation copy before component packaging; its files matched the sealed observation and were retained.",
+    "Initial serving preflight comparison traversed a generated donor package; corrected comparison passed before build."
+  ],
+  "schema": 1,
+  "selected_benchmark_combined_tp2_tokens_per_second": [
+    120.304,
+    120.368
+  ],
+  "selected_source": {
+    "author_manifest_sha256": "6ac26e4003cd189363023e08b46ce23c9c1233546c1eb5dfce43892897735297",
+    "author_members": 352,
+    "author_root": "fp8-sprint22-completion-lifecycle.pq2bsh79",
+    "recurrent_profile": "aligned ring-fold unchanged",
+    "rollback_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "source_file": "review/GEMM-tail.py"
+  },
+  "selected_source_changed": true,
+  "selection_scope": "Next experimental session only; installed runtime and persistent defaults unchanged.",
+  "serving": {
+    "both_arms": "Selected gate/upM16,aligned ring-fold,19usable20physical,BF16 target/draftKV,FP32recurrent;originalcompactreplaydisabled.",
+    "forward": {
+      "combined_tp2_output_tokens_per_second": 121.17524343,
+      "full_output_work_pairs": 4,
+      "median_latency_percent": -0.8917776606546024,
+      "result_sha256": "46bd23f9a00caf8ee66eef5f8826918041cdd21dbabcf872c7ded3d321bb94cb"
+    },
+    "independent_release_verified": true,
+    "model_starts_executed": 4,
+    "pooled_mean_latency_percent": -0.96771160524,
+    "protocol": "Two starts and eight requests per order; 2047 input tokens, 1024 forced output tokens, C1, greedy low thinking; one excluded warmup and three measured requests per start.",
+    "reverse": {
+      "combined_tp2_output_tokens_per_second": 121.24282247,
+      "full_output_work_pairs": 4,
+      "median_latency_percent": -0.8140279459182942,
+      "result_sha256": "b50b0315dbd81dbd31202bf84c54e77c511c98e18a54f53f05fbb7c693bcfd3c"
+    },
+    "status": "BOTH_ORDERS_PASS",
+    "stop_rule": "Park physical/authentication/measured-output/work failure or no lower median latency. No automatic retry/selection.",
+    "verification_cycles_per_request_per_rank": 164
+  },
+  "source_seal": {
+    "manifest_sha256": "e6b9a4f7ce42722923b84625f426285f49ede90cc1383b6e87440c9c13b7ef96",
+    "members": 101
+  },
+  "source_selected": true,
+  "status": "SPRINT22_COMPLETE_SELECTED_FOR_NEXT_EXPERIMENTAL_SESSION"
+}

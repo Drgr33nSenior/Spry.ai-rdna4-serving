@@ -573,3 +573,207 @@ disposition remain. Reliability and
 endurance remain deferred, no GPU campaign is queued, and installed runtime and
 persistent defaults remain unchanged. This is not production, numerical, state
 or distribution qualification. See [Sprint 19](SPRINT19-MATCHED-RINGFOLD.md).
+
+
+## Sprint 20 selected-profile cost refresh, 22 October 2026
+
+Two starts and eight sampled low-thinking requests completed on the selected
+Sprint 17 GEMM plus Sprint 19 ring-fold profile. All eight natural final answers
+passed, all four full-output ID pairs matched, and verification-cycle counts
+matched in each pair. Both ranks collected all eight scheduled device windows;
+source, native, HTTP, cache, graph and independent release checks passed.
+
+Four long-request windows per rank place projection methods at 27.550/27.516 ms
+within a 44.445/44.446 ms target graph. Gate/up remains the largest projection
+group at 11.939/11.932 ms; down takes 5.668/5.654 ms and GDN qkvz 4.384/4.377 ms.
+These forward intervals include quantization, launches, waits and enclosed
+collectives. Nested groups overlap; do not add groups or ranks into request time.
+
+Instrumented client elapsed time increased by 2.83%, 8.27%, 6.52% and 7.02% with
+matched outputs and verification work. One control-first order does not isolate
+causal overhead. Coverage remains sparse, with 13/42/64/150 later cycles beyond
+the last sampled window. This attribution does not establish a whole-request
+bottleneck or a new serving speed. The historical Sprint 19 benchmark was about
+120.3 combined TP2 tokens/s under its fixed-work envelope.
+
+The follow-on common M16 component and serving comparison are recorded below.
+See [Sprint 20](SPRINT20-CURRENT-PROFILE.md) and its
+[evidence index](../provenance/SPRINT20-CURRENT-PROFILE-20261022.json).
+
+## Sprint 21 common M16 gate/up, 22 October 2026
+
+The common M16/stage1 candidate passed 96 exact component comparisons at
+`(8,17408,5120)`. Both matched serving orders passed all eight output/work
+pairs. Median latency fell 0.38064% and 0.28794%; candidate rates were 120.304
+and 120.368 combined TP2 output tokens/s. The pooled mean latency change was
+−0.29775%, a descriptive result. The historical Sprint 19 benchmark was about
+120.3 combined TP2 tokens/s under its fixed-work envelope.
+
+Each performance start had one excluded warmup and three measured requests.
+Greedy and sampled quality used candidate GEMM and ring-fold in both arms; each
+passed 8/8 final answers and 4/4 full-output pairs, with independent release.
+The sampled route was verified, but its distribution was not. The 54-request
+lifecycle screen passed 52/52 finals, two cancellations, C2, slots and release;
+24/26 full cache outputs and 26/26 final texts matched. Both arms retained the
+Sprint 19 first difference at token 149 for the same cache comparison, without a
+proven cause. Astra selected M16 for the next experimental session only; the prior
+GEMM remains rollback and ring-fold is unchanged. Earlier numerical findings and
+deferred endurance remain. See [Sprint 21](SPRINT21-COMMON-M16.md) and its
+[provenance](../provenance/SPRINT21-COMMON-M16-20261022.json).
+
+## Sprint 22 GDN output candidate, 22 October 2026
+
+The common M16/stage1 candidate at `(8,5120,3072)` passed 96 exact component
+checks and all eight serving output/work pairs in both orders. Median latency
+fell 0.89178% forward and 0.81403% in reverse, with candidate rates of
+121.175–121.243 combined TP2 output tokens/s under the same fixed-work envelope.
+These are finite C1 results for the source selected for the next experimental
+session; the previous Sprint 21 source remains available for rollback.
+
+Greedy validation passed 8/8 normal-stop answers and 4/4 full-output pairs.
+The sampled campaign stopped when the supervisor reported that a process changed
+during namespace observation at second-arm startup. The interrupted arm then
+lacked its expected artifact bundle. Four first-arm HTTP responses remain
+ungraded, and lifecycle validation was not launched in that initial attempt.
+Independent release passed without survivors or unresolved cleanup.
+
+The owner subsequently authorized completion. Diagnostic messages were added
+to existing identity refusals without changing acceptance or read order.
+Fresh sampled validation passed 8/8 normal answers and 4/4 full-output pairs;
+the native sampling route was verified. Lifecycle passed 52/52 normal answers,
+two cancellations, actual C2, slots and release. Cache full outputs matched
+24/26 pairs and all 26 final texts matched, retaining the same two index-149
+reasoning variations as Sprint 21. A local transfer timeout was recovered with
+a reviewed compressed read-only collection; the GPU run was not repeated.
+Astra approved the smaller tile for the next experimental session with prior
+GEMM rollback and ring-fold unchanged. The initial observation cause, earlier
+numerical findings and deferred endurance remain. See [Sprint 22](SPRINT22-GDN-OUTPUT-M16.md) and its
+[provenance](../provenance/SPRINT22-GDN-OUTPUT-M16-20261022.json).
+
+## Sprint 23 attention QKV common M16, 22 October 2026
+
+The model-free `(8,7168,5120)` comparison changed only the common kernel's
+M tile from 64 to 16, retaining stage three. All 96 exact comparisons passed,
+including 24 graph comparisons. Timing was mixed: three cases improved
+1.64–8.03%, while GPU 0's random case took 2.60% more time. This fails the
+declared requirement for a lower median in all four cases, so the candidate
+is parked. The run completed in 23.60 seconds with independent release and
+zero model starts; no serving or quality campaign followed.
+
+The selected Sprint 22 GEMM and ring-fold remain unchanged. Its measured
+121.18–121.24 combined TP2 tokens/s was the qualified Sprint 22 result; Sprint 23
+establishes no new serving rate or timing cause. See [Sprint 23](SPRINT23-ATTENTION-COMMON-M16.md)
+and its [provenance](../provenance/SPRINT23-ATTENTION-COMMON-M16-20261022.json).
+
+## Sprint 24 selected-profile cost refresh, 22 October 2026
+
+The refresh retained the Sprint 22 GEMM and ring-fold profile. Two starts and
+eight sampled low-thinking requests passed all eight natural final-answer
+checks, sampling-route checks and independent release. Each rank completed
+all eight selected target timing windows, including four long-case windows.
+
+Long-window projection forward medians were 27.234/27.206 ms within target
+graphs of 44.111/44.115 ms on ranks 0/1. Gate/up remained the largest projection
+at 11.839/11.845 ms. These intervals include quantization, launches, waits and
+enclosed collectives; overlapping groups and ranks are not additive.
+
+Only 1/4 full-output and verification-work pairs matched; 3/4 final texts and
+final ID pairs matched. One coding final changed while retaining its functional
+pass. The other two differing outputs had exact final answers but different
+reasoning. The three unmatched pairs cannot measure instrumentation overhead.
+Retain all differences, sparse coverage and the unresolved numerical finding.
+This is no new serving-speed result or source selection.
+
+At Sprint 24 closeout, the proposed component was common M16 gate/up with N64
+instead of N128, holding K128, stage one and block scales fixed. It was
+source-feasible but not yet compiled or prepared. See [Sprint 24](SPRINT24-CURRENT-PROFILE.md)
+and its [provenance](../provenance/SPRINT24-CURRENT-PROFILE-20261022.json).
+
+## Sprint 25 gate/up N64, 23 October 2026
+
+The common gate/up N64 candidate passed all 96 exact component comparisons
+and reduced component medians by 0.540–0.980% across both GPUs and input
+patterns. M16, K128, stage one, group 32, four warps and the original 128-wide
+block scales remained fixed.
+
+The forward serving pilot matched all four output-ID and verification-work
+pairs, including warmup, at 164 cycles per request. Both ranks authenticated
+the intended N128/N64 dispatch. With one warmup excluded and three measured
+requests per start, N128's median was 8.464984 s, or 120.968929 combined TP2
+tokens/s; N64's was 8.468574 s, or 120.917646 tokens/s. Candidate median
+latency was 0.04241% higher. This small single-order result failed the required
+improvement gate; it does not establish a significant slowdown. N64 is parked
+without reverse, retry, natural-stop candidate screens or source selection.
+Independent release passed. The selected Sprint 22 GEMM, ring-fold and retained
+121.18–121.24 combined TP2 tokens/s result remain unchanged.
+
+An offline source audit found that the native sampled accept path makes two
+default-device RNG draws before its downstream deterministic kernel call.
+The retained server seed does not identify the RNG state entering each request.
+That state and matched selector inputs/draws remain unobserved, so this finding
+establishes neither the cause of Sprint 24's variations nor numerical resolution.
+At the Sprint 25 closeout, a small diagnostic of those inputs was proposed.
+See [Sprint 25](SPRINT25-GATEUP-N64.md) and its
+[provenance](../provenance/SPRINT25-GATEUP-N64-20261023.json).
+
+## Sprint 26 sampled acceptance investigation, 23 October 2026
+
+Two full instrumented traces completed: one repeated ring-fold and one
+snapshot versus ring-fold. Across both, all 8,328 observed events, eight
+full-output/work pairs and 16 functional answers matched; independent release
+passed. Synchronous CPU copies can perturb timing. A cross-phase review found one differing start out of eight, with its raw
+probability values unavailable. Earlier first-acceptance differences and a later
+sampled branch remain unresolved, and these finite
+comparisons do not prove numerical equivalence or ring-fold causality. The
+selected `b101` GEMM and ring-fold profile remain unchanged. The historical qualified
+Sprint 22 result was 121.18–121.24 combined TP2 tokens/s.
+See [Sprint 26](SPRINT26-SAMPLER-STATE.md) and its
+[provenance](../provenance/SPRINT26-SAMPLER-STATE-20261023.json).
+
+## Sprint 27 gate/up cost isolation, 23 October 2026
+
+The selected-profile diagnostic completed eight functional answers and four
+matching full-output/work pairs, with eight complete device windows per rank.
+Independent review approved the bounded results. Across four selected gate/up sites in
+long windows, GEMM had a median per-window share of 91.06%/91.00% on ranks 0/1;
+activation quantization had 3.22%/3.24%. The residual includes unattributed
+work and event effects. This sampled scope is not a new speed benchmark or an
+extrapolation to all 64 calls. At Sprint 27 closeout, the proposed next component changed stage one
+to stage two for the current gate/up shape; Sprint 28 completed and parked it. See
+[Sprint 27](SPRINT27-GATEUP-COST.md) and its
+[provenance](../provenance/SPRINT27-GATEUP-COST-20261023.json).
+
+## Sprint 28 gate/up stage two component, 23 October 2026
+
+All 96 model-free exact comparisons passed, but stage two was slower in two
+of four device/input timing cases. The candidate failed the all-case timing
+gate and is parked without serving preparation or source selection. Independent
+review approved the bounded closeout. The proposed CPU examination of retained
+compiler artifacts completed in Sprint 29; it does not authorize a GPU run. The selected profile and
+latest clean Sprint 22 serving benchmark remain unchanged. See
+[Sprint 28](SPRINT28-GATEUP-STAGE2.md) and its
+[provenance](../provenance/SPRINT28-GATEUP-STAGE2-20261023.json).
+
+## Sprint 29 gate/up compiler review, 23 October 2026
+
+A CPU-only review of the retained Sprint 28 compiler artifacts identified a
+possible exact-shape scalar specialization. Sprint 29 did not compile or run a
+candidate; Sprint 30 subsequently tested and parked it. Static instruction
+counts do not establish a bottleneck or gain. Independent engineering review
+approved the CPU findings and proposal. The selected profile and latest clean
+Sprint 22 serving benchmark remain unchanged. See
+[Sprint 29](SPRINT29-COMPILER-REVIEW.md) and its
+[provenance](../provenance/SPRINT29-COMPILER-REVIEW-20261023.json).
+
+## Sprint 30 gate/up static scalars, 23 October 2026
+
+The model-free candidate passed 96 exact comparisons and all four conservative
+compiler proofs, but GPU 0 random-input median latency was 0.709% higher. The
+all-case timing gate failed; the candidate is parked without serving
+preparation or source selection. Independent review approved the bounded results and parking. See
+[Sprint 30](SPRINT30-GATEUP-STATIC-SCALARS.md) and its
+[provenance](../provenance/SPRINT30-GATEUP-STATIC-SCALARS-20261023.json).
+
+## Sprint 31 warp screen
+
+W2 passed the component gate, but its forward serving median was 8.482985 s versus 8.481692 s for W4; the lower-median gate failed. The control measured 120.73 combined TP2 tokens/s and W2 120.71. All four output and cycle pairs matched. W2 and W8 are parked; independent review approved the closeout. This small sample does not establish a general slowdown. The selected profile remains unchanged. See [Sprint 31](SPRINT31-GATEUP-WARPS.md).

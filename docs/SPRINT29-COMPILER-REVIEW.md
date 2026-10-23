@@ -1,0 +1,15 @@
+# Sprint 29: gate/up compiler review
+
+**Status: `SPRINT29_COMPLETE_CPU_REVIEW`; independent engineering review approved.** This review examined retained Sprint 28 compiler artifacts for the selected gate/up kernel. It did not implement or compile a candidate, observe a remote host, run a device or model, or reserve a GPU. The selected `b101` GEMM and aligned ring-fold profile remain unchanged. [Provenance](../provenance/SPRINT29-COMPILER-REVIEW-20261023.json)
+
+The review authenticated four case records and eight variants, representing two unique compilations. Both stage-one and stage-two IR retain runtime `M`, `N`, `K`, `group_n` and `group_k`. Each contains seven static integer divisions and seven remainders, including one scale-step remainder inside the K loop. Stage one reported 114 registers, 16 KiB shared memory and zero spills; stage two reported 106 registers, 18,944 bytes shared and zero spills.
+
+The retained assembly has 743 and 952 static instruction lines for the two variants, with 153 and 131 lines in their respective loop bodies through the conditional backedge and 16 static WMMA instructions in each loop. These are textual code counts, not executed instruction counts, cycle costs, occupancy measurements or proof of a bottleneck. TTGIR and AMDGCN text are retained; HSACO evidence consists of its compiler-reported hash and length.
+
+For the current exact gate/up shape `(8,17408,5120)`, with 128-wide scale groups, M16/N128/K128 tiles, group 32, four warps and stage one, the launch has 136 programs and 40 K iterations. Its effective group size in M is one: `pid_m` is zero and `pid_n` equals the program ID. The scale step is one on every iteration. Equivalent group ordering does not prove that the current dynamic compiled code removed its indexing operations.
+
+The proposed next candidate uses an exact-shape guarded Triton JIT wrapper to forward literals for those five scalars to the unchanged native JIT body. A Python wrapper alone is insufficient. It must retain strides, masks, wrapped M16 input rows, the dot/scale/add sequence, stage one and four warps; compiled IR must demonstrate constant propagation. If it does not, a narrowly annotated version of the same body requires separate consideration. Compiler choices and bitwise output exactness remain unverified. A warp-count change is an untested backup, with no best count or gain established. A bounded review of public Sprint 11–28 records found no scalar-constexpr or two/eight-warp experiment; it was not an exhaustive search of private history.
+
+K64 is clamped on the current HIP path and would change dot partitioning; K256 does not satisfy the current scale stepping. A group-size change does not change this exact shape's program ordering. N64, stage two, unrolled M16 and common M32 have separate parked histories. None of these observations establishes a speedup or authorizes a GPU run.
+
+The latest clean serving result remains 121.18–121.24 combined TP2 tokens/s from Sprint 22. The Sprint 26 numerical finding remains unresolved. Reliability and endurance testing remain deferred.

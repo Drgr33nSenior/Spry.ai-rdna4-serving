@@ -1,0 +1,318 @@
+{
+  "affected_screens": {
+    "design": "Candidate M16 and selected ring-fold in both starts, not baseline/candidate quality comparison.",
+    "greedy": {
+      "final_answers_passed": 8,
+      "full_output_pairs_matched": 4,
+      "independent_release_verified": true,
+      "native_seal": {
+        "manifest_sha256": "8637e8c5620077742587ec4eb6cf2e5fc38c111bad93a5cd9952cd0bbffb5c68",
+        "members": 223
+      },
+      "reader_seal": {
+        "manifest_sha256": "96383d007136dbe017de194881139e84b2c3868ea837e3449cc7855f34583677",
+        "members": 121
+      },
+      "results_sha256": "ec1ac93fb859cad868b2c7b44c7ecec977f3ce14aa469a9331a7cb11b2128c46",
+      "source_seal": {
+        "manifest_sha256": "f308b513e2ef73b3b4c6baefe1e20d1edb47a6b4095531f29ace0319322e1690",
+        "members": 349
+      },
+      "status": "PASS"
+    },
+    "greedy_requests": 8,
+    "lifecycle": {
+      "actual_c2_accounting_passed": true,
+      "cache_final_text_pairs_matched": 26,
+      "cache_full_output_pairs_matched": 24,
+      "cache_pair_count": 26,
+      "cancellations": 2,
+      "cause_established": false,
+      "final_answers_passed": 52,
+      "independent_release_verified": true,
+      "native_seal": {
+        "manifest_sha256": "40fd60362fe232b779c673f332f13d68ec6297deae34e29c7703e98edfa4face",
+        "members": 567
+      },
+      "reader_seal": {
+        "manifest_sha256": "7d5d0007eb671e14b5b2ecb25e5bb656b84ea2fd3286221c30ca93dfdd168942",
+        "members": 442
+      },
+      "requests": 54,
+      "results_sha256": "5670c581ff8afbc4f0f8dccf152d9077a0f539b2ab9553fa5f458bd1020eb2f9",
+      "retained_cache_output_variations": [
+        {
+          "arm": "control",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        },
+        {
+          "arm": "mtp",
+          "case": "concurrent-a",
+          "comparison_case": "victim-cold-a",
+          "final_answers_equal": true,
+          "first_difference": 149,
+          "full_output_ids_equal": false
+        }
+      ],
+      "slot_bookkeeping_passed": true,
+      "source_seal": {
+        "manifest_sha256": "ce75522623550f4e5af9a5b9ce685231f83e6b78afa89a3055f5fea6b67bbe20",
+        "members": 355
+      },
+      "status": "PASS",
+      "variation_pattern_matches_sprint19": true
+    },
+    "lifecycle_requests": 54,
+    "sampled": {
+      "final_answers_passed": 8,
+      "full_output_pairs_matched": 4,
+      "independent_release_verified": true,
+      "native_seal": {
+        "manifest_sha256": "723f3b81caabd8cce9d1b5ba516eeffab89d8e6675c412417aa588514b8617f1",
+        "members": 223
+      },
+      "reader_seal": {
+        "manifest_sha256": "8a31a7d3157761708547f38afbf511dc414104a39618760b8b891a6b20791fa4",
+        "members": 121
+      },
+      "results_sha256": "6230094778bd6d45ce01d8270dd33ecf77235c79eb1f42833af3c50be308a193",
+      "sampling_distribution_verified": false,
+      "sampling_route_verified": true,
+      "source_seal": {
+        "manifest_sha256": "d4b4a1165fddc99bc4aff1d69ace6b351a52efe2d31eeb1d44a76ff5aefb6664",
+        "members": 349
+      },
+      "status": "PASS"
+    },
+    "sampled_requests": 8,
+    "source_selection_authorized": true,
+    "status": "ALL_BOUNDED_GATES_COMPLETE"
+  },
+  "campaign": {
+    "active_gpu_campaign": false,
+    "cancellations": 2,
+    "fixed_work_requests": 16,
+    "gpu_campaign_queued": false,
+    "model_starts": 10,
+    "normal_final_answers_passed": 68,
+    "requests": 86
+  },
+  "candidate_patch": {
+    "file": "patches/sglang-gfx1201-m8-gateup-common-tile16-serving.patch",
+    "installed": false,
+    "proof_seal": {
+      "manifest_sha256": "8af95e70eed631ea00b486be70f9363658e562f39c286ecd26076ececf016ba8",
+      "members": 7
+    },
+    "selected": true,
+    "selection_scope": "Next experimental session only",
+    "sha256": "01f6cf5c2b1b7689e62dd026446196d6f0a1afaae0b104fc709d99a6f8948f92"
+  },
+  "component": {
+    "block_k": 128,
+    "block_n": 128,
+    "comparisons": 96,
+    "eager_comparisons": 72,
+    "graph_comparisons": 24,
+    "group_m": 32,
+    "kernel": "common",
+    "native_seal": {
+      "manifest_sha256": "27de5fb6ac9f7ff626e976062ecf31d949094e1b5c8e063fd2af22c4652fec10",
+      "members": 190
+    },
+    "registers": [
+      238,
+      114
+    ],
+    "scope": "Synthetic inputs, sequential per card; no TP2 serving speed claim.",
+    "shape": [
+      8,
+      17408,
+      5120
+    ],
+    "shared_bytes": 16384,
+    "source_seal": {
+      "manifest_sha256": "92f262d678b8b28c55543be6d619bc853b2b48313cc26c48fd1ca75539992323",
+      "members": 105
+    },
+    "spills": [
+      0,
+      0
+    ],
+    "stages": [
+      1,
+      1
+    ],
+    "tile_m": [
+      64,
+      16
+    ],
+    "time_reduction_percent_range": [
+      2.1978253429372208,
+      2.433384188534604
+    ],
+    "timed_launches": 64,
+    "warps": 4
+  },
+  "final_review": {
+    "blocking_findings": [],
+    "report_basename": "fp8-sprint21-astra-review.0f4wsm4y",
+    "report_sha256": "174a8fb616a9eb00247897fe046d6ac1e37232838ff99e873e486350374a8942",
+    "review_seal": {
+      "manifest_sha256": "88349088c42eb5cef7950d9f7085132c7f53c91deb03381c0dc787113f572dd8",
+      "members": 3
+    },
+    "reviewed_utc": "2026-10-22T20:24:18.549251+00:00",
+    "scope": "Select exact ceec candidate for the next experimental session launch only,with unchanged selected aligned ring-fold. This review authorizes no new experiment,installation,persistent service or production-default mutation.",
+    "status": "APPROVED_EXPERIMENTAL_SESSION_SELECTION",
+    "verified_result_pins": 5,
+    "verified_roots": 22
+  },
+  "limitations": {
+    "additional_vram_saving_claim": false,
+    "dispatch_scope": "Live Python and source-derived dispatch, not device constexpr or occupancy counter evidence.",
+    "endurance_deferred": true,
+    "numerical_mismatch_resolved": false,
+    "production_qualified": false,
+    "sampling_distribution_verified": false,
+    "state_equivalence_established": false
+  },
+  "performance_summary": {
+    "matched_output_and_work_pairs": 8,
+    "pooled_mean_latency_percent": -0.2977450885800148,
+    "qualification": false,
+    "total_pairs": 8
+  },
+  "pilot": {
+    "archive_bytes": 16117760,
+    "archive_members": 64,
+    "argument_counts": [
+      255,
+      255
+    ],
+    "binding_bytes": [
+      65463,
+      65423
+    ],
+    "candidate_gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "combined_transport_bytes": 32335203,
+    "compact_replay_enabled": false,
+    "concurrency": 1,
+    "control_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "cpu_checks": {
+      "reader": 20,
+      "replay": 18,
+      "startup": 22
+    },
+    "existing_limits_unchanged": true,
+    "forced_output_tokens": 1024,
+    "independent_release": true,
+    "input_tokens": 2047,
+    "measured_per_start": 3,
+    "native_seal": {
+      "manifest_sha256": "aa9a0ba49f51044124eb3d727cfbe29ffef331134e4a89f6269599a60d2f1122",
+      "members": 224
+    },
+    "physical_slots": 20,
+    "reader_seal": {
+      "manifest_sha256": "e939bccbd24579aa31a003abffb1b1b6be5f070eb235b3334ffc5e7f0354c6c7",
+      "members": 86
+    },
+    "recurrent_profile_both_arms": "aligned_ring_fold",
+    "requests": 8,
+    "results": {
+      "changed_gateup_exercised_both_ranks_arms": true,
+      "latency_percent": -0.38064067299606874,
+      "output_pairs": 4,
+      "output_pairs_matched": 4,
+      "rate_percent": 0.3820950822887692,
+      "rows": [
+        {
+          "logical_arm": "control",
+          "max_client_seconds": 8.546678758983035,
+          "median_client_seconds": 8.544294213003013,
+          "median_output_tokens_per_client_second": 119.84606036173709,
+          "min_client_seconds": 8.526719659974333
+        },
+        {
+          "logical_arm": "mtp",
+          "max_client_seconds": 8.523951688024681,
+          "median_client_seconds": 8.511771154007874,
+          "median_output_tokens_per_client_second": 120.30398626469612,
+          "min_client_seconds": 8.50325143802911
+        }
+      ],
+      "sha256": "51976654a780c1e0c8d6637654662121a7ea7f08aa03960a4fbf50f30bab9ed5",
+      "verification_cycles_each_request": 164
+    },
+    "source_seal": {
+      "manifest_sha256": "d2434a5b77068c7f802e65507dcd70fc4270ab3a93ab00f979088c6f85ba635b",
+      "members": 356
+    },
+    "starts": 2,
+    "status": "FORWARD_PASS_REVERSE_PREPARATION_ALLOWED",
+    "thinking": "low",
+    "usable_slots": 19,
+    "warmup_per_start": 1
+  },
+  "qualification": false,
+  "reverse": {
+    "independent_release_verified": true,
+    "latency_percent": -0.287944974326948,
+    "native_seal": {
+      "manifest_sha256": "8e7c0651cf847ae2c6069a0a9ef5e3d597ac6200f15c3f37fb9366b67f6327ca",
+      "members": 224
+    },
+    "output_pairs": 4,
+    "output_pairs_matched": 4,
+    "physical_complete": true,
+    "rate_percent": 0.28877649172189823,
+    "reader_seal": {
+      "manifest_sha256": "78a5d4fa90d1c3da3f03e6831f72151e09acc44a4bbed44346a8850b440ee921",
+      "members": 81
+    },
+    "results_sha256": "b5a6baa8b812ba28b226af1a531034be969449d9cbfa7d5b45533bfb30d78fd8",
+    "rows": [
+      {
+        "logical_arm": "mtp",
+        "max_client_seconds": 8.508489429019392,
+        "median_client_seconds": 8.50724825297948,
+        "median_output_tokens_per_client_second": 120.36794619709917,
+        "min_client_seconds": 8.505761902953964
+      },
+      {
+        "logical_arm": "control",
+        "max_client_seconds": 8.532785592018627,
+        "median_client_seconds": 8.531815186026506,
+        "median_output_tokens_per_client_second": 120.02135274532407,
+        "min_client_seconds": 8.530664521967992
+      }
+    ],
+    "source_seal": {
+      "manifest_sha256": "72229ef642a71e5e434092ea2f8c253e419a05fdeb45e2b393bccc491e7859ed",
+      "members": 344
+    },
+    "status": "PASS",
+    "verification_cycles_each_request": 164
+  },
+  "schema": 1,
+  "selected_source": {
+    "author_basename": "fp8-sprint21-greedy._jmxsimr",
+    "gemm_sha256": "ceec5726fa20815395d2b7f6b44b22fe379a60ef1fb64f3dde89954ae04ee892",
+    "ring_fold_unchanged": true,
+    "rollback_gemm_sha256": "3f28660b26d00938e907441be64e5e9a74153194058ed9e91b52f8808f1a1390",
+    "source_file": "review/GEMM-tail.py",
+    "source_seal": {
+      "manifest_sha256": "f308b513e2ef73b3b4c6baefe1e20d1edb47a6b4095531f29ace0319322e1690",
+      "members": 349
+    }
+  },
+  "selection_scope": "Next experimental session only; no installed runtime or persistent default mutation.",
+  "source_promoted": true,
+  "source_selected": true,
+  "status": "SPRINT21_COMPLETE_SELECTED_FOR_NEXT_EXPERIMENTAL_SESSION"
+}

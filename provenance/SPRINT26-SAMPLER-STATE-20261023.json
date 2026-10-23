@@ -1,0 +1,504 @@
+{
+  "api_component": {
+    "independent_release_verified": true,
+    "native": {
+      "manifest_sha256": "3c79017f914108f0df505096751c06fb7656f3f303cd11933850bb408d0fa83a",
+      "members": 172,
+      "root": "fp8-sprint26-rng-api-run.lrci7esj"
+    },
+    "per_device": {
+      "copy_bytes": 32,
+      "cpu_copies": 2,
+      "peak_allocated_bytes": 1024,
+      "random_calls": 2,
+      "random_values": 8,
+      "rng_state_bytes": 16,
+      "state_reads": 6
+    },
+    "physical_seconds": 21.334084069007076,
+    "result_sha256": "c2ba7cfde4af9974edf07f33dd811f16056a755d17a5a2653b4a94fa96f87fe3",
+    "small_copy_only": true,
+    "source": {
+      "manifest_sha256": "f0aee2e5a4539f5bf96d5c51c77a4286074df3052a915969e0703e36d7da62c3",
+      "members": 65,
+      "root": "fp8-sprint26-rng-api.7f5hj4cp"
+    },
+    "status": "TWO_DEVICE_DEFAULT_RNG_API_PASS"
+  },
+  "collection_recovery": {
+    "compressed_recovery_elapsed_seconds": 38.921,
+    "gpu_or_model_rerun": false,
+    "independent_release_verified": true,
+    "initial_collection_timeout_seconds": 60,
+    "preserved_partial_bytes": 21528576,
+    "reader_change": "Collection receipt dispatch only; other authentication checks unchanged.",
+    "receipt_validator_unchanged": true,
+    "recovery_cpu_checks": 8,
+    "recovery_script_sha256": "767ff61f5e902c9b0bd5b2fb33a7baea6e529fb0a14bcb654b67a399c0785f74"
+  },
+  "cross_phase_hash_lineage": {
+    "cause_established": false,
+    "cpu_checks": 4,
+    "different_probability_values_and_magnitude_available": false,
+    "different_rank_observations": 2,
+    "different_start_output_tokens": 1345,
+    "first_output_difference_index": 27,
+    "gpu_prefix_unobserved_in_first_two_phases": true,
+    "helper_sha256": "0c3f4d757efaa97cc0c5dc57a911d1ba7dfe726fead9ba70d0707f35249b9d26",
+    "identical_hidden_state_established": false,
+    "independent_rank_trials": false,
+    "matching_output_tokens": 1101,
+    "matching_rank_observations": 14,
+    "matching_starts": 7,
+    "observed_full_trace_gpu_prefix": 246,
+    "observed_starts": 8,
+    "preceding_running_totals_output_and_work_equal_all_starts": true,
+    "recorded_host_prefix": 247,
+    "report_sha256": "299a59e186260bae98151566575b8f9b552cbc7dbec949f2072a29eef97494a0",
+    "seal": {
+      "manifest_sha256": "7ab95a49323f689894eefb5752016d169af46a5699d47081f32c6793fc7c520c",
+      "members": 12,
+      "root": "fp8-sprint26-hash-lineage.si0790h6"
+    },
+    "status": "SEALED_READER_CROSS_PHASE_HASH_LINEAGE"
+  },
+  "decision_trace": {
+    "active_gpu_run": false,
+    "analysis": {
+      "manifest_sha256": "38a521a5eb0b3a3062def9f4af2f6c25820923e132eee7008572cbc4b3619c79",
+      "members": 26,
+      "root": "fp8-sprint26-trace-analysis.hKN1zsek"
+    },
+    "archive_sha256": "018bfafd5fad1ea3dbedc7a0058785225ec0bd73b385959fbb3177a0f6fba9d7",
+    "compared_inputs_and_pre_post_native_results_equal": true,
+    "completed_attempts_model_starts": 7,
+    "completed_attempts_test_requests": 24,
+    "findings": {
+      "case_calls_per_start": [
+        62,
+        188,
+        341,
+        450
+      ],
+      "events": 4164,
+      "final_text_pairs_equal": 4,
+      "first_differences": 0,
+      "full_output_pairs_equal": 4,
+      "functional_passes": 8,
+      "interpretation": "No divergence reproduced under synchronous every-call observation; no numerical-resolution or ring-fold causal conclusion.",
+      "invalid_joins": 0
+    },
+    "functional_passes": 8,
+    "independent_release_verified": true,
+    "native": {
+      "manifest_sha256": "3c41617b0a8f8df148717037d30777402eb0e463bb1934993fdfe6d60cbb1fef",
+      "members": 218,
+      "root": "fp8-sprint26-trace-run.rnk4158u"
+    },
+    "native_command_seconds": 428.013414958,
+    "native_root": "fp8-sprint26-trace-run.rnk4158u",
+    "native_sealed": true,
+    "normal_stops": 8,
+    "numerical_resolution": false,
+    "performance_claim": false,
+    "planned_requests": 8,
+    "planned_starts": 2,
+    "prelaunch_review_status": "APPROVED_ONE_SAMPLED_ACCEPTANCE_TRACE_DIAGNOSTIC",
+    "preparation_ready_sha256": "05a848a79b1a3c4c95f72e4a5fd81757a5c2ea992f5d5a456127213cb932a8d2",
+    "prior_failed_trace": {
+      "active_gpu_run": false,
+      "exact_offending_origin_values_retained": false,
+      "external_requests_executed": 0,
+      "failure": "New trace eligibility guard rejected startup origin metadata before external test requests.",
+      "independent_release_verified": true,
+      "launch_seconds": 163.9021698338911,
+      "model_starts_executed": 1,
+      "native_root": "fp8-sprint26-trace-run.w6xyt9mb",
+      "native_seal": {
+        "manifest_sha256": "566f1823da514f8e8e6c31fad0343893b7c42a06e30500e501632fd28a75c6b1",
+        "members": 147,
+        "root": "fp8-sprint26-trace-run.w6xyt9mb"
+      },
+      "native_sealed": true,
+      "no_same_nonce_retry": true,
+      "numerical_result": null,
+      "performance_claim": false,
+      "prelaunch_review_status": "APPROVED_ONE_SAMPLED_ACCEPTANCE_TRACE_DIAGNOSTIC",
+      "qualification": false,
+      "result_pending": false,
+      "source": {
+        "manifest_sha256": "73b0ae03f24cea7701850a0b74ef78269641cfcc2dc7a4de129fe70f7c024541",
+        "members": 387,
+        "root": "fp8-sprint26-trace.9lma77zx"
+      },
+      "status": "DIAGNOSTIC_STARTUP_GUARD_FAILED_NO_NUMERICAL_RESULT"
+    },
+    "qualification": false,
+    "reader": {
+      "manifest_sha256": "9420c8bd40898efff391a0f530b6b7909cd1d6b0175ab4d6ef456c45f5fe65fc",
+      "members": 142,
+      "root": "fp8-sprint26-trace-warmup-reader.u8xaz271"
+    },
+    "requests": 8,
+    "result_pending": false,
+    "source": {
+      "manifest_sha256": "2455464b0492233c65bed322e84be2e02cb6f3f3bd3a9d5b9d6d8b671a65dd1d",
+      "members": 409,
+      "root": "fp8-sprint26-trace-warmup.s158oq3j"
+    },
+    "starts": 2,
+    "status": "COMPLETE_NO_DIVERGENCE_OBSERVED"
+  },
+  "first_acceptance_phase": {
+    "analysis_seal": {
+      "manifest_sha256": "9ac9e941ca0b5dde27eb3202c44a56c6d036ddb0258d967b1006ba15f6b37cda",
+      "members": 13,
+      "root": "fp8-sprint26-analysis.iuzAcimm"
+    },
+    "analysis_sha256": "f1dc197f9e4c7985c10490b674489381547abdd9d08fc9735e951cade331f8a7",
+    "difference_cause_established": false,
+    "final_text_pairs_equal": 3,
+    "host_prefix_scope": "Recorded host metadata only; actual GPU prefix was not captured in first two phases.",
+    "independent_release_verified": true,
+    "key_observation": "Both ranks at unique-last first acceptance had matching recorded host prefix, candidate IDs, RNG hashes and uniforms, while target and draft probability-buffer hashes differed.",
+    "output_pairs_equal": 1,
+    "quality_passes": 8,
+    "work_pairs_equal": 1
+  },
+  "full_trace_observer": {
+    "copies_per_event": 11,
+    "cpu_copy_bytes_per_campaign": 62041068288,
+    "scope": "synchronous observation; not a benchmark"
+  },
+  "next_action": "No blind GPU repeat without a concrete source-backed discriminator; retain actual GPU prefix and lossless values on a natural recurrence.",
+  "numerical_mismatch_resolved": false,
+  "observer": {
+    "cross_rank_rng_equality_required": false,
+    "dense_copy_overhead_measured": false,
+    "first_acceptance_after_draft": true,
+    "host_elapsed_includes_native_acceptance": true,
+    "native_sampling_algorithm_changed": false,
+    "operand_cpu_copies": 5,
+    "operand_cpu_copy_bytes": 14899296,
+    "request_start_rng_observed": false,
+    "rng_state_read_bytes": 64,
+    "rng_state_reads": 4,
+    "scope": "first_acceptance_phases_only"
+  },
+  "probability_values": {
+    "analysis": {
+      "manifest_sha256": "5a60e8a8d69cb9f66426911597c2329159e1c4b88d536e5fbb17e673fda473b7",
+      "members": 23,
+      "root": "fp8-sprint26-values-analysis.mlo7ZDD3"
+    },
+    "analysis_sha256": "5766bfb371768ff1aa298814c71bc6857de016d8795439727b8ee5210d013721",
+    "chain_result_sha256": "7aff02ae3ed48d1a1f0fa5f36816a2dd9d18331d646c487aa324c0bad9a5e052",
+    "collector_sha256": "60da08ce9a57c2f592f8cbdc5bfbf9c318b5f4ee4b2e1005623f741a7aa2d35d",
+    "compressed_receipt_sha256": "373df138c2fa3eb19f3afe3ead72ebcd023259401e9209e906453a8968c25a96",
+    "final_text_comparison": {
+      "coding-running-totals": {
+        "final_text_equal": true,
+        "output_tokens": [
+          333,
+          333
+        ],
+        "reasoning_tokens": [
+          290,
+          290
+        ]
+      },
+      "coding-unique-last": {
+        "final_text_equal": true,
+        "output_tokens": [
+          1101,
+          1101
+        ],
+        "reasoning_tokens": [
+          1031,
+          1031
+        ]
+      },
+      "heldout16k-audit": {
+        "final_text_equal": true,
+        "output_tokens": [
+          3352,
+          3344
+        ],
+        "reasoning_tokens": [
+          2529,
+          2521
+        ]
+      },
+      "quality16k-audit-threshold": {
+        "final_text_equal": true,
+        "output_tokens": [
+          2590,
+          2590
+        ],
+        "reasoning_tokens": [
+          1825,
+          1825
+        ]
+      }
+    },
+    "host_prefix_scope": "Recorded host metadata only; actual GPU prefix was not captured in first two phases.",
+    "local_preupload_failure": {
+      "error": "Parent outer receipt label collided with helper inner receipt label; FileExistsError before SSH invocation. Locally constructed upload.tar retained.",
+      "gpu_attempted": false,
+      "preservation_file": "PREUPLOAD-FAILURE-PRESERVATION.json",
+      "upload_attempted": false
+    },
+    "native": {
+      "manifest_sha256": "b3f5f8a94d064f808ae4feca67d45c35b52e278ffe09a64ade4d046213980f0d",
+      "members": 223,
+      "root": "fp8-sprint26-values-run.nq31wytx"
+    },
+    "reader": {
+      "manifest_sha256": "a8a41968a66996c59dc9dd5d24947e83b83065f4386a8410a611585f5b3d8467",
+      "members": 151,
+      "root": "fp8-sprint26-values-reader.mftlx8f9"
+    },
+    "result": {
+      "all_first_acceptance_comparisons_equal": true,
+      "functional_passes": 8,
+      "later_branch_localized": false,
+      "maximum_unique_last_probability_row_mass_error": 1.1805116806318239e-07,
+      "native_bonus_observed": false,
+      "negative_probability_values": 0,
+      "nonfinite_probability_values": 0,
+      "normal_stops": 8,
+      "original_greedy_mismatch_resolved": false,
+      "output_pairs": [
+        {
+          "case": "coding-running-totals",
+          "first_difference": null,
+          "output_ids_equal": true,
+          "verify_cycles": [
+            62,
+            62
+          ],
+          "work_equal": true
+        },
+        {
+          "case": "coding-unique-last",
+          "first_difference": null,
+          "output_ids_equal": true,
+          "verify_cycles": [
+            188,
+            188
+          ],
+          "work_equal": true
+        },
+        {
+          "case": "quality16k-audit-threshold",
+          "first_difference": null,
+          "output_ids_equal": true,
+          "verify_cycles": [
+            341,
+            341
+          ],
+          "work_equal": true
+        },
+        {
+          "case": "heldout16k-audit",
+          "first_difference": 2520,
+          "output_ids_equal": false,
+          "verify_cycles": [
+            450,
+            449
+          ],
+          "work_equal": false
+        }
+      ],
+      "output_pairs_equal": 3,
+      "performance_claim": false,
+      "probability_values_above_one": 0,
+      "resource_release_verified": true,
+      "ring_fold_cause_established": false,
+      "selected_profile_unchanged": true,
+      "status": "VALUES_AUTHENTICATED_FIRST_CALL_NONREPRODUCTION_LATER_BRANCH_REMAINS",
+      "unique_last_analytical_accepted_drafts": 3,
+      "unique_last_analytical_first_rejection_row": 3,
+      "unique_last_raw_payloads_bitwise_equal": true,
+      "unique_last_reference_bonus_token": 411,
+      "work_pairs_equal": 3
+    },
+    "review_status": "APPROVED_PHASE_TWO_EVIDENCE",
+    "source": {
+      "manifest_sha256": "1903cc130a7e62f7d527377ef7cf9a10e01517d08fb50fbf74efda558f9138a6",
+      "members": 347,
+      "root": "fp8-sprint26-values-framed.0hd78isd"
+    },
+    "status": "VALUES_AUTHENTICATED_FIRST_CALL_NONREPRODUCTION_LATER_BRANCH_REMAINS",
+    "values_result_sha256": "5766bfb371768ff1aa298814c71bc6857de016d8795439727b8ee5210d013721"
+  },
+  "qualification": false,
+  "qualification_or_source_promotion": false,
+  "readout_pending": false,
+  "record_date": "2026-10-23",
+  "ring_attribution": {
+    "active_gpu_run": false,
+    "analysis": {
+      "manifest_sha256": "acde0970078bf83d50e5cf016212e2ce7a542e28876b89c08e1593c298c9bfa1",
+      "members": 18,
+      "root": "fp8-sprint26-ring-analysis.jmxd6grn"
+    },
+    "analysis_checks": 11,
+    "analysis_sha256": "293570943d3a9ef3d64dd615bc862337a7b328ea021e3775fec4ba7b4570b328",
+    "archive_sha256": "f66340e44eab94bc9980ce8ece7ce56a22ee7788ee6c5c5037168a73d01c9173",
+    "arms": {
+      "control": "snapshot",
+      "mtp": "ring_fold"
+    },
+    "causal_attribution_established": false,
+    "completed_attempts_model_starts": 9,
+    "completed_attempts_test_requests": 32,
+    "controlled_difference": "speculative ring-fold flag and arm ports",
+    "cpu_grading_fixture_recovery": "Initial CPU grade failed on missing TASKS.json before SSH; exact sealed fixture restored and fresh CPU grading passed, with no grade rule or GPU retry.",
+    "findings": {
+      "case_calls_per_start": [
+        62,
+        188,
+        341,
+        450
+      ],
+      "events": 4164,
+      "final_text_pairs_equal": 4,
+      "first_differences": 0,
+      "full_output_pairs_equal": 4,
+      "functional_passes": 8,
+      "interpretation": "No drift observed between snapshot and ring-fold under identical full observation; no resolution of earlier intermittent same-mode or historical sampled/greedy findings.",
+      "invalid_joins": 0
+    },
+    "functional_passes": 8,
+    "independent_release_verified": true,
+    "independent_review_status": "APPROVED_COMPLETED_DIAGNOSTIC_CLOSURE",
+    "native": {
+      "manifest_sha256": "4ee8b4c91982bce73ca2e970163f6e3de790adca8503a78d8aa8b7f2c685a6ea",
+      "members": 218,
+      "root": "fp8-sprint26-ring-run.4aalzzxo"
+    },
+    "native_command_seconds": 424.893084,
+    "native_root": "fp8-sprint26-ring-run.4aalzzxo",
+    "native_sealed": true,
+    "normal_stops": 8,
+    "performance_claim": false,
+    "planned_requests": 8,
+    "planned_starts": 2,
+    "prelaunch_review_status": "APPROVED_ONE_RING_SNAPSHOT_TRACE_DIAGNOSTIC",
+    "preparation_ready_sha256": "17afa1686fc7d7861f2c9d79927e869ee247c33f678cee30517cf81a13291254",
+    "qualification": false,
+    "reader": {
+      "manifest_sha256": "7b0420acdbee8502dba921670f61c2b9715d7b3e7c4ab06e55093442209dc81f",
+      "members": 152,
+      "root": "fp8-sprint26-ring-reader.tchi6s8f"
+    },
+    "reader_checks": 46,
+    "result_pending": false,
+    "rng_reset": false,
+    "same_selected_gemm": true,
+    "source": {
+      "manifest_sha256": "bd9dcac4d9233f1d83940d58df607095ed8b2c22530a6d8be852220c4b58ae55",
+      "members": 350,
+      "root": "fp8-sprint26-ring-attribution.q6zzt723"
+    },
+    "source_checks": 92,
+    "status": "COMPLETE_SNAPSHOT_RING_EXACT_UNDER_OBSERVATION"
+  },
+  "sampling_distribution_verified": false,
+  "schema": 1,
+  "scope": "Bounded sampler diagnostics complete; cause remains unresolved, with no GPU campaign active or prepared.",
+  "selected_profile": "aligned_ring_fold",
+  "selected_source_changed": false,
+  "selected_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "separate_greedy_index124_resolved": false,
+  "serving": {
+    "archive_sha256": "8d8fdd318315026d4fcd00cf3e53c65065778e48a8a3630a2d92346e6afbf0fc",
+    "bounds": {
+      "archive_bytes": 16701440,
+      "archive_max": 16777216,
+      "archive_members": 64,
+      "argv_max": 256,
+      "argv_per_arm": 255,
+      "binding_bytes": {
+        "control": 65443,
+        "mtp": 65423
+      },
+      "binding_max": 65536,
+      "full_transport_bytes": 33494172,
+      "full_transport_max": 33554432,
+      "package_files": 63
+    },
+    "cpu_checks": {
+      "archive_validator": 1,
+      "observer_distinct": 10,
+      "procfs": 10,
+      "qualification": 18,
+      "reader": 24,
+      "replay": 18,
+      "startup": 35
+    },
+    "manifest_sha256": "2e0a9d51372ff9c40b8198c4610b75764f10ab8f84f259faa9627a56e92a465e",
+    "native_command_seconds": 388.8377998,
+    "prelaunch_review": {
+      "api_gate_verified": true,
+      "protected_helpers_unchanged": 8,
+      "status": "APPROVED_ONE_SAMPLED_FIRST_ACCEPTANCE_DIAGNOSTIC"
+    },
+    "reader_root": "fp8-sprint26-sampled-reader.ytd7jf8g",
+    "retained_extra_full_suite_failure": {
+      "additional_error": "FileExistsError when attempting to create already-existing accepted-results; original accepted-results retained and all 292 hashes verified.",
+      "coverage": "Current qualification and archive validator check packet/identity/bounds; updated selected-source and protected-helper sampling tests, replay/startup, reader and accepted-hash verification cover current scope. Historical tokenizer fixture checks not run by sampled donor qualification; no test weakened or removed.",
+      "receipt": "s26-12-packet-full.json",
+      "receipt_sha256": "03f8aea9d33d09ae63e217b6135bdad475e487dc3b01076aae218ecd524c610f",
+      "tests": {
+        "ServingAcceptance.test_exact_fp8_checkpoint_and_quality_input": "missing historical provenance/review/FINAL-SETTINGS.json",
+        "TailAcceptance.test_both_arms_match_except_gemm_selection_and_logical_identity": "obsolete 2308 GEMM pin versus selected b101",
+        "TailAcceptance.test_native_kernel_and_tail_source_delta": "compares selected b101 with old S7 GEMM",
+        "ThinkingQualityAcceptance.test_native_tokenizer_reproduces_pinned_prior_vectors": "missing historical THINKING-PROMPTS.json",
+        "ThinkingQualityAcceptance.test_protected_helpers_and_selected_numerical_sources_unchanged": "compares selected b101 with old S7 GEMM"
+      }
+    },
+    "source": {
+      "manifest_sha256": "158b0aa7a35c0e52b517a20028dd39b937ee3790fa7598b2e698e9fe970c595e",
+      "members": 377,
+      "root": "fp8-sprint26-sampled.cii7tj0k"
+    },
+    "status": "FIRST_ACCEPTANCE_TRIAGE_COMPLETE",
+    "tested_hashes_verified": 292
+  },
+  "source_arithmetic_review": {
+    "beta_branch": "BF16-rounded in both arms",
+    "commit_difference": "Snapshot copies stored FP32 state; ring-fold recomputes accepted prefix.",
+    "lm_head_dtype": "float32",
+    "recurrent_state_dtype": "float32",
+    "separate_kernel_compilations_universally_bitwise_equivalent": false,
+    "shared_verify_kernel": true
+  },
+  "sprint19_index137": {
+    "arms": [
+      "snapshot",
+      "ring_fold"
+    ],
+    "case": "quality16k-audit-threshold",
+    "cause_established": false,
+    "lm_head_dtype": "float32",
+    "mode": "sampled",
+    "per_request_seed": false,
+    "recurrent_state_dtype": "float32",
+    "ring_intermediate_staging": "BF16 raw K/V and FP32 gates replay into FP32 checkpoint",
+    "server_seed": 12345,
+    "target_and_draft_kv_dtype": "bfloat16",
+    "target_quantization": "fp8",
+    "temperature": 1,
+    "top_k": 20,
+    "top_p": 0.95
+  },
+  "status": "SPRINT26_BOUNDED_DIAGNOSTICS_COMPLETE_CAUSE_UNRESOLVED",
+  "trace_repair": {
+    "completed_disposition": "decision_trace",
+    "numerical_result": null,
+    "root": "fp8-sprint26-trace-warmup.s158oq3j",
+    "status": "HISTORICAL_CPU_PREPARATION_SNAPSHOT"
+  }
+}
