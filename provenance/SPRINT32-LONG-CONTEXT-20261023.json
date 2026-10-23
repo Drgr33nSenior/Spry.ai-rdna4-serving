@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "SPRINT32_COMPLETE_OWNER_ACCEPTED_LEXICAL_EXCEPTIONS_64K_PREFLIGHT_DONE",
+  "independent_result_review_pending": false,
+  "source": {
+    "root": "fp8-sprint32-serving.d8jagxzv",
+    "manifest_sha256": "7ef9e46f4a8eff2f55d49bfbbc3cecdf2016711228cac5526e5e3e1f0d6a7a43",
+    "members": 365
+  },
+  "native": {
+    "root": "fp8-sprint32-run.gc2u5d47",
+    "manifest_sha256": "030f26c9494baf3dfd6bce207ebf24abcedb4830d51627357732555c4ff1f27a",
+    "members": 271
+  },
+  "reader": {
+    "root": "fp8-sprint32-reader.1rwzqpbx",
+    "manifest_sha256": "ba468c9aa90659cc0dd6aaf91bf3acbd460839cf792add85fac37ad81f800037",
+    "members": 182,
+    "result_summary_sha256": "ef01c7292d3ae668c624c959f37228965078de4b85588101736bbeadb6dc66a7",
+    "strict_quality_sha256": "de05de11e4ee2d02e84aacfe1eb70889974926aae95166ac04500d28a5e47e4b",
+    "retrospective_audit_sha256": "8157053af90029747e730139d464a99aa34997497e7b137bcb445d3ac4127366",
+    "owner_disposition_sha256": "3b1faa6ab0ed99ca791ad04522d87ac3f1e0ea52b9d7864028e817c417490363"
+  },
+  "tokenizer": {
+    "root": "fp8-sprint32-tokenizer.pkazb5au",
+    "manifest_sha256": "f519d6e7a5f9fa711afa167a0c3b7e820079320c833ec2bbdf496f417809a1ed",
+    "members": 69
+  },
+  "protocol": {
+    "starts": 2,
+    "requests": 14,
+    "graded_sre_responses": 12,
+    "context_tokens": 32768,
+    "long_input_tokens": [
+      28639,
+      28640
+    ],
+    "output_cap_tokens": 4096,
+    "reserve_tokens": 32,
+    "actual_output_range_tokens": [
+      514,
+      1127
+    ],
+    "full_output_pairs_equal": 7,
+    "normal_final_responses": 14,
+    "selected_profile": "FP8 weights, BF16 target and draft KV, b101 W4 and aligned ring-fold, 19 usable/20 physical recurrent slots",
+    "work_pairs_equal": 7
+  },
+  "quality": {
+    "strict_passes": 2,
+    "strict_total": 12,
+    "strict_gate_passed": false,
+    "retrospective_factual_fields_match": 12,
+    "lexical_exceptions": [
+      "Six incident responses use rolled back instead of rollback.",
+      "Four runbook responses include an article in ticket evidence."
+    ],
+    "protocol_defect": "Prompt requested source wording while oracle labels were normalized.",
+    "owner_decision": "ACCEPT_LEXICAL_EXCEPTIONS_FOR_CURRENT_EXPERIMENTAL_SESSION",
+    "retrospective_is_replacement_gate": false
+  },
+  "measurements": {
+    "native_seconds": 491.5237565,
+    "client_elapsed_seconds_range": [
+      14.8306,
+      22.2084
+    ],
+    "client_elapsed_medians_seconds": [
+      18.1567,
+      18.1148
+    ],
+    "client_elapsed_scope": "Non-streaming end-to-end, including prefill and generation; TTFT and pure decode rate not measured.",
+    "startup_allocated_bytes_per_card": 21008233472,
+    "startup_driver_free_bytes_per_card": 11886657536,
+    "whole_workload_gpu_peak_measured": false,
+    "host_peak_bytes": [
+      30606680064,
+      24612687872
+    ],
+    "host_limit_bytes": 40802189312,
+    "host_max_events": 0,
+    "host_oom_events": 0,
+    "socket_throttled_counts": [
+      10756,
+      0
+    ],
+    "independent_release_passed": true
+  },
+  "next": "64K CPU adapter, indexing, graph, slot, tokenizer and request-asset review; a separate review is required before any device screen.",
+  "limitations": [
+    "Actual outputs did not exercise the full context plus output boundary.",
+    "No general quality, hardware causality, performance comparison or numerical resolution is established.",
+    "The current adapter eligibility guard caps context at 32768; 65536 falls back.",
+    "No 64K GPU run, source promotion or production/default change."
+  ],
+  "independent_review": {
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "APPROVED_CONSERVATIVE_SPRINT32_CLOSEOUT",
+    "findings": [],
+    "full_seals_verified": 5,
+    "reader_manifest_sha256": "ba468c9aa90659cc0dd6aaf91bf3acbd460839cf792add85fac37ad81f800037",
+    "result_summary_sha256": "ef01c7292d3ae668c624c959f37228965078de4b85588101736bbeadb6dc66a7",
+    "independent_release_verified": true
+  }
+}

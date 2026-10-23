@@ -286,4 +286,6 @@ faults recur. FP8 target attention KV remains optional and deferred. Adaptive
 speculation and target shard-max also remain separate unimplemented candidates;
 they are not required follow-up kernel changes merely because Sprint 7 ends.
 
-Sprint 31: [W2 and W8 parked](SPRINT31-GATEUP-WARPS.md). W2 failed its serving median gate; independent review approved the closeout. The current priority is a 32K BF16-KV quality and context baseline, then 64K if fit and quality support it. UltraQuant is parked and the BF16-versus-FP8 weight comparison is deferred; optional FP8 target-KV and adaptive speculation feasibility follow later, with endurance after selection.
+Sprint 31: [W2 and W8 parked](SPRINT31-GATEUP-WARPS.md). W2 failed its serving median gate; independent review approved the closeout. Sprint 32 subsequently completed a bounded 32K screen with owner-accepted lexical exceptions and a retained strict quality failure. The next step is CPU preflight for 64K; a device screen requires separate review. UltraQuant is parked and the BF16-versus-FP8 weight comparison is deferred; optional FP8 target-KV and adaptive speculation feasibility follow later, with endurance after selection.
+
+Sprint 32: [32K long-context screen](SPRINT32-LONG-CONTEXT.md). All 14 requests stopped normally; strict SRE grading passed 2/12, with owner-accepted lexical exceptions and a retained retrospective audit. The 64K adapter preflight is next; no 64K device run occurred.

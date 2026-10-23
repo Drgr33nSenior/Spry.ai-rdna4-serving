@@ -777,3 +777,7 @@ preparation or source selection. Independent review approved the bounded results
 ## Sprint 31 warp screen
 
 W2 passed the component gate, but its forward serving median was 8.482985 s versus 8.481692 s for W4; the lower-median gate failed. The control measured 120.73 combined TP2 tokens/s and W2 120.71. All four output and cycle pairs matched. W2 and W8 are parked; independent review approved the closeout. This small sample does not establish a general slowdown. The selected profile remains unchanged. See [Sprint 31](SPRINT31-GATEUP-WARPS.md).
+
+## Sprint 32 long-context screen
+
+Two selected-profile 32K starts completed 14 normal responses and seven identical output-ID pairs. Strict SRE grading passed 2/12; the owner accepted two lexical exceptions for current experimental use, while the strict failure remains recorded. A retrospective audit found all 12 factual-field sets matched under those exceptions. Actual outputs did not reach the full context-plus-output boundary. See [Sprint 32](SPRINT32-LONG-CONTEXT.md). The next step is 64K CPU preflight, not an authorized device run.
