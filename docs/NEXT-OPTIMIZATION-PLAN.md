@@ -408,3 +408,5 @@ Qwen3.8-Flash-Next [feasibility preflight](QWEN-NEXT-FEASIBILITY.md) found the o
 The [UltraQuant assessment](QWEN-NEXT-FEASIBILITY.md#ultraquant-assessment) found a KV-cache-only scope and an expected Next admission refusal; the FP8 weight shortfall remains.
 
 The owner parked Flash-Next checkpoint and engine work and will wait for Qwen4 dense 27B. No model release date or final architecture is assumed. The selected Qwen3.8 27B experimental baseline remains frozen.
+
+The owner then reopened [Qwen3.8 tuning](QWEN38-REOPENED-TUNING.md) against that reference. [Sprint 35](SPRINT35-LONG-PREFIX-REUSE.md) passed its first bounded long-document GPU prefix-reuse screen. Sprint 36 next compares prefill chunk sizing; the source audit requires actual producer, dispatch and memory witnesses. Each later candidate has a separate scope and review; Flash-Next, lower-bit weights and alternate engines remain parked. Reliability and endurance still follow tuning.

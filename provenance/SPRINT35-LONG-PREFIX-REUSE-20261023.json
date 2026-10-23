@@ -1,0 +1,437 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "sprint": 35,
+  "status": "BOUNDED_LONG_DOCUMENT_PREFIX_REUSE_SCREEN_PASSED",
+  "reference": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+  "model": "Qwen3.8-27B-FP8",
+  "precision": {
+    "target_weights": "fp8",
+    "target_kv": "bf16",
+    "draft_weights": "bf16",
+    "draft_kv": "bf16",
+    "recurrent_state": "fp32",
+    "head_arithmetic": "fp32"
+  },
+  "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "recurrent_profile": "aligned_ring_fold",
+  "usable_recurrent_slots_per_rank": 19,
+  "physical_recurrent_slots_per_rank": 20,
+  "concurrency": 1,
+  "model_starts": 2,
+  "requests_per_start": 6,
+  "thinking": true,
+  "reasoning_effort": "low",
+  "sampling": "greedy",
+  "natural_stop": true,
+  "output_cap_tokens": 4096,
+  "context_length": 32768,
+  "pool_tokens": 32800,
+  "prefill_chunk_tokens": 2048,
+  "cache_strategy": "no_buffer",
+  "actual_shared_prefix_tokens": 25890,
+  "starts": [
+    {
+      "logical_arm": "control",
+      "repeat_comparisons": [
+        {
+          "cold": "cold-a",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "warm-a"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-b-warm"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-a-warm"
+        }
+      ],
+      "samples": [
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "warmup",
+          "client_elapsed_seconds": 0.9804343880387023,
+          "input_tokens": 2040,
+          "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+          "output_tokens": 33,
+          "verifier_cycles": 6
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "cold-a",
+          "client_elapsed_seconds": 15.363647992024198,
+          "input_tokens": 25991,
+          "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+          "output_tokens": 673,
+          "verifier_cycles": 105
+        },
+        {
+          "cached_fraction": 0.9455580777961602,
+          "cached_tokens": 24576,
+          "case": "warm-a",
+          "client_elapsed_seconds": 6.35719109402271,
+          "input_tokens": 25991,
+          "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+          "output_tokens": 673,
+          "verifier_cycles": 105
+        },
+        {
+          "cached_fraction": 0.9460312572176457,
+          "cached_tokens": 24576,
+          "case": "branch-a-warm",
+          "client_elapsed_seconds": 4.9042479720083065,
+          "input_tokens": 25978,
+          "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+          "output_tokens": 523,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "isolated-b-cold",
+          "client_elapsed_seconds": 13.394520770991221,
+          "input_tokens": 25978,
+          "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+          "output_tokens": 523,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.9460312572176457,
+          "cached_tokens": 24576,
+          "case": "branch-b-warm",
+          "client_elapsed_seconds": 4.880870264954865,
+          "input_tokens": 25978,
+          "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+          "output_tokens": 523,
+          "verifier_cycles": 79
+        }
+      ],
+      "startup_memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 21008233472,
+            "driver_free_bytes": 11886657536,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 21039535616,
+            "reported_peak_reserved_bytes": 21319647232,
+            "reserved_bytes": 21317550080
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 21008233472,
+            "driver_free_bytes": 11886657536,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 21039535616,
+            "reported_peak_reserved_bytes": 21319647232,
+            "reserved_bytes": 21317550080
+          },
+          "usable_state_slots": 19
+        }
+      ]
+    },
+    {
+      "logical_arm": "mtp",
+      "repeat_comparisons": [
+        {
+          "cold": "cold-a",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "warm-a"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-b-warm"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-a-warm"
+        }
+      ],
+      "samples": [
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "warmup",
+          "client_elapsed_seconds": 0.979199271008838,
+          "input_tokens": 2040,
+          "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+          "output_tokens": 33,
+          "verifier_cycles": 6
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "cold-a",
+          "client_elapsed_seconds": 15.420478146988899,
+          "input_tokens": 25991,
+          "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+          "output_tokens": 673,
+          "verifier_cycles": 105
+        },
+        {
+          "cached_fraction": 0.9455580777961602,
+          "cached_tokens": 24576,
+          "case": "warm-a",
+          "client_elapsed_seconds": 6.3522546060266905,
+          "input_tokens": 25991,
+          "output_ids_sha256": "3951d463d6703eaa006cf91cb319e85ff13e4a7a0039a89c7e70bbd9406263e2",
+          "output_tokens": 673,
+          "verifier_cycles": 105
+        },
+        {
+          "cached_fraction": 0.9460312572176457,
+          "cached_tokens": 24576,
+          "case": "branch-a-warm",
+          "client_elapsed_seconds": 4.898352796968538,
+          "input_tokens": 25978,
+          "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+          "output_tokens": 523,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "isolated-b-cold",
+          "client_elapsed_seconds": 13.459595332969911,
+          "input_tokens": 25978,
+          "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+          "output_tokens": 523,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.9460312572176457,
+          "cached_tokens": 24576,
+          "case": "branch-b-warm",
+          "client_elapsed_seconds": 4.88123016001191,
+          "input_tokens": 25978,
+          "output_ids_sha256": "a4fa3fa0fec50a58d3792a8774c2df0a427736408d59252489c0904649c957aa",
+          "output_tokens": 523,
+          "verifier_cycles": 79
+        }
+      ],
+      "startup_memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 21008233472,
+            "driver_free_bytes": 11886657536,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 21039535616,
+            "reported_peak_reserved_bytes": 21319647232,
+            "reserved_bytes": 21317550080
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 21008233472,
+            "driver_free_bytes": 11886657536,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 21039535616,
+            "reported_peak_reserved_bytes": 21319647232,
+            "reserved_bytes": 21317550080
+          },
+          "usable_state_slots": 19
+        }
+      ]
+    }
+  ],
+  "across_start_pairs": [
+    {
+      "case": "warmup",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "cold-a",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "warm-a",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "branch-a-warm",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "isolated-b-cold",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "branch-b-warm",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    }
+  ],
+  "quality": {
+    "normal_decoded_finals": 12,
+    "total_responses": 12,
+    "sre_passes": 10,
+    "sre_requests": 10,
+    "unique_sre_task_families": 2,
+    "strict_typed_json": true,
+    "facts_placement": "Near front before filler; not dispersed-facts or depth coverage",
+    "prior_sprint32_and33_failures_unchanged": true
+  },
+  "cache_fractions": {
+    "input_fraction_definition": "cached_tokens/input_tokens; cached_fraction in each sample",
+    "shared_prefix_count_fraction": 0.9492468134414832,
+    "shared_prefix_count_fraction_definition": "24576 cached tokens /25890 native-tokenized common-prefix tokens; count comparison, not physical byte attribution or full-prefix proof",
+    "full_document_reuse_established": false
+  },
+  "timing": {
+    "metric": "Local non-stream HTTP request-to-terminal elapsed seconds",
+    "includes": [
+      "uncached prefill",
+      "generation",
+      "protocol completion"
+    ],
+    "single_request_observations": true,
+    "causal_speedup_established": false,
+    "ttft_measured": false,
+    "isolated_decode_measured": false,
+    "combined_tp2": true,
+    "per_card": false
+  },
+  "evidence": {
+    "tokenizer": {
+      "root": "fp8-sprint35-tokenizer.ig6sbexf",
+      "manifest_sha256": "c607638f1560ad4fd27b8f4ea208ed678354c4e3cf5f4a835797f1ad85b89865",
+      "members": 61
+    },
+    "author": {
+      "root": "fp8-sprint35-serving.cgelz1uv",
+      "manifest_sha256": "996c14d853db75808a2609f809f8f6203dcee7c82130c937992fe989c79494d7",
+      "members": 343
+    },
+    "native": {
+      "root": "fp8-sprint35-run.0mqmfrib",
+      "manifest_sha256": "a32071befa34e7f4af82fe4e1ec1525e14f7465a384b746f12beb93e09065575",
+      "members": 236
+    },
+    "reader": {
+      "root": "fp8-sprint35-reader.dxtvtjfx",
+      "manifest_sha256": "ef7f1ff8e221eff274d56ed06010b610af5c98e8a966f484e8b64c30f32c470a",
+      "members": 149
+    },
+    "failed_reader": {
+      "root": "fp8-sprint35-reader.r44sdlt9",
+      "manifest_sha256": "deaa0e852afe7357c660dfcab97a91424450d238c2c5a4ed85d38591b9175ffa",
+      "members": 42
+    },
+    "readout_sha256": {
+      "AUTHENTICATED.json": "e1b2948e0bfc6cabf34efacc883fb64c4387c7e542d8f8e75ad3fd7ac4e7d555",
+      "FINALS.json": "3cc521ce392c9855ff8bdf2b2bba8c52237068e74a00864a11779fa81198a537",
+      "QUALITY-RESULTS.json": "e8d8a9fac385e85efd39bf1d253aaf1bf63340fa5756884e884341cfdebdf67c",
+      "RESULT-SUMMARY.json": "e9997664366c2b782256d7950c49e25684cb8a37d574e1bb7923ffa5d90489ec"
+    },
+    "archive_sha256": "c681836cf3e02e48b957a185469d3c03098cb82cf07113eb4c0bd0e75aa91a8a",
+    "archive_members": 64,
+    "archive_bytes": 16691200
+  },
+  "execution": {
+    "physical_attempts": 1,
+    "automatic_retry": false,
+    "launch_elapsed_seconds": 358.90815495792776,
+    "collection_elapsed_seconds": 5.2335751669015735,
+    "independent_release_verified": true,
+    "physical_success": true,
+    "readout_receipts_passed": 4,
+    "protected_helpers_unchanged": true
+  },
+  "retained_local_failures": [
+    "Preparation used an older local Python interpreter; fresh author built with existing Python3.11 before any model/GPU attempt.",
+    "Offline reader input path was constructed incorrectly and failed before authentication; failed reader sealed, correct absolute reference supplied in fresh reader with byte-identical source. No GPU rerun."
+  ],
+  "runtime_defaults_changed": false,
+  "cache_policy_changed": false,
+  "selected_kernels_changed": false,
+  "numerical_mismatch_resolved": false,
+  "sampling_distribution_verified": false,
+  "production_qualified": false,
+  "endurance_tested": false,
+  "qualification": false,
+  "review": {
+    "prelaunch": "ASTRA_APPROVED_ONE_BOUNDED_CAMPAIGN",
+    "closeout": "ASTRA_APPROVED_BOUNDED_CLOSEOUT_SEALED",
+    "review_record_sha256": "dd9be59c7e3a90e48e85859b47ee956482dacce96ce171000446de28a7d01002"
+  },
+  "next": {
+    "sprint": 36,
+    "work": "Prefill chunk sizing2048vs4096 with actual producer/dispatch and memory witnesses",
+    "gpu_launch_prepared": false
+  }
+}

@@ -793,3 +793,7 @@ The selected experimental profile and its bounded results are recorded in the [f
 ## Qwen3.8-Flash-Next feasibility
 
 The [metadata and source preflight](QWEN-NEXT-FEASIBILITY.md) found that fully resident official FP8 tensors exceed combined physical RAM and VRAM. Source paths exist for ROCm, but device execution is unverified. The [candidate search](QWEN-NEXT-WEIGHT-CANDIDATES.md) is retained as research. No checkpoint or engine is selected and no experiment is queued; the frozen 27B selection is unchanged.
+
+## Reopened Qwen3.8 tuning
+
+The owner reopened the [remaining Qwen3.8 work](QWEN38-REOPENED-TUNING.md). [Sprint 35](SPRINT35-LONG-PREFIX-REUSE.md) completed two fresh starts with 12 normal decoded responses and 10/10 strict SRE answers across two repeated task families. Warm requests reused 24,576 tokens; cold requests reported zero. Cold long-request durations were 13.4–15.4 seconds and warm durations 4.9–6.4 seconds. Output IDs and verifier work matched in all corresponding comparisons. These individual HTTP timings are descriptive, not a benchmark speedup. The selected sources, BF16 caches and thinking-enabled profile remain the reference. Sprint 36 next compares prefill chunks with dispatch and memory witnesses. Flash-Next and alternate engines remain parked.

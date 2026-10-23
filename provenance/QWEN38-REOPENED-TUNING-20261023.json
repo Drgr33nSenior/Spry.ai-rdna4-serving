@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "QWEN38_REMAINING_TUNING_REOPENED",
+  "owner_direction": "As we have plenty of compute left, reopen the other sprints for the 3.8 model.",
+  "reference": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+  "reference_record_sha256": "c155ee3468c7917766cf58818e5092a344a9f05032b25bf7903be307dd0ed16c",
+  "selected_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "recurrent_profile": "aligned_ring_fold",
+  "next_lower_bit_and_engine_work": "PARKED_BY_OWNER_WAIT_QWEN4_DENSE27B",
+  "work": [
+    {
+      "sprint": 35,
+      "name": "Long-document GPU prefix reuse",
+      "status": "BOUNDED_SCREEN_PASSED",
+      "result": "provenance/SPRINT35-LONG-PREFIX-REUSE-20261023.json"
+    },
+    {
+      "sprint": 36,
+      "name": "Prefill chunk sizing",
+      "status": "SOURCE_AUDIT_COMPLETE_COMPARISON_QUEUED",
+      "source_audit": {
+        "selected_prefill_m_rows": [
+          2016,
+          2047,
+          2048
+        ],
+        "chunk4096_actual_producer_shapes_observed": false,
+        "actual_dispatch_and_peak_memory_required": true,
+        "separate_packet_and_fixtures_required": true,
+        "performance_gain_established": false
+      }
+    },
+    {
+      "sprint": 37,
+      "name": "FP8 target KV feasibility",
+      "status": "FEASIBILITY_QUEUED"
+    },
+    {
+      "sprint": 38,
+      "name": "Adaptive speculation",
+      "status": "PREREQUISITE_AUDIT_QUEUED"
+    },
+    {
+      "sprint": 39,
+      "name": "C2 throughput and scheduling",
+      "status": "DESIGN_QUEUED"
+    },
+    {
+      "sprint": 40,
+      "name": "UltraQuant KV feasibility",
+      "status": "CONDITIONAL_FEASIBILITY"
+    },
+    {
+      "sprint": 41,
+      "name": "BF16-weight control",
+      "status": "CONDITIONAL_MEMORY_FEASIBILITY"
+    }
+  ],
+  "first_packet": {
+    "sprint": 35,
+    "stage": "COMPLETE_SEALED_REVIEWED",
+    "starts": 2,
+    "requests_per_start": 6,
+    "concurrency": 1,
+    "context_tokens": 32768,
+    "pool_tokens": 32800,
+    "long_input_max_tokens": 26000,
+    "output_cap_tokens": 4096,
+    "internal_reserve_tokens": 32,
+    "cached_tokens_and_actual_token_lcp_required": true,
+    "typed_oracles_predeclared": true,
+    "model_or_gpu_run_prepared": true,
+    "actual_long_input_tokens": [
+      25991,
+      25978
+    ],
+    "actual_shared_prefix_tokens": 25890,
+    "tokenizer_seal": {
+      "root": "fp8-sprint35-tokenizer.ig6sbexf",
+      "manifest_sha256": "c607638f1560ad4fd27b8f4ea208ed678354c4e3cf5f4a835797f1ad85b89865",
+      "members": 61
+    },
+    "author_seal": {
+      "root": "fp8-sprint35-serving.cgelz1uv",
+      "manifest_sha256": "996c14d853db75808a2609f809f8f6203dcee7c82130c937992fe989c79494d7",
+      "members": 343
+    },
+    "archive_sha256": "c681836cf3e02e48b957a185469d3c03098cb82cf07113eb4c0bd0e75aa91a8a",
+    "native_root": "fp8-sprint35-run.0mqmfrib",
+    "no_automatic_retry": true,
+    "gpu_active": false,
+    "launch_prepared": false,
+    "native_seal": {
+      "root": "fp8-sprint35-run.0mqmfrib",
+      "manifest_sha256": "a32071befa34e7f4af82fe4e1ec1525e14f7465a384b746f12beb93e09065575",
+      "members": 236
+    },
+    "reader_seal": {
+      "root": "fp8-sprint35-reader.dxtvtjfx",
+      "manifest_sha256": "ef7f1ff8e221eff274d56ed06010b610af5c98e8a966f484e8b64c30f32c470a",
+      "members": 149
+    },
+    "result": "provenance/SPRINT35-LONG-PREFIX-REUSE-20261023.json",
+    "normal_decoded_finals": 12,
+    "strict_sre_passes": 10,
+    "sre_requests": 10,
+    "unique_sre_task_families": 2,
+    "warm_cached_tokens": 24576,
+    "independent_release_verified": true
+  },
+  "prior_numerical_and_quality_findings": "Retained; no new waiver or resolution.",
+  "reliability_and_endurance": "DEFERRED_UNTIL_TUNING_EXHAUSTED",
+  "resource_limits_changed": false,
+  "runtime_defaults_changed": false,
+  "tracking": "docs/QWEN38-REOPENED-TUNING.md",
+  "next_sprint": 36
+}
