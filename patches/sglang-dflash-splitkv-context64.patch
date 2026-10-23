@@ -1,0 +1,11 @@
+--- a/prototype/serving/verify_decode_adapter.py
++++ b/prototype/serving/verify_decode_adapter.py
+@@ -70,7 +70,7 @@
+         backend.split_tile_size is None and backend.max_kv_splits == 16 and
+         backend.device_core_count > 0 and backend.num_head == 12 and backend.num_kv_head == 2 and
+         backend.kv_index_translator.reads_are_translated is False and
+-        8 <= backend.max_context_len <= 32768 and
++        8 <= backend.max_context_len <= 65536 and
+         kwargs.get('logit_cap', 0) == 0 and kwargs.get('sliding_window_size', -1) == -1 and
+         kwargs.get('page_size', 1) == 1 and kwargs.get('xai_temperature_len') in (None, -1, 0) and
+         all(kwargs.get(key) is None for key in ('sinks', 'window_kv_offsets', 'score_mod', 'aux_tensors')))

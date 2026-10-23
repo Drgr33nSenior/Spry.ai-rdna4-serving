@@ -1,8 +1,8 @@
 {
   "active_sprint": {
-    "number": 32,
-    "status": "SPRINT32_COMPLETE_OWNER_ACCEPTED_LEXICAL_EXCEPTIONS_64K_PREFLIGHT_DONE",
-    "record": "provenance/SPRINT32-LONG-CONTEXT-20261023.json",
+    "number": 33,
+    "status": "SPRINT33_COMPLETE_BOUNDED_SCREEN_QUALITY_GATE_FAILED",
+    "record": "provenance/SPRINT33-LONG-CONTEXT64-20261023.json",
     "gpu_active": false,
     "launch_prepared": false
   },

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "SPRINT33_COMPLETE_BOUNDED_SCREEN_QUALITY_GATE_FAILED",
+  "independent_result_review_pending": false,
+  "source": {
+    "root": "fp8-sprint33-serving.5aowa2oc",
+    "manifest_sha256": "433aa9e938229ee8bd704ea3b01b007afa74f15f496a3639ba3475da8824ce55",
+    "members": 370
+  },
+  "native": {
+    "root": "fp8-sprint33-run.66xouz47",
+    "manifest_sha256": "b645330bf45eab872717a99519f4b0315e4075b6950a5154e0c0e693c406e157",
+    "members": 264
+  },
+  "reader": {
+    "root": "fp8-sprint33-reader.x0412kzi",
+    "manifest_sha256": "b314d87989b954c480d6993c88e428ae34f4696855a23c8e45c3a9ade822a07d",
+    "members": 164,
+    "result_summary_sha256": "3c4c13375b6baf71733a80ed2ce39ad300cebb5a8fdc54a30ec5900bba3c01a8",
+    "quality_results_sha256": "f74bda669d3d38b7d503a68dc44e2353641b3a22f2535c7865694692f3c44d58",
+    "format_exceptions_sha256": "61b249e039875915cedf43bc77694708d14f8eb3168145a88aa9adb18c3741bd"
+  },
+  "tokenizer": {
+    "root": "fp8-sprint33-tokenizer.ist7n8ef",
+    "manifest_sha256": "f5441abd0ee0c5d4668b5c708f88a211c19a5e9df7b366867d075b4187ef1d77",
+    "members": 54
+  },
+  "protocol": {
+    "starts": 2,
+    "requests": 14,
+    "normal_stops": 14,
+    "graded_sre_requests": 12,
+    "context_tokens": 65536,
+    "pool_tokens": 65568,
+    "long_input_tokens": 59999,
+    "output_cap_tokens": 4096,
+    "internal_reserve_tokens": 32,
+    "actual_output_range_tokens": [
+      567,
+      849
+    ],
+    "full_output_id_pairs_equal": 7,
+    "verifier_cycle_pairs_equal": 7,
+    "capture_ranks_per_start": 2,
+    "captured_index_elements_per_rank": 524288,
+    "profile": "FP8 weights, BF16 target and draft KV, b101 W4, aligned ring-fold, 19 usable/20 physical recurrent slots"
+  },
+  "quality": {
+    "literal_passes": 10,
+    "factual_passes": 10,
+    "total": 12,
+    "both_frozen_gates_passed": false,
+    "format_exception": "Both runbook-50 responses use the correct action-order words as a string; oracle requires an array and question did not specify array type.",
+    "new_normalization_added": false,
+    "regraded": false,
+    "sprint32_owner_exception_applies": false
+  },
+  "measurements": {
+    "native_seconds": 715.1144675421529,
+    "client_end_to_end_range_seconds": [
+      35.81091917899903,
+      37.868547020014375
+    ],
+    "startup_allocated_bytes_per_card": 22433668608,
+    "startup_driver_free_bytes_per_card": 10462691328,
+    "host_peak_bytes": [
+      27755708416,
+      21402025984
+    ],
+    "host_limit_bytes": 40802189312,
+    "memory_events": "all zero in both starts",
+    "independent_release_verified": true
+  },
+  "optional_patch": {
+    "path": "patches/sglang-dflash-splitkv-context64.patch",
+    "sha256": "ad69b128d969a9c72cf8296747f641c8edfe30660dc15d9dc1e39e6c12357d4e",
+    "public_base_sha256": "f62a549fa6b1db802d965f1b821866d590505045d916b180aded998544471128",
+    "public_patched_sha256": "ca2d698bb3a8ee1488ead6f37fe373d5e6da9af9c70a9e7eae29e8a3bf2bc7fd",
+    "private_adapter_sha256": "96fdd2bdd9d35b8b3d4e77a898c31fc425fe0f45b80b0791400c2f2252c9f086",
+    "arm_policy": "Public prototype retains mtp-only A/B; private repeated-profile screen enabled both arms. After normalizing that line adapter bytes match.",
+    "installed": false
+  },
+  "limitations": [
+    "Outputs did not exercise the full context-plus-output boundary.",
+    "Elapsed times include prefill and generation; TTFT and pure decode rate were not measured.",
+    "GPU memory is startup allocation and free memory, not whole-workload peak.",
+    "No general quality, numerical-equivalence, hardware-causality, performance-gain, 128K, or default-promotion claim."
+  ],
+  "next": "Assess cold/warm repeated large-prefix GPU radix reuse and audit dispatch before any prefill chunk comparison; draft mask and slot reuse are later leads.",
+  "final_review": {
+    "reviewer": "/root/astra_replay_serving_verify",
+    "status": "APPROVED_CONSERVATIVE_OPERATIONAL_CLOSEOUT",
+    "findings": [],
+    "report_sha256": "592270cab49d08b331c706a55891f5b1ef2a9e12439700e1f5af88d69c4ba2d4",
+    "reader_manifest_sha256": "b314d87989b954c480d6993c88e428ae34f4696855a23c8e45c3a9ade822a07d",
+    "result_summary_sha256": "3c4c13375b6baf71733a80ed2ce39ad300cebb5a8fdc54a30ec5900bba3c01a8"
+  }
+}

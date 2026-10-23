@@ -286,6 +286,8 @@ faults recur. FP8 target attention KV remains optional and deferred. Adaptive
 speculation and target shard-max also remain separate unimplemented candidates;
 they are not required follow-up kernel changes merely because Sprint 7 ends.
 
-Sprint 31: [W2 and W8 parked](SPRINT31-GATEUP-WARPS.md). W2 failed its serving median gate; independent review approved the closeout. Sprint 32 subsequently completed a bounded 32K screen with owner-accepted lexical exceptions and a retained strict quality failure. The next step is CPU preflight for 64K; a device screen requires separate review. UltraQuant is parked and the BF16-versus-FP8 weight comparison is deferred; optional FP8 target-KV and adaptive speculation feasibility follow later, with endurance after selection.
+Sprint 31: [W2 and W8 parked](SPRINT31-GATEUP-WARPS.md). W2 failed its serving median gate; independent review approved the closeout. Sprint 32 subsequently completed a bounded 32K screen with owner-accepted lexical exceptions and a retained strict quality failure. A separately reviewed 64K screen followed in Sprint 33. UltraQuant is parked and the BF16-versus-FP8 weight comparison is deferred; optional FP8 target-KV and adaptive speculation feasibility follow later, with endurance after selection.
 
-Sprint 32: [32K long-context screen](SPRINT32-LONG-CONTEXT.md). All 14 requests stopped normally; strict SRE grading passed 2/12, with owner-accepted lexical exceptions and a retained retrospective audit. The 64K adapter preflight is next; no 64K device run occurred.
+Sprint 32: [32K long-context screen](SPRINT32-LONG-CONTEXT.md). All 14 requests stopped normally; strict SRE grading passed 2/12, with owner-accepted lexical exceptions and a retained retrospective audit. The 64K adapter preflight and a separate device screen followed in Sprint 33.
+
+Sprint 33: [64K long-context screen](SPRINT33-LONG-CONTEXT64.md). All 14 responses stopped normally; both frozen SRE gates scored 10/12 and failed, with two retained format failures. Independent review approved the conservative closeout.

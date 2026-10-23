@@ -780,4 +780,8 @@ W2 passed the component gate, but its forward serving median was 8.482985 s vers
 
 ## Sprint 32 long-context screen
 
-Two selected-profile 32K starts completed 14 normal responses and seven identical output-ID pairs. Strict SRE grading passed 2/12; the owner accepted two lexical exceptions for current experimental use, while the strict failure remains recorded. A retrospective audit found all 12 factual-field sets matched under those exceptions. Actual outputs did not reach the full context-plus-output boundary. See [Sprint 32](SPRINT32-LONG-CONTEXT.md). The next step is 64K CPU preflight, not an authorized device run.
+Two selected-profile 32K starts completed 14 normal responses and seven identical output-ID pairs. Strict SRE grading passed 2/12; the owner accepted two lexical exceptions for current experimental use, while the strict failure remains recorded. A retrospective audit found all 12 factual-field sets matched under those exceptions. Actual outputs did not reach the full context-plus-output boundary. See [Sprint 32](SPRINT32-LONG-CONTEXT.md). A separately reviewed 64K device screen followed in Sprint 33.
+
+## Sprint 33 64K long-context screen
+
+Two repeated starts completed 14 normal stops and seven equal output-ID and verifier-cycle pairs. The literal and factual SRE gates each scored 10/12 and failed; two answers used a string for an action-order array that the prompt had not explicitly requested. Both failures remain. Long inputs were 59,999 tokens and outputs were 567–849 tokens, so the full output boundary was not exercised. [Sprint 33](SPRINT33-LONG-CONTEXT64.md) records memory, release and scope; independent review approved the conservative closeout.
