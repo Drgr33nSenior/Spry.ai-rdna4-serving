@@ -112,3 +112,12 @@ and selection remain **NOT RUN**; no performance gain is claimed.
 retain exact source identities and local evidence locations. The selected
 runtime and rollback remain those in the host cleanup report. No device process
 or reservation remains from this investigation.
+
+## Subsequent component test
+
+The later [lossy prefill component test](LOSSY-PREFILL-COMPONENT.md) ran a new
+block256 INT8/RCCL composition on both R9700s. It measured 16.8–17.9% less GPU
+time at the synthetic prefill size, slower small-message cases, and substantial
+relative-output error under adversarial cancellation. It remains unselected;
+the earlier **NOT RUN** statements above describe the initial source review.
+EAGLE-4 remains parked.
