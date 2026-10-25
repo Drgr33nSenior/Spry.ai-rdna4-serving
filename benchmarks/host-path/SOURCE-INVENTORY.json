@@ -1,0 +1,69 @@
+{
+  "baseline_source_seal": "37d5308486818bca9cd59d4d341995d4375e1192fdd3a4662390dad1f9f213e8",
+  "files": {
+    "HOST-PATH.patch": {
+      "bytes": 5259,
+      "sha256": "1bfcaa3e16073cad47e1f02934ba38893b56a224df7195a620ea52dc6eb383ef"
+    },
+    "LOGICAL-serving_integration.py": {
+      "bytes": 68566,
+      "sha256": "d2b8d218cec6805801930ab98139bc4bd628ded4d431becf295ef0f3b7d73155"
+    },
+    "author/review/ALLOCATION-OVERLAY.json": {
+      "bytes": 949,
+      "sha256": "24810e86e7a9e964034755e8506e95bdda7b4c8ea18f177e978fb6f0ec8f3844"
+    },
+    "author/review/DRAFT-MODEL.json": {
+      "bytes": 1583,
+      "sha256": "45f82c0840d69a0e68c7e9e340721b183f107c16d1b968bc102010ce070e3a81"
+    },
+    "author/review/FINAL-REQUESTS.zlib": {
+      "bytes": 20654,
+      "sha256": "c681361bb789379635bfd8b9637f3aaee9a492ae64cb4168b76dbcee6ec6d5d4"
+    },
+    "author/review/FINAL-SETTINGS.json": {
+      "bytes": 10663,
+      "sha256": "6570d08a833390354d56897266145c01631618d5eea9ccea3a9e5f0acd963214"
+    },
+    "author/review/PRECISION-REFERENCE.json": {
+      "bytes": 734,
+      "sha256": "f466d7a9fa0a0a3f33bf7b307a2f60ffba782444a198b3eee1c173bd60667b86"
+    },
+    "author/review/SERVING-STACK.json": {
+      "bytes": 352700,
+      "sha256": "507bdf9e76ce050b1ad9926abc8e664572be5f30fef8a311e2d765a7c04e945a"
+    },
+    "author/review/mtp_contract.py": {
+      "bytes": 63795,
+      "sha256": "55f2f60bf4ec9841b0ea89b8024f07078852d0611a4b048b743c4830484f0808"
+    },
+    "author/review/serving_entry.py": {
+      "bytes": 27889,
+      "sha256": "6e076f8777046a7cb40686c1d461c9bf3fed24c4104afcd844f852ce107b9ec7"
+    },
+    "author/review/serving_graph_observer.py": {
+      "bytes": 46581,
+      "sha256": "a6aa66a63d89a0998e7ded7ff4dda0821ccf552ebebb183e140d05fa973fe970"
+    },
+    "author/review/worker_entry.py": {
+      "bytes": 42959,
+      "sha256": "17ad9b906a9187305cc3347031a3aeae65634c0fcdd4c3bb75c58753e74f276d"
+    },
+    "test_host_contract.py": {
+      "bytes": 3079,
+      "sha256": "c17409b90e4373e1e5c298e03c39376e99f5b26ec51ebf0f06e3f55556434920"
+    },
+    "test_host_path.py": {
+      "bytes": 17581,
+      "sha256": "e29f0ae91924b7d87f70740d49610ffeacc133c373a7500de2e817975390d408"
+    }
+  },
+  "native_python": "3.14.4 x86_64",
+  "native_tests": 15,
+  "packet_archive_sha256": "bf66f6bc9674c7ae06ce21627419d8311a4df360b81f2061f444caef2a3851ec",
+  "result": "../results/20261025-host-path/summary.json",
+  "schema": 1,
+  "source_seal": "282293e2cf1b97a822298648c016d95cc16579f1fbc2d718fd1ccd9b6c6cb1d1",
+  "status": "SOURCE_VALIDATED_NATIVE_STDLIB_TESTED_SERVING_TESTED_UNSELECTED",
+  "upstream_client": "../betterbench/native-v2/SOURCE-INVENTORY.json"
+}

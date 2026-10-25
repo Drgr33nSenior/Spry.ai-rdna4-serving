@@ -91,3 +91,7 @@ These are whole-service rates across both GPUs. C1 generated 4,450/4,618 tokens 
 All 106 cache counters were unknown. Measured prefill inputs, excluding warm-ups, were 1,520–1,577,5,903–5,990 and11,753–11,837 tokens. Corresponding client content TTFT ranges were 0.450–0.470,1.710–1.732 and3.599–3.626 seconds. API prompt-count/TTFT estimates are about 3.25–3.47K prompt tokens/s; no uncached-prefix, cold-compilation or pure kernel claim follows. Batched stream update gaps are not native token-event ITL. Three measured samples per category remain a thin checkpoint, not the full/default BetterBench or a 1% experiment.
 
 The final host-reader change is validation tooling, not a serving optimisation. The selected b101/2K/fixed-eight configuration, precision and installed defaults are unchanged. Rollback requires no runtime action: keep that selected configuration and leave the unselected experimental kernel patches inactive. Endurance and production qualification remain NOT RUN under the procedure above. Publication does not deploy a server.
+
+## Subsequent host observation comparison
+
+The [host-path cleanup A/B](HOST-PATH-CLEANUP.md) completed another 106 BetterBench requests with independent release. Decode logging and commit-counter file calls were reduced, but no useful performance improvement was established. The candidate remains opt-in and unselected; the numerical serving baseline is unchanged.

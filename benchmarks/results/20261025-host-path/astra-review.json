@@ -1,0 +1,74 @@
+{
+  "approval_scope": {
+    "additional_experiments": false,
+    "candidate": "once-created 8-byte shared writable commit mapping / decode log interval 100",
+    "control": "legacy commit file writer / decode log interval 1",
+    "metrics": true,
+    "model_starts": 2,
+    "owner_seconds": 5400,
+    "requests_per_arm": 53,
+    "total_requests": 106
+  },
+  "baseline_seal": "37d5308486818bca9cd59d4d341995d4375e1192fdd3a4662390dad1f9f213e8",
+  "deployed": false,
+  "findings": [],
+  "independent_checks": [
+    "All 149 sealed baseline members hash-verified.",
+    "63 manifest package files and 64 regular archive members match current author bytes; archive/manifest identity verified.",
+    "Both 127-role source maps, source-manifest pins and preweight source rows match; every native source row is unchanged.",
+    "Control CLI unchanged; candidate CLI changes only decode-log-interval 1 to 100; metrics retained.",
+    "All eight protected helper files byte-identical; physical controller differs only in spec pin.",
+    "Packed reader exactly equals retained lossless packer output for reviewed logical source.",
+    "All graph/commit identity checks, finite bound, replay/API counters, boundary joins and numerical sources unchanged by exact diff.",
+    "Aggregate upload independently recomputed at 33483027 bytes, 71405 below 32 MiB; workload argv length 255 each.",
+    "Native test inventory hashes match current reviewed files; recipe and stdout/stderr hashes match exit-zero receipt."
+  ],
+  "limitations": [
+    "No remote or GPU actions performed by reviewer; no native serving/performance/correctness result accepted.",
+    "Final experiment metadata and final sealed author tree were still being prepared and are outside this checkpoint; seal and final label checks remain with root.",
+    "Prior embedded hypothesis/review authenticates reused workload and numerical baseline only; it does not review or qualify the new host candidate. Publish new run as host A/B with explicit profiles.",
+    "Reduced native logging changes periodic diagnostics/metrics-window freshness; throughput improvement and selection remain unproved.",
+    "Source-bound refusal when replaying old native artifacts with changed observer is expected; do not weaken binding or retrofit old evidence."
+  ],
+  "material_blockers": [],
+  "packet": {
+    "aggregate_upload_bytes": 33483027,
+    "archive_sha256": "bf66f6bc9674c7ae06ce21627419d8311a4df360b81f2061f444caef2a3851ec",
+    "manifest_sha256": "76d16b239cc6fe57f53d88ba1e0d32d8e6ddee1f4df041fab81637094eec26db",
+    "native_source_manifest_sha256": {
+      "control": "5bec90f2903a2c9ca68f8c6b55f8fd9c2983fd0479ba21268dc5d9b9031856a0",
+      "mtp": "5bec90f2903a2c9ca68f8c6b55f8fd9c2983fd0479ba21268dc5d9b9031856a0"
+    },
+    "nonce": "4463f3a0961a2a6d",
+    "package_sha256": "20845cad94660008432c41926e8c96fa04ab752731730f73efe08c875f7f4f16",
+    "spec_sha256": "11440c8f9ed7cf3f9cf7b17fd7e1fa330dfa5f949a2ca5be273555ef1f893eba",
+    "target_root": "/home/developer/fp8-kv-benchmark.4463f3a0961a2a6d"
+  },
+  "qualification": false,
+  "reused_test_evidence": {
+    "GPU": false,
+    "compiled_modules": 48,
+    "frameworks_imported": false,
+    "machine": "x86_64",
+    "python": "3.14.4",
+    "result": "PASS",
+    "tests": 15
+  },
+  "reviewed_files": {
+    "LOGICAL-serving_integration.py": "d2b8d218cec6805801930ab98139bc4bd628ded4d431becf295ef0f3b7d73155",
+    "author/read_final_betterbench.py": "33d8d6cd2258b50176fd74042daa1f18da6017bc4da150d001056b2a48445f8b",
+    "author/review/mtp_contract.py": "55f2f60bf4ec9841b0ea89b8024f07078852d0611a4b048b743c4830484f0808",
+    "author/review/serving_entry.py": "6e076f8777046a7cb40686c1d461c9bf3fed24c4104afcd844f852ce107b9ec7",
+    "author/review/serving_graph_observer.py": "a6aa66a63d89a0998e7ded7ff4dda0821ccf552ebebb183e140d05fa973fe970",
+    "author/review/serving_integration.py": "3c64c2271af8a7c1725664ae07eae3862f1fc30850cd1ee32e8edac9ab8da578",
+    "author/review/worker_entry.py": "17ad9b906a9187305cc3347031a3aeae65634c0fcdd4c3bb75c58753e74f276d",
+    "prepare_packet.py": "1fe23c84ecf338dc109a55cb747dee95cd8e3789c79f0d88cf04d0908c1e5e4c",
+    "test_host_contract.py": "c17409b90e4373e1e5c298e03c39376e99f5b26ec51ebf0f06e3f55556434920",
+    "test_host_path.py": "e29f0ae91924b7d87f70740d49610ffeacc133c373a7500de2e817975390d408"
+  },
+  "reviewer": "independent Astra HIGH checkpoint",
+  "schema": 1,
+  "scope": "Exact host-path candidate and source/package binding only; permission is limited to the already-authorized bounded comparison after normal final source/owner/readiness gates.",
+  "selected": false,
+  "status": "APPROVED_BOUNDED_HOST_SOURCE_AND_PACKET_CHECKPOINT"
+}

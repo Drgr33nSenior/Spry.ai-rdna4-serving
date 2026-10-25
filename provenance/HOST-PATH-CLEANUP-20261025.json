@@ -1,0 +1,60 @@
+{
+  "actual_review_sha256": "9b86ad39a881593b21c3b367d2828d4176ace75b7e6c8b83b45d7d1593b7fce4",
+  "comparisons": [
+    {
+      "candidate_group_seconds": 54.21681306906976,
+      "candidate_median_individual_seconds": 6.324805148993619,
+      "candidate_output_tokens": 4221,
+      "candidate_tok_s": 77.85407811821469,
+      "concurrency": 1,
+      "control_group_seconds": 55.460858208010904,
+      "control_median_individual_seconds": 6.580390059505589,
+      "control_output_tokens": 4610,
+      "control_tok_s": 83.12168525610952,
+      "matched_work_claim": false,
+      "throughput_change_percent": -6.337223700006311
+    },
+    {
+      "candidate_group_seconds": 27.90387985203415,
+      "candidate_median_individual_seconds": 7.0147475529811345,
+      "candidate_output_tokens": 3774,
+      "candidate_tok_s": 135.25000895977126,
+      "concurrency": 2,
+      "control_group_seconds": 29.12821268592961,
+      "control_median_individual_seconds": 6.146316596015822,
+      "control_output_tokens": 3851,
+      "control_tok_s": 132.2085924571756,
+      "matched_work_claim": false,
+      "throughput_change_percent": 2.300468105793363
+    }
+  ],
+  "decision": "KEEP_OPT_IN_EXPERIMENT_UNSELECTED_NO_PROVEN_USEFUL_PERFORMANCE_GAIN",
+  "deployed": false,
+  "endurance": "NOT RUN",
+  "full_task_quality_rerun": "NOT RUN; prior unchanged-arithmetic QA retained",
+  "independent_release": true,
+  "launcher_elapsed_seconds": 1073.0133174161892,
+  "manifest_sha256": "76d16b239cc6fe57f53d88ba1e0d32d8e6ddee1f4df041fab81637094eec26db",
+  "model_starts": 2,
+  "native_seal": "8931e5ecdbafb45518e1aac25e26701e5457ec36f6ad3117bdef9d71a08b0c7d",
+  "numerical_sources_changed": false,
+  "owner_elapsed_seconds": 1072.4191834189696,
+  "owner_seconds_charged": 1073,
+  "packet_archive_sha256": "bf66f6bc9674c7ae06ce21627419d8311a4df360b81f2061f444caef2a3851ec",
+  "packet_modules_compiled_native": 48,
+  "private_native_root": "fp8-host-cleanup-native.4463f3a0961a2a6d",
+  "repository_source_preflight_checks": 43,
+  "requests": 106,
+  "result": "benchmarks/results/20261025-host-path/summary.json",
+  "schema": 1,
+  "selected": false,
+  "source_checks_native": 15,
+  "source_inventory": "benchmarks/host-path/SOURCE-INVENTORY.json",
+  "source_review_sha256": "9d6738e49eb20533dd293442d3896a14b16ae8b551164f44f87bf5f892632779",
+  "source_seal": {
+    "manifest_sha256": "282293e2cf1b97a822298648c016d95cc16579f1fbc2d718fd1ccd9b6c6cb1d1",
+    "members": 150,
+    "root": "fp8-host-path-cleanup-20261025-v1/author"
+  },
+  "status": "BOUNDED_BETTERBENCH_HOST_CLEANUP_AB_COMPLETE_INDEPENDENT_RELEASE_VERIFIED"
+}

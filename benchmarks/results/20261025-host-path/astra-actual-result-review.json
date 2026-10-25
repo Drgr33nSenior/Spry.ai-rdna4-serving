@@ -1,0 +1,221 @@
+{
+  "author_seal": "282293e2cf1b97a822298648c016d95cc16579f1fbc2d718fd1ccd9b6c6cb1d1",
+  "controller_result_sha256": "3ece9e82cbb695e14ef6f5e7d2893ed4b5c7ab7b2c2a0e64fa437862cb03f115",
+  "counters": {
+    "candidate": {
+      "C2_each_rank": {
+        "bs1_replays": 77,
+        "bs2_replays": 418,
+        "completed_commits": 495,
+        "replays": 495,
+        "weighted_API_verifications": 913
+      },
+      "each_rank": {
+        "bs1_replays": 7278,
+        "bs2_replays": 418,
+        "captures": 2,
+        "completed_commits": 7696,
+        "replays": 7696
+      }
+    },
+    "control": {
+      "C2_each_rank": {
+        "bs1_replays": 31,
+        "bs2_replays": 474,
+        "completed_commits": 505,
+        "replays": 505,
+        "weighted_API_verifications": 979
+      },
+      "each_rank": {
+        "bs1_replays": 7533,
+        "bs2_replays": 474,
+        "captures": 2,
+        "completed_commits": 8007,
+        "replays": 8007
+      }
+    }
+  },
+  "deployed": false,
+  "findings": [],
+  "hypothesis_sha256": "00a9d7c61c3f1d50d3d3ae9eb1227605a524251de77eefb05c8171c9ca6cb028",
+  "independent_checks": [
+    "Exact author150/native475 sealed member sets, hashes, regular types, canonical paths, single links and modification bounds verified.",
+    "All106 raw after-result records match derived per-request measurements; retained requests/results/HTML bytes match sealed native copies.",
+    "Per-request output and prompt token counts match terminal usage frames; total/prefill/decode arithmetic recomputed; aggregate C1/C2 rates and medians independently recomputed.",
+    "Both ranks: all47 serial request replay/commit deltas match per-request API verification counts; all C2 event counters monotonic and bounded; final complete counters equal final binary observations; batch-weighted group totals match six API verifications.",
+    "Both-rank resolved flags are exact metrics=True and interval1 control/100 candidate; runtime binding CLI/source rows and worker source rows equal sealed author templates.",
+    "Both owner arms completed, exited0, reaped, no survivors/cleanup errors; independent release observed empty namespaces, no GPU holders and absent cgroups. Root closeout physical_success=True; observation and launch stdout/stderr match successful receipts."
+  ],
+  "material_blockers": [],
+  "metric_limits": [
+    "Combined TP2 output tokens divided by native client group clock, including prefill and owner boundary instrumentation.",
+    "Median individual request latency is separate from aggregate group throughput.",
+    "TTFT is first content update; API prompt tokens divided by TTFT does not prove uncached pure-kernel prefill throughput.",
+    "Batched stream gaps are update gaps, not independently observed per-token ITL.",
+    "BetterBench has no task-quality oracle; unchanged numerical sources do not requalify task quality.",
+    "The prior embedded hypothesis/review authenticates workload/numerical baseline only; new host hypothesis and checkpoint establish this A/B provenance."
+  ],
+  "metrics": {
+    "C1": {
+      "candidate": {
+        "client_group_wall_seconds": 54.21681306906976,
+        "combined_tp2_output_tok_s": 77.85407811821469,
+        "concurrency": 1,
+        "individual_TTFT_ms": [
+          93.4728829888627,
+          85.51716897636652,
+          87.08866406232119,
+          85.39355604443699,
+          85.55545308627188,
+          86.15067589562386
+        ],
+        "individual_source_reported_decode_tok_s": [
+          57.3064135746922,
+          73.9764843940157,
+          85.72959542982227,
+          120.24517308239405,
+          104.81436986361982,
+          109.02288517164445
+        ],
+        "individual_wall_seconds": [
+          23.372098315972835,
+          6.514251537970267,
+          8.007661933079362,
+          5.141936369007453,
+          6.13535876001697,
+          4.608320024912246
+        ],
+        "median_individual_wall_seconds": 6.324805148993619,
+        "output_and_work_equal_between_starts": "NOT REQUIRED_OR_CLAIMED",
+        "output_tokens": 4221,
+        "requests": 6
+      },
+      "control": {
+        "client_group_wall_seconds": 55.460858208010904,
+        "combined_tp2_output_tok_s": 83.12168525610952,
+        "concurrency": 1,
+        "individual_TTFT_ms": [
+          87.24145509768277,
+          85.79007897060364,
+          85.67843004129827,
+          85.05526697263122,
+          87.04119198955595,
+          83.67786300368607
+        ],
+        "individual_source_reported_decode_tok_s": [
+          61.16123301506118,
+          82.89461144869306,
+          100.13360372779522,
+          118.22412527689731,
+          108.9341589124842,
+          102.13760136691249
+        ],
+        "individual_wall_seconds": [
+          25.135985521017574,
+          3.7653640310745686,
+          7.046560710063204,
+          7.181953545892611,
+          5.778754079947248,
+          6.114219408947974
+        ],
+        "median_individual_wall_seconds": 6.580390059505589,
+        "output_and_work_equal_between_starts": "NOT REQUIRED_OR_CLAIMED",
+        "output_tokens": 4610,
+        "requests": 6
+      },
+      "median_latency_delta_percent": -3.884038912598653,
+      "throughput_delta_percent": -6.337223700006311
+    },
+    "C2": {
+      "candidate": {
+        "client_group_wall_seconds": 27.90387985203415,
+        "combined_tp2_output_tok_s": 135.25000895977126,
+        "concurrency": 2,
+        "individual_TTFT_ms": [
+          92.35002705827355,
+          133.9404529426247,
+          106.94048495497555,
+          123.28518996946514,
+          114.12705399561673,
+          105.8308269130066
+        ],
+        "individual_source_reported_decode_tok_s": [
+          47.39203180512698,
+          63.285323971747864,
+          80.13061186074528,
+          98.86512907329177,
+          85.28230092602067,
+          106.28752635689285
+        ],
+        "individual_wall_seconds": [
+          17.643113687983714,
+          5.996439744019881,
+          7.208039161982015,
+          9.752858800929971,
+          6.821455943980254,
+          4.623387992964126
+        ],
+        "median_individual_wall_seconds": 7.0147475529811345,
+        "output_and_work_equal_between_starts": "NOT REQUIRED_OR_CLAIMED",
+        "output_tokens": 3774,
+        "requests": 6
+      },
+      "control": {
+        "client_group_wall_seconds": 29.12821268592961,
+        "combined_tp2_output_tok_s": 132.2085924571756,
+        "concurrency": 2,
+        "individual_TTFT_ms": [
+          91.15456696599722,
+          286.97507502511144,
+          98.60398899763823,
+          104.9759810557589,
+          106.875114957802,
+          96.56578407157212
+        ],
+        "individual_source_reported_decode_tok_s": [
+          48.23675984533848,
+          67.15491244141343,
+          73.34845707999293,
+          96.36565905767151,
+          96.02947093616076,
+          85.15191362658959
+        ],
+        "individual_wall_seconds": [
+          22.543116748915054,
+          3.25045842200052,
+          13.814264165004715,
+          5.86447480507195,
+          6.428158386959694,
+          4.735530519043095
+        ],
+        "median_individual_wall_seconds": 6.146316596015822,
+        "output_and_work_equal_between_starts": "NOT REQUIRED_OR_CLAIMED",
+        "output_tokens": 3851,
+        "requests": 6
+      },
+      "median_latency_delta_percent": 14.129290989147037,
+      "throughput_delta_percent": 2.300468105793363
+    }
+  },
+  "mmap_publication": {
+    "blocking_for_this_observed_run": false,
+    "limitation": "struct.pack_into to shared mmap does not itself establish atomic interprocess 8-byte publication. Two equal reads plus semantic joins validate accepted observations but are not a synchronization or atomicity proof.",
+    "location": "author/review/serving_graph_observer.py:385 and :526",
+    "plausible_future_failure": "A reader overlapping a multi-byte counter update can observe an intermediate value. Strict joins can refuse an otherwise completed run; equal repeated reads do not categorically exclude a torn value if the writer pauses mid-update.",
+    "scope": "Retain as opt-in experimental profile. No atomic-publication, portability, endurance or unconditional snapshot-stability guarantee. Future generalization needs an explicit publication protocol or validated native atomic store; no change or rerun requested for this bounded completed evidence."
+  },
+  "native_seal": "8931e5ecdbafb45518e1aac25e26701e5457ec36f6ad3117bdef9d71a08b0c7d",
+  "performance_conclusion": "Neither concurrency clears the predeclared >=5% beneficial signal; output and verifier work differ, so no causal speedup or degradation claim. Candidate remains unselected for performance.",
+  "publication_scope": "Publish this single bounded host A/B and failed useful-effect signal with exact profiles, raw outputs/work and metric scopes. No default adoption, qualification, task-accuracy, distribution, endurance or deployment claim.",
+  "qualification": false,
+  "readout_sha256": "b11dd4d14fed75a7bebb663d945a42dc1f940feb01239cc75a1f9262cb108e20",
+  "schema": 1,
+  "selected": false,
+  "status": "ACCEPT_BOUNDED_COMPLETED_AB_EVIDENCE_NO_PERFORMANCE_SELECTION",
+  "timing": {
+    "controller_elapsed_seconds": 1072.1742738969624,
+    "native_launch_receipt_seconds": 1073.0133174161892,
+    "owner_limit_seconds": 5400,
+    "root_closeout_elapsed_seconds": 1072.4191834189696
+  }
+}

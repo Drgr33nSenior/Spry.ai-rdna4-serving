@@ -1,0 +1,77 @@
+--- a/review/serving_graph_observer.py
++++ b/review/serving_graph_observer.py
+@@ -365,6 +365,15 @@
+         finally:
+             os.close(fd)
+         self.write_counter()
++        self.commit_counter = None
++        if mtp_contract.host_path_cleanup_enabled(arm):
++            path = self.root / f'replay-commit-counter-rank-{rank}.bin'
++            fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 384)
++            try:
++                os.ftruncate(fd, 8)
++                self.commit_counter = mmap.mmap(fd, 8, access=mmap.ACCESS_WRITE)
++            finally:
++                os.close(fd)
+         self.write_commit_counter()
+         self.publish()
+ 
+@@ -372,6 +381,9 @@
+         self.counter[:] = struct.pack('<QQQQ', self.captures, self.replays, self.bs1_replays, self.bs2_replays) if self.closure else struct.pack('<QQ', self.captures, self.replays)
+ 
+     def write_commit_counter(self):
++        if self.commit_counter is not None:
++            struct.pack_into('<Q', self.commit_counter, 0, self.commits)
++            return
+         path = self.root / f'replay-commit-counter-rank-{self.rank}.bin'
+         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 384)
+         try:
+--- a/review/mtp_contract.py
++++ b/review/mtp_contract.py
+@@ -1022,3 +1022,13 @@
+ 
+ def betterbench_checkpoint_enabled():
+     return True  # Explicit selected-baseline adapter; no operation authority.
++
++
++def host_path_cleanup_enabled(arm):
++    """Select the host-only candidate within the exact BetterBench checkpoint."""
++    _require(arm in LOGICAL_ARMS, 'unknown host-path cleanup arm')
++    return betterbench_checkpoint_enabled() and arm == 'mtp'
++
++
++def expected_decode_log_interval(arm):
++    return 100 if host_path_cleanup_enabled(arm) else 1
+--- a/review/serving_entry.py
++++ b/review/serving_entry.py
+@@ -284,7 +284,7 @@
+         bound = mtp_contract.validate_memory_pool_config({key: binding['resolved_contract'].get(key) for key in pool}, binding['arm'])
+         _require(observed == bound, 'native memory-pool binding differs')
+     if mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES:
+-        _require(getattr(server_args, 'enable_metrics', None) is True and type(getattr(server_args, 'decode_log_interval', None)) is int and (server_args.decode_log_interval == 1), 'closure native metric/log observations are not enabled')
++        _require(getattr(server_args, 'enable_metrics', None) is True and type(getattr(server_args, 'decode_log_interval', None)) is int and (server_args.decode_log_interval == mtp_contract.expected_decode_log_interval(binding['arm'])), 'closure native metric/log observations are not enabled')
+     if mtp_contract.cache_config() is not None:
+         cache = mtp_contract.validate_cache_config({key: getattr(cfg, key, None) for key in mtp_contract.cache_config()})
+         _require(cache == binding['resolved_contract'].get('prefix_cache'), 'native prefix-cache binding differs')
+--- a/review/worker_entry.py
++++ b/review/worker_entry.py
+@@ -411,7 +411,7 @@
+     if pool_config is not None:
+         value['resolved_memory_pool'] = pool_config
+     if contract_module.settings()['phase'] in contract_module.BATCH_PHASES:
+-        wanted = dict(enable_metrics=True, decode_log_interval=1)
++        wanted = dict(enable_metrics=True, decode_log_interval=contract_module.expected_decode_log_interval(manifest['arm']))
+         observed = {key: getattr(cfg, key, None) for key in wanted}
+         _require(all(type(observed[key]) is type(item) and observed[key] == item
+                      for key, item in wanted.items()), 'closure native observability configuration differs')
+--- a/logical/serving_integration.py
++++ b/logical/serving_integration.py
+@@ -460,7 +460,7 @@
+             _need(mtp['resolved_memory_pool'] == {key: contract[key] for key in pool}, 'native rank memory-pool binding differs')
+         if mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES:
+             flags = mtp['resolved_observability']
+-            _need(type(flags) is dict and set(flags) == {'enable_metrics', 'decode_log_interval'} and (flags['enable_metrics'] is True) and (type(flags['decode_log_interval']) is int) and (flags['decode_log_interval'] == 1), 'closure native rank observability differs')
++            _need(type(flags) is dict and set(flags) == {'enable_metrics', 'decode_log_interval'} and (flags['enable_metrics'] is True) and (type(flags['decode_log_interval']) is int) and (flags['decode_log_interval'] == mtp_contract.expected_decode_log_interval(expected['arm'])), 'closure native rank observability differs')
+         resolved_fields = {'speculative_algorithm', 'enable_multi_layer_eagle', 'speculative_draft_model_path', 'speculative_draft_model_revision', 'speculative_num_steps', 'speculative_eagle_topk', 'speculative_num_draft_tokens', 'speculative_dflash_block_size', 'quantization', 'speculative_draft_model_quantization', '_speculative_draft_quantization_explicitly_set', 'speculative_use_rejection_sampling', 'speculative_accept_threshold_single', 'speculative_accept_threshold_acc'}
+         resolved = mtp['resolved_speculative']
+         explicit_draft_quantization = resolved.get('_speculative_draft_quantization_explicitly_set')
