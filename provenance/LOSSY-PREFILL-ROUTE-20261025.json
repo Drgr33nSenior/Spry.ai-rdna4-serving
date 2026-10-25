@@ -1,0 +1,712 @@
+{
+  "baseline": {
+    "dflash_width": 8,
+    "draft_kv": "explicit BF16",
+    "draft_weights": "BF16",
+    "gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "language_model_head": "FP32",
+    "prefill_chunk_tokens": 2048,
+    "recurrent_state": "FP32",
+    "target_kv": "BF16",
+    "target_weights": "official FP8",
+    "thinking": "existing frozen low-thinking input IDs"
+  },
+  "date": "2026-10-25",
+  "decision": "Keep BF16 communication selected. The INT8 candidate remains unselected: cancellation loss, actual-activation error acceptance, matching process-group candidate execution and exposed serving benefit remain unresolved. Synthetic component timing is separate.",
+  "deployed": false,
+  "interpretation": {
+    "actual_activation_codec_error_measured": false,
+    "actual_leaf": "torch.distributed.all_reduce",
+    "attention_and_tp_group_shared": true,
+    "exposure_time_measured": false,
+    "extra_model_forwards": 0,
+    "hooks_restored": true,
+    "in_place_alias_contract_observed": true,
+    "input_output_dtype": "BF16",
+    "nonstream_response_timing_used_as_performance": false,
+    "numerical_equivalence_established": false,
+    "observation_errors": 0,
+    "performance_improvement_established": false,
+    "target_graph_replays_advanced": true,
+    "tensor_values_recorded": false
+  },
+  "inventories": {
+    "logical_sources": {
+      "logical_bundle_sha256": "468421109ccebc6403dda447fb0c485daf59688dbf4ade7ea6c5c8a3bca25931",
+      "modules": {
+        "route_client.py": "c48f17a3a2f4e7db4d3276b9808ba08a2de60f983672d2995f5cff732ea3ef23",
+        "route_entry.py": "fd14c8954d56eeb852b84a3602396a02c6ee700cd3f7a98b70a5df7eff54b37a",
+        "route_hooks.py": "b80ef078b5c79e22157f9dd6d6654558b049c7ee3d95d41311e314319fd84625",
+        "route_plan.py": "f65055ea65bc8a5a82f265510a484502df4cc63d9dafe29b7e3f3892f0e4c1c6",
+        "route_probe.py": "eb983ae75a1f0cf73d35a6c9382a92de5bb7d5ca2e68cf761d707b3423130294"
+      },
+      "native_sources_packed": false,
+      "packaged_bundle_sha256": "b9a97b1ac9f5af86e31770409a4d48c24c54de3b6911c67b5a2ded7750f21b2d",
+      "packer_sha256": "16ba2260bc4a14955c472e5f725f67f122104e3cbb872d1044085ec9c778c77a"
+    },
+    "native_offline_inventory_sha256": "c5b1d5a6bd77dc498286375ef317b3f40737a90b8fc0b785e2f50aaf7a0ae896",
+    "native_source_inventory_sha256": "0254982a7fd5be7030a38976913c4ccf9beffae118187cc6414f2c788d4ff9bd",
+    "owner_request_sha256": "62ab3c34adfb42d249e1ef7a6a612ad6f595aedda026ce691874a9884f3f967d",
+    "package_files": {
+      "review/ALLOCATION-OVERLAY.json": "24810e86e7a9e964034755e8506e95bdda7b4c8ea18f177e978fb6f0ec8f3844",
+      "review/BENCHMARK-SPEC2.json": "c7d417eee6ae62d21916db657c2eb0adc462be16efe9ef6ceb464cb9610fa8af",
+      "review/CAPTURE-BUILD-PROOF.json": "b9990bf8ab5053621c60225275a42fb61e6b2b17cb4b661e3acbb1dc2e845960",
+      "review/COMMON-STACK-RECEIPT.json": "7ed6b470afbf132619ef21649c79f183c169179d0e706fcba8d8d9f4dd581413",
+      "review/COMPOSITION-FACTS.json": "d414db807ccec0f7c285be99cd040c86e0230521b03996f64f9bc4f9392d3072",
+      "review/CONTEXT-PROMPTS.zlib": "cef78631478b938dec73af5382e54bf2470393cfce3f0eb6beabe753b0306f21",
+      "review/CONTROL-CASE.zlib": "bf47dcc43d36709311422af34f98f9a49ce51628240c2cc22ffb27b82d7ca201",
+      "review/DRAFT-MODEL.json": "45f82c0840d69a0e68c7e9e340721b183f107c16d1b968bc102010ce070e3a81",
+      "review/FINAL-REQUESTS.zlib": "c681361bb789379635bfd8b9637f3aaee9a492ae64cb4168b76dbcee6ec6d5d4",
+      "review/FINAL-SETTINGS.json": "6570d08a833390354d56897266145c01631618d5eea9ccea3a9e5f0acd963214",
+      "review/GEMM-tail.py": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+      "review/HTTP-BINDING-control.json": "a66cb104d525da38db501786aa998c46f898709f484c7743dd0f0bd2c70154cc",
+      "review/HTTP-BINDING-mtp.json": "b3e45ff8fe794f3c5f0e2de5bec538da4b621394a2d1c6ece158acae2e65c3f7",
+      "review/MODEL-INVENTORY.json": "892e95cdabf87bbf96298e258e5889e2572acf21659121d811ca9a09eac09986",
+      "review/PRECISION-REFERENCE.json": "f466d7a9fa0a0a3f33bf7b307a2f60ffba782444a198b3eee1c173bd60667b86",
+      "review/RESOURCE-MANIFEST.json": "67fe9a5e3b42e9f9d81765852ce9e87c9cb43a6847efdc8fc3276920f357d2ab",
+      "review/SERVING-STACK.json": "507bdf9e76ce050b1ad9926abc8e664572be5f30fef8a311e2d765a7c04e945a",
+      "review/STOCK-BUILD-PROOF.json": "3d9d603b39f0aa297711bf5abca379933dcbccc7ec060a282404af39f7d40384",
+      "review/TOKENIZER-CONTRACT.json": "e0c8b26bd821bcc42719e55fbad658f7eecdae0053c0b8e05f48540cb3acdb88",
+      "review/allocation_sizing_candidate.py": "09eba1769b666722c7a05bc0235290253dde04a96e4c3f864d308c84d8c16f87",
+      "review/analyze_model_benchmark.py": "9856eaa02e79bced866f5f0526dbabee3b00e87f26508d7a4471eabc78b2bc4c",
+      "review/batch_telemetry.py": "0619773ea3ba5730381ef9dee0424d4488e69e8b33943e12b00b8d64a5720c74",
+      "review/benchmark_artifacts.py": "400855e791e7f2c91d140b20c66bd7e4b26f2c720560932b3e78adf7b56a5a65",
+      "review/benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+      "review/benchmark_host_transport.py": "c3490cc989454af9f1c620fd424d853f1dd40641970488b19a3e40c56182606c",
+      "review/benchmark_owner_adapter.py": "4e9fed1646e09260913e4b471f87da9f7b88b31872e8b3b4a3ee751e1c580aad",
+      "review/benchmark_physical_controller.py": "d7c0cf85455f0f84b831d489a048d892593001966bcc50baca005cff9c172b33",
+      "review/benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+      "review/benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+      "review/cache_profile.py": "256250bc43c4dfd7146f14f60b03bfa09f7d3648dd5f5e9c3298e4edb34851e5",
+      "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "review/capture_model_runner.py": "9f5c808978bb606a76f7907c6b6d3547aa105d050c5b8aa76dc64fd76f02a20c",
+      "review/collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+      "review/context_tokenizer.py": "3b4156118908ac46a633ef571f3274d1686dac1c84f79cbeccbcba7f46394819",
+      "review/dflash_info_v2_candidate.py": "ba5eac1d30ad1a6e3163ba31c66f3c72bbf04e171771d99220eeb5407ce48973",
+      "review/divergence_capture.py": "4e091d46696a25ea43ad2da930debef5bd3f67ea95df3d8dc478f7914d831255",
+      "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "review/graph_full_cuda_graph_backend.py": "571b84f8933c81392f967e632493691495631136c370294897d0bc06a475113a",
+      "review/graph_integration.py": "3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48",
+      "review/graph_outer.py": "3d88da7ed59e171fcc56cb773a74e7f2b08218a2d635c8403865e189e3a7e2bf",
+      "review/graph_screen.py": "9b5a1431b3d35770b1103a40212353eaea534d50a4b84d5f8be16aac7d56c8be",
+      "review/host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3",
+      "review/j01_probe.py": "3b83ccb75ebf834a97022f28188a0398ca8267a711fbfb5545b2ef3bbeb15899",
+      "review/model_benchmark.py": "a2733f7db573c51686a8af27df43e98914872f065895c347517c3933f045c919",
+      "review/mtp_contract.py": "55f2f60bf4ec9841b0ea89b8024f07078852d0611a4b048b743c4830484f0808",
+      "review/prefill_row_audit.py": "4d35da70f4923fd34ce144d49f187be9ad2f6a36271659a7c35e5634f943c52e",
+      "review/prepare_benchmark_package.py": "00f067a326474637166dcdee5f506c21bd6c68d60948510feda693ebe1eb7f5e",
+      "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "review/route_diagnostic.py": "b9a97b1ac9f5af86e31770409a4d48c24c54de3b6911c67b5a2ded7750f21b2d",
+      "review/serving_client.py": "314882c0bc24c358a12da2c3e8e61849018f45155448db24b064838c7fc97c15",
+      "review/serving_contract.py": "688797289749a2eefc0d958b8e51bfa1314f7e459bd739a56aea4d2661cf5f0b",
+      "review/serving_entry.py": "6e076f8777046a7cb40686c1d461c9bf3fed24c4104afcd844f852ce107b9ec7",
+      "review/serving_graph_observer.py": "a6aa66a63d89a0998e7ded7ff4dda0821ccf552ebebb183e140d05fa973fe970",
+      "review/serving_integration.py": "3c64c2271af8a7c1725664ae07eae3862f1fc30850cd1ee32e8edac9ab8da578",
+      "review/serving_launcher.py": "e9a4eea0ab385aea94e1c717b2e9969c164c95d44153c76edcde300fde3328a4",
+      "review/serving_parity.py": "3e655fa7b39c3826d122dba83866bb286216d8ad61d635d2a7006a709d52f14b",
+      "review/serving_projection.py": "ccdccfeccacedc3e432c91d510b937873ed0af4f94bed41e87945decc1e91921",
+      "review/serving_reader.py": "d32a9c00c8ea386bda7e483dcf77deb4e0254bfba1db22f7e3c7ded8de215bdb",
+      "review/serving_runtime.py": "b01509c6687a3520b721c282580894a6f1221a4fdfb2c415447a28cd28d97aff",
+      "review/validation_comparison.py": "607c5a44c3192329ec7566d0deadeafe5dcfcd7447fa306caa037aa20a7f5d28",
+      "review/verify_benchmark_runtime.py": "3ac5f6fc5cf84c9939ed4452edb68613c0c34b916108950fe55d8ba21b07a414",
+      "review/verify_decode_adapter.py": "96fdd2bdd9d35b8b3d4e77a898c31fc425fe0f45b80b0791400c2f2252c9f086",
+      "review/worker_entry.py": "3072e198f8fd7445d6bf00bf63d017c851aee92d483035cf33cb6bb25e2f1ea0"
+    },
+    "package_manifest_sha256": "d7b0d966234baec2d23e5176ea7a93c7e87e7f2324febe169bee4d72b4d86927",
+    "stage_archive_sha256": "503a6395fe36711f646fde540b4dc9e3e152aa209f8f0a471780623651d45cf4",
+    "stage_packet_manifest_sha256": "4768cd358b71eabf8b1a9acfb71a6187f885c3b473bfe61d2c699220b352f3bd"
+  },
+  "lossy_codec_injected": false,
+  "not_run": [
+    "Lossy model execution",
+    "Lossy candidate graph capture/replay",
+    "Natural-answer quality comparison",
+    "Comparable C1/C2 throughput or request latency",
+    "Exposed communication timing",
+    "Persistent deployment",
+    "EAGLE-4"
+  ],
+  "offline_correction": {
+    "corrected_reader_sha256": "4dc7407a0ef4a3ef7b18b5a5e5988ed61b4a29c80db868454508becf21d7f4a0",
+    "diff_sha256": "0d0b6e60403fb0bed5c0e2fa05412eeba3f073315d1e7799f2a01d3dd7e8159a",
+    "new_model_starts": 0,
+    "original_failed_record_preserved": true,
+    "required_artifacts": [
+      "BETTERBENCH-DEPENDENCIES.json",
+      "NUMPY-PREFLIGHT.stdout",
+      "NUMPY-PREFLIGHT.stderr"
+    ],
+    "result_sha256": "f2c5e42e262f355c935e6653d61ac47cd38c374fe5146d7afcd90dc8b94cf8ae",
+    "runner_sha256": "b01ef679d98e6f646fe0355b89e5b4369cd2d441f16700fea984b6e5fa75a81e",
+    "status": "OFFLINE_VALIDATED",
+    "validation": "Exact required receipt schema; namespace stdout byte-equal to frozen dependency evidence; empty stderr; unexpected files remain rejected."
+  },
+  "original_operation": {
+    "cleanup_errors": [],
+    "complete": false,
+    "failure": "ValueError: route readout: exact four-request client file inventory",
+    "independent_release_verified": true,
+    "owner_elapsed_seconds": 201.97700039600022,
+    "owner_result_sha256": "daecf5e640eea1bbde3bc3b4763465b525a45751eed8fdd71ba002bc7f491e84",
+    "unresolved": false
+  },
+  "recorded_calls_across_ranks": 128,
+  "recorded_calls_per_rank": 64,
+  "remaining_calls_characterized": false,
+  "retained_paths": [
+    "collected/RETAINED-SEAL.json",
+    "collected/workload/route-owner-evidence/OWNER-RESULT.json",
+    "collected/workload/route-owner-evidence/bf16-artifacts/result.json",
+    "collected/workload/route-owner-evidence/bf16-artifacts/native-http-bundle.json",
+    "collected/workload/route-owner-evidence/bf16-artifacts/http-client-bundle.json",
+    "offline-readout-v1/result-v1/OFFLINE_VALIDATED.json",
+    "offline-readout-v1/reader.diff",
+    "native-source-check-v4.stdout",
+    "native-offline-reader-check.stdout",
+    "collected/workload/route-owner-evidence/bf16-capture/stderr.raw",
+    "astra-readiness/REVIEW.json",
+    "astra-results/REVIEW.json"
+  ],
+  "retained_root": "scratchpad/fp8-lossy-prefill-route-20261025-v1",
+  "rollback": "No selected baseline mutation; diagnostic processes independently released.",
+  "samples": [
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 0,
+      "rank": 0,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 0,
+      "rank": 1,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 1,
+      "rank": 0,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 1,
+      "rank": 1,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 2,
+      "rank": 0,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 2,
+      "rank": 1,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 3,
+      "rank": 0,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    },
+    {
+      "all_outputs_alias_input": true,
+      "attention_shares_tp_group": true,
+      "call_ordinals": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "counts": {
+        "capacity_skipped": 113,
+        "capture_skipped": 0,
+        "non_bf16_skipped": 0,
+        "observer_errors": 0,
+        "recursive_skipped": 0
+      },
+      "dispatch": [
+        {
+          "kind": "dispatch",
+          "mode": "in_place"
+        },
+        {
+          "kind": "leaf",
+          "outcome": "returned",
+          "resolved_method": null,
+          "route": "torch.distributed.all_reduce"
+        }
+      ],
+      "dtype": "torch.bfloat16",
+      "group": "tp:0",
+      "one_caller_stream_in_sample": true,
+      "ordinal": 3,
+      "rank": 1,
+      "recorded_calls": 16,
+      "shape": [
+        2048,
+        5120
+      ],
+      "stride": [
+        5120,
+        1
+      ],
+      "tensor_bytes": 20971520
+    }
+  ],
+  "schema": 1,
+  "scope": "First 16 collective calls in the first 2,048-token target prefill chunk of each of four selected-model requests, on both ranks.",
+  "seals": {
+    "owner_members": 51,
+    "owner_seal_sha256": "8392937914b5ecb2d8cf635bc9b74c22ff778f8ff4992a389b5617fc46439e0f",
+    "retained_collection_sha256": "bea84ee3073f122d7f8c4a13543c6caf444dd141d1f722ee57b69fac31973a2b",
+    "retained_members": 148
+  },
+  "selected": false,
+  "status": "HARDWARE_OBSERVED_AND_OFFLINE_VALIDATED_UNSELECTED",
+  "verification": {
+    "actual_results_review": {
+      "independent_cpu_replay": true,
+      "model": "gpt-6-astra",
+      "promotion_approved": false,
+      "reasoning_effort": "max",
+      "sha256": "7726afc03940878ed4567a3d6027b695ec7255ff10157f7b5e8f26c920e1d19c",
+      "verdict": "SAMPLED_ROUTE_METADATA_SUPPORTED_AFTER_OFFLINE_READER_CORRECTION"
+    },
+    "postrun_native": {
+      "GPU": false,
+      "compiled_modules": 60,
+      "frameworks_imported": false,
+      "machine": "x86_64",
+      "model": false,
+      "python": "3.14.4",
+      "status": "NATIVE_OFFLINE_READER_TESTS_PASS",
+      "tests": 5
+    },
+    "prelaunch_native": {
+      "GPU": false,
+      "compiled_modules": 63,
+      "frameworks_imported": false,
+      "machine": "x86_64",
+      "model": false,
+      "python": "3.14.4",
+      "status": "NATIVE_SOURCE_TESTS_PASS",
+      "tests": 55
+    },
+    "source_readiness_review": {
+      "sha256": "f6ca7bfab704cbd3f1201067bb02d4e56abf708c3bd25cf5973b427ae2eb61f0",
+      "verdict": "SOURCE_READINESS_SUPPORTED_AFTER_HOSTS_FIX"
+    }
+  },
+  "warnings": {
+    "repaired": false,
+    "retained": [
+      "Optional DLPack extension JIT failed; EnvTensorAllocator unavailable",
+      "Python 3.14 TorchScript support/deprecation warnings",
+      "Optional model and multimodal import warnings",
+      "Apex invalid-escape syntax warnings",
+      "Triton block-pointer deprecation warning"
+    ],
+    "stderr_bytes": 66805,
+    "stderr_sha256": "28d5a87068192d016c530f035f46fd63405ce28124a2edda8fc6c1518843da48",
+    "suppressed": false
+  },
+  "workload": {
+    "cached_tokens": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "completion_tokens": [
+      32,
+      32,
+      32,
+      32
+    ],
+    "concurrency": 1,
+    "finish_reasons": [
+      "length",
+      "length",
+      "length",
+      "length"
+    ],
+    "input_ids_verified_by_native_hook": true,
+    "model_starts": 1,
+    "natural_answers_graded": false,
+    "prompt_tokens": [
+      25991,
+      25978,
+      25991,
+      25978
+    ],
+    "request_plan_sha256": "3dde1b508b224f64b7f6fa38764308926abdb8267ad6c04247cb9d58ab286555",
+    "requests": 4
+  }
+}

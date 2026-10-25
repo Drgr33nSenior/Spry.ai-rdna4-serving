@@ -5,6 +5,8 @@ The block256 INT8 composition reduced complete communication time at the
 synthetic 2,048-row prefill size. Small decode-sized tensors were slower.
 Model answers, actual model activations, graph replay and serving performance
 remain **NOT RUN** for this candidate. The selected runtime is unchanged.
+The subsequent [selected-model route diagnostic](LOSSY-PREFILL-ROUTE.md)
+observed matching large BF16 tensors without applying compression.
 
 ## Measured cost
 
@@ -81,18 +83,21 @@ packet. No model started, and no graph was captured or replayed.
 
 Astra at max reasoning verified the two evidence seals, source/runtime/rank
 joins, all timing pairs and independent release. It supports the narrow
-component cost result. It retains two applicability blockers: cancellation loss
-and absent per-operation serving evidence. Actual-route observation is the next
-gate; graph work is conditional. The review did not run native GPU tests.
+component cost result. That review retained cancellation loss and missing
+per-operation serving evidence as applicability gaps. The subsequent route
+diagnostic addresses the sampled shape/dispatch gap. Actual-activation error,
+exposed cost and candidate graph behavior remain unverified. The review itself
+did not run native GPU tests.
 
 ## Decision and reproduction
 
 Retain this as a **prefill-only component candidate**. Reject its current eager
 composition for small decode messages. Do not select it for serving on this
-evidence. Current selected server logs identify NCCL with custom all-reduce
-disabled on both ranks; they do not identify each timed shape or its exposed
-transport cost. Actual-activation error and invocation evidence must precede
-any model adoption, with an explicit numerical acceptance decision.
+evidence. The selected-model diagnostic confirms sampled in-place distributed
+all-reduce calls at `[2048, 5120]` on both ranks. It does not measure their
+exposed cost or make the synthetic communicator identical to the server's.
+Actual-activation error and candidate execution evidence must precede any model
+adoption, with an explicit numerical acceptance decision.
 
 The source-only [prototype](../prototype/lossy-prefill/codec.py),
 [kernels](../prototype/lossy-prefill/kernels.py) and
