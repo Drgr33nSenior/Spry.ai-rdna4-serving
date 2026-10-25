@@ -295,6 +295,19 @@
       "sha256": "154cb718ef838e49e65b57c0582148756b14814ca2f96fea94b9bbdd4d1b961b"
     }
   },
+  "final_completed_operation": {
+    "archive_sha256": "d88e6ff1bf21fe6fbf7f5e6be50b4d5fe55bc25ee3e2d82125b4012bed29108d",
+    "final_review_sha256": "7c3e9f6f778003365218f930006dc7213c6f6fed5d3479b9eb73b8d20f03d76a",
+    "host_counter_reader_patch": "counter-observation-reader.patch",
+    "independent_release": true,
+    "manifest_sha256": "6aa88ae248b887a50d5533a2c5cb7dba1bb8a141fe5e5976d6a56035e4b487b1",
+    "nonce": "49dd17d29f69f55f",
+    "portable_client_files_unchanged": true,
+    "requests": 106,
+    "result_seal_sha256": "53eae9b5f03872de9ca2846e7b1fad8b5702d7843d45bbe794706473e862b95f",
+    "source_index_sha256": "11192952675e37f34611a5c7817860b5e8e69ebb0d69f434ad507911ddebcc30",
+    "source_seal_sha256": "37d5308486818bca9cd59d4d341995d4375e1192fdd3a4662390dad1f9f213e8"
+  },
   "notes": [
     "README.bundled.md and test_selected.py predate final protocol patch; do not treat them as current full-v2 instructions or test results.",
     "Private protected owner helpers remain unchanged; source/package inventories identify the measured execution.",

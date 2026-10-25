@@ -1,6 +1,6 @@
 # Remaining FP8 optimization programme
 
-Status: **tuning dispositions reconciled; final bounded QA passed; BetterBench incomplete**. No new serving candidate passed every selection gate. The current b101/2K/fixed-eight configuration remains the best tested selection. None of this work deploys a persistent service or establishes production qualification.
+Status: **tuning dispositions reconciled; final bounded QA and BetterBench complete; no new runtime winner**. No new serving candidate passed every selection gate. The current b101/2K/fixed-eight configuration remains the best tested selection. None of this work deploys a persistent service or establishes production qualification.
 
 ## Retained configuration
 
@@ -77,4 +77,17 @@ The observer reads a global replay file, parses other metadata, then reads a sep
 
 The independently checked [forensic first-start measurements](../benchmarks/results/20261025-final-baseline/forensic-first-start.json) report C1 **81.3188 aggregate output tok/s**, median individual latency **5.7436 seconds**, and C2 **144.8048 aggregate tok/s**, median individual **8.9092 seconds**. The six C1 outputs total 4,241 tokens and range from 393 to 1,613; C2 totals 4,326 and ranges from 347 to 1,008. These mixed natural-stop workloads differ from Sprint 39. No degradation, optimisation gain or matched-work comparison is established. All 53 cache counters were unknown; no uncached-prefill claim is made. Measured prefill inputs were about 1.5K/5.9K/11.8K tokens, rather than the nominal 2K/8K/16K labels. A [standalone forensic table](../benchmarks/results/20261025-final-baseline/forensic-first-start.html) preserves that incomplete status visibly.
 
-A further physical operation is **NOT RUN**. The current 5,961-second ceiling leaves 4,842 seconds after both failures; the fixed launcher still requires a 5,400-second complete envelope. The remaining schedule decision, after source correction and review, is a fresh single-use allowance that retains 1,119 seconds and would set a 6,519-second cumulative ceiling. No automatic retry, protected-limit change, new tuning selection or deployment is implied.
+The owner approved the final corrected host-reader operation under a 6,519-second cumulative allowance. It completed both fresh starts and all 106 requests. The strict source/native/protocol/owner reader and independent Astra review passed; release checked 109 and 116 process identities for the arms and the 225-identity union, with all relevant namespaces, cgroups and GPU holders absent. Host OOM/memory-limit events were zero. The final operation charged 1,051 seconds; cumulative owner charge across both failures and this completed operation is 2,170 seconds. Both earlier failed controllers remain unchanged.
+
+## Completed BetterBench checkpoint
+
+| Start | C1 aggregate output tok/s | C1 median request seconds | C2 aggregate output tok/s | C2 median individual seconds |
+| --- | ---: | ---: | ---: | ---: |
+| A | 81.4279 | 7.0087 | 134.8680 | 7.2174 |
+| B | 87.2708 | 7.8549 | 133.1114 | 7.0678 |
+
+These are whole-service rates across both GPUs. C1 generated 4,450/4,618 tokens and C2 generated 3,638/3,835 per six-request group. Prompts, output lengths and verification work differ from Sprint 39 and between starts. No matched-work speedup or degradation is established. The [final JSON and HTML](../benchmarks/results/20261025-final-baseline/final-summary.html) retain per-request samples, speculative counts, native group proofs, reasoning/truncation estimates and exact source/artifact hashes.
+
+All 106 cache counters were unknown. Measured prefill inputs, excluding warm-ups, were 1,520–1,577,5,903–5,990 and11,753–11,837 tokens. Corresponding client content TTFT ranges were 0.450–0.470,1.710–1.732 and3.599–3.626 seconds. API prompt-count/TTFT estimates are about 3.25–3.47K prompt tokens/s; no uncached-prefix, cold-compilation or pure kernel claim follows. Batched stream update gaps are not native token-event ITL. Three measured samples per category remain a thin checkpoint, not the full/default BetterBench or a 1% experiment.
+
+The final host-reader change is validation tooling, not a serving optimisation. The selected b101/2K/fixed-eight configuration, precision and installed defaults are unchanged. Rollback requires no runtime action: keep that selected configuration and leave the unselected experimental kernel patches inactive. Endurance and production qualification remain NOT RUN under the procedure above. Publication does not deploy a server.

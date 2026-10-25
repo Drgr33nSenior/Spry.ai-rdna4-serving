@@ -9,11 +9,12 @@
     "charged_seconds": 1119,
     "current_cumulative_ceiling": 5961,
     "model_starts": 2,
-    "owner_disposition": "REQUIRED_BEFORE_PHYSICAL",
+    "owner_disposition": "EXPLICIT_FINAL_ALLOWANCE_GRANTED",
     "proposed_cumulative_ceiling": 6519,
     "remaining_seconds": 4842,
     "requests": 106,
-    "required_fresh_operation_seconds": 5400
+    "required_fresh_operation_seconds": 5400,
+    "scope": "Historical pre-final allowance decision; final explicit allowance6519 granted and operationcompleted2170total"
   },
   "counter_semantics": {
     "API": "spec_verify_ct once per active Req",
@@ -22,6 +23,22 @@
     "result_processor_source_sha256": "2f5baf667e6879e96b0fd4435750778d3989d03674e01c2963a08bed32091736"
   },
   "deployed": false,
+  "final_operation": {
+    "actual_result_review_sha256": "7c3e9f6f778003365218f930006dc7213c6f6fed5d3479b9eb73b8d20f03d76a",
+    "allowance_ceiling_seconds": 6519,
+    "cumulative_owner_seconds": 2170,
+    "fresh_starts": 2,
+    "independent_release": true,
+    "new_optimization": false,
+    "one_use_consumed": true,
+    "owner_seconds": 1051,
+    "prior_failed_seconds": 1119,
+    "report": "../../results/20261025-final-baseline/final-summary.json",
+    "requests": 106,
+    "result_seal_sha256": "53eae9b5f03872de9ca2846e7b1fad8b5702d7843d45bbe794706473e862b95f",
+    "source_and_model_arithmetic_unchanged": true,
+    "status": "SERVING_TESTED_BOUNDED_BETTERBENCH_BASELINE_AA_COMPLETE"
+  },
   "future_contract": "Strict C1 unchanged; ordered/concurrency-bounded C2 intervals, both-rank quiescent phase boundaries and final anchors, monotonic bounded counters, exact replay/commit totals and batch-weighted sum of all six individually authenticated API counts; no tolerance or invented per-request native attribution",
   "future_packet": {
     "CLI_unchanged": true,
@@ -30,7 +47,7 @@
     "native_arithmetic_pins_unchanged": 16,
     "nonce": "49dd17d29f69f55f",
     "only_changed_role": "Host serving_integration",
-    "physical": "NOT RUN",
+    "physical": "COMPLETED_BOUNDED_106_WITH_INDEPENDENT_RELEASE",
     "protected_helpers_unchanged": 8,
     "source_index_sha256": "11192952675e37f34611a5c7817860b5e8e69ebb0d69f434ad507911ddebcc30",
     "worker_source_rows_unchanged": 127
@@ -93,5 +110,5 @@
       "sha256": "4b8e6de1b46374619b2e0e5c90065c4731ac92ecf8e5a823a2849d3b80c66961"
     }
   ],
-  "status": "SOURCE_VALIDATED_CPU_TESTED_INDEPENDENT_REVIEW_PASSED_PHYSICAL_BUDGET_BLOCKED"
+  "status": "SERVING_TESTED_METADATA_VALIDATION_FIX_COMPLETE"
 }

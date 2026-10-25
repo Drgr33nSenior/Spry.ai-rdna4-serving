@@ -13,11 +13,28 @@
     "requested_new_requests": 106,
     "required_cumulative_ceiling_seconds": 5961,
     "review_sha256": "12e0488e53fb3ef36ef1b98b14d86d9e7ea65032e206b725fa6a744dd76a5cc4",
+    "scope": "Historical first-journal operation46; its failure remains; final49 operation recorded separately",
     "second_operation_charged_seconds": 558,
     "status": "EXPLICIT_OWNER_ALLOWANCE_GRANTED"
   },
-  "corrected_serving_test": "One clientstart53HTTPcomplete; finalstrictcounterjoinFAILED; secondstartNOTRUN",
+  "corrected_serving_test": "Final49 operation:2starts106HTTP plusnative/owner checksPASS and independentrelease; original46 remainsINCOMPLETE",
   "deployed": false,
+  "final_operation": {
+    "actual_result_review_sha256": "7c3e9f6f778003365218f930006dc7213c6f6fed5d3479b9eb73b8d20f03d76a",
+    "allowance_ceiling_seconds": 6519,
+    "cumulative_owner_seconds": 2170,
+    "fresh_starts": 2,
+    "independent_release": true,
+    "new_optimization": false,
+    "one_use_consumed": true,
+    "owner_seconds": 1051,
+    "prior_failed_seconds": 1119,
+    "report": "../../results/20261025-final-baseline/final-summary.json",
+    "requests": 106,
+    "result_seal_sha256": "53eae9b5f03872de9ca2846e7b1fad8b5702d7843d45bbe794706473e862b95f",
+    "source_and_model_arithmetic_unchanged": true,
+    "status": "SERVING_TESTED_BOUNDED_BETTERBENCH_BASELINE_AA_COMPLETE"
+  },
   "local_checks": {
     "callback_journal_and_legacy_methods": 1,
     "full_exporter_and_consumer_methods": 5,
@@ -34,7 +51,7 @@
     "seal_sha256": "e47ce09f466a85418eb78412789321e4d33d8f32a549a45940ce0c1762f68ba4",
     "zero_test_attempt_retained": true
   },
-  "new_performance_result": "FORENSIC_SINGLE_START_UNACCEPTED only",
+  "new_performance_result": "Completed final49 boundedbaselinecheckpoint, no newruntimegain",
   "prepared_packet": {
     "archive_sha256": "fb7ae35bb3fb04fd6480dced7c7c67f5e799f1f26a43d76c9a5610d00e73aa06",
     "frozen_source_index_sha256": "0fe31dd0969fd662ead8bd546c6760464ae4d9d4592d4f7c7c13d21edf6732ab",
@@ -107,5 +124,5 @@
       "sha256": "ecc9e4d83bcb20a44cb4412f9883eac416092686a39a79824ac2db939c4bb4a6"
     }
   ],
-  "status": "HARDWARE_EXPORTED_FIRST53_CLIENT_COMPLETE_STRICT_COUNTER_GATE_FAILED"
+  "status": "SERVING_TESTED_METADATA_VALIDATION_FIX_COMPLETE"
 }

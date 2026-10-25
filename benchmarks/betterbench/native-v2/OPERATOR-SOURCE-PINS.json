@@ -42,6 +42,26 @@
       "source_role": "unbound source template of actual owner validator"
     }
   ],
+  "final_completed_operation": {
+    "actual_result_review_sha256": "7c3e9f6f778003365218f930006dc7213c6f6fed5d3479b9eb73b8d20f03d76a",
+    "actual_transported_modules": {
+      "serving_integration.py": {
+        "bytes": 20757,
+        "sha256": "a7afd15cb67652bb76fe7ca712099d608668248e80f11038ce301929fea0b200"
+      },
+      "serving_runtime.py": {
+        "bytes": 34710,
+        "sha256": "b01509c6687a3520b721c282580894a6f1221a4fdfb2c415447a28cd28d97aff"
+      }
+    },
+    "archive_sha256": "d88e6ff1bf21fe6fbf7f5e6be50b4d5fe55bc25ee3e2d82125b4012bed29108d",
+    "manifest_sha256": "6aa88ae248b887a50d5533a2c5cb7dba1bb8a141fe5e5976d6a56035e4b487b1",
+    "native_arithmetic_pins_unchanged": 16,
+    "protected_helpers_unchanged": 8,
+    "reader_patch": "counter-observation-reader.patch",
+    "source_index_sha256": "11192952675e37f34611a5c7817860b5e8e69ebb0d69f434ad507911ddebcc30",
+    "worker_source_rows_unchanged_from_previous_operation": 127
+  },
   "packet_archive_sha256": "480c653f4468e84053f08915034bb915b929e4fe7cac02d9b0d6cee262075d05",
   "packet_manifest_sha256": "e951fc14416cf1e3c0393de41ef9b72e37de4560dc30e09954ef1cce4eda9d8d",
   "schema": 1,

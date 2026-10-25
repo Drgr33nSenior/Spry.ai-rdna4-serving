@@ -1,10 +1,11 @@
 {
   "BetterBench": {
+    "allowance_ceiling_seconds": 6519,
     "automatic_retry": false,
-    "charged_owner_seconds": 1119,
+    "charged_owner_seconds": 2170,
     "control_model_starts": 1,
     "correction": {
-      "corrected_physical": "Firststart53HTTPcomplete/exportpassed; strictcounterjoinFAILED; secondstartNOTRUN",
+      "corrected_physical": "Final49completed2starts106checks/release; historical46strictfailure unchanged",
       "native_stdlib_passes": 3,
       "prepared_archive_sha256": "fb7ae35bb3fb04fd6480dced7c7c67f5e799f1f26a43d76c9a5610d00e73aa06",
       "prepared_manifest_sha256": "be6857bdf835867453a7ccc6b6c1d46a544eaade113992a716b2fabb2f56f5bb",
@@ -12,8 +13,14 @@
       "required_cumulative_ceiling_seconds": 5961,
       "required_fresh_seconds": 5400,
       "source_readiness_sha256": "1e7e102d8664e6aa726619f5996126153a0e32f68c42f563c04a40b973da4308",
-      "status": "SOURCE_NATIVE_STDLIB_TESTED_PHYSICAL_BUDGET_BLOCKED"
+      "status": "SERVING_TESTED_EXPORT_CORRECTION_COMPLETE"
     },
+    "cumulative_owner_seconds": 2170,
+    "final_actual_review_sha256": "7c3e9f6f778003365218f930006dc7213c6f6fed5d3479b9eb73b8d20f03d76a",
+    "final_fresh_starts": 2,
+    "final_owner_seconds": 1051,
+    "final_report": "../benchmarks/results/20261025-final-baseline/final-summary.json",
+    "final_requests": 106,
     "first_corrected_client_requests": 53,
     "first_operation_seconds": 561,
     "forensic_only": {
@@ -32,22 +39,30 @@
       "owner_budget_decision": {
         "cumulative_ceiling": 6519,
         "prior_seconds": 1119,
-        "proposed_new_seconds": 5400
+        "proposed_new_seconds": 5400,
+        "status": "GRANTED_AND_CONSUMED_FINAL_OPERATION_COMPLETE"
       },
       "packed_reader_replay": true,
+      "physical": "COMPLETE",
       "review_sha256": "379016eb570800cc2eace47fb37a4098ffafbf7f0e41534bb085055309f04c64",
       "source_index_sha256": "11192952675e37f34611a5c7817860b5e8e69ebb0d69f434ad507911ddebcc30",
-      "status": "SOURCE_CPU_CHECKED_INDEPENDENT_REVIEW_PASSED_PHYSICAL_NOT_RUN",
+      "status": "HOST_VALIDATION_FIX_SERVING_TESTED_106_AND_REVIEWED",
       "worker_source_unchanged": true
+    },
+    "historical_operations": {
+      "first_export_failure_seconds": 561,
+      "second_counter_failure_seconds": 558,
+      "status": "BothINCOMPLETEunchanged"
     },
     "host_memory_limit_or_OOM_events": 0,
     "independent_release": true,
-    "new_performance_results": "NOT ACCEPTED",
+    "new_performance_results": "Completed bounded mixed-workload A/A; no matched-work gain/regression claim",
     "physical_deployment": false,
+    "quality_oracle": false,
     "second_corrected_start": "NOT RUN",
     "second_model_starts": 0,
     "second_operation_seconds": 558,
-    "status": "INCOMPLETE_TWO_RECORDED_OPERATIONS_FIRST_CORRECTED_CLIENT53_COMPLETE_STRICT_COUNTER_JOIN_FAIL",
+    "status": "SERVING_TESTED_BOUNDED_BETTERBENCH_BASELINE_AA_COMPLETE",
     "strict_control_request_completion": "NOT AUTHENTICATED"
   },
   "date": "2026-10-25",
@@ -70,6 +85,10 @@
     "Static_native_members": 259,
     "Static_native_seal": "c64ef6feb72593b10b27ab7c6f57a37f49ab5ada343784e8408b9f0dd095ea15",
     "current_baseline_prefill_result_sha256": "ff90e891b400353144c7a67037184633cb6437bedf919a653e9c425fb3970e00",
+    "final_BetterBench_actual_review_sha256": "7c3e9f6f778003365218f930006dc7213c6f6fed5d3479b9eb73b8d20f03d76a",
+    "final_BetterBench_members": 477,
+    "final_BetterBench_readout_sha256": "d206783c6bf3fae073b257d44d0722b43bb431ceaeb5b13031acfb59fc986d8b",
+    "final_BetterBench_result_seal": "53eae9b5f03872de9ca2846e7b1fad8b5702d7843d45bbe794706473e862b95f",
     "final_QA_CPU_members": 193,
     "final_QA_CPU_seal": "80544329cdf3ac696a6449779dfbefd664bb69d1fb30f2e7ead19ebbdf9057a6",
     "final_QA_native_members": 249,
@@ -363,5 +382,5 @@
   },
   "selected_configuration_changed": false,
   "selection_sha256": "aa691cdee9957416c8672cf400700dcec28cd49333795ad405aaf7d5912cabde",
-  "status": "TUNING_DISPOSITIONS_RECONCILED_FINAL_QA_PASS_BETTERBENCH_INCOMPLETE"
+  "status": "TUNING_DISPOSITIONS_CLOSED_FINAL_QA_AND_BOUNDED_BETTERBENCH_PASS"
 }
