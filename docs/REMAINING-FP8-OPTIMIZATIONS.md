@@ -95,3 +95,5 @@ The final host-reader change is validation tooling, not a serving optimisation. 
 ## Subsequent host observation comparison
 
 The [host-path cleanup A/B](HOST-PATH-CLEANUP.md) completed another 106 BetterBench requests with independent release. Decode logging and commit-counter file calls were reduced, but no useful performance improvement was established. The candidate remains opt-in and unselected; the numerical serving baseline is unchanged.
+
+The subsequent [EAGLE-4 and lossy communication investigation](EAGLE4-AND-LOSSY-COMMUNICATION.md) records source compatibility and measurement gaps. EAGLE-4 is parked at the owner's direction. Current QuickReduce admission excludes R9700, and the generic quantized communication flag is NPU-only. Lossy transport remains untested and unselected; no runtime or precision change was made.

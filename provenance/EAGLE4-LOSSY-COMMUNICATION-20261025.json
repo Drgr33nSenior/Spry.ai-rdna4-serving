@@ -1,0 +1,291 @@
+{
+  "active_owner": null,
+  "communication": {
+    "decision": "UNTESTED_UNSELECTED_PORTABILITY_AND_EXPOSURE_GATES_UNMET",
+    "echo": "RESEARCH_ONLY_NO_NATIVE_INTEGRATION_OR_BUILD",
+    "flashinfer": "UNSUPPORTED_SM90_AND_NVSWITCH_REQUIREMENT",
+    "generic_quant_all_reduce": "NPU_ONLY_OTHER_DEVICES_USE_ORDINARY_REDUCTION",
+    "new_precision_contract_approved": false,
+    "next_gate": "Authenticate current native route, shapes and exposed transport; do not infer transport from inclusive rank-wait intervals",
+    "quickreduce_current_admission": [
+      "gfx94",
+      "gfx95"
+    ],
+    "quickreduce_default": "NONE",
+    "quickreduce_default_cast_bf16_to_fp16": 1,
+    "rcclx_current_native_integration_verified": false
+  },
+  "created_utc": "2026-10-25T20:55:22.664857+00:00",
+  "eagle4": {
+    "accuracy_reports_verified": false,
+    "admitted_amd_architectures": [
+      "gfx90a",
+      "gfx942",
+      "gfx950"
+    ],
+    "decision": "PARKED_BY_OWNER",
+    "draft_revision": "f58a5985223040552ad404fba98f0dd27f5f676a",
+    "further_work_queued": false,
+    "local_arch": "gfx1201",
+    "owner_direction": "Let's part eagle-4 as I'm reading about issues with accuracy too",
+    "source_commit": "60bab6b469e795d47bda82b16243b82bb7b6206f"
+  },
+  "hardware_tests": "NOT RUN",
+  "host_benchmark_publication": "b0149ecd2ddcb68bdab35bce28ae114340e3aa04",
+  "model_tests": "NOT RUN",
+  "native_observation": {
+    "GPU": false,
+    "exit_code": 0,
+    "files": [
+      {
+        "bytes": 9909,
+        "path": "srt/distributed/device_communicators/quick_all_reduce.py",
+        "sha256": "ca29d8d012aa612f9349bd66cca47d9362aa0709101b6c0386be50fade080838"
+      },
+      {
+        "bytes": 9753,
+        "path": "srt/speculative/spec_registry.py",
+        "sha256": "c080ed73628a039e780c82c33600fd495526d4fd4fcda00e21faa5369861abdf"
+      }
+    ],
+    "framework_imports": false,
+    "parent_parallel_state_sha256": "8c2cdbbe98ae59894f1ff682a038cb21581421d2f889aa36604cd51542395da8",
+    "receipt": "scratchpad/fp8-host-path-cleanup-20261025-v1/communication-source-observation.json",
+    "recipe_sha256": "91a7b95f8047c39074fd4c210d8d7fea4369dc536c03cf1ea13a92948c4b09f0",
+    "scope": "read_only_source_no_import_no_GPU"
+  },
+  "precision_changed": false,
+  "report_sha256": "6b7c9f74b67fc898b2eccd3dd8f99d9131c721d1c39c802a39ab72290f16e37c",
+  "research_root": "scratchpad/fp8-host-path-cleanup-20261025-v1/research",
+  "retained_local_evidence": [
+    {
+      "bytes": 137819,
+      "path": "scratchpad/fp8-remaining-optimizations.w3m3xpg7/current-cost-route-source/srt/distributed/parallel_state.py",
+      "sha256": "8c2cdbbe98ae59894f1ff682a038cb21581421d2f889aa36604cd51542395da8"
+    },
+    {
+      "bytes": 75118,
+      "path": "scratchpad/fp8-remaining-optimizations.w3m3xpg7/fusion-complete-cost-preparation-v1/selected/srt/layers/linear.py",
+      "sha256": "9783c249d2e2283496f3f118e656b95b34aed80cc8776a6ccb9b16f7b8e6955d"
+    },
+    {
+      "bytes": 51350,
+      "path": "scratchpad/fp8-remaining-optimizations.w3m3xpg7/qwen-factory-flow-source/model/config.json",
+      "sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+    },
+    {
+      "bytes": 1926,
+      "path": "scratchpad/fp8-remaining-optimizations.w3m3xpg7/conditional/COLLECTIVE-SOURCE-AND-COST-GATE.json",
+      "sha256": "bca08581fd00b33fd50862d3cdc0fa6033cf93e64bc619a6bcb8098abbde75d4"
+    },
+    {
+      "bytes": 3213,
+      "path": "scratchpad/fp8-remaining-optimizations.w3m3xpg7/collective-overlap-disposition-20261025-v1/DISPOSITION.json",
+      "sha256": "831c33acdada98ce96ea59a16f062e922e19c4f0b79e72be495e3bc92a874877"
+    }
+  ],
+  "review": "Coordinator source investigation; no new independent arithmetic review or device qualification claimed",
+  "schema": 1,
+  "scope": "SOURCE_VALIDATED_FEASIBILITY_ONLY",
+  "selected_runtime_changed": false,
+  "shape_estimates": {
+    "cases": [
+      {
+        "input_bytes": 81920,
+        "rows": 8
+      },
+      {
+        "input_bytes": 163840,
+        "rows": 16
+      },
+      {
+        "input_bytes": 20971520,
+        "rows": 2048
+      }
+    ],
+    "dtype_bytes": 2,
+    "hidden_size": 5120,
+    "scope": "Estimated ordinary BF16 activation collective input; not captured wire bytes, route or bottleneck"
+  },
+  "upstream_other_sources": [
+    {
+      "scope": "SM90+ NVSwitch and large-message suitability; accessed 2026-10-25",
+      "url": "https://docs.flashinfer.ai/generated/flashinfer.comm.quantized_all_reduce.html"
+    },
+    {
+      "scope": "Published Instinct evidence; source separately pinned",
+      "url": "https://engineering.fb.com/2026/02/24/data-center-engineering/rrcclx-innovating-gpu-communications-amd-platforms-meta/"
+    },
+    {
+      "scope": "Echo A100 results and per-pass compensation; implementation not built",
+      "url": "https://arxiv.org/html/2610.14277v1"
+    },
+    {
+      "scope": "External report; not reproduced here or used to attribute past failures",
+      "url": "https://github.com/sgl-project/sglang/issues/40084"
+    }
+  ],
+  "upstream_sources": [
+    {
+      "bytes": 10341,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/README.md",
+      "sha256": "871ce17ed541a9020b8ec132e08a4cb21ac5a5f217d579c470d76889a6d11a94",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/README.md"
+    },
+    {
+      "bytes": 2708,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/pyproject.toml",
+      "sha256": "24bfdcd918bfbb74655e1fb548937942c7eca19cd92a976d94265f0412c58bdc",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/pyproject.toml"
+    },
+    {
+      "bytes": 33788,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/support-matrix.md",
+      "sha256": "c90369fc2e6d305ba929d76513d152cb410b91654127b87ff244a21e11f7f087",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/support-matrix.md"
+    },
+    {
+      "bytes": 5508,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/compatibility.md",
+      "sha256": "fab129e943329c26a62826cd8333eceb91d707802041acaf7cd6e514b0bb45e1",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/compatibility.md"
+    },
+    {
+      "bytes": 13998,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/known-limits.md",
+      "sha256": "7db614f79fa9c73932d872269b24db3cc813bea268b88c1ff1e43903e51e6474",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/known-limits.md"
+    },
+    {
+      "bytes": 6418,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/quickstart-amd.md",
+      "sha256": "6f80a7915424137f19d4415399e71ada86f454d9f9b3ddd2ce2d2375320c44cf",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/quickstart-amd.md"
+    },
+    {
+      "bytes": 6880,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/quickstart-sglang.md",
+      "sha256": "a2b88192ceca747b06039c347e6f7aa890c61d5809e08fd76814c05e161060ff",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/quickstart-sglang.md"
+    },
+    {
+      "bytes": 8929,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/install.md",
+      "sha256": "9b4929d25b113df5255f9da9734b163b3d7347d721992ec375ce5f9a09166325",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/install.md"
+    },
+    {
+      "bytes": 2101,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/release.env",
+      "sha256": "dac22438d2665d75351d599ef831f8fb830e5d71998612b51e42b37ecc53b92d",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/release.env"
+    },
+    {
+      "bytes": 10843,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/architecture.md",
+      "sha256": "35d16803658ec6af814b6d06088aedd7fb61f762cf48852022cd05763442f227",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/architecture.md"
+    },
+    {
+      "bytes": 19215,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/calibration.md",
+      "sha256": "9e7439fdea32336e823647bfb325aa19f11bdb5fe02a356e9fd0d5fd96508340",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/calibration.md"
+    },
+    {
+      "bytes": 7573,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/migration.md",
+      "sha256": "893746ad53204d3f576810d4ada5603588b85e9644c6fc0f2600699eb8a40773",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/migration.md"
+    },
+    {
+      "bytes": 10212,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/eagle_harness/sglang/hooks.py",
+      "sha256": "3bc9a40ba8fd394aff8b2ce6ec1d90b2c3002514100b5c3ba140126f0407a17a",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/eagle_harness/sglang/hooks.py"
+    },
+    {
+      "bytes": 7443,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/eagle_harness/compat.py",
+      "sha256": "1725e84de3e2d6191f97c1d4315e6f75c49e7202e5b39c77f32ae38f82e99571",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/eagle_harness/compat.py"
+    },
+    {
+      "bytes": 7801,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/eagle_harness/kernels/arch.py",
+      "sha256": "6451ac13107b9ffd4e0763b85befb3a0c1d718d2ca886e3da8f9f1ab341a36b3",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/eagle_harness/kernels/arch.py"
+    },
+    {
+      "bytes": 32632,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/eagle_harness/kernels/gdn_tree_gluon.py",
+      "sha256": "241d24287b04803f6e1b7c080eb284a75a1e52c9ed1931750d8efc58d885ab7b",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/eagle_harness/kernels/gdn_tree_gluon.py"
+    },
+    {
+      "bytes": 6263,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/docs/kernels.md",
+      "sha256": "a1cf9d2b10bb6318f62fbe0e931521d57766a18e239a39c9764e4594909bfb7d",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/docs/kernels.md"
+    },
+    {
+      "bytes": 2862,
+      "commit": "60bab6b469e795d47bda82b16243b82bb7b6206f",
+      "path": "eagle4/tests/test_rocm_dispatch.py",
+      "sha256": "47f7ba8497dfb8f59f4efb027f19c29f6b19bf5d7defc94a94302d997cadfded",
+      "url": "https://raw.githubusercontent.com/eagle-hq/eagle-4/60bab6b469e795d47bda82b16243b82bb7b6206f/tests/test_rocm_dispatch.py"
+    },
+    {
+      "bytes": 11630,
+      "commit": "44c4a0fe7d3519ef0ec6c547689a7790cae3b494",
+      "path": "rcclx/README.md",
+      "sha256": "02e149859d5bfe2e10c4b2208d53383c1990d811c3a716db993ede061e2726f6",
+      "url": "https://raw.githubusercontent.com/meta-pytorch/torchcomms/44c4a0fe7d3519ef0ec6c547689a7790cae3b494/comms/rcclx/develop/README.md"
+    },
+    {
+      "bytes": 7720,
+      "commit": "44c4a0fe7d3519ef0ec6c547689a7790cae3b494",
+      "path": "rcclx/meta/lpcoll/low_precision_allreduce.cc",
+      "sha256": "dcecf94c2db265cabed0763d1e8db80fc8f9dbe520ae14a34ca813726c237fa4",
+      "url": "https://raw.githubusercontent.com/meta-pytorch/torchcomms/44c4a0fe7d3519ef0ec6c547689a7790cae3b494/comms/rcclx/develop/meta/lpcoll/low_precision_allreduce.cc"
+    },
+    {
+      "bytes": 6243,
+      "commit": "44c4a0fe7d3519ef0ec6c547689a7790cae3b494",
+      "path": "rcclx/meta/lpcoll/low_precision_common.h",
+      "sha256": "565770604de2a36408cb77e49215004402acc86bd5546953379a49b60b8624ef",
+      "url": "https://raw.githubusercontent.com/meta-pytorch/torchcomms/44c4a0fe7d3519ef0ec6c547689a7790cae3b494/comms/rcclx/develop/meta/lpcoll/low_precision_common.h"
+    },
+    {
+      "bytes": 20859,
+      "commit": "44c4a0fe7d3519ef0ec6c547689a7790cae3b494",
+      "path": "rcclx/meta/lpcoll/low_precision_kernels.cu",
+      "sha256": "f5ee2f5dbfd9220014eaa5ce199382d95c3382e6c92d92842b3627f3a9ee661b",
+      "url": "https://raw.githubusercontent.com/meta-pytorch/torchcomms/44c4a0fe7d3519ef0ec6c547689a7790cae3b494/comms/rcclx/develop/meta/lpcoll/low_precision_kernels.cu"
+    },
+    {
+      "bytes": 9940,
+      "commit": "44c4a0fe7d3519ef0ec6c547689a7790cae3b494",
+      "path": "rcclx/meta/lpcoll/low_precision_utility.h",
+      "sha256": "576a32894e5a878489e846a58c33e86f07d38d1ad325e6f9fe832afa7259d5fc",
+      "url": "https://raw.githubusercontent.com/meta-pytorch/torchcomms/44c4a0fe7d3519ef0ec6c547689a7790cae3b494/comms/rcclx/develop/meta/lpcoll/low_precision_utility.h"
+    }
+  ]
+}
