@@ -1,0 +1,64 @@
+{
+  "active_bf16_projection_bytes_per_rank": 24326963200,
+  "active_fp8_projection_bytes_per_rank": 12163481600,
+  "active_fp8_resident_scale_bytes_per_rank": 2969600,
+  "automatic_pool_clamp_acceptable": false,
+  "contract_changed": false,
+  "date": "2026-10-23",
+  "decision": "Retain FP8 target weights; do not launch unchanged BF16 control with proven static deficit. Alternative smaller-profile design is separate, no owner question required while FP8 work proceeds.",
+  "exact_per_rank_target_weight_increase_bytes": 12160512000,
+  "excluded": [
+    "target BA/conv/norm weights",
+    "rotary caches",
+    "MM reservation",
+    "graphs",
+    "workspaces",
+    "allocator and driver overhead"
+  ],
+  "hardware_validation": "NOT RUN",
+  "host_fit_proven": false,
+  "host_owner_cap_bytes": 40802189312,
+  "kv_payload_and_padding_bytes_per_token_per_rank": 43008,
+  "label": "source-validated",
+  "lower_bounds": [
+    {
+      "bytes": 31904732912,
+      "context": 16384,
+      "pool": 16416
+    },
+    {
+      "bytes": 32609375984,
+      "context": 32768,
+      "pool": 32800
+    },
+    {
+      "bytes": 34018662128,
+      "context": 65536,
+      "pool": 65568
+    }
+  ],
+  "mandatory_resident_base_lower_bound_bytes": 31198670576,
+  "model_starts": 0,
+  "numerical_mismatch_resolved": false,
+  "optimistic_static_ceiling_bytes": 31472043950.08,
+  "publication_omissions": {
+    "private_path_or_machine_identity_fields_removed": 1,
+    "raw_record_sha256": "4f9b822e177a1cdba9152dc2b8a681b89134132e35ea581f6f1e7575c89194fb",
+    "sealed_private_evidence_hashes_retained": true
+  },
+  "qualification": false,
+  "raw_vram_bytes_per_card": 34208743424,
+  "recorded_utc": "2026-10-23T20:14:44.020004+00:00",
+  "reviewer": "/root/remaining_astra",
+  "schema_version": 1,
+  "scope": "Source memory feasibility; no BF16 device test",
+  "selected_target_weights": "FP8",
+  "source_seals": {
+    "headers": "ced831993a6cb25c7f0b3eae38d290df0238ae8f35d56b45a53d74109944808b",
+    "memory": "818a1e8100ee7665a825b524eb5709156ca2d792197e75347052699a1ee2e7fb",
+    "s31_native": "779b0425ca69970332f4700e323df92b8eee7c2fcd85ddbe3c9b31d498b8d893"
+  },
+  "sprint": 41,
+  "status": "SOURCE_BUDGET_EXCLUSION_UNCHANGED_PROFILE",
+  "tracking": "docs/SPRINT41-BF16-WEIGHT-FEASIBILITY.md"
+}

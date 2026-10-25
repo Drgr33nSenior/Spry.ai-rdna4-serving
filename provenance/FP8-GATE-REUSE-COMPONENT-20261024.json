@@ -1,0 +1,87 @@
+{
+  "component_scope": "FirstGPU/C1 only; selected reference versus coupled FP32 gate-exponential producer/fold",
+  "decision": "Reject advancement using resource and observed global verify prerequisites; no automatic retry",
+  "deployed": false,
+  "failure": "Observed allocation exceeds predeclared stricter upper envelope; full component incomplete",
+  "limits_of_inference": [
+    "No full useful-pair predicate conclusion: unrun C2 may differ",
+    "Broad overlapping timing ranges; no universal regression claim",
+    "No normalised-key/deferred-algebra disposition follows"
+  ],
+  "native": {
+    "members": 199,
+    "protected_members": 19,
+    "protected_seal": "bbc2d875f4b21ea31f73e0f6c2d286531fb22147263f9e6f2aefae118848f143",
+    "seal": "990447c1ddb245a434c4072fe9ae4ab625af02bf7e38de8c2d1429ea146c88bb",
+    "workload_members": 72,
+    "workload_seal": "2ff643fcd4fc9379049dd2272de1fb4078184e7610ee5b502f874734b0d096b1"
+  },
+  "not_run": [
+    "C2",
+    "second-card suites",
+    "long continuation",
+    "singleton tails",
+    "serving quality/latency",
+    "deployment"
+  ],
+  "partial_counts": {
+    "captures": 6,
+    "complete_suites": 0,
+    "exact_cases": 48,
+    "replays": 54,
+    "timings": 32,
+    "untimed_references": 2
+  },
+  "publication_omissions": {
+    "private_path_or_machine_identity_fields_removed": 2,
+    "raw_record_sha256": "81c4853cb769f50f476e017799caada0daf38228f0498437fe793adfae7a1b86",
+    "sealed_private_evidence_hashes_retained": true
+  },
+  "resource": {
+    "absolute_cap_breached": false,
+    "absolute_limit_bytes": 268435456,
+    "declared_upper_bytes": 130790328,
+    "host_peak_bytes": 729501696,
+    "peak_allocated_bytes": 152307200,
+    "peak_reserved_bytes": 176160768
+  },
+  "results": [
+    {
+      "accepted": 4,
+      "candidate_pair_ms": 0.28993499279022217,
+      "pair_ratio": 1.048339,
+      "paired_total": 8,
+      "paired_wins": 3,
+      "reference_pair_ms": 0.2765660136938095,
+      "verify_ratio": 1.098152
+    },
+    {
+      "accepted": 8,
+      "candidate_pair_ms": 0.2814750075340271,
+      "pair_ratio": 1.024701,
+      "paired_total": 8,
+      "paired_wins": 4,
+      "reference_pair_ms": 0.27469000220298767
+    }
+  ],
+  "review": {
+    "agent": "/root/remaining_astra",
+    "cleanup_errors": [],
+    "model": "gpt-6-astra",
+    "partial_results": "Authenticated separately without making full reader pass",
+    "reasoning_effort": "max",
+    "release": "PASS",
+    "unresolved": false
+  },
+  "rollback": "Non-adoption; selected baseline unchanged",
+  "schema": 1,
+  "selected": false,
+  "serving_tested": false,
+  "source": {
+    "fold_candidate": "5fa3c32aaf0ace58f479ba98fa03682eaa4382169682432e1c236592bf08eca8",
+    "members": 66,
+    "seal": "00efec39206aafca9accee2ad4e2179e083512841becc3f8a26892aa4d5a44b7",
+    "verify_candidate": "9e19aba72b8d6fd616b2780e4fb91f691d5888a92824a5dbb1b11cfb94d45c10"
+  },
+  "status": "REJECTED_ADVANCEMENT_COMPONENT_INCOMPLETE"
+}

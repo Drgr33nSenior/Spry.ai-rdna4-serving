@@ -1,0 +1,53 @@
+{
+  "automatic_retry": false,
+  "charged_seconds": 558,
+  "cumulative_seconds": 1119,
+  "date": "2026-10-25",
+  "deployed": false,
+  "evidence": {
+    "independent_failure_forensic_review_sha256": "c9400169a339566b25ef437ae6fd9f0d8e0b278fc9e71c13ba694ed9a604086e",
+    "native_manifest_sha256": "bee26bbf96caf7165d01b16c48e83df9f1fdf515a67ddb1389d8467cfda8b6ac",
+    "native_members": 300,
+    "result_release_sha256": "eedb51908981f40a01bf12158b566708754eb4e54c4e2a155e45996c8108600d"
+  },
+  "first_client_complete": true,
+  "first_client_parent_error": null,
+  "first_client_requests": 53,
+  "first_model_starts": 1,
+  "host_cgroup_peak_bytes": 23410515968,
+  "host_memory_events": {
+    "high": 0,
+    "low": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_group_kill": 0,
+    "oom_kill": 0,
+    "sock_throttled": 0
+  },
+  "independent_release_verified": true,
+  "original_controller_status": "INCOMPLETE",
+  "performance_scope": "FORENSIC_SINGLE_START_UNACCEPTED only; not completed final checkpoint",
+  "phases": [
+    {
+      "cgroup_sha256": "931de9bc62a63ed8f7fd58b0bb5f65a8625ee9799d39f1ed5165da0a601e3e7e",
+      "identities_checked_absent": 120,
+      "observer_sha256": "72ba5eab1b1c9066ebf0d0fa47b7f0b061bf007a9281e5c8ceb2b722312e145b",
+      "phase": "release-bf16",
+      "scope_absent": true
+    },
+    {
+      "cgroup_sha256": "fc2da5c93c9466c861898154db70f861ff321586f9f5197c8754bead07af3c3f",
+      "identities_checked_absent": 120,
+      "observer_sha256": "a28bef38560946b3259257c9e0580152574b6bd284e672960d865ed30664732f",
+      "phase": "independent",
+      "scope_absent": true
+    }
+  ],
+  "primary_observed_failure": "resource receipt: ValueError: HTTP integration: per-request completed commit/replay count differs",
+  "prior_failed_seconds": 561,
+  "schema": 1,
+  "second_model_starts": 0,
+  "selected": false,
+  "status": "BETTERBENCH_INCOMPLETE_FIRST53_CLIENT_COMPLETE_STRICT_COUNTER_JOIN_FAIL_RELEASE_VERIFIED",
+  "strict_arm_acceptance": false
+}

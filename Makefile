@@ -3,7 +3,17 @@ CXX ?= c++
 CPU_FLAGS = -std=c++17 -O1 -g -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -ffp-contract=off -fno-fast-math
 
 .PHONY: test test-target-graph-timing test-device-phase-timing test-sampling-host-timing test-cpu test-fp8 test-benchmark test-benchmark-profile test-benchmark-readout test-host-owner test-platform-collector test-benchmark-bindings test-codec test-cache-validator test-cache-gpu test-grouped-reader test-cache-native-inspection test-cache-phase-profile
+.PHONY: test-validation-preflight
 test: test-target-graph-timing test-device-phase-timing test-sampling-host-timing test-cpu test-fp8 test-benchmark test-benchmark-profile test-benchmark-readout test-host-owner test-platform-collector test-benchmark-bindings test-codec test-cache-validator test-cache-gpu test-grouped-reader test-cache-native-inspection test-cache-phase-profile
+
+# Source-only boundary regressions and actual package/collector entry points.
+# Run with the declared runtime Python for compiler-sensitive native preflight.
+test-validation-preflight:
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_validation_preflight.py
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_verify_metadata_reuse.py
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_context64_public_patch.py
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_prepare_benchmark_package.py
+	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_platform_collector.py
 
 test-cpu:
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tools/test_cpu.py

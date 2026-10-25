@@ -13,6 +13,10 @@ Use these maintained records for current settings; do not infer selection from
 the newest scratchpad directory. Resolve the private evidence workspace from
 the session handoff. For its existing launch/readout procedure, read
 [evidence workflow](references/evidence-workflow.md).
+Before native work on changed validation code, use its
+[source-boundary preflight](references/evidence-workflow.md#source-boundary-preflight).
+The public regression corpus is source-only; validate the exact consumed packet
+separately under its declared runtime.
 
 ## Preserve the request profile
 

@@ -1,0 +1,367 @@
+{
+  "BetterBench": {
+    "automatic_retry": false,
+    "charged_owner_seconds": 1119,
+    "control_model_starts": 1,
+    "correction": {
+      "corrected_physical": "Firststart53HTTPcomplete/exportpassed; strictcounterjoinFAILED; secondstartNOTRUN",
+      "native_stdlib_passes": 3,
+      "prepared_archive_sha256": "fb7ae35bb3fb04fd6480dced7c7c67f5e799f1f26a43d76c9a5610d00e73aa06",
+      "prepared_manifest_sha256": "be6857bdf835867453a7ccc6b6c1d46a544eaade113992a716b2fabb2f56f5bb",
+      "remaining_seconds": 4839,
+      "required_cumulative_ceiling_seconds": 5961,
+      "required_fresh_seconds": 5400,
+      "source_readiness_sha256": "1e7e102d8664e6aa726619f5996126153a0e32f68c42f563c04a40b973da4308",
+      "status": "SOURCE_NATIVE_STDLIB_TESTED_PHYSICAL_BUDGET_BLOCKED"
+    },
+    "first_corrected_client_requests": 53,
+    "first_operation_seconds": 561,
+    "forensic_only": {
+      "C1_aggregate_tok_s": 81.31884685057322,
+      "C1_median_individual_s": 5.743616194580682,
+      "C2_aggregate_tok_s": 144.80481455197696,
+      "C2_median_individual_s": 8.909152924024966,
+      "accepted_final_checkpoint": false,
+      "cache_counters": "ALL UNKNOWN"
+    },
+    "future_counter_fix": {
+      "CPU_tests": 4,
+      "archive_sha256": "d88e6ff1bf21fe6fbf7f5e6be50b4d5fe55bc25ee3e2d82125b4012bed29108d",
+      "host_only": true,
+      "manifest_sha256": "6aa88ae248b887a50d5533a2c5cb7dba1bb8a141fe5e5976d6a56035e4b487b1",
+      "owner_budget_decision": {
+        "cumulative_ceiling": 6519,
+        "prior_seconds": 1119,
+        "proposed_new_seconds": 5400
+      },
+      "packed_reader_replay": true,
+      "review_sha256": "379016eb570800cc2eace47fb37a4098ffafbf7f0e41534bb085055309f04c64",
+      "source_index_sha256": "11192952675e37f34611a5c7817860b5e8e69ebb0d69f434ad507911ddebcc30",
+      "status": "SOURCE_CPU_CHECKED_INDEPENDENT_REVIEW_PASSED_PHYSICAL_NOT_RUN",
+      "worker_source_unchanged": true
+    },
+    "host_memory_limit_or_OOM_events": 0,
+    "independent_release": true,
+    "new_performance_results": "NOT ACCEPTED",
+    "physical_deployment": false,
+    "second_corrected_start": "NOT RUN",
+    "second_model_starts": 0,
+    "second_operation_seconds": 558,
+    "status": "INCOMPLETE_TWO_RECORDED_OPERATIONS_FIRST_CORRECTED_CLIENT53_COMPLETE_STRICT_COUNTER_JOIN_FAIL",
+    "strict_control_request_completion": "NOT AUTHENTICATED"
+  },
+  "date": "2026-10-25",
+  "deployed": false,
+  "endurance": "NOT RUN; exact long-duration contract not frozen",
+  "evidence": {
+    "BetterBench_corrected_failure_review_sha256": "c9400169a339566b25ef437ae6fd9f0d8e0b278fc9e71c13ba694ed9a604086e",
+    "BetterBench_corrected_native_members": 300,
+    "BetterBench_corrected_native_seal": "bee26bbf96caf7165d01b16c48e83df9f1fdf515a67ddb1389d8467cfda8b6ac",
+    "BetterBench_failure_release_sha256": "0e538e090e207ca004adc1a77ed57055826d32b8ec364f45b5978ee7dee81b19",
+    "BetterBench_native_members": 132,
+    "BetterBench_native_seal": "522b8055fe30410637af740ad7ffd9043ba764d6dcd8e2cfc5f3c63321bd7125",
+    "BetterBench_source_readiness_sha256": "79296618024ec15126e604d27ac934a8d11e568e2f27f906402fd817713d058d",
+    "C2_ABBA_disposition_sha256": "c7cd967d97627958778b34eae131eaa433759764de598ea4bfdacca71046dd54",
+    "QA_local_seal_adapter_review_sha256": "f290d1b7e03289b88c10acef31f51ec963ed50d65485d90ea5e21e9eb70a53fc",
+    "QA_source_readiness_sha256": "71ca054c59dc45580416a860f8c68be6d0653a08b0a13fbfd001e5beafd231f3",
+    "Static_CPU_members": 297,
+    "Static_CPU_seal": "2ab4d1625eb1d02ca44c00390273a0817777d1cf205567c7f58d096930c896bd",
+    "Static_final_result_sha256": "ed60825363211b3d6559dc3fedb6d47b8745d7d5bd1aaa4e9856dc4f6a034ac7",
+    "Static_native_members": 259,
+    "Static_native_seal": "c64ef6feb72593b10b27ab7c6f57a37f49ab5ada343784e8408b9f0dd095ea15",
+    "current_baseline_prefill_result_sha256": "ff90e891b400353144c7a67037184633cb6437bedf919a653e9c425fb3970e00",
+    "final_QA_CPU_members": 193,
+    "final_QA_CPU_seal": "80544329cdf3ac696a6449779dfbefd664bb69d1fb30f2e7ead19ebbdf9057a6",
+    "final_QA_native_members": 249,
+    "final_QA_native_seal": "8480930bf8dcd7a6c28cd7101a87cd8de41fcbe8a4e29a610ea2d37891e62414",
+    "final_QA_result_review_sha256": "f3db1cea9d0e76163be09ff1df8ef0998f4412389640f6bc2c1a7caa0a5e049a",
+    "final_QA_result_sha256": "4434434aa9daaa694d7a1cfef8a3daafd1f19f6edd0e52b872eb6faa82bef4c1",
+    "private_root": "scratchpad/fp8-remaining-optimizations.w3m3xpg7",
+    "review_index_scope": "Inventory of exact pointers, not proof every raw archive was reviewed",
+    "review_input_members": 14,
+    "review_input_seal": "fcd77aacc0d2fe51412c0e40db9f5fa614ed24dba54d4a61f155d6af659e02f8"
+  },
+  "final_qualification": {
+    "CPU_seconds": 27.00842895801179,
+    "charged_owner_seconds": 394,
+    "fresh_starts": 2,
+    "independent_CPU_release": true,
+    "independent_GPU_release": true,
+    "isolated_code_passes": 2,
+    "native_final_answer_passes": 14,
+    "production_qualification": false,
+    "requests": 16,
+    "statistical_sampling_verified": false,
+    "status": "BOUNDED_FINAL_QA_PASS",
+    "unique_graded_tasks": 7
+  },
+  "final_review": "ACCEPTED retained baseline, material dispositions, QA/BetterBench source readiness and actual final QA; high-only final checks",
+  "findings": [
+    {
+      "deployed": false,
+      "disposition": "SOURCE_VALIDATED_REJECTED_UNCHANGED_PROFILE",
+      "id": "S41",
+      "limitations": "No BF16 hardware run; not exclusion of every smaller BF16 profile; no stability-superiority claim.",
+      "references": [
+        "s41"
+      ],
+      "selected": false,
+      "supported_result": "BF16 lower bound32,609,375,984B/rank at32K exceeds generous static31,472,043,950.08B ceiling before excluded allocations."
+    },
+    {
+      "deployed": false,
+      "disposition": "SERVING_TESTED_DIAGNOSTIC_CLOSED",
+      "id": "W1a",
+      "limitations": "Historical exceptions retained; no claim jitter is causal or all current answers are broken.",
+      "references": [
+        "dispatch"
+      ],
+      "selected": false,
+      "supported_result": "Actual C2 M16 common M64/stage3 and native extend attention observed on both ranks;8 natural checks;12/19 cross-start output/work matches."
+    },
+    {
+      "deployed": false,
+      "disposition": "INCONCLUSIVE_CLOSED_UNSELECTED",
+      "id": "W1b",
+      "limitations": "No serving causal speedup; BA/lifecycle NOTRUN after failed prerequisite.",
+      "references": [
+        "m16_component",
+        "m16_serving"
+      ],
+      "selected": false,
+      "supported_result": "M16 gate/up component144 exact checks; serving8natural answers pass but0 matchedC2groups; mandatoryABconjunct failed."
+    },
+    {
+      "deployed": false,
+      "disposition": "COMPONENT_TESTED_REJECTED_UNCONDITIONAL_C2_SPLIT",
+      "id": "W1c",
+      "limitations": "Bits match selected singleton composition, not nativeC2; serving/cancellation/lifecycle NOTRUN.",
+      "references": [
+        "c2_split"
+      ],
+      "selected": false,
+      "supported_result": "16both-card cells,1264graph checks,1024timings; longerC2 wins but shortest steady48/48losses and14/16flush losses fail globalgate."
+    },
+    {
+      "deployed": false,
+      "disposition": "SERVING_TESTED_REJECTED_BENEFIT_GATE",
+      "id": "W1d",
+      "limitations": "C2 paths/work differ; no matched-work kernel claim; fourunique short-answer oracles; survivor operational checks not numerical equivalence.",
+      "references": [
+        "c2_ab_review",
+        "c2_disposition",
+        "c2_ba_gpu",
+        "c2_ba_quality",
+        "raw_c2_ba"
+      ],
+      "selected": false,
+      "supported_result": "C2 AB+3.06382%,BA+0.913667%; geometric+1.9830771805%<2%. Each order14native grades+2codegraders/release passes."
+    },
+    {
+      "deployed": false,
+      "disposition": "COMPONENT_BENEFIT_RETAINED_FORMAL_SERVING_COMPARISON_INCOMPLETE_UNSELECTED",
+      "id": "W2_stage",
+      "limitations": "OriginalABphysical_successfalse remainsINCOMPLETE. Formal stage comparator refuses; no fabricated successfulAB. Single ABtaskAwork differs.",
+      "references": [
+        "m4096_component",
+        "w2_stage",
+        "w2_gate_false",
+        "w2_reader_fix",
+        "w2_offline_fix",
+        "w2_full_tests",
+        "raw_stage_ab",
+        "raw_stage_ba"
+      ],
+      "selected": false,
+      "supported_result": "720exact component checks,24.63\u201341.34%lowerM4096 medians. At4Kchunks correctedforensicAB andcleanBA show10.9\u201312.0%lowerTTFT."
+    },
+    {
+      "deployed": false,
+      "disposition": "HARDWARE_AND_SERVING_TESTED_REJECTED_NET_CURRENT_BASELINE_BENEFIT",
+      "id": "W2_current",
+      "limitations": "2Kcontrol uses b101-equivalent dispatch outsideM4096guard. Unequal output/verifier work. No reverse run because benefit gate failed; no new decode TPS claim.",
+      "references": [
+        "w2_current",
+        "raw_current",
+        "runtime",
+        "package_inventory"
+      ],
+      "selected": false,
+      "supported_result": "Exact303855both:4Kchunks2.8180%/2.7076%slowerTTFT than selected-equivalent2K;8/8natural checks; higher peakallocated/reserved eachrank."
+    },
+    {
+      "deployed": false,
+      "disposition": "REJECTED_COMPILE_RESOURCE_AND_MECHANISM_GATE",
+      "id": "W3",
+      "limitations": "Candidate matmul,secondcard,timing/serving NOTRUN; static instructions are not traffic/occupancy; not platform-unsupported.",
+      "references": [
+        "layout"
+      ],
+      "selected": false,
+      "supported_result": "Real89,128,960B rank0pack/inverse passes; packed256regs81spills versus114/0; weightLDSpath remains1both."
+    },
+    {
+      "deployed": false,
+      "disposition": "COMPONENT_TESTED_REJECTED_TWO_ROW_ATTENTION",
+      "id": "W4",
+      "limitations": "No serving/eightrow claim; registers/spills suggest mechanism but do not prove cause; preceding64MiBwrite is not proven coldDRAM.",
+      "references": [
+        "w4"
+      ],
+      "selected": false,
+      "supported_result": "54cases108captures4536checks3456timings; all108medianratios>1(1.009301\u20131.236214). Full writes/stage1/reduction included."
+    },
+    {
+      "deployed": false,
+      "disposition": "REJECT_STATIC4_BENEFIT_RETAIN_FIXED8_ADAPTIVE_POLICY_PREREQUISITE_UNVALIDATED",
+      "id": "W5",
+      "limitations": "All8nativegrades and strict retained finalizer accepted. OriginalCPU_RESULT_INCOMPLETE/missinghost_cpu localcontextfailure remainsfailed; no remote/GPUretry. LongC2visible64historiesmatch butnativeworkdiffers. AdaptivepolicyNOTIMPLEMENTED; sampledfeatureisnotcalibratedacceptanceprobability oransweraccuracy.",
+      "references": [
+        "static_source",
+        "static_release",
+        "raw_static",
+        "static_quality",
+        "static_final",
+        "static_final_report"
+      ],
+      "selected": false,
+      "supported_result": "Both13HTTParms/strictcontroller/releasecomplete;8nativegrades authenticated via LOCALretainedcontinuation. Rootreportswidth4time+32.90%shortC1,+12.14%shortC2,+8.44%longC1,+2.85%longC2; all4benefitgroupsfail. Prior1392+324=1716."
+    },
+    {
+      "deployed": false,
+      "disposition": "COMPONENT_TESTED_REJECTED_INTERMEDIATE_REUSE_DEEPER_ALGEBRA_NOT_ADVANCED",
+      "id": "W6",
+      "limitations": "Synthetic/model-free scope; productionradix/scheduler/model operands NOTRUN; no relaxed FP32rounding/precision. Cachedgate rejection retained.",
+      "references": [
+        "w6"
+      ],
+      "selected": false,
+      "supported_result": "Normalized-key268audits,192prefix+76physicalslotcases,216graphreplays,256continuations; all8benefitcellsfail; state materialization saving0B."
+    },
+    {
+      "deployed": false,
+      "disposition": "BLOCKED_UNSELECTED_FP8_TARGET_KV",
+      "id": "C1",
+      "limitations": "SDK886+prefix12,BASE0; source-constructed SDK context is not exact fullSGLang capture. No guard waiver,scale/query/error-contract success,graph/speed/serving claim.",
+      "references": [
+        "kv"
+      ],
+      "selected": false,
+      "supported_result": "898 guarded-source rows and independent nativeCPUrelease accepted. Noncanonical capturedtl.extra.cuda object still fails strict originalguard;0attention cases."
+    },
+    {
+      "deployed": false,
+      "disposition": "DEFERRED_UNSUPPORTED_CURRENT_NEED_ULTRAQUANT_KV4",
+      "id": "C2",
+      "limitations": "No new quantizedKVtrial; not a universal lowbit applicability rejection.",
+      "references": [
+        "ultraquant"
+      ],
+      "selected": false,
+      "supported_result": "Prior eagercomposition slower; bounded BF1664KC1fits; no new graphcompatible path/measured capacity need."
+    },
+    {
+      "deployed": false,
+      "disposition": "INCONCLUSIVE_CLOSED_MIXED_SCHEDULING",
+      "id": "C3",
+      "limitations": "CandidateNOTSTARTED; no backdating/tolerance/globalbarrier/after-snapshot substitution or speed claim; final12nativegrades NOTRUN.",
+      "references": [
+        "mixed",
+        "mixed_review"
+      ],
+      "selected": false,
+      "supported_result": "Actualcontrol25HTTPcomplete;1of38native temporaljoins late by3.209065ms. Peerpost-sendhoststamp lacks HTTP-EOF happens-before."
+    },
+    {
+      "deployed": false,
+      "disposition": "INCONCLUSIVE_CLOSED_COLLECTIVE_EXPOSURE_PREREQUISITE",
+      "id": "C4",
+      "limitations": "No matchedservingrank-arrival versus transportseparation.0.157msgather is not allcommunication; unsupported/zero counters are not lowutilisation.",
+      "references": [
+        "collective"
+      ],
+      "selected": false,
+      "supported_result": "Model-free bothGPU traces/correct outputs retained; original entryfailedUUID/schema; strictposthoc correctionreviewed."
+    },
+    {
+      "deployed": false,
+      "disposition": "INCONCLUSIVE_CLOSED_FUSION_EXPOSURE_PREREQUISITE",
+      "id": "C5",
+      "limitations": "No same-replay C1/C2pair numerator and targetgraph denominatorbothranks; >=3%advancegate unevaluable, not zero/failed. PrototypeNOTIMPLEMENTED; preserveBF16 boundary.",
+      "references": [
+        "fusion_actual",
+        "fusion_gate"
+      ],
+      "selected": false,
+      "supported_result": "Hardwarebaselinecost8cases128timings24graphs; pair22.2\u201325.6805us; actualcost+release accepted byAstra."
+    },
+    {
+      "deployed": false,
+      "disposition": "UNSUPPORTED_RESIDENT_CACHE_CODEC_APPLICABILITY_APPROXIMATE_STATE_CONDITIONAL",
+      "id": "C6",
+      "limitations": "Approximate state/lowbits need measuredcost and explicitnumericalcontract; modelmigration/lowerbitweights outofscope.",
+      "references": [
+        "codecs",
+        "conditional_review",
+        "w6"
+      ],
+      "selected": false,
+      "supported_result": "No activeKVoffload/transfer bottleneck in currentresidentprofile; TPcollectives distinct."
+    },
+    {
+      "deployed": false,
+      "disposition": "DEFERRED_NOT_RUN_NOT_PRODUCTION_QUALIFIED",
+      "id": "ENDURANCE",
+      "limitations": "No arbitrary reuse of5400owner grant for overnightserver; final shorttests/BetterBench do not establish endurance.",
+      "references": [
+        "endurance"
+      ],
+      "selected": false,
+      "supported_result": "Existing deferral after tuning; exact long-duration/workload/error acceptance and fitting finite owner contract not frozen."
+    }
+  ],
+  "hardware": {
+    "GPUs": "2 Radeon AI PRO R9700",
+    "VRAM_bytes_per_card": 34208743424,
+    "last_observed_MemTotal_bytes": 66711867392,
+    "logical_CPUs": 48,
+    "planned_RAM_upgrade_verified": false,
+    "swap_bytes": 0
+  },
+  "new_selected_candidates": [],
+  "production_qualified": false,
+  "runtime": {
+    "HIP": "7.17.26416",
+    "Python": "3.14.4",
+    "RCCL": "2.32.3",
+    "ROCm_SDK": "10.2.0.dev20261020+git535d2990",
+    "SDK_inventory_sha256": "727716907cc4274f4f4fb3735bfcb9d957a2ca2e55a72dbfb0d6e14a8d3292db",
+    "SGLang": "0.5.21",
+    "Torch": "2.14.0+git2e66fe81.rocm10.2.0",
+    "Torch_commit": "2e66fe8153890424e76464545bc5de6391bf9d8c",
+    "Triton": "3.8.0+git669b31ac.rocm10.1.0",
+    "architecture": "x86_64"
+  },
+  "schema": 1,
+  "selected": {
+    "DFlash_width": 8,
+    "GEMM": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "aligned_ring_fold": true,
+    "context_tokens": 32768,
+    "draft_KV": "BF16 explicit override",
+    "draft_weights": "BF16",
+    "metadata_reuse": true,
+    "physical_recurrent_slots_per_rank": 20,
+    "prefill_chunk_tokens": 2048,
+    "reasoning_effort": "low",
+    "state_and_head": "FP32",
+    "target_KV": "BF16",
+    "target_weights": "Official FP8",
+    "thinking": true,
+    "token_pool": 32800,
+    "usable_recurrent_slots_per_rank": 19
+  },
+  "selected_configuration_changed": false,
+  "selection_sha256": "aa691cdee9957416c8672cf400700dcec28cd49333795ad405aaf7d5912cabde",
+  "status": "TUNING_DISPOSITIONS_RECONCILED_FINAL_QA_PASS_BETTERBENCH_INCOMPLETE"
+}

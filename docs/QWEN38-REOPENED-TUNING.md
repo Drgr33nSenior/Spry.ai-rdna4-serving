@@ -12,7 +12,7 @@ Keep the selected Torch 2.14 / ROCm SDK 10.2 stack, official FP8 target weights,
 | 38 | Adaptive speculation | Establish usable pre-selection scores and acceptance telemetry before implementing a policy. Keep DFlash8 as the reference and test the sampling, graph and slot-lifetime contract. |
 | 39 | C2 throughput and scheduling | Fund both requests' context capacity, observe actual batch-two execution, and measure service throughput separately from C1. Preserve native fallback, cancellation and cache ownership. |
 | 40 | UltraQuant KV feasibility, conditional | Reuse the prior codec assessment only if cache capacity or traffic warrants the integration cost. The retained eager path is not a drop-in graph/DFlash backend and does not compress model weights. |
-| 41 | BF16-weight control, conditional | Reconcile loader, host and per-card memory before any comparison. Use a separate quality/performance contract; fit and stability superiority remain unproved. |
+| 41 | BF16-weight control, conditional | [Source memory audit complete](SPRINT41-BF16-WEIGHT-FEASIBILITY.md): the unchanged profile exceeds its static device budget. Retain FP8; hardware comparison NOT RUN. Included in the [remaining optimization programme](REMAINING-FP8-OPTIMIZATIONS.md). |
 
 Following the Sprint 36 source audit, both ranks observed full M2048 chunks using stage 1 and M4096 chunks using stage 3. The latter bypasses the selected M2016/2047/2048 specialization. An M4096 stage-1 route remains an unselected source lead requiring a separate experiment. Sprint 37 next audits optional FP8 target KV under the original matched-test scope and budgets.
 
@@ -21,3 +21,5 @@ Sprint 35 used two fresh starts with six requests each: warmup, cold document A,
 Report observed cached tokens and their fraction of the actual shared prefix. A partial hit does not establish reuse of the whole document. Preserve every generated-token and verifier-cycle difference. If generated work differs, timing is descriptive rather than a matched-output speedup. The first screen measures existing behavior; a source finding alone does not select a new kernel or cache policy.
 
 Rejected kernel candidates and their failed gates remain recorded. Reconsider them when new source evidence or a changed workload justifies it. Reliability and endurance remain after tuning, as previously directed. New concerning task results, numerical behavior or GPU faults follow the existing investigation procedure. See the [reopened work record](../provenance/QWEN38-REOPENED-TUNING-20261023.json).
+
+Sprint 41 completed its source memory audit; the remaining candidates now follow the dependency order in the [optimization programme](REMAINING-FP8-OPTIMIZATIONS.md).

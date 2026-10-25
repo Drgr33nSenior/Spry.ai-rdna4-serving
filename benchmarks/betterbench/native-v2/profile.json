@@ -1,0 +1,47 @@
+{
+  "campaign_seconds": 2400,
+  "config": {
+    "concurrency_levels": [
+      1,
+      2
+    ],
+    "concurrency_requests": 6,
+    "greedy": false,
+    "max_model_len": 32768,
+    "prefill_ctx_margin": 256,
+    "prefill_depths": [
+      2000,
+      8000,
+      16000
+    ],
+    "prefill_max_tokens": 16,
+    "prefill_runs": 2,
+    "prefill_warmup": 1,
+    "run_concurrency": true,
+    "run_prefill": true,
+    "run_single_stream": true,
+    "runs_per_category": 3,
+    "seed": 1729,
+    "temperature": 0.7,
+    "timeout_s": 120.0,
+    "top_k": 20,
+    "top_p": 0.95,
+    "unique_nonce": true,
+    "warmup": 1
+  },
+  "context_tokens": 32768,
+  "max_artifact_bytes": 33554432,
+  "max_requests": 53,
+  "name": "qwen38-selected-thinking-low-native-terminal-v2",
+  "output_tokens": 4096,
+  "python": "3.14.4",
+  "request_body": {
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    },
+    "reasoning_effort": "low",
+    "return_spec_tokens_details": true
+  },
+  "request_timeout_seconds": 120,
+  "schema": 1
+}

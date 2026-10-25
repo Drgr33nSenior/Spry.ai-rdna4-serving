@@ -1,0 +1,111 @@
+{
+  "budget": {
+    "automatic_retry": false,
+    "cumulative_charged_seconds": 1119,
+    "failed_charged_seconds": 561,
+    "fixed_new_operation_seconds": 5400,
+    "fixed_phase_allowances_sum": 5010,
+    "original_seconds": 5400,
+    "owner_allowance_sha256": "8416236ee0d5f2ac7e890f2160658a0ab5ddefd3afdd856fc010ef9759b189b6",
+    "protected_limits_widened": false,
+    "remaining_seconds": 4839,
+    "requested_new_model_starts": 2,
+    "requested_new_requests": 106,
+    "required_cumulative_ceiling_seconds": 5961,
+    "review_sha256": "12e0488e53fb3ef36ef1b98b14d86d9e7ea65032e206b725fa6a744dd76a5cc4",
+    "second_operation_charged_seconds": 558,
+    "status": "EXPLICIT_OWNER_ALLOWANCE_GRANTED"
+  },
+  "corrected_serving_test": "One clientstart53HTTPcomplete; finalstrictcounterjoinFAILED; secondstartNOTRUN",
+  "deployed": false,
+  "local_checks": {
+    "callback_journal_and_legacy_methods": 1,
+    "full_exporter_and_consumer_methods": 5,
+    "native_stdlib_methods": 3
+  },
+  "native_check": {
+    "architecture": "x86_64",
+    "elapsed_seconds": 1.6696972909849137,
+    "local_text_readout_continuation_no_remote_rerun": true,
+    "observed_passes": 3,
+    "python": "3.14.4",
+    "receipt_sha256": "c81cf77eea4234ecc9cf9f6daa4b82fa1bf978684ed28fb35d877853043d1b1d",
+    "scope": "Guarded exact metadatafunctions/fullprotectedpacker; no model/API/ABI test",
+    "seal_sha256": "e47ce09f466a85418eb78412789321e4d33d8f32a549a45940ce0c1762f68ba4",
+    "zero_test_attempt_retained": true
+  },
+  "new_performance_result": "FORENSIC_SINGLE_START_UNACCEPTED only",
+  "prepared_packet": {
+    "archive_sha256": "fb7ae35bb3fb04fd6480dced7c7c67f5e799f1f26a43d76c9a5610d00e73aa06",
+    "frozen_source_index_sha256": "0fe31dd0969fd662ead8bd546c6760464ae4d9d4592d4f7c7c13d21edf6732ab",
+    "local_execution_handoff_sha256": "c04237bf566d7c46a5274c11b15bf23dafb4686669c19ba16fad92bbe34b27a0",
+    "manifest_sha256": "be6857bdf835867453a7ccc6b6c1d46a544eaade113992a716b2fabb2f56f5bb",
+    "reviewed_execution_source_members": 149,
+    "reviewed_execution_source_seal_sha256": "f571a24093e692746a7010f5d093a1c3dbb4de239263695f7f17f32e0feecb1f",
+    "source_package_native_readiness_sha256": "1e7e102d8664e6aa726619f5996126153a0e32f68c42f563c04a40b973da4308"
+  },
+  "public_adapter": {
+    "adapter_sha256": "7113dbd943f91a4489b84573df6553dcd9319e07f0982f6339dbfc063b796594",
+    "definitions": [
+      "ServingRuntimeError",
+      "_require",
+      "_canonical",
+      "_bb_write_observation",
+      "_need",
+      "_json",
+      "_bb_expand_observations"
+    ],
+    "mapping_sha256": "f9a7f4ddce8e00d23f51ffb7663fae36ce2825d5234496151b453e991e6f3d2e",
+    "native_probe_is_distinct": true,
+    "operator_source_pin_history": {
+      "serving_integration.py": {
+        "failed45_sha256": "a857f41b575b92df02d21dd1751c5a126e779ba02e28a81c803d5a025c96f65d",
+        "reviewed_corrected_sha256": "2bd597bcfc90fa4a60357d383887ec52fb2bc658c03fadd7455c9f4c4767fa47",
+        "source_publication": "PIN ONLY; private owner orchestration remains excluded"
+      },
+      "serving_runtime.py": {
+        "failed45_sha256": "bc4c54481342c68883ec73ff1782f59be1db5f2d8795aae1fcd6f972178955a1",
+        "reviewed_corrected_sha256": "b01509c6687a3520b721c282580894a6f1221a4fdfb2c415447a28cd28d97aff",
+        "source_publication": "PIN ONLY; private owner orchestration remains excluded"
+      }
+    },
+    "portable_source_tests": 3,
+    "scope": "New standalone source representation, not literal transported module; seven function/class ASTs match consumed source",
+    "test_sha256": "893995a09015b75facac3d4e4517209accbd3e8ff1d6050dc922c653fc1e9ce3"
+  },
+  "reason": "Existing full53-request layout needs131 native files and fails unchangedfewer-than128 guard; sourcefixture555KiB proves filecountfailure",
+  "replacement": {
+    "QA_baseline_bridge": "Accepted for unchanged numerical source only",
+    "logical_records": 106,
+    "maximum_native_tree_bytes": 1263634,
+    "maximum_record_bytes": 8192,
+    "native_arithmetic_changed": false,
+    "physical_files": 78,
+    "protected_file_condition": "len(result) < 128 after each visited file; old131 necessarily fails; corrected78 fits",
+    "protected_helpers_changed": false,
+    "protected_native_limit_bytes": 4194304,
+    "request_journals": 53
+  },
+  "schema": 1,
+  "source_fragments": [
+    {
+      "bytes": 2099,
+      "file": "journal_writer.fragment.py",
+      "scope": "Prepared exact metadata-I/O source fragment/diff; corrected physical operation NOT RUN",
+      "sha256": "ef7380646e12c87aa6c10393d6ef76c6c8719545b229a222d88c98be608d4b67"
+    },
+    {
+      "bytes": 1795,
+      "file": "journal_reader.fragment.py",
+      "scope": "Prepared exact metadata-I/O source fragment/diff; corrected physical operation NOT RUN",
+      "sha256": "69a64b4365d918ec51387441103db374c5ba1765065657ee7225403671bef135"
+    },
+    {
+      "bytes": 8036,
+      "file": "observation-journal.patch",
+      "scope": "Prepared exact metadata-I/O source fragment/diff; corrected physical operation NOT RUN",
+      "sha256": "ecc9e4d83bcb20a44cb4412f9883eac416092686a39a79824ac2db939c4bb4a6"
+    }
+  ],
+  "status": "HARDWARE_EXPORTED_FIRST53_CLIENT_COMPLETE_STRICT_COUNTER_GATE_FAILED"
+}

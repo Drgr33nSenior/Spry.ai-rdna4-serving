@@ -1,0 +1,1118 @@
+{
+  "candidate_paired_sample_wins": 99,
+  "captures": 108,
+  "cases": 54,
+  "cases_detail": [
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02669999934732914,
+          "pair": 0.03048000019043684
+        },
+        "steady": {
+          "native": 0.0258799996227026,
+          "pair": 0.0294599998742342
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 0,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1415730687456298,
+        "steady": 1.1383307690774127
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.026399999856948853,
+          "pair": 0.030559999868273735
+        },
+        "steady": {
+          "native": 0.025779999792575836,
+          "pair": 0.030019999481737614
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 0,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1575757588585711,
+        "steady": 1.1644685695607655
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.026440000161528587,
+          "pair": 0.03188000060617924
+        },
+        "steady": {
+          "native": 0.02684000041335821,
+          "pair": 0.029599999077618122
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 0,
+      "ratios": {
+        "preceding64MiBzero-write": 1.2057488809158974,
+        "steady": 1.1028315432844131
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.027840000577270985,
+          "pair": 0.0315799992531538
+        },
+        "steady": {
+          "native": 0.027939999476075172,
+          "pair": 0.031539998948574066
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 31,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1343390301125285,
+        "steady": 1.1288475139586724
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02768000029027462,
+          "pair": 0.03148049861192703
+        },
+        "steady": {
+          "native": 0.02642050012946129,
+          "pair": 0.030560499988496304
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 31,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1373012385042394,
+        "steady": 1.1566964985049066
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02701999992132187,
+          "pair": 0.03117999993264675
+        },
+        "steady": {
+          "native": 0.026260499842464924,
+          "pair": 0.03027999959886074
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 31,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1539600304751358,
+        "steady": 1.1530625761317774
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.028680000454187393,
+          "pair": 0.03164000064134598
+        },
+        "steady": {
+          "native": 0.028020000085234642,
+          "pair": 0.03147999942302704
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 127,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1032078152120954,
+        "steady": 1.1234832022579353
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.028300000354647636,
+          "pair": 0.031620001420378685
+        },
+        "steady": {
+          "native": 0.02732000034302473,
+          "pair": 0.03096000012010336
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 127,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1173145238206972,
+        "steady": 1.1332357149112549
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02838000003248453,
+          "pair": 0.03207999840378761
+        },
+        "steady": {
+          "native": 0.02711999975144863,
+          "pair": 0.03084000013768673
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 127,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1303734449283989,
+        "steady": 1.137168157091867
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.034220000728964806,
+          "pair": 0.03815999999642372
+        },
+        "steady": {
+          "native": 0.03231999836862087,
+          "pair": 0.0362199991941452
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 511,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1151373227214454,
+        "steady": 1.1206683484647326
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.034039998427033424,
+          "pair": 0.038100000470876694
+        },
+        "steady": {
+          "native": 0.032099999487400055,
+          "pair": 0.03700000047683716
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 511,
+      "ratios": {
+        "preceding64MiBzero-write": 1.119271510912261,
+        "steady": 1.1526480083390798
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03449999913573265,
+          "pair": 0.03858000040054321
+        },
+        "steady": {
+          "native": 0.03173999860882759,
+          "pair": 0.036720000207424164
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 511,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1182609091889741,
+        "steady": 1.1568998682064064
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03357999958097935,
+          "pair": 0.034779999405145645
+        },
+        "steady": {
+          "native": 0.03220049850642681,
+          "pair": 0.032500000670552254
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 543,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0357355520887501,
+        "steady": 1.0093011654482822
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03303999826312065,
+          "pair": 0.03466050140559673
+        },
+        "steady": {
+          "native": 0.031040499918162823,
+          "pair": 0.032579999417066574
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 543,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0490467078590888,
+        "steady": 1.0495964788892764
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03298000060021877,
+          "pair": 0.034539999440312386
+        },
+        "steady": {
+          "native": 0.03105999995023012,
+          "pair": 0.032660000026226044
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 543,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0473013587538644,
+        "steady": 1.0515132027868554
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.037860000506043434,
+          "pair": 0.039479998871684074
+        },
+        "steady": {
+          "native": 0.033740000799298286,
+          "pair": 0.03605999983847141
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 959,
+      "ratios": {
+        "preceding64MiBzero-write": 1.042789179714407,
+        "steady": 1.0687610842979405
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03772000037133694,
+          "pair": 0.039000000804662704
+        },
+        "steady": {
+          "native": 0.033160500228405,
+          "pair": 0.03524100035429001
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 959,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0339342635398918,
+        "steady": 1.0627403118636574
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03819999843835831,
+          "pair": 0.038759998977184296
+        },
+        "steady": {
+          "native": 0.03357999958097935,
+          "pair": 0.035420000553131104
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 959,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0146597005685651,
+        "steady": 1.0547945501820073
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.04619999974966049,
+          "pair": 0.04838000051677227
+        },
+        "steady": {
+          "native": 0.03948049992322922,
+          "pair": 0.04302000068128109
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 2040,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0471861640459814,
+        "steady": 1.0896518728216338
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.04670000076293945,
+          "pair": 0.04868000000715256
+        },
+        "steady": {
+          "native": 0.039659999310970306,
+          "pair": 0.04292000085115433
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 2040,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0423982700613659,
+        "steady": 1.082198729118038
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.046539999544620514,
+          "pair": 0.04814000055193901
+        },
+        "steady": {
+          "native": 0.03934049978852272,
+          "pair": 0.0426000002771616
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 2040,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0343790507729698,
+        "steady": 1.0828535607366587
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.18460100144147873,
+          "pair": 0.19910100102424622
+        },
+        "steady": {
+          "native": 0.15154049545526505,
+          "pair": 0.18010099977254868
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 26000,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0785477839748567,
+        "steady": 1.1884678034836882
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.18425999581813812,
+          "pair": 0.19923999905586243
+        },
+        "steady": {
+          "native": 0.15244000405073166,
+          "pair": 0.1789804995059967
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 26000,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0812981850521115,
+        "steady": 1.1741045312910936
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.18434099853038788,
+          "pair": 0.1984810009598732
+        },
+        "steady": {
+          "native": 0.1515204980969429,
+          "pair": 0.17850099503993988
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 26000,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0767056842602185,
+        "steady": 1.1780649963659362
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.35392099618911743,
+          "pair": 0.4111210107803345
+        },
+        "steady": {
+          "native": 0.3109010010957718,
+          "pair": 0.3842010051012039
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 59984,
+      "ratios": {
+        "preceding64MiBzero-write": 1.161618031162673,
+        "steady": 1.2357663814110793
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.35252100229263306,
+          "pair": 0.41060100495815277
+        },
+        "steady": {
+          "native": 0.310480996966362,
+          "pair": 0.3838209956884384
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 59984,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1647561486770839,
+        "steady": 1.2362141304577883
+      }
+    },
+    {
+      "device": 0,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.3564610034227371,
+          "pair": 0.41106098890304565
+        },
+        "steady": {
+          "native": 0.3117399960756302,
+          "pair": 0.3846609890460968
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 59984,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1531723946127057,
+        "steady": 1.2339160643114127
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.026680000126361847,
+          "pair": 0.030780000612139702
+        },
+        "steady": {
+          "native": 0.02696000039577484,
+          "pair": 0.031619999557733536
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 0,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1536731808980296,
+        "steady": 1.1728486310663782
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.027520000003278255,
+          "pair": 0.030799999833106995
+        },
+        "steady": {
+          "native": 0.027400500141084194,
+          "pair": 0.031940000131726265
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 0,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1191860403138814,
+        "steady": 1.1656721580726026
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.027219999581575394,
+          "pair": 0.031080500222742558
+        },
+        "steady": {
+          "native": 0.027420000173151493,
+          "pair": 0.03172000125050545
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 0,
+      "ratios": {
+        "preceding64MiBzero-write": 1.141825889070926,
+        "steady": 1.156819877833711
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.028100499883294106,
+          "pair": 0.03230000101029873
+        },
+        "steady": {
+          "native": 0.028020000085234642,
+          "pair": 0.03235999867320061
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 31,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1494457801265396,
+        "steady": 1.1548893138745193
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.027779999189078808,
+          "pair": 0.031159999780356884
+        },
+        "steady": {
+          "native": 0.028599999845027924,
+          "pair": 0.032819999381899834
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 31,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1216702912146541,
+        "steady": 1.1475524321586859
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02756000030785799,
+          "pair": 0.03129999898374081
+        },
+        "steady": {
+          "native": 0.028059999458491802,
+          "pair": 0.03205999918282032
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 31,
+      "ratios": {
+        "preceding64MiBzero-write": 1.135703869162021,
+        "steady": 1.1425516679088172
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02867999952286482,
+          "pair": 0.03296000137925148
+        },
+        "steady": {
+          "native": 0.028880000114440918,
+          "pair": 0.03236000053584576
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 127,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1492329821335763,
+        "steady": 1.120498629072537
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02897999994456768,
+          "pair": 0.0327799990773201
+        },
+        "steady": {
+          "native": 0.02909999992698431,
+          "pair": 0.032180000096559525
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 127,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1311248840586947,
+        "steady": 1.1058419304915235
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.02850000001490116,
+          "pair": 0.032600000500679016
+        },
+        "steady": {
+          "native": 0.028440500609576702,
+          "pair": 0.032180000096559525
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 127,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1438596660924274,
+        "steady": 1.1314850092942326
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03452000021934509,
+          "pair": 0.038680000230669975
+        },
+        "steady": {
+          "native": 0.032760001718997955,
+          "pair": 0.03751999884843826
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 511,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1205098489250185,
+        "steady": 1.1452990500510238
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.034279998391866684,
+          "pair": 0.03865999914705753
+        },
+        "steady": {
+          "native": 0.03296000137925148,
+          "pair": 0.037580499425530434
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 511,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1277713232399116,
+        "steady": 1.1401850076738038
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03455999866127968,
+          "pair": 0.038599999621510506
+        },
+        "steady": {
+          "native": 0.032819999381899834,
+          "pair": 0.03751999884843826
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 511,
+      "ratios": {
+        "preceding64MiBzero-write": 1.116898180460787,
+        "steady": 1.1432053490266203
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.034380000084638596,
+          "pair": 0.03569999895989895
+        },
+        "steady": {
+          "native": 0.03189999982714653,
+          "pair": 0.03384000062942505
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 543,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0383943825483044,
+        "steady": 1.0608150725012733
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.033400001004338264,
+          "pair": 0.035439999774098396
+        },
+        "steady": {
+          "native": 0.03182000108063221,
+          "pair": 0.034039998427033424
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 543,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0610778056412382,
+        "steady": 1.0697673560970573
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03309999965131283,
+          "pair": 0.03511999920010567
+        },
+        "steady": {
+          "native": 0.03172000125050545,
+          "pair": 0.033820001408457756
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 543,
+      "ratios": {
+        "preceding64MiBzero-write": 1.061027177343572,
+        "steady": 1.0662042898853556
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03720000013709068,
+          "pair": 0.03902000002563
+        },
+        "steady": {
+          "native": 0.03428049944341183,
+          "pair": 0.03617999888956547
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 959,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0489247280062417,
+        "steady": 1.0554104950918004
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.0376800000667572,
+          "pair": 0.03906000033020973
+        },
+        "steady": {
+          "native": 0.03420000150799751,
+          "pair": 0.036079999059438705
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 959,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0366242107486094,
+        "steady": 1.0549706862147816
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.03772000037133694,
+          "pair": 0.03911999985575676
+        },
+        "steady": {
+          "native": 0.03449999913573265,
+          "pair": 0.036239998415112495
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 959,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0371155745131877,
+        "steady": 1.0504347629846076
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.04708000086247921,
+          "pair": 0.04900000058114529
+        },
+        "steady": {
+          "native": 0.040780000388622284,
+          "pair": 0.043959999457001686
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 2040,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0407816415355302,
+        "steady": 1.0779793780793252
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.04666049964725971,
+          "pair": 0.04883999936282635
+        },
+        "steady": {
+          "native": 0.04057999886572361,
+          "pair": 0.04399999976158142
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 2040,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0467097380448782,
+        "steady": 1.0842779938751195
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.046719999983906746,
+          "pair": 0.0485600009560585
+        },
+        "steady": {
+          "native": 0.040060000494122505,
+          "pair": 0.04384000040590763
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 2040,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0393835824654445,
+        "steady": 1.0943584589406012
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.1873605027794838,
+          "pair": 0.2005005031824112
+        },
+        "steady": {
+          "native": 0.15358050167560577,
+          "pair": 0.18020049482584
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 26000,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0701321794508243,
+        "steady": 1.1733292498709325
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.18643999844789505,
+          "pair": 0.2001199945807457
+        },
+        "steady": {
+          "native": 0.15279999375343323,
+          "pair": 0.1801605001091957
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 26000,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0733747921408283,
+        "steady": 1.1790609127897802
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.18569999933242798,
+          "pair": 0.20018000155687332
+        },
+        "steady": {
+          "native": 0.15244000405073166,
+          "pair": 0.17999999970197678
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 26000,
+      "ratios": {
+        "preceding64MiBzero-write": 1.0779752411227757,
+        "steady": 1.180792409596586
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.3562204986810684,
+          "pair": 0.41718100011348724
+        },
+        "steady": {
+          "native": 0.31582050025463104,
+          "pair": 0.38812100887298584
+        }
+      },
+      "pattern": "seeded BF16 random",
+      "prefix": 59984,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1711313685150893,
+        "steady": 1.2289291181543387
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.35580000281333923,
+          "pair": 0.4183399975299835
+        },
+        "steady": {
+          "native": 0.31502048671245575,
+          "pair": 0.38788050413131714
+        }
+      },
+      "pattern": "zero query",
+      "prefix": 59984,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1757728898879583,
+        "steady": 1.2312866003707452
+      }
+    },
+    {
+      "device": 1,
+      "medians": {
+        "preceding64MiBzero-write": {
+          "native": 0.356500506401062,
+          "pair": 0.4172405004501343
+        },
+        "steady": {
+          "native": 0.31520000100135803,
+          "pair": 0.3878604918718338
+        }
+      },
+      "pattern": "amplified finite query",
+      "prefix": 59984,
+      "ratios": {
+        "preceding64MiBzero-write": 1.1703784229151697,
+        "steady": 1.2305218611663733
+      }
+    }
+  ],
+  "checked_replays": 4536,
+  "compiler": {
+    "native_registers": 245,
+    "native_spills": 0,
+    "pair_registers": 256,
+    "pair_spills": 21,
+    "reduce_descriptor_next_free_vgpr": 241,
+    "reduce_metadata_and_live_n_regs": 13,
+    "scope": "Compiler resources/descriptors only; staticpairISA includesfallbacks, not measuredtraffic; slowdowncause unproven"
+  },
+  "condition_cells": 108,
+  "decision": "REJECT_EXACT_TWO_ROW_CANDIDATE",
+  "eight_row": "NOT RUN",
+  "long_prefix_improvement_cells": 0,
+  "manifest_sha256": "44716d8d7d0aebd6c7a403c5c47cb7260ee8f36e73337ef7384411909d13292f",
+  "members": 205,
+  "nonwriting_reader_exact": true,
+  "outstanding_material_findings": [],
+  "package_sha256": "f7497e890aad5ad5eeee43d0ad5b6db7ea7fbf5b5337f570b2ea55bfa76f140e",
+  "paired_sample_ties": 1,
+  "paired_samples": 1728,
+  "publication_omissions": {
+    "private_path_or_machine_identity_fields_removed": 1,
+    "raw_record_sha256": "841d6e80ea5f129ea090495503c1621e5baad3e58f9d1ab50f790f2ad2b5dc71",
+    "sealed_private_evidence_hashes_retained": true
+  },
+  "qualification": false,
+  "range_overlap_cells": {
+    "preceding64MiBwrite": 26,
+    "steady": 32
+  },
+  "ratio_range": [
+    1.0093011654482822,
+    1.2362141304577883
+  ],
+  "raw_result_sha256": "6e055188b722b276da4a1060aa826ce22ddeec6025501c302f15000cdc69756d",
+  "regression_over_2pct_cells": 106,
+  "release": {
+    "actual_unchanged_validators_replayed": true,
+    "all_user_holders_empty": true,
+    "cleanup_errors": [],
+    "gpu_allocations": 0,
+    "journal_closed_then_root_verified_absent": true,
+    "private_namespace_absence": true,
+    "process_identities": 9,
+    "root_requests_raw_joins": true,
+    "scope_absence_observations": 4,
+    "unresolved": false
+  },
+  "required_long_prefix_steady_cells": 18,
+  "resources": {
+    "case_final_allocated_bytes": 0,
+    "device_allocated_peak_bytes": 204737024,
+    "host_peak_bytes": 2268049408,
+    "output_evidence_bytes": 5919538,
+    "output_evidence_members": 42,
+    "owner_seconds": 229.23841536103282,
+    "payload_seconds": 209.45773992093746,
+    "reserved_bytes": 205520896
+  },
+  "retry_authorized": false,
+  "reviewer": {
+    "agent": "/root/remaining_astra",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "max"
+  },
+  "schema": 1,
+  "scope": "model-free BF16 attention component; no full-model throughput claim",
+  "selected": false,
+  "serving": "NOT RUN",
+  "slower_median_cells": 108,
+  "source_manifest_sha256": "27bbbcd5af94a498505f2f5a222c12cf9b4a4d60a2273e37b138c209e0ed7a0d",
+  "source_members": 78,
+  "source_validation": {
+    "author_cpu_tests": 62,
+    "independent_copy_guard_tests": 5,
+    "independent_correction_tests": 12
+  },
+  "status": "PASS",
+  "timed_replays": 3456,
+  "timing_scope": "Captured cache writes,stage1,native reduction; metadata and correctness excluded; preceding64MiB write is not proven coldDRAM",
+  "utc": "2026-10-24T05:30:16.731143+00:00",
+  "warnings": [
+    "Nonfatal optional TorchDLPack extension warning retained"
+  ]
+}

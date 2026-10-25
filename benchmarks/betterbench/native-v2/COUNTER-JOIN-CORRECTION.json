@@ -1,0 +1,97 @@
+{
+  "CPU_tests": {
+    "packed_reader_forensic_replay": true,
+    "real_data_and_adversarial_methods": 4,
+    "scope": "Host reader CPU/source behavior; no native runtime/graph/model change; original failed status not regraded"
+  },
+  "budget": {
+    "automatic_retry": false,
+    "charged_seconds": 1119,
+    "current_cumulative_ceiling": 5961,
+    "model_starts": 2,
+    "owner_disposition": "REQUIRED_BEFORE_PHYSICAL",
+    "proposed_cumulative_ceiling": 6519,
+    "remaining_seconds": 4842,
+    "requests": 106,
+    "required_fresh_operation_seconds": 5400
+  },
+  "counter_semantics": {
+    "API": "spec_verify_ct once per active Req",
+    "individual_native_attribution": "NOT CLAIMED for peer-overlapped intervals",
+    "observer": "Global native worker, once per raw target batch",
+    "result_processor_source_sha256": "2f5baf667e6879e96b0fd4435750778d3989d03674e01c2963a08bed32091736"
+  },
+  "deployed": false,
+  "future_contract": "Strict C1 unchanged; ordered/concurrency-bounded C2 intervals, both-rank quiescent phase boundaries and final anchors, monotonic bounded counters, exact replay/commit totals and batch-weighted sum of all six individually authenticated API counts; no tolerance or invented per-request native attribution",
+  "future_packet": {
+    "CLI_unchanged": true,
+    "archive_sha256": "d88e6ff1bf21fe6fbf7f5e6be50b4d5fe55bc25ee3e2d82125b4012bed29108d",
+    "manifest_sha256": "6aa88ae248b887a50d5533a2c5cb7dba1bb8a141fe5e5976d6a56035e4b487b1",
+    "native_arithmetic_pins_unchanged": 16,
+    "nonce": "49dd17d29f69f55f",
+    "only_changed_role": "Host serving_integration",
+    "physical": "NOT RUN",
+    "protected_helpers_unchanged": 8,
+    "source_index_sha256": "11192952675e37f34611a5c7817860b5e8e69ebb0d69f434ad507911ddebcc30",
+    "worker_source_rows_unchanged": 127
+  },
+  "independent_review_sha256": "379016eb570800cc2eace47fb37a4098ffafbf7f0e41534bb085055309f04c64",
+  "new_runtime_optimization": false,
+  "observed_group": {
+    "C1_strict_intervals": 47,
+    "C2_requests": 6,
+    "actual_API_verify_counts": [
+      354,
+      88,
+      154,
+      160,
+      157,
+      105
+    ],
+    "batch1": 8,
+    "batch2": 505,
+    "batch_weighted_work": 1018,
+    "both_rank_end": 7533,
+    "both_rank_start": 7020,
+    "commits": 513,
+    "exact_weighted_sum": true,
+    "replays": 513
+  },
+  "original_operation": {
+    "client_requests": 53,
+    "counter_failure_ordinal": 51,
+    "nonatomic_observation": true,
+    "rank0_after": {
+      "commits": 7533,
+      "replays": 7533
+    },
+    "rank0_before": {
+      "commits": 7376,
+      "replays": 7375
+    },
+    "rank1_before": {
+      "commits": 7376,
+      "replays": 7376
+    },
+    "second_start": "NOT RUN",
+    "status": "INCOMPLETE_UNCHANGED"
+  },
+  "schema": 1,
+  "snapshot_owner_source_sha256": "9a98cfe11968a8af62151b5bf4c5d675409e45ebcf1ff5dfdee096a31bda8d38",
+  "snapshot_serialization": "Exact owner has one synchronous observer/ACK loop; snapshot collectors cannot interleave, so observed_monotonic ordering is valid",
+  "source_files": [
+    {
+      "bytes": 6257,
+      "file": "counter-observation-reader.patch",
+      "scope": "Exact prepared host reader fragment/diff, not standalone module or deployed server source",
+      "sha256": "81ba7b0075f6211c152f53b888e37494bb0de574caca346bba04ade1783ca850"
+    },
+    {
+      "bytes": 4110,
+      "file": "c2_counter_group.fragment.py",
+      "scope": "Exact prepared host reader fragment/diff, not standalone module or deployed server source",
+      "sha256": "4b8e6de1b46374619b2e0e5c90065c4731ac92ecf8e5a823a2849d3b80c66961"
+    }
+  ],
+  "status": "SOURCE_VALIDATED_CPU_TESTED_INDEPENDENT_REVIEW_PASSED_PHYSICAL_BUDGET_BLOCKED"
+}

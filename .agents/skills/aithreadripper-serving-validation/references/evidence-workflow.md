@@ -41,6 +41,47 @@ as a thinking quality packet.
 
 ## Prepare and run
 
+### Source-boundary preflight
+
+Run `make test-validation-preflight PYTHON=/path/to/declared/python` before a
+native run that changes a validator, producer or package boundary. This bounded
+standard-library gate runs the actual public callable guard, package builder and
+collector entry tests. Its frozen width corpus retains the failed width-eight
+startup assumption and the corrected producer-to-reader path for widths four
+and eight, both contexts and both ranks. Descriptor substitutes do not establish
+GPU allocation, kernel correctness, model quality or native readiness.
+
+For an actual worker with this startup interface, set
+`SPRY_PREFLIGHT_WORKER_SOURCE` to its canonical source path and
+`SPRY_PREFLIGHT_WORKER_SHA256` to its independently recorded pin. The same tests
+then execute that worker's `_precision_weights` and `_full_enabled_indices`
+bodies. A missing helper, changed call site or failed negative case must fail;
+do not skip it. The retained reader still needs a separate check against the
+packet's actual reader and contract. This optional input supplies no launch
+authority.
+
+Test the exact generated and consumed closure before spending another native
+run: startup producer, reader, contract, package caller and collector. Exercise
+every admitted arm width through the startup call site and reader. Derive
+fixtures from retained raw failures and actual profiler SDK schemas. Do not
+invent an interchange shape or test a replica of the validator. Check the
+caller's output paths against the collector's actual path contract.
+
+Compile complete consumed modules for callable identity. Preserve global
+imports and future statements; compile body mutations from complete source
+instead of assuming integers occupy `co_consts`. Run compiler-sensitive checks
+with the packet's explicitly declared native Python. A Mac ARM Python 3.11 pass
+does not establish a native x86 Python 3.14 pass. Do not borrow an executable
+from an older baseline profile.
+
+Reuse authenticated unchanged receipts. Review and rerun the changed source
+closure and its affected boundaries; preserve failures. Keep one current
+readiness and next-command pointer per experiment, with remaining gates and
+the exact declared interpreter. Update it after a result instead of adding a
+parallel launch or approval workflow.
+
+### Native execution
+
 Reuse the existing source-pinned builder, package checker, launcher preparer,
 finite `local_commands.run` receipts and independent release observer. Keep the
 eight protected owner/transport/resource/identity helpers unchanged. Observe
@@ -105,6 +146,15 @@ each request's verifier count with singleton and batch-two group counts.
 Native `origin_input_ids` can be `array('q')`. When joining a request to its
 frozen input, validate bounded integer IDs and hash a canonical list together
 with the separate cache salt. A list-only fixture missed this native type.
+
+Test failure paths through their final retained output. If validation can throw
+after deferred tensors have become host values, retain a bounded numerical
+witness before those values are discarded. Include request, rank, width and
+failed-predicate identities. Exercise the actual traceback or export reader;
+partial host counters alone cannot explain a lost tensor-derived value. Failed
+records remain ineligible for completion or quality acceptance. Do not add
+device reads to the error path or relax the original predicate for logging.
+
 Slot bookkeeping may read bounded integer allocator indices outside graphs;
 report this instrumentation and avoid timing claims. Free plus cached slots
 can account for the pool even when not every slot is free. These observations

@@ -1,0 +1,119 @@
+--- approved-bb45/serving_runtime.py
++++ journal-candidate/serving_runtime.py
+@@ -404,10 +404,14 @@
+         }
+         if group is not None:
+             row.update(group_id=group['id'], group_ordinals=group['ordinals'])
+-        _write_exclusive(material["native_dir"] / f"request-{ordinal:02d}-{phase}.json", row)
++        if benchmark_mode:
++            before = _bb_write_observation(material["native_dir"], row)
++        else:
++            _write_exclusive(material["native_dir"] / f"request-{ordinal:02d}-{phase}.json", row)
+         if phase == "after":
+-            before_path = material["native_dir"] / f"request-{ordinal:02d}-before.json"
+-            before = json.loads(before_path.read_text(encoding="utf-8"))
++            if not benchmark_mode:
++                before_path = material["native_dir"] / f"request-{ordinal:02d}-before.json"
++                before = json.loads(before_path.read_text(encoding="utf-8"))
+             _require(before.get("body_sha256") == row["body_sha256"], "request observer body differs")
+             before_ranks = before["snapshot"]["ranks"]
+             after_ranks = snapshot["ranks"]
+@@ -579,3 +583,44 @@
+                 client_summary=summary, native_gate=gate,
+                 parent_error=type(error).__name__ + ": " + str(error)[:1024])
+         raise
++
++
++"""BetterBench-only durable two-record request journals; no witness is dropped."""
++def _bb_write_observation(native, row):
++    phase, ordinal = row['phase'], row['ordinal']
++    _require(phase in ('before', 'after') and type(ordinal) is int and 0 <= ordinal < 53,
++             'bounded BetterBench observation ordinal/phase')
++    path = native / f'request-{ordinal:02d}.jsonl'
++    raw = _canonical(row) + b'\n'
++    _require(len(raw) <= 8192, 'BetterBench observation line bound')
++    before = prior = None
++    if phase == 'after':
++        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
++        try:
++            prior = os.fstat(descriptor)
++            _require(stat.S_ISREG(prior.st_mode) and prior.st_nlink == 1 and prior.st_uid == os.getuid()
++                     and 0 < prior.st_size <= 8192, 'owned single before observation')
++            with os.fdopen(descriptor, 'rb', closefd=False) as stream:
++                old = stream.read(8193)
++            before = json.loads(old)
++            _require(_canonical(before) + b'\n' == old and before.get('phase') == 'before'
++                     and before.get('ordinal') == ordinal and before.get('body_sha256') == row['body_sha256'],
++                     'canonical matching BetterBench before observation')
++        finally:
++            os.close(descriptor)
++    flags = os.O_WRONLY | os.O_NOFOLLOW | (os.O_CREAT | os.O_EXCL if phase == 'before' else os.O_APPEND)
++    descriptor = os.open(path, flags, 0o600)
++    try:
++        current = os.fstat(descriptor)
++        _require(stat.S_ISREG(current.st_mode) and current.st_nlink == 1 and current.st_uid == os.getuid(),
++                 'owned regular BetterBench journal')
++        if prior is not None:
++            _require((current.st_dev, current.st_ino, current.st_size) ==
++                     (prior.st_dev, prior.st_ino, prior.st_size), 'BetterBench before journal changed')
++        with os.fdopen(descriptor, 'wb', closefd=False) as stream:
++            stream.write(raw)
++            stream.flush()
++            os.fsync(descriptor)
++    finally:
++        os.close(descriptor)
++    return before
+--- approved-bb45/serving_integration.py
++++ journal-candidate/serving_integration.py
+@@ -599,6 +599,9 @@
+     client_root, client_sha = _unpack_client(client_raw, extraction_root)
+     gate_raw, workers, full_workers, observations, native_sha, reader = _native(native_raw, expected)
+     _joined(workers, joins, supervision)
++    observation_storage = None
++    if _mtp_contract().betterbench_checkpoint_enabled():
++        observations, observation_storage = _bb_expand_observations(observations)
+     hip_components = _validate_native_observations(observations, expected=expected, gate=_json(gate_raw), full_workers=full_workers)
+     if _mtp_contract().betterbench_checkpoint_enabled():
+         wire=betterbench_owner.read_owner_artifacts(client_root,observations,expected=expected,workers=full_workers)
+@@ -639,7 +642,7 @@
+     complete = wire['wire_complete'] is True and result['status'] == 'HTTP_ARM_COMPLETE' and (result['parent_error'] is None)
+     if not complete:
+         _need(result['status'] == 'HTTP_ARM_FAILED', 'HTTP incomplete result status')
+-    return dict(schema=1, mode=MODE, owner_arm=owner_arm, logical_arm=logical, binding=dict(expected), wire=wire, status='HTTP_ARM_COMPLETE' if complete else 'HTTP_ARM_FAILED', qualification=False, client_bundle_sha256=client_sha, native_bundle_sha256=native_sha, full_workers=full_workers, native_observations={name: hashlib.sha256(raw).hexdigest() for name, raw in observations.items()}, result_sha256=hashlib.sha256(result_raw).hexdigest(), **{'j01_probe': probe} if probe is not None else {}, **{'raw_attention': raw_attention} if raw_attention is not None else {}, **{'hip_sampling_components': hip_components} if hip_components is not None else {})
++    return dict(schema=1, mode=MODE, owner_arm=owner_arm, logical_arm=logical, binding=dict(expected), wire=wire, status='HTTP_ARM_COMPLETE' if complete else 'HTTP_ARM_FAILED', qualification=False, client_bundle_sha256=client_sha, native_bundle_sha256=native_sha, full_workers=full_workers, native_observation_storage=observation_storage, native_observations={name: hashlib.sha256(raw).hexdigest() for name, raw in observations.items()}, result_sha256=hashlib.sha256(result_raw).hexdigest(), **{'j01_probe': probe} if probe is not None else {}, **{'raw_attention': raw_attention} if raw_attention is not None else {}, **{'hip_sampling_components': hip_components} if hip_components is not None else {})
+ 
+ def accept_with_owner(value, campaign, *, owner_arm):
+     """Attach the already-validated owner result; this creates no authority."""
+@@ -713,3 +716,32 @@
+         results.append(dict(group_id=group['id'],ordinals=group['ordinals'],concurrency=group['concurrency'],ranks=ranks))
+         previous_after=last
+     return results
++
++
++"""Expand authenticated journal bytes before unchanged logical witness checks."""
++def _bb_expand_observations(observations):
++    result = dict(observations)
++    storage = {}
++    for ordinal in range(53):
++        name = f'request-{ordinal:02d}.jsonl'
++        raw = result.pop(name, None)
++        _need(type(raw) is bytes and 0 < len(raw) <= 16384, 'bounded complete BetterBench journal')
++        lines = raw.splitlines(keepends=True)
++        _need(len(lines) == 2, 'exact two BetterBench observation records')
++        logical = {}
++        for phase, line in zip(('before', 'after'), lines):
++            _need(0 < len(line) <= 8192 and line.endswith(b'\n'), 'bounded terminated BetterBench observation')
++            row = _json(line)
++            canonical = json.dumps(row, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
++            _need(canonical + b'\n' == line and type(row) is dict and row.get('phase') == phase
++                  and type(row.get('ordinal')) is int and row['ordinal'] == ordinal,
++                  'canonical ordered BetterBench observation')
++            old_name = f'request-{ordinal:02d}-{phase}.json'
++            _need(old_name not in result, 'mixed legacy/journal BetterBench observations')
++            result[old_name] = canonical
++            logical[old_name] = hashlib.sha256(canonical).hexdigest()
++        storage[name] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest(), logical_sha256=logical)
++    _need(not any(name.startswith('request-') and name.endswith('.jsonl') for name in result),
++          'unexpected BetterBench journal ordinal')
++    return result, dict(mode='betterbench-two-record-observation-journal-v1', journals=storage,
++                        logical_records=106, lossless=True, protected_export_limits_changed=False)

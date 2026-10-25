@@ -1,0 +1,747 @@
+{
+  "C2_timing_scope": "Includes identical declared index_copy cache writes, metadata and attention/reductions; not full native allocator or scheduler",
+  "cache_probe_timing_scope": "Only native decode/reductions; KV and split values prepared before capture; not write/metadata-setup cost or a multirow candidate",
+  "cases": [
+    {
+      "device": 0,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.10238149762153625,
+          "native": 0.056760501116514206
+        },
+        "steady": {
+          "candidate": 0.0912414975464344,
+          "native": 0.04966049827635288
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        0,
+        31
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.10008099675178528,
+            0.10676100105047226
+          ],
+          "native": [
+            0.050519999116659164,
+            0.27068400382995605
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.09068100154399872,
+            0.09368100017309189
+          ],
+          "native": [
+            0.04928100109100342,
+            0.05048099905252457
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.12494200095534325,
+          "native": 0.4379665106534958
+        },
+        "steady": {
+          "candidate": 0.12306199967861176,
+          "native": 0.45428700745105743
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        31,
+        2040
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.11824200302362442,
+            0.13544200360774994
+          ],
+          "native": [
+            0.42752599716186523,
+            0.4708069860935211
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.12060099840164185,
+            0.12552200257778168
+          ],
+          "native": [
+            0.4514859914779663,
+            0.45584699511528015
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.14862199872732162,
+          "native": 0.44006650149822235
+        },
+        "steady": {
+          "candidate": 0.13070200383663177,
+          "native": 0.39682599902153015
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        2040,
+        2040
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.1418820023536682,
+            0.1496019959449768
+          ],
+          "native": [
+            0.4172860085964203,
+            0.4436059892177582
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.12932199239730835,
+            0.13196200132369995
+          ],
+          "native": [
+            0.3941650092601776,
+            0.39876601099967957
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.21020299941301346,
+          "native": 1.6205829977989197
+        },
+        "steady": {
+          "candidate": 0.18812300264835358,
+          "native": 1.484720528125763
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        8192,
+        1024
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.20544299483299255,
+            0.2167229950428009
+          ],
+          "native": [
+            1.5894229412078857,
+            1.6363029479980469
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.1859229952096939,
+            0.19276200234889984
+          ],
+          "native": [
+            1.4771809577941895,
+            1.4929009675979614
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.3973654955625534,
+          "native": 5.072631120681763
+        },
+        "steady": {
+          "candidate": 0.37506499886512756,
+          "native": 4.67792534828186
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        26000,
+        127
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.3925260007381439,
+            0.40148499608039856
+          ],
+          "native": [
+            5.002749919891357,
+            5.192831993103027
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.36932599544525146,
+            0.380964994430542
+          ],
+          "native": [
+            4.641944885253906,
+            4.840507984161377
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "cache-sharing",
+      "medians": {
+        "flush4MiB": {
+          "duplicated": 0.043161001056432724,
+          "shared": 0.04380050115287304
+        },
+        "steady": {
+          "duplicated": 0.04374049976468086,
+          "shared": 0.0437610000371933
+        }
+      },
+      "prefix": 2040,
+      "prefixes": null,
+      "timing_ranges": {
+        "flush4MiB": {
+          "duplicated": [
+            0.0421609990298748,
+            0.04472099989652634
+          ],
+          "shared": [
+            0.043081000447273254,
+            0.04408099874854088
+          ]
+        },
+        "steady": {
+          "duplicated": [
+            0.04228099808096886,
+            0.04448099806904793
+          ],
+          "shared": [
+            0.042319998145103455,
+            0.21452300250530243
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "cache-sharing",
+      "medians": {
+        "flush4MiB": {
+          "duplicated": 0.3096639961004257,
+          "shared": 0.3042045086622238
+        },
+        "steady": {
+          "duplicated": 0.31170399487018585,
+          "shared": 0.3008839935064316
+        }
+      },
+      "prefix": 26000,
+      "prefixes": null,
+      "timing_ranges": {
+        "flush4MiB": {
+          "duplicated": [
+            0.3079240024089813,
+            0.31048399209976196
+          ],
+          "shared": [
+            0.30124399065971375,
+            0.3074040114879608
+          ]
+        },
+        "steady": {
+          "duplicated": [
+            0.30672401189804077,
+            0.3165239989757538
+          ],
+          "shared": [
+            0.29404500126838684,
+            0.3132439851760864
+          ]
+        }
+      }
+    },
+    {
+      "device": 0,
+      "kind": "cache-sharing",
+      "medians": {
+        "flush4MiB": {
+          "duplicated": 0.6679494976997375,
+          "shared": 0.6514289975166321
+        },
+        "steady": {
+          "duplicated": 0.6901894807815552,
+          "shared": 0.682530015707016
+        }
+      },
+      "prefix": 59984,
+      "prefixes": null,
+      "timing_ranges": {
+        "flush4MiB": {
+          "duplicated": [
+            0.6589289903640747,
+            0.67364901304245
+          ],
+          "shared": [
+            0.6467689871788025,
+            0.6623700261116028
+          ]
+        },
+        "steady": {
+          "duplicated": [
+            0.6372089982032776,
+            0.7005699872970581
+          ],
+          "shared": [
+            0.6382089853286743,
+            0.6914499998092651
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.10318149998784065,
+          "native": 0.05360049940645695
+        },
+        "steady": {
+          "candidate": 0.09198099747300148,
+          "native": 0.050321001559495926
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        0,
+        31
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.09984199702739716,
+            0.27256399393081665
+          ],
+          "native": [
+            0.0517209991812706,
+            0.059321001172065735
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.09140100330114365,
+            0.09488099813461304
+          ],
+          "native": [
+            0.04992099851369858,
+            0.05124099925160408
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.12416199967265129,
+          "native": 0.4255460053682327
+        },
+        "steady": {
+          "candidate": 0.11098100244998932,
+          "native": 0.39310549199581146
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        31,
+        2040
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.1191210001707077,
+            0.12492100149393082
+          ],
+          "native": [
+            0.4046050012111664,
+            0.4291659891605377
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.1090409979224205,
+            0.11324100196361542
+          ],
+          "native": [
+            0.38936498761177063,
+            0.4249260127544403
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.14806199818849564,
+          "native": 0.4400260001420975
+        },
+        "steady": {
+          "candidate": 0.13002150505781174,
+          "native": 0.39634500443935394
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        2040,
+        2040
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.1408820003271103,
+            0.15088200569152832
+          ],
+          "native": [
+            0.41136500239372253,
+            0.4454459846019745
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.12924200296401978,
+            0.13188199698925018
+          ],
+          "native": [
+            0.39304599165916443,
+            0.39984598755836487
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.20966249704360962,
+          "native": 1.6153414845466614
+        },
+        "steady": {
+          "candidate": 0.18720199912786484,
+          "native": 1.4803799986839294
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        8192,
+        1024
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.2053619921207428,
+            0.21136300265789032
+          ],
+          "native": [
+            1.5632619857788086,
+            1.6329820156097412
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.18512199819087982,
+            0.19192199409008026
+          ],
+          "native": [
+            1.4707390069961548,
+            1.4916599988937378
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "c2",
+      "medians": {
+        "flush64MiB": {
+          "candidate": 0.4479059875011444,
+          "native": 5.758778095245361
+        },
+        "steady": {
+          "candidate": 0.3738255053758621,
+          "native": 4.652022838592529
+        }
+      },
+      "prefix": null,
+      "prefixes": [
+        26000,
+        127
+      ],
+      "timing_ranges": {
+        "flush64MiB": {
+          "candidate": [
+            0.3933259844779968,
+            0.4552060067653656
+          ],
+          "native": [
+            4.971268177032471,
+            6.037322044372559
+          ]
+        },
+        "steady": {
+          "candidate": [
+            0.36116498708724976,
+            0.3944050073623657
+          ],
+          "native": [
+            4.612823009490967,
+            4.853185176849365
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "cache-sharing",
+      "medians": {
+        "flush4MiB": {
+          "duplicated": 0.0435004997998476,
+          "shared": 0.04400100000202656
+        },
+        "steady": {
+          "duplicated": 0.044420499354600906,
+          "shared": 0.044560499489307404
+        }
+      },
+      "prefix": 2040,
+      "prefixes": null,
+      "timing_ranges": {
+        "flush4MiB": {
+          "duplicated": [
+            0.0421999990940094,
+            0.04436099901795387
+          ],
+          "shared": [
+            0.04255999997258186,
+            0.044280000030994415
+          ]
+        },
+        "steady": {
+          "duplicated": [
+            0.043000999838113785,
+            0.044961001724004745
+          ],
+          "shared": [
+            0.04304099828004837,
+            0.045281000435352325
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "cache-sharing",
+      "medians": {
+        "flush4MiB": {
+          "duplicated": 0.31308451294898987,
+          "shared": 0.3074039965867996
+        },
+        "steady": {
+          "duplicated": 0.3157844990491867,
+          "shared": 0.30374398827552795
+        }
+      },
+      "prefix": 26000,
+      "prefixes": null,
+      "timing_ranges": {
+        "flush4MiB": {
+          "duplicated": [
+            0.3112049996852875,
+            0.31660398840904236
+          ],
+          "shared": [
+            0.30600398778915405,
+            0.31188398599624634
+          ]
+        },
+        "steady": {
+          "duplicated": [
+            0.31152400374412537,
+            0.31980401277542114
+          ],
+          "shared": [
+            0.2999640107154846,
+            0.31472399830818176
+          ]
+        }
+      }
+    },
+    {
+      "device": 1,
+      "kind": "cache-sharing",
+      "medians": {
+        "flush4MiB": {
+          "duplicated": 0.6867695152759552,
+          "shared": 0.6738094985485077
+        },
+        "steady": {
+          "duplicated": 0.6984695196151733,
+          "shared": 0.6904289722442627
+        }
+      },
+      "prefix": 59984,
+      "prefixes": null,
+      "timing_ranges": {
+        "flush4MiB": {
+          "duplicated": [
+            0.6748089790344238,
+            0.6882489919662476
+          ],
+          "shared": [
+            0.668408989906311,
+            0.6774489879608154
+          ]
+        },
+        "steady": {
+          "duplicated": [
+            0.6620889902114868,
+            0.7106490135192871
+          ],
+          "shared": [
+            0.6530089974403381,
+            0.6982889771461487
+          ]
+        }
+      }
+    }
+  ],
+  "counts": {
+    "cells": 16,
+    "graph_captures": 32,
+    "poison_checked_replays": 1264,
+    "timing_observations": 1024
+  },
+  "deployed": false,
+  "devices": [
+    {
+      "architecture": "gfx1201",
+      "index": 0,
+      "multiprocessors": 32,
+      "name": "AMD Radeon AI PRO R9700",
+      "torch_reported_l2_cache_bytes": null,
+      "torch_reported_total_memory_bytes": 34208743424
+    },
+    {
+      "architecture": "gfx1201",
+      "index": 1,
+      "multiprocessors": 32,
+      "name": "AMD Radeon AI PRO R9700",
+      "torch_reported_l2_cache_bytes": null,
+      "torch_reported_total_memory_bytes": 34208743424
+    }
+  ],
+  "evidence": {
+    "native_members": 155,
+    "native_seal_sha256": "b7d4f917f265279648125e3345780f828f1031339458a5f275413dac1f12bafd",
+    "package_sha256": "20b78400ec686bd49c059c0a910475ae281c4541da864bf22d8857a0a44adcc8",
+    "result_summary_sha256": "a51179ed8de305f5b7ec43b3245d0f2c6ca1483581b39dedfe0861b2de326d8a",
+    "source_members": 2048,
+    "source_seal_sha256": "1da0cef942f1bc8b91bc4acc662952f34ce2bab240e0fb2fd5830c76dfefa87d",
+    "stage_result_sha256": "a7ede2796da2e688f36a09665544e2274e8e7432a566bed91a04ae59e023c4ff"
+  },
+  "gate": {
+    "longer_c2_paired_wins": 256,
+    "maximum_regression_ratio": 1.02,
+    "passed": false,
+    "required_long_cell_ratio": 0.98,
+    "short_flush_paired_losses": 14,
+    "short_flush_pairs": 16,
+    "short_steady_paired_wins": 0,
+    "short_steady_pairs": 48
+  },
+  "independent_review": {
+    "actual_reader_recomputed_identically": true,
+    "agent": "/root/remaining_astra",
+    "model": "gpt-6-astra",
+    "raw_admission_device_source_compiler_timing_release_joins": "PASS",
+    "reasoning_effort": "max"
+  },
+  "model_starts": 0,
+  "numerical_contract": {
+    "candidate": "Exact output bits against two selected singleton adapters",
+    "native": "Graph replay exact against own frozen eager reference",
+    "native_candidate_bit_identity": false,
+    "observed_native_candidate_max_abs_difference_range": [
+      0.0009765625,
+      0.0078125
+    ]
+  },
+  "publication_omissions": {
+    "private_path_or_machine_identity_fields_removed": 2,
+    "raw_record_sha256": "291ebaf4cd083ba99d9bf236a3e80b35f8c4561e2dcc96f2717ec01d4f00d40e",
+    "sealed_private_evidence_hashes_retained": true
+  },
+  "qualification": false,
+  "recorded_utc": "2026-10-24T01:50:11.975044+00:00",
+  "reference_configuration_changed": false,
+  "release": {
+    "cleanup_errors": [],
+    "independent_verified": true,
+    "journal_closed": true,
+    "survivors": [],
+    "unresolved": false
+  },
+  "resources": {
+    "device_tensor_limit_bytes": 268435456,
+    "final_phase_allocated_bytes": 0,
+    "host_peak_bytes": 2266279936,
+    "maximum_allocated_device_bytes": 261237248,
+    "oom_or_resource_events": false
+  },
+  "runtime": {
+    "hip_version": "7.17.26416",
+    "torch_version": "2.14.0+git2e66fe81.rocm10.2.0",
+    "triton_version": "3.8.0"
+  },
+  "schema": 1,
+  "scope": "Synthetic isolated C2 BF16 attention and separate native-decode address-sharing probe; no model serving or task-quality qualification",
+  "seconds": {
+    "owner": 41.82949876599014,
+    "payload": 22.606574642006308,
+    "physical_command": 42.133018458029255
+  },
+  "selected": false,
+  "serving_tested": false,
+  "status": "COMPONENT_TESTED_BENEFIT_GATE_FAILED_UNSELECTED",
+  "timing_method": "CUDA graph replay events, alternating ABBA; conditions do not prove cold cache",
+  "timing_units": "milliseconds",
+  "warnings": [
+    "Optional TVM Torch C-DLPack extension JIT failed; EnvTensorAllocator disabled. Warning retained; no install or source modification."
+  ]
+}

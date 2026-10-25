@@ -1,0 +1,49 @@
+{
+  "bound_helper_pin_only": {
+    "binding_only_AST_equivalence": true,
+    "changed_assignments": [
+      "PACKET_BINDING_SHA256",
+      "PACKET_BUNDLE_SHA256",
+      "PACKET_BUNDLE_BASE85"
+    ],
+    "decoded_consumed_sha256": "9a98cfe11968a8af62151b5bf4c5d675409e45ebcf1ff5dfdee096a31bda8d38",
+    "recommendation": "Publish unbound implementation template with explicit difference; no generated private packet bundle.",
+    "template_sha256": "7634adf71678d09ef9f3d8995c5913ddb43a86358c7824d6d3520089a8ceb567"
+  },
+  "files": [
+    {
+      "bytes": 3096,
+      "name": "owner_worker.py",
+      "sha256": "6687bc55eb9db7b5bf37f04362d7ad4818e4f151cb0d0a660ea84cb04f9d1a35",
+      "source_role": "actual owner worker/53-request bridge"
+    },
+    {
+      "bytes": 11457,
+      "name": "read_final_betterbench.py",
+      "sha256": "323d76d472845c89e48d07069ab91494f3f391d0d5ed48b4bab82bc94584e3f0",
+      "source_role": "strict final readout dependency"
+    },
+    {
+      "bytes": 5114,
+      "name": "campaign_evidence.py",
+      "sha256": "23001c02230b39a2385aeed0be69796b23ac43a6230314b910ddc31ae3d65a26",
+      "source_role": "strict final readout dependency"
+    },
+    {
+      "bytes": 4014,
+      "name": "owner_authentication.py",
+      "sha256": "520b588f6fa931e0f89028b96c01cab09e551b57ee3c63edce361fe1d81286cd",
+      "source_role": "strict final readout dependency"
+    },
+    {
+      "bytes": 34580,
+      "name": "betterbench_owner.py",
+      "sha256": "7634adf71678d09ef9f3d8995c5913ddb43a86358c7824d6d3520089a8ceb567",
+      "source_role": "unbound source template of actual owner validator"
+    }
+  ],
+  "packet_archive_sha256": "480c653f4468e84053f08915034bb915b929e4fe7cac02d9b0d6cee262075d05",
+  "packet_manifest_sha256": "e951fc14416cf1e3c0393de41ef9b72e37de4560dc30e09954ef1cce4eda9d8d",
+  "schema": 1,
+  "scope": "Private owner orchestration and evidence reader source identities; not executable public target configuration"
+}

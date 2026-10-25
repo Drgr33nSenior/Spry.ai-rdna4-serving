@@ -1,0 +1,179 @@
+{
+  "arithmetic": "K128 dot, As then Bs scaling, positive FP32 zero and exact sequential-add yield retained",
+  "asset": {
+    "checkpoint_bytes_hashed": 383865448,
+    "header_sha256": "f10e6204808d68452bb2b9584988d965ee3dea86aa04fa21c7e2a12df9641736",
+    "local_fp32_scales_sha256": "e938a5829e191e8b83e14abc69de9066443d58d4c7a4ddafb6c3cf22ff60b1b8",
+    "local_weights_sha256": "fd3063ff21bc7ec8d6d2e0733ebcd98ee665fcfaa7fe72ab6b8854aa872552be",
+    "native_runtime_normalization_applied": false,
+    "rank": 0,
+    "real_activation_source": "NOT LOCATED",
+    "runtime_loader_equivalence": "requires current native parameter/FP8 route verification",
+    "scale_shape": [
+      136,
+      40
+    ],
+    "scales_dtype": "FP32 exact BF16 expansion",
+    "shape": [
+      17408,
+      5120
+    ],
+    "shard": "layers-0.safetensors",
+    "shard_sha256": "07f700e293baeaf3cd4240c3df1a948c4403f16961ea7979e86c8d6a9f8fd466",
+    "weights_dtype": "checkpoint F8_E4M3 bytes"
+  },
+  "byte_check": {
+    "bytes_compared": 89128960,
+    "maximum_logical_chunk_bytes": 1310720,
+    "requantization": false,
+    "scales_modified": false
+  },
+  "compilation": {
+    "packed": {
+      "artifacts": {
+        "amdgcn": {
+          "bytes": 319983,
+          "name": "c1cb84c276d784a9e3bfbdd58f2fcf30d812366aa3ad09b7700d5e54a0cd38b6.amdgcn",
+          "sha256": "c1cb84c276d784a9e3bfbdd58f2fcf30d812366aa3ad09b7700d5e54a0cd38b6"
+        },
+        "hsaco": {
+          "bytes": 40552,
+          "name": "bcdad03028270dbce60a3ca6fac47c8adf8f078ba9f99de9ed927ae8eb1ede36.hsaco",
+          "sha256": "bcdad03028270dbce60a3ca6fac47c8adf8f078ba9f99de9ed927ae8eb1ede36"
+        },
+        "ttgir": {
+          "bytes": 22917,
+          "name": "81d589b9b1fe1e9cd127e86ca219fd0dbb315138411e90fb999fea1183e7cddf.ttgir",
+          "sha256": "81d589b9b1fe1e9cd127e86ca219fd0dbb315138411e90fb999fea1183e7cddf"
+        }
+      },
+      "attributes": {
+        "compiled.n_regs": 256,
+        "compiled.n_spills": 81,
+        "metadata.num_stages": 1,
+        "metadata.num_warps": 4,
+        "metadata.shared": 16384
+      },
+      "handles": {
+        "compiler_sha256": "28ff26b7e752df455c410418d72fd0afc5b3bfa952ca4bca95b1cfd5a31a0e2f",
+        "initialized_without_matmul": true,
+        "resource_metadata_available": true,
+        "status": "LOADED"
+      }
+    },
+    "selected": {
+      "artifacts": {
+        "amdgcn": {
+          "bytes": 52154,
+          "name": "d984a41d88cd2cf7ec507a273539418da31d7f8f3cc0ac83f312c738cc205730.amdgcn",
+          "sha256": "d984a41d88cd2cf7ec507a273539418da31d7f8f3cc0ac83f312c738cc205730"
+        },
+        "hsaco": {
+          "bytes": 10624,
+          "name": "773dbd99ac2c253bb3078b47a70cdfbe2477521f7b2b7b9a1380cfa61f0211fc.hsaco",
+          "sha256": "773dbd99ac2c253bb3078b47a70cdfbe2477521f7b2b7b9a1380cfa61f0211fc"
+        },
+        "ttgir": {
+          "bytes": 20479,
+          "name": "146948e0927ed2f54a85c2a4e370fe0ada659d882c675088a9c2c1eee5568745.ttgir",
+          "sha256": "146948e0927ed2f54a85c2a4e370fe0ada659d882c675088a9c2c1eee5568745"
+        }
+      },
+      "attributes": {
+        "compiled.n_regs": 114,
+        "compiled.n_spills": 0,
+        "metadata.num_stages": 1,
+        "metadata.num_warps": 4,
+        "metadata.shared": 16384
+      },
+      "handles": {
+        "compiler_sha256": "28ff26b7e752df455c410418d72fd0afc5b3bfa952ca4bca95b1cfd5a31a0e2f",
+        "initialized_without_matmul": true,
+        "resource_metadata_available": true,
+        "status": "LOADED"
+      }
+    }
+  },
+  "deployed": false,
+  "evidence": {
+    "native_members": 175,
+    "native_seal_sha256": "5462d9fd2a8b6e061978a0d7908702be251535186f8e604718a860961390ab4f",
+    "package_sha256": "812246057d1304e4cbc98d2a73e76428a3322c2da2a403740c6212e0db070baa",
+    "result_summary_sha256": "347e29e50964825fc754b118a6b99345543a8a1c592fadcc3c9f403a74f3c722",
+    "source_members": 1608,
+    "source_seal_sha256": "e903232a1ee29a2b090bdf0bb17833a31acf1159ff7fec719263a2709c1a4b4e"
+  },
+  "gate": {
+    "candidate_matmul_executed": false,
+    "device_coverage_complete": false,
+    "failed": true,
+    "intended_weight_LDS_removal_established": false,
+    "maximum_registers": 128,
+    "maximum_spills": 0,
+    "platform_unsupported": false
+  },
+  "independent_review": {
+    "actual_nonwriting_reader_replay": "Exact summary match",
+    "agent": "/root/remaining_astra",
+    "all_six_compiler_artifacts_authenticated": true,
+    "model": "gpt-6-astra",
+    "raw_release_joins": "PASS",
+    "reasoning_effort": "max"
+  },
+  "publication_omissions": {
+    "private_path_or_machine_identity_fields_removed": 1,
+    "raw_record_sha256": "635c8f4b4528d2be0a0a304b902efd64748bded9ebe58afb13684bfd63d00445",
+    "sealed_private_evidence_hashes_retained": true
+  },
+  "qualification": false,
+  "recorded_utc": "2026-10-24T02:04:16.329169+00:00",
+  "reference_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "release": {
+    "cleanup_errors": [],
+    "independent_verified": true,
+    "unresolved": false
+  },
+  "repack_milliseconds": 10.857003211975098,
+  "resources": {
+    "device_tensor_limit_bytes": 268435456,
+    "final_phase_allocated_bytes": 0,
+    "host_peak_bytes": 1004466176,
+    "peak_allocated_bytes": 248086528,
+    "peak_reserved_bytes": 270532608
+  },
+  "schema": 1,
+  "scope": "Rank0 seeded real-weight pack/inverse and compilation only; no candidate matmul, second-card correctness, timings or serving qualification",
+  "seconds": {
+    "owner": 26.70620253996458,
+    "payload": 8.871542835026048,
+    "physical_command": 26.96355849993415
+  },
+  "selected": false,
+  "shape": [
+    8,
+    17408,
+    5120
+  ],
+  "static_analysis": {
+    "interpretation": "Recognized static loop source counts; not executed traffic, occupancy or cycles",
+    "packed": {
+      "DS_loads": 20,
+      "DS_stores": 131,
+      "K_loop_instruction_lines": 797,
+      "WMMA_count": 16,
+      "buffer_loads": 131,
+      "waits": 109,
+      "weight_lds_paths": 1
+    },
+    "selected": {
+      "DS_loads": 20,
+      "DS_stores": 11,
+      "K_loop_instruction_lines": 153,
+      "WMMA_count": 16,
+      "buffer_loads": 11,
+      "waits": 26,
+      "weight_lds_paths": 1
+    }
+  },
+  "status": "REJECTED_AT_COMPILE_RESOURCE_GATE"
+}

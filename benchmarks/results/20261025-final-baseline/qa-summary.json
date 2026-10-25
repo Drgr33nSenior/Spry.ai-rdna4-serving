@@ -1,0 +1,437 @@
+{
+  "HTTP_requests": 16,
+  "actual_sampled_verification": "NOT PROVEN",
+  "capacity_scope": "Serial26K SRE requests and5.4K document continuation; not maximal-slot or multi-turn26K qualification",
+  "charged_GPU_owner_seconds": 394,
+  "comparisons": [
+    {
+      "case": "historical-runbook",
+      "input_ids_sha256": "4ef6d49003d5e828c6bcf172da8f89392ace11b46abbe9a0150245be072764d3",
+      "input_same": true,
+      "input_tokens": 25978,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 15,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "b7c24a4e685105951172ef1334be5a18731bf6855d18790c03976b3bbe6238e0",
+          "output_tokens": 523,
+          "speculation": {
+            "spec_num_correct_drafts": 443,
+            "spec_num_proposed_drafts": 553,
+            "spec_verify_ct": 79
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "b7c24a4e685105951172ef1334be5a18731bf6855d18790c03976b3bbe6238e0",
+          "output_tokens": 523,
+          "speculation": {
+            "spec_num_correct_drafts": 443,
+            "spec_num_proposed_drafts": 553,
+            "spec_verify_ct": 79
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "heldout-sre-0",
+      "input_ids_sha256": "31997d6d542bb4df0fc2a2405f1afa295a69176bfad1b3dcc2e0f5dfd16ad94b",
+      "input_same": true,
+      "input_tokens": 25991,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 16,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "8aae3e764f55e3469fface073b19370e710caabbebd92913553b6b8390e8ad63",
+          "output_tokens": 554,
+          "speculation": {
+            "spec_num_correct_drafts": 468,
+            "spec_num_proposed_drafts": 602,
+            "spec_verify_ct": 86
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "8aae3e764f55e3469fface073b19370e710caabbebd92913553b6b8390e8ad63",
+          "output_tokens": 554,
+          "speculation": {
+            "spec_num_correct_drafts": 468,
+            "spec_num_proposed_drafts": 602,
+            "spec_verify_ct": 86
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "heldout-sre-1",
+      "input_ids_sha256": "68c4bc989acc7e29744644640f92251e9679b9e41209da96748b1ea84a3696c6",
+      "input_same": true,
+      "input_tokens": 25978,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 17,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "893521decc66c88956f324349165134d8a7889006ee91663217f6802ecfe719d",
+          "output_tokens": 435,
+          "speculation": {
+            "spec_num_correct_drafts": 359,
+            "spec_num_proposed_drafts": 532,
+            "spec_verify_ct": 76
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "893521decc66c88956f324349165134d8a7889006ee91663217f6802ecfe719d",
+          "output_tokens": 435,
+          "speculation": {
+            "spec_num_correct_drafts": 359,
+            "spec_num_proposed_drafts": 532,
+            "spec_verify_ct": 76
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "quality-c1-a",
+      "input_ids_sha256": "67f17f15c38ec83b5bae07721e3c31fb585c5ee88a9fcf3c35418e6fb012a4bd",
+      "input_same": true,
+      "input_tokens": 5461,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 18,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "16805025ead8df6e0930afc34ca8c1fea5a9dc43dde86b24ab715b78042ef7ef",
+          "output_tokens": 242,
+          "speculation": {
+            "spec_num_correct_drafts": 199,
+            "spec_num_proposed_drafts": 301,
+            "spec_verify_ct": 43
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "16805025ead8df6e0930afc34ca8c1fea5a9dc43dde86b24ab715b78042ef7ef",
+          "output_tokens": 242,
+          "speculation": {
+            "spec_num_correct_drafts": 199,
+            "spec_num_proposed_drafts": 301,
+            "spec_verify_ct": 43
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "prefix-branch",
+      "input_ids_sha256": "d1b4882ddb2d5551159cd862a21812233cb0ac940d19ef49e622b78200cb1432",
+      "input_same": true,
+      "input_tokens": 5461,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 21,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "d30a026c91ea6f5e97517b5ff826225e604f5fb2f31fc9061a5b4bc3d7d6116e",
+          "output_tokens": 221,
+          "speculation": {
+            "spec_num_correct_drafts": 180,
+            "spec_num_proposed_drafts": 287,
+            "spec_verify_ct": 41
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "d30a026c91ea6f5e97517b5ff826225e604f5fb2f31fc9061a5b4bc3d7d6116e",
+          "output_tokens": 221,
+          "speculation": {
+            "spec_num_correct_drafts": 180,
+            "spec_num_proposed_drafts": 287,
+            "spec_verify_ct": 41
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "raw-tool-json",
+      "input_ids_sha256": "f8c4e78094fb5af48e4235b2b1acbbca36322a8efd9a49482fe20c672b8df736",
+      "input_same": true,
+      "input_tokens": 119,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 28,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "31afe628e47e308585f8ed6a881d527f2ad263c6333808cf1d72c00bc681b543",
+          "output_tokens": 82,
+          "speculation": {
+            "spec_num_correct_drafts": 66,
+            "spec_num_proposed_drafts": 112,
+            "spec_verify_ct": 16
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "31afe628e47e308585f8ed6a881d527f2ad263c6333808cf1d72c00bc681b543",
+          "output_tokens": 82,
+          "speculation": {
+            "spec_num_correct_drafts": 66,
+            "spec_num_proposed_drafts": 112,
+            "spec_verify_ct": 16
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "sampled-running-totals",
+      "input_ids_sha256": "30e2e4bf47eceaadc4b55f496604e95ec5e143f0a085e55a761cff73ae8bba9d",
+      "input_same": true,
+      "input_tokens": 226,
+      "mandatory_quality": true,
+      "output_ids_same": true,
+      "quality_ordinal": 29,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "7b405329f44760f6f7c11663bfe1fe93a8646e4f74f15b693bfc6a9392776405",
+          "output_tokens": 310,
+          "speculation": {
+            "spec_num_correct_drafts": 262,
+            "spec_num_proposed_drafts": 336,
+            "spec_verify_ct": 48
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "7b405329f44760f6f7c11663bfe1fe93a8646e4f74f15b693bfc6a9392776405",
+          "output_tokens": 310,
+          "speculation": {
+            "spec_num_correct_drafts": 262,
+            "spec_num_proposed_drafts": 336,
+            "spec_verify_ct": 48
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    },
+    {
+      "case": "long-prefix-repeat",
+      "input_ids_sha256": "31997d6d542bb4df0fc2a2405f1afa295a69176bfad1b3dcc2e0f5dfd16ad94b",
+      "input_same": true,
+      "input_tokens": 25991,
+      "mandatory_quality": false,
+      "output_ids_same": true,
+      "quality_ordinal": 30,
+      "starts": [
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "8aae3e764f55e3469fface073b19370e710caabbebd92913553b6b8390e8ad63",
+          "output_tokens": 554,
+          "speculation": {
+            "spec_num_correct_drafts": 468,
+            "spec_num_proposed_drafts": 602,
+            "spec_verify_ct": 86
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        },
+        {
+          "cached_tokens": 0,
+          "output_ids_sha256": "8aae3e764f55e3469fface073b19370e710caabbebd92913553b6b8390e8ad63",
+          "output_tokens": 554,
+          "speculation": {
+            "spec_num_correct_drafts": 468,
+            "spec_num_proposed_drafts": 602,
+            "spec_verify_ct": 86
+          },
+          "status": "NORMAL_STOP_COMPLETE"
+        }
+      ],
+      "visible_text_same": true,
+      "work_same": true
+    }
+  ],
+  "configuration": "unchanged selected b101/2K/BF16-KV/fixed-DFlash8/low-thinking",
+  "date": "2026-10-25",
+  "deployed": false,
+  "endurance": "NOT RUN",
+  "evidence": {
+    "CPU_manifest_sha256": "80544329cdf3ac696a6449779dfbefd664bb69d1fb30f2e7ead19ebbdf9057a6",
+    "QA_result_sha256": "4434434aa9daaa694d7a1cfef8a3daafd1f19f6edd0e52b872eb6faa82bef4c1",
+    "independent_QA_review_sha256": "f3db1cea9d0e76163be09ff1df8ef0998f4412389640f6bc2c1a7caa0a5e049a",
+    "native_manifest_sha256": "8480930bf8dcd7a6c28cd7101a87cd8de41fcbe8a4e29a610ea2d37891e62414"
+  },
+  "grades": [
+    {
+      "arm": "control",
+      "case": "historical-runbook",
+      "ordinal": 15,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "control",
+      "case": "heldout-sre-0",
+      "ordinal": 16,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "control",
+      "case": "heldout-sre-1",
+      "ordinal": 17,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "control",
+      "case": "quality-c1-a",
+      "ordinal": 18,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "control",
+      "case": "prefix-branch",
+      "ordinal": 21,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "control",
+      "case": "raw-tool-json",
+      "ordinal": 28,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "control",
+      "case": "sampled-running-totals",
+      "ordinal": 29,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "historical-runbook",
+      "ordinal": 15,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "heldout-sre-0",
+      "ordinal": 16,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "heldout-sre-1",
+      "ordinal": 17,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "quality-c1-a",
+      "ordinal": 18,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "prefix-branch",
+      "ordinal": 21,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "raw-tool-json",
+      "ordinal": 28,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    },
+    {
+      "arm": "mtp",
+      "case": "sampled-running-totals",
+      "ordinal": 29,
+      "quality_passed": true,
+      "status": "QUALITY_PASS"
+    }
+  ],
+  "host_memory_events": [
+    {
+      "high": 0,
+      "low": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0,
+      "sock_throttled": 0
+    },
+    {
+      "high": 0,
+      "low": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0,
+      "sock_throttled": 0
+    }
+  ],
+  "host_memory_peak_bytes": [
+    26047483904,
+    21946019840
+  ],
+  "independent_CPU_release": true,
+  "independent_GPU_release": true,
+  "isolated_code_graders": 2,
+  "native_CPU_seconds": 27.00842895801179,
+  "native_final_answer_grades": 14,
+  "new_cancellation_tests": "NOT RUN in final QA; retained prior lifecycle evidence remains separate",
+  "new_state_equivalence_tests": "NOT RUN in final QA; model outputs do not prove full recurrent-state equality",
+  "production_qualified": false,
+  "resource_scope": "Host cgroup peak includes model process tree and client; neither per-GPU VRAM nor leakage proof",
+  "sampling_distribution_verified": false,
+  "schema": 1,
+  "selection_sha256": "aa691cdee9957416c8672cf400700dcec28cd49333795ad405aaf7d5912cabde",
+  "starts": 2,
+  "status": "SERVING_TESTED_FROZEN_FINAL_QA_PASS",
+  "unique_graded_tasks": 7
+}

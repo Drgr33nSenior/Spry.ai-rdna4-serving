@@ -1,0 +1,167 @@
+{
+  "commit": "f72bb9011a830fd98e82ab89d01e549efa76e9c5",
+  "corpus_version": "1.0",
+  "files": {
+    "LICENSE": {
+      "bytes": 4023,
+      "git_blob_sha1": "6bde73186468a3d8485058a6d58a2660d6954772",
+      "sha256": "10acecb6443cdaeb295334a997d283021b3931190e0db02bb413d51baa7d285b"
+    },
+    "README.md": {
+      "bytes": 17383,
+      "git_blob_sha1": "acb4ab59b89bfbd180e02d57373f8dc7d269e4f2",
+      "sha256": "110df2256aa10c4cf7d443c278b0e847189b173b86fd958e0107eb0549e17b15"
+    },
+    "betterbench/__init__.py": {
+      "bytes": 141,
+      "git_blob_sha1": "f527c812373bf1c20337fdee96785c10635d12f3",
+      "sha256": "c53c4fbba8eaab49f004dc82fd8773b9e73c7880bdaec5e76a5a11f006f1bb94"
+    },
+    "betterbench/cli.py": {
+      "bytes": 21688,
+      "git_blob_sha1": "e554e6410e3653039b608eeda5a2f8d181282a0f",
+      "sha256": "11511bb6803fa1f7a6462b872561ac0acc8f8cd0b5a6b3d50fb5753850df864c"
+    },
+    "betterbench/client.py": {
+      "bytes": 21010,
+      "git_blob_sha1": "419cac412d10c5a7d112a8af2de398639dc0e66d",
+      "sha256": "b8fbd0a632e05673f78882a902c191bd6ae11af0e9bc544b6f0a08b8939b7bfd"
+    },
+    "betterbench/config.py": {
+      "bytes": 2804,
+      "git_blob_sha1": "35dd5ab9c8a59ae4f1f285005ecf1f1d2c854c06",
+      "sha256": "5026a6de91bc1324a244d1b8bfb277bab0f04f04fea3166cf66ce138c66897fd"
+    },
+    "betterbench/corpus.py": {
+      "bytes": 3036,
+      "git_blob_sha1": "ad40c3175ae187332985d136c1ac2e065d84832c",
+      "sha256": "e0cfb2b1a111ba03d44123f30ffb4c54d78b2d53c8733d99ba27d4690d3dd4d3"
+    },
+    "betterbench/env.py": {
+      "bytes": 2230,
+      "git_blob_sha1": "85e5c1a594982216c4b97e9e8cd35a3e3fbe9864",
+      "sha256": "454b0996c4647a8e837b67da1e9cc352687b626cec2ab13a03f006f95ee5d6aa"
+    },
+    "betterbench/gallery.py": {
+      "bytes": 37058,
+      "git_blob_sha1": "ddce52fcc498f7158a3fc630c676fd1842176235",
+      "sha256": "fbf1a705096c3c2e47de5b0cd12699992d5ee772c42eb8fc23c3fb244a9fb566"
+    },
+    "betterbench/html_report.py": {
+      "bytes": 36849,
+      "git_blob_sha1": "8d21dde328f09596f959973e61c03f94c19a42c2",
+      "sha256": "fdda7ca386f20379be1a3ee50363bdf664874bc2516dac044153f902eb7d7d8a"
+    },
+    "betterbench/metrics.py": {
+      "bytes": 7811,
+      "git_blob_sha1": "01367fb95b436269568275b57cc6ea38095e8b3d",
+      "sha256": "5dcece3cef1364f8800b8a87230912e027b3f301a17836df5eff6ff95bf0348d"
+    },
+    "betterbench/prefill.py": {
+      "bytes": 3763,
+      "git_blob_sha1": "441f1c4a1a9d4ddc13cc410a3abf3ef37732c465",
+      "sha256": "5fc78c6181863401ea828801fd0219c8265625f299385448a7a5a3abdae807d9"
+    },
+    "betterbench/report.py": {
+      "bytes": 22199,
+      "git_blob_sha1": "2c0736f3d09f19101d60dc127d38f789284172f5",
+      "sha256": "e29dba5b1df011c567adac38410ccb2bddf858b64222c7c659e98eea7db1b96f"
+    },
+    "betterbench/runner.py": {
+      "bytes": 13543,
+      "git_blob_sha1": "62610a0ab0a1579fb7afe5c1407cc9280d8041a9",
+      "sha256": "cff2a0eb7c3074596cfd956742510a03a99451d7bde42b2a9fdb9f1a013d8047"
+    },
+    "betterbench/runs.py": {
+      "bytes": 5501,
+      "git_blob_sha1": "8cdf8b3c6a1dec3cf8062ffc0be94434b12569be",
+      "sha256": "e580e6923fdb1b1d0b32256be4efc40c263fac96c54a5f82707cfb045d61691b"
+    },
+    "betterbench/session.py": {
+      "bytes": 11548,
+      "git_blob_sha1": "982a6183465a27c713cbcc527a7c61762a0923dc",
+      "sha256": "382b2f9c7c1f241dc120263dfbc000c3f06893b2529260b31a2a85ecc3036caa"
+    },
+    "betterbench/update.py": {
+      "bytes": 6304,
+      "git_blob_sha1": "ecdf174accb9fef8d22fb4d8663ae8d532cf4e0f",
+      "sha256": "548ba7844465c12b4641cb07a19a2d8382994da0ceb94f5143ff1941f957d0fc"
+    },
+    "config/deep_prefill.json": {
+      "bytes": 74,
+      "git_blob_sha1": "07138a112b58d53d7c1491570d2759c91e52057e",
+      "sha256": "8690a16b35288b29fe656f2dc147bcb0e6a4d61d69b81dd86d0582827dd89072"
+    },
+    "config/default.json": {
+      "bytes": 476,
+      "git_blob_sha1": "76d5fc118fa2c013dec6c275f9bc5888ca4526f0",
+      "sha256": "d833f3afe6a275cc1cd82f2446391e8a93adabdb2b859d5da9b3d4239cd82118"
+    },
+    "corpus/v1/chat.jsonl": {
+      "bytes": 1594,
+      "git_blob_sha1": "d8424b431712da66791ffbfd45530e8e78c505a9",
+      "sha256": "6adc21235fd04c32c235d0f61faeb95ed439fedb85b1813d17b006b41fe141f4"
+    },
+    "corpus/v1/code.jsonl": {
+      "bytes": 1488,
+      "git_blob_sha1": "fef8d0debffaa87984bf79e1ca0ada53eb943eb3",
+      "sha256": "0ba162ffabf02068b75795c3a9cd34d24c46e62b647f4d06768ef5673154e7d1"
+    },
+    "corpus/v1/file_edit.jsonl": {
+      "bytes": 1479,
+      "git_blob_sha1": "fad276003f99aef52e29dd2b9a17b067a2efcb7b",
+      "sha256": "1705dbceab532263c92c0868f31c1219a7cc2e1cd6e2f5b2d990590719f158d0"
+    },
+    "corpus/v1/json.jsonl": {
+      "bytes": 1549,
+      "git_blob_sha1": "61b0c20aa08297e09840af9682b3fe4a395e4e36",
+      "sha256": "8115eb2db822c99e8c604efd36b2ed3fa5614337c39e2972539d5ec59e091608"
+    },
+    "corpus/v1/math.jsonl": {
+      "bytes": 1304,
+      "git_blob_sha1": "2aed45e3b3a71f34ce4aa12c43e2439b2bf813c2",
+      "sha256": "c6b6d54c20b4878528ada3b280bf421b3a153843391b298351cd3b97cec8713b"
+    },
+    "corpus/v1/prose.jsonl": {
+      "bytes": 1431,
+      "git_blob_sha1": "1748860f844e3e0eacb4b2672603a8aa57668c7f",
+      "sha256": "df44c33ed8a9e4f122cadd344b0b30dd53c2d63459cbe41e48546d6635501c38"
+    },
+    "corpus/v1/reasoning.jsonl": {
+      "bytes": 1528,
+      "git_blob_sha1": "d12b77f65e0e603512f6bbe90dc327dc0d94cbe2",
+      "sha256": "bad636d9f5f43f6f0dddade46f15937952982dbe8b253b38800f28d65ed460e7"
+    },
+    "corpus/v1/summarization.jsonl": {
+      "bytes": 2035,
+      "git_blob_sha1": "172a88fd7a869b9c1b00011ab98bd23326c6073b",
+      "sha256": "a0755899e91385cf99ccb6eb2d89967f523e3946bc5cd548114c6761e809a15e"
+    },
+    "docs/METHODOLOGY.md": {
+      "bytes": 13401,
+      "git_blob_sha1": "cb3a53896bddc7b9dd2aa61f5afe30f59131f501",
+      "sha256": "ba885910460370562a5da823679119412a4bc997fd2f7a41a8d2c56cc48b1061"
+    },
+    "pyproject.toml": {
+      "bytes": 979,
+      "git_blob_sha1": "2ad91ec90df8aefdf819125b8a717cf25d017149",
+      "sha256": "c707953946dc5c4cf841dbef0c45566e6053c1d7e10f7a0feaf9e343ceb0ca63"
+    },
+    "tools/mock_server.py": {
+      "bytes": 10092,
+      "git_blob_sha1": "cf80678333a8924ce1041a4845ad86a938ccf964",
+      "sha256": "924532716391af6c22377f545d8e4e7e789890d45e136f1af6661f53d22d2fb3"
+    },
+    "tools/self_test.py": {
+      "bytes": 4073,
+      "git_blob_sha1": "fc4aab02011f4ac20563c558f6e08deaef8b3b1e",
+      "sha256": "4ac1aa785b6ee7e7d5210db553d6b6f584cc43a102d8f933a5ef9a46d54c2af6"
+    }
+  },
+  "license": "Apache-2.0",
+  "repository": "https://github.com/GGZ14/BetterBench",
+  "result_schema": 2,
+  "schema": 1,
+  "source_scope": "Exact upstream runtime, corpus, configurations, license, metadata, methodology and mock self-test; no source modifications.",
+  "tag": "v0.6.1"
+}

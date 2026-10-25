@@ -1,0 +1,53 @@
+{
+  "QA_status": "Separate finalQA14+2PASS; no BetterBench correctness oracle",
+  "automatic_retry": false,
+  "charged_owner_seconds": 561,
+  "control_request_completion": "NOT AUTHENTICATED: no exported final HTTP/client bundle",
+  "controller_failure": "ValueError: candidate campaign incomplete",
+  "date": "2026-10-25",
+  "deployed": false,
+  "endurance": "NOT RUN",
+  "evidence": {
+    "archive_sha256": "480c653f4468e84053f08915034bb915b929e4fe7cac02d9b0d6cee262075d05",
+    "failure_release_sha256": "0e538e090e207ca004adc1a77ed57055826d32b8ec364f45b5978ee7dee81b19",
+    "native_members": 132,
+    "native_seal": "522b8055fe30410637af740ad7ffd9043ba764d6dcd8e2cfc5f3c63321bd7125",
+    "package_manifest_sha256": "e951fc14416cf1e3c0393de41ef9b72e37de4560dc30e09954ef1cce4eda9d8d",
+    "source_seal": "e16096a705c826e5f2a8208580a4d217fc400daeaafae6a31e7ef370e8f9b75f"
+  },
+  "first_model_starts": 1,
+  "host_cgroup_peak_bytes": 26427662336,
+  "host_memory_events": {
+    "high": 0,
+    "low": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_group_kill": 0,
+    "oom_kill": 0,
+    "sock_throttled": 0
+  },
+  "independent_release_verified": true,
+  "new_selected_candidate": false,
+  "performance": "INCOMPLETE; no accepted new C1/C2/prefill figures or HTML/JSON report",
+  "precision_changed": false,
+  "primary_observed_failure": "ValueError: HTTP evidence aggregate bound in protected native subtree pack: maximum4MiB and fewer than128 files; combined assertion does not identify which limit",
+  "release_observations": [
+    {
+      "cgroup_sha256": "70522072c6345ee4f6457f1a44a22b0202b98ea5be8c78403d2ec9add72972a9",
+      "identities_checked_absent": 117,
+      "observer_sha256": "48b31b9b52dc02139a65c56911b737781b7cc65cb365aa0526bea327d32375ce",
+      "phase": "release-bf16",
+      "scope_absent": true
+    },
+    {
+      "cgroup_sha256": "f696c1600e02b87a50f5a4cec3f6aa4d5affc5f60a4b3af2e23815ca986d412e",
+      "identities_checked_absent": 117,
+      "observer_sha256": "fd7e74e0427441498cd4623cb076d98ae0ac51c278db0955bfeec260792ee184",
+      "phase": "independent",
+      "scope_absent": true
+    }
+  ],
+  "schema": 1,
+  "second_model_starts": 0,
+  "status": "BETTERBENCH_INCOMPLETE_NATIVE_EVIDENCE_EXPORT_BOUND_RELEASE_VERIFIED"
+}
