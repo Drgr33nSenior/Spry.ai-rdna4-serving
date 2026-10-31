@@ -1,0 +1,429 @@
+{
+  "candidate": {
+    "description": "private MXFP4 serving candidate (Qwen3.8-27B Quark AWQ MXFP4, BF16 draft/KV, DFlash width 8, TP2) with the P3 fused Gemma RMSNorm, the P1 FP8 prefill route, the FP8 target head, GDN copy fusion, the FP8 drafter head and the batch-size-1/2 singleton-per-row verify adapter, plus the packed QKVZ+BA verify projection (one quantisation and one N=8240 GEMM per GDN layer)",
+    "overlays": [
+      "bs2_verify_adapter",
+      "fp8_drafter_head",
+      "fp8_target_head",
+      "gdn_copy_fusion",
+      "p1_prefill",
+      "p3_norm",
+      "packed_qkvz_ba"
+    ],
+    "package_archive_sha256": "4e15fa6c41176d3f70450c380f34c64a0391fe57a964645ab9de54a1545a4ea5",
+    "precision_change_from_packed_route": false
+  },
+  "date": "2026-10-31",
+  "dispositions": {
+    "single_card": "not feasible at bounded risk: FP8 heads TP2-specific, memory marginal",
+    "w4_c4_c8": "deferred: two-request limit in native graph observer and validators; bs3-8 paths unexercised",
+    "w5_endurance": "pending; to be rebuilt on the promoted candidate"
+  },
+  "fault": {
+    "card_hung_until_owner_reset": true,
+    "disposition": "rare, unresolved; owner decision rule met",
+    "error": "HSA_STATUS_ERROR_MEMORY_FAULT",
+    "fault_rate": {
+      "C1_mean": 94.9,
+      "C2_mean": 175.3,
+      "faulted": 1,
+      "faults": 0,
+      "new_starts": 8,
+      "total_sampled_starts": 12
+    },
+    "isolation_op157": {
+      "C1": {
+        "full": 91.84743644657213,
+        "reduced": 89.33928728675956
+      },
+      "C2": {
+        "full": 175.0697386853898,
+        "reduced": 172.80586646129643
+      },
+      "verdict": "NO_FAULT_INCONCLUSIVE"
+    },
+    "kernel": "_gemm_afp4wfp4_kernel (MXFP4 base GEMM, decode tile M<=16, N=5120)",
+    "operation": 156,
+    "records": [
+      {
+        "record": "PHASE1-W2-CANDIDATE-GPU-FAULT-20261031-v1.json",
+        "sha256": "c3204e25c47eabb45e841afd19573d7904ce655b47eea5c08d9f418292df1548"
+      },
+      {
+        "record": "PHASE1-FAULTRATE-RESULTS-v1.json",
+        "sha256": "e855699d765e96b944647258197ce76f3639d0b973f9b985926955c5dc59cac8"
+      }
+    ],
+    "sampled_decoding": true
+  },
+  "hardware": "2x Radeon AI PRO R9700 (gfx1201), TP2, 300 W caps",
+  "levers": {
+    "packed_qkvz_ba": {
+      "component": {
+        "bitwise_exact": true,
+        "graph_us_48_layers": "~5400 -> ~4450",
+        "preset_gate_us_per_layer": 20,
+        "result": "correct; preset benefit gate missed",
+        "saving_us_per_layer": "18.1-19.8"
+      },
+      "promoted": true,
+      "records": [
+        {
+          "record": "PHASE2-FUSION-COMPONENT-CLOSEOUT-v1.json",
+          "sha256": "60d23f718061f4be512759724c0db43f2b6432fac676940538ad625f9e8d957a"
+        },
+        {
+          "record": "PHASE2-PACKED-SERVING-RESULTS-v1.json",
+          "sha256": "5a21ed4483f9aafd8c6e7b46ba3bb1264b39eb5ec781eef54eae7dfb9e7e4137"
+        },
+        {
+          "record": "PACKED-PROMOTION-v1.json",
+          "sha256": "a2ae5d2002c348d178f57a1cfc27e9b72985e36ec6e6545afe7f47ebbe6683c2"
+        }
+      ],
+      "serving": {
+        "cell_changes_percent": {
+          "config_c1_latency": -2.24,
+          "config_c2_tps": 2.7,
+          "ledger_c1_latency": -2.15,
+          "ledger_c2_tps": 1.88,
+          "sre_c1_latency": -2.58,
+          "sre_c2_tps": 2.4
+        },
+        "graded": "38/38",
+        "token_paths_equal_op151": 38
+      }
+    },
+    "prompt_lookup": "greedy replay: oracle 0.4-2.3% cycle saving; not built",
+    "temperature": {
+      "t03": {
+        "bf16": {
+          "cycles": 7471,
+          "full_accept_share": 0.2702449471288984,
+          "tokens_per_cycle": 4.319502074688796
+        },
+        "kv4": {
+          "cycles": 7267,
+          "full_accept_share": 0.27342782441172425,
+          "tokens_per_cycle": 4.314710334388331
+        }
+      },
+      "t06": {
+        "bf16": {
+          "cycles": 7215,
+          "full_accept_share": 0.2516978516978517,
+          "tokens_per_cycle": 4.206652806652807
+        },
+        "kv4": {
+          "cycles": 7563,
+          "full_accept_share": 0.25333862223985193,
+          "tokens_per_cycle": 4.238000793335978
+        }
+      },
+      "t07": {
+        "cycles": 58380,
+        "full_accept_share": 0.24914354230900992,
+        "starts": 8,
+        "tokens_per_cycle": 4.213634806440562
+      },
+      "verdict": "Temperature is not a meaningful lever on this workload: 0.6 unchanged (4.22 vs 4.21 tokens/cycle); 0.3 +2.5% acceptance, +2-3% tok/s. The sampled-vs-greedy acceptance gap (4.2 vs 6.96) is mostly workload content (BetterBench prompts vs W1 menu), not sampling temperature."
+    }
+  },
+  "limits": {
+    "deployment": false,
+    "public_selection_changed": false,
+    "selected": false,
+    "timing_scope": "combined TP2 HTTP service rates; not isolated kernel speedups"
+  },
+  "operations": {
+    "fault_rate": [
+      158,
+      159,
+      160,
+      161
+    ],
+    "isolation": [
+      157
+    ],
+    "packed_component": [
+      164
+    ],
+    "packed_serving": [
+      165
+    ],
+    "temperature": [
+      162,
+      163
+    ],
+    "w1": [
+      149,
+      150,
+      151,
+      152
+    ],
+    "w2": [
+      154,
+      155,
+      156
+    ],
+    "w3": [
+      153
+    ]
+  },
+  "schema_version": 1,
+  "scope": "Private MXFP4 serving candidate, Phase 1 benchmark and follow-up levers; descriptive; public FP8 selection unchanged",
+  "w1_natural_stop": {
+    "cells": [
+      {
+        "arm": "candidate",
+        "arm_value": 2.35,
+        "change_vs_fp8_after_percent": -14.0,
+        "change_vs_fp8_before_percent": -14.0,
+        "concurrency": 1,
+        "family": "ledger",
+        "fp8_after": 2.732,
+        "fp8_before": 2.733,
+        "metric": "median_request_latency_seconds",
+        "outcome": "ARM_USEFUL_SERVICE_LATENCY_ADVANTAGE"
+      },
+      {
+        "arm": "candidate",
+        "arm_value": 172.921,
+        "change_vs_fp8_after_percent": 36.9,
+        "change_vs_fp8_before_percent": 33.3,
+        "concurrency": 2,
+        "family": "ledger",
+        "fp8_after": 126.353,
+        "fp8_before": 129.702,
+        "metric": "aggregate_tokens_per_second",
+        "outcome": "ARM_USEFUL_SERVICE_THROUGHPUT_ADVANTAGE"
+      },
+      {
+        "arm": "candidate",
+        "arm_value": 29.215,
+        "change_vs_fp8_after_percent": -9.2,
+        "change_vs_fp8_before_percent": -9.0,
+        "concurrency": 1,
+        "family": "sre",
+        "fp8_after": 32.17,
+        "fp8_before": 32.11,
+        "metric": "median_request_latency_seconds",
+        "outcome": "ARM_USEFUL_SERVICE_LATENCY_ADVANTAGE"
+      },
+      {
+        "arm": "candidate",
+        "arm_value": 308.675,
+        "change_vs_fp8_after_percent": 49.6,
+        "change_vs_fp8_before_percent": 48.6,
+        "concurrency": 2,
+        "family": "sre",
+        "fp8_after": 206.341,
+        "fp8_before": 207.75,
+        "metric": "aggregate_tokens_per_second",
+        "outcome": "ARM_USEFUL_SERVICE_THROUGHPUT_ADVANTAGE"
+      },
+      {
+        "arm": "candidate",
+        "arm_value": 13.212,
+        "change_vs_fp8_after_percent": -3.2,
+        "change_vs_fp8_before_percent": -3.0,
+        "concurrency": 1,
+        "family": "config",
+        "fp8_after": 13.645,
+        "fp8_before": 13.619,
+        "metric": "median_request_latency_seconds",
+        "outcome": "NO_CLEAR_FIVE_PERCENT_ADVANTAGE"
+      },
+      {
+        "arm": "candidate",
+        "arm_value": 319.669,
+        "change_vs_fp8_after_percent": 29.2,
+        "change_vs_fp8_before_percent": 29.1,
+        "concurrency": 2,
+        "family": "config",
+        "fp8_after": 247.356,
+        "fp8_before": 247.584,
+        "metric": "aggregate_tokens_per_second",
+        "outcome": "ARM_USEFUL_SERVICE_THROUGHPUT_ADVANTAGE"
+      },
+      {
+        "arm": "fp8-adapter",
+        "arm_value": 2.74,
+        "change_vs_fp8_after_percent": 0.3,
+        "change_vs_fp8_before_percent": 0.3,
+        "concurrency": 1,
+        "family": "ledger",
+        "fp8_after": 2.732,
+        "fp8_before": 2.733,
+        "metric": "median_request_latency_seconds",
+        "outcome": "NO_CLEAR_FIVE_PERCENT_ADVANTAGE"
+      },
+      {
+        "arm": "fp8-adapter",
+        "arm_value": 143.779,
+        "change_vs_fp8_after_percent": 13.8,
+        "change_vs_fp8_before_percent": 10.9,
+        "concurrency": 2,
+        "family": "ledger",
+        "fp8_after": 126.353,
+        "fp8_before": 129.702,
+        "metric": "aggregate_tokens_per_second",
+        "outcome": "ARM_USEFUL_SERVICE_THROUGHPUT_ADVANTAGE"
+      },
+      {
+        "arm": "fp8-adapter",
+        "arm_value": 32.132,
+        "change_vs_fp8_after_percent": -0.1,
+        "change_vs_fp8_before_percent": 0.1,
+        "concurrency": 1,
+        "family": "sre",
+        "fp8_after": 32.17,
+        "fp8_before": 32.11,
+        "metric": "median_request_latency_seconds",
+        "outcome": "NO_CLEAR_FIVE_PERCENT_ADVANTAGE"
+      },
+      {
+        "arm": "fp8-adapter",
+        "arm_value": 242.458,
+        "change_vs_fp8_after_percent": 17.5,
+        "change_vs_fp8_before_percent": 16.7,
+        "concurrency": 2,
+        "family": "sre",
+        "fp8_after": 206.341,
+        "fp8_before": 207.75,
+        "metric": "aggregate_tokens_per_second",
+        "outcome": "ARM_USEFUL_SERVICE_THROUGHPUT_ADVANTAGE"
+      },
+      {
+        "arm": "fp8-adapter",
+        "arm_value": 13.633,
+        "change_vs_fp8_after_percent": -0.1,
+        "change_vs_fp8_before_percent": 0.1,
+        "concurrency": 1,
+        "family": "config",
+        "fp8_after": 13.645,
+        "fp8_before": 13.619,
+        "metric": "median_request_latency_seconds",
+        "outcome": "NO_CLEAR_FIVE_PERCENT_ADVANTAGE"
+      },
+      {
+        "arm": "fp8-adapter",
+        "arm_value": 269.756,
+        "change_vs_fp8_after_percent": 9.1,
+        "change_vs_fp8_before_percent": 9.0,
+        "concurrency": 2,
+        "family": "config",
+        "fp8_after": 247.356,
+        "fp8_before": 247.584,
+        "metric": "aggregate_tokens_per_second",
+        "outcome": "ARM_USEFUL_SERVICE_THROUGHPUT_ADVANTAGE"
+      }
+    ],
+    "criterion": ">=5% favourable vs both FP8 observations",
+    "graded": "152/152",
+    "record": {
+      "record": "COMPARISON.json",
+      "sha256": "ba19132bb176c9780a80a0cf41d0cae2db9aa442ef82d33ac96c539bacf73885"
+    }
+  },
+  "w2_betterbench": {
+    "deltas_percent_vs_fp8": {
+      "fp8": {
+        "C1_tok_s": 0.0,
+        "C2_tok_s": 0.0
+      },
+      "fp8-adapter": {
+        "C1_tok_s": -3.0678063244723663,
+        "C2_tok_s": 5.432697399521613
+      },
+      "fp8-baseline-20261025": {
+        "C1_tok_s": 1.1415947706398866,
+        "C2_tok_s": 1.9775009067075189
+      }
+    },
+    "lanes": {
+      "fp8": {
+        "C1": 83.4,
+        "C2": 131.4,
+        "prefill": {
+          "16000": {
+            "pp_tps": 3259,
+            "ttft_ms": 3630
+          },
+          "2000": {
+            "pp_tps": 3346,
+            "ttft_ms": 460
+          },
+          "8000": {
+            "pp_tps": 3455,
+            "ttft_ms": 1726
+          }
+        }
+      },
+      "fp8-adapter": {
+        "C1": 80.8,
+        "C2": 138.5,
+        "prefill": {
+          "16000": {
+            "pp_tps": 3260,
+            "ttft_ms": 3640
+          },
+          "2000": {
+            "pp_tps": 3332,
+            "ttft_ms": 464
+          },
+          "8000": {
+            "pp_tps": 3453,
+            "ttft_ms": 1725
+          }
+        }
+      },
+      "fp8-baseline-20261025": {
+        "C1": 84.3,
+        "C2": 134.0,
+        "prefill": {
+          "16000": {
+            "pp_tps": 3262,
+            "ttft_ms": 3617
+          },
+          "2000": {
+            "pp_tps": 3339,
+            "ttft_ms": 464
+          },
+          "8000": {
+            "pp_tps": 3461,
+            "ttft_ms": 1718
+          }
+        }
+      }
+    },
+    "record": {
+      "record": "COMPARISON-W2-PARTIAL.json",
+      "sha256": "d77174e91f86e60b40670d6a54d2560be96a0bb6b49d41b2899e90dd0a5d3c81"
+    }
+  },
+  "w3_quality_menu": {
+    "candidate_graded_op147": "74/74",
+    "comparison": {
+      "c1": {
+        "candidate_op147_median_latency": 7.867,
+        "candidate_op147_tokens_per_second": 130.173,
+        "candidate_vs_fp8_throughput_percent": 8.378,
+        "fp8_median_latency": 8.516,
+        "fp8_tokens_per_second": 120.11
+      },
+      "c2": {
+        "candidate_op147_median_latency": 8.758,
+        "candidate_op147_tokens_per_second": 233.306,
+        "candidate_vs_fp8_throughput_percent": 42.616,
+        "fp8_median_latency": 11.848,
+        "fp8_tokens_per_second": 163.591
+      }
+    },
+    "fp8_graded": "74/74",
+    "record": {
+      "record": "RESULTS.json",
+      "sha256": "a054d218c3bd9979e8f42ad93ebf7c747ad014b5ba430be8491eaa50e97775d2"
+    }
+  }
+}

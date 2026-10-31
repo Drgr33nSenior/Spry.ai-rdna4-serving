@@ -2,6 +2,10 @@
 
 Status: `EXPERIMENTAL_SOURCE_WITH_BOUNDED_VERIFICATION`.
 
+A private MXFP4 serving candidate completed a Phase 1 benchmark against the
+selected FP8 profile on 2026-10-31; see [MXFP4 candidate Phase 1](MXFP4-CANDIDATE-PHASE1.md).
+It does not change the public FP8 selection.
+
 The later FP8 thinking checks, previous/current stack HTTP benchmark and one
 combined DFlash2/split K/V timing screen are summarised in
 [current serving results](CURRENT-SERVING-RESULTS.md). They do not establish
