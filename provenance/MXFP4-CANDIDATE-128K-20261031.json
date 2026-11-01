@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "date": "2026-10-31",
+  "candidate": {
+    "description": "private MXFP4 serving candidate (Qwen3.8-27B Quark AWQ MXFP4, BF16 draft/KV, DFlash width 8, TP2) with the seven Phase 1 overlays plus C4 extend attention",
+    "base_from_phase1": "MXFP4-CANDIDATE-PHASE1-20261031.json",
+    "changes_for_128k": [
+      "verify-adapter index buffer sized rows*(context+8) (previously rows*context; latent overflow within 4 tokens of the limit)",
+      "commit-observation limit doubled (>=2x headroom)",
+      "benchmark spec bound to the 128K profile"
+    ],
+    "c4_overlay": {
+      "bitwise_exact": false,
+      "configuration": [
+        64,
+        64,
+        8,
+        1
+      ],
+      "file": "extend_attention_fwd_candidate.py",
+      "scope": "gfx1201 head-dimension-256 extend attention, guarded from stock (64,64,4,1); other shapes and architectures unchanged.",
+      "selected_logical_arm": "mtp",
+      "serving_operation": 174,
+      "sha256": "b5d145e55f391de7e515cfe164b6011444fe1696188e2c0f900e338ce36c22f0",
+      "stock_sha256": "f061599bb2c9243d50b565281c47de077ccc90135b9b1e5320a07425bedac112"
+    },
+    "selected_operation": 174,
+    "selected_start": 2,
+    "selected_logical_arm": "mtp",
+    "selection": "Private candidate adopted with owner-accepted A3 exception; public FP8 selection unchanged"
+  },
+  "hardware": "2x Radeon AI PRO R9700 (gfx1201), TP2, 235 W caps (Phase 1 ran at 300 W)",
+  "profile": {
+    "context_length": 131040,
+    "max_total_tokens": 262144,
+    "max_running_requests": 2,
+    "mem_fraction_static": 0.92,
+    "chunked_prefill_size": 2048,
+    "max_mamba_cache_size": 19,
+    "radix_cache": true,
+    "static_use_gb_per_card": 28.82,
+    "static_budget_gb_per_card": 31.47,
+    "feasibility_sha256": "474b6a58051653c5c58cec7d05b67a09d3cf0b2b1682d31d011f6617f770621f"
+  },
+  "b1_long_document": {
+    "operations": {
+      "167": "refused before launch: benchmark spec still 32K (packet defect)",
+      "168": "start 1 failed before weight load: 4 MiB parity-report cap (packet defect)",
+      "169": "serving complete; controller post-run natural-stop rule refused the designed cap rows; owner accepted as diagnostic evidence after CPU grading"
+    },
+    "graded_answers": "20/20",
+    "near_limit_rows": {
+      "intact": 6,
+      "output_tokens": 4096,
+      "prompt_plus_output": 131037
+    },
+    "radix_cached_tokens_warm_and_branch": 118784,
+    "peak_resident_tokens_two_running": 262074,
+    "retractions": 0,
+    "gpu_fault": false,
+    "timing_235w": {
+      "cold_120k_prefill_seconds": 97,
+      "cold_120k_prefill_mean_tok_s": 1240,
+      "warm_or_branch_request_seconds": "9-11",
+      "decode_tok_s_120k_one_user": 107
+    },
+    "run_seal": "040b318eb6c05cc1c7d1fb61bdea346eeea0b55bcf99a53a090c38acd22582cc",
+    "records": [
+      {
+        "record": "PHASE2-128K-B1-FAILURE-20261031-v1.json",
+        "sha256": "1693353523ac337d2a92e179a3baee14558973d5156af7bf40e1a427bdc28e31"
+      },
+      {
+        "record": "PHASE2-128K-B1-V2-FAILURE-20261031-v1.json",
+        "sha256": "244dbc93d7b32edf2086fb03123934ea5035b6c577106f27f212513b35f823f6"
+      },
+      {
+        "record": "PHASE2-128K-B1-V3-RESULT-20261031-v1.json",
+        "sha256": "158328311108ad512bfb3c04fdf7b2396ea2245e8daf0dbe6170c1b0a6da2070"
+      },
+      {
+        "record": "PHASE2-128K-B1-V3-DIAGNOSTIC-GRADES-v1.json",
+        "sha256": "d8d42d24e87dcaef016e223ef8356506a73d25046073d8a244de8724ed5270c6"
+      },
+      {
+        "record": "OWNER-B1-V3-ACCEPTANCE-DECISION-20261031-v1.json",
+        "sha256": "b48f2eb38d7035a4070b16681fc83d0b0fb85cd3b16f2e0c4ba21235e7bc0298"
+      }
+    ],
+    "extend_attention": "stock"
+  },
+  "w5_v2_endurance": {
+    "operation": 170,
+    "status": "SERVING_TESTED_PASS",
+    "instrumentation": "production (in-process instrumentation off)",
+    "requests_per_start": 176,
+    "serving_minutes": 61,
+    "graded_answers": "352/352",
+    "b1_token_equality_gate": "10/10",
+    "w1_token_equality_vs_phase1_op165": "171/171 per start (information)",
+    "kernel_fault_lines": 0,
+    "host_samples": "402/402",
+    "power_cap_w": 235,
+    "max_junction_c": 95,
+    "max_mem_c": 87,
+    "vram_drift_bytes": 2097152,
+    "throughput_drift_max_abs": 0.0025,
+    "grading_corrections": "two CPU-side grading-template corrections (stale replay deadline; CPU envelope) before the single official grading; failed bindings retained",
+    "run_seal": "e4000ac74e2e9fea6b86029f914b22f5aa823c40669a382b4bbeb4e503366734",
+    "records": [
+      {
+        "record": "PHASE2-128K-W5-V2-OWNER-DECISION-v1.md",
+        "sha256": "5120dac58e7a3e51ea4f7b3824117f37ad90dbe8707953fb32157469bd2f1447"
+      },
+      {
+        "record": "phase2-128k-w5p-ff396f8f-execution-v1/analysis/RESULTS.json",
+        "sha256": "0599bcd66b70a894ec1a63470cc1907e041b97776593a93f9289665429a502cc"
+      },
+      {
+        "record": "PHASE2-128K-W5-V2-GRADING-CORRECTION-v1.json",
+        "sha256": "df2be975f6c81b6f7d46901f3486e4832b13f7900067ee742670299295d3e25b"
+      },
+      {
+        "record": "PHASE2-128K-W5-V2-GRADING-CORRECTION-v2.json",
+        "sha256": "43c7647a60216d279576aca4084756dc233160397f7fcfe7211a7585ca20f287"
+      },
+      {
+        "record": "OWNER-128K-DUAL-POOL-DIRECTION-20261031-v1.json",
+        "sha256": "9a38d6e967ce923d6351e1b5f3c8458c4c1b8b5724d7daf75560a455c2135282"
+      },
+      {
+        "record": "OWNER-W5V2-PRODUCTION-MODE-DIRECTION-20261031-v1.json",
+        "sha256": "fb3ca92d6dee2c74f4c5198bbe4a567225f0c23428b966a04227288e1045548f"
+      }
+    ],
+    "extend_attention": "stock",
+    "establishes_c4_endurance": false
+  },
+  "decode_w1_menu_server_median_tok_s": {
+    "metric": "server-reported decode generation throughput, both cards combined; excludes prefill and HTTP",
+    "mean_acceptance": {
+      "one_user": 6.95,
+      "two_users": 7.09
+    },
+    "fp8_selected_300w": {
+      "one_user": 163.5,
+      "two_users": 254
+    },
+    "candidate_packed_300w_instrumented_32k": {
+      "one_user": 198,
+      "two_users": 380
+    },
+    "confound": "the 235 W row changes power cap, instrumentation and profile together",
+    "candidate_128k_stock_attention_235w_production": {
+      "one_user": 185.5,
+      "two_users": 356.6
+    },
+    "scope": "Historical server decode rates before C4; not the op-174 HTTP metric or request subset. Compare performance only within a matched power cap."
+  },
+  "limits": [
+    "two-request limit unchanged; batch sizes 3-8 unexercised",
+    "Phase 1 GPU memory fault (1 in 12 sampled starts) not recurred but unresolved",
+    "selected Torch 2.14 build compiled without Kineto (no in-process GPU profiling)",
+    "C4 adopted with the original failed A3 latency gate retained as an owner-accepted exception",
+    "C4 endurance not tested; W5 v2 stock endurance does not transfer to C4",
+    "C4 HTTP throughput is not directly comparable to the historical server-reported decode rates"
+  ],
+  "deployed": false,
+  "public_fp8_selection_changed": false,
+  "updated": "2026-11-01",
+  "c4_serving_ab": {
+    "operation": 174,
+    "date": "2026-11-01",
+    "status": "SERVING_AB_TESTED_PASS",
+    "power_cap_w_per_card": 235,
+    "instrumentation": "production",
+    "start_order": [
+      "stock",
+      "C4"
+    ],
+    "requests_per_start": 16,
+    "graded_answers": {
+      "passed": 32,
+      "total": 32
+    },
+    "paired_outputs": {
+      "compared": 16,
+      "equal": 9,
+      "final_answer_equal": 16
+    },
+    "comparisons": {
+      "mean_cold_120k_log_prefill": {
+        "stock": 96.5,
+        "c4": 74.0,
+        "unit": "seconds",
+        "change_percent": -23.316062176165808
+      },
+      "mean_cold_client_latency": {
+        "stock": 105.07429572450201,
+        "c4": 83.34196721650369,
+        "unit": "seconds",
+        "change_percent": -20.682821005985208
+      },
+      "warm_a_client_latency": {
+        "stock": 10.826339146995451,
+        "c4": 9.722263424002449,
+        "unit": "seconds",
+        "change_percent": -10.198052250186596
+      },
+      "branch_client_latency": {
+        "stock": 9.110859155000071,
+        "c4": 9.720344003995706,
+        "unit": "seconds",
+        "change_percent": 6.689652848613603
+      },
+      "warm_b_client_latency": {
+        "stock": 9.009850990994892,
+        "c4": 9.494154850995983,
+        "unit": "seconds",
+        "change_percent": 5.375270473231364
+      },
+      "concurrent_60k_pair_makespan": {
+        "stock": 71.81368897200446,
+        "c4": 62.31709531499655,
+        "unit": "seconds",
+        "change_percent": -13.223932362964973
+      },
+      "w1_aggregate_http_throughput": {
+        "stock": 158.43612766539925,
+        "c4": 158.9508369158259,
+        "unit": "output_tokens_per_second_combined_tp2",
+        "change_percent": 0.3248686129931455
+      }
+    },
+    "timing_scope": "Natural-stop HTTP including prefill and completion; combined TP2; production mode (no in-run probes). Prefill windows from the stock server log at 1 s resolution; start order fixed (start 1 stock, start 2 C4).",
+    "sealed_adoption_result": {
+      "checks": {
+        "A1_correctness_gates": true,
+        "A2_cold_prefill": true,
+        "A3_warm_branch_not_slower": false,
+        "A4_decode_not_slower": true
+      },
+      "note": "Adopting C4 changes generated tokens slightly (correct within tolerance, not bitwise); see token_equality.",
+      "owner_decision_required": true,
+      "thresholds": {
+        "cold_prefill_ratio_max": 0.95,
+        "decode_rate_ratio_min": 0.95,
+        "warm_latency_ratio_max": 1.05
+      },
+      "verdict": "ADOPTION_CRITERIA_NOT_MET"
+    },
+    "owner_adoption": {
+      "status": "C4_ADOPTED_WITH_OWNER_ACCEPTED_A3_EXCEPTION",
+      "date": "2026-11-01",
+      "approval": {
+        "record": "OWNER-C4-PROMOTION-APPROVAL-20261101-v1.json",
+        "sha256": "a9f74eb5d68a82e0f22617db3468faf627c819088914a0abdbac9e5c22397d4a"
+      },
+      "promotion": {
+        "record": "C4-PROMOTION-v1.json",
+        "sha256": "980f7de889cb52ba2b52f9f814329dd05953c73285bbe495eb1d5f480d93ee4f"
+      },
+      "candidate_pointer": {
+        "record": "CANDIDATE-POINTER.json",
+        "sha256": "fe92916ca06f43ec719d3a66345e4345908106212596d7044c03713b575c3394"
+      },
+      "original_A3_failure_retained": true,
+      "threshold_changed": false,
+      "branch_and_warm_b_output_tokens": {
+        "stock": 634,
+        "c4": 691,
+        "extra_reasoning_tokens": 57
+      },
+      "interpretation": "Unequal generated work prevents the client latency comparison from isolating kernel speed.",
+      "rollback": "Operation 174 start 1, logical control, stock attention in the same sealed donor with the matched 128K profile and other seven overlays"
+    },
+    "c4_endurance": "NOT TESTED; operation 170 used stock attention",
+    "external": {
+      "all_criteria_passed": true,
+      "criteria_count": 7,
+      "host_samples": 93,
+      "successful_host_samples": 93,
+      "kernel_fault_lines": 0,
+      "max_junction_c": 93,
+      "independent_gpu_release": true,
+      "independent_cpu_release": true,
+      "compilation_after_readiness": {
+        "1": [],
+        "2": []
+      }
+    },
+    "records": [
+      {
+        "record": "phase2-128k-c4ab-ff396f8f-execution-v1/analysis-v2/RESULTS.json",
+        "sha256": "44389a524fb52ee5578119e35f88620c7e764ca0eb4147f624a571e24d24f0df"
+      },
+      {
+        "record": "phase2-128k-c4ab-ff396f8f-execution-v1/GATE-c4ab-serving-ab.json",
+        "sha256": "46ea897d144289dca3a45a413d9c82e4012e7280322794e98f66630a3fc4672c"
+      }
+    ],
+    "seals": [
+      {
+        "root": "phase2-128k-c4ab-ff396f8f-execution-v1",
+        "sha256": "f5b86d774154d4a765f0319656699a02b01c3db86f2ff9efeca2927dd89cec14"
+      },
+      {
+        "root": "phase2-128k-c4ab-ff396f8f-execution-v1/analysis-v2",
+        "sha256": "cf379b92c5b449246f67a8481386a40be648c579fbd233df503eb7bf5fb75f59"
+      },
+      {
+        "root": "c4-candidate-adoption-20261101-v1",
+        "sha256": "fc829eec432b0dc1242e348649749a99efab198ce8ea481d054c93e72b98cc24"
+      }
+    ],
+    "retained_failures": [
+      "Initial SSH preflight p1 failed before connection; owner-requested p2 succeeded without firewall changes.",
+      "Original analysis failed on mixed integer/string JSON keys; retained partial report is sealed. A separate local correction stringified report keys, without repeating GPU work or native grading or changing validation."
+    ],
+    "limits": [
+      "One fixed stock-then-C4 pair of starts; no reversed-order replicate.",
+      "Two cold documents per start; prefill logs have 1-second resolution; warm prefill rounds to zero.",
+      "Full output tokens differ on seven long-context pairs; no bitwise-equivalence claim.",
+      "Bounded answer checks do not establish broad quality, cancellation coverage, or long-term reliability."
+    ]
+  }
+}

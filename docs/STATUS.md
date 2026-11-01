@@ -6,6 +6,12 @@ A private MXFP4 serving candidate completed a Phase 1 benchmark against the
 selected FP8 profile on 2026-10-31; see [MXFP4 candidate Phase 1](MXFP4-CANDIDATE-PHASE1.md).
 It does not change the public FP8 selection.
 
+The candidate's 128K profile passed long-document validation and 61 minutes of
+production-mode endurance with stock attention at 235 W. C4 attention was then
+adopted privately after 23.3% lower cold-prefill time, with an owner-accepted
+warm/branch latency exception; C4 endurance is untested. See
+[MXFP4 candidate 128K](MXFP4-CANDIDATE-128K.md).
+
 The later FP8 thinking checks, previous/current stack HTTP benchmark and one
 combined DFlash2/split K/V timing screen are summarised in
 [current serving results](CURRENT-SERVING-RESULTS.md). They do not establish
