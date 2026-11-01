@@ -4,12 +4,15 @@ This directory holds the observer safety and structural cleanup increments from
 `CLEANUP-HANDOFF-20261031-v1.md`. The owner selected this repository for the
 cleanup source. These files are not a launch packet or a new serving selection.
 
-The latest local increment is the
+The latest increment is the
+[MXFP4 startup runtime binding](proposals/runtime-binding/README.md). It resolves
+operator modules and architecture once during scheme construction, after the
+native loader selects the rank's device. Per-call device and tensor checks
+remain. It builds on the
 [configured request and evidence proposal](proposals/configuration-mutations/README.md).
-It adds bounded configuration changes, compact request references, three-request
-receipt files and declared-count CPU quality packets. The retained A/B pilot
-predates these changes. The larger runner, replay-metadata and memory cleanup
-still remains; [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json) records the gates.
+The retained A/B pilot predates these changes. The larger runner, replay metadata
+and memory cleanup remains; [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json) records
+the gates. The new sources still need native serving qualification.
 
 ## Implemented
 

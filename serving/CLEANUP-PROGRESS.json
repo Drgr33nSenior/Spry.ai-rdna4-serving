@@ -37,7 +37,11 @@
     "Declared paired row count through CPU materializer, common policy and schema-2 release-binding proof",
     "Public regression suite: 893 Python tests across 70 suites plus C++ sanitizers",
     "Native CPython 3.14.7 source preflight: 153 checks, no GPU/model/grading work",
-    "Owner corrected private-repository constraint and explicitly authorized public source publication"
+    "Owner corrected private-repository constraint and explicitly authorized public source publication",
+    "MXFP4 runtime modules and architecture bound during scheme construction after native rank device selection; per-call device/tensor checks and kernel frontends preserved",
+    "Rank-one startup regression, actual archive rollback refusal and byte-identical request/settings/overlay comparison",
+    "Public regression suite: 902 Python tests across 71 suites plus C++ sanitizers",
+    "Native CPython 3.14.7 source preflight: 164 checks, no GPU/model/grading work"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -78,7 +82,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/configuration-mutations/VERIFICATION.json",
+  "latest_verification": "proposals/runtime-binding/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -92,7 +96,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "New configuration proposal is CPU-verified; native qualification and later runner/memory cleanup remain",
+    "next_stage": "New configuration and runtime-binding proposals are CPU-verified; native qualification and remaining startup/module/runner/memory cleanup remain",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -108,10 +112,10 @@
     "visibility": "public"
   },
   "remaining": [
-    "Exact protected diff review and fresh native serving/token-ID/quality qualification for this proposal",
-    "Complete remaining shared-helper and import-closure cleanup",
+    "Fresh exact protected-source review and one-use native serving/token-ID/quality qualification",
+    "Repeated startup source hashing and remaining module/package closure",
     "Stock runner/post-load hook and verify metadata preparation before replay",
-    "Shared FP8 head and packed QKVZ/BA views, after the refactor phases",
+    "Shared FP8 head and packed QKVZ/BA views after refactors",
     "Native startup memory equality and retained headroom proof",
     "Broader configuration and instrumented full-menu capacity qualification"
   ],
@@ -121,10 +125,20 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
+    "Repeated startup source hashing while preserving exact source checks",
     "Remaining compatibility APIs, shared helpers and canonical import/package closure",
     "Stock runner/post-load hook and verify metadata preparation before replay",
     "Memory recovery after the refactor phases"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",
+  "runtime_binding_increment": {
+    "native_cpu_source_tests": 164,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "packet_checks": 11,
+    "public_tests": 902,
+    "status": "CPU_RUNTIME_BINDING_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
   "schema": 1
 }

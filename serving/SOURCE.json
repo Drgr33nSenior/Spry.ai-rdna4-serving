@@ -1402,7 +1402,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Continue configuration mutation, all-cap/doubled-menu, shared-module, runner and memory cleanup gates. No native execution authority remains.",
+  "next_bounded_action": "Remove repeated startup source hashing while preserving source authentication, then finish module/package closure, stock runner/replay metadata and memory cleanup. Fresh native qualification remains required; no native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -2658,6 +2658,16 @@
     "syntax_compilation": "PASS_ALL_THIRTY_FIVE_PYTHON_MODULES",
     "unsupported_config_mutation": "REFUSED_BEFORE_OUTPUT"
   },
+  "runtime_binding_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/runtime-binding",
+    "record_sha256": "feb1238a4fef2f25470922524d4722afcc5f6464946e976df88ce8db5bea6096",
+    "source_review_only": true,
+    "status": "CPU_RUNTIME_BINDING_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "verification": "proposals/runtime-binding/VERIFICATION.json",
+    "verification_sha256": "93ae3d1ec85cd5e6583d746f016fc6844726e5978c4235181d856b00727edab0"
+  },
   "schema": 1,
   "scope": "Observer safety and source cleanup, deterministic source assembly, pinned W5 configuration, resource-manifest bindings, isolated controller/transport approval proposals, and removal-only retained-package pruning. Source review only; complete cleaned-source integration, protected migration and native gates remain pending.",
   "session_timing_proposal": {
@@ -2887,9 +2897,12 @@
   "source_files": {
     "graph_integration.py": "8eeb2874592e66994d02be7466163106b4dc2dc4c490647fde592cfa0586ea45",
     "graph_screen.py": "9b5a1431b3d35770b1103a40212353eaea534d50a4b84d5f8be16aac7d56c8be",
+    "isolated_scheme.py": "f396186d36fa83812d7d3d4ec538e47588d3513a06e9996539e1481bebe8c185",
     "j01_probe.py": "e0d5b41be325420900f5f5f44e4df76293f0cec3f1a60e43fca75244ac741443",
     "model_benchmark.py": "ed140c53272b993bb4f8c15fbcf2a1957998fd2a0e24e1e31bfa6a40a5c977cb",
     "mtp_contract.py": "5e8e0ad4538991d0f0e361cb32d90cbcdda75bb01e860dcccba6eff46a9b82c8",
+    "ops.py": "66d25968516c6c9509923ad363a291d57d192918f1e7121f96481202391c3776",
+    "prefill_reference.py": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887",
     "serving_client.py": "063a6dfcc1f4412d41c701d4ac6f65d31f01ac26f3539c60309a596805f072d5",
     "serving_contract.py": "4cd35766324e8c5f46d2ad4e359d4670e38c7828f766dc316863aa47547590a0",
     "serving_entry.py": "e994edecf87c7387a51504de64016979f4cdc460f5ddeb973a902494b065baee",

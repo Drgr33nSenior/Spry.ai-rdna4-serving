@@ -14,13 +14,16 @@ def main():
     parser.add_argument('--repository',required=True,type=Path)
     parser.add_argument('--donor',required=True,type=Path)
     parser.add_argument('--report',required=True,type=Path)
-    parser.add_argument('--configuration-proposal',action='store_true')
+    proposal_group=parser.add_mutually_exclusive_group()
+    proposal_group.add_argument('--configuration-proposal',action='store_true')
+    proposal_group.add_argument('--runtime-binding-proposal',action='store_true')
     parser.add_argument('--metrics-reporter',type=Path)
     args=parser.parse_args()
     if sys.version_info[:2]!=(3,14) or platform.machine()!='x86_64' or sys.platform!='linux':
         raise ValueError('native Linux x86_64 CPython 3.14 required')
     repository=args.repository.resolve(strict=True);donor=args.donor.resolve(strict=True)
-    if args.configuration_proposal and args.metrics_reporter is None:
+    configured=args.configuration_proposal or args.runtime_binding_proposal
+    if configured and args.metrics_reporter is None:
         raise ValueError('configured source preflight requires the pinned metrics reporter')
     denied=[]
     def guard(event,values):
@@ -41,10 +44,12 @@ def main():
         'serving/tests/test_startup_configuration.py','serving/tests/test_host_binding.py',
         'serving/tests/test_source_fingerprints.py','serving/tests/test_configured_caller.py',
         'serving/tests/test_gpu_run_packaging.py','serving/tests/test_one_use_caller.py')
-    if args.configuration_proposal:
+    if configured:
         scripts+=('serving/tests/test_configuration_projection.py','serving/tests/test_chunked_receipts.py',
                   'serving/tests/test_quality_materialization.py','serving/tests/test_quality_policy.py')
-    private='serving/tests/check_configuration_mutations_packet.py' if args.configuration_proposal else 'serving/tests/check_evidence_capacity_packet.py'
+    if args.runtime_binding_proposal:scripts+=('serving/tests/test_runtime_binding.py',)
+    private=('serving/tests/check_runtime_binding_packet.py' if args.runtime_binding_proposal else
+             'serving/tests/check_configuration_mutations_packet.py' if configured else 'serving/tests/check_evidence_capacity_packet.py')
     cases=[];passed=True
     for number,relative in enumerate((*scripts,private)):
         path=repository/relative;previous=dict(sys.modules);old_path=list(sys.path)
@@ -52,13 +57,19 @@ def main():
         try:
             spec=importlib.util.spec_from_file_location('native_cpu_preflight_'+str(number),path)
             module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
-            if relative.endswith('check_configuration_mutations_packet.py'):
-                module.PACKET=donor;module.METRICS_REPORTER=args.metrics_reporter
-                names=['ConfigurationPacket.'+name for name in (
+            if relative.endswith(('check_configuration_mutations_packet.py','check_runtime_binding_packet.py')):
+                context=module.configured if args.runtime_binding_proposal else module
+                context.PACKET=donor;context.METRICS_REPORTER=args.metrics_reporter
+                prefix='RuntimeBindingPacket.' if args.runtime_binding_proposal else 'ConfigurationPacket.'
+                names=[prefix+name for name in (
                     'test_baseline_and_scalar_mutations_reach_the_same_real_prelaunch_boundary',
                     'test_all_cap_and_doubled_menus_reach_the_real_prelaunch_boundary',
                     'test_owner_ceiling_invalid_policy_and_unaccounted_groups_refuse_before_output',
                     'test_new_source_review_is_deterministic','test_pinned_runtime_decode_logging_obeys_selected_interval')]
+                if args.runtime_binding_proposal:
+                    names += [prefix+name for name in (
+                        'test_actual_transport_binds_new_ops_and_rejects_rollback_with_self_consistent_package_pins',
+                        'test_runtime_payload_changes_only_reviewed_code_and_derived_source_bindings')]
                 suite=unittest.defaultTestLoader.loadTestsFromNames(names,module)
             elif relative.endswith('check_evidence_capacity_packet.py'):
                 module.inventory_checks.PACKET=donor
@@ -85,6 +96,7 @@ def main():
         native_imports_denied=True,gpu_devices_denied=True,denied_events=denied,
         worker_profile='MXFP4 W5 startup API; separate frozen FP8 regression corpus')
     report['configuration_proposal']=args.configuration_proposal
+    report['runtime_binding_proposal']=args.runtime_binding_proposal
     with args.report.open('x') as stream:json.dump(report,stream,sort_keys=True,indent=2);stream.write('\n')
     print(json.dumps(report,sort_keys=True),flush=True)
     return 0 if passed else 1

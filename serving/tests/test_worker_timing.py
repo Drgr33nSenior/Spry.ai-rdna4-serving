@@ -216,6 +216,7 @@ class ProposalIntegrity(unittest.TestCase):
                     # Reverse the current, independently pinned source change
                     # before checking the retained production-isolation stage.
                     stages.insert(0,HERE.parent/'proposals/configuration-mutations')
+                    stages.insert(0,HERE.parent/'proposals/runtime-binding')
             records=[json.loads((stage/'PROPOSAL.json').read_bytes()) for stage in stages]
             with tempfile.TemporaryDirectory(prefix='worker-source-history-') as temporary:
                 root=Path(temporary).resolve()
