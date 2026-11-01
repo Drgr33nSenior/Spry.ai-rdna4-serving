@@ -1,0 +1,71 @@
+--- a/review/benchmark_owner_adapter.py
++++ b/review/benchmark_owner_adapter.py
+@@ -227,6 +227,11 @@
+             for key,value in stack['environment'].items():
+                 _need(not any(projected[i:i+2]==['--setenv',key] for i in range(len(projected)-1)),'duplicate BLAS setting')
+                 projected[position:position]=['--setenv',key,value]
++        if http_contract is not None and not contract.instrumentation_enabled():
++            position=projected.index('/mnt/work/build-venv/bin/python3')
++            mask=str(Path(review).parent/contract.PRODUCTION_EVIDENCE_MASK_NAME)
++            projected[position:position]=[item for name in contract.PRODUCTION_EVIDENCE_FILES
++                for item in ('--ro-bind',mask,'/mnt/review/'+name)]
+         return tuple(projected)
+     _need(arm in ('bf16', 'kv4') and _digest(spec_sha256), 'arm/spec binding')
+     _need(type(bounded_scratch) is bool, 'explicit scratch projection required')
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -442,6 +442,7 @@
+                 artifacts_sha256=value['package_files']['review/benchmark_artifacts.py'],
+                 independent_contract=spec['independent_reference'])
+         expected = mtp_contract.replay_serving_sandbox_argv(expected, value['package_files'])
++        need(len(expected) <= 256, 'final production projection exceeds existing argv bound')
+         need(resource_manifest["workload_argv"][arm] == list(expected), "exact read-only bounded-scratch projection")
+     need(RUNTIME_REQUIRED <= set(value["runtime_files"]), "complete executable runtime source closure required")
+     if live:
+@@ -533,6 +534,11 @@
+         stamps.update(_tree(_canonical(tc['root']),{name:row['sha256'] for name,row in rows.items()},deadline,clock))
+         for name,row in rows.items():need((Path(tc['root'])/name).stat().st_mode & 0o777 == row['mode'],'development file mode')
+         digest,size,stamp=_hash(Path(tc['manifest']['path']),deadline,clock);need(digest==tc['manifest']['sha256'] and size==tc['manifest']['bytes'],'development manifest current identity');stamps[tc['manifest']['path']]=stamp
++    if (type(configuration_pins) is dict and configuration_pins.get('model_start_authorized') is True
++            and not mtp_contract.instrumentation_enabled()):
++        raw=mtp_contract.PRODUCTION_EVIDENCE_MASK_BYTES
++        _configuration_file(package/mtp_contract.PRODUCTION_EVIDENCE_MASK_NAME,hashlib.sha256(raw).hexdigest(),
++            len(raw),deadline=deadline,clock=clock,stamps=stamps,json_object=False)
+     return {"manifest": value, "spec": spec, "spec_path": str(spec_path), "spec_sha256": spec_sha256,
+             "owner_timing": timing, "session_timing": session_timing, "menu": configured['menu'],
+             "resource_manifest": resource_manifest, "resource_path": str(resource_path), "stamps": stamps,
+@@ -1477,6 +1483,26 @@
+     need(missing <= optional, 'complete bound raw result bundle required')
+ 
+ 
++def prepare_production_evidence_mask(root):
++    """Create one exclusive import-refusal source for the effective GPU view."""
++    if mtp_contract.instrumentation_enabled():
++        return None
++    root=_canonical(str(root))
++    name,raw=mtp_contract.PRODUCTION_EVIDENCE_MASK_NAME,mtp_contract.PRODUCTION_EVIDENCE_MASK_BYTES
++    need(type(name) is str and Path(name).name==name and type(raw) is bytes and 0<len(raw)<=256,
++         'bounded production evidence mask required')
++    path=root/name
++    fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o444)
++    try:
++        view=memoryview(raw)
++        while view:
++            count=os.write(fd,view);need(count>0,'short production evidence mask write');view=view[count:]
++        os.fsync(fd)
++    finally:
++        os.close(fd)
++    return path
++
++
+ def _run_physical_after_retained_closure(*, manifest_path, manifest_sha256, grant_path, grant, manifest, rpc):
+     """Unexposed projection; no caller reaches this before retained closure exists."""
+     root = _canonical(manifest["target_root"])
+@@ -1485,6 +1511,7 @@
+          "exact fresh physical root/entry/grant paths required")
+     configured = verify_configured_spec(grant, manifest,
+         deadline=grant['received_monotonic'] + transport.SOURCE_PREPARATION_SECONDS)
++    prepare_production_evidence_mask(root)
+     spec_sha256 = configured['spec_sha256']
+     artifacts = _adjacent("spry_physical_artifacts", "benchmark_artifacts.py")
+     artifact_limits = artifacts.HTTPArtifactLimits.from_limits(configured['artifact_limits'])

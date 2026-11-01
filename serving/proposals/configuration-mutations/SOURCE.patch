@@ -1,0 +1,199 @@
+--- a/build.py
++++ b/build.py
+@@ -380,7 +380,7 @@
+ 
+ 
+ def build(packet, output, *, source_root=HERE, run_dir=None, packet_id=None, upstream_root=None,
+-          configured_artifacts=False):
++          configured_artifacts=False, source_overrides=None, configuration_projector=None):
+     source_root = Path(source_root)
+     need(source_root.is_absolute() and source_root.resolve(strict=True) == source_root,
+          'canonical source root required')
+@@ -409,6 +409,11 @@
+     for name, pin in metadata['source_files'].items():
+         need(digest(donor[name]) == pin, 'canonical source donor pin differs: ' + name)
+     edited = canonical_sources(source_root, metadata)
++    if source_overrides is not None:
++        need(type(source_overrides) is dict and set(source_overrides) <= set(edited)
++             and all(type(raw) is bytes and 0 < len(raw) <= 2 << 20 for raw in source_overrides.values()),
++             'explicit existing non-protected source overrides required')
++        edited.update(source_overrides)
+     need(not set(edited) & set(protected), 'protected canonical override refused')
+     files = {**donor, **edited}
+     settings = parse_json(files['FINAL-SETTINGS.json'])
+@@ -427,7 +432,7 @@
+     need(type(configured_artifacts) is bool and (not configured_artifacts or run_dir is not None),
+          'configured artifact projection requires a run directory')
+     configuration = run_config.load(Path(run_dir), source_root, metadata, files, read_regular,
+-        configured_artifacts=configured_artifacts) if run_dir is not None else None
++        configured_artifacts=configured_artifacts, projector=configuration_projector) if run_dir is not None else None
+     if upstream_root is not None:
+         need(configuration is not None, 'patch reproduction requires authenticated run configuration')
+     overlay_series = reproduce_overlays(files, upstream_root, source_root,
+--- a/run_config.py
++++ b/run_config.py
+@@ -62,15 +62,16 @@
+     return literal(nodes[0])
+ 
+ 
+-def load(run_dir, source_root, metadata, files, read, *, configured_artifacts=False):
++def load(run_dir, source_root, metadata, files, read, *, configured_artifacts=False, projector=None):
+     run_dir = Path(run_dir)
+     need(run_dir.is_absolute() and run_dir.resolve(strict=True) == run_dir, 'canonical run directory required')
+     run = parse_json(read(run_dir / 'run.json', 256 << 10))
+     schema_raw = {name: read(HERE / 'config/schema' / (name + '.schema.json'), 256 << 10)
+                   for name in ('run-config', 'host', 'menu')}
+     validate_schema(run, parse_json(schema_raw['run-config']))
+-    host_path = source_root / run['host']['file']
+-    need(host_path.is_relative_to(source_root / 'config/host'), 'host config location differs')
++    configuration_root=run_dir.parent.parent.parent if projector is not None else source_root
++    host_path = configuration_root / run['host']['file']
++    need(host_path.is_relative_to(configuration_root / 'config/host'), 'host config location differs')
+     host = parse_json(read(host_path, 64 << 10))
+     menu = parse_json(read(run_dir / run['menu']['file'], 1 << 20))
+     validate_schema(host, parse_json(schema_raw['host']))
+@@ -78,6 +79,18 @@
+     pins = {name: digest(canonical_line(value)) for name, value in (('run', run), ('host', host), ('menu', menu))}
+     need(pins['host'] == run['host']['sha256'] and pins['menu'] == run['menu']['sha256'], 'config reference pin differs')
+     baseline = metadata['run_configuration']['baseline_sha256']
++    if projector is not None:
++        need(configured_artifacts and callable(projector), 'configured consumers required for mutation projection')
++        limits = derive(run['limits'])
++        ceiling_run=parse_json(read(HERE/'config/runs/w5-v2/run.json',256<<10))
++        need(digest(canonical_line(ceiling_run))==baseline['run'],'authenticated primary ceiling baseline required')
++        need(all(value<=ceiling_run['limits'][name] for name,value in run['limits'].items()),
++             'configuration may only tighten the existing primary ceilings')
++        projected = projector(files, run, host, menu, run_dir=run_dir, read=read)
++        return dict(run=run, host=host, menu=menu, pins=pins, derived_limits=limits,
++                    schema_sha256={name: digest(raw) for name, raw in schema_raw.items()},
++                    evidence_capacity_verified=False, protected_migration_applied=False,
++                    configuration_mutations_supported=True, projection=projected)
+     need(pins == baseline, 'configuration differs from the supported W5 baseline; migration required')
+     limits = derive(run['limits'])
+     protected = files['benchmark_host_transport.py']
+@@ -142,3 +155,73 @@
+     return dict(run=run, host=host, menu=menu, pins=pins, derived_limits=limits,
+                 schema_sha256={name: digest(raw) for name, raw in schema_raw.items()},
+                 evidence_capacity_verified=False, protected_migration_applied=False)
++
++
++def project_configuration(files,run,host,menu,*,run_dir,read,contract):
++    """Render the configured consumer proposal without changing protected code."""
++    import base64
++    import zlib
++    def inflate(raw):
++        decoder=zlib.decompressobj();value=decoder.decompress(raw,(16<<20)+1)
++        need(len(value)<=16<<20 and decoder.eof and not decoder.unused_data and not decoder.unconsumed_tail,
++             'complete bounded configuration asset')
++        return parse_json(value)
++    limits=derive(run['limits'])
++    need(limits['total_seconds']<=6360 and limits['caller_seconds']<=7160
++         and limits['worker_seconds']<=2280 and limits['arm_work_seconds']<=2430
++         and limits['arm_envelope_seconds']<=2490,'configured owner timing ceiling')
++    for ref in (*run['base']['assets'],*run['model']['assets']):
++        need(ref['file'] in files and digest(files[ref['file']])==ref['sha256'],'pinned configuration input asset differs')
++    need(run['base']['sglang']==parse_json(files['COMMON-STACK-RECEIPT.json'])['target']['sglang'],
++         'configured SGLang identity differs')
++    original_overlay=parse_json(files['RESOURCE-MANIFEST.json'])['workload_argv']['bf16']
++    overlays=[Path(original_overlay[i+1]).name for i,item in enumerate(original_overlay[:-2]) if item=='--ro-bind'
++              and '/review/' in original_overlay[i+1] and original_overlay[i+2].startswith('/mnt/composition/')
++              and original_overlay[i+1].endswith('.py')]
++    need(run['overlays']==overlays,'configured overlay selection requires a separate source proposal')
++    outer={name:base64.b64decode(value,validate=True) for name,value in inflate(files['FINAL-REQUESTS.zlib']).items()}
++    inherited=outer['FINAL-REQUESTS.zlib']
++    need(digest(inherited)==contract.REQUEST_INHERITED['sha256'] and len(inherited)==contract.REQUEST_INHERITED['bytes'],
++         'immutable configured tokenizer source')
++    base_assets={name:base64.b64decode(value,validate=True) for name,value in inflate(inherited).items()}
++    rows,client=contract.resolve_configured_requests(base_assets,run,menu)
++    old_client=inflate(outer['CLIENT-BINDING.zlib'])
++    client_raw=canonical_line(dict(old_client,schema=2,rows=client));need(len(client_raw)<=16<<20,'configured client decoded bound')
++    outer['CLIENT-BINDING.zlib']=zlib.compress(client_raw,9)
++    outer_raw=canonical_line({name:base64.b64encode(raw).decode() for name,raw in outer.items()})
++    stored=zlib.compress(outer_raw,9);need(len(stored)<=2<<20 and len(outer_raw)<=16<<20,'configured request container bound')
++    inventory=dict(request_container=dict(stored_name='review/FINAL-REQUESTS.zlib',stored=dict(bytes=len(stored),sha256=digest(stored)),
++        expanded=dict(bytes=len(outer_raw),sha256=digest(outer_raw)),
++        members={name:dict(bytes=len(raw),sha256=digest(raw)) for name,raw in outer.items()},
++        inherited_container=dict(contract.REQUEST_INHERITED)),composition_facts=dict(stored_name='review/COMPOSITION-FACTS.zlib',
++        stored=dict(contract.FACTS_STORED),logical_name='review/COMPOSITION-FACTS.json',logical=dict(contract.FACTS_LOGICAL)),
++        executable_members_packed=0)
++    settings=contract.project_settings(parse_json(files['FINAL-SETTINGS.json']),run,host,menu,rows,inventory)
++    contract.validate_configured_settings(dict(settings,requests=rows))
++    rendered=canonical_line(settings);need(2*len(rendered)<=run['limits']['settings_bytes'],'configured settings require twofold margin')
++    files['FINAL-SETTINGS.json']=rendered;files['FINAL-REQUESTS.zlib']=stored
++    precision=parse_json(files['PRECISION-REFERENCE.json'])
++    precision.update(context_length=run['profile']['context_length'],max_total_tokens=run['profile']['max_total_tokens'],
++                     memory_fraction_static=run['profile']['mem_fraction_static'])
++    files['PRECISION-REFERENCE.json']=canonical_line(precision)
++    stack=parse_json(files['SERVING-STACK.json']);stack.update(worker_seconds=limits['worker_seconds'],client_seconds=run['limits']['client_seconds'])
++    files['SERVING-STACK.json']=canonical_line(stack)
++    for arm in ('control','mtp'):
++        name='HTTP-BINDING-'+arm+'.json';binding=parse_json(files[name]);resolved=binding['binding_template']['resolved_contract']
++        binding['worker_template']['expected_devices']=copy.deepcopy(host['devices'])
++        for key,value in run['profile'].items():
++            if key=='disable_overlap_schedule':resolved['prefix_cache'][key]=value
++            else:need(key in resolved,'configured resolved field missing');resolved[key]=value
++        cli=binding['binding_template']['canonical_server_cli']
++        for key,value in dict(run['profile'],decode_log_interval=1 if run['instrumentation']=='on' else 100).items():
++            flag='--'+key.replace('_','-')
++            need(cli.count(flag)==1,'one configured CLI flag required: '+flag)
++            if type(value) is not bool:cli[cli.index(flag)+1]=str(value)
++        files[name]=canonical_line(binding)
++    spec=parse_json(files['BENCHMARK-SPEC2.json']);spec.update(worker_seconds=limits['worker_seconds'],
++        context_length=run['profile']['context_length'],physical_slots=run['profile']['context_length'],gpu_ids=host['rank_indices'])
++    spec['server_args'].update(run['profile']);spec['http_serving'].update(client_seconds=run['limits']['client_seconds'],
++        expected_devices=copy.deepcopy(host['devices']),artifact_limits={key:run['limits'][key] for key in HTTP_ARTIFACT_KEYS})
++    files['BENCHMARK-SPEC2.json']=canonical_line(spec)
++    return dict(schema=1,rows=len(rows),source_prompt_ids_unchanged=True,logical_inventory=inventory,
++                settings_bytes=len(rendered),configuration_sha256=settings['configuration']['run_config_sha256'])
+--- a/propose_packet.py
++++ b/propose_packet.py
+@@ -6,10 +6,13 @@
+ import re
+ import sys
+ import tempfile
++import functools
+ 
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ import build as source_builder
++import run_config
++from launcher.run_native import checked_module
+ from spry_common.canon import canonical_line as canonical, digest, need, parse_json
+ 
+ 
+@@ -60,10 +63,25 @@
+              if name.startswith('author/package-v2/review/')}
+     seed = parse_json(authenticated['author/package-v2/MANIFEST.json'])
+     selected, record, proposal_pin = protected_sources(proposal, donor, metadata)
++    overrides={}
++    for name,row in record.get('source_files',{}).items():
++        need(name in source_builder.canonical_sources(HERE,metadata) and type(row) is dict
++             and set(row)=={'file','sha256'},'exact existing non-protected source role required')
++        path=(HERE/row['file']).resolve(strict=True)
++        need(path.is_relative_to(HERE) and not path.is_relative_to(HERE/'legacy'),'canonical proposed source location required')
++        raw=source_builder.read_regular(path,2<<20)
++        need(digest(raw)==row['sha256'],'proposed non-protected source identity differs')
++        overrides[name]=raw
++    projector=None
++    if record.get('configuration_mutations_supported') is True:
++        need('mtp_contract.py' in overrides,'configured runtime contract source required')
++        contract=checked_module(HERE/'spry_serving','contract',digest(overrides['mtp_contract.py']))
++        projector=functools.partial(run_config.project_configuration,contract=contract)
+     with tempfile.TemporaryDirectory(prefix='spry-packet-proposal-') as temporary:
+         baseline = Path(temporary).resolve() / 'source'
+         original = source_builder.build(donor_root, baseline, run_dir=run_dir,
+-            packet_id=packet_id, configured_artifacts=True)
++            packet_id=packet_id, configured_artifacts=True,source_overrides=overrides,
++            configuration_projector=projector)
+         need(original['protected_sources_unchanged'] is True, 'canonical protected builder invariant required')
+         files = {path.name: source_builder.read_regular(path) for path in (baseline / 'review').iterdir()}
+         files.update(selected)
+@@ -86,6 +104,8 @@
+             spec_sha256=package_files['review/BENCHMARK-SPEC2.json'],
+             resource_manifest_sha256=package_files['review/RESOURCE-MANIFEST.json'],
+             run_config=run_name, proposed_complete_seconds=derived['total_seconds'], launch_authorized=False)
++        if projector is not None:
++            manifest['logical_package_inventory']=original['configuration']['projection']['logical_inventory']
+         manifest.pop('boot_id')
+         package = dict(('package/review/' + name, raw) for name, raw in files.items())
+         for path in (baseline / 'config').rglob('*'):

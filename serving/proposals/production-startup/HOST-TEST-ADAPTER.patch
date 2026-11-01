@@ -1,0 +1,30 @@
+--- a/tests/test_host_binding.py
++++ b/tests/test_host_binding.py
+@@ -66,10 +66,12 @@
+                 patch.object(self.worker.time,'monotonic',return_value=100), \
+                 patch.object(self.worker,'_source_module',source), \
+                 patch.object(self.worker,'_render_device_bindings',return_value=self.renders), \
++                patch.object(self.worker,'_validate_serving_startup') as startup, \
+                 patch.object(self.worker,'_atomic_json') as write, \
+                 patch.object(self.worker,'_mtp_preflight') as mtp:
+             result=self.worker._preweight_before_scheduler(self.manifest,0,object(),gpu_id=0,
+                 contract=self.contract,instrumented=instrumented)
++            startup.assert_called_once()
+         return result,helper,graph,source,write,mtp
+ 
+     def test_production_checks_identity_without_importing_observers_or_writing_evidence(self):
+@@ -116,12 +118,13 @@
+                 patch.object(self.worker,'_validate_manifest',side_effect=lambda value:value), \
+                 patch.object(self.worker,'_worker_record',return_value={}), \
+                 patch.object(self.worker,'_atomic_json'),patch.object(self.worker,'_native_module'), \
++                patch.object(self.worker,'_validate_serving_startup',side_effect=lambda *args:events.append('configuration')), \
+                 patch.object(self.worker,'_source_module',side_effect=source), \
+                 patch.object(self.worker,'_render_device_bindings',return_value=self.renders), \
+                 patch.object(self.worker,'_source_selection',return_value=target):
+             result=self.worker.run_scheduler_process(object(),object(),0,0,0,None,object())
+         self.assertEqual(result,'served')
+-        self.assertEqual(events,['identity','scheduler'])
++        self.assertEqual(events,['configuration','identity','scheduler'])
+         target.assert_called_once()
+ 
+ 

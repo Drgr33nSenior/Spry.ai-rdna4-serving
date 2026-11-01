@@ -1,0 +1,361 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -30,7 +30,9 @@
+ retained_verifier = _adjacent("spry_retained_runtime_verifier", "verify_benchmark_runtime.py")
+ http_integration = _adjacent("spry_http_serving_integration", "serving_integration.py")
+ mtp_contract = _adjacent("spry_mtp_contract", "mtp_contract.py")
+-SPEC_SHA256 = 'c911276a972544b7889cfc7c24b294c704f020778bf3db65704c42a4c402e81a'
++SUPPORTED_RUN_SHA256 = '48aab0c783f27717ae44be9753e064a08cb8c33bf0c175c5bcb302348868b7ab'
++SUPPORTED_SETTINGS_SHA256 = '099148986068e3d2a01761036f78e4d76d3c366402bfe3ff1e95f5ce327c12c4'
++SPEC_TEMPLATE_SHA256 = 'ac1b7afaf10e248d944a0d441ffa9abe30d72ed134860b93a7ec69aae09a07fd'
+ MODEL_INVENTORY_SHA256 = "892e95cdabf87bbf96298e258e5889e2572acf21659121d811ca9a09eac09986"
+ CONFIG_SHA256 = "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+ if mtp_contract.precision_reference_enabled():
+@@ -278,7 +280,7 @@
+     return stamps
+ 
+ 
+-def validate_manifest(path, expected_sha256, *, deadline, clock=time.monotonic):
++def validate_manifest(path, expected_sha256, *, deadline, clock=time.monotonic, configuration_pins=None):
+     """Authenticate complete local inputs; no runtime import or remote query."""
+     value, _ = adapter.readout.read_json(path, expected_sha256)
+     live = value.get("schema") == 2
+@@ -315,9 +317,11 @@
+     need(value["package_files"]["review/collect_benchmark_platform.py"] == METADATA_SHA256,
+          "metadata collector identity")
+     spec_path = package / "review/BENCHMARK-SPEC2.json"
+-    need(value["spec_sha256"] == SPEC_SHA256 == value["package_files"]["review/BENCHMARK-SPEC2.json"],
+-         "frozen benchmark spec identity")
+-    spec, _ = adapter.readout.read_json(spec_path, SPEC_SHA256)
++    need(live and value['experiment_mode'] == 'native-http-fp8-sprint01-v1',
++         'configured W5 HTTP manifest required')
++    configured = verify_configured_spec(configuration_pins, value, deadline=deadline, clock=clock)
++    spec, spec_sha256 = configured['spec'], configured['spec_sha256']
++    stamps.update(configured['stamps'])
+     adapter.readout.bench.validate_spec(spec)
+     need(value["experiment_mode"] == spec["experiment_mode"], "manifest/spec experiment mode")
+     independent = spec['experiment_mode'] == INDEPENDENT_MODE
+@@ -393,7 +397,7 @@
+     resource_manifest = resources.read_manifest(resource_path, value["resource_manifest_sha256"])
+     need(resource_manifest["root"] == value["target_root"] and
+          resource_manifest["session_sha256"] == value["session_sha256"] and
+-         resource_manifest["benchmark_spec_sha256"] == SPEC_SHA256 and
++         resource_manifest["benchmark_spec_sha256"] == spec_sha256 and
+          resource_manifest["gate_sha256"] == value["package_files"]["review/benchmark_resource_gate.py"] and
+          resource_manifest["entry_sha256"] == value["package_files"]["review/model_benchmark.py"],
+          "resource/package/source binding")
+@@ -404,7 +408,7 @@
+             review=Path(value["target_root"]) / "review", model=value["model_root"],
+             output=Path(value["target_root"]) / "arms" / arm,
+             entry=Path(value["target_root"]) / "review/model_benchmark.py",
+-            spec_sha256=SPEC_SHA256, bounded_scratch=True,
++            spec_sha256=spec_sha256, bounded_scratch=True,
+             **({"physical_artifacts": True, "session_sha256": value["session_sha256"],
+                 "artifacts_sha256": value["package_files"]["review/benchmark_artifacts.py"]} if live else {}))
+         if comparison is not None:
+@@ -412,7 +416,7 @@
+                 review=Path(value["target_root"]) / "review", model=value["model_root"],
+                 output=Path(value["target_root"]) / "arms" / arm,
+                 entry=Path(value["target_root"]) / "review/model_benchmark.py",
+-                spec_sha256=SPEC_SHA256, bounded_scratch=True, physical_artifacts=True,
++                spec_sha256=spec_sha256, bounded_scratch=True, physical_artifacts=True,
+                 session_sha256=value["session_sha256"],
+                 artifacts_sha256=value["package_files"]["review/benchmark_artifacts.py"],
+                 comparison_contract=comparison)
+@@ -420,7 +424,7 @@
+             expected = adapter.bwrap_argv(arm, retained_root=retained, composition=runtime,
+                 review=Path(value["target_root"]) / "review", model=value["model_root"],
+                 output=Path(value["target_root"]) / "arms" / arm, entry=Path(value["target_root"]) / "review/model_benchmark.py",
+-                spec_sha256=SPEC_SHA256, bounded_scratch=True, physical_artifacts=True,
++                spec_sha256=spec_sha256, bounded_scratch=True, physical_artifacts=True,
+                 session_sha256=value["session_sha256"], artifacts_sha256=value["package_files"]["review/benchmark_artifacts.py"],
+                 graph_contract=spec["graph_projection"],
+                 http_contract=http_projection_contract(spec))
+@@ -429,7 +433,7 @@
+                 review=Path(value['target_root']) / 'review', model=value['model_root'],
+                 output=Path(value['target_root']) / 'arms' / arm,
+                 entry=Path(value['target_root']) / 'review/model_benchmark.py',
+-                spec_sha256=SPEC_SHA256, bounded_scratch=True, physical_artifacts=True,
++                spec_sha256=spec_sha256, bounded_scratch=True, physical_artifacts=True,
+                 session_sha256=value['session_sha256'],
+                 artifacts_sha256=value['package_files']['review/benchmark_artifacts.py'],
+                 independent_contract=spec['independent_reference'])
+@@ -525,7 +529,7 @@
+         stamps.update(_tree(_canonical(tc['root']),{name:row['sha256'] for name,row in rows.items()},deadline,clock))
+         for name,row in rows.items():need((Path(tc['root'])/name).stat().st_mode & 0o777 == row['mode'],'development file mode')
+         digest,size,stamp=_hash(Path(tc['manifest']['path']),deadline,clock);need(digest==tc['manifest']['sha256'] and size==tc['manifest']['bytes'],'development manifest current identity');stamps[tc['manifest']['path']]=stamp
+-    return {"manifest": value, "spec": spec, "spec_path": str(spec_path),
++    return {"manifest": value, "spec": spec, "spec_path": str(spec_path), "spec_sha256": spec_sha256,
+             "resource_manifest": resource_manifest, "resource_path": str(resource_path), "stamps": stamps,
+             **({'retained_identity': retained_identity} if live else {})}
+ 
+@@ -591,7 +595,9 @@
+             report["scope"] = "matched-physical-model-benchmark-v2"
+         need(all(callable(item) for item in (observer, read_inner_result, read_resource_receipt,
+              resource_check, supervisor)), "complete explicit owner effects required")
+-        prepared = validate_manifest(manifest_path, manifest_sha256, deadline=started + 105, clock=clock)
++        prepared = validate_manifest(manifest_path, manifest_sha256, deadline=started + 105, clock=clock,
++                                     configuration_pins=physical_context)
++        spec_sha256 = prepared['spec_sha256']
+         value, results = prepared["manifest"], []
+         if physical_context is not None:
+             prepared['stamps'].update(authenticate_configuration_files(
+@@ -678,7 +684,7 @@
+             prepared["resource_manifest"]["gate_path"], prepared["resource_manifest"]["gate_sha256"])
+             for arm in ("bf16", "kv4"))
+         campaign = adapter.run_campaign(lease=lease, arms=frozen_arms,
+-            spec_path=prepared["spec_path"], spec_sha256=SPEC_SHA256,
++            spec_path=prepared["spec_path"], spec_sha256=spec_sha256,
+             collector_sha256=observer_sha, active_deadline=started + 6060,
+             collect_release=lambda current, arm, result, end: observe("release", current, arm, result, end),
+             read_inner_result=read_inner_result,
+@@ -709,14 +715,14 @@
+                           http_throughput_measured=True)
+         elif prepared["spec"].get("experiment_mode") == "native-model-context-retrieval-32k-v1":
+             graph_directories = {arm: Path(value["target_root"]) / "results" / (arm + "-artifacts") for arm in ("bf16", "kv4")}
+-            report["graph_potential"] = adapter.readout.analyze(prepared["spec"], SPEC_SHA256,
++            report["graph_potential"] = adapter.readout.analyze(prepared["spec"], spec_sha256,
+                 read_inner_result("bf16"), read_inner_result("kv4"), graph_directories)
+             report.update(experiment_mode=prepared["spec"]["experiment_mode"], qualification=False, source_promotion=False)
+         if prepared["spec"].get("validation_comparison") is not None:
+             left, right = (read_inner_result(arm) for arm in ("bf16", "kv4"))
+             directories = (capture_directories if capture_directories is not None else
+                 {arm: Path(value['target_root']) / 'results' / (arm + '-artifacts') for arm in ('bf16', 'kv4')})
+-            analysis = adapter.readout.analyze(prepared["spec"], SPEC_SHA256, left, right,
++            analysis = adapter.readout.analyze(prepared["spec"], spec_sha256, left, right,
+                 directories if adapter.readout.bench.capture_mode(prepared['spec']) else None)
+             report.update(experiment_mode=prepared["spec"]["experiment_mode"],
+                 arm_labels=prepared["spec"]["validation_comparison"]["arm_labels"],
+@@ -792,8 +798,8 @@
+ 
+ 
+ def authenticate_configuration_files(grant, manifest, *, deadline, clock=time.monotonic):
+-    """Bind approval files; existing spec checks still govern runtime semantics."""
+-    need(all(_digest(grant.get(key)) for key in
++    """Bind independently approved run, host, menu and protected source bytes."""
++    need(type(grant) is dict and all(_digest(grant.get(key)) for key in
+          ('run_config_sha256', 'host_sha256', 'protected_set_sha256')), 'three configuration approval pins required')
+     root = _canonical(manifest['package_root'])
+     need(Path(__file__).resolve(strict=True) == root / 'review/benchmark_physical_controller.py',
+@@ -841,6 +847,81 @@
+     return stamps
+ 
+ 
++def render_configured_spec(template, run, host, package_files):
++    """Reproduce the supported W5 spec from a fingerprinted template and inputs.
++
++    Only the listed slots can vary with configuration/source bindings. Hashing
++    the remainder authenticates every other field, including unknown fields.
++    The pinned run is a temporary compatibility boundary until all consumers
++    support configuration changes; owner ceilings remain separate literals.
++    """
++    need(mapping_sha256(run) == SUPPORTED_RUN_SHA256, 'unsupported run configuration')
++    need(mapping_sha256(host) == run['host']['sha256'], 'configured host identity differs')
++    expected = json.loads(json.dumps(template, allow_nan=False))
++    slots = [(('worker_seconds',), run['limits']['client_seconds'] + run['limits']['worker_startup_seconds']),
++             (('context_length',), run['profile']['context_length']),
++             (('physical_slots',), run['profile']['context_length']),
++             (('gpu_ids',), host['rank_indices']),
++             (('http_serving', 'client_seconds'), run['limits']['client_seconds']),
++             (('http_serving', 'expected_devices'), host['devices'])]
++    slots += [(('server_args', key), value) for key, value in run['profile'].items()]
++    sources = [(('http_serving', 'bindings', arm, 'sha256'), 'HTTP-BINDING-' + arm + '.json')
++               for arm in ('control', 'mtp')]
++    sources += [(('graph_projection', 'helpers', name), name) for name in
++                ('context_tokenizer.py', 'graph_integration.py', 'graph_outer.py', 'graph_screen.py')]
++    for path, name in sources:
++        pin = package_files.get('review/' + name)
++        need(_digest(pin), 'configured spec source pin required')
++        slots.append((path, pin))
++    for path, value in slots:
++        parent = expected
++        for key in path[:-1]:
++            need(type(parent) is dict and key in parent, 'spec template shape differs')
++            parent = parent[key]
++        need(type(parent) is dict and path[-1] in parent, 'spec template slot missing')
++        parent[path[-1]] = None
++    need(mapping_sha256(expected) == SPEC_TEMPLATE_SHA256, 'fixed spec template differs')
++    for path, value in slots:
++        parent = expected
++        for key in path[:-1]:
++            parent = parent[key]
++        parent[path[-1]] = value
++    return expected
++
++
++def verify_configured_spec(grant, manifest, *, deadline, clock=time.monotonic):
++    """Authenticate inputs and compare complete spec bytes before owner effects."""
++    stamps = authenticate_configuration_files(grant, manifest, deadline=deadline, clock=clock)
++    initial_stamps = dict(stamps)
++    root = _canonical(manifest['package_root'])
++    run = _configuration_file(root / manifest['run_config'], grant['run_config_sha256'],
++        256 << 10, deadline=deadline, clock=clock, stamps=stamps)
++    host = _configuration_file(root / run['host']['file'], grant['host_sha256'],
++        64 << 10, deadline=deadline, clock=clock, stamps=stamps)
++    files = manifest['package_files']
++    settings_pin = files.get('review/FINAL-SETTINGS.json')
++    need(settings_pin == SUPPORTED_SETTINGS_SHA256, 'supported W5 settings required')
++    _configuration_file(root / 'review/FINAL-SETTINGS.json', settings_pin, 256 << 10,
++        deadline=deadline, clock=clock, stamps=stamps)
++    for name in ('HTTP-BINDING-control.json', 'HTTP-BINDING-mtp.json', 'context_tokenizer.py',
++                 'graph_integration.py', 'graph_outer.py', 'graph_screen.py'):
++        _configuration_file(root / 'review' / name, files.get('review/' + name),
++            64 << 10 if name.endswith('.json') else 2 << 20, deadline=deadline, clock=clock,
++            stamps=stamps, json_object=name.endswith('.json'))
++    pin = manifest.get('spec_sha256')
++    need(_digest(pin) and pin == files.get('review/BENCHMARK-SPEC2.json'), 'spec/package identity differs')
++    spec = _configuration_file(root / 'review/BENCHMARK-SPEC2.json', pin, 64 << 10,
++        deadline=deadline, clock=clock, stamps=stamps)
++    expected = render_configured_spec(spec, run, host, files)
++    # Canonical input was already required above. The final digest comparison
++    # checks all bytes, so bool/int aliases, field omissions and extra fields fail.
++    need(mapping_sha256(expected) == pin, 'configuration-generated spec differs')
++    verify_unchanged({'stamps': initial_stamps})
++    verify_unchanged({'stamps': stamps})
++    need(clock() < deadline, 'configured spec verification deadline')
++    return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps}
++
++
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,
+                             clock=time.monotonic, utc_now=lambda: datetime.now(timezone.utc)):
+     need(type(grant) is dict and set(grant) == GRANT_FIELDS and grant["schema"] == 2 and
+@@ -865,7 +946,7 @@
+     instant = datetime.fromisoformat(grant["received_utc"].replace("Z", "+00:00"))
+     need(instant.tzinfo is not None and abs((utc_now() - instant).total_seconds() - (clock() - received)) <= 3,
+          "UTC/monotonic receipt disagreement")
+-    authenticate_configuration_files(grant, manifest, deadline=received + 105, clock=clock)
++    verify_configured_spec(grant, manifest, deadline=received + 105, clock=clock)
+     return grant
+ 
+ 
+@@ -880,7 +961,7 @@
+          all(final.get(key) == initial.get(key) for key in ("schema", "scope", "arm", "root", "session_sha256",
+              "benchmark_spec_sha256", "gate_sha256", "entry_sha256", "bwrap_sha256", "workload_argv_sha256",
+              "gate_process", "cgroup_identity")) and
+-         initial.get("benchmark_spec_sha256") == SPEC_SHA256 and final.get("complete") is True and
++         initial.get("benchmark_spec_sha256") == prepared['spec_sha256'] and final.get("complete") is True and
+          type(final.get("child_exit")) is int and final["child_exit"] == 0 and
+          final.get("child_reaped") is True and final.get("owner_signals") == [] and
+          final.get("qualification") is False and final.get("only_wrapper_remains") is True and
+@@ -983,7 +1064,7 @@
+     return {"host_process": asdict(before), "nspid": nspid, "observed_monotonic": clock()}
+ 
+ 
+-def checked_native_records(directory, inner, *, arm, session_sha256, joins, result):
++def checked_native_records(directory, inner, *, arm, session_sha256, spec_sha256, joins, result):
+     need(inner.get("physical_artifacts") is True and inner.get("session_sha256") == session_sha256 and
+          inner.get("native_identity_verified") is True and len(inner.get("ranks", [])) == 2,
+          "physical native identity completion required")
+@@ -993,7 +1074,7 @@
+         raw = adapter.readout.bench.read_bounded_file(path, 64 << 10)
+         value, _ = adapter.readout.read_json(path, hashlib.sha256(raw).hexdigest())
+         adapter.readout.bench.validate_rank_identity(value, rank=rank, arm=arm,
+-            session_sha256=session_sha256, spec_sha256=SPEC_SHA256)
++            session_sha256=session_sha256, spec_sha256=spec_sha256)
+         need(inner["ranks"][rank].get("rank") == rank and
+              inner["ranks"][rank].get("native_identity") == value, "rank/result/native file mismatch")
+         process = value["process"]
+@@ -1010,10 +1091,10 @@
+ 
+ 
+ def checked_independent_records(spec, inner, *, arm, session_sha256, joins, result,
+-                                artifacts_sha256):
++                                artifacts_sha256, spec_sha256):
+     """Join the one real native Python owner to live host observations."""
+     adapter.readout.bench.checked_independent_result(spec, inner, arm=arm,
+-        session_sha256=session_sha256, spec_sha256=SPEC_SHA256)
++        session_sha256=session_sha256, spec_sha256=spec_sha256)
+     native = inner.get('native_identity')
+     need(type(native) is dict and native.get('before_weights') is True and
+          native.get('helper_sha256') == GPU_IDENTITY_SHA256, 'independent preweight identity required')
+@@ -1023,7 +1104,7 @@
+     adapter.readout.bench.validate_physical_details(helper, native.get('devices'), native.get('hip'))
+     command = ['/mnt/work/build-venv/bin/python3', '-I', '-B', '/mnt/review/model_benchmark.py',
+         '--execute-reviewed-benchmark', '--spec', '/mnt/review/BENCHMARK-SPEC2.json',
+-        '--spec-sha256', SPEC_SHA256, '--output', '/mnt/output/benchmark', '--arm', arm,
++        '--spec-sha256', spec_sha256, '--output', '/mnt/output/benchmark', '--arm', arm,
+         '--physical-artifacts', '--session-sha256', session_sha256,
+         '--artifacts-sha256', artifacts_sha256]
+     command_sha = hashlib.sha256(b'\0'.join(value.encode() for value in command) + b'\0').hexdigest()
+@@ -1041,8 +1122,9 @@
+     return native
+ 
+ 
+-def http_expected_binding(root, spec, *, owner_arm, session_sha256):
++def http_expected_binding(root, spec, *, owner_arm, session_sha256, spec_sha256):
+     """Read a frozen source template before accepting a runtime readiness gate."""
++    need(_digest(spec_sha256) and mapping_sha256(spec) == spec_sha256, 'verified HTTP spec identity required')
+     logical = mtp_contract.owner_arm_map()[owner_arm]
+     row = spec["http_serving"]["bindings"][logical]
+     path = Path(root) / row["path"]
+@@ -1071,7 +1153,7 @@
+          value["worker_template"].get("expected_devices") == expected_devices,
+          "HTTP binding template schema")
+     return {"arm": logical, "source_manifest_sha256": value["source_manifest_sha256"],
+-            "session_sha256": session_sha256, "spec_sha256": SPEC_SHA256}
++            "session_sha256": session_sha256, "spec_sha256": spec_sha256}
+ 
+ 
+ def diagnostic_readout(directory, binding, artifacts, inner=None):
+@@ -1330,6 +1412,8 @@
+     need(root == Path(manifest["package_root"]) and Path(manifest_path) == root / "MANIFEST.json" and
+          Path(grant_path) == root / "GRANT.json" and Path(__file__).resolve() == root / "review/benchmark_physical_controller.py",
+          "exact fresh physical root/entry/grant paths required")
++    configured = verify_configured_spec(grant, manifest, deadline=grant['received_monotonic'] + 105)
++    spec_sha256 = configured['spec_sha256']
+     artifacts = _adjacent("spry_physical_artifacts", "benchmark_artifacts.py")
+     raw_transport = (manifest['experiment_mode'] == artifacts.HTTP_MODE and
+                      http_integration._mtp_contract().raw_attention_capture_enabled())
+@@ -1350,7 +1434,7 @@
+                 raw_options = {}
+                 if raw_transport:
+                     raw_options = dict(raw_binding=dict(session_sha256=manifest["session_sha256"],
+-                        arm=arm, spec_sha256=SPEC_SHA256, experiment_mode=artifacts.HTTP_MODE,
++                        arm=arm, spec_sha256=spec_sha256, experiment_mode=artifacts.HTTP_MODE,
+                         artifact_transport=artifacts.RAW_TRANSPORT),
+                         raw_destination=output / (arm + "-artifacts"))
+                 cap = artifacts.CapturePipes(output / (arm + "-capture"),
+@@ -1404,7 +1488,7 @@
+             limit = artifacts.stream_limit(manifest['experiment_mode'])
+             stdout = adapter.readout.bench.read_bounded_file(output / (arm + "-capture/stdout.raw"), limit)
+             stderr = adapter.readout.bench.read_bounded_file(output / (arm + "-capture/stderr.raw"), limit)
+-            binding = {"session_sha256": manifest["session_sha256"], "arm": arm, "spec_sha256": SPEC_SHA256}
++            binding = {"session_sha256": manifest["session_sha256"], "arm": arm, "spec_sha256": spec_sha256}
+             if manifest['experiment_mode'] in ('v4-first-divergence-capture-v1', 'native-repeatability-capture-v1',
+                                                'native-decode-layer-capture-v1', 'native-prefill-row-audit-v1',
+                                                'native-async-prefill-layer-capture-v1', 'native-model-context-retrieval-32k-v1',
+@@ -1443,7 +1527,7 @@
+                                                'native-http-fp8-sprint01-v1', INDEPENDENT_MODE):
+                 capture_path = root / 'review/BENCHMARK-SPEC2.json'
+                 capture_raw = adapter.readout.bench.read_bounded_file(capture_path, 8 << 20)
+-                need(hashlib.sha256(capture_raw).hexdigest() == SPEC_SHA256,
++                need(hashlib.sha256(capture_raw).hexdigest() == spec_sha256,
+                      'frozen capture spec identity')
+                 capture_spec = json.loads(capture_raw, object_pairs_hook=adapter.readout._object,
+                                           parse_constant=adapter.readout._constant)
+@@ -1452,7 +1536,7 @@
+             require_complete_artifact_members(bundle, capture_spec, destination, inner, artifacts)
+             if independent_mode:
+                 checked_independent_records(capture_spec, inner, arm=arm,
+-                    session_sha256=manifest['session_sha256'],
++                    session_sha256=manifest['session_sha256'], spec_sha256=spec_sha256,
+                     joins=[record for pair in joins[arm].values() for record in pair.values()],
+                     result=supervised_results[arm],
+                     artifacts_sha256=manifest['package_files']['review/benchmark_artifacts.py'])
+@@ -1461,7 +1545,7 @@
+                 _publish(output / (arm + '-diagnostics.json'), diagnostic_observations[arm])
+             elif http_mode:
+                 expected = http_expected_binding(root, capture_spec, owner_arm=arm,
+-                    session_sha256=manifest["session_sha256"])
++                    session_sha256=manifest["session_sha256"], spec_sha256=spec_sha256)
+                 inner = http_integration.read_http_artifacts(destination,
+                     extraction_root=output / (arm + '-http-client-tree'), expected=expected, owner_arm=arm,
+                     joins=[record for pair in joins[arm].values() for record in pair.values()],
+@@ -1472,6 +1556,7 @@
+             else:
+                 diagnostics = diagnostic_readout(destination, binding, artifacts, inner)
+                 checked_native_records(inner_path.parent, inner, arm=arm, session_sha256=manifest["session_sha256"],
++                    spec_sha256=spec_sha256,
+                     joins=[record for pair in joins[arm].values() for record in pair.values()],
+                     result=supervised_results[arm])
+             if manifest["experiment_mode"] == "native-model-context-retrieval-32k-v1":

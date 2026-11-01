@@ -1,0 +1,16 @@
+{
+  "apply_incomplete_proposal_independently": false,
+  "complete_D1_D2_approved": false,
+  "context": "Reply to the completed D2 configuration-binding proposal and the stated next transport/configuration integration work.",
+  "date": "2026-11-01",
+  "gpu_launch_authorized": false,
+  "owner_ceiling_increase_authorized": false,
+  "owner_words": "OK, approved",
+  "presented_configuration_binding_controller_sha256": "98bec4bc5f22acccb22d9c111ad2e17cdb2ddfd774d096d9674b9bab4ef4cd28",
+  "presented_configuration_binding_patch_sha256": "04fd5086e53f3cf7a9789c68c4d34a05b22ca52357f5b0c40e28df6301464287",
+  "presented_configuration_binding_proposal_sha256": "0dde54539a56c56160d595c3044abb8e6bc4042c491b8eda257a108220663ef9",
+  "publication_performed": false,
+  "recorded_proposal_status_is_historical": true,
+  "schema": 1,
+  "scope": "Approval of the presented configuration-binding source proposal and continuation of cleanup implementation. New transport changes remain separate review artifacts."
+}

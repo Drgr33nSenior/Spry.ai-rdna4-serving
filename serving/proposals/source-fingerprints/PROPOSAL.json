@@ -1,0 +1,192 @@
+{
+  "added_source_names": [
+    "kv_graph_join.py",
+    "observer_health.py",
+    "request_receipts.py",
+    "target_kv_metadata.py"
+  ],
+  "archive_member_ceiling": 80,
+  "artifact_fixture_patch_sha256": "1ae4990dfacc276883fc99fc71d7329551de72e2ea0ce3543d47c53536a33704",
+  "artifact_limits_consumers_migrated": true,
+  "baseline_owner_required_seconds": 5385,
+  "baseline_proposal": "../d2-durable-limits/PROPOSAL.json",
+  "baseline_sha256": "932efdb83387d73b7c9721c086e74ec0af38558f662180da9b4b332dbb2282c1",
+  "boot_independent_manifest_schema": 3,
+  "caller_power_config_binding_migrated": false,
+  "canonical_source_count": 21,
+  "cap_policy": "Natural stop allowed; length requires exact declared output cap and remains ineligible for answer grading.",
+  "changed_file": "review/benchmark_physical_controller.py",
+  "changes": {
+    "review/benchmark_host_transport.py": {
+      "baseline_sha256": "9034f4afeb46742d552fa9da70ef466af5798bd2f3bc0b39a07c2376ae46e4bf",
+      "proposed_sha256": "ad1c922e1ea467172e6b034e65af0d01990a6069045dbc29754d49d79d878ff7"
+    },
+    "review/benchmark_physical_controller.py": {
+      "baseline_sha256": "932efdb83387d73b7c9721c086e74ec0af38558f662180da9b4b332dbb2282c1",
+      "proposed_sha256": "0d5ebbb55dcc481da14542e5b3c1a792b9acd0e3d7edaeb47fa2ff45a6b75f06"
+    }
+  },
+  "configured_archive_members": 80,
+  "configured_artifacts_opt_in": true,
+  "consumed_by_builder": false,
+  "direct_source_changes": {
+    "legacy/review/j01_probe.py": {
+      "baseline_sha256": "7662d0f8e417fbe60d8ed7ce8b8242ed1d342addd1f2ed1ad2d5eee3c80305f0",
+      "proposed_sha256": "f1622b0a09bcb594a0b2c38784ce90df56e2e79bb60b8fb8bded9e2428d4e395"
+    },
+    "legacy/review/verify_decode_adapter.py": {
+      "baseline_sha256": "731fdc22429376633785c9bd659128eedf0668575bdddbdb29c0e4816703223b",
+      "proposed_sha256": "0f721e09477ac873b7e37ec6ea5692404c15a07514bae835b93b3f66aa7d8eed"
+    },
+    "legacy/review/worker_entry.py": {
+      "baseline_sha256": "7abe4240ba779680c053dcf2cb6aad12a20ec40dcf9993919ea56efe0b92373c",
+      "proposed_sha256": "eb8ad2a02d23f4b89b93f51337019c734b50f9ce37dbe4b3891accf17dd2e257"
+    }
+  },
+  "entire_D2_complete": false,
+  "fixed_admission_seconds": 180,
+  "fixed_campaign_margin_seconds": 390,
+  "fixed_collection_reserve_seconds": 330,
+  "fixed_locked_admission_seconds": 75,
+  "fixed_seal_reserve_seconds": 300,
+  "fixed_source_preparation_seconds": 105,
+  "fresh_caller_generation_complete": false,
+  "inherited_source_patch": "../d2-artifact-binding/SOURCE.patch",
+  "inherited_source_patches": [
+    "../d2-artifact-binding/SOURCE.patch",
+    "../production-startup/SOURCE.patch",
+    "../production-imports/SOURCE.patch"
+  ],
+  "launch_authorized": false,
+  "legacy_manifest_schema_2_supported": true,
+  "legacy_worker_diagnostic_migrated": false,
+  "maximum_active_seconds": 6060,
+  "maximum_arm_envelope_seconds": 2490,
+  "maximum_arm_work_seconds": 2430,
+  "maximum_total_seconds": 6360,
+  "maximum_worker_seconds": 2280,
+  "minimum_arm_release_seconds": 60,
+  "minimum_owner_cleanup_seconds": 150,
+  "observed_boot_must_match_explicit_approval": true,
+  "observed_device_rank_binding_migrated": true,
+  "original_receipt_preserved": true,
+  "outer_durable_partitions_migrated": true,
+  "owner_adapter_proposal": "../d2-owner-timing/review/benchmark_owner_adapter.py",
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "patch_sha256": "834dc18240fbadc6e279635fbd123335a1faece48bf4a23661479229d04080a0",
+  "postrun_global_spec_pin": false,
+  "production_mount_isolation_complete": false,
+  "production_parity_import_removed": true,
+  "production_startup_identity_required": true,
+  "promoted_source": "legacy/review/verify_decode_adapter.py",
+  "proposed_sha256": "0d5ebbb55dcc481da14542e5b3c1a792b9acd0e3d7edaeb47fa2ff45a6b75f06",
+  "protected_files": {
+    "benchmark_artifacts.py": "851a121161d7a76b391d8a9b052aa84984e798e4e223b8c19c6e36a45f53a11e",
+    "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "benchmark_host_transport.py": "ad1c922e1ea467172e6b034e65af0d01990a6069045dbc29754d49d79d878ff7",
+    "benchmark_owner_adapter.py": "91d3d9f7426afc68fbd8d35cf8de5132e903ff467d82ffcbee59ca025c09d3be",
+    "benchmark_physical_controller.py": "0d5ebbb55dcc481da14542e5b3c1a792b9acd0e3d7edaeb47fa2ff45a6b75f06",
+    "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+  },
+  "protected_helpers_changed_from_previous_stage": false,
+  "protected_set_sha256": "fc01b14af963be26cf572895cc449bedbe24ee8abb6d5cd4721116bc03bf1f48",
+  "readout_artifact_limits_migrated": true,
+  "readout_behavior": "HTTP evidence schema and source/spec binding preserved; inactive legacy diagnostics unchanged",
+  "removed_source_names": [
+    "batch_telemetry.py",
+    "cache_profile.py",
+    "prepare_benchmark_package.py"
+  ],
+  "retired_owner_fit_literal": 1995,
+  "review_members": 75,
+  "root_authenticated_module_loader": true,
+  "runtime_inputs": [
+    "admission_seconds",
+    "arm_release_seconds",
+    "campaign_margin_seconds",
+    "client_seconds",
+    "collection_reserve_seconds",
+    "locked_admission_seconds",
+    "owner_cleanup_seconds",
+    "seal_reserve_seconds",
+    "source_preparation_seconds",
+    "worker_startup_seconds"
+  ],
+  "schema": 1,
+  "scope": "Preserve native source fingerprints through standard checked-byte loaders; no direct exec/compile in proposed Python sources",
+  "selected_draft_head_arm": "both",
+  "selected_phase": "sprint01-paired-serving",
+  "signal_offsets_seconds": [
+    20,
+    25,
+    30
+  ],
+  "source_changes": {
+    "build.py": {
+      "baseline_sha256": "2b55ce2e2dd672a17102a5bd27365ec866a9762d40e7fc5c4f3247dda994dad4",
+      "proposed_sha256": "08002f5039b67318741588640fd9c81c795e91ac9ab64b32019d7f8b56892707"
+    },
+    "legacy/review/j01_probe.py": {
+      "baseline_sha256": "7662d0f8e417fbe60d8ed7ce8b8242ed1d342addd1f2ed1ad2d5eee3c80305f0",
+      "proposed_sha256": "f1622b0a09bcb594a0b2c38784ce90df56e2e79bb60b8fb8bded9e2428d4e395"
+    },
+    "legacy/review/model_benchmark.py": {
+      "baseline_sha256": "e5b831a3a0fd64acdc2e030a0fb35052329e06dd1ba641c7e281383b232c43c7",
+      "proposed_sha256": "4c5c134dc470652b97908c2d269119629becc4cee884aaa023848cb1f719a436"
+    },
+    "legacy/review/serving_integration.py": {
+      "baseline_sha256": "b5c3fde6b16c5e3032c999890dee98f7464ea84e2f5c847347dad0da1031a440",
+      "proposed_sha256": "87d21aa8a6174d411d526fbd7bc63314d494bc75c2c96a570384206a908c5796"
+    },
+    "legacy/review/serving_launcher.py": {
+      "baseline_sha256": "29c162a80514cad9c28a81bae276a60f52a241d77cd0ce3f814ceda9b7d99454",
+      "proposed_sha256": "5b0e3b07a8187c1d0e6265f74fbfd8349b29491b5d7b0983fdad5579999fe693"
+    },
+    "legacy/review/serving_runtime.py": {
+      "baseline_sha256": "7fe44382439cda9b39a6d3e221e752a12d0ffedc02455776fb45bc6a0fdee16d",
+      "proposed_sha256": "4221a4f714d90bcd207619f7ea167178afb65ff20a6296abdebe2cf023eb033c"
+    },
+    "legacy/review/verify_decode_adapter.py": {
+      "baseline_sha256": "731fdc22429376633785c9bd659128eedf0668575bdddbdb29c0e4816703223b",
+      "proposed_sha256": "0f721e09477ac873b7e37ec6ea5692404c15a07514bae835b93b3f66aa7d8eed"
+    },
+    "legacy/review/worker_entry.py": {
+      "baseline_sha256": "7abe4240ba779680c053dcf2cb6aad12a20ec40dcf9993919ea56efe0b92373c",
+      "proposed_sha256": "eb8ad2a02d23f4b89b93f51337019c734b50f9ce37dbe4b3891accf17dd2e257"
+    },
+    "run_config.py": {
+      "baseline_sha256": "b12ab1058db602745b3186d2608c2939d41d7de90d91ee8a0671c43449c68231",
+      "proposed_sha256": "2589c2a60c9b0d5b64a9410dd65fc98f99f1ebb4c342f77de9c136019f6564cd"
+    },
+    "spry_common/limits.py": {
+      "baseline_sha256": "530569634a16c2dd2c20ebeb1b4c4850c1b64ae5015c9c5d46da6a66119ec91a",
+      "proposed_sha256": "89228812d01ed0f5689b0e0f5c46796727eb329706fcc8952dcae8217740d6d1"
+    }
+  },
+  "source_changes_baseline": "../production-imports/PROPOSAL.json",
+  "source_changes_consumed_by_builder": true,
+  "source_fingerprint_sites_migrated": 6,
+  "source_patch_scope": "Only the three files in direct_source_changes",
+  "source_patch_sha256": "6030e474aacba6d4e0479a866137f9988f6c927918c7702d0705cdfacedc7cda",
+  "source_patch_source": "../d2-artifact-binding/SOURCE.patch",
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "spec_fixture": "tests/fixtures/w5/BENCHMARK-SPEC2.json",
+  "spec_fixture_sha256": "c911276a972544b7889cfc7c24b294c704f020778bf3db65704c42a4c402e81a",
+  "spec_reproduction": "Fingerprint fixed template fields; regenerate all config/source slots; compare canonical bytes",
+  "spec_template_sha256": "ac1b7afaf10e248d944a0d441ffa9abe30d72ed134860b93a7ec69aae09a07fd",
+  "startup_configuration_checked_in_production": true,
+  "status": "PROPOSAL_ONLY",
+  "stop_policy_consumers_migrated": true,
+  "supported_configuration": "Pinned W5 v2; mutations require remaining consumer migration",
+  "supported_run_sha256": "48aab0c783f27717ae44be9753e064a08cb8c33bf0c175c5bcb302348868b7ab",
+  "supported_settings_sha256": "099148986068e3d2a01761036f78e4d76d3c366402bfe3ff1e95f5ce327c12c4",
+  "transport_and_controller_timing_migrated": true,
+  "transport_and_worker_timing_migrated": true,
+  "whole_run_config_mutations_supported": false,
+  "worker_client_timing_migrated": true,
+  "worker_export_config_binding_migrated": true
+}

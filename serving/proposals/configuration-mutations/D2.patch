@@ -1,0 +1,54 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -31,8 +31,6 @@
+ http_integration = _adjacent("spry_http_serving_integration", "serving_integration.py")
+ mtp_contract = _adjacent("spry_mtp_contract", "mtp_contract.py")
+ transport = _adjacent("spry_physical_root_transport", "benchmark_host_transport.py")
+-SUPPORTED_RUN_SHA256 = '48aab0c783f27717ae44be9753e064a08cb8c33bf0c175c5bcb302348868b7ab'
+-SUPPORTED_SETTINGS_SHA256 = '099148986068e3d2a01761036f78e4d76d3c366402bfe3ff1e95f5ce327c12c4'
+ SPEC_TEMPLATE_SHA256 = 'ac1b7afaf10e248d944a0d441ffa9abe30d72ed134860b93a7ec69aae09a07fd'
+ MODEL_INVENTORY_SHA256 = "892e95cdabf87bbf96298e258e5889e2572acf21659121d811ca9a09eac09986"
+ CONFIG_SHA256 = "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+@@ -877,7 +875,7 @@
+     The pinned run is a temporary compatibility boundary until all consumers
+     support configuration changes; owner ceilings remain separate literals.
+     """
+-    need(mapping_sha256(run) == SUPPORTED_RUN_SHA256, 'unsupported run configuration')
++    mtp_contract.validate_profile(run['profile'])
+     need(mapping_sha256(host) == run['host']['sha256'], 'configured host identity differs')
+     expected = json.loads(json.dumps(template, allow_nan=False))
+     expected['http_serving'].pop('artifact_limits', None)
+@@ -932,9 +930,21 @@
+          'explicit per-row stop policy required')
+     files = manifest['package_files']
+     settings_pin = files.get('review/FINAL-SETTINGS.json')
+-    need(settings_pin == SUPPORTED_SETTINGS_SHA256, 'supported W5 settings required')
+-    _configuration_file(root / 'review/FINAL-SETTINGS.json', settings_pin, 256 << 10,
++    need(_digest(settings_pin), 'configured settings identity required')
++    settings = _configuration_file(root / 'review/FINAL-SETTINGS.json', settings_pin, 256 << 10,
+         deadline=deadline, clock=clock, stamps=stamps)
++    inventory=mtp_contract.logical_package_inventory()
++    original=mtp_contract.logical_asset('FINAL-REQUESTS.zlib',mtp_contract.REQUEST_INHERITED['sha256'],2<<20)
++    original_assets=mtp_contract._decoded_assets(original)
++    resolved_rows,client_rows=mtp_contract.resolve_configured_requests(original_assets,run,menu)
++    expected_settings=mtp_contract.project_settings(settings,run,host,menu,resolved_rows,inventory)
++    need(mapping_sha256(expected_settings)==settings_pin,'configuration-generated settings differ')
++    client_pin=inventory['request_container']['members']['CLIENT-BINDING.zlib']['sha256']
++    client_raw=mtp_contract._asset_inflate(mtp_contract.logical_asset('CLIENT-BINDING.zlib',client_pin,2<<20),16<<20)
++    client_value=mtp_contract.strict_json(client_raw)
++    need(client_value['rows']==client_rows and set(client_value)=={'schema','mode','rows'}
++         and type(client_value['schema']) is int and client_value['schema']==2
++         and client_value['mode']=='normal-stop-fp8-mxfp4-workload-v1','configuration-generated client assets differ')
+     for name in ('HTTP-BINDING-control.json', 'HTTP-BINDING-mtp.json', 'context_tokenizer.py',
+                  'graph_integration.py', 'graph_outer.py', 'graph_screen.py'):
+         _configuration_file(root / 'review' / name, files.get('review/' + name),
+@@ -964,7 +974,8 @@
+     verify_unchanged({'stamps': stamps})
+     need(clock() < deadline, 'configured spec verification deadline')
+     return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing,
+-            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits), 'menu': menu, 'host': host}
++            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits),
++            'menu': dict(menu,rows=resolved_rows), 'host': host}
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,

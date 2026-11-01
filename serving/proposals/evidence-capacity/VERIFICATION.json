@@ -1,0 +1,29 @@
+{
+  "all_cap_and_doubled_pipeline_verified": false,
+  "canonical_protected_builder_unchanged": true,
+  "gpu_execution_performed": false,
+  "launch_authorized": false,
+  "minimum_expected_margin": 2.226,
+  "minimum_retained_envelope_margin": 2.226,
+  "native_cpu_selected_packet_checks": 4,
+  "native_runtime_tested": false,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "proposal_sha256": "15e8b6c159498b9227a887bff2932ccdb046515e3168bf2817649ebcb490f796",
+  "protected_set_sha256": "6da65f49338a304885cdb5c20b3f032dbb4afcf9df1716e13fe8dab929e56d37",
+  "report": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/capacity-full-report-1.json",
+    "sha256": "ce65c44cea268307e24765066c174114bea4f276e54d514e639981216a2671bd"
+  },
+  "required_margin": 2.0,
+  "schema": 1,
+  "source_copies_bytes": 15287040,
+  "source_copy_margin": 2.1949593904379134,
+  "source_tests": 14,
+  "source_upload_codec": "gzip; independently bounded 16MiB expanded tar",
+  "status": "CPU_VERIFIED_W5_PROPOSAL_ONLY",
+  "tests": 37,
+  "whole_run_config_mutations_supported": false
+}

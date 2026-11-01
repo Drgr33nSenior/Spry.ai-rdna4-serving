@@ -1,0 +1,334 @@
+--- a/review/benchmark_artifacts.py
++++ b/review/benchmark_artifacts.py
+@@ -4,6 +4,7 @@
+ separate from numerical acceptance. The receiver cannot authorize a workload.
+ """
+ import base64
++from dataclasses import asdict, dataclass
+ import hashlib
+ import json
+ import os
+@@ -107,12 +108,76 @@
+ assert ASYNC_PREFILL_MAX_SESSION_DURABLE_BYTES < 512 << 20
+ 
+ 
+-def member_limits(binding):
++@dataclass(frozen=True)
++class HTTPArtifactLimits:
++    """Configured HTTP partitions under the retained protected ceilings."""
++    result_json_bytes: int = 8 << 20
++    client_bundle_bytes: int = 33 << 20
++    native_bundle_bytes: int = 6 << 20
++    http_stream_bytes: int = 64 << 20
++    client_tree_bytes: int = 24 << 20
++    native_tree_bytes: int = 4 << 20
++    arm_metadata_bytes: int = 1 << 20
++    source_copies_bytes: int = 32 << 20
++    observer_copies_bytes: int = (20 << 20) + (512 << 10)
++    outer_stdio_bytes: int = 16 << 20
++    summary_closeout_bytes: int = 16 << 20
++    small_metadata_bytes: int = 4 << 20
++    session_bytes: int = 512 << 20
++    http_member_read_bytes: int = 8 << 20
++    client_tree_files: int = 512
++    native_tree_files: int = 256
++
++    def __post_init__(self):
++        ceilings = {name: field.default for name, field in self.__dataclass_fields__.items()}
++        need(all(type(value) is int and 0 < value <= ceilings[name]
++                 for name, value in asdict(self).items()), 'HTTP artifact ceiling or type differs')
++        need(self.http_session_max_bytes < self.session_bytes,
++             'HTTP durable partitions exceed configured session ceiling')
++        need(self.encoded_bytes <= self.http_stream_bytes and self.encoded_bytes <= 63 << 20,
++             'HTTP encoded partitions exceed stream/bundle ceiling')
++
++    @classmethod
++    def from_limits(cls, values):
++        need(type(values) is dict and set(cls.__dataclass_fields__) <= set(values)
++             and not {'http_payload_bytes', 'http_session_max_bytes'} & set(values),
++             'primary HTTP artifact limits required')
++        return cls(**{name: values[name] for name in cls.__dataclass_fields__})
++
++    @property
++    def members(self):
++        return dict(zip(HTTP_MEMBER_LIMITS, (self.result_json_bytes,
++            self.client_bundle_bytes, self.native_bundle_bytes), strict=True))
++
++    @property
++    def encoded_bytes(self):
++        return len(PREFIX) + sum(4 * ((n + 2) // 3) for n in self.members.values()) + 8193
++
++    @property
++    def http_session_max_bytes(self):
++        return (2 * (2 * self.http_stream_bytes + sum(self.members.values()) +
++                    self.client_tree_bytes + self.native_tree_bytes + self.arm_metadata_bytes)
++                + self.source_copies_bytes + self.observer_copies_bytes + self.outer_stdio_bytes
++                + self.summary_closeout_bytes + self.small_metadata_bytes)
++
++
++def _http_limits(binding, limits):
++    need(limits is None or (binding.get('experiment_mode') == HTTP_MODE
++         and type(limits) is HTTPArtifactLimits), 'HTTP artifact plan required')
++    if limits is not None:
++        # Revalidate even a frozen instance: object.__setattr__ must not turn
++        # a corrupted plan into permission to increase an owner ceiling.
++        limits.__post_init__()
++    return HTTPArtifactLimits() if limits is None else limits
++
++
++def member_limits(binding, *, limits=None):
++    policy = _http_limits(binding, limits)
+     mode = binding.get('experiment_mode')
+     if mode == INDEPENDENT_MODE:
+         return dict(INDEPENDENT_MEMBER_LIMITS)
+     if mode == HTTP_MODE:
+-        return dict(HTTP_MEMBER_LIMITS)
++        return policy.members
+     if mode == "native-model-context-retrieval-32k-v1":
+         return dict(MEMBER_LIMITS, **NATIVE_CACHE_MEMBER_LIMITS, **{
+             "rank-0-graph-potential.json": 256 << 10, "rank-1-graph-potential.json": 256 << 10})
+@@ -135,11 +200,12 @@
+     return limits
+ 
+ 
+-def stream_limit(mode):
++def stream_limit(mode, *, limits=None):
++    policy = _http_limits({'experiment_mode': mode}, limits)
+     if mode == INDEPENDENT_MODE:
+         return 8 << 20
+     if mode == HTTP_MODE:
+-        return HTTP_STREAM_LIMIT
++        return policy.http_stream_bytes
+     if mode == "native-model-context-retrieval-32k-v1":
+         return STREAM_LIMIT
+     need(mode in ('model-benchmark-v1', 'v4-repeatability-control-v1', CAPTURE_MODE,
+@@ -149,17 +215,18 @@
+             86 if mode in (CAPTURE_MODE, NATIVE_CAPTURE_MODE) else 80) << 20
+ 
+ 
+-def bundle_limit(binding):
++def bundle_limit(binding, *, limits=None):
++    policy = _http_limits(binding, limits)
+     if binding.get('experiment_mode') == HTTP_MODE:
+-        return 63 << 20
++        return 63 << 20 if limits is None else policy.encoded_bytes
+     if binding.get('experiment_mode') in (DECODE_LAYER_CAPTURE_MODE, PREFILL_ROW_AUDIT_MODE,
+                                           ASYNC_PREFILL_MODE):
+         return (72 if binding.get('experiment_mode') == ASYNC_PREFILL_MODE else 61) << 20
+     return (46 if binding.get('experiment_mode') in (CAPTURE_MODE, NATIVE_CAPTURE_MODE) else 40) << 20
+ 
+ 
+-def encoded_limit(binding):
+-    return len(PREFIX) + sum(4 * ((n + 2) // 3) for n in member_limits(binding).values()) + 8193
++def encoded_limit(binding, *, limits=None):
++    return len(PREFIX) + sum(4 * ((n + 2) // 3) for n in member_limits(binding, limits=limits).values()) + 8193
+ 
+ 
+ def need(value, message):
+@@ -310,7 +377,7 @@
+                 base64=base64.b64encode(raw).decode('ascii'))
+ 
+ 
+-def _http_tree(path, maximum, files=128):
++def _http_tree(path, maximum, files=128, member_bytes=8 << 20):
+     result, total = {}, 0
+     if not path.exists():
+         return result
+@@ -324,7 +391,7 @@
+             need(all(part not in ('', '.', '..') for part in name.split('/')), 'HTTP relative member')
+             directory = _directory(entry.parent)
+             try:
+-                raw = _read_member(directory, entry.name, min(maximum, 8 << 20))
++                raw = _read_member(directory, entry.name, min(maximum, member_bytes))
+             finally:
+                 os.close(directory)
+             need(raw is not None, 'HTTP member vanished')
+@@ -334,13 +401,16 @@
+     return result
+ 
+ 
+-def pack_http_artifacts(output, binding):
++def pack_http_artifacts(output, binding, *, limits=None):
+     """Pack owned raw trees after native cleanup; missing evidence stays missing."""
+     _binding(binding)
+     need(binding.get('experiment_mode') == HTTP_MODE, 'explicit HTTP export mode')
++    policy = _http_limits(binding, limits)
+     output = Path(output)
+-    client = dict(schema=1, mode=HTTP_MODE, files=_http_tree(output/'client', 24 << 20, files=512))
+-    native = _http_tree(output/'native', 4 << 20, files=256)
++    client = dict(schema=1, mode=HTTP_MODE, files=_http_tree(output/'client', policy.client_tree_bytes,
++        files=policy.client_tree_files, member_bytes=policy.http_member_read_bytes))
++    native = _http_tree(output/'native', policy.native_tree_bytes, files=policy.native_tree_files,
++                        member_bytes=policy.http_member_read_bytes)
+     gate = native.pop('NATIVE-READINESS.json', None)
+     workers = []
+     for rank in (0, 1):
+@@ -350,12 +420,12 @@
+     value = dict(schema=1, mode=HTTP_MODE, gate=gate, workers=workers, observations=native)
+     for name, body in (('http-client-bundle.json', client), ('native-http-bundle.json', value)):
+         raw = _canonical(body)+b'\n'
+-        need(len(raw) <= HTTP_MEMBER_LIMITS[name], 'HTTP encoded aggregate bound')
++        need(len(raw) <= policy.members[name], 'HTTP encoded aggregate bound')
+         with (output/name).open('xb') as stream:
+             stream.write(raw)
+ 
+ 
+-def stage_artifacts(output, binding):
++def stage_artifacts(output, binding, *, limits=None):
+     """Stage bounded raw evidence after worker reaping; never parse partial results.
+ 
+     Full rank logs are streamed for their hashes, then only their bounded binary
+@@ -363,6 +433,7 @@
+     changed, and an existing export directory is never reused.
+     """
+     _binding(binding)
++    selected = member_limits(binding, limits=limits)
+     output = Path(output)
+     source = _directory(output)
+     destination = None
+@@ -370,7 +441,7 @@
+         os.mkdir("export", mode=0o700, dir_fd=source)
+         destination = os.open("export", os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=source)
+         before, names = os.fstat(source), set(os.listdir(source))
+-        for name, limit in member_limits(binding).items():
++        for name, limit in selected.items():
+             if name == "diagnostics.json" or name.endswith(".log.tail"):
+                 continue
+             raw = _read_member(source, name, limit)
+@@ -395,20 +466,20 @@
+         os.close(source)
+ 
+ 
+-def export_bundle(output, binding, sink):
++def export_bundle(output, binding, sink, *, limits=None):
+     """Export the exact mode-bound V2 members; missing files remain explicit."""
+     _binding(binding)
+     directory = _directory(output)
+     try:
+         before = os.fstat(directory)
+         names = set(os.listdir(directory))
+-        need(names <= set(member_limits(binding)), "extra export member or directory")
+-        members = {name: _member(directory, name, limit) for name, limit in member_limits(binding).items()}
++        need(names <= set(member_limits(binding, limits=limits)), "extra export member or directory")
++        members = {name: _member(directory, name, limit) for name, limit in member_limits(binding, limits=limits).items()}
+         need(set(os.listdir(directory)) == names and _stamp(before) == _stamp(os.fstat(directory)),
+              "export directory changed")
+         value = {"schema": 2, "binding": dict(binding), "members": members}
+         line = PREFIX + _canonical(value) + b"\n"
+-        need(len(line) <= encoded_limit(binding) <= bundle_limit(binding), "encoded bundle overflow")
++        need(len(line) <= encoded_limit(binding, limits=limits) <= bundle_limit(binding, limits=limits), "encoded bundle overflow")
+         sink.write(line)
+         sink.flush()
+         return value
+@@ -416,15 +487,15 @@
+         os.close(directory)
+ 
+ 
+-def receive_bundle(stdout, stderr, destination, binding):
++def receive_bundle(stdout, stderr, destination, binding, *, limits=None):
+     """Validate one raw transport record, then exclusively retain original bytes."""
+     _binding(binding)
+     need(type(stdout) is bytes and type(stderr) is bytes and
+-         len(stdout) <= stream_limit(binding.get('experiment_mode', 'model-benchmark-v1'))
+-         and len(stderr) <= stream_limit(binding.get('experiment_mode', 'model-benchmark-v1')), "stdio capture overflow")
++         len(stdout) <= stream_limit(binding.get('experiment_mode', 'model-benchmark-v1'), limits=limits)
++         and len(stderr) <= stream_limit(binding.get('experiment_mode', 'model-benchmark-v1'), limits=limits), "stdio capture overflow")
+     split = stdout.splitlines(keepends=True)
+     lines = [line for line in split if line.startswith(b"SPRY_BENCHMARK_BUNDLE_")]
+-    need(len(lines) == 1 and lines[0].startswith(PREFIX) and len(lines[0]) <= bundle_limit(binding),
++    need(len(lines) == 1 and lines[0].startswith(PREFIX) and len(lines[0]) <= bundle_limit(binding, limits=limits),
+          "exactly one bounded V2 artifact bundle")
+     need(lines[0].endswith(b"\n"), "incomplete artifact record line")
+     value = _json(lines[0][len(PREFIX):-1])
+@@ -432,10 +503,10 @@
+          type(value["schema"]) is int and value["schema"] == 2 and value["binding"] == binding,
+          "artifact schema/binding mismatch")
+     _binding(value["binding"])
+-    need(type(value["members"]) is dict and set(value["members"]) == set(member_limits(binding)),
++    need(type(value["members"]) is dict and set(value["members"]) == set(member_limits(binding, limits=limits)),
+          "exact artifact members required")
+     decoded = {}
+-    for name, limit in member_limits(binding).items():
++    for name, limit in member_limits(binding, limits=limits).items():
+         member = value["members"][name]
+         need(type(member) is dict and type(member.get("exists")) is bool, "artifact presence type")
+         if not member["exists"]:
+@@ -468,7 +539,7 @@
+             finally:
+                 os.close(fd)
+         return {"schema": 2, "binding": dict(binding), "transport_valid": True,
+-                "all_members_present": len(decoded) == len(member_limits(binding)),
++                "all_members_present": len(decoded) == len(member_limits(binding, limits=limits)),
+                 "qualification": False, "members": {name: {key: item for key, item in record.items()
+                 if key != "base64"} for name, record in value["members"].items()},
+                 "stdout_sha256": hashlib.sha256(stdout).hexdigest(),
+@@ -489,9 +560,9 @@
+     This class does not signal, own or attest release of any process.
+     """
+     def __init__(self, output_dir, *, stream_limit=None, mode='model-benchmark-v1',
+-                 raw_binding=None, raw_destination=None):
+-        self.stream_limit = STREAM_LIMIT if stream_limit is None else stream_limit
+-        ceiling = globals()['stream_limit'](mode)
++                 raw_binding=None, raw_destination=None, limits=None):
++        ceiling = globals()['stream_limit'](mode, limits=limits)
++        self.stream_limit = ceiling if stream_limit is None else stream_limit
+         need(type(self.stream_limit) is int and 0 < self.stream_limit <= ceiling,
+              "bounded capture stream limit")
+         self.output_dir = Path(output_dir)
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -933,6 +933,8 @@
+     # checks all bytes, so bool/int aliases, field omissions and extra fields fail.
+     need(mapping_sha256(expected) == pin, 'configuration-generated spec differs')
+     session_timing = transport.SessionTiming.from_limits(run['limits'])
++    artifact_module = _adjacent('spry_configured_artifact_limits', 'benchmark_artifacts.py')
++    artifact_limits = artifact_module.HTTPArtifactLimits.from_limits(run['limits'])
+     need(type(manifest.get('proposed_complete_seconds')) is int
+          and manifest['proposed_complete_seconds'] == session_timing.total_seconds,
+          'manifest/session timing differs')
+@@ -946,7 +948,7 @@
+     verify_unchanged({'stamps': stamps})
+     need(clock() < deadline, 'configured spec verification deadline')
+     return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing,
+-            'session_timing': session_timing}
++            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits)}
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,
+@@ -1456,6 +1458,7 @@
+         deadline=grant['received_monotonic'] + transport.SOURCE_PREPARATION_SECONDS)
+     spec_sha256 = configured['spec_sha256']
+     artifacts = _adjacent("spry_physical_artifacts", "benchmark_artifacts.py")
++    artifact_limits = artifacts.HTTPArtifactLimits.from_limits(configured['artifact_limits'])
+     raw_transport = (manifest['experiment_mode'] == artifacts.HTTP_MODE and
+                      http_integration._mtp_contract().raw_attention_capture_enabled())
+     output = root / "results"
+@@ -1479,7 +1482,8 @@
+                         artifact_transport=artifacts.RAW_TRANSPORT),
+                         raw_destination=output / (arm + "-artifacts"))
+                 cap = artifacts.CapturePipes(output / (arm + "-capture"),
+-                    stream_limit=artifacts.stream_limit(manifest['experiment_mode']), mode=manifest['experiment_mode'],
++                    stream_limit=artifacts.stream_limit(manifest['experiment_mode'], limits=artifact_limits),
++                    mode=manifest['experiment_mode'], limits=artifact_limits,
+                     **raw_options)
+                 caps[arm] = cap
+                 cleanup.callback(lambda cap=cap: cap.finish() if not cap.finished else None)
+@@ -1526,7 +1530,7 @@
+             if arm in parsed:
+                 return parsed[arm]
+             need(captured[arm].get("capture_complete") is True, "bounded stream capture incomplete")
+-            limit = artifacts.stream_limit(manifest['experiment_mode'])
++            limit = artifacts.stream_limit(manifest['experiment_mode'], limits=artifact_limits)
+             stdout = adapter.readout.bench.read_bounded_file(output / (arm + "-capture/stdout.raw"), limit)
+             stderr = adapter.readout.bench.read_bounded_file(output / (arm + "-capture/stderr.raw"), limit)
+             binding = {"session_sha256": manifest["session_sha256"], "arm": arm, "spec_sha256": spec_sha256}
+@@ -1541,7 +1545,8 @@
+                 need(type(bundle) is dict and bundle.get('binding') == binding and
+                      bundle.get('transport_valid') is True, 'raw frame transport incomplete')
+             else:
+-                bundle = artifacts.receive_bundle(stdout, stderr, output / (arm + "-artifacts"), binding)
++                bundle = artifacts.receive_bundle(stdout, stderr, output / (arm + "-artifacts"), binding,
++                                                  limits=artifact_limits)
+             artifact_receipts[arm] = bundle
+             destination = output / (arm + "-artifacts")
+             http_mode = manifest['experiment_mode'] == 'native-http-fp8-sprint01-v1'

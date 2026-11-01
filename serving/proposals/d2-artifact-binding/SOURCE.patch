@@ -1,0 +1,295 @@
+--- a/legacy/review/model_benchmark.py
++++ b/legacy/review/model_benchmark.py
+@@ -378,6 +378,12 @@
+     if type(spec) is dict and spec.get('experiment_mode') == 'native-http-fp8-sprint01-v1':
+         http = spec.get('http_serving')
+         fields = {'schema', 'mode', 'bindings', 'client_seconds', 'expected_devices'}
++        if type(http) is dict and 'artifact_limits' in http:
++            primary_limits = http['artifact_limits']
++            if not (type(primary_limits) is dict and len(primary_limits) == 16
++                    and all(type(value) is int and 0 < value < 2**63 for value in primary_limits.values())):
++                raise ValueError('bounded HTTP artifact primaries required')
++            fields.add('artifact_limits')
+         worker = spec.get('worker_seconds')
+         client = http.get('client_seconds') if type(http) is dict else None
+         if not (type(worker) is int and type(client) is int
+@@ -495,11 +501,22 @@
+     spec = json.loads(checked_file(args.spec, args.spec_sha256))
+     validate_spec(spec)
+     worker_seconds = spec['worker_seconds']
++    artifact_values = spec['http_serving'].get('artifact_limits')
++    artifact_values = None if artifact_values is None else dict(artifact_values)
+     if args.execute_serving_screen:
+         raise ValueError('HTTP screen uses the canonical reviewed-benchmark entry flag')
+     if not args.physical_artifacts:
+         raise ValueError('native HTTP screen requires physical artifact identity')
+     artifacts = authenticated_adjacent('benchmark_artifacts.py', args.artifacts_sha256)
++    artifact_options = {}
++    if artifact_values is not None:
++        factory = getattr(artifacts, 'HTTPArtifactLimits', None)
++        if factory is None:
++            raise ValueError('configured artifact helper required')
++        plan = factory.from_limits(artifact_values)
++        if set(artifact_values) != set(plan.__dataclass_fields__):
++            raise ValueError('exact HTTP artifact primaries required')
++        artifact_options['limits'] = plan
+     prepare_serving_scratch_directories()
+     output = Path(args.output)
+     if not output.is_absolute() or not output.parent.is_dir() or output.parent.is_symlink():
+@@ -508,6 +525,8 @@
+     serving_runtime = http_runtime_module(spec, args.arm)
+     binding = {'session_sha256': args.session_sha256, 'arm': args.arm, 'spec_sha256': args.spec_sha256, 'experiment_mode': 'native-http-fp8-sprint01-v1'}
+     raw_transport = serving_runtime.mtp_contract.raw_attention_capture_enabled()
++    if raw_transport and artifact_options:
++        raise ValueError('configured artifact limits do not support raw-frame transport')
+     if raw_transport:
+         binding['artifact_transport'] = artifacts.RAW_TRANSPORT
+     result = None
+@@ -516,13 +535,13 @@
+             deadline=time.monotonic() + worker_seconds, artifacts=artifacts)
+     finally:
+         if (output / 'result.json').is_file():
+-            artifacts.pack_http_artifacts(output, binding)
++            artifacts.pack_http_artifacts(output, binding, **artifact_options)
+             if raw_transport:
+                 sys.stdout.flush()
+                 artifacts.export_raw_frames(output, binding=binding, sink=sys.stdout.buffer)
+             else:
+-                staged = artifacts.stage_artifacts(output, binding)
+-                artifacts.export_bundle(staged, binding=binding, sink=sys.stdout.buffer)
++                staged = artifacts.stage_artifacts(output, binding, **artifact_options)
++                artifacts.export_bundle(staged, binding=binding, sink=sys.stdout.buffer, **artifact_options)
+     raise SystemExit(0 if type(result) is dict and result.get('status') == 'HTTP_ARM_COMPLETE' else 1)
+ 
+ _GRAPH = _LazyAdjacent('graph_integration.py', '3a22c68b19e34cab7f815f841a8c0b8702af129f3e1646b002c0b491d82aee48')
+--- a/legacy/review/serving_runtime.py
++++ b/legacy/review/serving_runtime.py
+@@ -469,6 +469,12 @@
+ 
+ def validate_http_specification(http):
+     fields = {"schema", "mode", "bindings", "client_seconds", "expected_devices"}
++    if type(http) is dict and 'artifact_limits' in http:
++        values = http['artifact_limits']
++        _require(type(values) is dict and len(values) == 16
++                 and all(type(value) is int and 0 < value < 2**63 for value in values.values()),
++                 'bounded HTTP artifact primaries required')
++        fields.add('artifact_limits')
+     if mtp_contract.settings()['phase'] in mtp_contract.FAIL_FAST_PHASES or mtp_contract.precision_reference_enabled():
+         fields.add('diagnostic_environment')
+         _require(type(http) is dict and http.get('diagnostic_environment') == {
+--- a/legacy/review/serving_integration.py
++++ b/legacy/review/serving_integration.py
+@@ -66,8 +66,9 @@
+     _need(not path.is_absolute() and str(path) == name and all((part not in ('', '.', '..', '.idea', 'keeper-env') for part in path.parts)), 'unsafe client member name')
+     return path
+ 
+-def _decode_member(row):
+-    _need(type(row) is dict and set(row) == _MEMBER_FIELDS and (type(row['bytes']) is int) and (0 <= row['bytes'] <= MAX_MEMBER_BYTES) and _digest(row['sha256']) and (type(row['base64']) is str), 'client member schema')
++def _decode_member(row, maximum=MAX_MEMBER_BYTES):
++    _need(type(row) is dict and set(row) == _MEMBER_FIELDS and (type(row['bytes']) is int) and (0 <= row['bytes'] <= min(MAX_MEMBER_BYTES, maximum)) and _digest(row['sha256']) and (type(row['base64']) is str)
++          and len(row['base64']) <= 4 * ((min(MAX_MEMBER_BYTES, maximum) + 2) // 3), 'client member schema')
+     try:
+         raw = base64.b64decode(row['base64'], validate=True)
+     except (ValueError, TypeError) as error:
+@@ -123,24 +124,35 @@
+     spec.loader.exec_module(module)
+     return module
+ 
+-def _unpack_client(raw, destination):
++def _unpack_client(raw, destination, *, limits=None):
+     value = _json(raw)
+     _need(type(value) is dict and set(value) == {'schema', 'mode', 'files'} and (value['schema'] == 1) and (value['mode'] == MODE) and (type(value['files']) is dict) and (1 <= len(value['files']) <= MAX_MEMBERS), 'HTTP client bundle schema')
+     destination = Path(destination)
+     _need(destination.is_absolute() and (not destination.exists()), 'fresh client extraction root required')
++    decoded = None
++    if limits is not None:
++        _need(len(value['files']) <= limits['client_tree_files'], 'configured client file count')
++        decoded = {name: _decode_member(row, limits['http_member_read_bytes']) for name, row in value['files'].items()}
++        _need(sum(map(len, decoded.values())) <= limits['client_tree_bytes'], 'configured client tree bytes')
++        for name in decoded:
++            _relative(name)
+     destination.mkdir(mode=448)
+     names = set()
+     for name, row in sorted(value['files'].items()):
+         path = _relative(name)
+         _need(name not in names, 'duplicate client member')
+         names.add(name)
+-        _write_exclusive(destination / path, _decode_member(row))
++        _write_exclusive(destination / path, _decode_member(row) if decoded is None else decoded[name])
+     return (destination, hashlib.sha256(raw).hexdigest())
+ 
+-def _native(raw, expected):
++def _native(raw, expected, *, limits=None):
+     value = _json(raw)
+     _need(type(value) is dict and set(value) == {'schema', 'mode', 'gate', 'workers', 'observations'} and (value['schema'] == 1) and (value['mode'] == MODE) and (type(value['workers']) is list) and (len(value['workers']) == 2) and (type(value['observations']) is dict) and (1 <= len(value['observations']) <= MAX_MEMBERS), 'native HTTP bundle schema')
+-    gate_raw = _decode_member(value['gate'])
++    maximum = MAX_MEMBER_BYTES if limits is None else min(MAX_MEMBER_BYTES, limits['http_member_read_bytes'])
++    if limits is not None:
++        _need(len(value['observations']) + len(value['workers']) + 1 <= limits['native_tree_files'],
++              'configured native file count')
++    gate_raw = _decode_member(value['gate'], maximum)
+     contract, reader = _private_reader()
+     gate = _json(gate_raw)
+     workers = reader.serving_client.validate_gate(gate, expected)
+@@ -150,7 +162,13 @@
+     observations = {}
+     for name, row in sorted(value['observations'].items()):
+         _relative(name)
+-        observations[name] = _decode_member(row)
++        observations[name] = _decode_member(row, maximum)
++    if limits is not None:
++        worker_bytes = [(json.dumps(row, sort_keys=True, separators=(',', ':'), allow_nan=False) + '\n').encode()
++                        for row in value['workers']]
++        _need(all(len(raw) <= maximum for raw in worker_bytes)
++              and len(gate_raw) + sum(map(len, worker_bytes)) + sum(map(len, observations.values())) <= limits['native_tree_bytes'],
++              'configured native tree bytes')
+     return (gate_raw, workers, value['workers'], observations, hashlib.sha256(raw).hexdigest(), reader)
+ 
+ def _observation_json(observations, name):
+@@ -656,7 +674,14 @@
+ PRODUCTION_OBSERVATIONS = frozenset({'NATIVE-READINESS-CALLBACK.json', 'SERVING-BINDING.json', 'WORKER-MANIFEST.json'})
+ 
+ 
+-def _production_readback(directory, *, extraction_root, expected, owner_arm, joins, supervision):
++def _artifact_payloads(directory, limits):
++    pairs = (('http-client-bundle.json', 'client_bundle_bytes'),
++             ('native-http-bundle.json', 'native_bundle_bytes'), ('result.json', 'result_json_bytes'))
++    return tuple(_read(directory / name, MAX_BUNDLE_BYTES if limits is None
++        else min(MAX_BUNDLE_BYTES, limits[key])) for name, key in pairs)
++
++
++def _production_readback(directory, *, extraction_root, expected, owner_arm, joins, supervision, limits=None):
+     """Production mode: no probe, observer or parity file exists. Every byte read, the readiness gate, both worker
+     identities, the live-worker joins, the binding/manifest identity, the complete client wire and the exact request-body
+     join are checked as in instrumented mode; the return shape is unchanged."""
+@@ -664,11 +689,9 @@
+     logical = _mtp_contract().owner_arm_map()[owner_arm]
+     _need(expected['arm'] == logical, 'owner/logical arm binding')
+     directory = Path(directory)
+-    client_raw = _read(directory / 'http-client-bundle.json')
+-    native_raw = _read(directory / 'native-http-bundle.json')
+-    result_raw = _read(directory / 'result.json')
+-    client_root, client_sha = _unpack_client(client_raw, extraction_root)
+-    gate_raw, workers, full_workers, observations, native_sha, reader = _native(native_raw, expected)
++    client_raw, native_raw, result_raw = _artifact_payloads(directory, limits)
++    client_root, client_sha = _unpack_client(client_raw, extraction_root, limits=limits)
++    gate_raw, workers, full_workers, observations, native_sha, reader = _native(native_raw, expected, limits=limits)
+     _joined(workers, joins, supervision)
+     _need(set(observations) == PRODUCTION_OBSERVATIONS, 'production native observations are the readiness callback and startup bindings only')
+     _need(_observation_json(observations, 'NATIVE-READINESS-CALLBACK.json') == _json(gate_raw), 'production readiness callback/gate')
+@@ -698,19 +721,24 @@
+         _need(result['status'] == 'HTTP_ARM_FAILED', 'HTTP incomplete result status')
+     return dict(schema=1, mode=MODE, owner_arm=owner_arm, logical_arm=logical, binding=dict(expected), wire=wire, status='HTTP_ARM_COMPLETE' if complete else 'HTTP_ARM_FAILED', qualification=False, client_bundle_sha256=client_sha, native_bundle_sha256=native_sha, full_workers=full_workers, native_observation_storage=None, native_observations={name: hashlib.sha256(raw).hexdigest() for name, raw in observations.items()}, result_sha256=hashlib.sha256(result_raw).hexdigest(), instrumentation='production')
+ 
+-def read_http_artifacts(directory, *, extraction_root, expected, owner_arm, joins, supervision):
++def read_http_artifacts(directory, *, extraction_root, expected, owner_arm, joins, supervision, limits=None):
+     """Recompute one complete HTTP arm from exactly three exported raw members."""
++    if limits is not None:
++        fields = {'client_bundle_bytes','native_bundle_bytes','result_json_bytes','client_tree_files',
++                  'client_tree_bytes','native_tree_files','native_tree_bytes','http_member_read_bytes'}
++        _need(type(limits) is dict and len(limits) == 16 and fields <= set(limits)
++              and all(type(value) is int and 0 < value < 2**63 for value in limits.values()),
++              'configured artifact readout primaries required')
++        limits = dict(limits)
+     if not _mtp_contract().instrumentation_enabled():
+-        return _production_readback(directory, extraction_root=extraction_root, expected=expected, owner_arm=owner_arm, joins=joins, supervision=supervision)
++        return _production_readback(directory, extraction_root=extraction_root, expected=expected, owner_arm=owner_arm, joins=joins, supervision=supervision, limits=limits)
+     _need(owner_arm in ('bf16', 'kv4') and type(expected) is dict and (set(expected) == {'arm', 'source_manifest_sha256', 'session_sha256', 'spec_sha256'}), 'HTTP expected binding')
+     logical = _mtp_contract().owner_arm_map()[owner_arm]
+     _need(expected['arm'] == logical, 'owner/logical arm binding')
+     directory = Path(directory)
+-    client_raw = _read(directory / 'http-client-bundle.json')
+-    native_raw = _read(directory / 'native-http-bundle.json')
+-    result_raw = _read(directory / 'result.json')
+-    client_root, client_sha = _unpack_client(client_raw, extraction_root)
+-    gate_raw, workers, full_workers, observations, native_sha, reader = _native(native_raw, expected)
++    client_raw, native_raw, result_raw = _artifact_payloads(directory, limits)
++    client_root, client_sha = _unpack_client(client_raw, extraction_root, limits=limits)
++    gate_raw, workers, full_workers, observations, native_sha, reader = _native(native_raw, expected, limits=limits)
+     _joined(workers, joins, supervision)
+     observation_storage = None
+     if _mtp_contract().kv_composition_enabled():
+--- a/run_config.py
++++ b/run_config.py
+@@ -5,7 +5,7 @@
+ from pathlib import Path
+ 
+ from spry_common.canon import canonical_line, digest, need, parse_json
+-from spry_common.limits import derive
++from spry_common.limits import derive, HTTP_ARTIFACT_KEYS
+ 
+ HERE = Path(__file__).resolve().parent
+ 
+@@ -62,7 +62,7 @@
+     return literal(nodes[0])
+ 
+ 
+-def load(run_dir, source_root, metadata, files, read):
++def load(run_dir, source_root, metadata, files, read, *, configured_artifacts=False):
+     run_dir = Path(run_dir)
+     need(run_dir.is_absolute() and run_dir.resolve(strict=True) == run_dir, 'canonical run directory required')
+     run = parse_json(read(run_dir / 'run.json', 256 << 10))
+@@ -135,6 +135,8 @@
+     spec['worker_seconds'] = limits['worker_seconds']
+     spec['http_serving']['client_seconds'] = run['limits']['client_seconds']
+     spec['http_serving']['expected_devices'] = copy.deepcopy(host['devices'])
++    if configured_artifacts:
++        spec['http_serving']['artifact_limits'] = {key: run['limits'][key] for key in HTTP_ARTIFACT_KEYS}
+     spec['server_args'].update(profile)
+     files['BENCHMARK-SPEC2.json'] = canonical_line(spec)
+     return dict(run=run, host=host, menu=menu, pins=pins, derived_limits=limits,
+--- a/spry_common/limits.py
++++ b/spry_common/limits.py
+@@ -10,6 +10,7 @@
+              'observer_copies_bytes', 'outer_stdio_bytes', 'summary_closeout_bytes',
+              'small_metadata_bytes', 'session_bytes', 'settings_bytes', 'http_member_read_bytes')
+ COUNT_KEYS = ('client_tree_files', 'native_tree_files')
++HTTP_ARTIFACT_KEYS = tuple(key for key in BYTE_KEYS if key != 'settings_bytes') + COUNT_KEYS
+ 
+ 
+ def derive(primaries):
+--- a/build.py
++++ b/build.py
+@@ -336,7 +336,8 @@
+                 dynamic_import_closure_verified=False)
+ 
+ 
+-def build(packet, output, *, source_root=HERE, run_dir=None, packet_id=None, upstream_root=None):
++def build(packet, output, *, source_root=HERE, run_dir=None, packet_id=None, upstream_root=None,
++          configured_artifacts=False):
+     source_root = Path(source_root)
+     need(source_root.is_absolute() and source_root.resolve(strict=True) == source_root,
+          'canonical source root required')
+@@ -380,7 +381,10 @@
+     omitted = {name: digest(files.pop(name)) for name in RETIRED_W5_MEMBERS}
+     need(all(name + '.py' in files for name in (*HTTP_IMPORTS, 'serving_reader')),
+          'HTTP/readout source missing')
+-    configuration = run_config.load(Path(run_dir), source_root, metadata, files, read_regular) if run_dir is not None else None
++    need(type(configured_artifacts) is bool and (not configured_artifacts or run_dir is not None),
++         'configured artifact projection requires a run directory')
++    configuration = run_config.load(Path(run_dir), source_root, metadata, files, read_regular,
++        configured_artifacts=configured_artifacts) if run_dir is not None else None
+     if upstream_root is not None:
+         need(configuration is not None, 'patch reproduction requires authenticated run configuration')
+     overlay_series = reproduce_overlays(files, upstream_root, source_root,
+@@ -425,6 +429,8 @@
+         report['remaining_gates'].extend(('runtime_config_consumers', 'fresh_launch_manifest_and_caller'))
+     if overlay_series is not None:
+         report['overlay_series'] = overlay_series
++    if configured_artifacts:
++        report['configured_artifacts'] = dict(spec_projection=True, protected_consumer_proposal_required=True)
+     # No donor code executes during the build. All inputs and renders are checked
+     # before the first output write; failures retain their incomplete output.
+     output.mkdir(mode=0o700)
+@@ -449,9 +455,10 @@
+     parser.add_argument('--output', type=Path, required=True, help='new absolute source-review directory')
+     parser.add_argument('--packet-id', help='fresh 16-hex review identity; requires a run directory')
+     parser.add_argument('--upstream-root', type=Path, help='pinned effective base sources for patch reproduction')
++    parser.add_argument('--configured-artifacts', action='store_true', help='project artifact limits for the protected consumer proposal')
+     args = parser.parse_args()
+     report = build(args.donor, args.output, run_dir=args.run_dir, packet_id=args.packet_id,
+-                   upstream_root=args.upstream_root)
++                   upstream_root=args.upstream_root, configured_artifacts=args.configured_artifacts)
+     print(json.dumps(dict(status=report['status'], content_sha256=report['content_sha256'],
+                          files=len(report['files']), launch_authorized=False), sort_keys=True))
+ 

@@ -1,0 +1,65 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -350,7 +350,7 @@
+              spec.get('server_args', {}).get('context_length') == context and
+              http.get('client_seconds') == session_timing.client_seconds, 'final phase context/client binding')
+         expected_devices = configured['host']['devices']
+-        http_fields = {"schema", "mode", "bindings", "client_seconds", "expected_devices"}
++        http_fields = {"schema", "mode", "bindings", "client_seconds", "expected_devices", "artifact_limits"}
+         if mtp_contract.settings()['phase'] in mtp_contract.FAIL_FAST_PHASES or mtp_contract.precision_reference_enabled():
+             http_fields.add('diagnostic_environment')
+             need(http.get('diagnostic_environment') == {
+@@ -860,7 +860,7 @@
+     return stamps
+ 
+ 
+-def render_configured_spec(template, run, host, package_files):
++def render_configured_spec(template, run, host, package_files, *, artifact_limits):
+     """Reproduce the supported W5 spec from a fingerprinted template and inputs.
+ 
+     Only the listed slots can vary with configuration/source bindings. Hashing
+@@ -871,6 +871,10 @@
+     need(mapping_sha256(run) == SUPPORTED_RUN_SHA256, 'unsupported run configuration')
+     need(mapping_sha256(host) == run['host']['sha256'], 'configured host identity differs')
+     expected = json.loads(json.dumps(template, allow_nan=False))
++    expected['http_serving'].pop('artifact_limits', None)
++    need(type(artifact_limits) is dict and len(artifact_limits) == 16
++         and all(type(value) is int and value == run['limits'].get(key)
++                 for key, value in artifact_limits.items()), 'artifact plan/configuration differs')
+     slots = [(('worker_seconds',), run['limits']['client_seconds'] + run['limits']['worker_startup_seconds']),
+              (('context_length',), run['profile']['context_length']),
+              (('physical_slots',), run['profile']['context_length']),
+@@ -899,6 +903,7 @@
+         for key in path[:-1]:
+             parent = parent[key]
+         parent[path[-1]] = value
++    expected['http_serving']['artifact_limits'] = dict(artifact_limits)
+     return expected
+ 
+ 
+@@ -930,13 +935,13 @@
+     need(_digest(pin) and pin == files.get('review/BENCHMARK-SPEC2.json'), 'spec/package identity differs')
+     spec = _configuration_file(root / 'review/BENCHMARK-SPEC2.json', pin, 64 << 10,
+         deadline=deadline, clock=clock, stamps=stamps)
+-    expected = render_configured_spec(spec, run, host, files)
++    artifact_module = _adjacent('spry_configured_artifact_limits', 'benchmark_artifacts.py')
++    artifact_limits = artifact_module.HTTPArtifactLimits.from_limits(run['limits'])
++    expected = render_configured_spec(spec, run, host, files, artifact_limits=asdict(artifact_limits))
+     # Canonical input was already required above. The final digest comparison
+     # checks all bytes, so bool/int aliases, field omissions and extra fields fail.
+     need(mapping_sha256(expected) == pin, 'configuration-generated spec differs')
+     session_timing = transport.SessionTiming.from_limits(run['limits'])
+-    artifact_module = _adjacent('spry_configured_artifact_limits', 'benchmark_artifacts.py')
+-    artifact_limits = artifact_module.HTTPArtifactLimits.from_limits(run['limits'])
+     need(type(manifest.get('proposed_complete_seconds')) is int
+          and manifest['proposed_complete_seconds'] == session_timing.total_seconds,
+          'manifest/session timing differs')
+@@ -1597,7 +1602,7 @@
+                 inner = http_integration.read_http_artifacts(destination,
+                     extraction_root=output / (arm + '-http-client-tree'), expected=expected, owner_arm=arm,
+                     joins=[record for pair in joins[arm].values() for record in pair.values()],
+-                    supervision=supervised_results[arm])
++                    supervision=supervised_results[arm], limits=asdict(artifact_limits))
+                 diagnostic_observations[arm] = {"schema": 1, "mode": manifest['experiment_mode'],
+                     "owner_arm": arm, "status": inner["status"], "qualification": False}
+                 _publish(output / (arm + "-diagnostics.json"), diagnostic_observations[arm])

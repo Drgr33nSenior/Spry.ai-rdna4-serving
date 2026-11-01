@@ -1,0 +1,61 @@
+--- a/legacy/review/model_benchmark.py
++++ b/legacy/review/model_benchmark.py
+@@ -107,7 +107,12 @@
+         raise ValueError('HTTP private source map')
+     helper_root = Path(__file__).resolve().parent
+     required = ('mtp_contract', 'serving_contract', 'serving_client', 'serving_parity', 'worker_entry', 'serving_launcher', 'serving_entry', 'serving_runtime')
+-    if any((name in sys.modules for name in required)):
++    instrumented = mapping_module.instrumentation_enabled()
++    if type(instrumented) is not bool:
++        raise ValueError('HTTP observation mode must be boolean')
++    if not instrumented:
++        required = tuple(name for name in required if name != 'serving_parity')
++    if any((name in sys.modules for name in (*required, 'serving_parity'))):
+         raise ValueError('HTTP private helper already imported')
+     loaded = []
+     try:
+@@ -128,6 +133,8 @@
+             raise ValueError('HTTP MTP speculation contract')
+         if sys.modules['mtp_contract'].owner_arm_map() != mapping:
+             raise ValueError('HTTP selected runtime owner mapping differs')
++        if sys.modules['mtp_contract'].instrumentation_enabled() is not instrumented:
++            raise ValueError('HTTP observation mode changed during private imports')
+         return sys.modules['serving_runtime']
+     except BaseException:
+         for name in reversed(loaded):
+--- a/legacy/review/serving_runtime.py
++++ b/legacy/review/serving_runtime.py
+@@ -22,7 +22,6 @@
+ import serving_client
+ import serving_contract
+ import serving_entry
+-import serving_parity
+ 
+ 
+ MODE = "native-http-fp8-sprint01-v1"
+@@ -250,6 +249,7 @@
+                  'HIP component bounded single-link file required')
+         records.append(json.loads(checked.read_bytes(), object_pairs_hook=pairs,
+             parse_constant=lambda _: (_ for _ in ()).throw(ServingRuntimeError('nonfinite HIP component JSON'))))
++    import serving_parity
+     return serving_parity.validate_hip_sampling_components(
+         records, binding=binding, workers=gate['workers'], phase=phase)
+ 
+--- a/legacy/review/serving_launcher.py
++++ b/legacy/review/serving_launcher.py
+@@ -11,7 +11,6 @@
+ from typing import Any, Callable, Iterator
+ 
+ import worker_entry
+-import serving_parity
+ 
+ 
+ class LaunchBindingError(ValueError):
+@@ -149,6 +148,7 @@
+     def checked_tokenizer(*args, **kwargs):
+         managers = init_tokenizer_manager(*args, **kwargs)
+         if contract.instrumentation_enabled():  # production mode: the client still checks every response's prompt IDs
++            import serving_parity
+             serving_parity.collect(*managers, manifest)
+         return managers
+ 

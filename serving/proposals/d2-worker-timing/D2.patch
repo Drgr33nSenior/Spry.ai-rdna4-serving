@@ -1,0 +1,15 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -345,10 +345,10 @@
+              'independent authenticated native helper bindings')
+     elif spec["experiment_mode"] == "native-http-fp8-sprint01-v1":
+         http = spec.get("http_serving")
+-        context, seconds = mtp_contract.phase_config()[:2]
++        context = mtp_contract.phase_config()[0]
+         need(spec.get('context_length') == spec.get('physical_slots') == context and
+              spec.get('server_args', {}).get('context_length') == context and
+-             http.get('client_seconds') == seconds, 'final phase context/client binding')
++             http.get('client_seconds') == session_timing.client_seconds, 'final phase context/client binding')
+         expected_devices = {
+             "0000:c3:00.0": {"uuid": "39373864-6465-3038-6163-303837666533", "render": "/dev/dri/renderD128"},
+             "0000:23:00.0": {"uuid": "34663466-6561-3362-3832-346261366439", "render": "/dev/dri/renderD129"},

@@ -1,0 +1,45 @@
+--- a/w5_evidence.py
++++ b/w5_evidence.py
+@@ -172,10 +172,10 @@
+     row = spec['http_serving']['bindings'][logical]
+     http = controller.mtp_contract.expand_http_template(json.loads((root / row['path']).read_bytes()))
+     bt, wt = http['binding_template'], http['worker_template']
+-    worker = dict(wt, evidence_dir=str(native), session_sha256=session, spec_sha256=controller.SPEC_SHA256,
++    worker = dict(wt, evidence_dir=str(native), session_sha256=session, spec_sha256=controller.mapping_sha256(spec),
+                   preweight=dict(wt['preweight'], deadline_monotonic=time.monotonic() + 3600))
+     worker_sha = runtime._write_exclusive(native / 'WORKER-MANIFEST.json', worker)
+-    binding = dict(bt, session_sha256=session, spec_sha256=controller.SPEC_SHA256, evidence_dir=str(native),
++    binding = dict(bt, session_sha256=session, spec_sha256=controller.mapping_sha256(spec), evidence_dir=str(native),
+                    worker_manifest=str(native / 'WORKER-MANIFEST.json'), worker_manifest_sha256=worker_sha)
+     runtime._write_exclusive(native / 'SERVING-BINDING.json', binding)
+     helper = sha((root / 'review/worker_entry.py').read_bytes())
+@@ -183,7 +183,7 @@
+         scheduler = worker['sources']['scheduler']
+         record = dict(schema=1, mode=worker['mode'], arm=worker['arm'], rank=rank, pid=4100 + rank, start_ticks=88000 + rank,
+                       boot_id=json.loads((HERE / 'BOOT-ID.json').read_bytes())['boot_id'], session_sha256=session,
+-                      spec_sha256=controller.SPEC_SHA256, source_manifest_sha256=worker['source_manifest_sha256'],
++                      spec_sha256=controller.mapping_sha256(spec), source_manifest_sha256=worker['source_manifest_sha256'],
+                       arm_config=worker['arm_config'], sources=worker['sources'], helper_sha256=helper,
+                       scheduler_source={k: scheduler[k] for k in ('module', 'path', 'sha256')})
+         record['identity_sha256'] = worker_entry.identity_digest(record)
+@@ -229,7 +229,7 @@
+         spec = json.loads((root / 'review/BENCHMARK-SPEC2.json').read_bytes())
+         session = manifest['session_sha256']
+         assert not controller.mtp_contract.instrumentation_enabled()
+-        expected_by_arm = {arm: controller.http_expected_binding(root, spec, owner_arm=arm, session_sha256=session) for arm in ('bf16', 'kv4')}
++        expected_by_arm = {arm: controller.http_expected_binding(root, spec, owner_arm=arm, session_sha256=session, spec_sha256=controller.mapping_sha256(spec)) for arm in ('bf16', 'kv4')}
+         bindings = dict(expected_by_arm)
+         for owner_arm in ('bf16', 'kv4'):
+             expected = expected_by_arm[owner_arm]
+@@ -247,9 +247,9 @@
+                 paired = json.loads((client / 'paired/RUN-SUMMARY.json').read_bytes())
+                 bad = [(r['case'], r['contract'].get('status'), r['contract'].get('error')) for r in paired['rows'] if r['contract'].get('status') != 'NORMAL_STOP_COMPLETE']
+                 raise AssertionError((summary['error'], paired.get('paired_error'), bad[:3], len(paired['rows'])))
+-            runtime._result(output, status='HTTP_ARM_COMPLETE', arm=owner_arm, session_sha256=session, spec_sha256=controller.SPEC_SHA256,
++            runtime._result(output, status='HTTP_ARM_COMPLETE', arm=owner_arm, session_sha256=session, spec_sha256=controller.mapping_sha256(spec),
+                             source_manifest_sha256=expected['source_manifest_sha256'], client_summary=summary, native_gate=gate, parent_error=None)
+-            art_binding = dict(session_sha256=session, arm=owner_arm, spec_sha256=controller.SPEC_SHA256, experiment_mode=artifacts.HTTP_MODE)
++            art_binding = dict(session_sha256=session, arm=owner_arm, spec_sha256=controller.mapping_sha256(spec), experiment_mode=artifacts.HTTP_MODE)
+             try:
+                 artifacts.pack_http_artifacts(output, art_binding)
+             except ValueError as error:

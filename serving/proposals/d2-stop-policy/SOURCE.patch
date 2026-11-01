@@ -1,0 +1,94 @@
+--- a/legacy/review/mtp_contract.py
++++ b/legacy/review/mtp_contract.py
+@@ -892,6 +892,8 @@
+     for group in expected['groups']:
+         for index,ordinal in enumerate(group['ordinals']):
+             row=rows[ordinal]
++            _require(row.get('stop_policy', 'natural') in ('natural', 'cap'),
++                     'explicit natural or cap stop policy required')
+             if ordinal in b1:
+                 ok=(row['case']==b1[ordinal][0] and (row['input_tokens'],row['maximum_output_tokens'])==(b1[ordinal][1],4096) and
+                     row['context_envelope_tokens']==131040)
+@@ -939,6 +941,24 @@
+ def instrumentation_enabled():
+     """Production mode serves the same path with no probe, observer, parity gate or evidence writer (W5 v2)."""
+     return settings().get('instrumentation', 'production') == 'on'
++
++
++def completion_allowed(response, request):
++    """Apply a source-bound row policy without grading cap work as an answer."""
++    if type(response) is not dict or type(request) is not dict:
++        return False
++    policy = request.get('stop_policy', 'natural')
++    if policy not in ('natural', 'cap'):
++        return False
++    if response.get('status') == 'NORMAL_STOP_COMPLETE' and response.get('finish_reason') == 'stop':
++        return True
++    maximum = request.get('maximum_output_tokens')
++    return (policy == 'cap' and type(maximum) is int and maximum > 0
++            and response.get('status') == 'OUTPUT_CAP_REACHED'
++            and response.get('finish_reason') == 'length'
++            and response.get('metric_eligible') is False
++            and all(type(response.get(key)) is int and response[key] == maximum
++                    for key in ('reported_completion_tokens', 'response_id_count')))
+ 
+ def kv_request_groups():
+     return [dict(group) for group in paired_groups('control')]
+--- a/legacy/review/serving_client.py
++++ b/legacy/review/serving_client.py
+@@ -792,7 +792,7 @@
+                                    summary_bytes=len(paired_raw)))
+             _require(block.get('frozen_case_count')==block.get('executed_case_count')==176 and
+                      block.get('paired_error') is None and
+-                     all(row.get('contract',{}).get('status')=='NORMAL_STOP_COMPLETE' for row in block['rows']),
++                     all(serving_contract.response_completed(row.get('contract',{})) for row in block['rows']),
+                      'incomplete natural-stop paired block')
+         except (ValueError,OSError,http.client.HTTPException) as failure:
+             error=type(failure).__name__+': '+str(failure)[:512]
+--- a/legacy/review/serving_contract.py
++++ b/legacy/review/serving_contract.py
+@@ -27,6 +27,10 @@
+     return rows
+ 
+ _KV_ROWS = _kv_rows()
++_STOP_POLICIES = {row['case']: row.get('stop_policy', 'natural')
++                  for row in mtp_contract.settings()['requests']}
++_COMPLETION_PLANS = {row['case']: dict(stop_policy=_STOP_POLICIES[row['case']],
++    maximum_output_tokens=row['maximum_output_tokens']) for row in _KV_ROWS}
+ CASES = tuple(row['case'] for row in _KV_ROWS)
+ CAPS = tuple(row['maximum_output_tokens'] for row in _KV_ROWS)
+ SPECULATION_FLOAT_KEYS = (
+@@ -81,8 +85,8 @@
+ 
+ 
+ def response_completed(row):
+-    plans=[r for r in _KV_ROWS if r['case']==row.get('case')]
+-    return len(plans)==1 and row.get('status')=='NORMAL_STOP_COMPLETE'
++    plan = _COMPLETION_PLANS.get(row.get('case'))
++    return plan is not None and mtp_contract.completion_allowed(row, plan)
+ 
+ 
+ def sampling_contract():
+@@ -875,7 +879,7 @@
+     tokens=sum(r['reported_completion_tokens'] for r in responses)
+     _need(type(tokens) is int and tokens>0 and end>start, 'paired positive work/duration')
+     measured=group['kind']=='timing'
+-    _need(all(r['status']=='NORMAL_STOP_COMPLETE' for r in responses), 'all measured work must stop naturally')
++    _need(all(response_completed(r) for r in responses), 'all measured work must satisfy its stop policy')
+     return dict(group_id=group['id'],ordinals=list(group['ordinals']),concurrency=group['concurrency'],
+         kind=group['kind'],measured=measured,excluded_warmup=group['kind']=='warmup',
+         prepared_monotonic=start,received_monotonic=end,makespan_seconds=end-start,
+@@ -905,9 +909,10 @@
+     rows=value.get('rows');counts=value.get('counts')
+     _need(value.get('frozen_case_count')==value.get('executed_case_count')==176 and
+           type(rows) is list and len(rows)==176 and value.get('paired_error') is None and
+-          counts.get('valid_complete_count')==counts.get('normal_complete_count')==176 and
+-          all(row.get('contract',{}).get('status')=='NORMAL_STOP_COMPLETE' for row in rows),
+-          'every request must stop naturally; output caps are failures')
++          counts.get('valid_complete_count')==176 and
++          counts.get('normal_complete_count')==sum(row.get('contract',{}).get('status')=='NORMAL_STOP_COMPLETE' for row in rows) and
++          all(response_completed(row.get('contract',{})) for row in rows),
++          'every request must satisfy its source-bound stop policy')
+     return summary
+ 
+ 

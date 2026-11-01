@@ -1,0 +1,402 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -30,6 +30,7 @@
+ retained_verifier = _adjacent("spry_retained_runtime_verifier", "verify_benchmark_runtime.py")
+ http_integration = _adjacent("spry_http_serving_integration", "serving_integration.py")
+ mtp_contract = _adjacent("spry_mtp_contract", "mtp_contract.py")
++transport = _adjacent("spry_physical_root_transport", "benchmark_host_transport.py")
+ SUPPORTED_RUN_SHA256 = '48aab0c783f27717ae44be9753e064a08cb8c33bf0c175c5bcb302348868b7ab'
+ SUPPORTED_SETTINGS_SHA256 = '099148986068e3d2a01761036f78e4d76d3c366402bfe3ff1e95f5ce327c12c4'
+ SPEC_TEMPLATE_SHA256 = 'ac1b7afaf10e248d944a0d441ffa9abe30d72ed134860b93a7ec69aae09a07fd'
+@@ -294,7 +295,8 @@
+                                        "native-async-prefill-layer-capture-v1", "native-model-context-retrieval-32k-v1",
+                                        "native-http-fp8-sprint01-v1", INDEPENDENT_MODE) and
+          value["launch_authorized"] is False
+-         and value["proposed_complete_seconds"] == 6360, "preparation-only controller manifest")
++         and type(value["proposed_complete_seconds"]) is int
++         and 0 < value["proposed_complete_seconds"] <= transport.TOTAL_SECONDS, "preparation-only controller manifest")
+     need(re.fullmatch(r"/home/developer/fp8-kv-benchmark\.[A-Za-z0-9]{8,64}", value["target_root"])
+          and re.fullmatch(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", value["boot_id"])
+          and _digest(value["session_sha256"]), "target/session binding")
+@@ -322,6 +324,7 @@
+     configured = verify_configured_spec(configuration_pins, value, deadline=deadline, clock=clock)
+     spec, spec_sha256 = configured['spec'], configured['spec_sha256']
+     timing = configured['owner_timing']
++    session_timing = configured['session_timing']
+     stamps.update(configured['stamps'])
+     adapter.readout.bench.validate_spec(spec)
+     need(value["experiment_mode"] == spec["experiment_mode"], "manifest/spec experiment mode")
+@@ -531,7 +534,7 @@
+         for name,row in rows.items():need((Path(tc['root'])/name).stat().st_mode & 0o777 == row['mode'],'development file mode')
+         digest,size,stamp=_hash(Path(tc['manifest']['path']),deadline,clock);need(digest==tc['manifest']['sha256'] and size==tc['manifest']['bytes'],'development manifest current identity');stamps[tc['manifest']['path']]=stamp
+     return {"manifest": value, "spec": spec, "spec_path": str(spec_path), "spec_sha256": spec_sha256,
+-            "owner_timing": timing,
++            "owner_timing": timing, "session_timing": session_timing,
+             "resource_manifest": resource_manifest, "resource_path": str(resource_path), "stamps": stamps,
+             **({'retained_identity': retained_identity} if live else {})}
+ 
+@@ -597,17 +600,23 @@
+             report["scope"] = "matched-physical-model-benchmark-v2"
+         need(all(callable(item) for item in (observer, read_inner_result, read_resource_receipt,
+              resource_check, supervisor)), "complete explicit owner effects required")
+-        prepared = validate_manifest(manifest_path, manifest_sha256, deadline=started + 105, clock=clock,
++        prepared = validate_manifest(manifest_path, manifest_sha256,
++                                     deadline=started + transport.SOURCE_PREPARATION_SECONDS, clock=clock,
+                                      configuration_pins=physical_context)
+         spec_sha256 = prepared['spec_sha256']
+         timing = prepared['owner_timing']
+-        report.update(arm_envelope_seconds=timing.arm_envelope_seconds,
++        session_timing = prepared['session_timing']
++        report.update(proposed_complete_seconds=session_timing.total_seconds,
++                      admission_seconds=session_timing.admission_seconds,
++                      source_preparation_seconds=session_timing.source_preparation_seconds,
++                      seal_reserve_seconds=session_timing.seal_reserve_seconds,
++                      arm_envelope_seconds=timing.arm_envelope_seconds,
+                       locked_admission_seconds=timing.locked_admission_seconds,
+                       collection_reserve_seconds=timing.collection_reserve_seconds)
+         value, results = prepared["manifest"], []
+         if physical_context is not None:
+             prepared['stamps'].update(authenticate_configuration_files(
+-                grant, value, deadline=started + 105, clock=clock))
++                grant, value, deadline=started + session_timing.source_preparation_seconds, clock=clock))
+         need(physical_context is None or value["schema"] == 2, "physical execution requires physical package schema")
+         need(str(lease.root) == value["target_root"] and lease.session == value["session_sha256"]
+              and lease.boot == value["boot_id"], "lease/package target binding")
+@@ -656,7 +665,8 @@
+             return snapshot
+ 
+         def admission(current_lease, *, deadline_monotonic):
+-            need(deadline_monotonic <= started + 180, "locked admission exceeds complete preparation bound")
++            need(deadline_monotonic <= started + session_timing.admission_seconds,
++                 "locked admission exceeds complete preparation bound")
+             snapshot = observe("locked-admission", current_lease, None, None, deadline_monotonic)
+             need(snapshot.get("root") == value["target_root"] and
+                  snapshot.get("boot_id") == value["boot_id"], "admission target differs")
+@@ -691,7 +701,7 @@
+             for arm in ("bf16", "kv4"))
+         campaign = adapter.run_campaign(lease=lease, arms=frozen_arms,
+             spec_path=prepared["spec_path"], spec_sha256=spec_sha256,
+-            collector_sha256=observer_sha, active_deadline=started + 6060,
++            collector_sha256=observer_sha, active_deadline=started + session_timing.active_seconds,
+             collect_release=lambda current, arm, result, end: observe("release", current, arm, result, end),
+             read_inner_result=read_inner_result,
+             independent_postcheck=lambda current, end: observe("independent", current, None, results[-1], end),
+@@ -922,15 +932,21 @@
+     # Canonical input was already required above. The final digest comparison
+     # checks all bytes, so bool/int aliases, field omissions and extra fields fail.
+     need(mapping_sha256(expected) == pin, 'configuration-generated spec differs')
+-    timing = adapter.CampaignTiming(worker_seconds=expected['worker_seconds'],
+-        owner_cleanup_seconds=run['limits']['owner_cleanup_seconds'],
+-        arm_release_seconds=run['limits']['arm_release_seconds'],
+-        locked_admission_seconds=run['limits']['locked_admission_seconds'],
+-        collection_reserve_seconds=run['limits']['collection_reserve_seconds'])
++    session_timing = transport.SessionTiming.from_limits(run['limits'])
++    need(type(manifest.get('proposed_complete_seconds')) is int
++         and manifest['proposed_complete_seconds'] == session_timing.total_seconds,
++         'manifest/session timing differs')
++    need(expected['worker_seconds'] == session_timing.worker_seconds, 'spec/session worker timing differs')
++    timing = adapter.CampaignTiming(worker_seconds=session_timing.worker_seconds,
++        owner_cleanup_seconds=session_timing.owner_cleanup_seconds,
++        arm_release_seconds=session_timing.arm_release_seconds,
++        locked_admission_seconds=session_timing.locked_admission_seconds,
++        collection_reserve_seconds=session_timing.collection_reserve_seconds)
+     verify_unchanged({'stamps': initial_stamps})
+     verify_unchanged({'stamps': stamps})
+     need(clock() < deadline, 'configured spec verification deadline')
+-    return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing}
++    return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing,
++            'session_timing': session_timing}
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,
+@@ -938,8 +954,10 @@
+     need(type(grant) is dict and set(grant) == GRANT_FIELDS and grant["schema"] == 2 and
+          grant["scope"] == "one-matched-fp8-kv-benchmark" and grant["model_start_authorized"] is True and
+          type(grant["maximum_starts"]) is int and grant["maximum_starts"] == 2 and
+-         grant["arm_order"] == ["bf16", "kv4"] and grant["cumulative_ceiling_seconds"] == 6360 and
+-         grant["fixed_reserve_seconds"] == 300, "exact separate two-start physical grant required")
++         grant["arm_order"] == ["bf16", "kv4"] and type(grant["cumulative_ceiling_seconds"]) is int
++         and 0 < grant["cumulative_ceiling_seconds"] <= transport.TOTAL_SECONDS
++         and type(grant["fixed_reserve_seconds"]) is int
++         and grant["fixed_reserve_seconds"] == transport.SEAL_RESERVE, "exact separate two-start physical grant required")
+     need(manifest["schema"] == 2 and grant["manifest_sha256"] == manifest_sha256 and
+          grant["boot_id"] == manifest["boot_id"] and
+          grant["package_sha256"] == mapping_sha256(manifest["package_files"]) and
+@@ -952,12 +970,18 @@
+          parent_identity == parent, "authenticated human-root parent required")
+     received = grant["received_monotonic"]
+     need(type(received) in (int, float) and math.isfinite(received) and
+-         received <= clock() < received + 105, "source/admission receipt window expired")
++         received <= clock() < received + transport.SOURCE_PREPARATION_SECONDS, "source/admission receipt window expired")
+     need(type(grant["received_utc"]) is str and grant["received_utc"].endswith("Z"), "original UTC receipt required")
+     instant = datetime.fromisoformat(grant["received_utc"].replace("Z", "+00:00"))
+     need(instant.tzinfo is not None and abs((utc_now() - instant).total_seconds() - (clock() - received)) <= 3,
+          "UTC/monotonic receipt disagreement")
+-    verify_configured_spec(grant, manifest, deadline=received + 105, clock=clock)
++    configured = verify_configured_spec(grant, manifest,
++        deadline=received + transport.SOURCE_PREPARATION_SECONDS, clock=clock)
++    timing = configured['session_timing']
++    need(grant['cumulative_ceiling_seconds'] == timing.total_seconds
++         and grant['fixed_reserve_seconds'] == timing.seal_reserve_seconds,
++         'grant/configured session timing differs')
++    timing.require_start_window(received, clock=clock)
+     return grant
+ 
+ 
+@@ -1324,8 +1348,12 @@
+         os.close(fd)
+ 
+ 
+-def seal_result(root, *, deadline, received_monotonic, received_utc, clock=time.monotonic):
++def seal_result(root, *, timing, received_monotonic, received_utc, clock=time.monotonic):
+     """Seal the stopped UID1000 tree; closeout stays outside the sealed tree."""
++    need(type(timing) is transport.SessionTiming, 'explicit configured session timing required')
++    timing = transport.SessionTiming(**asdict(timing))
++    _, deadline = timing.deadlines(received_monotonic)
++    need(received_monotonic <= clock(), 'original receipt is in the future')
+     root = _canonical(str(root))
+     need(clock() < deadline, "seal deadline exhausted")
+     manifest = root / "FINAL-ARTIFACTS.sha256"
+@@ -1357,7 +1385,8 @@
+          "result member/root newer than seal")
+     completed = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+     elapsed = clock() - received_monotonic
+-    need(math.ceil(elapsed) <= 6360 and clock() <= deadline, "receipt-to-verified-seal ceiling exceeded")
++    need(math.ceil(elapsed) <= timing.total_seconds and clock() <= deadline,
++         "receipt-to-verified-seal ceiling exceeded")
+     closeout = {"schema": 1, "root": str(root), "manifest_sha256": hashlib.sha256(raw).hexdigest(),
+         "member_count": len(members), "verified_completion_utc": completed, "received_utc": received_utc,
+         "elapsed_seconds": elapsed, "charged_seconds": math.ceil(elapsed), "qualification": False}
+@@ -1423,7 +1452,8 @@
+     need(root == Path(manifest["package_root"]) and Path(manifest_path) == root / "MANIFEST.json" and
+          Path(grant_path) == root / "GRANT.json" and Path(__file__).resolve() == root / "review/benchmark_physical_controller.py",
+          "exact fresh physical root/entry/grant paths required")
+-    configured = verify_configured_spec(grant, manifest, deadline=grant['received_monotonic'] + 105)
++    configured = verify_configured_spec(grant, manifest,
++        deadline=grant['received_monotonic'] + transport.SOURCE_PREPARATION_SECONDS)
+     spec_sha256 = configured['spec_sha256']
+     artifacts = _adjacent("spry_physical_artifacts", "benchmark_artifacts.py")
+     raw_transport = (manifest['experiment_mode'] == artifacts.HTTP_MODE and
+@@ -1594,7 +1624,7 @@
+         report["partial_resource_records"] = partial_resource_records
+         report["live_namespace_joins"] = {arm: list(rows.values()) for arm, rows in joins.items()}
+         _publish(output / "CONTROLLER-RESULT.json", report)
+-    seal_result(root, deadline=grant["received_monotonic"] + 6360,
++    seal_result(root, timing=configured['session_timing'],
+         received_monotonic=grant["received_monotonic"], received_utc=grant["received_utc"])
+     return report
+ 
+@@ -1612,7 +1642,6 @@
+          args.grant_json, args.grant_sha256)) and args.observer_fd is not None,
+          "NOT_READY: separate grant and authenticated inherited root socket required")
+     grant, _ = adapter.readout.read_json(args.grant_json, args.grant_sha256)
+-    transport = _adjacent("spry_physical_root_transport", "benchmark_host_transport.py")
+     rpc = transport.RpcClient(args.observer_fd, grant, args.manifest_sha256)
+     report = run_physical_controller(manifest_path=args.manifest, manifest_sha256=args.manifest_sha256,
+         grant_path=args.grant_json, grant_sha256=args.grant_sha256, rpc=rpc)
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -5,6 +5,7 @@
+ Importing this module performs no host, credential, or GPU operation.
+ """
+ import argparse
++from dataclasses import asdict, dataclass
+ from datetime import datetime, timezone
+ import hashlib
+ import importlib.util
+@@ -30,6 +31,9 @@
+ ARCHIVE_LIMIT = 16 * 1024 * 1024
+ TOTAL_SECONDS = 6360
+ SEAL_RESERVE = 300
++ACTIVE_SECONDS = 6060
++SOURCE_PREPARATION_SECONDS = 105
++ADMISSION_SECONDS = 180
+ LOCK = Path('/home/developer/model-serving.izR2m1O9/diagnostic.lock')
+ USER_CGROUP = '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/'
+ 
+@@ -37,6 +41,83 @@
+ def need(value, message):
+     if not value:
+         raise ValueError(message)
++
++
++@dataclass(frozen=True)
++class SessionTiming:
++    """Receipt-based timing under the retained W5 owner ceilings and reserves."""
++    client_seconds: int
++    worker_startup_seconds: int
++    owner_cleanup_seconds: int
++    arm_release_seconds: int
++    admission_seconds: int
++    source_preparation_seconds: int
++    locked_admission_seconds: int
++    collection_reserve_seconds: int
++    campaign_margin_seconds: int
++    seal_reserve_seconds: int
++
++    def __post_init__(self):
++        need(all(type(value) is int and 0 < value < 2**63 for value in asdict(self).values()),
++             'positive bounded integer session timing required')
++        need(self.client_seconds <= 2040 and self.worker_startup_seconds >= 240
++             and self.worker_seconds <= 2280 and self.owner_cleanup_seconds >= 150
++             and self.arm_work_seconds <= 2430 and self.arm_release_seconds >= 60
++             and self.arm_envelope_seconds <= 2490, 'worker/owner timing ceiling or reserve differs')
++        # These stages still use the complete W5 observation and sealing
++        # contracts. Keep their exact reserves until their consumers migrate.
++        need(self.admission_seconds == ADMISSION_SECONDS
++             and self.source_preparation_seconds == SOURCE_PREPARATION_SECONDS
++             and self.locked_admission_seconds == 75 and self.collection_reserve_seconds == 330
++             and self.campaign_margin_seconds == 390 and self.seal_reserve_seconds == SEAL_RESERVE,
++             'complete W5 session reserves required')
++        need(self.active_seconds <= ACTIVE_SECONDS and self.total_seconds <= TOTAL_SECONDS,
++             'session owner ceiling exceeded')
++
++    @classmethod
++    def from_limits(cls, limits):
++        need(type(limits) is dict and set(cls.__dataclass_fields__) <= set(limits)
++             and not {'worker_seconds', 'arm_work_seconds', 'arm_envelope_seconds',
++                      'active_seconds', 'total_seconds', 'caller_seconds', 'owner_required_seconds'} & set(limits),
++             'primary session timing required; derived values cannot be supplied')
++        return cls(**{name: limits[name] for name in cls.__dataclass_fields__})
++
++    @property
++    def worker_seconds(self):
++        return self.client_seconds + self.worker_startup_seconds
++
++    @property
++    def arm_work_seconds(self):
++        return self.worker_seconds + self.owner_cleanup_seconds
++
++    @property
++    def arm_envelope_seconds(self):
++        return self.arm_work_seconds + self.arm_release_seconds
++
++    @property
++    def owner_required_seconds(self):
++        return self.locked_admission_seconds + 2 * self.arm_envelope_seconds + self.collection_reserve_seconds
++
++    @property
++    def active_seconds(self):
++        return (self.owner_required_seconds + self.admission_seconds
++                + self.source_preparation_seconds + self.campaign_margin_seconds)
++
++    @property
++    def total_seconds(self):
++        return self.active_seconds + self.seal_reserve_seconds
++
++    def deadlines(self, received):
++        need(type(received) in (int, float) and math.isfinite(received), 'finite original receipt required')
++        return received + self.active_seconds, received + self.total_seconds
++
++    def require_start_window(self, received, *, clock=time.monotonic):
++        active_end, _ = self.deadlines(received)
++        now = clock()
++        need(received <= now < received + self.source_preparation_seconds,
++             'source/admission receipt window expired')
++        need(now + self.owner_required_seconds <= active_end,
++             'complete preparation/owner envelope does not fit')
+ 
+ 
+ def sha(raw):
+@@ -373,26 +454,33 @@
+     need(len(members) <= _archive_member_limit(manifest, members),
+          'archive mode-specific member limit')
+     configuration = configuration_members(manifest, members, configuration_pins)
++    timing = SessionTiming.from_limits(decode(members[manifest['run_config']])['limits'])
+     need(not configuration & set(expected), 'configuration must be independently approved')
+     need(set(members) == {'MANIFEST.json'} | set(expected) | configuration and all(sha(members[name]) == pin
+         and digest(pin) for name, pin in expected.items()), 'archive exact source inventory differs')
+     need(manifest.get('schema') == 2 and manifest.get('scope') == 'matched-benchmark-physical-package-v2'
+         and manifest.get('launch_authorized') is False
+-        and manifest.get('proposed_complete_seconds') == TOTAL_SECONDS
++        and type(manifest.get('proposed_complete_seconds')) is int
++        and manifest['proposed_complete_seconds'] == timing.total_seconds
+         and manifest.get('package_root') == manifest.get('target_root')
+         and re.fullmatch(r'/home/developer/fp8-kv-benchmark\.[A-Za-z0-9]{8,64}', manifest['target_root']),
+         'physical package contract differs')
+     return manifest, members
+ 
+ 
+-def new_grant(manifest, manifest_sha256, *, received_utc, received_monotonic, parent, configuration_pins):
++def new_grant(manifest, manifest_sha256, *, received_utc, received_monotonic, parent, configuration_pins, timing):
++    need(type(timing) is SessionTiming, 'explicit configured session timing required')
++    timing = SessionTiming(**asdict(timing))
++    timing.deadlines(received_monotonic)
++    need(type(manifest.get('proposed_complete_seconds')) is int
++         and manifest['proposed_complete_seconds'] == timing.total_seconds, 'manifest/session timing differs')
+     need(parent['uid'] == 0 and parent['boot_id'] == manifest['boot_id'], 'native root parent required')
+     need(type(configuration_pins) is dict and set(configuration_pins) == set(CONFIGURATION_PIN_FIELDS)
+          and all(digest(pin) for pin in configuration_pins.values()), 'three configuration approval pins required')
+     files = manifest['package_files']
+     return {'schema': 2, 'scope': 'one-matched-fp8-kv-benchmark', 'model_start_authorized': True,
+-        'maximum_starts': 2, 'arm_order': ['bf16', 'kv4'], 'cumulative_ceiling_seconds': TOTAL_SECONDS,
+-        'fixed_reserve_seconds': SEAL_RESERVE, 'received_utc': received_utc,
++        'maximum_starts': 2, 'arm_order': ['bf16', 'kv4'], 'cumulative_ceiling_seconds': timing.total_seconds,
++        'fixed_reserve_seconds': timing.seal_reserve_seconds, 'received_utc': received_utc,
+         'received_monotonic': received_monotonic, 'boot_id': manifest['boot_id'],
+         'manifest_sha256': manifest_sha256, 'package_sha256': sha(canonical(files)),
+         'source_manifest_sha256': sha(canonical({name: pin for name, pin in files.items() if name.endswith('.py')})),
+@@ -523,7 +611,6 @@
+     need(os.getuid() == os.geteuid() == os.getgid() == os.getegid() == 0,
+         'human must start the reviewed root wrapper; agent execution is not permitted')
+     beginning, received = args.original_receipt
+-    active_end, seal_end = beginning + TOTAL_SECONDS - SEAL_RESERVE, beginning + TOTAL_SECONDS
+     source_root = Path(__file__).resolve().parent
+     protected_stage(source_root)
+     # Root imports only authenticated files under its private staged source.
+@@ -531,6 +618,9 @@
+     configuration_pins = {name: getattr(args, name) for name in CONFIGURATION_PIN_FIELDS}
+     manifest, members = inspect_archive(Path(args.archive).resolve(), args.archive_sha256, args.manifest_sha256,
+         configuration_pins=configuration_pins)
++    timing = SessionTiming.from_limits(decode(members[manifest['run_config']])['limits'])
++    active_end, seal_end = timing.deadlines(beginning)
++    args.seal_deadline = seal_end
+     need(manifest['package_files']['review/benchmark_host_transport.py'] == args.expected_self_sha256,
+         'root transport/package identity differs')
+     trusted = {name: root_source(source_root / name, manifest['package_files']['review/' + name])
+@@ -547,6 +637,7 @@
+     boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+     need(boot == manifest['boot_id'], 'new boot requires reviewed package rebinding')
+     root = Path(manifest['target_root'])
++    timing.require_start_window(beginning, clock=time.monotonic)
+     root.mkdir(mode=0o700)  # Exclusive: never reuse/remove an earlier remote root.
+     root_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+     held = os.fstat(root_fd)
+@@ -567,7 +658,7 @@
+     review = root / 'review'
+     parent = {'pid': os.getpid(), 'uid': 0, 'start_ticks': process_start(os.getpid()), 'boot_id': boot}
+     grant = new_grant(manifest, args.manifest_sha256, received_utc=received,
+-        received_monotonic=beginning, parent=parent, configuration_pins=configuration_pins)
++        received_monotonic=beginning, parent=parent, configuration_pins=configuration_pins, timing=timing)
+     raw = canonical(grant)
+     exclusive_beneath(root_fd, 'GRANT.json', raw)
+     receipt = canonical({'schema': 1, 'received_utc': received,
+@@ -610,8 +701,8 @@
+         'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus'}
+     import pwd
+     account = pwd.getpwnam('developer')
+-    need(account.pw_uid == account.pw_gid == 1000 and time.monotonic() + 1995 <= active_end,
+-        'complete preparation/owner envelope does not fit')
++    need(account.pw_uid == account.pw_gid == 1000, 'native developer account required')
++    timing.require_start_window(beginning, clock=time.monotonic)
+     known, errors, owner_signals, escalations = [], [], [], []
+     previous = {number: signal.signal(number, lambda number, frame: owner_signals.append(number))
+         for number in (signal.SIGINT, signal.SIGTERM)}
+@@ -722,7 +813,7 @@
+     result = seal(source_root.parent, deadline=seal_end)
+     completed = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+     elapsed = time.monotonic() - beginning
+-    need(elapsed <= TOTAL_SECONDS, 'verified seal deadline exceeded')
++    need(elapsed <= timing.total_seconds, 'verified seal deadline exceeded')
+     closeout = {**result, 'root': str(source_root.parent), 'workload_evidence_root': str(root),
+         'verified_completion_utc': completed,
+         'elapsed_seconds': elapsed, 'charged_seconds': math.ceil(elapsed),
+@@ -753,7 +844,7 @@
+             'received_utc': args.original_receipt[1], 'release_authority': False}
+         if not os.path.lexists(stage / 'FINAL-ARTIFACTS.sha256'):
+             exclusive(stage / 'BOOTSTRAP-FAILURE.json', canonical(failure))
+-            result = seal(stage, deadline=args.original_receipt[0] + TOTAL_SECONDS)
++            result = seal(stage, deadline=getattr(args, 'seal_deadline', args.original_receipt[0] + TOTAL_SECONDS))
+         else:
+             result = {'seal_verification_failed_or_already_closed': True}
+         elapsed = time.monotonic() - args.original_receipt[0]

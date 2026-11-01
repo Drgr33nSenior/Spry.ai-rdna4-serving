@@ -1,0 +1,26 @@
+{
+  "baseline_sha256": "30fef5b08f940191fe57f6220cabcc6f011abc7b47c96f73e0c7b8adf28c06c9",
+  "caller_bundle_generation_complete": false,
+  "device_wake_performed": false,
+  "documentation_audit": "PASS_NO_FINDINGS",
+  "donor_source": "launcher/caller-preview/power_observe.py",
+  "gpu_run": false,
+  "limits_watts": [
+    235,
+    230
+  ],
+  "logs": {
+    ".test-build/serving-cleanup/caller-power/docs-audit.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/caller-power/unit-1.log": "a7ccf33b50dce01c9993a528589911c435807ffd9f7478a13639f4c17ff43a38"
+  },
+  "maximum_power_cap_watts": 235,
+  "observation_only": true,
+  "passed": true,
+  "patch_sha256": "4fbded558f9de7104a1ff9c05ba10c6069d92318f57623b58e7ecf6587fd7fa1",
+  "remote_execution_mocked": true,
+  "remote_execution_performed": false,
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "source_sha256": "26e51ed8b2f386321999e984e3fb52b9e4e73ec9a51e6df028c50cd59472c9ca",
+  "test_source_sha256": "6cf6a66b56866406019137cd1c46c174ea0fb823462a68f0aee0e9928633b495",
+  "tests": 6
+}

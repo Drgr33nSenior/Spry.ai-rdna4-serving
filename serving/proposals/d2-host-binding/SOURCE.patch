@@ -1,0 +1,116 @@
+--- a/legacy/review/mtp_contract.py
++++ b/legacy/review/mtp_contract.py
+@@ -960,6 +960,36 @@
+             and all(type(response.get(key)) is int and response[key] == maximum
+                     for key in ('reported_completion_tokens', 'response_id_count')))
+ 
++
++def bind_observed_rank(devices, renders, expected, indices, rank, gpu_id):
++    """Join observed HIP indices to BDF/UUID/render identity, never key order."""
++    _require(type(indices) is list and len(indices) == 2
++             and all(type(index) is int for index in indices) and set(indices) == {0, 1}
++             and type(rank) is int and rank in (0, 1)
++             and type(gpu_id) is int and gpu_id == indices[rank], 'native rank/index binding differs')
++    _require(type(expected) is dict and len(expected) == 2
++             and all(type(bdf) is str and re.fullmatch(r'[0-9a-f]{4}:[0-9a-f]{2}:[0-9a-f]{2}\.[0-7]', bdf)
++                     and type(item) is dict and set(item) == {'uuid', 'render'}
++                     and type(item['uuid']) is str and item['uuid']
++                     and type(item['render']) is str and re.fullmatch(r'/dev/dri/renderD[0-9]+', item['render'])
++                     for bdf, item in expected.items()), 'configured device identities differ')
++    _require(type(devices) is list and len(devices) == 2
++             and all(type(row) is dict and type(row.get('index')) is int
++                     and type(row.get('bdf')) is str for row in devices)
++             and {row['index'] for row in devices} == {0, 1}
++             and len({row['bdf'] for row in devices}) == 2
++             and {row['bdf']: row.get('uuid') for row in devices}
++                 == {bdf: item['uuid'] for bdf, item in expected.items()}, 'observed HIP device set differs')
++    _require(type(renders) is list and len(renders) == 2
++             and all(type(row) is dict and type(row.get('bdf')) is str for row in renders)
++             and {row['bdf'] for row in renders} == set(expected)
++             and all(row.get('sysfs_bdf') == row['bdf'] and row.get('render') == expected[row['bdf']]['render']
++                     and row.get('uuid') == expected[row['bdf']]['uuid'] for row in renders),
++             'observed render/sysfs device set differs')
++    selected = next(row for row in devices if row['index'] == gpu_id)
++    return dict(rank=rank, hip_index=gpu_id, bdf=selected['bdf'], uuid=selected['uuid'],
++                render=expected[selected['bdf']]['render'])
++
+ def kv_request_groups():
+     return [dict(group) for group in paired_groups('control')]
+ 
+--- a/legacy/review/worker_entry.py
++++ b/legacy/review/worker_entry.py
+@@ -426,13 +426,16 @@
+     return value
+ 
+ 
+-def _preweight_before_scheduler(manifest: dict[str, Any], rank: int, server_args: Any) -> dict[str, Any]:
++def _preweight_before_scheduler(manifest: dict[str, Any], rank: int, server_args: Any, *,
++                                gpu_id: int, contract: Any, instrumented: bool) -> dict[str, Any]:
+     """Run only pinned native identity/config checks before Scheduler."""
+     config = manifest["preweight"]
++    _require(type(instrumented) is bool and type(rank) is int and rank in (0, 1)
++             and type(gpu_id) is int and gpu_id == manifest['expected_ranks'][rank],
++             'native rank/index or observation mode differs')
+     if time.monotonic() >= config["deadline_monotonic"]:
+         raise WorkerEntryError("preweight deadline elapsed")
+     gpu_identity = _source_module(config["gpu_identity"])
+-    graph_observer = _source_module(config["graph_observer"])
+     import torch
+ 
+     expected = manifest["expected_devices"]
+@@ -440,12 +443,17 @@
+     devices, hip = gpu_identity.physical_devices(
+         torch, {bdf: row["uuid"] for bdf, row in expected.items()}, config["deadline_monotonic"]
+     )
++    rank_binding = contract.bind_observed_rank(devices, render_observation, expected,
++        manifest['expected_ranks'], rank, gpu_id)
+     record = dict(schema=1, mode=manifest["mode"], arm=manifest["arm"], rank=rank,
+                   session_sha256=manifest["session_sha256"], spec_sha256=manifest["spec_sha256"],
+-                  devices=devices, render_bindings=render_observation, hip=hip,
++                  devices=devices, render_bindings=render_observation, hip=hip, rank_binding=rank_binding,
+                   before_scheduler=True, qualification=False)
+     record["identity_sha256"] = identity_digest(record)
++    if not instrumented:
++        return record
+     _atomic_json(Path(manifest["evidence_dir"]) / f"worker-rank-{rank}-preweight.json", record)
++    graph_observer = _source_module(config["graph_observer"])
+     graph_observer.install(rank=rank, evidence=manifest["evidence_dir"],
+                            backend_sha256=manifest["arm_config"]["backend_source_sha256"], arm=manifest["arm"],
+                            sources=manifest["sources"])
+@@ -838,7 +846,8 @@
+         parity = _source_module(dict(manifest['sources']['serving_parity'], module='serving_parity'))
+         parity.wait_before_weights(manifest)
+     _native_module(manifest['sources']['gemm'])
+-    preweight = _preweight_before_scheduler(manifest, tp_rank, server_args) if instrumented else None
++    preweight = _preweight_before_scheduler(manifest, tp_rank, server_args, gpu_id=gpu_id,
++        contract=contract, instrumented=instrumented)
+     target = _source_selection(manifest["sources"]["scheduler"])
+     head_startup = None
+     phase_timing = None
+--- a/legacy/review/serving_integration.py
++++ b/legacy/review/serving_integration.py
+@@ -384,6 +384,16 @@
+                 raw = observations.get(f'TARGET-KV-ROUTES-rank-{rank}.jsonl', b'')
+                 _need(counters['routes'] == len(raw.splitlines()) and counters['bytes'] == len(raw),
+                       'observer health target KV journal differs')
++
++
++def _validate_observed_rank(preweight, worker_manifest, rank):
++    selected = _mtp_contract().bind_observed_rank(preweight['devices'], preweight['render_bindings'],
++        worker_manifest['expected_devices'], worker_manifest['expected_ranks'], rank,
++        worker_manifest['expected_ranks'][rank])
++    rank_binding = preweight.get('rank_binding')
++    _need(type(rank_binding) is dict and set(rank_binding) == set(selected)
++          and all(type(rank_binding[key]) is type(value) and rank_binding[key] == value
++                  for key, value in selected.items()), 'native observed rank binding differs')
+ 
+ 
+ def _validate_native_observations(observations, *, expected, gate, full_workers):
+@@ -498,6 +508,7 @@
+     for rank, worker in enumerate(full_workers):
+         preweight = _observation_json(observations, f'worker-rank-{rank}-preweight.json')
+         _need(type(preweight) is dict and preweight.get('schema') == 1 and (preweight.get('mode') == MODE) and (preweight.get('arm') == expected['arm']) and (preweight.get('rank') == rank) and (preweight.get('session_sha256') == expected['session_sha256']) and (preweight.get('spec_sha256') == expected['spec_sha256']) and (preweight.get('before_scheduler') is True) and (preweight.get('qualification') is False) and (type(preweight.get('devices')) is list) and (len(preweight['devices']) == 2) and all((type(row) is dict and set(row) == {'index', 'bdf', 'uuid', 'architecture', 'vram_bytes'} for row in preweight['devices'])) and (type(preweight.get('render_bindings')) is list) and (len(preweight['render_bindings']) == 2) and all((type(row) is dict and set(row) == {'bdf', 'render', 'sysfs_bdf', 'uuid'} for row in preweight['render_bindings'])) and (type(preweight.get('hip')) is dict) and (preweight.get('hip', {}).get('no_load_handle') is True) and (type(preweight.get('identity_sha256')) is str), 'native HIP preweight observation differs')
++        _validate_observed_rank(preweight, worker_manifest, rank)
+         mtp = _observation_json(observations, f'MTP-PREFLIGHT-rank-{rank}.json')
+         expected_fields = {'schema', 'mode', 'arm', 'rank', 'session_sha256', 'spec_sha256', 'source_manifest_sha256', 'contract', 'environment', 'resolved_speculative', 'draft_model_config', 'model_config_source', 'before_scheduler', 'qualification'}
+         if mtp_contract.cache_config() is not None:

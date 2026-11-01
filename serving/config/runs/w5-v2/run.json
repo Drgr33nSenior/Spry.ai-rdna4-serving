@@ -1,0 +1,99 @@
+{
+  "base": {
+    "assets": [
+      {
+        "file": "COMMON-STACK-RECEIPT.json",
+        "sha256": "7ed6b470afbf132619ef21649c79f183c169179d0e706fcba8d8d9f4dd581413"
+      },
+      {
+        "file": "SERVING-STACK.json",
+        "sha256": "58b6c125db80ab92f9a67f6b919fca58dcc037e648661fef066917f8a8843645"
+      }
+    ],
+    "sglang": "0.5.21"
+  },
+  "host": {
+    "file": "config/host/r9700-pair.json",
+    "sha256": "5fc702096026cb3ad426bf0baef9ee90774ab0fc55079fdb074b3c85446e4f30"
+  },
+  "instrumentation": "production",
+  "limits": {
+    "admission_seconds": 180,
+    "arm_metadata_bytes": 1048576,
+    "arm_release_seconds": 60,
+    "caller_reserve_seconds": 800,
+    "campaign_margin_seconds": 390,
+    "client_bundle_bytes": 34603008,
+    "client_seconds": 2040,
+    "client_tree_bytes": 25165824,
+    "client_tree_files": 512,
+    "collection_reserve_seconds": 330,
+    "http_member_read_bytes": 8388608,
+    "http_stream_bytes": 67108864,
+    "locked_admission_seconds": 75,
+    "native_bundle_bytes": 6291456,
+    "native_tree_bytes": 4194304,
+    "native_tree_files": 256,
+    "observer_copies_bytes": 21495808,
+    "outer_stdio_bytes": 16777216,
+    "owner_cleanup_seconds": 150,
+    "result_json_bytes": 8388608,
+    "seal_reserve_seconds": 300,
+    "session_bytes": 536870912,
+    "settings_bytes": 262144,
+    "small_metadata_bytes": 4194304,
+    "source_copies_bytes": 33554432,
+    "source_preparation_seconds": 105,
+    "summary_closeout_bytes": 16777216,
+    "worker_startup_seconds": 240
+  },
+  "menu": {
+    "file": "menu.json",
+    "sha256": "b90415d6b07382aba23a69862963e23df0779f4f037aea58ae3abbffc5d8f146"
+  },
+  "model": {
+    "assets": [
+      {
+        "file": "PRECISION-REFERENCE.json",
+        "sha256": "0b6b37380bc084dd92b0f4319fb69cfc496d6ee7d4464859e766102299152988"
+      },
+      {
+        "file": "MODEL-INVENTORY.json",
+        "sha256": "ce21ebd92e8625d6df250c89fafc1159f4ede0ce9eba9ec8ef62990f8431d238"
+      },
+      {
+        "file": "DRAFT-MODEL.json",
+        "sha256": "45f82c0840d69a0e68c7e9e340721b183f107c16d1b968bc102010ce070e3a81"
+      }
+    ],
+    "cache_profile": {
+      "draft": "bf16",
+      "target": "bf16"
+    },
+    "draft_width": 8
+  },
+  "overlays": [
+    "graph_full_cuda_graph_backend.py",
+    "GEMM-tail.py",
+    "allocation_sizing_candidate.py",
+    "dflash_info_v2_candidate.py",
+    "gdn_verify_candidate.py",
+    "layernorm_p3_candidate.py",
+    "d3b_combined_model_runner.py",
+    "qwen3_5_candidate.py",
+    "replay_memory_pool_candidate.py",
+    "capture_hybrid_linear_attn_backend.py",
+    "replay_kv_cache_configurator_candidate.py"
+  ],
+  "profile": {
+    "chunked_prefill_size": 2048,
+    "context_length": 131040,
+    "disable_overlap_schedule": true,
+    "max_mamba_cache_size": 19,
+    "max_running_requests": 2,
+    "max_total_tokens": 262144,
+    "mem_fraction_static": 0.92
+  },
+  "run_id": "w5-v2",
+  "schema": 1
+}

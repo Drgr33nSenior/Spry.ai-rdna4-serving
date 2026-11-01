@@ -1,0 +1,52 @@
+--- a/image-source/python/sglang/srt/model_executor/runner_backend/full_cuda_graph_backend.py
++++ b/image-source/python/sglang/srt/model_executor/runner_backend/full_cuda_graph_backend.py
+@@ -21,9 +21,19 @@
+ from functools import partial
+ from typing import TYPE_CHECKING, Any, Callable, Dict, Optional
+ 
++import sys as _spry_sys
++
+ import torch
+ 
+ from sglang.srt.constants import GPU_MEMORY_TYPE_CUDA_GRAPH
++
++
++def _spry_http_graph_observer():
++    # Only the instrumented worker installs serving_graph_observer (before any graph exists); production mode never imports it.
++    module = _spry_sys.modules.get('serving_graph_observer')
++    return None if module is None else module.CURRENT
++
++
+ from sglang.srt.distributed.device_communicators.pynccl_allocator import (
+     set_graph_pool_id,
+ )
+@@ -141,6 +151,9 @@
+             self._device_module.synchronize()
+             self._tp_group.barrier()
+             with self._precarve.measure():
++                observer = getattr(self._cuda_graph_runner.model_runner, '_fp8_decode_graph_observer', None) or _spry_http_graph_observer()
++                if observer is not None:
++                    observer.capture_forward(self, shape_key, 'warmup', warmup_step)
+                 output = forward_fn()
+             if self._reuse_output_buffer and warmup_step == 1:
+                 warmup_output = output
+@@ -178,6 +191,9 @@
+             graph_ctx(cuda_graph=graph, pool=self._pool, stream=self._capture_stream),
+         ):
+             self._precarve.mint()
++            observer = getattr(self._cuda_graph_runner.model_runner, '_fp8_decode_graph_observer', None) or _spry_http_graph_observer()
++            if observer is not None:
++                observer.capture_forward(self, shape_key, 'capture')
+             out = forward_fn()
+             if self._reuse_output_buffer:
+                 output_buffer = self._output_buffer
+@@ -208,6 +224,9 @@
+     ) -> Any:
+         with graph_pool_replay_scope():
+             self._graphs[shape_key].replay()
++        observer = getattr(self._cuda_graph_runner.model_runner, '_fp8_decode_graph_observer', None) or _spry_http_graph_observer()
++        if observer is not None:
++            observer.backend_replayed(self, shape_key, static_forward_batch)
+         return self._outputs[shape_key]
+ 
+     def cleanup(self) -> None:

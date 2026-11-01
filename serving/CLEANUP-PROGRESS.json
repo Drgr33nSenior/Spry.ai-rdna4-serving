@@ -1,0 +1,130 @@
+{
+  "complete": false,
+  "completed_in_this_loop": [
+    "Configured artifact consumer APIs and controller capture/receive",
+    "Production default",
+    "Per-row completion policy through serving and protected report",
+    "Production observed rank/device startup and readout",
+    "Fresh source-review resource/session identities",
+    "All 11 active overlay patches and builder reproduction",
+    "Spec-bound worker export and readout artifact limits",
+    "Canonical configured power-observer source",
+    "Configured durable accounting across workload/protected trees and outside seals/closeouts",
+    "Configured cap-work quality source; native grading assembly remains pending",
+    "Boot-independent manifest with explicit observed approval boot binding",
+    "Fresh manifest/caller source review renderer and pinned caller dependencies",
+    "Resolved width, overlap, graphs and runner/overlay checks in both startup modes",
+    "Production parity import isolation with authenticated instrumented loading retained",
+    "All six source fingerprints use equivalent standard loaders; proposed package passes no-direct-exec/compile gate on Python 3.14.8",
+    "Production evidence masks in proposed owner/controller; CPU source, import, mount projection and durable-accounting checks complete",
+    "Matched production measurement source review and protocol; native execution remains gated",
+    "W5 compressed receipt/control envelopes and bounded gzip source transport with measured 2x capacity margins",
+    "Sealed baseline and cleanup campaign sources, exact one-use caller checks and CPU grading templates",
+    "Target CPython 3.14.7 CPU preflight: 110 checks passed without GPU access",
+    "Baseline A operation 184: two starts, 352 responses, complete owner/native/HTTP/release replay and independent GPU release",
+    "Corrected and sealed CPU-only grading continuation; five source-boundary checks passed locally and on native CPython 3.14.7",
+    "Approved CPU-only continuation: all 352 baseline natural answers and long-answer coverage passed; independent CPU release verified",
+    "Refreshed cleanup B source author sealed; six checks pass and all 40 fixed files match the executed baseline",
+    "Cleanup B operation 186: two starts, 352 responses, complete replay and independent GPU release",
+    "Corrected local configured resource/artifact replay handoffs; complete B replay and byte-identical legacy A input verified",
+    "One approved native CPU grade: all 352 B natural answers and long-answer coverage passed; independent CPU release verified",
+    "Sealed A/B comparison: all 352 prompt/output vectors, speculative/cache work and sampling/terminal fields match; all 186 groups retained",
+    "Descriptive timing pilot completed: no demonstrated improvement; operation parked with no native allowance",
+    "Bounded configured profiles, menus and CLI/resolved bindings through actual native CPU prelaunch",
+    "Immutable corpus references and lazy bounded asset resolution; authenticated request validation cache",
+    "Compressed three-request receipt chunks with legacy v1/v2 reads and unchanged byte ceilings",
+    "Varied-response all-cap/doubled transport capacity and actual CPU packet materialization",
+    "Declared paired row count through CPU materializer, common policy and schema-2 release-binding proof",
+    "Public regression suite: 893 Python tests across 70 suites plus C++ sanitizers",
+    "Native CPython 3.14.7 source preflight: 153 checks, no GPU/model/grading work",
+    "Owner corrected private-repository constraint and explicitly authorized public source publication"
+  ],
+  "configuration_increment": {
+    "native_cpu_source_tests": 153,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "public_tests": 893,
+    "status": "CPU_CONFIGURED_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "gpu_run_preparation": {
+    "baseline_quality_passes": 352,
+    "cleanup_B_requires_grading_template_refresh": false,
+    "cleanup_quality_passes": 352,
+    "cpu_only_review": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/cpu-only-review-v1/APPROVE-CPU-ONLY.md",
+    "first_campaign": "baseline",
+    "global_operation": 186,
+    "independent_cpu_release": true,
+    "independent_gpu_release": true,
+    "launch_authorized": false,
+    "model_starts_executed": 2,
+    "native_grade_complete": true,
+    "pilot_model_starts": 4,
+    "pilot_responses": 704,
+    "readiness": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/READINESS.json",
+    "remaining_cpu_grading_allowance": 0,
+    "remaining_gpu_allowance": 0,
+    "source_seals": {
+      "baseline": {
+        "manifest_sha256": "411d8254564d8436f2d3fdced13abf0398f72585cde9ced93bab38a9ce90b900",
+        "members": 148,
+        "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/author"
+      },
+      "cleanup": {
+        "manifest_sha256": "bbafcaf9e70baeea6ecaef252abe2f1c973c304e049881815783277c28790b58",
+        "members": 148,
+        "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/author"
+      }
+    },
+    "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
+  },
+  "latest_verification": "proposals/configuration-mutations/VERIFICATION.json",
+  "measurement_preparation": {
+    "baseline": "retained W5 stock attention",
+    "candidate_gpu_execution_performed": true,
+    "comparison": {
+      "manifest_sha256": "9adcc5db51db49924bb110260f697cc9d6b3e3cacf0355afc98d95470dc8fb67",
+      "members": 3,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/comparison-v2"
+    },
+    "gpu_execution_performed": true,
+    "hyperloom_measured_path_enabled": false,
+    "instrumentation": "production",
+    "matched_rows": 352,
+    "mismatched_rows": 0,
+    "next_stage": "New configuration proposal is CPU-verified; native qualification and later runner/memory cleanup remain",
+    "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
+    "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
+    "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
+    "verification": "measurements/production-cleanup/VERIFICATION.json"
+  },
+  "no_measured_inference_speedup": true,
+  "publication": {
+    "branch": "cleanup/serving-source-20261101",
+    "owner_authorized": true,
+    "private_run_evidence_excluded": true,
+    "repository": "https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving",
+    "source_publication_only": true,
+    "visibility": "public"
+  },
+  "remaining": [
+    "Exact protected diff review and fresh native serving/token-ID/quality qualification for this proposal",
+    "Complete remaining shared-helper and import-closure cleanup",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Shared FP8 head and packed QKVZ/BA views, after the refactor phases",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "remaining_external": [
+    "Exact review of the new protected-source proposal before native adoption",
+    "Fresh one-use native serving, token-ID, quality and startup-memory proofs",
+    "Native timing and full instrumented qualification for broader configurations"
+  ],
+  "remaining_local": [
+    "Remaining compatibility APIs, shared helpers and canonical import/package closure",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Memory recovery after the refactor phases"
+  ],
+  "requested": "Continue until all remaining cleanup steps are complete",
+  "schema": 1
+}

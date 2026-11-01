@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "devices": {
+      "additionalProperties": false,
+      "properties": {
+        "0000:23:00.0": {
+          "additionalProperties": false,
+          "properties": {
+            "render": {
+              "type": "string"
+            },
+            "uuid": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "render",
+            "uuid"
+          ],
+          "type": "object"
+        },
+        "0000:c3:00.0": {
+          "additionalProperties": false,
+          "properties": {
+            "render": {
+              "type": "string"
+            },
+            "uuid": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "render",
+            "uuid"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "0000:23:00.0",
+        "0000:c3:00.0"
+      ],
+      "type": "object"
+    },
+    "power_cap_watts": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "rank_indices": {
+      "items": {
+        "maximum": 9223372036854775807,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "maxItems": 10000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": 1,
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "devices",
+    "rank_indices",
+    "power_cap_watts"
+  ],
+  "title": "W5 host source-review configuration",
+  "type": "object"
+}

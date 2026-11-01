@@ -1,0 +1,18 @@
+--- a/image-source/python/sglang/srt/speculative/dflash_info_v2.py
++++ b/image-source/python/sglang/srt/speculative/dflash_info_v2.py
+@@ -153,6 +153,15 @@
+             page_size=page_size,
+         )
+ 
++        # Check the CPU-resolved extent before allocation or req_to_token writes.
++        row_width = batch.req_to_token_pool.req_to_token.shape[1]
++        max_reserved_len = max(nxt_kv_lens)
++        if max_reserved_len > row_width:
++            raise RuntimeError(
++                "DFLASH req_to_token row capacity exceeded: "
++                f"reserved_len={max_reserved_len}, row_width={row_width}."
++            )
++
+         max_top_k = 1
+         uniform_top_k_value = None
+         uniform_top_k = True

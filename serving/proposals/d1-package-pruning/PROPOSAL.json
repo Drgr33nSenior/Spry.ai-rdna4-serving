@@ -1,0 +1,74 @@
+{
+  "D1_added_lines": 0,
+  "D1_patch_sha256": "6a2489977d16ccae0054ca9b597fb33c828cfabbd35af88dcddc4131fd719de4",
+  "D1_removed_lines": 5,
+  "D2_patch_sha256": "a223be59c41625275dd686b1e097e24e841d6cd65f98bdb206383a4e08db7a11",
+  "archive_member_ceiling": 80,
+  "baseline_configuration_proposals": [
+    "../d2-config-binding/PROPOSAL.json",
+    "../d2-transport-binding/PROPOSAL.json"
+  ],
+  "baseline_controller_proposal": "../d1-controller-inventory/PROPOSAL.json",
+  "changes": {
+    "review/benchmark_host_transport.py": {
+      "baseline_sha256": "a7a889351af95c9439b5b059b734c8afd158fff5ddfe5ec130f066fd1a8e0578",
+      "integrated_sha256": "dd5b58b413de65958b6e091467810567ab49e340e234b9e38da1115e5b3bf6f7",
+      "proposed_sha256": "98f19970ed257011bd295a4ef78af91c3146ea47a714dd79cef598c91d21eb8b",
+      "removed_lines": 1
+    },
+    "review/benchmark_physical_controller.py": {
+      "baseline_sha256": "5d5c0e5489d21858c6055fe17af997448a20e75fb60f39603758f7a81a84d9ac",
+      "integrated_sha256": "876546578c16be1e46e39d3d3c2452cc1102fa40e09db85a1492bee8d400c2ed",
+      "proposed_sha256": "6535e6b379e53454119d5a71b7c5da739e0af45a18041d6603fa843f23d4f50e",
+      "removed_lines": 4
+    }
+  },
+  "cleaned_source_archive_fits": false,
+  "cleaned_source_configured_archive_members": 83,
+  "configured_archive_members": 79,
+  "consumed_by_builder": false,
+  "entire_D1_complete": false,
+  "entire_D2_complete": false,
+  "integrated_protected_files": {
+    "benchmark_artifacts.py": "b602a28620aeee26d84f1ca313debaf4ea0dc545abe84fb9714767cf4e1b6f02",
+    "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "benchmark_host_transport.py": "dd5b58b413de65958b6e091467810567ab49e340e234b9e38da1115e5b3bf6f7",
+    "benchmark_owner_adapter.py": "c615e847aec7ed5c52dd5651ce3e9b1c63c3130f5620da9c5d1994de30fc1e47",
+    "benchmark_physical_controller.py": "876546578c16be1e46e39d3d3c2452cc1102fa40e09db85a1492bee8d400c2ed",
+    "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+  },
+  "integrated_protected_set_sha256": "4ed1631a2c30662a1fd8c8e43e7c658cfd3c39930c3b91740632fa6e4421fe9b",
+  "launch_authorized": false,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "package_inventory_sha256": "efdda86dc46918de3a20017f0383f240a7aa377636462ed7c8be9361689129a3",
+  "proposed_protected_files": {
+    "benchmark_artifacts.py": "b602a28620aeee26d84f1ca313debaf4ea0dc545abe84fb9714767cf4e1b6f02",
+    "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "benchmark_host_transport.py": "98f19970ed257011bd295a4ef78af91c3146ea47a714dd79cef598c91d21eb8b",
+    "benchmark_owner_adapter.py": "c615e847aec7ed5c52dd5651ce3e9b1c63c3130f5620da9c5d1994de30fc1e47",
+    "benchmark_physical_controller.py": "6535e6b379e53454119d5a71b7c5da739e0af45a18041d6603fa843f23d4f50e",
+    "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+  },
+  "proposed_protected_set_sha256": "245a702bed257478d88372617ad4ac789dadaa7f838f3304cd65533d28e580a3",
+  "pruned_package_members": 74,
+  "removed_package_files": [
+    "review/CAPTURE-BUILD-PROOF.json",
+    "review/STOCK-BUILD-PROOF.json",
+    "review/capture_model_runner.py",
+    "review/divergence_capture.py",
+    "review/prefill_row_audit.py"
+  ],
+  "retained_package_members": 79,
+  "schema": 1,
+  "selected_draft_head_arm": "both",
+  "selected_phase": "sprint01-paired-serving",
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "status": "PROPOSAL_ONLY"
+}

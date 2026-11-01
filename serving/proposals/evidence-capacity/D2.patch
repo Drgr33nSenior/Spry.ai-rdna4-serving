@@ -1,0 +1,22 @@
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -26,6 +26,7 @@
+ import tarfile
+ import tempfile
+ import time
++import zlib
+ 
+ 
+ PACKET_LIMIT = 2 * 1024 * 1024
+@@ -429,6 +430,11 @@
+     need(digest(expected_sha256) and digest(manifest_sha256), 'independent archive/manifest pins required')
+     raw = read_file(path, ARCHIVE_LIMIT)
+     need(sha(raw) == expected_sha256, 'archive digest differs')
++    if raw.startswith(b'\x1f\x8b'):
++        decoder = zlib.decompressobj(31)
++        raw = decoder.decompress(raw, ARCHIVE_LIMIT + 1)
++        need(len(raw) <= ARCHIVE_LIMIT and decoder.eof and not decoder.unused_data
++             and not decoder.unconsumed_tail, 'bounded complete gzip source archive required')
+     import io
+     members, size = {}, 0
+     with tarfile.open(fileobj=io.BytesIO(raw), mode='r:') as archive:
