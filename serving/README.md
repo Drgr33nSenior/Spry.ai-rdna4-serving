@@ -5,10 +5,11 @@ This directory holds the observer safety and structural cleanup increments from
 cleanup source. These files are not a launch packet or a new serving selection.
 
 The latest increment is the
-[startup source digest proposal](proposals/startup-digests/README.md). The worker
-reuses digests for unchanged declared source files on read-only mounts while
-retaining source-pin, path, import and callable checks. Writable files keep
-fresh hashing. It builds on the
+[shared JSON and HTTP package cleanup](proposals/common-helpers/README.md).
+Three serializers use one authenticated canonical source. The candidate removes
+the retired graph-integration payload and keeps the active graph projection API,
+with 1,092 fewer Python lines and the same 80 archive members. It builds on the
+[startup source digest proposal](proposals/startup-digests/README.md), the
 [MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and the
 [configured request and evidence proposal](proposals/configuration-mutations/README.md).
 The retained A/B pilot predates these changes. The larger runner, replay metadata

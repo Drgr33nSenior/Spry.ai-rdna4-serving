@@ -1,4 +1,16 @@
 {
+  "common_helpers_increment": {
+    "archive_members": 80,
+    "native_cpu_source_tests": 186,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "packet_checks": 14,
+    "public_tests": 921,
+    "removed_candidate_python_lines": 1092,
+    "shared_serializers": 3,
+    "status": "CPU_SHARED_CANON_AND_HTTP_CLOSURE_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
   "complete": false,
   "completed_in_this_loop": [
     "Configured artifact consumer APIs and controller capture/receive",
@@ -45,7 +57,12 @@
     "Worker-scoped reuse of unchanged declared source digests on read-only mounts, with fresh hashing for writable or unknown views",
     "Actual manifest/import checks reject stale pins and symlinks; inode, link and byte changes force fresh hashing in local and packaged-worker tests",
     "Public regression suite: 914 Python tests across 72 suites plus C++ sanitizers",
-    "Native CPython 3.14.7 source preflight: 178 checks, plus 12 nested packaged-worker regressions, without GPU/model/grading work"
+    "Native CPython 3.14.7 source preflight: 178 checks, plus 12 nested packaged-worker regressions, without GPU/model/grading work",
+    "Three serializers share the authenticated canonical JSON/hash source with identical previous bytes",
+    "Unused legacy graph-integration payload replaced by the canonical helper; active graph projection API retained",
+    "Candidate package: 1,092 fewer Python lines, 65,908 fewer source bytes, same 80 archive members and native workload arguments apart from source pins",
+    "Public regression suite: 921 Python tests across 73 suites plus C++ sanitizers",
+    "Native CPython 3.14.7 source preflight: 186 checks without GPU/model/grading work; original 16 MiB archive limit retained"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -86,7 +103,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/startup-digests/VERIFICATION.json",
+  "latest_verification": "proposals/common-helpers/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -100,7 +117,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Configuration, runtime-binding and startup-digest proposals are CPU-verified; native qualification and remaining module/runner/replay/startup-scan/memory cleanup remain",
+    "next_stage": "Configured runtime, startup digest and shared-canonical proposals are CPU-verified; native qualification and remaining module/runner/replay/startup-scan/memory cleanup remain",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -116,8 +133,8 @@
     "visibility": "public"
   },
   "remaining": [
-    "Exact source review and fresh one-use native serving/token-ID/quality qualification, including live read-only source-cache behavior",
-    "Remaining shared helpers, compatibility APIs and canonical module/package closure",
+    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
+    "Remaining compatibility APIs, shared helpers and module/package closure beyond the three migrated serializers",
     "Stock runner/post-load hook and verify metadata preparation before replay",
     "Startup tensor validation scans and item synchronization after the runner refactor",
     "Shared FP8 head and packed QKVZ/BA views after refactors",
@@ -130,7 +147,7 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Remaining compatibility APIs, shared helpers and canonical import/package closure",
+    "Remaining compatibility APIs, shared helpers and module/package closure beyond the three migrated serializers",
     "Stock runner/post-load hook and verify metadata preparation before replay",
     "Startup tensor validation scans and item synchronization after the runner refactor",
     "Memory recovery after the refactor phases"

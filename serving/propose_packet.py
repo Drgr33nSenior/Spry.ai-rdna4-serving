@@ -13,7 +13,43 @@ sys.path.insert(0, str(HERE))
 import build as source_builder
 import run_config
 from launcher.run_native import checked_module
-from spry_common.canon import canonical_line as canonical, digest, need, parse_json
+from spry_common.canon import canonical_bare, canonical_line as canonical, digest, need, parse_json
+
+
+def install_shared_common(files, record):
+    """Exchange the unused legacy graph integration for one pinned common source."""
+    row = record['shared_common_source']
+    need(type(row) is dict and set(row) == {'file', 'sha256', 'replaces', 'replaced_sha256'}
+         and row['file'] == 'spry_common/canon.py' and row['replaces'] == 'graph_integration.py',
+         'exact shared common source exchange required')
+    raw = source_builder.read_regular(HERE / row['file'], 4096)
+    need(digest(raw) == row['sha256'] and digest(files[row['replaces']]) == row['replaced_sha256'],
+         'shared common source or replaced graph integration differs')
+    name = 'spry_common_canon.py'
+    need(name not in files, 'common source role already exists')
+    del files[row['replaces']]
+    files[name] = raw
+    spec = parse_json(files['BENCHMARK-SPEC2.json'])
+    helpers = spec['graph_projection']['helpers']
+    need(set(helpers) == {'graph_screen.py', 'graph_integration.py', 'graph_outer.py', 'context_tokenizer.py'},
+         'exact inherited projection helper inventory required')
+    del helpers[row['replaces']]
+    helpers[name] = digest(raw)
+    for arm in ('control', 'mtp'):
+        binding_name = 'HTTP-BINDING-' + arm + '.json'
+        value = parse_json(files[binding_name])
+        sources = value['binding_template']['sources']
+        need('spry_common_canon' not in sources, 'common manifest source already exists')
+        sources['spry_common_canon'] = dict(module='spry_common_canon', path='/mnt/review/' + name,
+                                            sha256=digest(raw))
+        pin = digest(canonical_bare(sources))
+        value['source_manifest_sha256'] = pin
+        value['binding_template']['source_manifest_sha256'] = pin
+        value['worker_template']['source_manifest_sha256'] = pin
+        value['worker_template']['sources']['source_manifest_sha256'] = pin
+        files[binding_name] = canonical(value)
+        spec['http_serving']['bindings'][arm]['sha256'] = digest(files[binding_name])
+    files['BENCHMARK-SPEC2.json'] = canonical(spec)
 
 
 def protected_sources(proposal, donor, metadata):
@@ -86,6 +122,8 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         need(original['protected_sources_unchanged'] is True, 'canonical protected builder invariant required')
         files = {path.name: source_builder.read_regular(path) for path in (baseline / 'review').iterdir()}
         files.update(selected)
+        if 'shared_common_source' in record:
+            install_shared_common(files, record)
         policy=source_builder.production_evidence_policy(files)
         need(policy is None or record.get('production_evidence_mount_isolation') is True,
              'production evidence view requires matching protected consumers')

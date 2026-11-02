@@ -716,6 +716,16 @@
     "transport_unchanged_owner_control_flow": "PASS_EXCEPT_EXPLICIT_CONFIGURATION_PINS",
     "unsupported_config_mutation": "REFUSED_BEFORE_OUTPUT"
   },
+  "common_helpers_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/common-helpers",
+    "record_sha256": "55eae8ca2cbab5b60e7054f8c1c9ddd30c45e8d5b0c31d331813bdb106305cf9",
+    "source_review_only": true,
+    "status": "CPU_SHARED_CANON_AND_HTTP_CLOSURE_VERIFIED_NATIVE_SERVING_PENDING",
+    "verification": "proposals/common-helpers/VERIFICATION.json",
+    "verification_sha256": "a8bef81968a3e469d427d73fff1c019230f43b45d3778e9c0a1ff8fdbfd418da"
+  },
   "configuration_binding_proposal": {
     "approval_fields": [
       "run_config_sha256",
@@ -1402,7 +1412,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Finish shared helpers and canonical module/package closure, then stock runner/post-load hook and replay metadata. Startup tensor scans and memory recovery follow the runner refactor. Fresh native qualification remains required; no native execution allowance remains.",
+  "next_bounded_action": "Migrate remaining compatibility consumers and finish the HTTP module closure, then stock runner/post-load hook and replay metadata. Startup tensor scans and memory recovery follow the runner refactor. No native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -2896,6 +2906,7 @@
   },
   "source_files": {
     "graph_integration.py": "8eeb2874592e66994d02be7466163106b4dc2dc4c490647fde592cfa0586ea45",
+    "graph_outer.py": "3d88da7ed59e171fcc56cb773a74e7f2b08218a2d635c8403865e189e3a7e2bf",
     "graph_screen.py": "9b5a1431b3d35770b1103a40212353eaea534d50a4b84d5f8be16aac7d56c8be",
     "isolated_scheme.py": "f396186d36fa83812d7d3d4ec538e47588d3513a06e9996539e1481bebe8c185",
     "j01_probe.py": "e0d5b41be325420900f5f5f44e4df76293f0cec3f1a60e43fca75244ac741443",
