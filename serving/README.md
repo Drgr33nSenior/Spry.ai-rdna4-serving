@@ -4,11 +4,13 @@ This directory holds the observer safety and structural cleanup increments from
 `CLEANUP-HANDOFF-20261031-v1.md`. The owner selected this repository for the
 cleanup source. These files are not a launch packet or a new serving selection.
 
-The latest increment is the
+The latest runtime increment is the
 [runner post-load hook](proposals/post-load/README.md).
 The runner delegates target/draft installation to one authenticated module
 before graph capture. The candidate has 78 members under the existing
-80-member ceiling. It builds on the
+80-member ceiling. The [source reference proposal](proposals/source-references/README.md)
+reuses unchanged protected files and produces an identical package without
+adding review copies. The runtime builds on the
 [closed HTTP package](proposals/closed-http/README.md), which removes disabled
 feature APIs, legacy diagnostics and three unused payloads, and the
 [shared helper cleanup](proposals/common-helpers/README.md), the

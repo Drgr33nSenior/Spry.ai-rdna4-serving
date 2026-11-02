@@ -89,12 +89,22 @@ def protected_sources(proposal, donor, metadata):
          'exact nine-helper boot-independent source proposal required')
     need(digest(source_builder.read_regular(proposal / 'D2.patch', 1 << 20)) == record['patch_sha256'],
          'exact protected proposal patch required')
+    references = record.get('protected_source_references', {})
+    need(type(references) is dict and set(references) <= set(expected)
+         and all(type(value) is str and value and not Path(value).is_absolute()
+                 for value in references.values()), 'relative protected source references required')
     selected = {}
     for name, pin in expected.items():
         need(type(pin) is str and re.fullmatch('[0-9a-f]{64}', pin), 'protected helper digest required')
         path = proposal / 'review' / name
         if path.exists() or path.is_symlink():
+            need(name not in references, 'protected source has both a copy and a reference')
             raw = source_builder.read_regular(path, 512 << 10)
+        elif name in references:
+            referenced = Path(os.path.abspath(proposal / references[name]))
+            need(referenced.is_relative_to(HERE / 'proposals') and referenced.name == name,
+                 'protected reference must name the local proposal source role')
+            raw = source_builder.read_regular(referenced, 512 << 10)
         elif digest(donor[name]) == pin:
             raw = donor[name]
         else:

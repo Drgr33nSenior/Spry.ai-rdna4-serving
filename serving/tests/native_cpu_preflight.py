@@ -21,12 +21,14 @@ def main():
     proposal_group.add_argument('--common-helpers-proposal',action='store_true')
     proposal_group.add_argument('--closed-http-proposal',action='store_true')
     proposal_group.add_argument('--post-load-proposal',action='store_true')
+    proposal_group.add_argument('--source-references-proposal',action='store_true')
     parser.add_argument('--metrics-reporter',type=Path)
     args=parser.parse_args()
     if sys.version_info[:2]!=(3,14) or platform.machine()!='x86_64' or sys.platform!='linux':
         raise ValueError('native Linux x86_64 CPython 3.14 required')
     repository=args.repository.resolve(strict=True);donor=args.donor.resolve(strict=True)
-    closed=args.closed_http_proposal or args.post_load_proposal
+    post_load=args.post_load_proposal or args.source_references_proposal
+    closed=args.closed_http_proposal or post_load
     common=args.common_helpers_proposal or closed
     startup=args.startup_digests_proposal or common
     runtime=args.runtime_binding_proposal or startup
@@ -59,8 +61,10 @@ def main():
     if startup:scripts+=('serving/tests/test_startup_digests.py',)
     if common:scripts+=('serving/tests/test_common_helpers.py',)
     if closed:scripts+=('serving/tests/test_closed_http.py',)
-    if args.post_load_proposal:scripts+=('serving/tests/test_post_load.py',)
-    private=('serving/tests/check_post_load_packet.py' if args.post_load_proposal else
+    if post_load:scripts+=('serving/tests/test_post_load.py',)
+    if args.source_references_proposal:scripts+=('serving/tests/test_protected_source_references.py',)
+    private=('serving/tests/check_source_references_packet.py' if args.source_references_proposal else
+             'serving/tests/check_post_load_packet.py' if post_load else
              'serving/tests/check_closed_http_packet.py' if closed else
              'serving/tests/check_common_helpers_packet.py' if common else
              'serving/tests/check_startup_digests_packet.py' if startup else
@@ -74,10 +78,11 @@ def main():
             spec=importlib.util.spec_from_file_location('native_cpu_preflight_'+str(number),path)
             module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
             if relative.endswith(('check_configuration_mutations_packet.py','check_runtime_binding_packet.py',
-                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py','check_post_load_packet.py')):
+                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py','check_post_load_packet.py','check_source_references_packet.py')):
                 context=module.configured if runtime else module
                 context.PACKET=donor;context.METRICS_REPORTER=args.metrics_reporter
-                prefix=('PostLoadPacket.' if args.post_load_proposal else
+                prefix=('SourceReferencePacket.' if args.source_references_proposal else
+                        'PostLoadPacket.' if post_load else
                         'ClosedHttpPacket.' if closed else
                         'CommonHelperPacket.' if common else
                         'StartupDigestPacket.' if startup else
@@ -100,7 +105,7 @@ def main():
                         'test_all_three_actual_consumers_share_exact_json_functions_and_bytes',
                         'test_packaged_common_source_change_or_removal_refuses_before_code_exec',
                         'test_native_workload_argv_keeps_every_mount_resource_and_model_argument')]
-                if args.post_load_proposal:
+                if post_load:
                     names += [prefix+'test_packaged_hook_is_source_bound_in_both_workers_and_refuses_changed_bytes']
                 suite=unittest.defaultTestLoader.loadTestsFromNames(names,module)
             elif relative.endswith('check_evidence_capacity_packet.py'):
@@ -133,6 +138,7 @@ def main():
     report['common_helpers_proposal']=args.common_helpers_proposal
     report['closed_http_proposal']=args.closed_http_proposal
     report['post_load_proposal']=args.post_load_proposal
+    report['source_references_proposal']=args.source_references_proposal
     with args.report.open('x') as stream:json.dump(report,stream,sort_keys=True,indent=2);stream.write('\n')
     print(json.dumps(report,sort_keys=True),flush=True)
     return 0 if passed else 1

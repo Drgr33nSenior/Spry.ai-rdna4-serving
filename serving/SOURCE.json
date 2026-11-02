@@ -2497,6 +2497,16 @@
     "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
     "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
   },
+  "protected_source_references_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/source-references",
+    "record_sha256": "ba5177db30d242bddebbb921ffc8bd7bc6cb36fea1ccdd17a785faa6f961f793",
+    "source_review_only": true,
+    "status": "CPU_PROTECTED_SOURCE_REFERENCES_VERIFIED_PACKAGE_BYTE_IDENTICAL",
+    "verification": "proposals/source-references/VERIFICATION.json",
+    "verification_sha256": "b65d98333b0c36e8d807937d129b34d06f3ff8586fadfa2233f01116b593c53e"
+  },
   "quality_policy_source": {
     "consumed_by_builder": false,
     "launch_authorized": false,

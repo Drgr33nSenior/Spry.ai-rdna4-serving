@@ -84,7 +84,11 @@
     "Exact runner patch applies and reverses against the retained effective base",
     "Both worker bindings authenticate the hook; callable/code/globals and rollback/substitution refusals verified",
     "Public regression suite: 939 Python tests across 75 suites plus C++ sanitizers",
-    "Target CPython 3.14.7 source preflight: 205 checks without GPU/model/grading work; complete consumed-packet suite: 15 checks"
+    "Target CPython 3.14.7 source preflight: 205 checks without GPU/model/grading work; complete consumed-packet suite: 15 checks",
+    "Three unchanged protected sources referenced by exact hash instead of copied into new proposal reviews; canonical path, role, size and protected-set checks retained",
+    "Every assembled package member byte-identical to the verified post-load parent; actual archive and worker source-refusal checks pass",
+    "Public regression suite: 945 Python tests across 76 suites plus C++ sanitizers",
+    "Target CPython 3.14.7 source preflight: 211 checks without GPU/model/grading work"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -125,7 +129,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/post-load/VERIFICATION.json",
+  "latest_verification": "proposals/source-references/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -155,6 +159,18 @@
     "packet_checks": 15,
     "public_tests": 939,
     "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "protected_source_references_increment": {
+    "archive_members": 78,
+    "native_cpu_source_tests": 211,
+    "new_model_starts": 0,
+    "new_review_copies": 0,
+    "packet_checks": 3,
+    "public_tests": 945,
+    "references": 3,
+    "reused_identical_packet_transport_checks": 15,
+    "status": "CPU_PROTECTED_SOURCE_REFERENCES_VERIFIED_PACKAGE_BYTE_IDENTICAL",
     "whole_cleanup_complete": false
   },
   "publication": {
