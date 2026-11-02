@@ -136,12 +136,8 @@ def production_evidence_policy(files):
     return dict(files=names, name=mask, raw=raw, sha256=digest(raw))
 
 
-def render_data(files):
-    """Refresh the existing JSON dependency order; do not rewrite Python source."""
-    overlay = parse_json(files['ALLOCATION-OVERLAY.json'])
-    for row in overlay['files']:
-        row['sha256'] = digest(files[relative_name(row['file'])])
-    files['ALLOCATION-OVERLAY.json'] = canonical(overlay)
+def refresh_http_source_bindings(files):
+    """Bind final private source bytes and worker aliases after all replacements."""
     spec = parse_json(files['BENCHMARK-SPEC2.json'])
     need(spec['experiment_mode'] == MODE, 'W5 HTTP source build required')
     policy = production_evidence_policy(files)
@@ -153,10 +149,6 @@ def render_data(files):
         alias = value['worker_template']['sources']
         need(set(alias) == {'same_as', 'source_manifest_sha256'}
              and alias['same_as'] == 'binding_template.sources', 'worker source alias differs')
-        for helper in EXTRACTED_HELPERS:
-            need(helper not in sources, 'extracted helper role already present')
-            sources[helper] = dict(path='/mnt/review/' + helper + '.py', module=helper,
-                                   sha256=digest(files[helper + '.py']))
         for row in sources.values():
             if row['path'].startswith('/mnt/review/'):
                 filename = relative_name(row['path'].removeprefix('/mnt/review/'))
@@ -173,6 +165,32 @@ def render_data(files):
         files[name] = canonical(value)
         need(len(files[name]) < 65536, 'HTTP template exceeds retained byte limit')
         spec['http_serving']['bindings'][arm]['sha256'] = digest(files[name])
+    files['BENCHMARK-SPEC2.json'] = canonical(spec)
+
+
+def render_data(files):
+    """Refresh the existing JSON dependency order; do not rewrite Python source."""
+    overlay = parse_json(files['ALLOCATION-OVERLAY.json'])
+    for row in overlay['files']:
+        row['sha256'] = digest(files[relative_name(row['file'])])
+    files['ALLOCATION-OVERLAY.json'] = canonical(overlay)
+    spec = parse_json(files['BENCHMARK-SPEC2.json'])
+    need(spec['experiment_mode'] == MODE, 'W5 HTTP source build required')
+    for arm in ('control', 'mtp'):
+        name = 'HTTP-BINDING-' + arm + '.json'
+        value = parse_json(files[name])
+        need(value['mode'] == MODE and value['arm'] == arm, 'HTTP template selection differs')
+        sources = value['binding_template']['sources']
+        alias = value['worker_template']['sources']
+        need(set(alias) == {'same_as', 'source_manifest_sha256'}
+             and alias['same_as'] == 'binding_template.sources', 'worker source alias differs')
+        for helper in EXTRACTED_HELPERS:
+            need(helper not in sources, 'extracted helper role already present')
+            sources[helper] = dict(path='/mnt/review/' + helper + '.py', module=helper,
+                                   sha256=digest(files[helper + '.py']))
+        files[name] = canonical(value)
+    refresh_http_source_bindings(files)
+    spec = parse_json(files['BENCHMARK-SPEC2.json'])
     for name in spec['graph_projection']['helpers']:
         spec['graph_projection']['helpers'][name] = digest(files[relative_name(name)])
     files['BENCHMARK-SPEC2.json'] = canonical(spec)

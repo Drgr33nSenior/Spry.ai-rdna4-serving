@@ -11,6 +11,7 @@ test: test-serving-cleanup test-target-graph-timing test-device-phase-timing tes
 test-serving-cleanup:
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_final_campaign.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_bootstrap_common_stage.py
+	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_final_template_pins.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_common_closure.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_phase_closure.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_shared_memory.py

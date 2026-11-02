@@ -227,6 +227,7 @@ class ProposalIntegrity(unittest.TestCase):
                     stages.insert(0,HERE.parent/'proposals/common-closure')
                     stages.insert(0,HERE.parent/'proposals/final-campaign')
                     stages.insert(0,HERE.parent/'proposals/final-qualification')
+                    stages.insert(0,HERE.parent/'proposals/final-template-pins')
             records=[json.loads((stage/'PROPOSAL.json').read_bytes()) for stage in stages]
             with tempfile.TemporaryDirectory(prefix='worker-source-history-') as temporary:
                 root=Path(temporary).resolve()

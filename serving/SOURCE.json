@@ -1223,6 +1223,14 @@
     "verification": "proposals/final-qualification/VERIFICATION.json",
     "verification_sha256": "a6a10cec7cdd28c222791a84326ddac3ec37532f5bad9832dcbcbea838d08916"
   },
+  "final_template_source_pins": {
+    "native_execution_authorized": false,
+    "path": "proposals/final-template-pins",
+    "record_sha256": "502e9ca2c9376458ae8f2867c3a3ddb48a94aa03e2e58c0f07263d8593d8d138",
+    "status": "CPU_FINAL_TEMPLATE_SOURCE_BINDINGS_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "verification": "proposals/final-template-pins/VERIFICATION.json",
+    "verification_sha256": "39faa59055643a9c076b35089590741c4d18ce38a9ccaf35cfd526b0f04eb854"
+  },
   "fresh_identity_renderer": {
     "builder_sha256": "2b55ce2e2dd672a17102a5bd27365ec866a9762d40e7fc5c4f3247dda994dad4",
     "fresh_launch_manifest_created": false,
@@ -1428,11 +1436,12 @@
     "syntax_compilation": "PASS_ALL_TWENTY_TWO_PYTHON_MODULES"
   },
   "last_instrumented_native_attempt": {
-    "model_starts": 0,
-    "operation": 191,
-    "result": "measurements/native-qualification/GPU-191-RESULT.json",
-    "sha256": "812ed0f9d110b9d4a4d34fcadf9cc590a1175899af57be6c82a4a5212a52e274",
-    "status": "INSTRUMENTED_CANDIDATE_PREOWNER_STAGING_REFUSAL_PARKED"
+    "model_construction_reached": false,
+    "operation": 192,
+    "result": "measurements/native-qualification/GPU-192-RESULT.json",
+    "sha256": "edcb578109e8e5e04de43c5799071ae1abbb1bf7d5db562007518a6403ded134",
+    "status": "INSTRUMENTED_CANDIDATE_TEMPLATE_SOURCE_REFUSAL_PARKED",
+    "worker_start_attempts": 1
   },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
   "measurement_comparison": {
@@ -1469,7 +1478,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000084. Reuse the sealed real CPU tensor structure proof; no retry under operation191 authority.",
+  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000088. Reuse the unchanged sealed real CPU tensor proof. Operation192 is parked with no retry or grading allowance.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",

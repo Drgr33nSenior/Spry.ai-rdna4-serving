@@ -130,7 +130,11 @@
     "Changed readout passes 15 native source checks; actual sealed A/B replay retains all 352 matches and identical timing populations",
     "Approved real CPU tensor storage/sharing/version proof passed with independent CPU release",
     "Operation191 refused before model start; complete bootstrap refusal, source seals and independent no-holder/no-lock observation retained",
-    "Root trusted subset now authenticates and accounts for the common helper; old refusal reproduced and exact fresh packet reaches the stopped workload boundary on native CPython"
+    "Root trusted subset now authenticates and accounts for the common helper; old refusal reproduced and exact fresh packet reaches the stopped workload boundary on native CPython",
+    "Operation192 worker source refusal retained and independent GPU release verified; no model construction, second arm or quality grade",
+    "One source-binding refresh used before base rendering and after final protected replacements; worker aliases and spec hashes rebuilt",
+    "Actual worker authentication loop checks all 38 final private sources per arm in both modes; old native failure reproduced",
+    "Default builder payload byte-identical; 1,011 public tests, nine focused native checks and six campaign checks per mode pass"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -171,6 +175,17 @@
     "status": "FINAL_NATIVE_ENVELOPES_PREPARED_UNFUNDED",
     "whole_cleanup_complete": false
   },
+  "final_template_pins_increment": {
+    "all_worker_and_protected_python_bytes_unchanged": true,
+    "complete_campaign_checks_per_mode": 6,
+    "default_builder_payload_byte_identical": true,
+    "fresh_candidate": "e201110200000088",
+    "native_focused_source_tests": 9,
+    "native_gpu_allowance": 0,
+    "public_tests": 1011,
+    "status": "CPU_FINAL_TEMPLATE_SOURCE_BINDINGS_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "whole_cleanup_complete": false
+  },
   "gpu_run_preparation": {
     "baseline_quality_passes": 352,
     "cleanup_B_requires_grading_template_refresh": false,
@@ -203,14 +218,15 @@
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
   "instrumented_native_attempt": {
-    "independent_preowner_absence_verified": true,
-    "model_starts": 0,
-    "operation": 191,
+    "independent_gpu_release_verified": true,
+    "model_construction_reached": false,
+    "operation": 192,
     "responses": 0,
     "retry_authorized": false,
-    "status": "INSTRUMENTED_CANDIDATE_PREOWNER_STAGING_REFUSAL_PARKED"
+    "status": "INSTRUMENTED_CANDIDATE_TEMPLATE_SOURCE_REFUSAL_PARKED",
+    "worker_start_attempts": 1
   },
-  "latest_verification": "proposals/bootstrap-common-stage/VERIFICATION.json",
+  "latest_verification": "proposals/final-template-pins/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -224,7 +240,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000084. Reuse the sealed real CPU tensor structure proof; no retry under operation191 authority.",
+    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000088. Reuse the unchanged sealed real CPU tensor proof. Operation192 is parked with no retry or grading allowance.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -293,14 +309,14 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact approval for corrected instrumented GPU packet e201110200000084",
+    "Fresh exact approval for instrumented packet e201110200000088",
     "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
-    "Final production comparison and retained evidence closeout"
+    "Production comparison and final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact approval for corrected instrumented GPU packet e201110200000084",
+    "Fresh exact approval for instrumented packet e201110200000088",
     "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
-    "Final production comparison and retained evidence closeout"
+    "Production comparison and final retained evidence closeout"
   ],
   "remaining_local": [],
   "requested": "Continue until all remaining cleanup steps are complete",

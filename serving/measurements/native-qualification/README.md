@@ -20,3 +20,14 @@ adds the exact common helper to authentication, membership and byte accounting.
 Its fresh packet needs a new one-use approval. GPU startup equality, selected
 quality, greedy token identity, BDF memory and production comparison are still
 open. No recovered GPU memory or performance improvement has been measured.
+
+Operation 192 passed the corrected root stage and launched one worker. The
+worker refused a stale GPU identity source digest before model construction;
+no second arm, responses or quality grade ran. Evidence collection and
+independent GPU release passed, and checkpoint 531 is parked. See
+[GPU-192-RESULT.json](GPU-192-RESULT.json).
+
+The [final template pin correction](../../proposals/final-template-pins/README.md)
+refreshes source bindings after protected replacements. Its CPU checks execute
+the actual worker authentication loop for both modes and arms. Runtime and
+protected Python bytes are unchanged. A fresh exact GPU approval is required.

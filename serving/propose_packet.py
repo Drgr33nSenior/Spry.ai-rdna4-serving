@@ -234,6 +234,7 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
              'production evidence view requires matching protected consumers')
         # Rebuild source pins using the authenticated sandbox, then apply the
         # same fresh session identity. No Python or shell text is rewritten.
+        source_builder.refresh_http_source_bindings(files)
         source_builder.render_resource_manifest(files, donor, seed)
         identity = source_builder.render_session_identity(files, original['configuration'], packet_id)
         runs = list((baseline / 'config/runs').glob('*/run.json'))
