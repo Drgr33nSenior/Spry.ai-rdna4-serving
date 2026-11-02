@@ -1,0 +1,80 @@
+--- a/image-source/python/sglang/srt/model_executor/model_runner.py
++++ b/image-source/python/sglang/srt/model_executor/model_runner.py
+@@ -1138,6 +1138,35 @@
+         #     )
+ 
+         #     warmup_all_flashinfer_megamoe_layers(self.model)
++        if not self.is_draft_worker:
++            # D3b: the target FP8 LM head (FP32 logits) on verification rows only, installed before
++            # any target graph capture. The drafter borrows the unmodified head and keeps BF16.
++            if hasattr(self, "d3b_target_head_inventory"):
++                raise RuntimeError("D3b target head installation is single-use per serving process")
++            if self.startup_weight_load is not None:
++                raise RuntimeError("D3b target head requires completed synchronous target weight loading")
++            from d3b_target_head_adapter import install as install_d3b_target_head
++
++            self.d3b_target_head_inventory = install_d3b_target_head(
++                self.model, expected_device=self.gpu_id, expected_rank=self.tp_rank
++            )
++            # Packed QKVZ+BA verify route (op 164): pack every GDN input projection before any target
++            # graph capture; all-or-none over exactly 48 layers; finalize is idempotent.
++            gdn_layers = [m for m in self.model.modules() if type(m).__name__ == "Qwen3_5GatedDeltaNet"]
++            gdn_packed = [m.finalize_packed_mxfp4_in_proj() for m in gdn_layers]
++            if len(gdn_layers) != 48 or not all(gdn_packed):
++                raise RuntimeError("packed MXFP4 GDN input projection must cover all 48 GDN layers")
++            logger.info("Packed MXFP4 GDN input projection enabled for %d layers", len(gdn_layers))
++        if self.is_draft_worker:
++            # D3b: the DFlash worker attached the target head before this call. Install the
++            # drafter-only FP8 head before any draft capture; capture routes emit bounded metadata.
++            if hasattr(self, "d3b_draft_head_inventory"):
++                raise RuntimeError("D3b head installation is single-use per serving process")
++            from d3b_head_adapter import install as install_d3b_draft_head
++
++            self.d3b_draft_head_inventory = install_d3b_draft_head(
++                self.model, expected_device=self.gpu_id, expected_rank=self.tp_rank
++            )
+         is_scale_joiner = get_exec().moe.is_ep_scale_joiner and not self.is_draft_worker
+         defer_decode_capture = (
+             is_scale_joiner
+@@ -1282,6 +1311,8 @@
+         self.loader = loaded.loader
+         self.model = loaded.model
+         self.startup_weight_load = loaded.startup_weight_load
++        if self.is_draft_worker and self.startup_weight_load is not None:
++            raise RuntimeError("D3b requires completed synchronous draft weight loading")
+         if loaded.remote_instance_weight_info is not None:
+             self.remote_instance_weight_transporter.weight_info = (
+                 loaded.remote_instance_weight_info
+@@ -1872,6 +1903,10 @@
+             or forward_batch.forward_mode.is_draft_extend_v2()
+         ):
+             return
++        # FP8_CAPTURE_PROPOSAL_BEGIN
++        if getattr(self, "_fp8_capture_observer", None) is not None:
++            self._fp8_capture_observer.before_deferred(self.req_to_token_pool, forward_batch)
++        # FP8_CAPTURE_PROPOSAL_END
+         if (
+             forward_batch.mamba_clear_indices is not None
+             and len(forward_batch.mamba_clear_indices) > 0
+@@ -1898,6 +1933,10 @@
+                     pool.translate_mamba_indices(forward_batch.mamba_cow_src_indices),
+                     pool.translate_mamba_indices(forward_batch.mamba_cow_dst_indices),
+                 )
++        # FP8_CAPTURE_PROPOSAL_BEGIN
++        if getattr(self, "_fp8_capture_observer", None) is not None:
++            self._fp8_capture_observer.after_deferred(self.req_to_token_pool, forward_batch)
++        # FP8_CAPTURE_PROPOSAL_END
+         forward_batch.mamba_clear_indices = None
+         forward_batch.mamba_cow_src_indices = None
+         forward_batch.mamba_cow_dst_indices = None
+@@ -2465,6 +2504,10 @@
+         load_format: str,
+         load_config: LoadConfig,
+     ) -> None:
++        if not self.is_draft_worker and hasattr(self, "d3b_target_head_inventory"):
++            raise RuntimeError("D3b model replacement requires a fresh serving process")
++        if self.is_draft_worker and hasattr(self, "d3b_draft_head_inventory"):
++            raise RuntimeError("D3b model replacement requires a fresh serving process")
+         self.model = new_model
+         # The record says what model this PROCESS serves; a draft's weight
+         # update is not that (its own state is on the runner).

@@ -1,0 +1,148 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -321,6 +321,7 @@
+          'configured W5 HTTP manifest required')
+     configured = verify_configured_spec(configuration_pins, value, deadline=deadline, clock=clock)
+     spec, spec_sha256 = configured['spec'], configured['spec_sha256']
++    timing = configured['owner_timing']
+     stamps.update(configured['stamps'])
+     adapter.readout.bench.validate_spec(spec)
+     need(value["experiment_mode"] == spec["experiment_mode"], "manifest/spec experiment mode")
+@@ -387,7 +388,7 @@
+         for name, row in comparison['overlay_files'].items():
+             need(value["package_files"].get("review/" + name) == row["sha256"],
+                  "exact candidate overlay input binding")
+-    need(spec["worker_seconds"] == 2280 and spec["config_path"] == "/mnt/models/config.json"
++    need(spec["worker_seconds"] == timing.worker_seconds and spec["config_path"] == "/mnt/models/config.json"
+          and spec["stack_receipt"] == "/mnt/review/COMMON-STACK-RECEIPT.json"
+          and (independent or spec.get('package_root') == '/mnt/composition/image-source/python/sglang' and
+               spec.get('server_args', {}).get('model_path') == '/mnt/models'), "unchanged inner paths/work bound")
+@@ -530,6 +531,7 @@
+         for name,row in rows.items():need((Path(tc['root'])/name).stat().st_mode & 0o777 == row['mode'],'development file mode')
+         digest,size,stamp=_hash(Path(tc['manifest']['path']),deadline,clock);need(digest==tc['manifest']['sha256'] and size==tc['manifest']['bytes'],'development manifest current identity');stamps[tc['manifest']['path']]=stamp
+     return {"manifest": value, "spec": spec, "spec_path": str(spec_path), "spec_sha256": spec_sha256,
++            "owner_timing": timing,
+             "resource_manifest": resource_manifest, "resource_path": str(resource_path), "stamps": stamps,
+             **({'retained_identity': retained_identity} if live else {})}
+ 
+@@ -598,6 +600,10 @@
+         prepared = validate_manifest(manifest_path, manifest_sha256, deadline=started + 105, clock=clock,
+                                      configuration_pins=physical_context)
+         spec_sha256 = prepared['spec_sha256']
++        timing = prepared['owner_timing']
++        report.update(arm_envelope_seconds=timing.arm_envelope_seconds,
++                      locked_admission_seconds=timing.locked_admission_seconds,
++                      collection_reserve_seconds=timing.collection_reserve_seconds)
+         value, results = prepared["manifest"], []
+         if physical_context is not None:
+             prepared['stamps'].update(authenticate_configuration_files(
+@@ -690,7 +696,7 @@
+             read_inner_result=read_inner_result,
+             independent_postcheck=lambda current, end: observe("independent", current, None, results[-1], end),
+             streams=streams, resource_check=resource_check, supervisor=supervise, clock=clock,
+-            arm_envelope_seconds=2490, collection_reserve_seconds=330, admission_check=admission,
++            timing=timing, admission_check=admission,
+             prepare_streams=prepare_streams)
+         report["campaign"] = campaign
+         verify_unchanged(prepared)
+@@ -916,10 +922,15 @@
+     # Canonical input was already required above. The final digest comparison
+     # checks all bytes, so bool/int aliases, field omissions and extra fields fail.
+     need(mapping_sha256(expected) == pin, 'configuration-generated spec differs')
++    timing = adapter.CampaignTiming(worker_seconds=expected['worker_seconds'],
++        owner_cleanup_seconds=run['limits']['owner_cleanup_seconds'],
++        arm_release_seconds=run['limits']['arm_release_seconds'],
++        locked_admission_seconds=run['limits']['locked_admission_seconds'],
++        collection_reserve_seconds=run['limits']['collection_reserve_seconds'])
+     verify_unchanged({'stamps': initial_stamps})
+     verify_unchanged({'stamps': stamps})
+     need(clock() < deadline, 'configured spec verification deadline')
+-    return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps}
++    return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing}
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,
+--- a/review/benchmark_owner_adapter.py
++++ b/review/benchmark_owner_adapter.py
+@@ -60,6 +60,36 @@
+     argv: tuple
+     script_path: str
+     script_sha256: str
++
++
++@dataclass(frozen=True)
++class CampaignTiming:
++    """Approved worker time and owner reserves under the existing W5 ceilings."""
++    worker_seconds: int
++    owner_cleanup_seconds: int
++    arm_release_seconds: int
++    locked_admission_seconds: int
++    collection_reserve_seconds: int
++
++    def __post_init__(self):
++        _need(all(type(value) is int and value > 0 for value in asdict(self).values()),
++              'positive integer owner timing required')
++        _need(self.worker_seconds <= INNER_WORK and self.owner_cleanup_seconds >= 150
++              and self.arm_release_seconds >= 60, 'worker ceiling or owner cleanup/release reserve differs')
++        _need(self.arm_work_seconds <= ARM_WORK and self.arm_envelope_seconds <= ARM_ENVELOPE,
++              'owner work/envelope ceiling exceeded')
++        # Observer and outer collection consumers still require these complete
++        # reserves. Do not enable configuration changes that shorten them.
++        _need(self.locked_admission_seconds == 75 and self.collection_reserve_seconds == 330,
++              'complete W5 admission/collection reserves required')
++
++    @property
++    def arm_work_seconds(self):
++        return self.worker_seconds + self.owner_cleanup_seconds
++
++    @property
++    def arm_envelope_seconds(self):
++        return self.arm_work_seconds + self.arm_release_seconds
+ 
+ 
+ def bwrap_argv(arm, *, retained_root, composition, review, model, output, entry,
+@@ -423,7 +453,7 @@
+ def run_campaign(*, lease, arms, spec_path, spec_sha256, collector_sha256, active_deadline,
+                  collect_release, read_inner_result, independent_postcheck,
+                  streams, resource_check, supervisor=owner.supervise, clock=time.monotonic,
+-                 arm_envelope_seconds=ARM_ENVELOPE, collection_reserve_seconds=COLLECTION_RESERVE,
++                 timing,
+                  admission_check=None, prepare_streams=None):
+     """Single matched screen with explicit observed effects supplied by its owner.
+ 
+@@ -437,14 +467,16 @@
+     _need(type(arms) is tuple and len(arms) == 2
+           and all(isinstance(arm, FrozenArm) for arm in arms)
+           and [arm.arm for arm in arms] == ['bf16', 'kv4'], 'exact two-arm order required')
+-    _need(spec['worker_seconds'] == INNER_WORK and ARM_WORK - INNER_WORK >= 150,
+-          'inner worker must leave 150 seconds for collection and owner cleanup')
+-    # Both are preparation contracts, never grants. Keep the original default;
+-    # the explicit observer projection reserves 75 seconds after owned reaping.
+-    _need(type(arm_envelope_seconds) is int and type(collection_reserve_seconds) is int
+-          and ((arm_envelope_seconds, collection_reserve_seconds) in ((750, 180), (795, 330)) or (arm_envelope_seconds, collection_reserve_seconds)==(2490,330) and INNER_WORK==2280 and ARM_WORK==2430 and ARM_ENVELOPE==2490),
+-          'unreviewed owner envelope')
+-    locked_admission_seconds = 75 if arm_envelope_seconds in (795,2490) else 0
++    _need(type(timing) is CampaignTiming, 'explicit configured owner timing required')
++    # Snapshot and revalidate at entry; a caller cannot substitute derived
++    # fields or mutate a retained plan between validation and lease acquisition.
++    timing = CampaignTiming(**asdict(timing))
++    _need(type(spec['worker_seconds']) is int and spec['worker_seconds'] == timing.worker_seconds,
++          'spec/configured worker timing differs')
++    arm_work_seconds = timing.arm_work_seconds
++    arm_envelope_seconds = timing.arm_envelope_seconds
++    collection_reserve_seconds = timing.collection_reserve_seconds
++    locked_admission_seconds = timing.locked_admission_seconds
+     _need(not locked_admission_seconds or callable(admission_check), 'live locked admission callback required')
+     _need(type(active_deadline) in (int, float) and math.isfinite(active_deadline)
+           and clock() + locked_admission_seconds + 2 * arm_envelope_seconds
+@@ -482,8 +514,8 @@
+             report['arms'].append(row)
+             result = supervisor(frozen.argv, script_path=frozen.script_path,
+                 script_sha256=frozen.script_sha256,
+-                deadlines=owner.Deadlines(start + ARM_WORK, start + ARM_WORK + 20,
+-                    start + ARM_WORK + 25, start + ARM_WORK + 30),
++                deadlines=owner.Deadlines(start + arm_work_seconds, start + arm_work_seconds + 20,
++                    start + arm_work_seconds + 25, start + arm_work_seconds + 30),
+                 on_child=lease.record_child, stdout=streams[frozen.arm][0], stderr=streams[frozen.arm][1],
+                 resource_check=resource_check)
+             row['supervision'] = asdict(result)

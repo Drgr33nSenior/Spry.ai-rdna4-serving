@@ -1,0 +1,228 @@
+{
+  "actual_input_sha256": "3c02f00bc9fc18d1d8a72f7a92d757052787b4c85194fdfd7011bdcfe32fc5ca",
+  "actual_transport_receipt_sha256": "13707ea5f2c02412d58f5b6dadce613b6dfc8e6b546cceaaa8b7565aed40c3b5",
+  "attention": "retained-W5-stock",
+  "c4_included": false,
+  "cache_work_equal": true,
+  "caller_charge_seconds": 4031,
+  "caller_elapsed_seconds": 4030.507760041859,
+  "causal_speedup_established": false,
+  "cleanup_complete": false,
+  "comparison": {
+    "comparison_seal": {
+      "manifest_sha256": "9adcc5db51db49924bb110260f697cc9d6b3e3cacf0355afc98d95470dc8fb67",
+      "members": 3,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/comparison-v2"
+    },
+    "html_sha256": "36ec9e16490ea307352e7d18929bce1e853e81bbf4202fdf13f98f6af7f126a5",
+    "matched_rows": 352,
+    "mismatched_rows": 0,
+    "performance_improvement_established": false,
+    "report_sha256": "67f6a4128e99a9675fad038fc76cbb78574849ef8c047e8cc512831839e607f5"
+  },
+  "comparison_status": "MATCHED_WORK_DESCRIPTIVE_PILOT",
+  "cpu_elapsed_seconds": 32.124325750395656,
+  "cpu_evidence_seal": {
+    "manifest_sha256": "cf8a17f5c41b31dcfda1ab06715d404223a803bb7f6a348f12a71404c5c3c4d0",
+    "members": 77,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/quality-binding-v3/cpu"
+  },
+  "cpu_model_starts": 0,
+  "cpu_native_retry_performed": false,
+  "cpu_source_seal": {
+    "manifest_sha256": "1ccc9e4149a1809b102f2941ed6251d8cdb4151ed308ec769d1ec4059a5549e1",
+    "members": 41,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/quality-template-correction-v2/author"
+  },
+  "decoded_rows": 352,
+  "failed_host_samples": 0,
+  "fixed_input_files": 40,
+  "gpu_evidence_seals": {
+    "operation": {
+      "manifest_sha256": "42c87ea81715682450c1a91ba101e7dd2e2ec31a7fa00922364383207595939e",
+      "members": 662,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "27b3e0adc67534783d06a971ea65389964cd6e3a46aa89e8c86cd0fb6de0b462",
+      "members": 31,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/caller/collected/protected/fp8-benchmark-source.e201110100000205"
+    },
+    "source_author": {
+      "manifest_sha256": "bbafcaf9e70baeea6ecaef252abe2f1c973c304e049881815783277c28790b58",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/author"
+    },
+    "workload": {
+      "manifest_sha256": "b667350854b474ce2c8207cec64028b0d1000dcb464dd716433dc77c9c7c1882",
+      "members": 558,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/caller/collected/workload/fp8-kv-benchmark.e201110100000205"
+    }
+  },
+  "gpu_generation_performed": true,
+  "gpu_model_starts": 2,
+  "gpu_retry_performed": false,
+  "groups_retained": 186,
+  "host_samples": 402,
+  "hyperloom_measured_path_enabled": false,
+  "independent_cpu_release": true,
+  "independent_gpu_release": true,
+  "instrumentation": "production",
+  "interpretation": "Matched-work A-then-B descriptive pilot. Observed throughput is 0.0800% to 0.1754% lower for B. No repeatable performance change is established.",
+  "kernel_gpu_fault_entries": 0,
+  "long_answer_coverage_pass": true,
+  "matched_rows": 352,
+  "mismatched_rows": 0,
+  "native_batch_size_proven": false,
+  "native_cpu_sources_byte_identical": true,
+  "native_cpu_transport_elapsed_seconds": 28.772873042151332,
+  "native_execution_contracts_equal": true,
+  "native_generation_performed": false,
+  "natural_quality_failures": 0,
+  "natural_quality_passes": 352,
+  "next_action": "Continue configuration mutation, all-cap/doubled-menu, shared-module, runner and memory cleanup gates. No native execution authority remains.",
+  "offline_reader_correction_sha256": "77ed59ee27fbd0301a68ff3f424db3d15fe0b6338b5269c59e6594c2287d4d80",
+  "operation": 186,
+  "original_approval_request_sha256": "cc09f1e1c4a5d7b056a1c64da6e4a4a0cc81bdb9d24697fd6a07660c1f2291c9",
+  "outer_receipt_sha256": "c7c6650f437815d3eebbefeb6f032adfba34a179494f04eff76b3c2c93c0d904",
+  "output_token_identity_verified": true,
+  "owner_charge_seconds": 4019,
+  "owner_elapsed_seconds": 4018.548411472002,
+  "owner_native_http_release_replay": "PASS",
+  "performance_improvement_established": false,
+  "precision_accepted": false,
+  "prior_offline_failures_retained": true,
+  "private_cpu_execution_seal": {
+    "manifest_sha256": "e93a6a8ed66c1c4197065388f87bb50367ec6cfa72a9ea3f60ea1e7106c5dd62",
+    "members": 7,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/cpu-execution-v1"
+  },
+  "private_cpu_result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/cpu-execution-v1/RESULT.json",
+    "sha256": "d2105d3e838b699b7d6a932d7649fd73557303c04f7eb017ad6ea13a4c3492cf"
+  },
+  "prompt_token_identity_verified": true,
+  "publication_performed": false,
+  "qualification": false,
+  "quality_summary_sha256": "131b223ab095d56fc733785c6178266e15042894b4ef47f8020a78e419738fd0",
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "reverse_order_confirmation_run": false,
+  "schema": 1,
+  "selection_changed": false,
+  "source_seal": {
+    "manifest_sha256": "bbafcaf9e70baeea6ecaef252abe2f1c973c304e049881815783277c28790b58",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/author"
+  },
+  "speculative_work_equal": true,
+  "status": "CLEANUP_B_352_QUALITY_AND_INDEPENDENT_RELEASE_PASS",
+  "timing_groups": 110,
+  "timing_populations": [
+    {
+      "arm": "bf16",
+      "baseline": {
+        "combined_tp2_tokens_per_second": 157.66668760647224,
+        "completion_tokens": 131940,
+        "http_wall_seconds": 836.828641502987,
+        "mean_request_latency_seconds": 15.482179292111445,
+        "median_group_makespan_seconds": 27.490606521998416,
+        "median_request_latency_seconds": 13.726139095495455,
+        "requests": 54
+      },
+      "cleanup": {
+        "combined_tp2_tokens_per_second": 157.45554966643647,
+        "completion_tokens": 131940,
+        "http_wall_seconds": 837.9507758190157,
+        "mean_request_latency_seconds": 15.50443997518623,
+        "median_group_makespan_seconds": 27.519315393001307,
+        "median_request_latency_seconds": 13.747613134502899,
+        "requests": 54
+      },
+      "concurrency": 1,
+      "groups": 27,
+      "logical_arm": "control",
+      "observed_throughput_change_percent": -0.133914109087363,
+      "observed_wall_change_percent": 0.13409367944352546
+    },
+    {
+      "arm": "bf16",
+      "baseline": {
+        "combined_tp2_tokens_per_second": 254.86614527968732,
+        "completion_tokens": 133153,
+        "http_wall_seconds": 522.4428684079612,
+        "mean_request_latency_seconds": 18.637472692820406,
+        "median_group_makespan_seconds": 14.878856532995997,
+        "median_request_latency_seconds": 14.8779592255014,
+        "requests": 56
+      },
+      "cleanup": {
+        "combined_tp2_tokens_per_second": 254.66218813787214,
+        "completion_tokens": 133153,
+        "http_wall_seconds": 522.861289198976,
+        "mean_request_latency_seconds": 18.652337809839082,
+        "median_group_makespan_seconds": 14.878900231000443,
+        "median_request_latency_seconds": 14.878173851502652,
+        "requests": 56
+      },
+      "concurrency": 2,
+      "groups": 28,
+      "logical_arm": "control",
+      "observed_throughput_change_percent": -0.08002519973430156,
+      "observed_wall_change_percent": 0.08008929134966092
+    },
+    {
+      "arm": "kv4",
+      "baseline": {
+        "combined_tp2_tokens_per_second": 157.52727634484583,
+        "completion_tokens": 131940,
+        "http_wall_seconds": 837.5692328430014,
+        "mean_request_latency_seconds": 15.495960963019266,
+        "median_group_makespan_seconds": 27.487372414005222,
+        "median_request_latency_seconds": 13.729248566000024,
+        "requests": 54
+      },
+      "cleanup": {
+        "combined_tp2_tokens_per_second": 157.2509625614834,
+        "completion_tokens": 131940,
+        "http_wall_seconds": 839.0409689760272,
+        "mean_request_latency_seconds": 15.524797008630735,
+        "median_group_makespan_seconds": 27.543705781994504,
+        "median_request_latency_seconds": 13.75899322800251,
+        "requests": 54
+      },
+      "concurrency": 1,
+      "groups": 27,
+      "logical_arm": "mtp",
+      "observed_throughput_change_percent": -0.17540694524391665,
+      "observed_wall_change_percent": 0.1757151618416275
+    },
+    {
+      "arm": "kv4",
+      "baseline": {
+        "combined_tp2_tokens_per_second": 254.84548862672926,
+        "completion_tokens": 133153,
+        "http_wall_seconds": 522.4852153260144,
+        "mean_request_latency_seconds": 18.639070228196683,
+        "median_group_makespan_seconds": 14.859211178998521,
+        "median_request_latency_seconds": 14.858561725501204,
+        "requests": 56
+      },
+      "cleanup": {
+        "combined_tp2_tokens_per_second": 254.50559185005542,
+        "completion_tokens": 133153,
+        "http_wall_seconds": 523.1830036899482,
+        "mean_request_latency_seconds": 18.66395983246392,
+        "median_group_makespan_seconds": 14.886558630001673,
+        "median_request_latency_seconds": 14.885745023500931,
+        "requests": 56
+      },
+      "concurrency": 2,
+      "groups": 28,
+      "logical_arm": "mtp",
+      "observed_throughput_change_percent": -0.13337366829816455,
+      "observed_wall_change_percent": 0.133551791221187
+    }
+  ],
+  "total_responses": 352
+}

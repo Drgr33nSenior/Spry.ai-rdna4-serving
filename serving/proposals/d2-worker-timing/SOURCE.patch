@@ -1,0 +1,103 @@
+--- a/legacy/review/model_benchmark.py
++++ b/legacy/review/model_benchmark.py
+@@ -378,6 +378,11 @@
+     if type(spec) is dict and spec.get('experiment_mode') == 'native-http-fp8-sprint01-v1':
+         http = spec.get('http_serving')
+         fields = {'schema', 'mode', 'bindings', 'client_seconds', 'expected_devices'}
++        worker = spec.get('worker_seconds')
++        client = http.get('client_seconds') if type(http) is dict else None
++        if not (type(worker) is int and type(client) is int
++                and 1 <= client <= 2040 and client + 240 <= worker <= 2280):
++            raise ValueError('bounded HTTP worker/client timing required')
+         if type(http) is dict and 'diagnostic_environment' in http:
+             path = Path(__file__).resolve().with_name('mtp_contract.py')
+             module_spec = importlib.util.spec_from_file_location('frozen_http_phase_contract', path)
+@@ -386,7 +391,7 @@
+             if phase_contract.settings()['phase'] not in phase_contract.FAIL_FAST_PHASES and (not phase_contract.precision_reference_enabled()) or http['diagnostic_environment'] != {arm: phase_contract.expected_environment(arm) for arm in ('control', 'mtp')}:
+                 raise ValueError('native diagnostic environment binding')
+             fields.add('diagnostic_environment')
+-        if not (type(http) is dict and set(http) == fields and (http['schema'] == 1) and (http['mode'] == 'native-http-fp8-sprint01-v1') and (type(http['client_seconds']) is int) and (http['client_seconds'] in (180, 300, 420, 1740, 2040)) and (type(http['bindings']) is dict) and (set(http['bindings']) == {'control', 'mtp'}) and all((type(row) is dict and set(row) == {'path', 'sha256'} and (type(row['path']) is str) and (row['path'] == 'review/HTTP-BINDING-' + arm + '.json') and valid_digest(row['sha256']) for arm, row in http['bindings'].items())) and (type(http['expected_devices']) is dict) and (len(http['expected_devices']) == 2) and all((type(bdf) is str and type(row) is dict and (set(row) == {'uuid', 'render'}) and (type(row['uuid']) is str) and (type(row['render']) is str) for bdf, row in http['expected_devices'].items()))):
++        if not (type(http) is dict and set(http) == fields and (http['schema'] == 1) and (http['mode'] == 'native-http-fp8-sprint01-v1') and (type(http['client_seconds']) is int) and (1 <= http['client_seconds'] <= 2040) and (type(http['bindings']) is dict) and (set(http['bindings']) == {'control', 'mtp'}) and all((type(row) is dict and set(row) == {'path', 'sha256'} and (type(row['path']) is str) and (row['path'] == 'review/HTTP-BINDING-' + arm + '.json') and valid_digest(row['sha256']) for arm, row in http['bindings'].items())) and (type(http['expected_devices']) is dict) and (len(http['expected_devices']) == 2) and all((type(bdf) is str and type(row) is dict and (set(row) == {'uuid', 'render'}) and (type(row['uuid']) is str) and (type(row['render']) is str) for bdf, row in http['expected_devices'].items()))):
+             raise ValueError('native HTTP serving specification')
+         return spec
+     raise ValueError('only the W5 native HTTP serving specification is supported')
+@@ -489,6 +494,7 @@
+         raise ValueError('physical artifact flags must be supplied together')
+     spec = json.loads(checked_file(args.spec, args.spec_sha256))
+     validate_spec(spec)
++    worker_seconds = spec['worker_seconds']
+     if args.execute_serving_screen:
+         raise ValueError('HTTP screen uses the canonical reviewed-benchmark entry flag')
+     if not args.physical_artifacts:
+@@ -506,7 +512,8 @@
+         binding['artifact_transport'] = artifacts.RAW_TRANSPORT
+     result = None
+     try:
+-        result = serving_runtime.execute(args, spec, output, deadline=time.monotonic() + 2280, artifacts=artifacts)
++        result = serving_runtime.execute(args, spec, output,
++            deadline=time.monotonic() + worker_seconds, artifacts=artifacts)
+     finally:
+         if (output / 'result.json').is_file():
+             artifacts.pack_http_artifacts(output, binding)
+--- a/legacy/review/serving_runtime.py
++++ b/legacy/review/serving_runtime.py
+@@ -353,8 +353,11 @@
+ 
+ 
+ def _client_callback(
+-    material: dict[str, Any], *, deadline: float, client_factory: Callable[..., Any], holder: dict[str, Any],
++    material: dict[str, Any], *, deadline: float, client_seconds: int,
++    client_factory: Callable[..., Any], holder: dict[str, Any],
+ ) -> Callable[[dict[str, Any]], Any]:
++    _require(type(client_seconds) is int and 1 <= client_seconds <= 2040,
++             "bounded configured client duration required")
+     binding = material["entry_binding"]
+     expected = {key: binding[key] for key in ("arm", "source_manifest_sha256", "session_sha256", "spec_sha256")}
+     port = _port(binding["canonical_server_cli"])
+@@ -418,7 +421,9 @@
+         _hip_sampling_ready(material, gate)
+         if mtp_contract.instrumentation_enabled() and mtp_contract.settings().get('allocator_snapshot') is True:
+             _allocator_ready(material, gate, _load_private_helper(observer_source))
+-        client_deadline = min(deadline, time.monotonic() + mtp_contract.phase_config()[1])
++        ready = time.monotonic()
++        client_deadline = min(deadline, ready + client_seconds)
++        _require(ready < client_deadline, "shared HTTP deadline elapsed during native readiness")
+         raw_gate = _canonical(gate)
+         _write_exclusive(material["native_dir"] / "NATIVE-READINESS-CALLBACK.json", gate)
+         client = client_factory(port=port, output_root=material["client_dir"], absolute_deadline=client_deadline,
+@@ -471,7 +476,8 @@
+             'HTTP diagnostic environment differs')
+     _require(type(http) is dict and set(http) == fields
+              and http["schema"] == 1 and http["mode"] == MODE and type(http["bindings"]) is dict
+-             and set(http["bindings"]) == {"control", "mtp"} and http["client_seconds"] == mtp_contract.phase_config()[1],
++             and set(http["bindings"]) == {"control", "mtp"}
++             and type(http["client_seconds"]) is int and 1 <= http["client_seconds"] <= 2040,
+              "HTTP specification differs")
+ 
+ 
+@@ -494,6 +500,11 @@
+              "retired BetterBench client is not supported")
+     http = spec.get("http_serving")
+     validate_http_specification(http)
++    client_seconds = http["client_seconds"]
++    worker_seconds = spec.get("worker_seconds")
++    _require(type(worker_seconds) is int and client_seconds + 240 <= worker_seconds <= 2280,
++             "bounded HTTP worker/client timing required")
++    _require(deadline <= time.monotonic() + worker_seconds, "shared HTTP deadline exceeds configured worker budget")
+     _require(type(getattr(args, "session_sha256", None)) is str and _HEX.fullmatch(args.session_sha256) is not None
+              and type(getattr(args, "spec_sha256", None)) is str and _HEX.fullmatch(args.spec_sha256) is not None,
+              "session/spec identities required")
+@@ -504,12 +515,11 @@
+     holder: dict[str, Any] = {}
+     try:
+         template, template_sha256 = _read_template(http["bindings"][logical], arm=logical)
+-        _require(http["client_seconds"] == mtp_contract.phase_config()[1], "HTTP client duration differs")
+         material = _materialize(template, template_sha256=template_sha256, session_sha256=args.session_sha256,
+                                 spec_sha256=args.spec_sha256, output=output, deadline=deadline,
+                                 expected_devices=http["expected_devices"])
+         entry_runner(material["entry_binding"],
+-                     client=_client_callback(material, deadline=deadline,
++                     client=_client_callback(material, deadline=deadline, client_seconds=client_seconds,
+                                              client_factory=client_factory, holder=holder))
+         summary = holder.get("summary")
+         _require(summary is not None, "native callback returned without client summary")

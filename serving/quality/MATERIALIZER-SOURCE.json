@@ -1,0 +1,11 @@
+{
+  "canonical_source": "prepare_packet.py",
+  "common_canonical_source": "common.py",
+  "common_donor": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/phase2-128k-w5p-ff396f8f-preparation-v1/quality-template-w5/source/common.py",
+  "common_original_sha256": "f56025c9c6075cda87cc52c1b678407b908997384c021b3746a4ec348b440933",
+  "donor": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/phase2-128k-w5p-ff396f8f-preparation-v1/quality-template-w5/prepare_packet.py",
+  "donor_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "maximum_paired_rows": 704,
+  "original_sha256": "01b8d87e74462f2135c1d985e0f8235ca71531467f763f6518b53be29021fef8",
+  "scope": "Derive paired row count; native work and resource ceilings unchanged"
+}

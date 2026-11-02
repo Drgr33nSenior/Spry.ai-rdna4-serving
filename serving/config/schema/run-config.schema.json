@@ -1,0 +1,397 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "base": {
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "file",
+              "sha256"
+            ],
+            "type": "object"
+          },
+          "maxItems": 10000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "sglang": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "sglang",
+        "assets"
+      ],
+      "type": "object"
+    },
+    "host": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "pattern": "config/host/[a-z0-9-]+\\.json",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "[0-9a-f]{64}",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "instrumentation": {
+      "enum": [
+        "production",
+        "on"
+      ],
+      "type": "string"
+    },
+    "limits": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "arm_metadata_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "arm_release_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "caller_reserve_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "campaign_margin_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "client_bundle_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "client_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "client_tree_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "client_tree_files": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "collection_reserve_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "http_member_read_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "http_stream_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "locked_admission_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "native_bundle_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "native_tree_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "native_tree_files": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "observer_copies_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "outer_stdio_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "owner_cleanup_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "result_json_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "seal_reserve_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "session_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "settings_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "small_metadata_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_copies_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_preparation_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "summary_closeout_bytes": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "worker_startup_seconds": {
+          "maximum": 9223372036854775807,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "client_seconds",
+        "worker_startup_seconds",
+        "owner_cleanup_seconds",
+        "arm_release_seconds",
+        "admission_seconds",
+        "source_preparation_seconds",
+        "locked_admission_seconds",
+        "collection_reserve_seconds",
+        "campaign_margin_seconds",
+        "seal_reserve_seconds",
+        "caller_reserve_seconds",
+        "result_json_bytes",
+        "client_bundle_bytes",
+        "native_bundle_bytes",
+        "http_stream_bytes",
+        "client_tree_bytes",
+        "native_tree_bytes",
+        "arm_metadata_bytes",
+        "source_copies_bytes",
+        "observer_copies_bytes",
+        "outer_stdio_bytes",
+        "summary_closeout_bytes",
+        "small_metadata_bytes",
+        "session_bytes",
+        "settings_bytes",
+        "http_member_read_bytes",
+        "client_tree_files",
+        "native_tree_files"
+      ],
+      "type": "object"
+    },
+    "menu": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "const": "menu.json",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "[0-9a-f]{64}",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "model": {
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "file",
+              "sha256"
+            ],
+            "type": "object"
+          },
+          "maxItems": 10000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "cache_profile": {
+          "additionalProperties": false,
+          "properties": {
+            "draft": {
+              "enum": [
+                "bf16"
+              ],
+              "type": "string"
+            },
+            "target": {
+              "enum": [
+                "bf16"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "target",
+            "draft"
+          ],
+          "type": "object"
+        },
+        "draft_width": {
+          "maximum": 32,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "assets",
+        "cache_profile",
+        "draft_width"
+      ],
+      "type": "object"
+    },
+    "overlays": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "profile": {
+      "additionalProperties": false,
+      "properties": {
+        "chunked_prefill_size": {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "context_length": {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "disable_overlap_schedule": {
+          "type": "boolean"
+        },
+        "max_mamba_cache_size": {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "max_running_requests": {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "max_total_tokens": {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "mem_fraction_static": {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "context_length",
+        "max_total_tokens",
+        "max_running_requests",
+        "mem_fraction_static",
+        "chunked_prefill_size",
+        "max_mamba_cache_size",
+        "disable_overlap_schedule"
+      ],
+      "type": "object"
+    },
+    "run_id": {
+      "pattern": "[a-z0-9][a-z0-9-]{0,63}",
+      "type": "string"
+    },
+    "schema": {
+      "const": 1,
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "run_id",
+    "base",
+    "model",
+    "profile",
+    "instrumentation",
+    "overlays",
+    "limits",
+    "host",
+    "menu"
+  ],
+  "title": "W5 run-config source-review configuration",
+  "type": "object"
+}

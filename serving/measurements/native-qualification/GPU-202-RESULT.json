@@ -1,0 +1,91 @@
+{
+  "acceptance_guards_changed": false,
+  "caller_seconds_charged": 202,
+  "closed_scopes": [
+    {
+      "absent": true,
+      "arm": "bf16",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-8ea2c2d6cbb9448d-bf16.scope",
+      "observed_monotonic": 172752.574643449
+    }
+  ],
+  "closing_marker_count": 2,
+  "closing_marker_positions": [
+    1896,
+    3294
+  ],
+  "deployed": false,
+  "execution_seal": {
+    "manifest_sha256": "9d4da5897aeb193d1a96cf003c8a3bbea1779d2d1080bf61668cb413005b9741",
+    "members": 28,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/execution-v1",
+    "verified_utc": "2026-11-02T13:58:56.197988+00:00"
+  },
+  "failure": "ValueError: exactly one closing thinking marker required",
+  "head_sharing_enabled": false,
+  "independent_gpu_release_verified": true,
+  "local_caller_completed_with_receipt": true,
+  "model_construction_reached": true,
+  "native_quality_grade_performed": false,
+  "native_readiness_reached": true,
+  "next_control_launch_authorized": false,
+  "next_control_packet": "ca3598712e150f21",
+  "nonce": "c21e0b4ce8f4ed17",
+  "operation": 202,
+  "own_closeout_checkpoint": "CHECKPOINT-553.json",
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 196,
+  "packed_parameter_storage_rebinding_enabled": false,
+  "pre_memory_response_exactly_matches196_and201": true,
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_frozen_requests_not_run": 351,
+  "remaining_gpu_allowance": 0,
+  "reported_completion_tokens": 3318,
+  "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+  "requests_attempted": 1,
+  "response_sha256": "625a1e313c6c8b6bbcb10d1489649713877280892273dd089de5c107c5779294",
+  "response_token_ids": 3318,
+  "responses": 1,
+  "retry_authorized": false,
+  "schema": 1,
+  "seals": {
+    "operation": {
+      "manifest_sha256": "af17d0384948ecabf4dbbbbc4bd547c59500e1f8e1d44314bc29fea61f7ad0fd",
+      "members": 198,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/caller"
+    },
+    "protected": {
+      "manifest_sha256": "2831743a6d3bb8aa4766dd06fdd17929a1e1906da210d82661bf66c7e16b0dd0",
+      "members": 26,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/caller/collected/protected/fp8-benchmark-source.c21e0b4ce8f4ed17"
+    },
+    "workload": {
+      "manifest_sha256": "a659949f83c77aea2d8a0add0725db2bd607fae286311444ad5015c6f8b4e95d",
+      "members": 99,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/caller/collected/workload/fp8-kv-benchmark.c21e0b4ce8f4ed17"
+    }
+  },
+  "second_arm_started": false,
+  "shared_head_and_packed_rebinding_not_required_for_failure": true,
+  "source_of_response_divergence": "UNRESOLVED",
+  "source_selection_changed": false,
+  "startup_witnesses": [
+    {
+      "production_readiness_gate_validated": true,
+      "rank": 0
+    },
+    {
+      "production_readiness_gate_validated": true,
+      "rank": 1
+    }
+  ],
+  "status": "PRE_MEMORY_CONTROL_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED",
+  "token_comparison": "GPU-202-TOKEN-COMPARISON.json",
+  "token_ids_sha256": "9c67733793946807c999cecf672a1f56081d814d6686498d8449334a68622afc",
+  "valid_complete_responses": 0,
+  "whole_cleanup_complete": false,
+  "whole_native_qualification": false,
+  "worker_start_attempts": 1
+}

@@ -1,0 +1,35 @@
+{
+  "current_baseline_native_grade": "NOT COMPLETE",
+  "decoder_child_seconds": 180,
+  "new_execution_authorized": false,
+  "owner_ceiling_seconds": 320,
+  "prior_native_result_sha256": "131b223ab095d56fc733785c6178266e15042894b4ef47f8020a78e419738fd0",
+  "prior_native_status": "NATIVE_CPU_FINAL_QUALITY_AND_RELEASE_VALIDATED",
+  "prior_profile_rows": 352,
+  "rows": {
+    "cpu_readout.py": {
+      "sha256": "097d7ce70e34609a8ab8aac94ac4b838a9809ec8ae14cecd6e459ba71dc698ea",
+      "source_member": "readout.py",
+      "superseded_template_sha256": "d3c5cd5efc76a2d547abf96555a3cbb91f843e26a2b4e23d1577a19328a27232"
+    },
+    "quality_stages.py": {
+      "sha256": "8ace9cf62fe248452a7fe6bb8f85be1e947c2f93eba24bc9babea4dd356da62e",
+      "source_member": "source/quality_stages.py",
+      "superseded_template_sha256": "402519aa237983ad2d007f11bcbff52afad669b0a1116017f4e2ef553da25079"
+    },
+    "tokenizer_entry.py": {
+      "sha256": "a14c950dc2bd649191d0680d5967d8477e522527876ca195133026f2522cac09",
+      "source_member": "source/tokenizer_entry.py",
+      "superseded_template_sha256": "ab6acb59d34ecb11f0638df271efe3b2a1f48fddd1845d15c8b9dfa46b6deb86"
+    }
+  },
+  "schema": 1,
+  "source_files_copied_byte_identically": true,
+  "source_root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/phase2-128k-w5p-ff396f8f-quality-binding-v3/cpu",
+  "source_seal": {
+    "manifest_sha256": "5bc98ea8b9aba1dca1d46c8167be2bb9185b01b488a6d7faa39c9b638af10224",
+    "members": 76,
+    "root": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/phase2-128k-w5p-ff396f8f-quality-binding-v3/cpu"
+  },
+  "work_seconds": 210
+}

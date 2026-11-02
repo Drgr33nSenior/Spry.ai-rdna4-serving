@@ -1,0 +1,202 @@
+{
+  "analyzer_sha256": "47a59adea37e2b9f82a4ff0b44fa9e7f0094010eead08eecd0606a16d9dfb3f9",
+  "baseline": {
+    "arms": {
+      "bf16": {
+        "http_including_warmup": {
+          "0000:23:00.0": {
+            "median_bytes": 29745872896.0,
+            "minimum_bytes": 29479284736,
+            "sampled_maximum_bytes": 29745872896,
+            "samples": 186
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 30006190080.0,
+            "minimum_bytes": 29739601920,
+            "sampled_maximum_bytes": 30006190080,
+            "samples": 186
+          }
+        },
+        "measured_timing_groups": {
+          "0000:23:00.0": {
+            "median_bytes": 29745872896.0,
+            "minimum_bytes": 29743603712,
+            "sampled_maximum_bytes": 29745872896,
+            "samples": 136
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 30006190080.0,
+            "minimum_bytes": 30003920896,
+            "sampled_maximum_bytes": 30006190080,
+            "samples": 136
+          }
+        },
+        "window_end_monotonic": 176365.172289861,
+        "window_start_monotonic": 174504.396814485
+      },
+      "kv4": {
+        "http_including_warmup": {
+          "0000:23:00.0": {
+            "median_bytes": 29745942528.0,
+            "minimum_bytes": 29479354368,
+            "sampled_maximum_bytes": 29745942528,
+            "samples": 186
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 30006284288.0,
+            "minimum_bytes": 29739692032,
+            "sampled_maximum_bytes": 30006284288,
+            "samples": 186
+          }
+        },
+        "measured_timing_groups": {
+          "0000:23:00.0": {
+            "median_bytes": 29745942528,
+            "minimum_bytes": 29743673344,
+            "sampled_maximum_bytes": 29745942528,
+            "samples": 135
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 30006284288,
+            "minimum_bytes": 30004011008,
+            "sampled_maximum_bytes": 30006284288,
+            "samples": 135
+          }
+        },
+        "window_end_monotonic": 178328.876717403,
+        "window_start_monotonic": 176467.784495258
+      }
+    },
+    "caller_seal": {
+      "manifest_sha256": "c95a0831de8b9147d7e6bccddd4b714038b4829e34bf726e3c9352e24c2eb36a",
+      "members": 426,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-replay-control-v1/pair-v1/baseline/caller"
+    },
+    "failed_samples": 0,
+    "host_cgroup_memory_peak_bytes": {
+      "bf16": 13083967488,
+      "kv4": 13317140480
+    },
+    "interval_seconds": 10,
+    "launch_sampled_vram": {
+      "0000:23:00.0": {
+        "median_bytes": 29745872896.0,
+        "minimum_bytes": 59916288,
+        "sampled_maximum_bytes": 29745942528,
+        "samples": 400
+      },
+      "0000:c3:00.0": {
+        "median_bytes": 30006190080.0,
+        "minimum_bytes": 79822848,
+        "sampled_maximum_bytes": 30006284288,
+        "samples": 400
+      }
+    },
+    "samples_sha256": "2f045eb328089ba2c2a35eab3e7d0dfda49d7f1c18db25aa5e545dc006cdb48b",
+    "successful_samples": 400,
+    "total_samples": 400
+  },
+  "baseline_operation": 203,
+  "causal_memory_savings_established": false,
+  "cleanup": {
+    "arms": {
+      "bf16": {
+        "http_including_warmup": {
+          "0000:23:00.0": {
+            "median_bytes": 28113879040.0,
+            "minimum_bytes": 27847294976,
+            "sampled_maximum_bytes": 28113879040,
+            "samples": 186
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 28374171648.0,
+            "minimum_bytes": 28107587584,
+            "sampled_maximum_bytes": 28374171648,
+            "samples": 186
+          }
+        },
+        "measured_timing_groups": {
+          "0000:23:00.0": {
+            "median_bytes": 28113879040,
+            "minimum_bytes": 28075958272,
+            "sampled_maximum_bytes": 28113879040,
+            "samples": 137
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 28374171648,
+            "minimum_bytes": 28336250880,
+            "sampled_maximum_bytes": 28374171648,
+            "samples": 137
+          }
+        },
+        "window_end_monotonic": 191485.427158141,
+        "window_start_monotonic": 189623.339224039
+      },
+      "kv4": {
+        "http_including_warmup": {
+          "0000:23:00.0": {
+            "median_bytes": 28113764352,
+            "minimum_bytes": 27847118848,
+            "sampled_maximum_bytes": 28113764352,
+            "samples": 187
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 28374073344,
+            "minimum_bytes": 28107431936,
+            "sampled_maximum_bytes": 28374073344,
+            "samples": 187
+          }
+        },
+        "measured_timing_groups": {
+          "0000:23:00.0": {
+            "median_bytes": 28113764352,
+            "minimum_bytes": 28111519744,
+            "sampled_maximum_bytes": 28113764352,
+            "samples": 135
+          },
+          "0000:c3:00.0": {
+            "median_bytes": 28374073344,
+            "minimum_bytes": 28371832832,
+            "sampled_maximum_bytes": 28374073344,
+            "samples": 135
+          }
+        },
+        "window_end_monotonic": 193452.476777773,
+        "window_start_monotonic": 191589.120526677
+      }
+    },
+    "caller_seal": {
+      "manifest_sha256": "a1bcb5fab8ec167b41f5f2a88084701a6471561b167c8b33f4157dda3aad70e4",
+      "members": 428,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller"
+    },
+    "failed_samples": 0,
+    "host_cgroup_memory_peak_bytes": {
+      "bf16": 12962009088,
+      "kv4": 13036498944
+    },
+    "interval_seconds": 10,
+    "launch_sampled_vram": {
+      "0000:23:00.0": {
+        "median_bytes": 28113764352,
+        "minimum_bytes": 59916288,
+        "sampled_maximum_bytes": 28113879040,
+        "samples": 401
+      },
+      "0000:c3:00.0": {
+        "median_bytes": 28374073344,
+        "minimum_bytes": 79822848,
+        "sampled_maximum_bytes": 28374171648,
+        "samples": 401
+      }
+    },
+    "samples_sha256": "f858b4eed5c732b80ed3cfbe7742387660b5a0bde41becde591b6c51bbdfe239",
+    "successful_samples": 401,
+    "total_samples": 401
+  },
+  "cleanup_operation": 207,
+  "schema": 1,
+  "scope": "Read-only sysfs VRAM-used point samples every10 seconds, joined to host monotonic HTTP group windows. Samples can miss transient peaks. Host cgroup peak is system RAM, not VRAM. Sequential descriptive comparison only.",
+  "status": "AUTHENTICATED_DESCRIPTIVE_EXTERNAL_MEMORY_SAMPLES",
+  "whole_device_peak_established": false
+}

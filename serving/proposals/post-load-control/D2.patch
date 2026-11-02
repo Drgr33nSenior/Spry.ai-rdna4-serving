@@ -1,0 +1,36 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -50,6 +50,7 @@
+                                    "verify_benchmark_runtime.py")
+ LIVE_SOURCE_NAMES += ('callback_profile.py', 'stall_trace.py')
+ LIVE_SOURCE_NAMES += ('spry_common_canon.py', 'graph_outer.py', 'graph_full_cuda_graph_backend.py')
++LIVE_SOURCE_NAMES += ('spry_post_load.py',)
+ LIVE_SOURCE_NAMES += ('serving_contract.py', 'serving_client.py', 'serving_reader.py', 'serving_integration.py',
+                       'serving_projection.py', 'serving_entry.py', 'serving_launcher.py', 'worker_entry.py',
+                       'serving_runtime.py', 'serving_graph_observer.py', 'mtp_contract.py', 'serving_parity.py')
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -336,6 +336,10 @@
+  "review/d3b_head_fp8_ops.py": "4814926eb6294f76d29516ad68f78271d1cf879c0de3815554d8044cd8251770",
+  "review/d3b_head_launches.py": "e88da9ee318a5e0fac1282a757e7c4282cfddd0b97a8c160419732e42e15a442",
+  "review/d3b_target_head_adapter.py": "88721f70837b6775bdabcca9bf9b9f44cac5c84da804699f864e0b080108bee4"
++}
++POST_LOAD_FILES = {
++ "review/d3b_combined_model_runner.py": "034212ae8dae8d0eba591787bb53adadb7c331ba9f676ea517a4c8a834ab63da",
++ "review/spry_post_load.py": "84634fd9c4a5ffcac71643bb7263f8c71cd41e5206e4dda89fec331d26d890ed"
+ }
+ 
+ 
+@@ -369,9 +373,9 @@
+         need(expected.get('review/d3b_head_adapter.py') == 'd0eb6f467f29b24079254d5b5cdd0101291ae6e0a5e6f92ad2ed9798123ca942' and
+              sha(members.get('review/d3b_head_adapter.py', b'')) == 'd0eb6f467f29b24079254d5b5cdd0101291ae6e0a5e6f92ad2ed9798123ca942',
+              'exact current drafter-head source closure required')
+-        need(expected.get('review/d3b_combined_model_runner.py') == 'da81d4c393cf5910753c48036bedbe593e851ffe0985997f4eca02d79737df76' and
+-             sha(members.get('review/d3b_combined_model_runner.py', b'')) == 'da81d4c393cf5910753c48036bedbe593e851ffe0985997f4eca02d79737df76',
+-             'exact current drafter-head source closure required')
++        need(all(expected.get(name) == pin and sha(members.get(name, b'')) == pin
++                 for name, pin in POST_LOAD_FILES.items()),
++             'exact post-load runner/helper source closure required')
+         return 80
+     return 66 if 'review/raw_attention.py' in expected else 65 if 'review/attention_capture.py' in expected else 64
+ 

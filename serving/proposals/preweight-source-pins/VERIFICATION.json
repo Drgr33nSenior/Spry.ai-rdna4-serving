@@ -1,0 +1,419 @@
+{
+  "actual_campaign_checks": {
+    "instrumented": 6,
+    "passed": true,
+    "production": 6
+  },
+  "actual_worker_materialization": {
+    "instrumented/baseline": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual template reader, complete materializer and written worker cross-binding"
+    },
+    "instrumented/cleanup": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual template reader, complete materializer and written worker cross-binding"
+    },
+    "production/baseline": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual template reader, complete materializer and written worker cross-binding"
+    },
+    "production/cleanup": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual template reader, complete materializer and written worker cross-binding"
+    }
+  },
+  "all_61_worker_and_protected_python_sources_unchanged": true,
+  "all_ten_protected_inventory_members_unchanged": true,
+  "complete_cleanup": false,
+  "consumed_native_attempt": {
+    "caller_seconds_charged": 79,
+    "execution_seal": {
+      "manifest_sha256": "6c55f7faa24cf7756deebe305e5417b71e97daaef52e4ffe4fb0c0edf4d68f61",
+      "members": 21,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-template-pins-v1/instrumented-pair-v1/cleanup/execution-v1"
+    },
+    "independent_gpu_release_verified": true,
+    "model_construction_reached": false,
+    "operation": 193,
+    "owner_seconds_charged": 73,
+    "responses": 0,
+    "status": "INSTRUMENTED_CANDIDATE_PREWEIGHT_SOURCE_REFUSAL_PARKED",
+    "worker_start_attempts": 1
+  },
+  "correction": "Refresh both preweight helper aliases; exclude both private digests from the comparison projection while retaining paths, modules and settings",
+  "cpu_tensor_gate_reused": true,
+  "default_builder": {
+    "changed_non_payload_records": [
+      "SOURCE-BUILD.json"
+    ],
+    "current_builder_sha256": "523175bfedadcfe47c5752e183b77dd814e985bd4de59c3d14068bcf943fa45c",
+    "native_payload_byte_identical": true,
+    "native_payload_files": 78,
+    "old_builder_sha256": "65e9aad619504137c5e4d72fc9e885aed043f7816ee7c10d4f7395254a7e02bf",
+    "passed": true
+  },
+  "fresh_candidate": {
+    "archive_members": 79,
+    "native_execution_authorized": false,
+    "nonce": "e201110200000091",
+    "owner_review_sha256": "178b896a0661e59fc33780e25c3db4e324849c0e00cd40674f12bb93381d21f6",
+    "source_seal": {
+      "manifest_sha256": "c891509d098594e2f349842e3496f9ce849a9a38dbcc31f65e48d13b4570bbb5",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/preweight-source-pins-v1/instrumented-pair-v1/cleanup/author"
+    }
+  },
+  "kernels_requests_settings_and_pools_changed": false,
+  "native_bundle_method": "Reuse complete new review bytes plus four data replacements; authenticate reconstructed operation193 review against its original full manifest",
+  "native_focused_checks": {
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "subprocess_denied": true,
+    "tests": 22
+  },
+  "native_gpu_allowance": 0,
+  "native_source_transfer": {
+    "ceiling_bytes": 16777216,
+    "gzip_bytes": 11840924,
+    "tar_bytes": 13056000
+  },
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "post_test_change": "cpu_verified false to true only",
+  "previous_test_gap": "The previous source check stopped at the expected-device shape gate before checking the nested preweight aliases",
+  "proofs": {
+    "DEFAULT-BUILDER-PARITY.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/DEFAULT-BUILDER-PARITY.json",
+      "sha256": "be22af379d5db541df5b6099af63fab49408bce13646aedb041cca9784cee511"
+    },
+    "GPU-193-EXECUTION-SEAL.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/GPU-193-EXECUTION-SEAL.json",
+      "sha256": "499c27599524b2e5a50a040656c58a2845370ca0f535f0ee2662de7fbe2bc62d"
+    },
+    "NATIVE-MATERIALIZATION-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/NATIVE-MATERIALIZATION-CHECKS.json",
+      "sha256": "16ae4e15b148e394041634e39b88719ed2d364701db0d754df023498fdb31742"
+    },
+    "NATIVE-SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/NATIVE-SOURCE-INVENTORY.json",
+      "sha256": "961465df2a8b9edec9b01bfb1f23a7aedd0acddc6bd09899f209315793532d90"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/PUBLIC-CHECKS.json",
+      "sha256": "d81dee20be620dfeb6ad03e6e80e426a22810cc6017b8c027454ff89780fdce7"
+    },
+    "SOURCE-SEALS.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/SOURCE-SEALS.json",
+      "sha256": "0a4acca70ccafd414810e7bdf0278da12748fded4656c949121e69563deba07a"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/STATIC-CHECKS.json",
+      "sha256": "8503065dd45b9026629f3d4cd5e5f71b967534e3c496b91333f132cbef4208ba"
+    },
+    "WORKER-MATERIALIZATION-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/WORKER-MATERIALIZATION-CHECKS.json",
+      "sha256": "7dc24c1f3c79033d84eceae85064c751d011db5d575e8f67705dd554946d809a"
+    },
+    "check_final_campaign_cases.py": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/check_final_campaign_cases.py",
+      "sha256": "3fb25229667843be3f8c34c7f17d2cd7e395d65ac65779b0e083d66bd76893b4"
+    },
+    "check_worker_materialization.py": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/check_worker_materialization.py",
+      "sha256": "80edfbd3601e8d213e00e176e17c2f4b1ab1dfd8cd28a4c50c6a7ed3e8fa1352"
+    },
+    "instrumented-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/instrumented-campaign-checks.json",
+      "sha256": "b0ac08ad159765f7772af9e359539ab77daccbd1bc1df098716f373cb9da5bd2"
+    },
+    "instrumented-packet-check.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/instrumented-packet-check.json",
+      "sha256": "32c5bae119b12f11d36606e5664bc277a303f1a3f6111e908df612f39a6d3862"
+    },
+    "native-checks.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/native-checks.log",
+      "sha256": "501ac85a9195ca36c2639a18dca62a9f43f40816c833fac21a98082d32ad164d"
+    },
+    "native-materialization-checks.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/native-materialization-checks.json",
+      "sha256": "16ae4e15b148e394041634e39b88719ed2d364701db0d754df023498fdb31742"
+    },
+    "prepare-instrumented-argument-refusal.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/prepare-instrumented-argument-refusal.log",
+      "sha256": "0e9378d58c593b52583b3360d41d116aba2a4ed57c1c88881a154fff7c68083e"
+    },
+    "prepare-instrumented-path-refusal.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/prepare-instrumented-path-refusal.log",
+      "sha256": "74d7db8e748807fa798b455158d5867626a32a55e03481a16eae8fbcafc42a58"
+    },
+    "prepare-production-argument-refusal.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/prepare-production-argument-refusal.log",
+      "sha256": "0e9378d58c593b52583b3360d41d116aba2a4ed57c1c88881a154fff7c68083e"
+    },
+    "prepare-production-contract-refusal.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/prepare-production-contract-refusal.log",
+      "sha256": "97c0da0ba707dee7c41bbc60fb862acf912049d5528633ff3286b3e57a99caa7"
+    },
+    "production-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/production-campaign-checks.json",
+      "sha256": "b0ac08ad159765f7772af9e359539ab77daccbd1bc1df098716f373cb9da5bd2"
+    },
+    "production-packet-check.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/production-packet-check.json",
+      "sha256": "3345a3b1d02c1d7b6fda6150f85854b4f80ba237986adc457fe4cceb1b652d92"
+    },
+    "public-make-fixture-refusal.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/public-make-fixture-refusal.log",
+      "sha256": "980d4e8a0e261d5bb517a5a1da2847d2b99f39431570e84825779ef351b26e90"
+    },
+    "public-make.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/public-make.log",
+      "sha256": "c144288f8e05639704dbdc016186a5d7e6a1172025d7c09c5ebac90a399a6049"
+    },
+    "retained-worker-materialization.json": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/retained-worker-materialization.json",
+      "sha256": "ff58c33b20a239d52abe8983dd8a3e8794c478bc74af237d45a17b406fb80cf1"
+    },
+    "unit-builder.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/unit-builder.log",
+      "sha256": "21a7e856499be01481dabe56e4aa666acf6e4bcef7f7d70c43ab0150b8f5b4ac"
+    },
+    "unit-history-final.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/unit-history-final.log",
+      "sha256": "f2789e3bca1dd5f3bcdb4f3b584ea304a8fe1c06a5538e655bcf920dc6bf5221"
+    },
+    "unit-measurement.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/unit-measurement.log",
+      "sha256": "8d792d81c28f14e81434cb2a175feb8a800363e60faf05e9aa008104cb37a9c2"
+    },
+    "unit-pins.log": {
+      "path": ".test-build/serving-cleanup/preweight-source-pins-v1/unit-pins.log",
+      "sha256": "6f8a987ff9d3dcb6541362dcfb63b18ec406e6a8b06eb1797ce44daef9fbd18f"
+    }
+  },
+  "protected_set_sha256": "12eec6f8b63b486a218ad2d489ed966073894405e2e86f8306a9999c16a91f06",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed",
+    "passed": true,
+    "python_tests": 1013,
+    "suites": 83
+  },
+  "published_materialization_checker": {
+    "byte_identical_to_native_tested_source": true,
+    "path": "tests/check_worker_materialization.py",
+    "sha256": "80edfbd3601e8d213e00e176e17c2f4b1ab1dfd8cd28a4c50c6a7ed3e8fa1352"
+  },
+  "published_proposal_sha256": "ebd0ab266b92861e8a53f8d262d55ac27072606f428c5d8e37c7aeb0d97f598b",
+  "remaining": [
+    "Fresh exact approval for instrumented packet e201110200000091",
+    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Production comparison and final retained evidence closeout"
+  ],
+  "retained_failure_reproduced": {
+    "arms": [
+      {
+        "actual_private_file_hashing": true,
+        "arm": "control",
+        "complete_materialization": false,
+        "empty_bytecode_mounts_substituted": true,
+        "expected_error": "preweight helper source map differs: gpu_identity",
+        "generated_manifest_files": 0,
+        "gpu_work": false,
+        "model_construction": false,
+        "native_entry_admission": false,
+        "output_filesystem_redirected": true,
+        "private_sources_checked": 38,
+        "production_evidence_mask_applied": false,
+        "stock_image_sources_substituted": true,
+        "template_reader_complete": true,
+        "worker_cross_binding_complete": false
+      },
+      {
+        "actual_private_file_hashing": true,
+        "arm": "mtp",
+        "complete_materialization": false,
+        "empty_bytecode_mounts_substituted": true,
+        "expected_error": "preweight helper source map differs: gpu_identity",
+        "generated_manifest_files": 0,
+        "gpu_work": false,
+        "model_construction": false,
+        "native_entry_admission": false,
+        "output_filesystem_redirected": true,
+        "private_sources_checked": 38,
+        "production_evidence_mask_applied": false,
+        "stock_image_sources_substituted": true,
+        "template_reader_complete": true,
+        "worker_cross_binding_complete": false
+      }
+    ],
+    "native_serving_or_quality_proven": false,
+    "passed": true,
+    "scope": "actual template reader, complete materializer and written worker cross-binding"
+  },
+  "root_cause": "Final source refresh updated graph_observer but left the nested gpu_identity preweight digest stale",
+  "schema": 1,
+  "static_checks": {
+    "ast_symtable_compile_modules": 303,
+    "passed": true,
+    "published_materialization_checker_byte_identical_to_native_tested_source": true,
+    "source_patch_forward_reverse_exact": true,
+    "worker_and_protected_python_sources_changed": false
+  },
+  "status": "CPU_PREWEIGHT_SOURCE_BINDINGS_FIXED_FRESH_GPU_APPROVAL_PENDING",
+  "tested_proposal_sha256": "3820a81066ccb679894d692db9ae58fa98919f34fce7e20d2a10714fa39c8f1d"
+}

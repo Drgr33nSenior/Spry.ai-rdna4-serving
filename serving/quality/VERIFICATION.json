@@ -1,0 +1,88 @@
+{
+  "all_cap_and_doubled_consumer_tests": true,
+  "canonical_quality_source_consumed_by_builder": false,
+  "cap_wire_projection": {
+    "both_complete_wires_retained": true,
+    "cap_oracles_removed": true,
+    "grade_claimed": false,
+    "input_bytes": [
+      5908880
+    ]
+  },
+  "complete_doubled_serving_pipeline_verified": false,
+  "consumed_protected_helpers_changed": false,
+  "correction": "Regenerated patch sections in sorted source-inventory order; source bytes unchanged.",
+  "distinct_composed_checks_verified": 27,
+  "envelope_wire_projection": {
+    "baseline_input_byte_identical": true,
+    "full_wire_decode_executed": false,
+    "input_bytes": [
+      12583890
+    ],
+    "private_oracles_kept_outside_source": true
+  },
+  "evidence_capacity_verified": false,
+  "expected_wire_projection": {
+    "baseline_input_byte_identical": true,
+    "full_wire_decode_executed": false,
+    "input_bytes": [
+      5725168
+    ],
+    "private_oracles_kept_outside_source": true
+  },
+  "focused_tests": 312,
+  "full_run_failed_check": "test_quality_source_pins_and_exact_patch",
+  "full_run_passing_tests": 26,
+  "full_run_tests": 27,
+  "full_suite_repeated_after_order_correction": false,
+  "launch_authorized": false,
+  "native_grading_packet_assembled": false,
+  "native_runtime_tested": false,
+  "native_tokenizer_executed": false,
+  "natural_baseline": {
+    "input_answers_and_grades_byte_identical": true,
+    "rows": 352,
+    "tokenizer": "CPU stand-in"
+  },
+  "owner_approved": false,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "proposal_sha256": "f6cadb54d4d2d2456d091625780f71a3d306f87df946249ba2dbe9020d8b28d9",
+  "public_tests": 11,
+  "reports": {
+    "packet-report-1.json": "5fed0674ab06e5f34a9126e7b24c248253d9e26219ca9da82f47524326995233",
+    "packet-report-pin-recheck.json": "f68c9b1027b00451e532d56faaf23a6fd8e55d91b02e9f4d7fd8375ef1652f26"
+  },
+  "repository_make_test": "PASS",
+  "repository_python_unittest_count": 749,
+  "source_patch_sha256": "5c39ddd112020851c016e43c5ef812a579a09061763672f4111f7065764b5771",
+  "source_pins": {
+    "final_quality_inputs.py": {
+      "baseline_sha256": "3fef086d6d60afde253ebf6c98f13c51a4d8fe65c025e90ea77c363575f8f8cd",
+      "proposed_sha256": "842e1669e49cdb35ac188dd3492ba51367aa4e885a90d5a31967ed159e0fb4f0",
+      "source_member": "quality-template-w5/producer/final_quality_inputs.py"
+    },
+    "quality_contract.py": {
+      "baseline_sha256": "2774c80629d2be5de59c9f5c3d6afc7c4b37538a6eb24aaaf8de737adeed4b0d",
+      "proposed_sha256": "9c59ccdbffcd5c11e2c6c649770d8262b9998863029dbeec5991dae165ea56da",
+      "source_member": "quality-template-w5/source/quality_contract.py"
+    },
+    "thinking_segments.py": {
+      "baseline_sha256": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29",
+      "proposed_sha256": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29",
+      "source_member": "quality-template-w5/source/thinking_segments.py"
+    }
+  },
+  "static_global_references": "PASS_SIX_CHANGED_PROPOSAL_MODULES",
+  "subsequent_complete_composition": {
+    "inherited_quality_checks": 27,
+    "passed": true,
+    "raw_report_path": "../../.test-build/serving-cleanup/approval-boot/packet-report-1.json",
+    "raw_report_sha256": "29ad057cad7735ad4d675ba9abd51bd2c6227d4adf91e9d8fd206ca6cc544be8",
+    "tests": 30
+  },
+  "syntax_compilation": "PASS_ALL_98_PYTHON_MODULES",
+  "targeted_pin_recheck_passed": true,
+  "targeted_pin_recheck_tests": 1,
+  "whole_run_config_mutations_supported": false
+}

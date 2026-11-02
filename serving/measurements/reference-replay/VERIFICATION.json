@@ -1,0 +1,173 @@
+{
+  "acceptance_guards_changed": false,
+  "approval_note": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/APPROVE-NEXT-GPU.md",
+  "approval_note_sha256": "80026249e9f872e74734708f133bbb8f8dfbd8fdbf375aec0033fe1dc6cb1778",
+  "approval_request_sha256": "5ccbaf9becf2792e86e2c041a1d1ed63837a776226fd319f9d506c878fb038c2",
+  "deployment": false,
+  "execution_authorized": false,
+  "first_native_check_failed": "Mac-only connection path absent on Linux; failure retained without changing packet source",
+  "gpu_work": false,
+  "local_checks": {
+    "caller_contexts_verified": true,
+    "launch_authorized": false,
+    "model_starts_executed": 0,
+    "one_use_entrypoint_external_dispatch_substituted": true,
+    "passed": true,
+    "quality_template_materialization": [
+      {
+        "cpu_recipe_bytes": 5655440,
+        "execution_authorized": false,
+        "fixture": true,
+        "rows": 352,
+        "variant": "baseline"
+      },
+      {
+        "cpu_recipe_bytes": 5655440,
+        "execution_authorized": false,
+        "fixture": true,
+        "rows": 352,
+        "variant": "cleanup"
+      }
+    ],
+    "real_transport_cli_parsers_passed": true,
+    "registration_created": false,
+    "source_archives": [
+      {
+        "archive_bytes": 11642880,
+        "members": 80,
+        "schema": 2,
+        "variant": "baseline"
+      },
+      {
+        "archive_bytes": 5926472,
+        "members": 80,
+        "schema": 3,
+        "variant": "cleanup"
+      }
+    ],
+    "test_source_sha256": "ceaa64ede91a93a90fbc2cb1b2315a120bd8b1906ca835bf3047d7967c7de789",
+    "tests": 6
+  },
+  "model_starts": 0,
+  "native_checks": {
+    "compiled_exact_sources": 62,
+    "denied_events": [],
+    "fixed_native_inputs": 9,
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "packet_evidence": {
+      "caller_contexts_verified": true,
+      "launch_authorized": false,
+      "model_starts_executed": 0,
+      "one_use_entrypoint_external_dispatch_substituted": true,
+      "quality_template_materialization": [
+        {
+          "cpu_recipe_bytes": 5655440,
+          "execution_authorized": false,
+          "fixture": true,
+          "rows": 352,
+          "variant": "cleanup"
+        }
+      ],
+      "real_transport_cli_parsers_passed": true,
+      "registration_created": false,
+      "source_archives": [
+        {
+          "archive_bytes": 5926472,
+          "members": 80,
+          "schema": 3,
+          "variant": "cleanup"
+        }
+      ]
+    },
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "source_seal_sha256": "ee4d8e11fb08515b6e1ad3f6be22a3220f7fd885275b37f4282b5be416be4f93",
+    "subprocess_denied": true,
+    "tests": 6,
+    "variant": "cleanup"
+  },
+  "native_checks_seal": {
+    "manifest_sha256": "a7ee7bf7358bef6f6897208ee940299e537a605f523394fa0eb0e26f58245f3f",
+    "members": 6,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/native-checks-v2"
+  },
+  "native_fixture_substitutes": [
+    "Variant loops select only the proposed cleanup packet",
+    "Materializer PROGRAMME relocated to staged byte-identical connection.py; source and execution assertions unchanged",
+    "One-use external dispatch substituted by the original CPU fixture"
+  ],
+  "native_preflight_wrapper_sha256": "5883b47a0f1e77814198d0a9d1702fd3ce7168d27307f141bdc10bbcb2cdd81a",
+  "nonce": "e20111020000009b",
+  "not_a_final_performance_comparison": true,
+  "owner_review_sha256": "710dc75c8ec7da3910bea578970003f490b9f8caf1c1bbfc8c0b828b86a837a8",
+  "protected_delta": {
+    "path": "PROTECTED-DELTA.json",
+    "sha256": "f868474fda22264cf9977369391a00fb82f5851e5d3c4e1922bfbf9713311875"
+  },
+  "public_regression_evidence_reused": {
+    "path": "../../proposals/startup-proof-policy/VERIFICATION.json",
+    "reason": "No public executable source or test changed; 1029 Python tests and C++ checks from unchanged published source retained",
+    "sha256": "6d56d55eb3d09bc01cd24053dfe46d5f47f88b740d372b414feab4253e298598"
+  },
+  "registration_created": false,
+  "request": {
+    "archive_sha256": "8b3fc3a39f2b29294c94d3b4ab648fbd25accd174b1b414be548b9f4adb0544c",
+    "binding_template_sha256": "c9a27478982ea8722811309c1e8eb46a6b7c9cdbefb3465a15bfa291caa5f195",
+    "caller_inventory": {
+      "collect_results.py": "104b4e22d187668c8266e9f33be25dfc6e319520efee233f321ffc8bbf17bffd",
+      "connection.py": "1d885651f2d93b9f019bcce04c2022726a9c8af5676e475dc92035047b947dde",
+      "execute_once.py": "e2a710a92ba39177612ceb810f8dbc47d320ad4ededf796b7e8dd83ed5d86075",
+      "host_faults.py": "51ee2942a6fd09ded2b0855071995714e31f92c78cf926469a7d670deeaa0f6a",
+      "host_sample.py": "266409f88b3d29d8d1efe8fb0d89023417e0b8045dad9696abf76553e9362bd9",
+      "local_commands.py": "71ac3ebfc4eef1c0b373a7a8317c1f72d300a375f307cce1500bbdb0a659711a",
+      "observe_closeout.py": "2dd7b3d62167f47057835872541514fa9b5e8595bcba6adb81f82fb97822d8f5",
+      "observe_failed_closeout.py": "56de8796d0c5b5ac11a51243e42f697badf25b78d1dd1ba5aa026c39fe2ca73b",
+      "power_observe.py": "26e51ed8b2f386321999e984e3fb52b9e4e73ec9a51e6df028c50cd59472c9ca",
+      "run_native.py": "3a6147019d1973c459460a87113592044e6f0dccf4be95017bdbbc74992c2fee",
+      "seal_evidence.py": "082835dabf0bf1e96d9bba6f08918914b01a1306a5a2cd939a0c9309ad334e18"
+    },
+    "cpu_execution_authorized": false,
+    "deployment_authorized": false,
+    "host_sha256": "5fc702096026cb3ad426bf0baef9ee90774ab0fc55079fdb074b3c85446e4f30",
+    "manifest_sha256": "e2cf687bb2e5595905575a8a2751ca8762b2739ecea999073402b8e80e7ce4c8",
+    "maximum_starts": 0,
+    "model_start_authorized": false,
+    "nonce": "e20111020000009b",
+    "observed_boot_id": "ff396f8f-e5c3-4ae5-86c1-b986bc483185",
+    "promotion_authorized": false,
+    "protected_patch_sha256": "bd1544605c0098f84632a699c433be4a5c212e50473edd62a8de56fe9dc54ddf",
+    "protected_set_sha256": "6da65f49338a304885cdb5c20b3f032dbb4afcf9df1716e13fe8dab929e56d37",
+    "publication_authorized": false,
+    "requested_caller_seconds": 7160,
+    "requested_cpu_grading_seconds": 320,
+    "requested_generations": 352,
+    "requested_model_starts": 2,
+    "requested_owner_seconds": 6360,
+    "retry_authorized": false,
+    "run_config_sha256": "48aab0c783f27717ae44be9753e064a08cb8c33bf0c175c5bcb302348868b7ab",
+    "schema": 1,
+    "status": "UNFUNDED_GPU_RUN_REQUEST",
+    "variant": "cleanup"
+  },
+  "response_comparison": {
+    "path": "RESPONSE-COMPARISON.json",
+    "sha256": "4cfc64d340af6f9d9414c3d66522ada46a1e759e251b4ff0c876e840a709345a"
+  },
+  "schema": 1,
+  "source_identity": {
+    "path": "MATCHED-REFERENCE.json",
+    "sha256": "25772aa165e89e41d957ff41b8fca481e2c708060658c40ccac37811e8faa4af"
+  },
+  "source_promotion": false,
+  "source_seal": {
+    "manifest_sha256": "ee4d8e11fb08515b6e1ad3f6be22a3220f7fd885275b37f4282b5be416be4f93",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/author"
+  },
+  "status": "REFERENCE_SOURCE_AND_PACKET_VERIFIED_UNFUNDED",
+  "whole_cleanup_complete": false
+}

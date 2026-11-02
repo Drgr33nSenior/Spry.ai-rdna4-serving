@@ -1,0 +1,12 @@
+--- a/verify_decode_adapter.py
++++ b/verify_decode_adapter.py
+@@ -206,7 +206,8 @@
+                     in_capture = kwargs.get('in_capture', args[0] if args else False)
+                     verify = (forward_batch.forward_mode.is_target_verify()
+                               and type(forward_batch.batch_size) is int
+-                              and forward_batch.batch_size in (1, 2))
++                              and forward_batch.batch_size in (1, 2)
++                              and backend.num_head == 12 and backend.num_kv_head == 2)
+                     key = (id(backend), 8 * forward_batch.batch_size) if verify else None
+                     if in_capture and verify:
+                         adapter.graph_metadata.pop(key, None)

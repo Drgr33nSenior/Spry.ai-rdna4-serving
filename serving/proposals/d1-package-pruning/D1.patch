@@ -1,0 +1,30 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -47,9 +47,6 @@
+ LIVE_SOURCE_NAMES = SOURCE_NAMES + ("benchmark_gpu_identity.py", "benchmark_artifacts.py",
+                                    "prepare_benchmark_package.py", "benchmark_host_transport.py",
+                                    "verify_benchmark_runtime.py", "validation_comparison.py", "batch_telemetry.py")
+-LIVE_SOURCE_NAMES += ('divergence_capture.py', 'capture_model_runner.py', 'capture_logits_processor.py',
+-                      'capture_sampler.py', 'capture_hybrid_linear_attn_backend.py', 'capture_qwen3_5.py',
+-                      'prefill_row_audit.py')
+ LIVE_SOURCE_NAMES += ('callback_profile.py', 'stall_trace.py')
+ LIVE_SOURCE_NAMES += ('graph_screen.py', 'graph_integration.py', 'graph_outer.py', 'graph_full_cuda_graph_backend.py', 'context_tokenizer.py')
+ LIVE_SOURCE_NAMES += ('serving_contract.py', 'serving_client.py', 'serving_reader.py', 'serving_integration.py',
+@@ -82,7 +79,6 @@
+ LIVE_PACKAGE_NAMES.update({'review/CONTEXT-PROMPTS.zlib', 'review/TOKENIZER-CONTRACT.json', 'review/CONTROL-CASE.zlib'})
+ LIVE_PACKAGE_NAMES.update({'review/HTTP-BINDING-control.json', 'review/HTTP-BINDING-mtp.json'})
+ LIVE_PACKAGE_NAMES.add('review/DRAFT-MODEL.json')
+-LIVE_PACKAGE_NAMES.update({'review/STOCK-BUILD-PROOF.json', 'review/CAPTURE-BUILD-PROOF.json'})
+ LIVE_PACKAGE_NAMES.update(mtp_contract.package_assets())
+ LIVE_PACKAGE_NAMES.difference_update('review/' + name for name in mtp_contract.PACKED_REQUEST_NAMES if name != 'FINAL-REQUESTS.zlib')
+ INDEPENDENT_MODE = 'independent-bf16-reference-v1'
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -229,7 +229,6 @@
+ }
+ 
+ D3B_TARGET_FILES = {
+- "review/capture_model_runner.py": "5e2325bb08930cdffa55cc9d944cb1dc589b662c42de821eb391c82c8bdf37de",
+  "review/d3b_head_fp8_kernels.py": "32522a45ccb6bf11b887427257853f6af38ced5b1fb9e188fd49ed4867055c51",
+  "review/d3b_head_fp8_ops.py": "4814926eb6294f76d29516ad68f78271d1cf879c0de3815554d8044cd8251770",
+  "review/d3b_head_launches.py": "e88da9ee318a5e0fac1282a757e7c4282cfddd0b97a8c160419732e42e15a442",

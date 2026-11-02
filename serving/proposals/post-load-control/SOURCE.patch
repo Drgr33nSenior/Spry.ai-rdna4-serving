@@ -1,0 +1,179 @@
+--- a/propose_packet.py
++++ b/propose_packet.py
+@@ -188,13 +188,16 @@
+ 
+ 
+ def correct_pre_memory_worker(raw, correction):
+-    """Apply the two proven startup corrections to the exact pre-memory worker."""
++    """Apply exact startup corrections to a reviewed pre-memory control worker."""
+     if correction is None:
+         return raw
+-    need(correction == dict(
++    pre_replay = correction == dict(
+         original_sha256='6b4622b92c2f759b9346909fbb87f56b55eb3b22c7c9a6c0ec2fac918d8da1b0',
+-        corrected_sha256='d46fd8f749e26af4e4bb761a5f835fb9aac20ce2796d9bf23e3d36a470c3444f'),
+-        'exact pre-memory startup correction required')
++        corrected_sha256='d46fd8f749e26af4e4bb761a5f835fb9aac20ce2796d9bf23e3d36a470c3444f')
++    post_load = correction == dict(
++        original_sha256='5ea61d216dcd91c0d7f3de8d9816d5e44643385776cd712124424eb2fee2e330',
++        corrected_sha256='f9b9f962da347c31289f4ea31998bbdcff2d936da6c888ecf1b64bcdc3bcf0f7')
++    need(pre_replay or post_load, 'exact pre-memory startup correction required')
+     need(digest(raw) == correction['original_sha256'], 'pre-memory worker input differs')
+     replacements = (
+         (b"    draft_summary: dict[str, Any] = contract_module.expected_draft_summary('none')\n", b''),
+@@ -205,7 +208,7 @@
+         (b"proof['metadata_preparation_policy'] = adapter.METADATA_PREPARATION_POLICY if adapter else None",
+          b"proof['metadata_preparation_policy'] = adapter_module.METADATA_PREPARATION_POLICY if adapter else None"),
+     )
+-    for before, after in replacements:
++    for before, after in (replacements if pre_replay else replacements[:1]):
+         need(raw.count(before) == 1, 'pre-memory startup call site differs')
+         raw = raw.replace(before, after)
+     need(digest(raw) == correction['corrected_sha256'], 'pre-memory worker output differs')
+--- a/tests/check_startup_proof.py
++++ b/tests/check_startup_proof.py
+@@ -28,12 +28,14 @@
+ 
+ def run_case(contract,worker,adapter_module,adapter_source,reader,*,arm='control',rank=0,
+              mutate_adapter=None,module_policy=None,remove_module_policy=False,expected_error=None,
+-             reader_error=None):
++             reader_error=None, expected_policy='outside-forward-graph-v1'):
+     """Keep the producer, private module authentication, writer and full-enabled reader real."""
+     context=contract.precision_profile()['context_length']
+     adapter=object.__new__(adapter_module.Adapter)
+     adapter.enabled=True;adapter.eligible_host_calls=40;adapter.capture_host_calls=32
+     adapter.metadata_build_host_calls=2;adapter.metadata_reuse_host_calls=40;adapter.metadata_capture_build_host_calls=0
++    if expected_policy is None:
++        adapter.metadata_reuse_host_calls=38;adapter.metadata_capture_build_host_calls=2
+     adapter.layers=set(range(16))
+     adapter.buffers={n:dict(indices=SimpleNamespace(numel=lambda n=n:n*(context+8))) for n in (8,16)}
+     assert not hasattr(adapter,'METADATA_PREPARATION_POLICY')
+@@ -67,7 +69,12 @@
+                 patch.object(worker,'_precision_loading_policy',return_value=dict(cpu_metadata_fixture=True)), \
+                 patch.object(worker,'_mxfp4_loaded_weights',return_value=dict(cpu_metadata_fixture=True)), \
+                 patch.object(worker,'_source_module',wraps=original_source) as module_loader:
+-            original_policy=adapter_module.METADATA_PREPARATION_POLICY
++            assert expected_policy in (None,'outside-forward-graph-v1')
++            original_policy=getattr(adapter_module,'METADATA_PREPARATION_POLICY',None)
++            assert original_policy==expected_policy, 'declared startup metadata policy differs'
++            if expected_policy is None:
++                assert not hasattr(adapter_module,'METADATA_PREPARATION_POLICY')
++                assert not remove_module_policy and module_policy is None
+             try:
+                 if remove_module_policy:del adapter_module.METADATA_PREPARATION_POLICY
+                 elif module_policy is not None:adapter_module.METADATA_PREPARATION_POLICY=module_policy
+@@ -78,7 +85,8 @@
+                     assert not (root/f'FULL-ENABLED-rank-{rank}.json').exists()
+                     return dict(arm=arm,rank=rank,expected_error=expected_error,precision_witness_retained=True,
+                         incomplete_full_enabled_witness_absent=True,model_construction=False,gpu_work=False)
+-            finally:adapter_module.METADATA_PREPARATION_POLICY=original_policy
++            finally:
++                if expected_policy is not None:adapter_module.METADATA_PREPARATION_POLICY=original_policy
+             assert expected_error is None,('expected refusal',expected_error)
+             observer.validate_precision_weights.assert_called_once()
+             module_loader.assert_called_once_with(adapter_source)
+@@ -91,18 +99,19 @@
+                 return dict(arm=arm,rank=rank,expected_reader_error=reader_error,reader_refused=True,
+                     model_construction=False,gpu_work=False)
+             assert reader_error is None,('expected reader refusal',reader_error)
+-            assert proof['metadata_preparation_policy']==original_policy=='outside-forward-graph-v1'
++            if expected_policy is None:assert 'metadata_preparation_policy' not in proof
++            else:assert proof['metadata_preparation_policy']==original_policy=='outside-forward-graph-v1'
+             return dict(arm=arm,rank=rank,complete_producer=True,real_full_enabled_reader_passed=True,
+-                authenticated_adapter_module_used=True,metadata_policy_read_from_module=True,
++                authenticated_adapter_module_used=True,metadata_policy_read_from_module=expected_policy is not None,
+                 native_linear_and_weight_validation_substituted=True,metadata_buffers_and_adapter_lifecycle_substituted=True,
+                 retained_files=2,model_construction=False,gpu_work=False)
+ 
+ 
+-def check(review,*,expected_error=None):
++def check(review,*,expected_error=None,expected_policy='outside-forward-graph-v1'):
+     reports=[]
+     with loaded(review) as values:
+         for arm in ('control','mtp'):
+-            for rank in (0,1):reports.append(run_case(*values,arm=arm,rank=rank,expected_error=expected_error))
++            for rank in (0,1):reports.append(run_case(*values,arm=arm,rank=rank,expected_error=expected_error,expected_policy=expected_policy))
+     return dict(passed=True,scope='complete actual startup proof producer and full-enabled reader with metadata substitutes',
+         cases=reports,native_serving_or_quality_proven=False)
+ 
+--- a/tests/test_pre_memory_startup.py
++++ b/tests/test_pre_memory_startup.py
+@@ -22,7 +22,7 @@
+ 
+ 
+ @contextmanager
+-def fixture(*,corrected=True):
++def fixture(*,corrected=True,post_load=False):
+     with tempfile.TemporaryDirectory(prefix='pre-memory-startup-') as temporary:
+         root=Path(temporary).resolve()
+         for name,source in [('mtp_contract.py','spry_serving/hook_contract.py'),
+@@ -30,8 +30,12 @@
+                 ('serving_integration.py','spry_evidence/pre_replay_integration.py'),
+                 ('kv_graph_join.py','legacy/review/kv_graph_join.py'),
+                 ('spry_common_canon.py','spry_common/canon.py')]:
++            if post_load and name=='verify_decode_adapter.py':source='legacy/review/verify_decode_adapter.py'
++            if post_load and name=='serving_integration.py':source='spry_evidence/closed_integration.py'
+             shutil.copyfile(HERE.parent/source,root/name)
+-        (root/'worker_entry.py').write_bytes(propose_packet.correct_pre_memory_worker(ORIGINAL,CORRECTION) if corrected else ORIGINAL)
++        original=(HERE.parent/'spry_serving/hook_worker.py').read_bytes() if post_load else ORIGINAL
++        correction=POST_LOAD_CORRECTION if post_load else CORRECTION
++        (root/'worker_entry.py').write_bytes(propose_packet.correct_pre_memory_worker(original,correction) if corrected else original)
+         for path in (HERE/'fixtures/w5').glob('*.json'):shutil.copyfile(path,root/path.name)
+         yield root
+ 
+@@ -88,4 +92,55 @@
+                 proof.run_case(*values,module_policy='inside-forward-graph',reader_error='not prepared outside')
+ 
+ 
++POST_LOAD_CORRECTION=dict(original_sha256='5ea61d216dcd91c0d7f3de8d9816d5e44643385776cd712124424eb2fee2e330',
++    corrected_sha256='f9b9f962da347c31289f4ea31998bbdcff2d936da6c888ecf1b64bcdc3bcf0f7')
++
++
++class PostLoadStartup(unittest.TestCase):
++    def test_only_eager_preflight_summary_changes(self):
++        original=(HERE.parent/'spry_serving/hook_worker.py').read_bytes()
++        corrected=propose_packet.correct_pre_memory_worker(original,POST_LOAD_CORRECTION)
++        expected=original.replace(b"    draft_summary: dict[str, Any] = contract_module.expected_draft_summary('none')\n",b'')
++        self.assertEqual(corrected,expected)
++        self.assertEqual(propose_packet.digest(corrected),POST_LOAD_CORRECTION['corrected_sha256'])
++    def test_post_load_correction_rejects_changed_input(self):
++        with self.assertRaisesRegex(ValueError,'input differs'):
++            propose_packet.correct_pre_memory_worker((HERE.parent/'spry_serving/hook_worker.py').read_bytes()+b'\n',POST_LOAD_CORRECTION)
++    def test_complete_post_load_draft_preflight_both_modes_arms_and_ranks(self):
++        with fixture(post_load=True) as root,draft.loaded(root) as (contract,worker):
++            settings=json.loads((root/'FINAL-SETTINGS.json').read_bytes());contract.settings=lambda:copy.deepcopy(settings)
++            for mode in ('on','production'):
++                settings['instrumentation']=mode
++                for arm in ('control','mtp'):
++                    for rank in (0,1):self.assertTrue(draft.run_case(worker,contract,arm=arm,rank=rank)['complete_preflight'])
++    def test_original_post_load_reproduces_retired_summary_failure(self):
++        with fixture(post_load=True,corrected=False) as root,draft.loaded(root) as (contract,worker):
++            settings=json.loads((root/'FINAL-SETTINGS.json').read_bytes());contract.settings=lambda:copy.deepcopy(settings)
++            self.assertTrue(draft.run_case(worker,contract,expected_error='selected DFlash2')['refused_before_evidence'])
++    def test_complete_post_load_producer_and_original_reader_both_modes_arms_and_ranks(self):
++        with fixture(post_load=True) as root,proof.loaded(root) as values:
++            settings=json.loads((root/'FINAL-SETTINGS.json').read_bytes());values[0].settings=lambda:copy.deepcopy(settings)
++            with patch.object(values[-1],'_mtp_contract',return_value=values[0]):
++                for mode in ('on','production'):
++                    settings['instrumentation']=mode
++                    for arm in ('control','mtp'):
++                        for rank in (0,1):self.assertTrue(proof.run_case(*values,arm=arm,rank=rank,expected_policy=None)['real_full_enabled_reader_passed'])
++    def test_post_load_producer_still_rejects_invalid_geometry(self):
++        from types import SimpleNamespace
++        with fixture(post_load=True) as root,proof.loaded(root) as values:
++            settings=json.loads((root/'FINAL-SETTINGS.json').read_bytes());values[0].settings=lambda:copy.deepcopy(settings)
++            with patch.object(values[-1],'_mtp_contract',return_value=values[0]):
++                proof.run_case(*values,expected_policy=None,mutate_adapter=lambda adapter:adapter.buffers.update({8:dict(indices=SimpleNamespace(numel=lambda:1))}),expected_error='split-KV indices geometry differs')
++    def test_post_load_reader_still_requires_two_capture_metadata_builds(self):
++        with fixture(post_load=True) as root,proof.loaded(root) as values:
++            settings=json.loads((root/'FINAL-SETTINGS.json').read_bytes());values[0].settings=lambda:copy.deepcopy(settings)
++            with patch.object(values[-1],'_mtp_contract',return_value=values[0]):
++                proof.run_case(*values,expected_policy=None,mutate_adapter=lambda adapter:setattr(adapter,'metadata_capture_build_host_calls',0),reader_error='metadata not reused')
++    def test_legacy_policy_declaration_cannot_downgrade_the_current_fixture(self):
++        with fixture() as root,proof.loaded(root) as values:
++            settings=json.loads((root/'FINAL-SETTINGS.json').read_bytes());values[0].settings=lambda:copy.deepcopy(settings)
++            with self.assertRaisesRegex(AssertionError,'declared startup metadata policy differs'):
++                proof.run_case(*values,expected_policy=None)
++
++
+ if __name__=='__main__':unittest.main()

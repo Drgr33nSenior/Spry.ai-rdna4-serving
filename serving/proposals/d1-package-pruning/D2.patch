@@ -1,0 +1,295 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -280,7 +280,7 @@
+     """Authenticate complete local inputs; no runtime import or remote query."""
+     value, _ = adapter.readout.read_json(path, expected_sha256)
+     live = value.get("schema") == 2
+-    need(set(value) == FIELDS | ({"runtime_scopes", "retained_base", "logical_package_inventory"} if live else set()) and
++    need(set(value) == FIELDS | ({"runtime_scopes", "retained_base", "logical_package_inventory", "run_config"} if live else set()) and
+          value["schema"] in (1, 2) and
+          value["scope"] == ("matched-benchmark-physical-package-v2" if live else
+                             "matched-benchmark-controller-candidate-v1") and
+@@ -591,6 +591,9 @@
+              resource_check, supervisor)), "complete explicit owner effects required")
+         prepared = validate_manifest(manifest_path, manifest_sha256, deadline=started + 105, clock=clock)
+         value, results = prepared["manifest"], []
++        if physical_context is not None:
++            prepared['stamps'].update(authenticate_configuration_files(
++                grant, value, deadline=started + 105, clock=clock))
+         need(physical_context is None or value["schema"] == 2, "physical execution requires physical package schema")
+         need(str(lease.root) == value["target_root"] and lease.session == value["session_sha256"]
+              and lease.boot == value["boot_id"], "lease/package target binding")
+@@ -743,7 +746,97 @@
+ 
+ GRANT_FIELDS = {"schema", "scope", "model_start_authorized", "maximum_starts", "arm_order",
+     "cumulative_ceiling_seconds", "fixed_reserve_seconds", "received_utc", "received_monotonic",
+-    "boot_id", "manifest_sha256", "package_sha256", "source_manifest_sha256", "transport_parent"}
++    "boot_id", "manifest_sha256", "package_sha256", "source_manifest_sha256", "transport_parent",
++    "run_config_sha256", "host_sha256", "protected_set_sha256"}
++
++PROTECTED_SOURCE_NAMES = (
++    'benchmark_artifacts.py', 'benchmark_gpu_identity.py', 'benchmark_host_transport.py',
++    'benchmark_owner_adapter.py', 'benchmark_physical_controller.py',
++    'benchmark_release_observer.py', 'benchmark_resource_gate.py',
++    'collect_benchmark_platform.py', 'host_process_owner.py')
++
++
++def _configuration_file(path, expected_sha256, maximum, *, deadline, clock, stamps, json_object=True):
++    """Read bounded, canonical approval inputs without importing their contents."""
++    need(_digest(expected_sha256) and clock() < deadline, 'configuration pin/deadline required')
++    path = Path(path)
++    need(path.is_absolute() and path.resolve(strict=True) == path, 'canonical configuration file required')
++    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(fd)
++        need(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and 0 < before.st_size <= maximum,
++             'bounded singly linked configuration file required')
++        chunks, remaining = [], before.st_size
++        while remaining:
++            need(clock() < deadline, 'configuration authentication deadline')
++            chunk = os.read(fd, min(1 << 20, remaining))
++            need(chunk, 'short configuration input')
++            chunks.append(chunk)
++            remaining -= len(chunk)
++        raw = b''.join(chunks)
++        need(path.resolve(strict=True) == path and
++             _stamp(before) == _stamp(os.fstat(fd)) == _stamp(path.lstat()), 'configuration input changed')
++        need(hashlib.sha256(raw).hexdigest() == expected_sha256, 'configuration/source digest mismatch')
++        stamps[str(path)] = _stamp(before)
++    finally:
++        os.close(fd)
++    need(clock() < deadline, 'configuration authentication deadline')
++    if not json_object:
++        return raw
++    value = json.loads(raw, object_pairs_hook=adapter.readout._object, parse_constant=adapter.readout._constant)
++    need(type(value) is dict and raw == (json.dumps(value, sort_keys=True, separators=(',', ':'),
++         allow_nan=False) + '\n').encode(), 'canonical configuration JSON object required')
++    return value
++
++
++def authenticate_configuration_files(grant, manifest, *, deadline, clock=time.monotonic):
++    """Bind approval files; existing spec checks still govern runtime semantics."""
++    need(all(_digest(grant.get(key)) for key in
++         ('run_config_sha256', 'host_sha256', 'protected_set_sha256')), 'three configuration approval pins required')
++    root = _canonical(manifest['package_root'])
++    need(Path(__file__).resolve(strict=True) == root / 'review/benchmark_physical_controller.py',
++         'configuration must bind the executed controller root')
++    run_name = manifest.get('run_config')
++    need(type(run_name) is str and re.fullmatch(r'config/runs/[a-z0-9][a-z0-9-]{0,63}/run.json', run_name),
++         'exact run configuration location required')
++    stamps = {}
++    protected = _configuration_file(root / 'PROTECTED-SHA256.json', grant['protected_set_sha256'],
++        64 << 10, deadline=deadline, clock=clock, stamps=stamps)
++    names = {'review/' + name for name in PROTECTED_SOURCE_NAMES}
++    need(set(protected) == names and all(_digest(pin) for pin in protected.values()),
++         'exact protected file set required')
++    for name, pin in protected.items():
++        need(manifest['package_files'].get(name) == pin, 'protected set/package binding differs')
++        _configuration_file(root / name, pin, 1 << 20, deadline=deadline, clock=clock,
++                            stamps=stamps, json_object=False)
++    run = _configuration_file(root / run_name, grant['run_config_sha256'], 256 << 10,
++        deadline=deadline, clock=clock, stamps=stamps)
++    need(type(run.get('schema')) is int and run['schema'] == 1
++         and run.get('run_id') == Path(run_name).parent.name, 'run configuration identity differs')
++    host, menu = run.get('host'), run.get('menu')
++    need(type(host) is dict and set(host) == {'file', 'sha256'}
++         and type(host['file']) is str and re.fullmatch(r'config/host/[a-z0-9][a-z0-9-]{0,63}\.json', host['file'])
++         and host['sha256'] == grant['host_sha256'], 'run/host approval binding differs')
++    need(type(menu) is dict and set(menu) == {'file', 'sha256'} and menu['file'] == 'menu.json'
++         and _digest(menu['sha256']), 'run/menu binding differs')
++    host_value = _configuration_file(root / host['file'], grant['host_sha256'], 64 << 10,
++        deadline=deadline, clock=clock, stamps=stamps)
++    need(set(host_value) == {'schema', 'devices', 'rank_indices', 'power_cap_watts'}
++         and type(host_value['schema']) is int and host_value['schema'] == 1,
++         'host configuration fields differ; boot ID belongs in the approval')
++    _configuration_file((root / run_name).parent / menu['file'], menu['sha256'], 1 << 20,
++        deadline=deadline, clock=clock, stamps=stamps)
++    # Include immutable parent directories so a later config/review symlink or
++    # directory replacement is refused by the existing verify_unchanged calls.
++    for name in tuple(stamps):
++        parent = Path(name).parent
++        while parent != root:
++            need(parent.resolve(strict=True) == parent and parent.is_dir(), 'configuration parent changed')
++            stamps[str(parent)] = _stamp(parent.lstat())
++            parent = parent.parent
++    verify_unchanged({'stamps': stamps})
++    need(clock() < deadline, 'configuration authentication deadline')
++    return stamps
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,
+@@ -770,6 +863,7 @@
+     instant = datetime.fromisoformat(grant["received_utc"].replace("Z", "+00:00"))
+     need(instant.tzinfo is not None and abs((utc_now() - instant).total_seconds() - (clock() - received)) <= 3,
+          "UTC/monotonic receipt disagreement")
++    authenticate_configuration_files(grant, manifest, deadline=received + 105, clock=clock)
+     return grant
+ 
+ 
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -152,9 +152,29 @@
+ 
+ 
+ def stage_members(root_fd, members):
+-    """Flat review members only; the retired private package directories are gone."""
+-    for name, raw in members.items():
+-        exclusive_beneath(root_fd, name, raw)
++    """Stage authenticated review/config files through held no-follow directories."""
++    runs = [name for name in members if re.fullmatch(r'config/runs/[a-z0-9][a-z0-9-]{0,63}/run.json', name)]
++    hosts = [name for name in members if re.fullmatch(r'config/host/[a-z0-9][a-z0-9-]{0,63}\.json', name)]
++    need(len(runs) == len(hosts) == 1, 'one run and host required for staging')
++    run_directory = str(PurePosixPath(runs[0]).parent)
++    need({name for name in members if name.startswith('config/')} ==
++         {runs[0], hosts[0], run_directory + '/menu.json'}, 'exact configuration staging members required')
++    held = {'': root_fd}
++    try:
++        for name in ('config', 'config/host', 'config/runs', run_directory):
++            path = PurePosixPath(name)
++            parent = held['' if str(path.parent) == '.' else str(path.parent)]
++            os.mkdir(path.name, mode=0o755, dir_fd=parent)
++            held[name] = os.open(path.name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
++        for name, raw in members.items():
++            exclusive_beneath(root_fd, name, raw)
++        for name, fd in held.items():
++            if name:
++                os.fchmod(fd, 0o555)
++    finally:
++        for name, fd in reversed(tuple(held.items())):
++            if name:
++                os.close(fd)
+ 
+ 
+ def peer_identity(channel):
+@@ -273,7 +293,56 @@
+     return 66 if 'review/raw_attention.py' in expected else 65 if 'review/attention_capture.py' in expected else 64
+ 
+ 
+-def inspect_archive(path, expected_sha256, manifest_sha256):
++CONFIGURATION_PIN_FIELDS = ('run_config_sha256', 'host_sha256', 'protected_set_sha256')
++PROTECTED_SOURCE_NAMES = (
++    'benchmark_artifacts.py', 'benchmark_gpu_identity.py', 'benchmark_host_transport.py',
++    'benchmark_owner_adapter.py', 'benchmark_physical_controller.py',
++    'benchmark_release_observer.py', 'benchmark_resource_gate.py',
++    'collect_benchmark_platform.py', 'host_process_owner.py')
++
++
++def configuration_members(manifest, members, configuration_pins):
++    """Authenticate configuration bytes against independently supplied owner pins."""
++    need(type(configuration_pins) is dict and set(configuration_pins) == set(CONFIGURATION_PIN_FIELDS)
++         and all(digest(pin) for pin in configuration_pins.values()), 'three configuration approval pins required')
++
++    def read(name, pin, maximum):
++        raw = members.get(name)
++        need(type(raw) is bytes and 0 < len(raw) <= maximum and digest(pin) and sha(raw) == pin,
++             'configuration member digest/size differs')
++        value = decode(raw)
++        need(type(value) is dict and canonical(value) == raw, 'canonical configuration JSON object required')
++        return value
++
++    protected = read('PROTECTED-SHA256.json', configuration_pins['protected_set_sha256'], 64 << 10)
++    need(set(protected) == {'review/' + name for name in PROTECTED_SOURCE_NAMES}
++         and all(digest(pin) for pin in protected.values()), 'exact protected file set required')
++    for name, pin in protected.items():
++        raw = members.get(name)
++        need(manifest['package_files'].get(name) == pin and type(raw) is bytes
++             and 0 < len(raw) <= 1 << 20 and sha(raw) == pin, 'protected set/package binding differs')
++    run_name = manifest.get('run_config')
++    need(type(run_name) is str and re.fullmatch(r'config/runs/[a-z0-9][a-z0-9-]{0,63}/run.json', run_name),
++         'exact run configuration location required')
++    run = read(run_name, configuration_pins['run_config_sha256'], 256 << 10)
++    need(type(run.get('schema')) is int and run['schema'] == 1
++         and run.get('run_id') == PurePosixPath(run_name).parent.name, 'run configuration identity differs')
++    host, menu = run.get('host'), run.get('menu')
++    need(type(host) is dict and set(host) == {'file', 'sha256'} and type(host['file']) is str
++         and re.fullmatch(r'config/host/[a-z0-9][a-z0-9-]{0,63}\.json', host['file'])
++         and host['sha256'] == configuration_pins['host_sha256'], 'run/host approval binding differs')
++    need(type(menu) is dict and set(menu) == {'file', 'sha256'} and menu['file'] == 'menu.json'
++         and digest(menu['sha256']), 'run/menu binding differs')
++    host_value = read(host['file'], configuration_pins['host_sha256'], 64 << 10)
++    need(set(host_value) == {'schema', 'devices', 'rank_indices', 'power_cap_watts'}
++         and type(host_value['schema']) is int and host_value['schema'] == 1,
++         'host configuration fields differ; boot ID belongs in the approval')
++    menu_name = str(PurePosixPath(run_name).parent / menu['file'])
++    read(menu_name, menu['sha256'], 1 << 20)
++    return {'PROTECTED-SHA256.json', run_name, host['file'], menu_name}
++
++
++def inspect_archive(path, expected_sha256, manifest_sha256, *, configuration_pins):
+     """Read authenticated regular members without extracting an archive path."""
+     need(digest(expected_sha256) and digest(manifest_sha256), 'independent archive/manifest pins required')
+     raw = read_file(path, ARCHIVE_LIMIT)
+@@ -286,7 +355,10 @@
+             need(item.isfile() and not item.issym() and not item.islnk()
+                 and str(PurePosixPath(name)) == name and not name.startswith('/')
+                 and not any(part in ('.', '..', '.idea', 'keeper-env') for part in name.split('/'))
+-                and (name == 'MANIFEST.json' or re.fullmatch(r'review/[A-Za-z0-9_.-]+', name) or name in MXFP4_FILES)
++                and (name in ('MANIFEST.json', 'PROTECTED-SHA256.json')
++                     or re.fullmatch(r'review/[A-Za-z0-9_.-]+', name) or name in MXFP4_FILES
++                     or re.fullmatch(r'config/runs/[a-z0-9][a-z0-9-]{0,63}/(?:run|menu)\.json', name)
++                     or re.fullmatch(r'config/host/[a-z0-9][a-z0-9-]{0,63}\.json', name))
+                 and name not in members and 0 <= item.size <= 16 * 1024 * 1024,
+                 'unsafe, linked, duplicate or oversized archive member')
+             size += item.size
+@@ -300,7 +372,9 @@
+     expected = manifest['package_files']
+     need(len(members) <= _archive_member_limit(manifest, members),
+          'archive mode-specific member limit')
+-    need(set(members) == {'MANIFEST.json'} | set(expected) and all(sha(members[name]) == pin
++    configuration = configuration_members(manifest, members, configuration_pins)
++    need(not configuration & set(expected), 'configuration must be independently approved')
++    need(set(members) == {'MANIFEST.json'} | set(expected) | configuration and all(sha(members[name]) == pin
+         and digest(pin) for name, pin in expected.items()), 'archive exact source inventory differs')
+     need(manifest.get('schema') == 2 and manifest.get('scope') == 'matched-benchmark-physical-package-v2'
+         and manifest.get('launch_authorized') is False
+@@ -311,8 +385,10 @@
+     return manifest, members
+ 
+ 
+-def new_grant(manifest, manifest_sha256, *, received_utc, received_monotonic, parent):
++def new_grant(manifest, manifest_sha256, *, received_utc, received_monotonic, parent, configuration_pins):
+     need(parent['uid'] == 0 and parent['boot_id'] == manifest['boot_id'], 'native root parent required')
++    need(type(configuration_pins) is dict and set(configuration_pins) == set(CONFIGURATION_PIN_FIELDS)
++         and all(digest(pin) for pin in configuration_pins.values()), 'three configuration approval pins required')
+     files = manifest['package_files']
+     return {'schema': 2, 'scope': 'one-matched-fp8-kv-benchmark', 'model_start_authorized': True,
+         'maximum_starts': 2, 'arm_order': ['bf16', 'kv4'], 'cumulative_ceiling_seconds': TOTAL_SECONDS,
+@@ -320,7 +396,7 @@
+         'received_monotonic': received_monotonic, 'boot_id': manifest['boot_id'],
+         'manifest_sha256': manifest_sha256, 'package_sha256': sha(canonical(files)),
+         'source_manifest_sha256': sha(canonical({name: pin for name, pin in files.items() if name.endswith('.py')})),
+-        'transport_parent': parent}
++        'transport_parent': parent, **configuration_pins}
+ 
+ 
+ class PhaseSequence:
+@@ -452,7 +528,9 @@
+     protected_stage(source_root)
+     # Root imports only authenticated files under its private staged source.
+     root_source(Path(__file__).resolve(), args.expected_self_sha256)
+-    manifest, members = inspect_archive(Path(args.archive).resolve(), args.archive_sha256, args.manifest_sha256)
++    configuration_pins = {name: getattr(args, name) for name in CONFIGURATION_PIN_FIELDS}
++    manifest, members = inspect_archive(Path(args.archive).resolve(), args.archive_sha256, args.manifest_sha256,
++        configuration_pins=configuration_pins)
+     need(manifest['package_files']['review/benchmark_host_transport.py'] == args.expected_self_sha256,
+         'root transport/package identity differs')
+     trusted = {name: root_source(source_root / name, manifest['package_files']['review/' + name])
+@@ -489,7 +567,7 @@
+     review = root / 'review'
+     parent = {'pid': os.getpid(), 'uid': 0, 'start_ticks': process_start(os.getpid()), 'boot_id': boot}
+     grant = new_grant(manifest, args.manifest_sha256, received_utc=received,
+-        received_monotonic=beginning, parent=parent)
++        received_monotonic=beginning, parent=parent, configuration_pins=configuration_pins)
+     raw = canonical(grant)
+     exclusive_beneath(root_fd, 'GRANT.json', raw)
+     receipt = canonical({'schema': 1, 'received_utc': received,
+@@ -657,7 +735,8 @@
+ def main(argv=None):
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument('--human-root-benchmark', action='store_true')
+-    for name in ('archive', 'archive-sha256', 'manifest-sha256', 'expected-self-sha256'):
++    for name in ('archive', 'archive-sha256', 'manifest-sha256', 'expected-self-sha256',
++                 'run-config-sha256', 'host-sha256', 'protected-set-sha256'):
+         parser.add_argument('--' + name, required=True)
+     args = parser.parse_args(argv)
+     need(args.human_root_benchmark, 'explicit human physical invocation required')

@@ -1,0 +1,48 @@
+{
+  "canonical_sources": 21,
+  "documentation_audit": "PASS_NO_FINDINGS",
+  "fingerprint_sites_migrated": 6,
+  "focused_interpreters": [
+    "3.11.6",
+    "3.14.8"
+  ],
+  "focused_source_tests": 3,
+  "focused_tests": 345,
+  "launch_authorized": false,
+  "local_platform": "macOS",
+  "local_python": "3.14.8",
+  "native_linux_interpreter_tested": false,
+  "native_runtime_tested": false,
+  "old_and_new_code_objects_identical": true,
+  "owner_approved": false,
+  "packet_tests": 35,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "phase3_complete": false,
+  "production_mount_isolation_complete": false,
+  "promoted_source": {
+    "authenticated_donor_members": 313,
+    "original_sha256": "731fdc22429376633785c9bd659128eedf0668575bdddbdb29c0e4816703223b",
+    "path": "legacy/review/verify_decode_adapter.py",
+    "source_member": "author/package-v2/review/verify_decode_adapter.py",
+    "source_sha256": "0f721e09477ac873b7e37ec6ea5692404c15a07514bae835b93b3f66aa7d8eed"
+  },
+  "proposal_sha256": "a07a3cd032dfeed66aeba578c4c4ea30293ce7809abf88fdd2969a7923ad9256",
+  "proposed_python_ast_gate": {
+    "canonical_builder_protected_sources_unchanged": true,
+    "direct_exec_or_compile_calls": 0,
+    "includes_proposed_protected_sources": true,
+    "python_files": 62
+  },
+  "protected_helpers_changed_from_previous_stage": false,
+  "raw_report_sha256": "486af26ba83c1a634530a35cb7b3f66ff33674286bda17976a3ecf80b03fd4ad",
+  "repository_make_test": "PASS",
+  "repository_make_test_command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+  "repository_python_unittest_count": 782,
+  "source_patch_sha256": "6030e474aacba6d4e0479a866137f9988f6c927918c7702d0705cdfacedc7cda",
+  "stale_bytecode_ignored": true,
+  "static_global_references": "PASS_THREE_CHANGED_MODULES",
+  "substituted_method_refused": true,
+  "syntax_compilation": "PASS_ALL_122_PYTHON_MODULES",
+  "whole_run_config_mutations_supported": false
+}

@@ -1,0 +1,102 @@
+{
+  "approval_request": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/APPROVAL-REQUEST.json",
+    "sha256": "c007b228a4e7468c30f6f1aadf05f73fa3fcd5ef9dd20b32eb433a691f810cd8"
+  },
+  "automatic_counterpart_run": false,
+  "automatic_retry": false,
+  "complete_protected_patch": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/author/PROTECTED-COMPLETE.patch",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "conditional_cpu_grade_requires_complete_authenticated_operation_and_independent_gpu_release": true,
+  "configuration_pins": {
+    "archive_sha256": "5d126003eccf98f5a618a330f5ffffefd076a48b134dc53bef0e3b4545f29a86",
+    "binding_template_sha256": "85b591e4d75320b259690ac583d1ff7e5eb932496ee6f9c31d213faaef825f6a",
+    "host_sha256": "5fc702096026cb3ad426bf0baef9ee90774ab0fc55079fdb074b3c85446e4f30",
+    "manifest_sha256": "d95e92470cb3285c55ae3660a54ab906fca080ab11af53c32ca2d512a93947a3",
+    "protected_set_sha256": "f44d65288bae28e60ab780ecbe53bd3e8bf5e4ac31a336866ebfc3ea5a084309",
+    "run_config_sha256": "48aab0c783f27717ae44be9753e064a08cb8c33bf0c175c5bcb302348868b7ab"
+  },
+  "counterpart_nonce_not_selected": "e20111020000009e",
+  "deployment": false,
+  "head_sharing": false,
+  "hyperloom_enabled": false,
+  "instrumentation": "production",
+  "launch_authorized": false,
+  "limitations": [
+    "The response divergence cause remains unresolved.",
+    "The control can bracket later cleanup increments but cannot attribute a single numerical cause.",
+    "Source-only native tests substitute native metadata, tensor objects and root admission.",
+    "No new tensor, GPU arithmetic, quality, memory or performance proof is claimed.",
+    "Operation201 completed its finite caller; full-campaign local caller durability remains unestablished."
+  ],
+  "local_campaign_checks": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/LOCAL-PACKET-CHECKS.json",
+    "sha256": "458350e0e91f8a7acefc9a0e0ae5c8882b209334f4b39605dea28ac0ab09e52d"
+  },
+  "metadata_preparation_policy": "outside-forward-graph-v1",
+  "model_starts_executed": 0,
+  "native_preflight": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/NATIVE-CONTROL-CHECKS.json",
+    "sha256": "c28c14866a0f6c9cb78234df293aafa6912ae10ae7dc91cfa04863fb0ea3b67b"
+  },
+  "next_control_packet": "ca3598712e150f21",
+  "nonce": "c21e0b4ce8f4ed17",
+  "operation": 202,
+  "own_closeout_checkpoint": "CHECKPOINT-551.json",
+  "packed_parameter_storage_rebinding": false,
+  "performance_comparison": false,
+  "previous_execution_seal": {
+    "manifest_sha256": "469595c25755e5254f1311dce27845dc5cc147d91966bc91510ca52b323e645a",
+    "members": 20,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/startup-proof-policy-v1/production-pair-v1/cleanup/execution-v1"
+  },
+  "previous_operation": 201,
+  "previous_result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-201-RESULT.json",
+    "sha256": "af6ff5adb6f6da282572bbd3a075be0389c34588483a2dd3e24c369fddce6fae"
+  },
+  "profile": "TP2, DFlash8, low thinking, BF16 target/draft KV, aligned GDN, eleven overlays, fixed pools, 235W",
+  "profilers_enabled": false,
+  "protected_delta_since201": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/PROTECTED-SINCE-201.patch",
+    "sha256": "5a58d4bfa2dd401d965d628d9851aa6a624f4fcad50b501dc71c90c6d788f1a9"
+  },
+  "protected_entries": 9,
+  "protected_helpers_are_the_pre_replay_stage": true,
+  "registration_created": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "reproduction": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/REPRODUCTION.json",
+    "sha256": "31d0eff45454fe4a29145480786d169a181ebeeb691ff3ea6b0bd480f8200ff6"
+  },
+  "requested_caller_seconds": 7160,
+  "requested_cpu_grading_seconds": 320,
+  "requested_generations": 352,
+  "requested_model_starts": 2,
+  "requested_owner_seconds": 6360,
+  "result": "GPU-202-RESULT.json",
+  "schema": 1,
+  "selected_variant": "baseline",
+  "source_identity": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/SOURCE-AND-REQUEST-IDENTITY.json",
+    "sha256": "1083f6f5fb23a1489d34e3bcf2d0724734cecbf879f592e46f2ee403db066ab2"
+  },
+  "source_promotion": false,
+  "source_seal": {
+    "manifest_sha256": "b4ac840c8506da4b48c62097b53070c4234096393f26c660c537d3355690fd16",
+    "members": 146,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/author",
+    "verified_utc": "2026-11-02T13:30:11.802815+00:00"
+  },
+  "source_verification": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/proposals/pre-memory-startup/VERIFICATION.json",
+    "sha256": "a3c0910bdcfbab70f90d8f0520821e09afd4aaf78c41c3295caadb16983ae3e9"
+  },
+  "status": "EXECUTED_ONCE_RESPONSE_FAILED_PARKED",
+  "uses_pty": true,
+  "whole_cleanup_complete": false
+}

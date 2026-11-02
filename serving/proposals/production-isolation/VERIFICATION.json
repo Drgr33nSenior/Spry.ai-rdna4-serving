@@ -1,0 +1,92 @@
+{
+  "actual_owner_production_projection": {
+    "cases": [
+      {
+        "argv_items": 246,
+        "arm": "bf16",
+        "evidence_masks": 6
+      },
+      {
+        "argv_items": 246,
+        "arm": "kv4",
+        "evidence_masks": 6
+      }
+    ],
+    "existing_argv_ceiling": 256,
+    "frozen_projection_byte_identical": true,
+    "native_bwrap_executed": false
+  },
+  "actual_production_mask_file": {
+    "bytes": 84,
+    "durable_partition_accounted": true,
+    "exclusive": true,
+    "sha256": "f445742b24b741824165f2815c681bd5cbe7ee8616c0a6f31fffb04169873308",
+    "source_stamp_verified": true
+  },
+  "canonical_sources": 21,
+  "documentation_audit": "PASS_NO_FINDINGS",
+  "exact_protected_patch_verified": true,
+  "exact_source_patch_verified": true,
+  "focused_tests": 353,
+  "launch_authorized": false,
+  "local_platform": "macOS",
+  "local_python": "3.14.8",
+  "native_linux_bwrap_executed": false,
+  "native_runtime_tested": false,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet_tests": 37,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "phase3_complete": false,
+  "production_evidence_isolation_source_complete": true,
+  "production_isolation_source_tests": 7,
+  "production_mount_isolation_complete": false,
+  "proposal_sha256": "85ef8d28ea853a8880504b7c568a4e2b7d9f4d52c413a4b4d7a8a376d776d092",
+  "proposed_python_ast_gate": {
+    "canonical_builder_protected_sources_unchanged": true,
+    "direct_exec_or_compile_calls": 0,
+    "includes_proposed_protected_sources": true,
+    "python_files": 62
+  },
+  "protected_patch_sha256": "8f30d1b6bf4b4ee9bb9ac1eaefaeb230a7b07a5448e0c8be15ae97ac729e9c26",
+  "raw_report": "../../../.test-build/serving-cleanup/production-isolation/full-report-2.json",
+  "raw_report_sha256": "5ba513da3ec10ff3c1f977fd3906bd0c483e988d2a52805beafc843c24085b02",
+  "repository_make_test": "PASS",
+  "repository_make_test_command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+  "repository_python_unittest_count": 790,
+  "retained_corrections": [
+    {
+      "log": "targeted-1.log",
+      "reason": "Idempotent refresh initially duplicated production masks; exact one-set validation added."
+    },
+    {
+      "log": "targeted-2.log",
+      "reason": "Argument bound checked before existing consolidation; final controller projection retains the 256-item bound."
+    },
+    {
+      "log": "make-test-1.log",
+      "reason": "Negative-test output assertion was inserted in the new positive test; restored to its original negative case."
+    },
+    {
+      "log": "full-1.log",
+      "reason": "Protected-set metadata used the wrong mapping/hash encoding; corrected to canonical review paths with trailing newline; corrected targeted checks and full 37-check rerun passed."
+    }
+  ],
+  "source_patch_sha256": "c19a627aaf959a6d045c98d917036b2fdd84129473d84d80426be5c49ad6f508",
+  "source_validators_unchanged": true,
+  "static_global_references": "PASS_FIVE_CHANGED_MODULES",
+  "syntax_compilation": "PASS_ALL_128_PYTHON_MODULES",
+  "test_sources": {
+    "check_artifact_limits_packet.py": "54053c4ec176ba987872976ea4407c79a1272c683fc0edbc0eaa22cbae5e473d",
+    "check_packet_projection_packet.py": "7c04f790a22a8973c2b63b3829ca20929c914ebf46e760fe67a07bef12373dba",
+    "check_production_imports_packet.py": "6e2a31620224052251b7c29fc64d87f03d6286dec73c208676d9feeb29e9a799",
+    "check_production_isolation_packet.py": "f5d16e12db856a8236d066bdb6a2d805a182fd9de634f20c3605f0477a75119e",
+    "check_session_timing_packet.py": "900adb7c64fd40589a330b93a20aec11508a44e2bbd7c65ada60fa217929c91e",
+    "check_worker_timing_packet.py": "7bfc8fd59a4a4af74ba98e0ffd72d3daf57a3e001c8bb7c8a6ae8de87caf9928",
+    "test_production_isolation.py": "ef7e3fd1c673e0ddfc4d60cee90e79f71820f4f93a291473e71d99f6adb162a3",
+    "test_source_builder.py": "85946dee555b5807ab41fb1c4d4d3779e4c06748f3e572b71ddb92db1bb4e8e0",
+    "test_worker_timing.py": "c4e6007b0cc6c4240edf36fd2cd58b27b4edb2c2d75704f785c061ae8fd64bcb"
+  },
+  "whole_run_config_mutations_supported": false
+}

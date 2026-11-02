@@ -1,0 +1,89 @@
+--- a/image-source/python/sglang/srt/models/qwen3_5.py
++++ b/image-source/python/sglang/srt/models/qwen3_5.py
+@@ -746,6 +746,29 @@
+             )
+         )
+ 
++    def finalize_packed_mxfp4_in_proj(self) -> bool:
++        """Private HIP verify route (op 164): one packed MXFP4 copy of the loaded QKVZ and BA shards. Idempotent."""
++        if getattr(self, "_packed_mxfp4_in_proj", None) is not None:
++            return True
++        self._packed_mxfp4_in_proj = None
++        qkvz, ba = self.in_proj_qkvz, self.in_proj_ba
++        scheme = getattr(qkvz, "scheme", None)
++        if not (
++            _is_hip
++            and not _use_aiter
++            and self.attn_tp_size == 2
++            and qkvz.bias is None
++            and ba.bias is None
++            and scheme is not None
++            and type(scheme) is type(getattr(ba, "scheme", None))
++            and hasattr(scheme, "pack_rows")
++            and tuple(qkvz.weight.shape) == (8192, 2560)
++            and tuple(ba.weight.shape) == (48, 2560)
++        ):
++            return False
++        self._packed_mxfp4_in_proj = scheme.pack_rows((qkvz, ba))
++        return self._packed_mxfp4_in_proj is not None
++
+     def _forward_input_proj(self, hidden_states: torch.Tensor):
+         if _use_aiter and self._fused_in_proj_weight is not None:
+             # Unquantized BF16 projections consume the bf16 side of the fused
+@@ -922,9 +945,22 @@
+         2. Core attention (custom op)
+         3. Output projection
+         """
+-        projected_states_qkvz, projected_states_ba = self._forward_input_proj(
+-            hidden_states
+-        )
++        packed = getattr(self, "_packed_mxfp4_in_proj", None)
++        if (
++            packed is not None
++            and forward_batch.forward_mode.is_target_verify()
++            and isinstance(hidden_states, torch.Tensor)
++            and hidden_states.dim() == 2
++            and hidden_states.shape[0] in (8, 16)
++        ):
++            # Packed QKVZ+BA verify route (op 164): one quantization and one GEMM; views keep row stride 8240.
++            projected_states_qkvz, projected_states_ba = self.in_proj_qkvz.scheme.apply_packed(
++                packed, hidden_states
++            )
++        else:
++            projected_states_qkvz, projected_states_ba = self._forward_input_proj(
++                hidden_states
++            )
+ 
+         if _is_xpu and get_exec().mamba.linear_attn_backend == "intel_xpu":
+             from sglang.srt.model_executor.forward_context import get_attn_backend
+@@ -945,6 +981,30 @@
+         )
+         use_fused_contiguous_unpack = (
+             self.num_v_heads // self.num_k_heads in _GDN_FUSED_QKVZBA_RATIOS
++            or (
++                # Private ratio-three TP2 verifier copy-only component candidate.
++                # Other modes/shapes retain the pinned source route.
++                _is_hip
++                and forward_batch.forward_mode.is_target_verify()
++                and self.attn_tp_size == 2
++                and (self.num_k_heads, self.num_v_heads) == (16, 48)
++                and (self.head_k_dim, self.head_v_dim) == (128, 128)
++                and isinstance(projected_states_qkvz, torch.Tensor)
++                and isinstance(projected_states_ba, torch.Tensor)
++                and projected_states_qkvz.dtype == torch.bfloat16
++                and projected_states_ba.dtype == torch.bfloat16
++                and projected_states_qkvz.device.type == "cuda"
++                and projected_states_qkvz.device == projected_states_ba.device
++                and projected_states_qkvz.ndim == 2
++                and projected_states_ba.ndim == 2
++                and projected_states_qkvz.shape[0] in (8, 16)
++                and projected_states_qkvz.shape[1] == 8192
++                and projected_states_ba.shape == (projected_states_qkvz.shape[0], 48)
++                and projected_states_qkvz.stride(1) == 1
++                and projected_states_ba.stride(1) == 1
++                and projected_states_qkvz.stride(0) >= 8192
++                and projected_states_ba.stride(0) >= 48
++            )
+         )
+         if use_fused_decode_proj_conv:
+             # GDN owns indexed Conv1D state and the safe unpack/Conv boundary;

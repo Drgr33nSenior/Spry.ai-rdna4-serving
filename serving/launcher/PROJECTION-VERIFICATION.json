@@ -1,0 +1,38 @@
+{
+  "actual_authentication": {
+    "SSH_or_native_execution": false,
+    "actual_configuration_and_spec_verified": true,
+    "archive_members": 80,
+    "configured_caller_host_read": true,
+    "external_runtime_proof_still_required": true
+  },
+  "caller_activation_complete": false,
+  "consumed_protected_helpers_changed": false,
+  "documentation_audit": "PASS_NO_FINDINGS",
+  "focused_tests": 325,
+  "fresh_projection": {
+    "caller_activation_complete": false,
+    "content_sha256": "6ba7061960787607905251b8ac48086a2e52b0f85becf881ad96701f32438dd4",
+    "deterministic": true,
+    "no_launchable_manifest_or_authorization": true,
+    "proposed_package_members": 80
+  },
+  "launch_authorized": false,
+  "native_grading_packet_assembled": false,
+  "native_runtime_tested": false,
+  "owner_approved": false,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "private_key_or_credential_files_read": false,
+  "private_renderer_checks": 2,
+  "public_tests": 5,
+  "raw_report_sha256": "dcbe88f5b6435b6fa802376e8c28705f7ba199cedc7bfc6da38a76539a5f1d49",
+  "renderer_sha256": "26a9bf3bc2a8a719ac21af980c1203dcd8cecda8520c7d7f381e241122399cb4",
+  "repository_make_test": "PASS",
+  "repository_python_unittest_count": 762,
+  "source_review_only": true,
+  "source_tests_sha256": "faf85baa7dff06606f4df58b0b45d257422fd27148bbf2381b749bccf9a48cd6",
+  "static_global_references": "PASS_FOUR_CHANGED_MODULES",
+  "syntax_compilation": "PASS_ALL_106_PYTHON_MODULES",
+  "whole_run_config_mutations_supported": false
+}

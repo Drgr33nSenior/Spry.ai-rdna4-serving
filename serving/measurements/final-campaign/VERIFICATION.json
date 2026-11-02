@@ -1,0 +1,104 @@
+{
+  "actual_final_pair_source_contract_passed": true,
+  "changed_sources": {
+    "compare_measurement.py": "c5b791d5e8139f6c68088c43dbfccf18ace148b95d21e8fe030e35dcba12c914",
+    "tests/test_measurement_comparison.py": "b4ff6954d9b124d9ff489aa59bad483d662c330b149a3ce9b73310d6c1b20e77"
+  },
+  "comparison_entrypoint_fixture": {
+    "full_request_work_calls": 704,
+    "native_quality_proven": false,
+    "sealed_quality_and_receipt_inputs": "inert stand-ins",
+    "source_membership_and_execution_guards": "actual functions"
+  },
+  "complete_cleanup": false,
+  "launch_authorized": false,
+  "legacy_actual_sealed_replay": {
+    "causal_speedup_established": false,
+    "groups_retained": 186,
+    "matched_rows": 352,
+    "passed": true,
+    "timing_populations_unchanged": true
+  },
+  "native_focused_source_checks": {
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "subprocess_denied": true,
+    "tests": 15
+  },
+  "new_model_starts": 0,
+  "offline_reader_only": true,
+  "prior_runtime_and_campaign_source_checks": 270,
+  "proofs": {
+    "ACTUAL-FINAL-PAIR-SOURCE-CHECK.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/ACTUAL-FINAL-PAIR-SOURCE-CHECK.json",
+      "sha256": "c5c83cd816433bdec0b2da4dd3605cddc995d653f155120dcb97257ad8b56b61"
+    },
+    "LEGACY-REPLAY-CHECK.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/LEGACY-REPLAY-CHECK.json",
+      "sha256": "4dfb0d240a3b6466eea2a2faf50c7c3b0b4e3ac053a3a2c7a78f6b2066e95a03"
+    },
+    "NATIVE-READOUT-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/NATIVE-READOUT-CHECKS.json",
+      "sha256": "32c2019658469cfc051ac380acc0b99394f177c3a0c199427818710ded7c93b5"
+    },
+    "NATIVE-SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/NATIVE-SOURCE-INVENTORY.json",
+      "sha256": "70722a8e4c0fe61f92a624f96bf4736a9d99c16bc03a0d442af0233e1d323531"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/PUBLIC-CHECKS.json",
+      "sha256": "b4e8716a73ab1b2531599e8c2681d159409442d14ac40a51b473e316d85fef24"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/STATIC-CHECKS.json",
+      "sha256": "2869dbab6c8d1bdc0617b69c846851264a0589718ebc71eed201895c93891f34"
+    },
+    "comparison-tests-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/comparison-tests-attempt-1.log",
+      "sha256": "0b1ecf64f1ee6ffeb31738134ffd5f6d213310fc1946cb06efa94bc534899e7a"
+    },
+    "comparison-tests-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/comparison-tests-attempt-2.log",
+      "sha256": "71b69d7c17ab4443ce65ef23d48691e804ec4656a49a03cd5c96de64abe6cbf0"
+    },
+    "legacy-replay-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/legacy-replay-attempt-1.log",
+      "sha256": "505c33872ae154ef75e37d208911eecdc8581a9d033b044e6b3c0044058a930f"
+    },
+    "legacy-replay-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/legacy-replay-attempt-2.log",
+      "sha256": "7fc5f45b4b9b854b0c2469ae143d2b6719a78b239f170b0c6240a28c0b52bb3a"
+    },
+    "native-readout-source-checks.json": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/native-readout-source-checks.json",
+      "sha256": "1d6ea18934dcfcad04dacd53d3e2888ccf13e15765683736aef0e965342d727c"
+    },
+    "public-make.log": {
+      "path": ".test-build/serving-cleanup/final-readout-v1/public-make.log",
+      "sha256": "d5dd9de57b9e987fe1cd10e918f79052f72c02b2288df388e227feb811775b42"
+    }
+  },
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed",
+    "passed": true,
+    "python_tests": 1001,
+    "suites": 81
+  },
+  "remaining": [
+    "Exact CPU tensor and GPU campaign approvals",
+    "Real CPU tensor structure proof",
+    "Native GPU startup bytes, token identity, quality, BDF memory and independent releases",
+    "Final production measurement and retained evidence closeout"
+  ],
+  "runtime_and_protected_source_changes": false,
+  "schema": 1,
+  "sealed_campaigns_rebuilt": false,
+  "status": "CPU_FINAL_COMPARISON_READOUT_VERIFIED_NATIVE_RUNS_PENDING"
+}

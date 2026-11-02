@@ -1,0 +1,134 @@
+{
+  "actual_archives": {
+    "baseline": 78,
+    "cleanup": 79
+  },
+  "complete_local_campaign_checks": 6,
+  "control203_result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-203-RESULT.json",
+    "sha256": "c48e5ccd3db7900c2c67f0c9f191a0c436d3fac9da468fdfdd356dd85f951561"
+  },
+  "failed_preparation_cannot_register_capture_view": true,
+  "five_tensor_structure_sources_unchanged": true,
+  "focused_replay_scope_tests": 9,
+  "identity": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/SOURCE-AND-REQUEST-IDENTITY-FINAL.json",
+    "sha256": "55f4beaafb01861112923441eec718524777bf5e384c5fe3cdb99d482c6d86ce"
+  },
+  "launch_authorized": false,
+  "logs": {
+    "boundary_tests": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/validation-preflight-v2.log",
+      "sha256": "d55004014b1ba6d40322e120b6924f18f1686319d3f0bd90c64e55fefe879fb8"
+    },
+    "local_packet_checks": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/final-source-checks-v2/local-packet-checks.log",
+      "sha256": "0de610d0679c631960b0547ddc3643522682e6c765c1b6517eca3a4b89ecc503"
+    },
+    "native_stderr": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/final-source-checks-v2/native-control-checks.stderr",
+      "sha256": "c2632357cc6150c1e5d9bcb05cb2a7809ed1fb15b4e87ba83d92d4af50e960ab"
+    },
+    "native_stdout": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/final-source-checks-v2/native-control-checks.stdout",
+      "sha256": "07e0d5cedd3649d51e2aa3fc466aa0a6681d730e1c491283a3a72972203d9269"
+    },
+    "public_tests": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/public-make-v2.log",
+      "sha256": "9d9f2852ede3c331ea72bf132822a0e1e53176bb630f0755a6eccdab0d68a517"
+    }
+  },
+  "native_gpu_execution_performed": false,
+  "native_lifecycle_reproduction": {
+    "actual_native_initializer_body_executed": true,
+    "batch_sizes": [
+      1,
+      2
+    ],
+    "complete_native_module_compiled": true,
+    "corrected_adapter_matches_old_graph": true,
+    "eager_metadata_assignment_source_line": 1041,
+    "native_gpu_cause_or_recovery_proven": false,
+    "old_adapter_refreshed": true,
+    "passed": true,
+    "retained_cleanup_adapter_stale": true,
+    "substitutes": [
+      "tensor and CUDA graph execution",
+      "native fill helpers",
+      "eager ForwardMetadata object replacement",
+      "native callable admission for the exact pinned initializer"
+    ],
+    "upstream_triton_backend_sha256": "9924224f0dd4150fe1fc9ef7de6a556c49857608792479379179a973436762c1"
+  },
+  "native_python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+  "native_quality_proven": false,
+  "native_report": {
+    "actual_archives": 2,
+    "complete_worker_materialization_both_arms": true,
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "scope": "source-only corrected replay metadata and exact instrumented closures with declared native metadata and ownership substitutes",
+    "subprocess_denied": true,
+    "tests": 31
+  },
+  "native_source_inventory": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/final-source-checks-v2/NATIVE-SOURCE-INVENTORY.json",
+    "sha256": "b2120b5bfa6a58983e42a2517fbc57ed852b9b34d7219b3e1fa1ccd2613fec9e"
+  },
+  "native_source_tests": 31,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "proposal_sha256": "c5641defa616d52b410bdc40a2209573d007a0f126bb589d700b02ad712377f2",
+  "protected_bytes_unchanged_since196": true,
+  "public_test_suites": 87,
+  "public_tests": 1055,
+  "registration_created": false,
+  "reproduction": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/REPRODUCTION-FINAL.json",
+    "sha256": "1837a559a55566dd608fa70a60d3e07f16ec0d7f3f17e0c68c4c3e4fa5df1853"
+  },
+  "response_acceptance_changed": false,
+  "retained_failed_capture_preparation_test": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/capture-preparation-negative.log",
+    "sha256": "899231617b6ff641ecea6cf2019ebc65602ce31312136f0e56cb8a1fa3649505"
+  },
+  "retained_failed_optional_preflight": {
+    "guard_or_acceptance_changed": false,
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/validation-preflight.log",
+    "reason": "The selected W5 worker lacks the optional generic _full_enabled_indices interface. That input correctly refused. The standard boundary suite passes unchanged; the exact selected-width worker producer and reader pass separately in the native archive checks."
+  },
+  "schema": 1,
+  "source_pins": {
+    "Makefile": "5203676abc9afa0b3550da451496453989c00e28d3f4d9263b1de52db47ba057",
+    "serving/proposals/replay-metadata-scope/RUNTIME.patch": "cdd482171a2b9178acd800b8f1de3938709e2146a688ba530439a9addc3b9e33",
+    "serving/proposals/replay-metadata-scope/SOURCE.patch": "b99c26346c57449fe5d443aee548cb61221ef3db7136a02f57ec4459808f3621",
+    "serving/spry_serving/common_replay_scope_adapter.py": "04223b6ff6c56ae6130b6a7c61c9b9f519155d128ae4c17b30d0815d6132a5ea",
+    "serving/tests/test_replay_metadata_scope.py": "6ec322b186d041bf64739c07422553b29635b121c23120d645b17ce1c8bbbc7a",
+    "serving/tests/test_worker_timing.py": "eddb70c1561194437d93e72df1c4f5635ebc95211ba24f9c1822dca06ead6ea2"
+  },
+  "source_seals": {
+    "baseline": {
+      "manifest_sha256": "a4c6d7a0a24221e855c6267ae2d4287b0cfab77544bff7b9ab230849b468aa64",
+      "members": 146,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/baseline/author",
+      "verified_utc": "2026-11-02T15:19:14.170740+00:00"
+    },
+    "cleanup": {
+      "manifest_sha256": "3d089db78c415ba8c54cd7c0f6ca10d595222909d1370a48aeb90a9b488b9b0c",
+      "members": 148,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/author",
+      "verified_utc": "2026-11-02T15:19:14.581156+00:00"
+    }
+  },
+  "status": "CPU_REPLAY_METADATA_SCOPE_FIXED_NATIVE_QUALIFICATION_PENDING",
+  "validation_preflight_tests": 43,
+  "whole_cleanup_complete": false
+}

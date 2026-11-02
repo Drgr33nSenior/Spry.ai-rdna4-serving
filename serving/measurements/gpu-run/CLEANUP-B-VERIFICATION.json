@@ -1,0 +1,50 @@
+{
+  "caller_seconds": 7160,
+  "cleanup_complete": false,
+  "cpu_grading_seconds": 320,
+  "current_protected_patch_approved": false,
+  "final_checks": {
+    "approval_request_hash_verified": true,
+    "baseline_cpu_evidence_seals_reverified": true,
+    "documentation_audits": 4,
+    "documentation_findings": 0,
+    "documentation_logs": {
+      "docs-approval.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+      "docs-gpu-run.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+      "docs-quality.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+      "docs-serving.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "git_diff_check": "PASS",
+    "json_parse": "PASS",
+    "source_seals_reverified": true,
+    "unfunded_caller_verified": true
+  },
+  "fixed_input_files": 40,
+  "gpu_work_performed": false,
+  "grading_inventory_identical_to_passed_baseline": true,
+  "launch_authorized": false,
+  "matched_executed_baseline_sha256": "845f039ad11febe613ebb186d254fa1a3de5754225c05d7d94a47b3b92c9e660",
+  "native_cpu_source_checks_reused": 110,
+  "nonce": "e201110100000205",
+  "owner_seconds": 6360,
+  "packet_checks": 6,
+  "packet_checks_passed": true,
+  "packet_checks_sha256": "8a458ee85a827751b557b3c003b816d1a5c42a017837d78fedb78e92d7ad9a7c",
+  "performance_improvement_measured": false,
+  "profile_native_checks_reused": 5,
+  "readiness": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/READINESS.json",
+  "registered": false,
+  "request_sha256": "cc09f1e1c4a5d7b056a1c64da6e4a4a0cc81bdb9d24697fd6a07660c1f2291c9",
+  "review_path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/APPROVE-CLEANUP-B.md",
+  "runtime_capacity_checks_reused": 37,
+  "runtime_reuse_basis": "Only RESOURCE-MANIFEST.json identity differs from the previous 37-check review payload; all code and protected patch bytes are identical.",
+  "schema": 1,
+  "source_archive_expansion_ceiling_bytes": 16777216,
+  "source_archive_member_count": 80,
+  "source_seal": {
+    "manifest_sha256": "bbafcaf9e70baeea6ecaef252abe2f1c973c304e049881815783277c28790b58",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/author"
+  },
+  "status": "REFRESHED_CLEANUP_B_SEALED_PENDING_OWNER_APPROVAL"
+}

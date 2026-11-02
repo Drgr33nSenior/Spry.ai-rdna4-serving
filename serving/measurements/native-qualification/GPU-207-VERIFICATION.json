@@ -1,0 +1,58 @@
+{
+  "checkpoint_sha256": "cf6890a9ae73b534fa861234934005ec4c5afdeee79bdb20077c81916e1ef935",
+  "complete_original_caller": true,
+  "cpu_evidence_seal": {
+    "manifest_sha256": "76955f4265a9f97a3e5ce9e56f0a2ba6c854ffa6a69f8ce0a78735b88b748fe8",
+    "members": 77,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/quality-binding-v1/cpu"
+  },
+  "cpu_execution_seal": {
+    "manifest_sha256": "1d9777611178e9590056c4ad80dfbf0aace1eb491fb1272c2fd3b4a05ad91113",
+    "members": 7,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/cpu-execution-v1"
+  },
+  "execution_seal": {
+    "manifest_sha256": "a62d1e9c71ed98422d6add0c0bb62177b4e8045afb78e51b0e125435d83c760d",
+    "members": 98,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T19:43:32.814480+00:00"
+  },
+  "independent_cpu_release": true,
+  "independent_gpu_release": true,
+  "long_answer_coverage_pass": true,
+  "native_cpu_readout_recomputed": true,
+  "native_seals": {
+    "operation": {
+      "manifest_sha256": "a1bcb5fab8ec167b41f5f2a88084701a6471561b167c8b33f4157dda3aad70e4",
+      "members": 428,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "549f2daaacfaa860808d26eca8417eaabfa9a820d1583cf2e2a83c3894f522f5",
+      "members": 32,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e2011102000000a3"
+    },
+    "workload": {
+      "manifest_sha256": "017b64a0094737d977ecacadb99f71f33857a4c1da6bd026ba12333c4a73151f",
+      "members": 323,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e2011102000000a3"
+    }
+  },
+  "natural_quality_passes": 352,
+  "operation": 207,
+  "passed": true,
+  "raw_request_and_token_vectors_match_B186": 352,
+  "result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-207-RESULT.json",
+    "sha256": "0ff4ae312ddb2adfb8685452186fe87f7c7ad11cdb3f6732064badfe26c8ca10"
+  },
+  "result_sha256": "99bbf86c67b7627e930e6ed6c749674ee2d298ed150d7e077b6acc66ebc7d8f4",
+  "schema": 1,
+  "source_seal": {
+    "manifest_sha256": "430da555d2892402b589c6c0a5ed677284b9c68ea8fd2002bdeeea28b5aad8f5",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/author"
+  },
+  "whole_cleanup_complete": false
+}

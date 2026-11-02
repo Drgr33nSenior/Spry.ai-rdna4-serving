@@ -1,0 +1,110 @@
+--- a/review/worker_entry.py
++++ b/review/worker_entry.py
+@@ -16,6 +16,7 @@
+ import stat
+ import sys
+ import time
++from contextlib import contextmanager
+ from importlib.machinery import SourceFileLoader
+ from pathlib import Path
+ from typing import Any, Callable
+@@ -37,6 +38,7 @@
+     "dflash_model", "dflash_worker", "dflash_utils", "dflash_info",
+     "dflash_info_v2", "draft_worker_common",
+ }
++_SOURCE_DIGEST_SCOPE = None
+ 
+ 
+ def _canonical(value: Any) -> bytes:
+@@ -52,12 +54,60 @@
+     return hashlib.sha256(_canonical(value) + b"\n").hexdigest()
+ 
+ 
+-def _file_digest(path: Path) -> str:
++def _uncached_file_digest(path: Path) -> str:
+     digest = hashlib.sha256()
+     with path.open("rb") as source:
+         for block in iter(lambda: source.read(1024 * 1024), b""):
+             digest.update(block)
+     return digest.hexdigest()
++
++
++def _source_file_identity(path: Path) -> tuple:
++    info = _safe_regular(path).lstat()
++    return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid, info.st_nlink,
++            info.st_size, info.st_mtime_ns, info.st_ctime_ns)
++
++
++def _readonly_source(path: Path) -> bool:
++    try:
++        return bool(os.statvfs(path).f_flag & getattr(os, 'ST_RDONLY', 0))
++    except (OSError, AttributeError):
++        return False
++
++
++def _file_digest(path: Path) -> str:
++    scope = _SOURCE_DIGEST_SCOPE
++    if scope is None or scope['pid'] != os.getpid() or str(path) not in scope['paths']:
++        return _uncached_file_digest(path)
++    cache = scope['digests']
++    identity = _source_file_identity(path)
++    if not _readonly_source(path):
++        cache.pop(path, None)
++        return _uncached_file_digest(path)
++    previous = cache.get(path)
++    if previous is not None and previous[0] == identity:
++        return previous[1]
++    value = _uncached_file_digest(path)
++    _require(_source_file_identity(path) == identity and _readonly_source(path),
++             'source changed while hashing')
++    cache[path] = (identity, value)
++    return value
++
++
++@contextmanager
++def _source_digest_scope(manifest):
++    """Reuse source digests only within this worker and its read-only view."""
++    global _SOURCE_DIGEST_SCOPE
++    _require(_SOURCE_DIGEST_SCOPE is None, 'fresh source digest scope required')
++    sources = manifest.get('sources', {})
++    paths = (frozenset(row['path'] for row in sources.values()
++                       if type(row) is dict and type(row.get('path')) is str)
++             if type(sources) is dict else frozenset())
++    _SOURCE_DIGEST_SCOPE = dict(pid=os.getpid(), paths=paths, digests={})
++    try:
++        yield
++    finally:
++        _SOURCE_DIGEST_SCOPE = None
+ 
+ 
+ def _require(condition: bool, message: str) -> None:
+@@ -876,7 +926,28 @@
+     display_moe_ep_rank: Any = None,
+ ) -> Any:
+     """Record the spawned TP scheduler identity then delegate once, unchanged."""
+-    manifest = _validate_manifest(_read_manifest())
++    value = _read_manifest()
++    with _source_digest_scope(value):
++        return _run_scheduler_process(
++            value, server_args, port_args, gpu_id, tp_rank, pp_rank, dp_rank, pipe_writer,
++            display_tp_rank=display_tp_rank, display_dp_rank=display_dp_rank,
++            display_moe_ep_rank=display_moe_ep_rank)
++
++
++def _run_scheduler_process(
++    value: dict[str, Any],
++    server_args: Any,
++    port_args: Any,
++    gpu_id: int,
++    tp_rank: int,
++    pp_rank: int,
++    dp_rank: Any,
++    pipe_writer: Any,
++    display_tp_rank: Any = None,
++    display_dp_rank: Any = None,
++    display_moe_ep_rank: Any = None,
++) -> Any:
++    manifest = _validate_manifest(value)
+     _require(type(tp_rank) is int and tp_rank in manifest["expected_ranks"], "unexpected TP rank")
+     _require(pp_rank == 0 and dp_rank is None, "unsupported native scheduler topology")
+     record = _worker_record(manifest, tp_rank)

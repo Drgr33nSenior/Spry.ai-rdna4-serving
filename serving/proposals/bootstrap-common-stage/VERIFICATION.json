@@ -1,0 +1,192 @@
+{
+  "all_60_other_python_sources_unchanged": true,
+  "complete_cleanup": false,
+  "consumed_native_attempt": {
+    "caller_seconds_charged": 5,
+    "execution_seal": {
+      "manifest_sha256": "18ee59a4a4f0e779003efcb572fa90e5ef1d90dbbbc80eac17babf2e6e004f9d",
+      "members": 23,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/instrumented-pair-v1/cleanup/execution-v1"
+    },
+    "independent_preowner_absence_verified": true,
+    "model_starts": 0,
+    "normal_owner_release_not_applicable": true,
+    "operation": 191,
+    "owner_seconds_charged": 1,
+    "responses": 0,
+    "status": "INSTRUMENTED_CANDIDATE_PREOWNER_STAGING_REFUSAL_PARKED"
+  },
+  "correction": "Add spry_common_canon.py to the existing trusted tuple; verify its manifest pin and include its bytes in the existing source-copy charge",
+  "cpu_structure_gate": {
+    "execution_seal": {
+      "manifest_sha256": "1d8573c4ee5bf9d63a7614e20003f138b7a7ba9345467d2c383252f72e835dfe",
+      "members": 33,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/tensor-review-v1/execution-v1"
+    },
+    "gpu_free": true,
+    "independent_release": true,
+    "native_quantizer_or_kernel_equivalence": false,
+    "passed": true,
+    "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes",
+    "torch": "2.14.0+git2e66fe81.rocm10.2.0"
+  },
+  "fixture_annotation": "After full make, the optional exact-archive fixture interface was added; all five current public cases and the exact packet case passed on native CPython",
+  "fresh_candidate": {
+    "archive_members": 79,
+    "native_execution_authorized": false,
+    "nonce": "e201110200000084",
+    "owner_review_sha256": "7fbb2829d64f3dc8dbfea3fa588551654f7d9a84f29183d8bd3a29c535ec1d6f",
+    "protected_set_sha256": "12eec6f8b63b486a218ad2d489ed966073894405e2e86f8306a9999c16a91f06",
+    "run_config_sha256": "b35bbacb9d22c97d2254b6eb8184fd5e4ac92e894c31bee08de38bafeab4d648",
+    "source_seal": {
+      "manifest_sha256": "c460063954636ec3193cda0d196fe8f513fd22d90929b53e74b11989e0ac1e74",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/bootstrap-common-stage-v1/instrumented-pair-v1/cleanup/author"
+    }
+  },
+  "kernels_requests_settings_and_pools_changed": false,
+  "native_focused_source_checks": {
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "subprocess_denied": true,
+    "tests": 6
+  },
+  "native_gpu_allowance": 0,
+  "native_snapshot": {
+    "ceiling_bytes": 16777216,
+    "files": {
+      "check_real_prefix.py": "77701052b0f58a2b01bb94c04fb8be45581809763a11a13910b09bb2450e422b",
+      "packet/APPROVAL-REQUEST.json": "6aafee8f7b47670d529089e41d76b465a93eb4616f226dc205187aa3d61149c7",
+      "packet/payload.tar": "b58e04dd63d76364e3af208ad6e4dd74a1b212566f2cfeb6b84e47de9ccda73d",
+      "readout_preflight.py": "d91cd494abde58d1da84ae7fbe257c8be94d3c8d62f2f06ce22961a2a4c4257a",
+      "serving/build.py": "49e37bd91297f9ec76aaff7fb21131ba53ecb9894472e4a92b66eaf47c66220d",
+      "serving/compare_measurement.py": "c5b791d5e8139f6c68088c43dbfccf18ace148b95d21e8fe030e35dcba12c914",
+      "serving/config/runs/w5-v2/run.json": "595ddab08b434f10c94bd548e38e31e2ae01355638262fa90a09d4afe10fb216",
+      "serving/launcher/run_native.py": "3a6147019d1973c459460a87113592044e6f0dccf4be95017bdbbc74992c2fee",
+      "serving/prepare_measurement.py": "c25524e3bd5edca7a31c49f6994a403eda3f94a234d7fd8502bba8a6c83091a6",
+      "serving/proposals/bootstrap-common-stage/review/benchmark_host_transport.py": "a28a507df77805d2b7e77d7106a4f103486574d40c0b8beb1a100f516fe0e922",
+      "serving/proposals/common-closure/review/benchmark_artifacts.py": "662b377ebad9d24f4627ad36e1885f2616ce95122837edcbe84f8ec5a8086f70",
+      "serving/proposals/common-closure/review/benchmark_host_transport.py": "5fb2bc534eaf8587f8d3497c7e5857be37f0c43329475e552cdaf917b13a071e",
+      "serving/proposals/common-closure/review/benchmark_release_observer.py": "0eddebd8c281199d8e37342418475dcb384c2c28957c2fe957173f24742051af",
+      "serving/proposals/common-closure/review/collect_benchmark_platform.py": "47e3ca93178974cbcee81bf11dfaa26770fc84aeb6bdba2563dff68e667cbc32",
+      "serving/proposals/common-closure/review/host_process_owner.py": "8d49e1fbdd33e2fe4b3fb74412d3d9c9fd16198fbc696d3aa5ee5a19d4c51ec3",
+      "serving/propose_packet.py": "87a3ad3e9e6e4ad85a991a5b6325cc3cbc3e926abe854691cd3a6b5ca18cb3ca",
+      "serving/run_config.py": "f49d9c42fe1a55b568224cbfcf179d4ecd83373981c7b1e93600d13ba5c5dea9",
+      "serving/spry_common/canon.py": "a1bdcb26c9a076ae3471a3a9182622b193aab113bfc18ba3657c5db4f44308e0",
+      "serving/spry_common/limits.py": "89228812d01ed0f5689b0e0f5c46796727eb329706fcc8952dcae8217740d6d1",
+      "serving/spry_common/selected.py": "c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed",
+      "serving/tests/test_bootstrap_common_stage.py": "d6b60f49a98104b3eaf60ac63f19f74e7131acaceeb87b8887943517c2fdaefa"
+    },
+    "gzip_bytes": 5765883,
+    "tar_bytes": 6062080
+  },
+  "new_model_starts": 0,
+  "only_changed_protected_source": "benchmark_host_transport.py",
+  "other_nine_protected_inventory_members_unchanged": true,
+  "owner_approved": false,
+  "post_test_change": "cpu_verified false to true only",
+  "proofs": {
+    "ACTUAL-ROOT-PREFIX-CHECK.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/ACTUAL-ROOT-PREFIX-CHECK.json",
+      "sha256": "b01ae2d6bbdf0d7dbd179b85bfadd390aba5caeb9928c39e86edc23ccb6d4975"
+    },
+    "NATIVE-BOOTSTRAP-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/NATIVE-BOOTSTRAP-CHECKS.json",
+      "sha256": "19972134cdae42573929b0c1aee28f415814a1f15460bbeddb67c2c263bb076c"
+    },
+    "NATIVE-SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/NATIVE-SOURCE-INVENTORY.json",
+      "sha256": "c2e84504f3a1360a800627b4bb6224b567f72c78a2b75f08ef64ef3b8e8dde20"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/PUBLIC-CHECKS.json",
+      "sha256": "49dbc08341f1390d644237e05ccb4f369356314a3a3e900d0a97d9e4e57fe4fd"
+    },
+    "SOURCE-SEALS.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/SOURCE-SEALS.json",
+      "sha256": "a68b162503199a22382aca738ab9baa899f6f5a2415360c1f03858b1d1da7be2"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/STATIC-CHECKS.json",
+      "sha256": "57347515dbebb8e275ab7664397a1adfc42ffed2c880a6c752e2e91309ec1e76"
+    },
+    "full-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/full-campaign-checks.json",
+      "sha256": "297a5f41fe8086c7f3aacac2a776d7840ed36f32c86043f194cca677a760cb04"
+    },
+    "full-campaign-checks.log": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/full-campaign-checks.log",
+      "sha256": "2e0f6e28645f3bc34b81d2c657978435ad7b4d622b50b274d9dc0a21bf42a9d1"
+    },
+    "native-bootstrap-source-checks.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/native-bootstrap-source-checks.json",
+      "sha256": "432171b36d3bd5fd9549c510aaa0be198e1f6aad8c15956cb7333e1e51c1f9ed"
+    },
+    "packet-check.json": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/packet-check.json",
+      "sha256": "32c5bae119b12f11d36606e5664bc277a303f1a3f6111e908df612f39a6d3862"
+    },
+    "public-make.log": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/public-make.log",
+      "sha256": "feeea5e20a448da62792ce35d6067cf7f194fc68f7dc02b16b8c728f099d97db"
+    },
+    "unit-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/unit-attempt-1.log",
+      "sha256": "1e262d273a736125c31aa504b7d65ed4bc13c22f8b6c853a6ac6f7720f616cda"
+    },
+    "unit-current.log": {
+      "path": ".test-build/serving-cleanup/bootstrap-common-stage-v1/unit-current.log",
+      "sha256": "2a1d3581ed526f3f659bd1acdb2804607e1b0760e18a14467942945af9d8c55b"
+    }
+  },
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed",
+    "final_focused_tests": 5,
+    "passed": true,
+    "python_tests": 1006,
+    "suites": 82
+  },
+  "published_proposal_sha256": "fca04fe619c3d773bf9860bde20d299d4b1f59a185e3b96e98964f3ddefdf8e2",
+  "remaining": [
+    "Fresh exact approval for corrected instrumented GPU packet e201110200000084",
+    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Final production comparison and retained evidence closeout"
+  ],
+  "resource_ceilings_changed": false,
+  "root_cause": "The root trusted tuple omitted the authenticated common helper that the launcher staged",
+  "schema": 1,
+  "static_checks": {
+    "ast_symtable_compile_modules": 301,
+    "change": "Add the authenticated common helper to the existing trusted source tuple",
+    "exact_changed_source_and_tests_match_native_snapshot": true,
+    "passed": true,
+    "protected_patch_forward_reverse_exact": true,
+    "root_transport_only_changed_definition": "human_main"
+  },
+  "status": "CPU_BOOTSTRAP_COMMON_STAGE_FIXED_FRESH_GPU_APPROVAL_PENDING",
+  "test_substitutes": {
+    "exact_archive_authentication_and_source_hashing_executed": true,
+    "exact_packet_test": [
+      "root credentials/parent-directory metadata",
+      "boot identity",
+      "monotonic clock",
+      "workload mkdir boundary"
+    ],
+    "unit_fixture": [
+      "root credentials/parent-directory metadata",
+      "archive authentication",
+      "boot identity",
+      "monotonic clock",
+      "workload mkdir boundary"
+    ]
+  },
+  "tested_proposal_sha256": "96a0b0e201f689a931be5a46b011e82f0ff62395ede774bb72f5e8b234c03d3f"
+}

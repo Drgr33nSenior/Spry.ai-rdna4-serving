@@ -1,0 +1,115 @@
+--- a/tests/test_import_cleanup.py
++++ b/tests/test_import_cleanup.py
+@@ -183,7 +183,7 @@
+         self.model = load('cleanup_model_frontend', self.root / 'model_benchmark.py')
+ 
+     @contextlib.contextmanager
+-    def http_tree(self, failure=None):
++    def http_tree(self, failure=None, *, instrumented=True):
+         sources = {}
+         for name in self.NAMES:
+             raw = 'import sys\nSELF = sys.modules[__name__]\nVALUE = ' + repr(name) + '\n'
+@@ -194,6 +194,7 @@
+                         'def expand_http_template(value): return value\n'
+                         'def validate_contract(value): return value\n'
+                         'def contract_for_arm(arm): return {"selected":"speculation"}\n')
++                raw += 'def instrumentation_enabled(): return ' + repr(instrumented) + '\n'
+             if name == 'serving_runtime':
+                 raw += 'import mtp_contract\nDEPENDENCY = mtp_contract.VALUE\n'
+             if name == failure:
+@@ -237,6 +238,39 @@
+                 self.model.http_runtime_module(spec, 'bf16')
+             self.assertFalse(set(self.NAMES) & sys.modules.keys())
+ 
++    def test_production_does_not_read_or_import_the_parity_source(self):
++        with self.http_tree(instrumented=False) as spec:
++            (self.root/'serving_parity.py').write_text('raise AssertionError("production parity import")\n')
++            runtime=self.model.http_runtime_module(spec,'bf16')
++            self.assertEqual(runtime.DEPENDENCY,'mtp_contract')
++            self.assertNotIn('serving_parity',sys.modules)
++            self.assertEqual(set(self.NAMES)-set(sys.modules),{'serving_parity'})
++
++    def test_production_rejects_an_ambient_parity_module(self):
++        with self.http_tree(instrumented=False) as spec:
++            previous=SimpleNamespace(ambient=True);sys.modules['serving_parity']=previous
++            with self.assertRaisesRegex(ValueError,'already imported'):
++                self.model.http_runtime_module(spec,'bf16')
++            self.assertIs(sys.modules['serving_parity'],previous)
++            self.assertNotIn('mtp_contract',sys.modules)
++
++    def test_observation_mode_must_be_a_boolean(self):
++        with self.http_tree(instrumented=0) as spec:
++            with self.assertRaisesRegex(ValueError,'mode must be boolean'):
++                self.model.http_runtime_module(spec,'bf16')
++            self.assertFalse(set(self.NAMES)&sys.modules.keys())
++
++    def test_changed_observation_mode_rolls_back_the_production_import_chain(self):
++        with self.http_tree(instrumented=False) as spec:
++            execute=SourceFileLoader.exec_module
++            def changed(loader,module):
++                execute(loader,module)
++                if module.__name__=='mtp_contract':module.instrumentation_enabled=lambda:True
++            with patch.object(SourceFileLoader,'exec_module',new=changed):
++                with self.assertRaisesRegex(ValueError,'observation mode changed'):
++                    self.model.http_runtime_module(spec,'bf16')
++            self.assertFalse(set(self.NAMES)&sys.modules.keys())
++
+     def test_http_chain_refuses_ambient_module_without_replacing_it(self):
+         with self.http_tree() as spec:
+             previous = SimpleNamespace(ambient=True)
+--- a/tests/test_worker_timing.py
++++ b/tests/test_worker_timing.py
+@@ -206,16 +206,27 @@
+                for name,row in record['source_changes'].items()):
+             successor=HERE.parent/'proposals/d2-artifact-binding'
+             next_record=json.loads((successor/'PROPOSAL.json').read_bytes())
+-            raw=(successor/'SOURCE.patch').read_bytes()
+-            self.assertEqual(sha(raw),next_record['source_patch_sha256'])
++            stages=[successor]
++            if any(sha((HERE.parent/name).read_bytes())!=row['proposed_sha256']
++                   for name,row in next_record['source_changes'].items()):
++                stages.insert(0,HERE.parent/'proposals/production-imports')
++            records=[json.loads((stage/'PROPOSAL.json').read_bytes()) for stage in stages]
+             with tempfile.TemporaryDirectory(prefix='worker-source-history-') as temporary:
+                 root=Path(temporary).resolve()
+-                for name in next_record['source_changes']:
++                for name in {name for value in records for name in value['source_changes']}:
+                     target=root/name;target.parent.mkdir(parents=True,exist_ok=True)
+                     target.write_bytes((HERE.parent/name).read_bytes())
+-                result=subprocess.run(['/usr/bin/patch','--batch','--fuzz=0','-R','-p1'],
+-                    input=raw,cwd=root,capture_output=True,timeout=30)
+-                self.assertEqual(result.returncode,0,result.stdout.decode())
++                for stage,value in zip(stages,records,strict=True):
++                    raw=(stage/'SOURCE.patch').read_bytes()
++                    self.assertEqual(sha(raw),value['source_patch_sha256'])
++                    changed=value.get('direct_source_changes',value['source_changes'])
++                    for name,row in changed.items():
++                        self.assertEqual(sha((root/name).read_bytes()),row['proposed_sha256'])
++                    result=subprocess.run(['/usr/bin/patch','--batch','--fuzz=0','-R','-p1'],
++                        input=raw,cwd=root,capture_output=True,timeout=30)
++                    self.assertEqual(result.returncode,0,result.stdout.decode())
++                    for name,row in changed.items():
++                        self.assertEqual(sha((root/name).read_bytes()),row['baseline_sha256'])
+                 historical={name:(root/name).read_bytes() for name in record['source_changes']}
+             for name,row in record['source_changes'].items():
+                 self.assertEqual(next_record['source_changes'][name]['baseline_sha256'],row['proposed_sha256'])
+--- a/tests/check_contract_packet.py
++++ b/tests/check_contract_packet.py
+@@ -464,11 +464,15 @@
+                 self.assertFalse({'torch', 'triton', 'sglang'} & sys.modules.keys())
+                 runtime = model.http_runtime_module(spec, arm)
+                 self.assertEqual(Path(runtime.__file__), review / 'serving_runtime.py')
+-                for name in builder.HTTP_IMPORTS:
++                imported=tuple(name for name in builder.HTTP_IMPORTS
++                    if name!='serving_parity' or runtime.mtp_contract.instrumentation_enabled())
++                if not runtime.mtp_contract.instrumentation_enabled():
++                    self.assertNotIn('serving_parity',sys.modules)
++                for name in imported:
+                     self.assertEqual(Path(sys.modules[name].__file__), review / (name + '.py'))
+                 self.assertEqual(len(sys.modules['serving_contract'].CASES), 176)
+                 integration = load('cleanup_built_integration', review / 'serving_integration.py')
+-                registered = {name: sys.modules[name] for name in builder.HTTP_IMPORTS}
++                registered = {name: sys.modules[name] for name in imported}
+                 contract, reader, parity = integration._private_reader(include_parity=True)
+                 self.assertEqual(len(contract.CASES), 176)
+                 self.assertEqual(Path(reader.__file__), review / 'serving_reader.py')

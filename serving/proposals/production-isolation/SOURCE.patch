@@ -1,0 +1,116 @@
+--- a/build.py
++++ b/build.py
+@@ -112,6 +112,30 @@
+     return result
+ 
+ 
++def production_evidence_policy(files):
++    """Read literal policy from canonical source without executing that source."""
++    if parse_json(files['FINAL-SETTINGS.json']).get('instrumentation', 'production') != 'production':
++        return None
++    wanted = {'PRODUCTION_EVIDENCE_FILES', 'PRODUCTION_EVIDENCE_MASK_NAME', 'PRODUCTION_EVIDENCE_MASK_BYTES'}
++    values = {}
++    for node in ast.parse(files['mtp_contract.py']).body:
++        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
++            name = node.targets[0].id
++            if name in wanted:
++                need(name not in values, 'unique production evidence policy required')
++                values[name] = ast.literal_eval(node.value)
++    need(set(values) == wanted, 'complete literal production evidence policy required')
++    names, mask, raw = (values[name] for name in (
++        'PRODUCTION_EVIDENCE_FILES', 'PRODUCTION_EVIDENCE_MASK_NAME', 'PRODUCTION_EVIDENCE_MASK_BYTES'))
++    need(type(names) is tuple and len(names) == len(set(names)) == 6 and
++         all(type(name) is str and re.fullmatch('[a-z][a-z0-9_]*\\.py', name) for name in names),
++         'six explicit production evidence files required')
++    need(type(mask) is str and relative_name(mask) == mask and PurePosixPath(mask).name == mask
++         and mask not in names and type(raw) is bytes and 0 < len(raw) <= 256,
++         'bounded production import-refusal source required')
++    return dict(files=names, name=mask, raw=raw, sha256=digest(raw))
++
++
+ def render_data(files):
+     """Refresh the existing JSON dependency order; do not rewrite Python source."""
+     overlay = parse_json(files['ALLOCATION-OVERLAY.json'])
+@@ -120,6 +144,7 @@
+     files['ALLOCATION-OVERLAY.json'] = canonical(overlay)
+     spec = parse_json(files['BENCHMARK-SPEC2.json'])
+     need(spec['experiment_mode'] == MODE, 'W5 HTTP source build required')
++    policy = production_evidence_policy(files)
+     for arm in ('control', 'mtp'):
+         name = 'HTTP-BINDING-' + arm + '.json'
+         value = parse_json(files[name])
+@@ -137,6 +162,8 @@
+                 filename = relative_name(row['path'].removeprefix('/mnt/review/'))
+                 need(filename in files, 'private source missing: ' + filename)
+                 row['sha256'] = digest(files[filename])
++                if policy is not None and filename in policy['files']:
++                    row['sha256'] = policy['sha256']
+         pin = digest(canonical_bare(sources))
+         value['source_manifest_sha256'] = pin
+         for template in ('binding_template', 'worker_template'):
+@@ -204,6 +231,22 @@
+         value['workload_argv_sha256'][arm] = digest(canonical_bare(argv))
+     for key, name in references.items():
+         value[key] = digest(files[name])
++    policy = production_evidence_policy(files)
++    if policy is not None:
++        source = root + '/' + policy['name']
++        for arm, argv in value['workload_argv'].items():
++            position = argv.index('/mnt/work/build-venv/bin/python3')
++            masks = [item for name in policy['files']
++                     for item in ('--ro-bind', source, '/mnt/review/' + name)]
++            targets=['/mnt/review/'+name for name in policy['files']]
++            if any(target in argv for target in targets):
++                need(argv[position-len(masks):position] == masks
++                     and all(argv.count(target)==1 for target in targets),
++                     'one complete final production evidence mask set required')
++            else:
++                argv[position:position] = masks
++            need(len(argv) <= 256, 'production evidence masks exceed existing argv bound')
++            value['workload_argv_sha256'][arm] = digest(canonical_bare(argv))
+     files['RESOURCE-MANIFEST.json'] = canonical(value)
+ 
+ 
+--- a/legacy/review/mtp_contract.py
++++ b/legacy/review/mtp_contract.py
+@@ -22,6 +22,10 @@
+ DRAFT_GRAPH_ENV = "SGLANG_DISABLE_DRAFT_EXTEND_CUDA_GRAPH"
+ OWNER_ARMS = {"bf16": "control", "kv4": "mtp"}
+ LOGICAL_ARMS = frozenset(OWNER_ARMS.values())
++PRODUCTION_EVIDENCE_FILES = ('serving_graph_observer.py', 'j01_probe.py',
++    'observer_health.py', 'target_kv_metadata.py', 'kv_graph_join.py', 'serving_parity.py')
++PRODUCTION_EVIDENCE_MASK_NAME = 'PRODUCTION-EVIDENCE-MASK.py'
++PRODUCTION_EVIDENCE_MASK_BYTES = b'raise ModuleNotFoundError("private evidence helpers are unavailable in production")\n'
+ TAIL = 'b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069'
+ GEMM_TARGET = '/mnt/composition/image-source/python/sglang/kernels/ops/gemm/fp8_kernel.py'
+ GEMM_MASK = '/mnt/capture-bytecode/mnt/composition/image-source/python/sglang/kernels/ops/gemm'
+--- a/propose_packet.py
++++ b/propose_packet.py
+@@ -67,6 +67,9 @@
+         need(original['protected_sources_unchanged'] is True, 'canonical protected builder invariant required')
+         files = {path.name: source_builder.read_regular(path) for path in (baseline / 'review').iterdir()}
+         files.update(selected)
++        policy=source_builder.production_evidence_policy(files)
++        need(policy is None or record.get('production_evidence_mount_isolation') is True,
++             'production evidence view requires matching protected consumers')
+         # Rebuild source pins using the authenticated sandbox, then apply the
+         # same fresh session identity. No Python or shell text is rewritten.
+         source_builder.render_resource_manifest(files, donor, seed)
+@@ -122,6 +125,8 @@
+         protected_set_sha256=record['protected_set_sha256'], session_identity=identity,
+         source_builder_protected_sources_unchanged=True, proposed_package_members=80,
+         caller_activation_complete=False, caller_dependencies_staged=True,
++        production_evidence_view=None if policy is None else dict(files=list(policy['files']),
++            mask_sha256=policy['sha256'],generated_on_native_execution=True),
+         boot_identity_only_in_approval_template=True, files=pins,
+         content_sha256=digest(canonical(pins)),
+         remaining_gates=['complete_protected_diff_review', 'caller_approval_and_execution_binding',
+@@ -142,7 +147,7 @@
+     parser.add_argument('--donor', type=Path, required=True)
+     parser.add_argument('--output', type=Path, required=True)
+     parser.add_argument('--packet-id', required=True)
+-    parser.add_argument('--proposal', type=Path, default=HERE / 'proposals/d2-approval-boot')
++    parser.add_argument('--proposal', type=Path, default=HERE / 'proposals/production-isolation')
+     parser.add_argument('--run-dir', type=Path, default=HERE / 'config/runs/w5-v2')
+     options = parser.parse_args()
+     report = build(options.donor, options.output, packet_id=options.packet_id,

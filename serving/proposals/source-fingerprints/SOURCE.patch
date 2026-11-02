@@ -1,0 +1,74 @@
+--- a/legacy/review/worker_entry.py
++++ b/legacy/review/worker_entry.py
+@@ -593,7 +593,8 @@
+         'mxfp4_prefill_reference': ('quantizer_geometry',),
+     }.items():
+         source, module = manifest['sources'][role], modules[role]
+-        compiled = compile(Path(source['path']).read_bytes(), source['path'], 'exec', dont_inherit=True)
++        compiled = SourceFileLoader(source['module'], source['path']).source_to_code(
++            Path(source['path']).read_bytes(), source['path'])
+         for name in names:
+             value, code = module, compiled
+             for part in name.split('.'):
+@@ -637,7 +638,8 @@
+         ('mxfp4_selection', 'build_config_class', private, ('_get_scheme_from_config',)),
+     ):
+         source = manifest['sources'][role]
+-        compiled = compile(Path(source['path']).read_bytes(), source['path'], 'exec', dont_inherit=True)
++        compiled = SourceFileLoader(source['module'], source['path']).source_to_code(
++            Path(source['path']).read_bytes(), source['path'])
+         for part in (factory, cls.__name__):
+             matches = [item for item in compiled.co_consts if type(item) is CodeType and item.co_name == part]
+             _require(len(matches) == 1, 'unique private MXFP4 class body')
+@@ -770,7 +772,7 @@
+     _require(hashlib.sha256(raw).hexdigest() == source['sha256'], 'allocator scheduler source changed')
+     # Compile without executing or importing native source. Code-object equality
+     # also refuses substitutions that merely borrow the authentic co_filename.
+-    compiled = compile(raw, str(path), 'exec', dont_inherit=True)
++    compiled = SourceFileLoader(source['module'], str(path)).source_to_code(raw, str(path))
+     def code(parent, name):
+         matches = [item for item in parent.co_consts if type(item) is CodeType and item.co_name == name]
+         _require(len(matches) == 1, 'allocator native callable source missing')
+--- a/legacy/review/j01_probe.py
++++ b/legacy/review/j01_probe.py
+@@ -106,7 +106,8 @@
+         self.module = head_module(self.source)
+         self.cls = self.module.MultimemAllGatherer
+         self.original = self.cls.__dict__.get('__call__')
+-        code = compile(Path(self.source['path']).read_bytes(), self.source['path'], 'exec', dont_inherit=True)
++        code = SourceFileLoader(self.source['module'], self.source['path']).source_to_code(
++            Path(self.source['path']).read_bytes(), self.source['path'])
+         for name in ('MultimemAllGatherer', '__call__'):
+             matches = [x for x in code.co_consts if type(x) is CodeType and x.co_name == name]
+             need(len(matches) == 1, 'gather native method source')
+@@ -179,8 +180,9 @@
+         self.module = head_module(self.sources['head_logits'])
+         self.cls = self.module.LogitsProcessor
+         self.original = self.cls.__dict__.get('_compute_lm_head')
+-        code = compile(Path(self.sources['head_logits']['path']).read_bytes(),
+-                       self.sources['head_logits']['path'], 'exec', dont_inherit=True)
++        source = self.sources['head_logits']
++        code = SourceFileLoader(source['module'], source['path']).source_to_code(
++            Path(source['path']).read_bytes(), source['path'])
+         for name in ('LogitsProcessor', '_compute_lm_head'):
+             matches = [value for value in code.co_consts if type(value) is CodeType and value.co_name == name]
+             need(len(matches) == 1, 'native head body missing')
+--- a/legacy/review/verify_decode_adapter.py
++++ b/legacy/review/verify_decode_adapter.py
+@@ -10,6 +10,7 @@
+ import dis
+ import hashlib
+ import importlib
++from importlib.machinery import SourceFileLoader
+ import inspect
+ import math
+ from pathlib import Path
+@@ -34,7 +35,7 @@
+ 
+ def checked_method(cls, name, source):
+     raw = Path(source['path']).read_bytes()
+-    code = compile(raw, source['path'], 'exec', dont_inherit=True)
++    code = SourceFileLoader(source['module'], source['path']).source_to_code(raw, source['path'])
+     for part in (cls.__name__, name):
+         matches = [x for x in code.co_consts if type(x) is CodeType and x.co_name == part]
+         need(len(matches) == 1, 'adapter native method source')

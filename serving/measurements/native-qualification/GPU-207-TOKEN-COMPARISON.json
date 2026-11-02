@@ -1,0 +1,18 @@
+{
+  "distinct_prompt_message_sequences": 8,
+  "full_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/execution-v1/TOKEN-COMPARISON.json",
+    "sha256": "c53c8834f6e961e7683bf167ca63db0dbd300966a3d6aac1a97b94bcce286efd"
+  },
+  "matched_requests": 352,
+  "matched_token_vectors": 352,
+  "mismatched_token_vectors": 0,
+  "native_quality_grades": 352,
+  "operation": 207,
+  "quality_grade_performed": false,
+  "reference_operation": 186,
+  "responses": 352,
+  "schema": 1,
+  "status": "RETAINED_TOKEN_VECTOR_COMPARISON",
+  "whole_cleanup_qualified": false
+}

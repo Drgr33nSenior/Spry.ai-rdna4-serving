@@ -1,0 +1,22 @@
+--- a/review/benchmark_owner_adapter.py
++++ b/review/benchmark_owner_adapter.py
+@@ -108,7 +108,7 @@
+         if http_contract is not None:
+             contract = _adjacent('final_projection_contract', 'mtp_contract.py')
+             reclaimed_masks = 0
+-            if contract.settings()['phase'] in (contract.GDN_PAIR_PHASE, contract.LIFECYCLE_PHASE) or contract.precision_reference_enabled():
++            if contract.precision_reference_enabled():
+                 for directory in ('model_executor/runner_backend', 'layers/attention'):
+                     mask = '/mnt/capture-bytecode/mnt/composition/image-source/python/sglang/srt/' + directory
+                     for group in (['--size', str(1 << 20), '--tmpfs', mask], ['--remount-ro', mask]):
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -299,7 +299,7 @@
+     need(spec.get('context_length') == spec.get('physical_slots') == context and spec.get('server_args', {}).get('context_length') == context and (http.get('client_seconds') == session_timing.client_seconds), 'final phase context/client binding')
+     expected_devices = configured['host']['devices']
+     http_fields = {'schema', 'mode', 'bindings', 'client_seconds', 'expected_devices', 'artifact_limits'}
+-    if mtp_contract.settings()['phase'] in mtp_contract.FAIL_FAST_PHASES or mtp_contract.precision_reference_enabled():
++    if mtp_contract.precision_reference_enabled():
+         http_fields.add('diagnostic_environment')
+         need(http.get('diagnostic_environment') == {arm: mtp_contract.expected_environment(arm) for arm in ('control', 'mtp')}, 'frozen diagnostic environment differs')
+     need(type(http) is dict and set(http) == http_fields and (http['schema'] == 1) and (http['mode'] == spec['experiment_mode']) and (type(http['client_seconds']) is int) and (1 <= http['client_seconds'] <= 2040) and (type(http['bindings']) is dict) and (set(http['bindings']) == {'control', 'mtp'}) and (http['expected_devices'] == expected_devices), 'frozen HTTP serving binding contract')

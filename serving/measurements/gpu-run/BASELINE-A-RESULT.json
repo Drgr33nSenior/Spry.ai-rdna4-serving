@@ -1,0 +1,91 @@
+{
+  "actual_input_sha256": "bdd09d7754014ce146dfc53dbd35ac784e17aaefa998d90610c8ac07fb04955d",
+  "actual_transport_receipt_sha256": "b9027a160c0b396c4d80609c7e29873b4fb2c1f6d18b7a3e0dc4f7eb7bf9319b",
+  "approved_request_sha256": "e024e49096399e660a75c3abf8015be53965f3c831a694248d744a5a0f5271d8",
+  "caller_charge_seconds": 4034,
+  "caller_elapsed_seconds": 4033.3231732500717,
+  "cleanup_B_executed": false,
+  "corrected_sources": {
+    "prepare_gpu_run.py": "162997f8b7ceee15e2a68bdeb2ea6e4aceebb6ed6d6919a8857142a4cc6069ec",
+    "quality/bind_future.py": "8ffe2d9cf2c553fb21510da28a1cf7d59077d2b961cc693d8285ef44b0db4efb",
+    "quality/cpu_readout.py": "097d7ce70e34609a8ab8aac94ac4b838a9809ec8ae14cecd6e459ba71dc698ea",
+    "quality/quality_stages.py": "8ace9cf62fe248452a7fe6bb8f85be1e947c2f93eba24bc9babea4dd356da62e",
+    "quality/retained_replay.py": "efaf47137be28267ca8aa137161a842ec72a2565e5221100e48d8a16fad8f859",
+    "quality/tokenizer_entry.py": "a14c950dc2bd649191d0680d5967d8477e522527876ca195133026f2522cac09",
+    "tests/test_quality_cpu_profile.py": "42152c2ba6943c6ffff8a93562303c67fd0de039382e34941564fefad829fdd3"
+  },
+  "cpu_continuation_elapsed_seconds": 35.28514379216358,
+  "cpu_continuation_model_starts": 0,
+  "cpu_evidence_seal": {
+    "manifest_sha256": "a0cd0688b9d3c0eccb55c5b4c286f520e3d0f4acaa8dacdc4c1bc7852416f536",
+    "members": 77,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/quality-binding-v4/cpu"
+  },
+  "cpu_native_generation_performed": false,
+  "cpu_source_seal": {
+    "manifest_sha256": "6abb990baf90e7bbab125a976028c8f759c5184cb7cb7de0e02cd5804f2bce5c",
+    "members": 49,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/cpu-only-review-v1/author"
+  },
+  "decoded_rows": 352,
+  "gpu_elapsed_seconds": 4017.1797817740007,
+  "gpu_generation_performed": true,
+  "gpu_model_starts": 2,
+  "grade_complete": true,
+  "independent_cpu_release": true,
+  "independent_gpu_release": true,
+  "kernel_gpu_fault_entries": 0,
+  "long_answer_coverage_pass": true,
+  "model_starts": 2,
+  "native_cpu_transport_elapsed_seconds": 26.653148000128567,
+  "natural_quality_failures": 0,
+  "natural_quality_passes": 352,
+  "next_action": "Review the complete protected patch and exact one-use request for cleanup B. No B execution is authorized yet.",
+  "next_cleanup_request_sha256": "cc09f1e1c4a5d7b056a1c64da6e4a4a0cc81bdb9d24697fd6a07660c1f2291c9",
+  "next_cleanup_review": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/APPROVE-CLEANUP-B.md",
+  "operation": 184,
+  "outer_receipt_sha256": "5345b3911f1834fc90df7e7b155646b8f58bea7d460eaad2d6ee5af908ede913",
+  "owner_approval_sha256": "00cec89c8d152553387d2d98e96b14d62c1192265f1f1f8f3cf133ed91e8a766",
+  "owner_charge_seconds": 4018,
+  "owner_native_http_release_replay": "PASS",
+  "performance_improvement_measured": false,
+  "precision_accepted": false,
+  "prior_failed_attempt_retained": true,
+  "prior_failed_cpu_attempt": {
+    "cpu_seal": {
+      "manifest_sha256": "a01e9e60fdc84bcbcc92329eecb6ad3fe58bb05eab06233c0973fe7d50479a1f",
+      "members": 77,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/quality-binding-v3/cpu"
+    },
+    "decoded_rows": 0,
+    "failure": "Legacy tokenizer entry refused the W5 210-second shared work deadline with its stale 75-second check; native decoding did not begin.",
+    "private_result": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/execution-v1/BASELINE-A-RESULT.json",
+      "sha256": "4a6af6782f1301fd63b97d71cbd5f9300dea70b73fece13c04894db8d09e458e"
+    },
+    "status": "BASELINE_GPU_PASS_CPU_GRADING_INCOMPLETE_PARKED"
+  },
+  "private_result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/cpu-only-execution-v1/RESULT.json",
+    "sha256": "b3277e595f48f8bf565496a9f40b0fa72ddca6bc9e3e78686e026cb9c3c32922"
+  },
+  "qualification": false,
+  "quality_pass": true,
+  "quality_summary_sha256": "131b223ab095d56fc733785c6178266e15042894b4ef47f8020a78e419738fd0",
+  "responses": 352,
+  "schema": 1,
+  "selection_changed": false,
+  "status": "BASELINE_A_352_QUALITY_AND_INDEPENDENT_RELEASE_PASS",
+  "total_responses": 352,
+  "verification": {
+    "cleanup_unittest_count": 412,
+    "complete_baseline_owner_native_http_release_replay": true,
+    "current_native_quality_complete": true,
+    "local_cpu_profile_tests": 5,
+    "make_test": "PASS",
+    "native_cpu_profile_tests": 5,
+    "native_python": "3.14.7",
+    "repository_python_unittest_count": 849,
+    "syntax_and_symbol_table_modules": 150
+  }
+}

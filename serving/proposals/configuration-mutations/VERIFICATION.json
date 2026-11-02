@@ -1,0 +1,623 @@
+{
+  "complete_cleanup": false,
+  "fixture_scope": {
+    "decode_line_bytes_per_rank": 512,
+    "diagnostic_ranks": 2,
+    "native_decode": false,
+    "non_bundle_stdout_bytes": 4194304,
+    "retained_B_non_bundle_stdout_maximum": 30341,
+    "scope": "Finite producer/reader capacity fixtures; not a universal bound on runtime warnings or a native quality result",
+    "startup_stderr_bytes": 4194304,
+    "varied_ascii_text": true,
+    "varied_six_digit_token_ids": true
+  },
+  "launch_authorized": false,
+  "measured_capacity": {
+    "full-all-cap": {
+      "minimum_measured_margin": 2.315,
+      "quality_packet": [
+        {
+          "actual_cpu_packet_materialized": true,
+          "cap_rows": 352,
+          "fixture": true,
+          "native_decode": false,
+          "native_execution_authorized": false,
+          "natural_rows": 0,
+          "rows": 352
+        }
+      ],
+      "rows": [
+        {
+          "limits": [
+            {
+              "bytes": 2097152,
+              "where": "serving_client MAX_RESPONSE_BYTES, serving_reader MAX_RAW_BYTES, serving_contract response object"
+            },
+            {
+              "bytes": 4194304,
+              "where": "_kv_receipts field"
+            }
+          ],
+          "margin": 6.634,
+          "measured": 316139,
+          "passes": true,
+          "row": "response.raw (largest)"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 1048576,
+              "where": "mtp_contract request asset, serving_reader request_raw, serving_integration composed body"
+            }
+          ],
+          "margin": 4.434,
+          "measured": 236486,
+          "passes": true,
+          "row": "request.raw (largest)"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 4194304,
+              "where": "_kv_receipts MEMBER_LIMIT"
+            },
+            {
+              "bytes": 8388608,
+              "where": "benchmark_artifacts per-file, serving_integration MAX_MEMBER_BYTES"
+            }
+          ],
+          "margin": 20.512,
+          "measured": 204476,
+          "passes": true,
+          "row": "request receipt (largest)"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 25165824,
+              "where": "_kv_receipts TREE_LIMIT, serving_reader, benchmark_artifacts client tree (protected)"
+            }
+          ],
+          "margin": 2.797,
+          "measured": 8996528,
+          "passes": true,
+          "row": "client tree"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 512,
+              "where": "_kv_receipts FILE_LIMIT, benchmark_artifacts files=512 (protected, W5)"
+            },
+            {
+              "bytes": 528,
+              "where": "serving_reader physical members"
+            }
+          ],
+          "margin": 4.531,
+          "measured": 113,
+          "passes": true,
+          "row": "client tree files"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 8388608,
+              "where": "serving_reader and serving_integration summary reads"
+            }
+          ],
+          "margin": 11.446,
+          "measured": 732859,
+          "passes": true,
+          "row": "RUN-SUMMARY.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 8388608,
+              "where": "HTTP_MEMBER_LIMITS (protected), controller inner read, retained replay"
+            }
+          ],
+          "margin": 5329.484,
+          "measured": 1574,
+          "passes": true,
+          "row": "result.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 4194304,
+              "where": "benchmark_artifacts native tree (protected)"
+            }
+          ],
+          "margin": 30.957,
+          "measured": 135486,
+          "passes": true,
+          "row": "native tree"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 256,
+              "where": "benchmark_artifacts native files (protected, W5)"
+            }
+          ],
+          "margin": 42.667,
+          "measured": 6,
+          "passes": true,
+          "row": "native tree files"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 34603008,
+              "where": "HTTP_MEMBER_LIMITS (protected)"
+            },
+            {
+              "bytes": 37748736,
+              "where": "serving_integration MAX_BUNDLE_BYTES"
+            }
+          ],
+          "margin": 2.881,
+          "measured": 12011964,
+          "passes": true,
+          "row": "http-client-bundle.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 6291456,
+              "where": "HTTP_MEMBER_LIMITS (protected)"
+            }
+          ],
+          "margin": 39.4,
+          "measured": 159681,
+          "passes": true,
+          "row": "native-http-bundle.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 66060288,
+              "where": "bundle_limit / encoded_limit (protected)"
+            }
+          ],
+          "margin": 4.07,
+          "measured": 16231671,
+          "passes": true,
+          "row": "export line"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 67108864,
+              "where": "HTTP_STREAM_LIMIT capture, receive, controller re-read (protected)"
+            }
+          ],
+          "margin": 3.285,
+          "measured": 20426047,
+          "passes": true,
+          "row": "stdout"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 67108864,
+              "where": "HTTP_STREAM_LIMIT (protected)"
+            }
+          ],
+          "margin": 5.442,
+          "measured": 12332032,
+          "passes": true,
+          "row": "stderr"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 8388608,
+              "where": "controller _publish (protected)"
+            }
+          ],
+          "margin": 17.326,
+          "measured": 484159,
+          "passes": true,
+          "row": "published controller result"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 16777216,
+              "where": "mtp_contract / serving_contract decoded request containers"
+            }
+          ],
+          "margin": 2.914,
+          "measured": 5757066,
+          "passes": true,
+          "row": "request containers, decoded"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 2097152,
+              "where": "mtp_contract / serving_contract stored containers"
+            }
+          ],
+          "margin": 3.631,
+          "measured": 577638,
+          "passes": true,
+          "row": "request containers, compressed"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 262144,
+              "where": "mtp_contract settings (W5)"
+            }
+          ],
+          "margin": 10.092,
+          "measured": 25975,
+          "passes": true,
+          "row": "FINAL-SETTINGS.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 55574528,
+              "where": "quality_contract INPUT_LIMIT (CPU grading template)"
+            }
+          ],
+          "margin": 2.315,
+          "measured": 24007414,
+          "passes": true,
+          "row": "quality CPU input"
+        }
+      ]
+    },
+    "full-doubled": {
+      "minimum_measured_margin": 2.208,
+      "quality_packet": [
+        {
+          "actual_cpu_packet_materialized": true,
+          "cap_rows": 0,
+          "fixture": true,
+          "native_decode": false,
+          "native_execution_authorized": false,
+          "natural_rows": 704,
+          "rows": 704
+        }
+      ],
+      "rows": [
+        {
+          "limits": [
+            {
+              "bytes": 2097152,
+              "where": "serving_client MAX_RESPONSE_BYTES, serving_reader MAX_RAW_BYTES, serving_contract response object"
+            },
+            {
+              "bytes": 4194304,
+              "where": "_kv_receipts field"
+            }
+          ],
+          "margin": 7.912,
+          "measured": 265067,
+          "passes": true,
+          "row": "response.raw (largest)"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 1048576,
+              "where": "mtp_contract request asset, serving_reader request_raw, serving_integration composed body"
+            }
+          ],
+          "margin": 4.434,
+          "measured": 236509,
+          "passes": true,
+          "row": "request.raw (largest)"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 4194304,
+              "where": "_kv_receipts MEMBER_LIMIT"
+            },
+            {
+              "bytes": 8388608,
+              "where": "benchmark_artifacts per-file, serving_integration MAX_MEMBER_BYTES"
+            }
+          ],
+          "margin": 32.143,
+          "measured": 130487,
+          "passes": true,
+          "row": "request receipt (largest)"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 25165824,
+              "where": "_kv_receipts TREE_LIMIT, serving_reader, benchmark_artifacts client tree (protected)"
+            }
+          ],
+          "margin": 2.477,
+          "measured": 10159233,
+          "passes": true,
+          "row": "client tree"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 512,
+              "where": "_kv_receipts FILE_LIMIT, benchmark_artifacts files=512 (protected, W5)"
+            },
+            {
+              "bytes": 528,
+              "where": "serving_reader physical members"
+            }
+          ],
+          "margin": 2.338,
+          "measured": 219,
+          "passes": true,
+          "row": "client tree files"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 8388608,
+              "where": "serving_reader and serving_integration summary reads"
+            }
+          ],
+          "margin": 5.704,
+          "measured": 1470565,
+          "passes": true,
+          "row": "RUN-SUMMARY.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 8388608,
+              "where": "HTTP_MEMBER_LIMITS (protected), controller inner read, retained replay"
+            }
+          ],
+          "margin": 5326.1,
+          "measured": 1575,
+          "passes": true,
+          "row": "result.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 4194304,
+              "where": "benchmark_artifacts native tree (protected)"
+            }
+          ],
+          "margin": 30.957,
+          "measured": 135486,
+          "passes": true,
+          "row": "native tree"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 256,
+              "where": "benchmark_artifacts native files (protected, W5)"
+            }
+          ],
+          "margin": 42.667,
+          "measured": 6,
+          "passes": true,
+          "row": "native tree files"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 34603008,
+              "where": "HTTP_MEMBER_LIMITS (protected)"
+            },
+            {
+              "bytes": 37748736,
+              "where": "serving_integration MAX_BUNDLE_BYTES"
+            }
+          ],
+          "margin": 2.548,
+          "measured": 13578024,
+          "passes": true,
+          "row": "http-client-bundle.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 6291456,
+              "where": "HTTP_MEMBER_LIMITS (protected)"
+            }
+          ],
+          "margin": 39.4,
+          "measured": 159681,
+          "passes": true,
+          "row": "native-http-bundle.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 66060288,
+              "where": "bundle_limit / encoded_limit (protected)"
+            }
+          ],
+          "margin": 3.606,
+          "measured": 18319690,
+          "passes": true,
+          "row": "export line"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 67108864,
+              "where": "HTTP_STREAM_LIMIT capture, receive, controller re-read (protected)"
+            }
+          ],
+          "margin": 2.981,
+          "measured": 22514066,
+          "passes": true,
+          "row": "stdout"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 67108864,
+              "where": "HTTP_STREAM_LIMIT (protected)"
+            }
+          ],
+          "margin": 3.279,
+          "measured": 20468736,
+          "passes": true,
+          "row": "stderr"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 8388608,
+              "where": "controller _publish (protected)"
+            }
+          ],
+          "margin": 17.326,
+          "measured": 484159,
+          "passes": true,
+          "row": "published controller result"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 16777216,
+              "where": "mtp_contract / serving_contract decoded request containers"
+            }
+          ],
+          "margin": 2.914,
+          "measured": 5757066,
+          "passes": true,
+          "row": "request containers, decoded"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 2097152,
+              "where": "mtp_contract / serving_contract stored containers"
+            }
+          ],
+          "margin": 3.631,
+          "measured": 577638,
+          "passes": true,
+          "row": "request containers, compressed"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 262144,
+              "where": "mtp_contract settings (W5)"
+            }
+          ],
+          "margin": 4.905,
+          "measured": 53448,
+          "passes": true,
+          "row": "FINAL-SETTINGS.json"
+        },
+        {
+          "limits": [
+            {
+              "bytes": 55574528,
+              "where": "quality_contract INPUT_LIMIT (CPU grading template)"
+            }
+          ],
+          "margin": 2.208,
+          "measured": 25169972,
+          "passes": true,
+          "row": "quality CPU input"
+        }
+      ]
+    }
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_quality_grading": false,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 153
+  },
+  "owner_ceilings_changed": false,
+  "proofs": {
+    "entropy-envelope-attempt-3.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/entropy-envelope-attempt-3.json",
+      "sha256": "710a72673183098287232a419dbd84a8871a28f8623b78e796389a95277ca4a0"
+    },
+    "full-chain-attempt-4.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/full-chain-attempt-4.json",
+      "sha256": "a3efa803682fb65f5d347d29ab5fc1b49db471fefd88df82d2ecc56ec03c825e"
+    },
+    "full-chain-attempt-5.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/full-chain-attempt-5.json",
+      "sha256": "d2bc5614ede14adb834c7a8dad585ddcc630d0aa454da1565104acda4171323b"
+    },
+    "native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "e9ed1106cd60b035642248c9236fb347be1b6f4f99894aa53094d43c763bdffc"
+    },
+    "native-source-preflight-v2/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/native-source-preflight-v2/SOURCE-INVENTORY.json",
+      "sha256": "d90e4f4af7b63589f118c00f5821e7192764f048da50bf0f9e751d9885e63a6b"
+    },
+    "native-source-preflight-v2/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/native-source-preflight-v2/native-cpu-source-preflight.json",
+      "sha256": "82205d111db0379dd972a67f3218297fe4bb73d68f19ef3aa064ef33893ef9ae"
+    },
+    "quality-materialization-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/quality-materialization-attempt-1.json",
+      "sha256": "4b67c04f2693aa3bad5ad4345aaeb64f9789cfdb129a29f9f3e393134143d6fb"
+    }
+  },
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers_passed": true,
+    "log": ".test-build/serving-cleanup/configuration-completion-v1/public-make-attempt-4.log",
+    "log_sha256": "df463646e49ec21d26919c94fec483db3f44e03ccfd7c20728d8a2b01e8c35a4",
+    "python_tests": 893,
+    "suites": 70
+  },
+  "quality_for_new_source_graded": false,
+  "remaining": [
+    "Exact protected diff review and fresh native serving/token-ID/quality qualification for this proposal",
+    "Complete remaining shared-helper and import-closure cleanup",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Shared FP8 head and packed QKVZ/BA views, after the refactor phases",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "retained_failures": [
+    {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/public-make-attempt-1.log",
+      "reason": "Historical source-pin test required reversing the new source patch before the earlier stage"
+    },
+    {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/full-chain-attempt-3.log",
+      "reason": "Interrupted CPU fixture before authenticated request-validation caching"
+    },
+    {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/entropy-envelope-attempt-1.json",
+      "reason": "Varied-response doubled menu missed measured physical tree, bundle and stdout margins"
+    },
+    {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/entropy-envelope-attempt-2.log",
+      "reason": "Fixture measurement still scanned JSON-only files after compressed chunk format change"
+    },
+    {
+      "path": ".test-build/serving-cleanup/configuration-completion-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "reason": "Test assumed a missing runtime proof on the target where the actual validator completed"
+    }
+  ],
+  "schema": 1,
+  "static_analysis": {
+    "ast_symtable_compile_passed": true,
+    "modules": 166
+  },
+  "status": "CPU_CONFIGURED_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING"
+}

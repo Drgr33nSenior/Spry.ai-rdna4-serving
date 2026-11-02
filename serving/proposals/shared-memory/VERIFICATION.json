@@ -1,0 +1,283 @@
+{
+  "complete_cleanup": false,
+  "kernels_and_other_active_overlays_requests_settings_byte_identical": true,
+  "launch_authorized": false,
+  "memory_recovered_measured": false,
+  "native_preflight_archive": {
+    "ceiling_bytes": 16777216,
+    "excluded_sources_opened": 0,
+    "excluded_unused_historical_sources": 85,
+    "gzip_bytes": 3677678,
+    "repository_files_deleted": 0,
+    "selected_tests_and_required_controls_retained": true,
+    "tar_bytes": 16752640
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 251
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "other_seven_protected_helpers_unchanged": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packed_views": {
+    "layers": 48,
+    "p1_explicit_rebind": true,
+    "p1_rebound_apply_and_stale_refusal": true,
+    "parameter_objects_classes_and_loader_metadata_preserved": true,
+    "shards_per_layer": 2,
+    "source_only": true,
+    "weight_and_scale_equality_required": true
+  },
+  "packet": {
+    "archive": {
+      "archive_members": 79,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "memory_reader": {
+      "actual_packaged_producer_observer_and_helper": true,
+      "changed_helper_refused": true,
+      "incomplete_sharing_and_missing_layer_refused": true,
+      "loaded_weight_rows": 304,
+      "native_execution": false,
+      "old_witness_refused": true,
+      "source_only_descriptors": true
+    },
+    "native_argv": {
+      "all_mount_resource_model_and_sampling_arguments_preserved": true,
+      "native_execution": false,
+      "only_expected_source_pins_changed": true
+    },
+    "passed": true,
+    "payload_delta": {
+      "added": [
+        "review/spry_fp8_head.py"
+      ],
+      "archive_members": 79,
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "PROTECTED-SHA256.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/benchmark_host_transport.py",
+        "review/benchmark_physical_controller.py",
+        "review/d3b_head_adapter.py",
+        "review/d3b_target_head_adapter.py",
+        "review/isolated_scheme.py",
+        "review/mtp_contract.py",
+        "review/p1_prefill.py",
+        "review/serving_graph_observer.py",
+        "review/spry_post_load.py",
+        "review/worker_entry.py"
+      ],
+      "kernels_and_other_active_overlays_requests_settings_unchanged": true,
+      "native_execution": false,
+      "owner_archive_ceiling": 80
+    },
+    "rollback_refusals": {
+      "native_execution": false,
+      "rollback_sources": 6,
+      "self_consistent_manifest_pins": true
+    },
+    "source_authentication": {
+      "actual_packaged_worker": true,
+      "arms": 2,
+      "changed_bytes_refused": true,
+      "helper_code_and_globals_authenticated": true,
+      "native_execution": false
+    },
+    "tests": 17
+  },
+  "pool_sizes_unchanged": true,
+  "post_test_record_change": "cpu_verified false to true; normalize unused descriptive native preflight key to the actual tested source pin; execution authority remains false",
+  "predicted_tensor_payload_reduction_bytes_per_rank": 1711668800,
+  "proofs": {
+    "NATIVE-TENSOR-PROOF-PENDING.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/NATIVE-TENSOR-PROOF-PENDING.json",
+      "sha256": "cbd9112794d199013ecb5eda4eeb002fc01627fbe511fcc7b29c6cff193b7e7b"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/PUBLIC-CHECKS.json",
+      "sha256": "8a6dd28a3898ab3f11de7d68a330d00a0125a576fb4c6ad0cb7c98fefd553e98"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/STATIC-CHECKS.json",
+      "sha256": "f9a40233ae852306582920a9302360cd14f62355f21f6a0bb82ca2ddb515dd67"
+    },
+    "full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/full-chain-attempt-1.json",
+      "sha256": "53d7b717a906f09ae94d616b7c0b5162ed0adf810e8def4cac37b88b70fd9dbe"
+    },
+    "full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/full-chain-attempt-1.log",
+      "sha256": "8ae733eff6ab6797d5848553455853fde6e15ed5171cbf939285b0da36009865"
+    },
+    "native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "eb3b4b3d6bc3734379317f4cb532cc4b66f1e0184fa8435bf5a744f104571d50"
+    },
+    "native-source-preflight-v2/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/native-source-preflight-v2/SOURCE-INVENTORY.json",
+      "sha256": "2b6ec4d3a1bcd49d138b421926fb8feaf332820d47ab4607890c4f4287c31474"
+    },
+    "native-source-preflight-v2/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/native-source-preflight-v2/native-cpu-source-preflight.json",
+      "sha256": "82a31fbbccd861aa70c5e0412873055b3516d4881901634dcb684558991da86d"
+    },
+    "native_memory_structure.py": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/native_memory_structure.py",
+      "sha256": "9998b91aa6229084c3e71fe5d31b12dff914507059b6862771278b8dafb53bbe"
+    },
+    "packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/packet-attempt-1.json",
+      "sha256": "599fd8550f862b71fd0541e0bde3aa50366003456873d0ace5da3bb4fbc23db8"
+    },
+    "packet-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/packet-attempt-1.log",
+      "sha256": "1b35c165d38f08e01b28c40d7741a3189c68fdfef5f515497a6475fc86e40d8e"
+    },
+    "packet-attempt-2.json": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/packet-attempt-2.json",
+      "sha256": "7cf4104b22335711d8c54dce374818caa11657957cf4c7dc5de9112f5da85b0d"
+    },
+    "packet-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/packet-attempt-2.log",
+      "sha256": "f9e883fcf7583bcb766df670bf798e75caaf9d2b2025a95427f5c18e39ab9bf4"
+    },
+    "proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/public-make-attempt-1.log",
+      "sha256": "3bdcfe27cdc33624bbbe704ba81ceeb6cd9917b250e6031cacfa2909ffc84e0a"
+    },
+    "serving-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/serving-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "unit-canonical-final.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/unit-canonical-final.log",
+      "sha256": "0143d8c39834a5973c4be18b549802b7d519e2e2b436937bb806ae69b7fcccad"
+    },
+    "worker-history-final.log": {
+      "path": ".test-build/serving-cleanup/shared-head-v1/worker-history-final.log",
+      "sha256": "67f8127be956aae71a639e2534e85f925c30c7e6a5eeeab91e2121dd27565d43"
+    }
+  },
+  "protected_helpers_changed": [
+    "benchmark_host_transport.py",
+    "benchmark_physical_controller.py"
+  ],
+  "protected_set_sha256": "973aa2466b5c448b03464d957ae3b269e256af541773555a2e6049c31bb94349",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 983,
+    "suites": 78
+  },
+  "published_proposal_sha256": "e2f223ca4f87f1e0cbd8b033c2a76c16a0977bc690131d6aa83eea934cef9cab",
+  "real_cpu_tensor_proof": {
+    "compact_head_geometry_for_storage_proof": true,
+    "native_quantizer_equivalence_not_claimed": true,
+    "requires_gpu_free_approved_tensor_envelope": true,
+    "source_sha256": "9998b91aa6229084c3e71fe5d31b12dff914507059b6862771278b8dafb53bbe",
+    "status": "PREPARED_NOT_EXECUTED"
+  },
+  "remaining": [
+    "Remaining shared helper consumers, including protected common-source authentication without weaker trust",
+    "Inactive phase-marker consumers outside the closed HTTP controller/readout",
+    "Any further startup scan consolidation justified by retained failure timing",
+    "Real CPU tensor structure proof under an approved GPU-free tensor envelope",
+    "Exact source/protected-delta review and fresh one-use native greedy token/selected-quality qualification",
+    "Instrumented native startup bytes, deterministic head quantization and whole-device memory by BDF",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "schema": 1,
+  "shared_head": {
+    "actual_adapter_constructors": true,
+    "draft_added_persistent_bytes": 0,
+    "finite_scan_chunk_rows": 128,
+    "finite_scan_scalar_reads": 1,
+    "per_call_binding_and_compute_frontends_unchanged": true,
+    "quantizations_per_rank": 1,
+    "scope": "Source-only stand-ins; native tensor semantics and arithmetic remain unverified",
+    "weight_and_scale_object_identity": true
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 249,
+    "native_runtime_imported": false,
+    "patches": {
+      "D2.patch": {
+        "files": 2,
+        "forward_and_reverse_exact": true,
+        "sha256": "5eccc06dc8a4cc56638a9dbe900244cb7afcaaf13b59fdd6ed4cb1139c4800dd"
+      },
+      "RUNTIME.patch": {
+        "files": 8,
+        "forward_and_reverse_exact": true,
+        "sha256": "5d89f98bc7685320e2ef61b6477f2a505641520edcac2b801ead7a02f0c20473"
+      },
+      "SOURCE.patch": {
+        "files": 2,
+        "forward_and_reverse_exact": true,
+        "sha256": "0b365cda42ee39e171ae40639183750bc2bd03a8ac44764e3e72539aa2059b1c"
+      }
+    },
+    "real_cpu_tensor_script_compiles_but_is_unexecuted": true
+  },
+  "status": "CPU_SHARED_MEMORY_SOURCE_AND_PACKET_VERIFIED_NATIVE_TENSOR_AND_SERVING_PENDING",
+  "tested_proposal_sha256": "cf0374cb586deb276f277abc948486c417c0a2f19267ecdf179b4412fb7abee3",
+  "witness": {
+    "actual_packaged_producer_observer_and_helper_tested": true,
+    "buffer_sha256": true,
+    "head_storage_and_object_identity": true,
+    "instrumented_transient_quantizations": 1,
+    "instrumented_witness_format_changed": true,
+    "loaded_weight_reader_rows": 304,
+    "metadata_reader_adds_zero_tensor_operations": true,
+    "old_or_incomplete_witness_refused": true,
+    "packed_view_offsets_alignment_and_all_layer_coverage": true,
+    "production_skips_diagnostic_quantization_and_hashes": true
+  }
+}

@@ -1,0 +1,597 @@
+--- a/review/mtp_contract.py
++++ b/review/mtp_contract.py
+@@ -31,14 +31,7 @@
+ GEMM_TARGET = '/mnt/composition/image-source/python/sglang/kernels/ops/gemm/fp8_kernel.py'
+ GEMM_MASK = '/mnt/capture-bytecode/mnt/composition/image-source/python/sglang/kernels/ops/gemm'
+ # Comparison markers retained for consumers awaiting migration; never selectable.
+-GDN_PAIR_PHASE = 'sprint01-gdn-aligned-pair'
+-LIFECYCLE_PHASE = 'sprint01-gdn-aligned-lifecycle'
+ PAIRED_PHASE = 'sprint01-paired-serving'
+-PRECISION_REFERENCE_PHASES = frozenset({PAIRED_PHASE})
+-CLOSURE_PHASES = frozenset()
+-BATCH_PHASES = frozenset({PAIRED_PHASE})
+-CACHE_PHASES = BATCH_PHASES
+-HISTORY_PHASES = frozenset()
+ GDN_STOCK = '7cad2a1b690b15c8d13f15cf1e458a7fba85f2bca9e47327a9804a1e7ba92943'
+ GDN_ALIGNED = '0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87'
+ GDN_TARGET = '/mnt/composition/image-source/python/sglang/kernels/ops/attention/fla/fused_sigmoid_gating_recurrent.py'
+@@ -59,8 +52,6 @@
+ 
+ D3B_TARGET_FILES = ('review/d3b_target_head_adapter.py', 'review/d3b_head_launches.py', 'review/d3b_head_fp8_ops.py', 'review/d3b_head_fp8_kernels.py')
+ PHASES = {PAIRED_PHASE: (131040, 2040, 176, ('dflash2', 'dflash2'), ('tail', 'tail'))}
+-TAIL_PHASES = frozenset()
+-FAIL_FAST_PHASES = frozenset()
+ 
+ 
+ def settings():
+@@ -192,13 +183,14 @@
+ 
+ 
+ def precision_reference_enabled():
+-    return settings()['phase'] in PRECISION_REFERENCE_PHASES
++    settings()
++    return True
+ 
+ 
+ def precision_profile():
+     """One immutable checkpoint profile shared by both ordinary serving starts."""
+     value = settings()
+-    _require(value['phase'] in PRECISION_REFERENCE_PHASES, 'precision reference phase required')
++    _require(value['phase'] == PAIRED_PHASE, 'precision reference phase required')
+     path = Path(__file__).with_name('PRECISION-REFERENCE.json')
+     _require(path.is_file() and not path.is_symlink() and path.stat().st_size < 32768,
+              'precision reference profile missing or oversized')
+@@ -489,7 +481,7 @@
+ 
+ 
+ def expected_recurrent_slots():
+-    _require(settings()['phase'] in BATCH_PHASES, 'lifecycle recurrent geometry phase')
++    _require(settings()['phase'] == PAIRED_PHASE, 'lifecycle recurrent geometry phase')
+     return configured_profile()['max_mamba_cache_size']
+ 
+ 
+@@ -1450,7 +1442,7 @@
+     import importlib.util
+     from importlib.machinery import SourceFileLoader
+     path = Path(__file__).with_name('spry_common_canon.py')
+-    if Path(__file__).name in ('shared_contract.py', 'closed_contract.py', 'hook_contract.py', 'memory_contract.py'):
++    if Path(__file__).name in ('shared_contract.py', 'closed_contract.py', 'hook_contract.py', 'memory_contract.py', 'selected_contract.py'):
+         path = Path(__file__).resolve().parents[1] / 'spry_common/canon.py'
+     _require(path.is_absolute() and path.resolve(strict=True) == path
+              and path.is_file() and not path.is_symlink(), 'canonical shared helper source required')
+--- a/review/serving_contract.py
++++ b/review/serving_contract.py
+@@ -51,14 +51,6 @@
+ SPECULATION_KEYS = frozenset(
+     SPECULATION_FLOAT_KEYS + SPECULATION_COUNT_KEYS + SPECULATION_HISTOGRAM_KEYS
+ )
+-COMBINED_PHASE = 'sprint01-combined-forward'
+-SAMPLING_PHASE = 'sprint01-sampling-forward'
+-HIP_SAMPLING_PHASE = 'sprint01-hip-sampling-forward'
+-CONFIRMATION_PHASE = 'sprint01-hip-confirmation-reverse'
+-GDN_PAIR_PHASE = mtp_contract.GDN_PAIR_PHASE
+-HIP_PHASE_ARMS = {HIP_SAMPLING_PHASE: 'mtp', CONFIRMATION_PHASE: 'control',
+-                  GDN_PAIR_PHASE: ('control', 'mtp')}
+-SAMPLING_PHASES = frozenset((SAMPLING_PHASE, *mtp_contract.PRECISION_REFERENCE_PHASES, *HIP_PHASE_ARMS))
+ MAX_STREAM_BYTES = 512 << 10
+ MAX_STREAM_CHUNKS = 4096
+ 
+@@ -101,17 +93,13 @@
+     reference = mtp_contract.precision_reference_enabled()
+     mtp_contract.settings()
+     greedy = reference
+-    seed_valid = 'seed' not in body if reference or mtp_contract.settings()['phase'] in HIP_PHASE_ARMS else type(body.get('seed')) is int and body['seed'] == 1729 + ordinal
++    seed_valid = 'seed' not in body
+     _need(type(body.get('temperature')) is float and body['temperature'] == (0.0 if greedy else 0.7) and (type(body.get('top_p')) is float) and (body['top_p'] == (1.0 if greedy else 0.9)) and (type(body.get('top_k')) is int) and (body['top_k'] == (1 if greedy else 40)) and seed_valid and (body.get('stream') is False) and (type(body.get('n')) is int) and (body['n'] == 1) and (body.get('return_token_ids') is True) and (body.get('return_meta_info') is True), 'frozen native sampling parameters differ')
+ 
+ 
+ def hip_sampling_arm(phase, arm):
+-    if phase == GDN_PAIR_PHASE:
+-        mtp_contract.settings()
+-    if phase == mtp_contract.LIFECYCLE_PHASE:
+-        return arm in ('control', 'mtp')
+-    selected = HIP_PHASE_ARMS.get(phase)
+-    return arm in selected if type(selected) is tuple else arm == selected
++    mtp_contract.settings()
++    return False
+ 
+ 
+ def validate_thinking_quality_request(body):
+@@ -193,38 +181,8 @@
+ 
+ 
+ def materialize_history(case, previous_case, previous_raw):
+-    """Bind the literal prior wire answer; never trim, replace, or retry it."""
+-    _need(mtp_contract.settings()['phase'] in mtp_contract.HISTORY_PHASES and
+-          case.get('generated_history', {}).get('previous_case') == previous_case and
+-          type(previous_raw) is bytes and 0 < len(previous_raw) <= 512 << 10,
+-          'generated history parent binding differs')
+-    def pairs(items):
+-        result = {}
+-        for key, value in items:
+-            _need(key not in result, 'duplicate generated history JSON key')
+-            result[key] = value
+-        return result
+-    response = json.loads(previous_raw, object_pairs_hook=pairs,
+-        parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite generated history JSON')))
+-    choices = response.get('choices')
+-    if (screen_policy() == 'exploratory-stop-or-length-v1' and type(choices) is list and
+-            len(choices) == 1 and type(choices[0]) is dict and choices[0].get('finish_reason') == 'length'):
+-        raise HistoryRefusal('capped generated answer cannot supply a completed history turn')
+-    _need(type(choices) is list and len(choices) == 1 and choices[0].get('finish_reason') == 'stop' and
+-          choices[0].get('message', {}).get('role') == 'assistant' and
+-          type(choices[0]['message'].get('content')) is str, 'generated history parent is not normal assistant text')
+-    text = choices[0]['message']['content']
+-    indices = [index for index, branch in enumerate(case['generated_history']['branches'])
+-               if branch['assistant_text'] == text]
+-    if len(indices) != 1:
+-        raise HistoryRefusal('generated answer is outside the frozen exact-text branches')
+-    actual = history_branch(case, indices[0])
+-    actual['history_binding'] = dict(schema=1, previous_case=previous_case,
+-        parent_response_sha256=hashlib.sha256(previous_raw).hexdigest(),
+-        assistant_text_sha256=hashlib.sha256(text.encode()).hexdigest(), branch_index=indices[0],
+-        template_request_sha256=digest(case['body']), request_sha256=digest(actual['body']),
+-        expected_sha256=case['generated_history']['branches'][indices[0]]['expected_sha256'])
+-    return actual
++    mtp_contract.settings()
++    _need(False, 'generated history parent binding differs')
+ 
+ 
+ def history_refusal(case, previous_raw):
+@@ -300,7 +258,7 @@
+         if frozen is not None:
+             _need(choice['prompt_token_ids'] == frozen['input_ids'], 'frozen prompt IDs differ')
+         result.update(finish_reason=finish, matched_stop=choice.get('matched_stop'), terminal_meta_info=copy.deepcopy(meta), usage=copy.deepcopy(usage), prompt_token_ids_sha256=digest(choice['prompt_token_ids']), prompt_token_count=len(choice['prompt_token_ids']), response_token_ids=list(choice['response_token_ids']), response_id_count=len(choice['response_token_ids']), reported_completion_tokens=meta['completion_tokens'], id_count_equals_reported_count=len(choice['response_token_ids']) == meta['completion_tokens'], id_eos_inclusion='UNPROVEN', text=message['content'], server_timing_interpretation='raw terminal metadata retained; units/scope not asserted', frozen_history_exact_answer=message['content'] == 'SPRUCE-7|32' if case['case'] == 'frozen-two-turn' else None)
+-        sampled = mtp_contract.settings()['phase'] in SAMPLING_PHASES
++        sampled = mtp_contract.precision_reference_enabled()
+         if sampled:
+             mtp_contract.settings()
+             result.update(sampled_request=not mtp_contract.precision_reference_enabled(), sampling_parameters={key: case['body'][key] for key in ('temperature', 'top_p', 'top_k', 'seed') if key in case['body']}, sampling_distribution_verified=False, expected_answer_matches=None, answer_grade_status='PENDING_POST_RELEASE_NATIVE_DECODE')
+@@ -402,113 +360,8 @@
+ 
+ 
+ def inspect_stream_response(case, raw, client_elapsed_seconds):
+-    """Read native stream fields without inventing absent non-stream metadata."""
+-    expected = {row['case']: row for row in requests()}
+-    _need(case['case'] in expected and canonical(case) == canonical(expected[case['case']]) and
+-          mtp_contract.settings()['phase'] == COMBINED_PHASE and case['body'].get('stream') is True,
+-          'unfrozen combined stream request')
+-    result = dict(schema=1, mode=MODE, case=case['case'], request_sha256=digest(case['body']),
+-        raw_response_sha256=hashlib.sha256(raw).hexdigest(), raw_http_response_sha256=hashlib.sha256(raw).hexdigest(),
+-        client_elapsed_seconds=client_elapsed_seconds, status='STRUCTURAL_REFUSAL', metric_eligible=False,
+-        qualification=False, source_promotion=False, code_execution_performed=False,
+-        code_correctness_graded=False, numerical_equivalence_established=False,
+-        normal_stop_is_not_strict_eos_proof=True, ttft_measured=False, decode_latency_measured=False,
+-        transport='native-sse', terminal_meta_info=None, cached_tokens=None, num_retractions=None,
+-        server_e2e_latency=None, metadata_availability='native SSE omits terminal meta_info and retraction count')
+-    try:
+-        _need(type(client_elapsed_seconds) in (int, float) and math.isfinite(client_elapsed_seconds) and
+-              client_elapsed_seconds > 0, 'positive finite client duration required')
+-        events = stream_events(raw, final=True)
+-        _need(events and events[-1]['value'] is None, 'terminal SSE DONE required')
+-        identity, text, terminal, extension, usage, role = None, [], None, None, None, False
+-        generated = 0
+-        for event in events[:-1]:
+-            value = event['value']
+-            _need(type(value) is dict and set(value) <= {'id', 'object', 'created', 'model', 'choices', 'usage', 'sglext'},
+-                  'unexpected native stream fields')
+-            _need(type(value.get('id')) is str and value['id'] and value.get('model') == case['body']['model'] and
+-                  value.get('object') == 'chat.completion.chunk' and _count(value.get('created')),
+-                  'native SSE identity differs')
+-            if identity is None:
+-                identity = value['id']
+-            _need(value['id'] == identity, 'SSE response ID changed')
+-            choices = value.get('choices')
+-            _need(type(choices) is list and len(choices) <= 1, 'SSE choices differ')
+-            if choices:
+-                _need(terminal is None and extension is None and usage is None, 'SSE choice after terminal')
+-                choice = choices[0]
+-                _need(type(choice) is dict and set(choice) <= {'index', 'delta', 'logprobs', 'finish_reason', 'matched_stop'} and
+-                      type(choice.get('index')) is int and choice['index'] == 0 and choice.get('logprobs') is None,
+-                      'unexpected stream choice')
+-                delta = choice.get('delta')
+-                _need(type(delta) is dict and set(delta) <= {'role', 'content', 'reasoning_content', 'tool_calls'} and
+-                      delta.get('role') in (None, 'assistant') and delta.get('reasoning_content') in (None, '') and
+-                      delta.get('tool_calls') in (None, []) and
+-                      (delta.get('content') is None or type(delta['content']) is str), 'tool/reasoning/invalid SSE delta')
+-                if delta.get('role') is not None:
+-                    _need(not role and not text and delta.get('content') in (None, ''), 'duplicate or late assistant role')
+-                    role = True
+-                content, finish = delta.get('content'), choice.get('finish_reason')
+-                _need(role, 'SSE content before assistant role')
+-                _need(content or finish is not None or delta.get('role') == 'assistant',
+-                      'unrequested empty SSE choice')
+-                if content:
+-                    _need(finish is None, 'content in native finish frame')
+-                    text.append(content)
+-                    generated += 1
+-                if finish is not None:
+-                    _need(type(finish) is str and not content, 'invalid native finish frame')
+-                    terminal = dict(finish_reason=finish, matched_stop=choice.get('matched_stop'))
+-                _need(value.get('sglext') is None and value.get('usage') is None, 'premature stream extension or usage')
+-            else:
+-                _need(terminal is not None, 'SSE extension or usage before terminal')
+-                current_extension, current_usage = value.get('sglext'), value.get('usage')
+-                _need((current_extension is not None) != (current_usage is not None), 'empty or mixed terminal SSE frame')
+-                if current_extension is not None:
+-                    _need(extension is None and usage is None and type(current_extension) is dict and
+-                          set(current_extension) == {'input_ids', 'output_ids', 'spec_tokens_details'},
+-                          'duplicate, reordered or unexpected native SSE extension')
+-                    extension = current_extension
+-                else:
+-                    _need(extension is not None and usage is None and type(current_usage) is dict,
+-                          'duplicate or reordered native SSE usage')
+-                    usage = current_usage
+-        _need(role and generated > 0 and terminal is not None and extension is not None and usage is not None,
+-              'missing stream content, terminal, IDs or usage')
+-        input_ids, output_ids = extension['input_ids'], extension['output_ids']
+-        _need(_ids(input_ids) and type(output_ids) is list and len(output_ids) == 1 and
+-              _ids(output_ids[0], maximum=case['body']['max_completion_tokens']), 'invalid native stream IDs')
+-        frozen = expected_case(case['case'])
+-        _need(input_ids == frozen['input_ids'], 'frozen stream prompt IDs differ')
+-        _need(set(usage) <= {'prompt_tokens', 'completion_tokens', 'total_tokens', 'reasoning_tokens', 'prompt_tokens_details'} and
+-              all(_count(usage.get(key)) for key in ('prompt_tokens', 'completion_tokens', 'total_tokens')) and
+-              usage['prompt_tokens'] == len(input_ids) and usage['completion_tokens'] == len(output_ids[0]) and
+-              usage['total_tokens'] == usage['prompt_tokens'] + usage['completion_tokens'] and
+-              _count(usage.get('reasoning_tokens', 0)) and usage.get('reasoning_tokens', 0) == 0,
+-              'stream usage/count disagreement')
+-        cached = usage.get('prompt_tokens_details')
+-        if cached is not None:
+-            _need(type(cached) is dict and set(cached) <= {'cached_tokens', 'image_tokens', 'audio_tokens', 'video_tokens'} and
+-                  _count(cached.get('cached_tokens')) and cached['cached_tokens'] == 0 and
+-                  all(cached.get(key) in (None, 0) for key in ('image_tokens', 'audio_tokens', 'video_tokens')),
+-                  'stream usage cache or modality counts differ')
+-            result['cached_tokens'] = cached['cached_tokens']
+-        complete_text = ''.join(text)
+-        result.update(**terminal, usage=copy.deepcopy(usage), prompt_token_ids=list(input_ids),
+-            response_token_ids=list(output_ids[0]), response_id_count=len(output_ids[0]),
+-            reported_completion_tokens=usage['completion_tokens'], id_count_equals_reported_count=True,
+-            id_eos_inclusion='UNPROVEN', text=complete_text, response_id=identity,
+-            generated_content_chunks=generated, stream_done=True,
+-            spec_tokens_details=inspect_speculation(dict(sglext=extension)))
+-        if terminal['finish_reason'] != 'stop':
+-            result['status'] = 'STOP_LENGTH_REFUSAL' if terminal['finish_reason'] == 'length' else 'STOP_REFUSAL'
+-        elif 'expected_answer' in frozen and complete_text.strip() != frozen['expected_answer']:
+-            result['status'] = 'KNOWN_KEY_REFUSAL'
+-        else:
+-            result.update(status='NORMAL_STOP_COMPLETE', metric_eligible=True)
+-    except (ValueError, KeyError, TypeError, UnicodeError, RecursionError) as error:
+-        result.update(status='STRUCTURAL_REFUSAL', error=type(error).__name__ + ': ' + str(error)[:512])
+-    return result
++    mtp_contract.settings()
++    _need(False, 'unfrozen combined stream request')
+ 
+ 
+ def inspect_stream_observation(case, raw, observation, *, ordinal, prepared, sent, headers, received):
+@@ -551,21 +404,15 @@
+ 
+ def compare(left, right):
+     _need(left.get('case') == right.get('case') and left.get('mode') == right.get('mode') == MODE, 'paired case/mode differs')
+-    result = dict(schema=1, mode=MODE, case=left['case'], qualification=False, numerical_equivalence_established=False, comparison_eligible=False, client_seconds=dict(control=left.get('client_elapsed_seconds'), mtp=right.get('client_elapsed_seconds')), completion_tokens=dict(control=left.get('reported_completion_tokens'), mtp=right.get('reported_completion_tokens')), interpretation='same accepted candidate repeated; client request-to-terminal; stream TTFT reported separately; no speedup claim' if mtp_contract.settings()['phase'] == COMBINED_PHASE else 'non-stream client request-to-terminal latency, not decode TPOT or TTFT')
++    result = dict(schema=1, mode=MODE, case=left['case'], qualification=False, numerical_equivalence_established=False, comparison_eligible=False, client_seconds=dict(control=left.get('client_elapsed_seconds'), mtp=right.get('client_elapsed_seconds')), completion_tokens=dict(control=left.get('reported_completion_tokens'), mtp=right.get('reported_completion_tokens')), interpretation='non-stream client request-to-terminal latency, not decode TPOT or TTFT')
+     if not left.get('metric_eligible') is right.get('metric_eligible') is True:
+         result['reason'] = 'one or both responses did not complete normally'
+     elif left['request_sha256'] != right['request_sha256'] or left['prompt_token_ids'] != right['prompt_token_ids']:
+         result['reason'] = 'different request bytes or actual prompt IDs'
+     else:
+         result.update(full_response_ids_equal=left['response_token_ids'] == right['response_token_ids'], generated_id_difference_count=sum((left_id != right_id for left_id, right_id in zip(left['response_token_ids'], right['response_token_ids']))) + abs(len(left['response_token_ids']) - len(right['response_token_ids'])), equal_output_counts_do_not_establish_quality_or_numerical_equivalence=True)
+-        if mtp_contract.settings()['phase'] == SAMPLING_PHASE:
+-            result.update(sampled_request=True, sampling_distribution_verified=False, seed_reproducibility_observed=result['full_response_ids_equal'] and left['text'] == right['text'], interpretation='same requested seed repeated across two native sampling starts; output equality is descriptive', reason='sampled outputs retained without a cross-start exactness or speedup gate')
+-            return result
+-        if mtp_contract.settings()['phase'] in HIP_PHASE_ARMS:
+-            mtp_contract.settings()
+-            greedy = False
+-            result.update(sampled_request=not greedy, sampling_distribution_verified=False, request_seed_present=False, interpretation='greedy target-only versus greedy DFlash; quality and output differences are data' if greedy else 'native sampling versus HIP DFlash sampling; stochastic output differences are data', reason='outputs retained without a cross-arm exactness or paired-output speedup gate')
+-            return result
++        mtp_contract.settings()
++        mtp_contract.settings()
+         if left['reported_completion_tokens'] != right['reported_completion_tokens']:
+             result['reason'] = 'different actual completion counts; retain raw latency without a paired speed claim'
+         elif not result['full_response_ids_equal'] or left['text'] != right['text']:
+@@ -675,29 +522,8 @@
+ 
+ 
+ def compare_closure(cold, warm):
+-    """Compare only frozen paired identities; do not infer internal state equality."""
+-    _need(mtp_contract.settings()['phase'] in mtp_contract.CLOSURE_PHASES and
+-          cold.get('mode') == warm.get('mode') == MODE, 'explicit closure comparison mode required')
+-    cases = {row['case']: row for row in requests()}
+-    _need(cold.get('case') in cases and warm.get('case') in cases, 'unknown closure comparison case')
+-    first, second = expected_case(cold['case']), expected_case(warm['case'])
+-    _need(second['stress_info'].get('comparison_case') == cold['case'] and
+-          first['cache_policy']['intent'] == 'cold' and
+-          first['stress_info']['terminal_expectation'] == second['stress_info']['terminal_expectation'] == 'normal',
+-          'undeclared closure normal-response pair')
+-    for result, frozen in ((cold, first), (warm, second)):
+-        _need(result.get('request_sha256') == digest(cases[result['case']]['body']) and
+-              result.get('prompt_token_ids') == frozen['input_ids'], 'closure pair frozen request/IDs differ')
+-    strip = lambda body: {key: value for key, value in body.items() if key != 'cache_salt'}
+-    same = (first['cache_policy']['prompt_pair_sha256'] == second['cache_policy']['prompt_pair_sha256'] and
+-            cold['prompt_token_ids'] == warm['prompt_token_ids'] and
+-            strip(cases[cold['case']]['body']) == strip(cases[warm['case']]['body']))
+-    value = _compare_outputs(cold, warm, same)
+-    value.update(comparison_scope='frozen-closure-output-parity', cold_case=cold['case'], warm_case=warm['case'],
+-                 cached_tokens=dict(cold=cold.get('cached_tokens'), warm=warm.get('cached_tokens')),
+-                 performance_claim=False)
+-    value.pop('control_over_mtp_client_latency', None)
+-    return value
++    mtp_contract.settings()
++    _need(False, 'explicit closure comparison mode required')
+ 
+ 
+ def _compare_outputs(left, right, same_request):
+--- a/review/serving_entry.py
++++ b/review/serving_entry.py
+@@ -93,8 +93,7 @@
+     _require(type(value['sources']) is dict and set(value['sources']) >= _REQUIRED_SOURCES, 'required source pins missing')
+     _require(type(value['source_manifest_sha256']) is str and value['source_manifest_sha256'] == _digest(value['sources']), 'source manifest digest mismatch')
+     _validate_overlay_bindings(value)
+-    if mtp_contract.settings()['phase'] == mtp_contract.GDN_PAIR_PHASE:
+-        _require(value['sources'].get('gdn_verify') == mtp_contract.gdn_source_for_arm(value['arm']), 'GDN pair original/effective source binding differs')
++    mtp_contract.settings()
+     mtp_contract.settings()
+     for name, source in value['sources'].items():
+         _require(type(name) is str and type(source) is dict and (set(source) >= {'path', 'sha256'}), 'source pin shape differs')
+@@ -120,7 +119,8 @@
+     _require(type(value['canonical_server_cli']) is list and all((type(arg) is str and arg for arg in value['canonical_server_cli'])), 'canonical server CLI invalid')
+     _require('--disable-cuda-graph' not in value['canonical_server_cli'], 'deprecated graph flag forbidden')
+     required_contract = {'tp_size', 'context_length', 'chunked_prefill_size', 'mem_fraction_static', 'max_running_requests', 'cuda_graph_backend_decode', 'cuda_graph_backend_prefill', 'cuda_graph_bs_decode', 'cuda_graph_max_bs_decode', 'kv_cache_dtype', 'model_config_sha256', 'enable_linear_replayssm', 'enable_linear_replayssm_spec', 'max_mamba_cache_size', 'speculative_draft_kv_cache_dtype'}
+-    lifecycle = mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES
++    mtp_contract.settings()
++    lifecycle = True
+     reference = mtp_contract.precision_reference_enabled()
+     _require(type(value['resolved_contract']) is dict, 'resolved contract fields differ')
+     if mtp_contract.serving_seed_required():
+@@ -288,8 +288,8 @@
+         observed = mtp_contract.validate_memory_pool_config({key: getattr(cfg, key, None) for key in pool}, binding['arm'])
+         bound = mtp_contract.validate_memory_pool_config({key: binding['resolved_contract'].get(key) for key in pool}, binding['arm'])
+         _require(observed == bound, 'native memory-pool binding differs')
+-    if mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES:
+-        _require(getattr(server_args, 'enable_metrics', None) is True and type(getattr(server_args, 'decode_log_interval', None)) is int and (server_args.decode_log_interval == mtp_contract.expected_decode_log_interval(binding['arm'])), 'closure native metric/log observations are not enabled')
++    mtp_contract.settings()
++    _require(getattr(server_args, 'enable_metrics', None) is True and type(getattr(server_args, 'decode_log_interval', None)) is int and (server_args.decode_log_interval == mtp_contract.expected_decode_log_interval(binding['arm'])), 'closure native metric/log observations are not enabled')
+     if mtp_contract.cache_config() is not None:
+         cache = mtp_contract.validate_cache_config({key: getattr(cfg, key, None) for key in mtp_contract.cache_config()})
+         _require(cache == binding['resolved_contract'].get('prefix_cache'), 'native prefix-cache binding differs')
+--- a/review/serving_graph_observer.py
++++ b/review/serving_graph_observer.py
+@@ -25,25 +25,17 @@
+ MODULE = 'sglang.srt.model_executor.runner_backend.full_cuda_graph_backend'
+ GDN_MODULES = {'gdn_backend': 'sglang.srt.layers.attention.linear.gdn_backend', 'gdn_triton': 'sglang.srt.layers.attention.linear.kernels.gdn_triton', 'gdn_packed': 'sglang.kernels.ops.attention.fla.fused_recurrent', 'gdn_verify': 'sglang.kernels.ops.attention.fla.fused_sigmoid_gating_recurrent', 'gdn_prefill': 'sglang.kernels.ops.attention.fla.fused_gdn_gating', 'hybrid_backend': 'sglang.srt.layers.attention.hybrid_linear_attn_backend', 'memory_pool': 'sglang.srt.mem_cache.memory_pool'}
+ GDN_ROLES = frozenset(GDN_MODULES)
+-CLOSURE_PHASE = 'sprint01-gdn-aligned-lifecycle'
+-CLOSURE_PHASES = frozenset({CLOSURE_PHASE})
+ CLOSURE_LAYOUT = '<QQQQ captures,total,bs1,bs2'
+ 
+ def closure_phase():
+     import mtp_contract
+-    return mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES
++    mtp_contract.settings()
++    return True
+ 
+ def expected_alignment(arm):
+     import mtp_contract
+-    if mtp_contract.full_enabled_benchmark():
+-        return 'beta-bf16'
+-    if mtp_contract.precision_reference_enabled():
+-        return 'stock'
+-    if arm == 'mtp' or closure_phase():
+-        return 'beta-bf16'
+-    import mtp_contract
+-    settings = mtp_contract.settings()
+-    return 'beta-bf16' if settings['phase'] == mtp_contract.GDN_PAIR_PHASE and settings.get('aligned_gdn_both_arms') is True else 'stock'
++    mtp_contract.settings()
++    return 'beta-bf16'
+ FLOAT_DTYPES = ('torch.bfloat16', 'torch.float16', 'torch.float32', 'torch.float64')
+ GDN_STOCK = '7cad2a1b690b15c8d13f15cf1e458a7fba85f2bca9e47327a9804a1e7ba92943'
+ GDN_ALIGNED = '0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87'
+--- a/review/serving_integration.py
++++ b/review/serving_integration.py
+@@ -499,8 +499,8 @@
+         expected_fields = {'schema', 'mode', 'arm', 'rank', 'session_sha256', 'spec_sha256', 'source_manifest_sha256', 'contract', 'environment', 'resolved_speculative', 'draft_model_config', 'model_config_source', 'before_scheduler', 'qualification'}
+         if mtp_contract.cache_config() is not None:
+             expected_fields.add('resolved_prefix_cache')
+-        if mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES:
+-            expected_fields.add('resolved_observability')
++        mtp_contract.settings()
++        expected_fields.add('resolved_observability')
+         if pool is not None:
+             expected_fields.add('resolved_memory_pool')
+         _need(type(mtp) is dict and set(mtp) == expected_fields and (mtp['schema'] == 1) and (mtp['mode'] == MODE) and (mtp['arm'] == expected['arm']) and (mtp['rank'] == rank) and (mtp['session_sha256'] == expected['session_sha256']) and (mtp['spec_sha256'] == expected['spec_sha256']) and (mtp['source_manifest_sha256'] == expected['source_manifest_sha256']) and (mtp_contract.validate_contract(mtp['contract']) == expected_mtp) and (mtp['environment'] == mtp_contract.expected_environment(expected['arm'])) and (mtp['before_scheduler'] is True) and (mtp['qualification'] is False) and (type(mtp['model_config_source']) is dict) and (set(mtp['model_config_source']) == {'module', 'path', 'sha256'}) and (mtp['model_config_source'].get('module') == 'sglang.srt.configs.model_config') and (type(mtp['model_config_source'].get('path')) is str) and _digest(mtp['model_config_source'].get('sha256')), 'MTP native preflight differs')
+@@ -510,9 +510,9 @@
+         if pool is not None:
+             mtp_contract.validate_memory_pool_config(mtp['resolved_memory_pool'], expected['arm'])
+             _need(mtp['resolved_memory_pool'] == {key: contract[key] for key in pool}, 'native rank memory-pool binding differs')
+-        if mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES:
+-            flags = mtp['resolved_observability']
+-            _need(type(flags) is dict and set(flags) == {'enable_metrics', 'decode_log_interval'} and (flags['enable_metrics'] is True) and (type(flags['decode_log_interval']) is int) and (flags['decode_log_interval'] == mtp_contract.expected_decode_log_interval(expected['arm'])), 'closure native rank observability differs')
++        mtp_contract.settings()
++        flags = mtp['resolved_observability']
++        _need(type(flags) is dict and set(flags) == {'enable_metrics', 'decode_log_interval'} and (flags['enable_metrics'] is True) and (type(flags['decode_log_interval']) is int) and (flags['decode_log_interval'] == mtp_contract.expected_decode_log_interval(expected['arm'])), 'closure native rank observability differs')
+         resolved_fields = {'speculative_algorithm', 'enable_multi_layer_eagle', 'speculative_draft_model_path', 'speculative_draft_model_revision', 'speculative_num_steps', 'speculative_eagle_topk', 'speculative_num_draft_tokens', 'speculative_dflash_block_size', 'quantization', 'speculative_draft_model_quantization', '_speculative_draft_quantization_explicitly_set', 'speculative_use_rejection_sampling', 'speculative_accept_threshold_single', 'speculative_accept_threshold_acc'}
+         resolved = mtp['resolved_speculative']
+         explicit_draft_quantization = resolved.get('_speculative_draft_quantization_explicitly_set')
+@@ -539,7 +539,8 @@
+         else:
+             _need('token_probe' not in capture, 'unexpected J01 probe record')
+         counter = observations[f'graph-counter-rank-{rank}.bin']
+-        closure = mtp_contract.settings()['phase'] in mtp_contract.BATCH_PHASES
++        mtp_contract.settings()
++        closure = True
+         _need(type(capture) is dict and capture.get('schema') == 1 and (capture.get('rank') == rank) and (capture.get('arm') == expected['arm']) and (capture.get('native_graph_api_observations') is True) and (capture.get('qualification') is False) and (capture.get('gpu_time_measured') is False) and (capture.get('pid') == worker['pid']) and (type(capture.get('events')) is list) and (len(counter) == (32 if closure else 16)), 'native graph startup observation differs')
+         if closure:
+             _need(capture.get('phase') == mtp_contract.settings()['phase'] and capture.get('counter_layout') == '<QQQQ captures,total,bs1,bs2' and (capture.get('replay_batch_binding') == 'original-forward-batch.batch_size=runner.raw_bs=shape.size'), 'lifecycle graph request-count binding differs')
+@@ -570,11 +571,7 @@
+             _need(type(left) is int and type(right) is int and (0 <= left < right <= mtp_contract.commit_observation_limit()) and (right - left == delta), 'per-request completed commit/replay count differs')
+             final_counter = observations[f'replay-commit-counter-rank-{rank}.bin']
+             _need(len(final_counter) == 8 and right <= struct.unpack('<Q', final_counter)[0] <= mtp_contract.commit_observation_limit(), 'completed commit final counter binding')
+-    if _mtp_contract().settings()['phase'] in _mtp_contract().CLOSURE_PHASES:
+-        first = _observation_json(observations, 'request-24-before.json')
+-        last = _observation_json(observations, 'request-25-after.json')
+-        for left, right in zip(first['snapshot']['ranks'], last['snapshot']['ranks']):
+-            _need(right.get('bs2_replays', -1) > left.get('bs2_replays', -1) >= 0, 'closure concurrent group lacks native batch-two replay')
++    _mtp_contract().settings()
+     states = [_observation_json(observations, f'graph-captures-rank-{rank}.json').get('token_probe') for rank in (0, 1)]
+     _validate_final_norm(observations, binding, full_workers, states)
+     _validate_midpoint(observations, binding, full_workers, states)
+--- a/review/serving_parity.py
++++ b/review/serving_parity.py
+@@ -32,73 +32,7 @@
+ 
+ 
+ def validate_hip_sampling_components(records, *, binding, workers, phase):
+-    """Validate native startup results, independently of model task acceptance."""
+-    require((phase in serving_contract.HIP_PHASE_ARMS or phase == serving_contract.mtp_contract.LIFECYCLE_PHASE) and
+-            serving_contract.hip_sampling_arm(phase, binding.get('arm')),
+-            'HIP component trial phase')
+-    require(type(records) is list and len(records) == 2 and type(workers) is list and len(workers) == 2,
+-            'HIP component rank count')
+-    require([row.get('rank') for row in records if type(row) is dict] == [0, 1] and
+-            [row.get('rank') for row in workers if type(row) is dict] == [0, 1],
+-            'HIP component rank order or duplicate')
+-    source = binding['sources']['dflash_worker']
+-    expected_source = {key: source[key] for key in ('module', 'path', 'sha256')}
+-    require(expected_source['module'] == 'sglang.srt.speculative.dflash_worker_v2' and
+-            type(expected_source['sha256']) is str and len(expected_source['sha256']) == 64,
+-            'HIP component source')
+-    fields = {'schema', 'mode', 'phase', 'arm', 'rank', 'pid', 'start_ticks', 'boot_id',
+-              'session_sha256', 'spec_sha256', 'source_manifest_sha256', 'worker_identity_sha256',
+-              'worker_source', 'component', 'native', 'prewarm', 'qualification'}
+-    for rank, (row, worker) in enumerate(zip(records, workers)):
+-        require(set(row) == fields and type(row['schema']) is int and row['schema'] == 1 and
+-                row['phase'] == phase and row['qualification'] is False,
+-                'HIP component schema')
+-        require(all(row[key] == binding[key] for key in
+-                    ('mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256')) and
+-                all(type(row[key]) is int and row[key] == worker[key] for key in ('rank', 'pid', 'start_ticks')) and
+-                row['pid'] > 0 and row['start_ticks'] > 0 and row['boot_id'] == worker['boot_id'] and
+-                row['worker_identity_sha256'] == worker['identity_sha256'] and
+-                row['worker_source'] == expected_source,
+-                'HIP component live worker or source identity')
+-        expected_component = {
+-            'schema': 1, 'mode': 'hip-native-target-sample-prefix-v1', 'rank': rank,
+-            'shape': [2, 8, 32], 'one_hot_cases': [
+-                {'accept_len': [0, 3], 'bonus': [21, 22]},
+-                {'accept_len': [7, 1], 'bonus': [23, 24]}],
+-            'passed': True, 'distribution_statistical_test': False,
+-            'model_forward_count': 0, 'seed_reset': False,
+-        }
+-        require(serving_contract.canonical(row['component']) == serving_contract.canonical(expected_component),
+-                'HIP native component result')
+-        expected_native = {'sampling_backend': 'pytorch', 'sampling_phase_enabled': True,
+-                           'tp_sync_site14_enabled': True, 'simulate_acc_len': -1,
+-                           'acceptance_thresholds': [1.0, 1.0], 'graph_pool_borrowing': False,
+-                           'proposal_mode': 'selector-greedy-target-sample-v1',
+-                           'selector_present': True, 'selector_sampling_enabled': False,
+-                           'lilicorr_present': False}
+-        require(type(row['native']) is dict and set(row['native']) == set(expected_native) and
+-                row['native'] == expected_native and
+-                row['native']['sampling_phase_enabled'] is True and
+-                row['native']['tp_sync_site14_enabled'] is True and
+-                row['native']['graph_pool_borrowing'] is False and
+-                row['native']['selector_present'] is True and
+-                row['native']['selector_sampling_enabled'] is False and
+-                row['native']['lilicorr_present'] is False and
+-                type(row['native']['simulate_acc_len']) in (int, float),
+-                'HIP native sampling or synchronization mode')
+-        memory = row['prewarm']
+-        require(type(memory) is dict and set(memory) ==
+-                {'shape', 'sampling_input_bytes', 'peak_bytes', 'sampling_headroom_bytes'} and
+-                memory['shape'] == [2, 8, 248320] and
+-                all(type(item) is int for item in memory['shape']) and
+-                all(type(memory[key]) is int and memory[key] > 0 for key in
+-                    ('sampling_input_bytes', 'peak_bytes', 'sampling_headroom_bytes')) and
+-                memory['sampling_input_bytes'] == 2 * 8 * 248320 * 4 and
+-                memory['sampling_headroom_bytes'] == memory['peak_bytes'] + memory['sampling_input_bytes'],
+-                'HIP native memory rehearsal')
+-    require(len({(row['pid'], row['start_ticks'], row['boot_id']) for row in records}) == 2,
+-            'HIP component duplicate worker')
+-    return records
++    require(False, 'HIP component trial phase')
+ 
+ 
+ def collect(manager, template, manifest):
+--- a/review/serving_runtime.py
++++ b/review/serving_runtime.py
+@@ -222,36 +222,10 @@
+ 
+ 
+ def _hip_sampling_ready(material: dict[str, Any], gate: dict[str, Any]) -> list[dict[str, Any]] | None:
+-    """Fail before any external generation if either native component is absent."""
+-    phase = mtp_contract.settings()['phase']
+-    binding = material['entry_binding']
+-    native = material['native_dir']
+-    paths = sorted(native.glob('HIP-SAMPLING-COMPONENT-*'))
+-    required = ((phase in serving_contract.HIP_PHASE_ARMS or phase == mtp_contract.LIFECYCLE_PHASE) and
+-                serving_contract.hip_sampling_arm(phase, binding['arm']))
+-    if not required:
+-        _require(not paths, 'HIP sampling records appeared outside the candidate phase')
+-        return None
+-    _require([path.name for path in paths] == [f'HIP-SAMPLING-COMPONENT-rank-{rank}.json' for rank in (0, 1)],
+-             'HIP sampling component files missing, duplicate or extra')
+-
+-    def pairs(items):
+-        result = {}
+-        for key, value in items:
+-            _require(key not in result, 'HIP component duplicate JSON key')
+-            result[key] = value
+-        return result
+-
+-    records = []
+-    for path in paths:
+-        checked = _canonical_regular(str(path))
+-        _require(checked.stat().st_nlink == 1 and 0 < checked.stat().st_size <= 16384,
+-                 'HIP component bounded single-link file required')
+-        records.append(json.loads(checked.read_bytes(), object_pairs_hook=pairs,
+-            parse_constant=lambda _: (_ for _ in ()).throw(ServingRuntimeError('nonfinite HIP component JSON'))))
+-    import serving_parity
+-    return serving_parity.validate_hip_sampling_components(
+-        records, binding=binding, workers=gate['workers'], phase=phase)
++    mtp_contract.settings()
++    paths = sorted(material['native_dir'].glob('HIP-SAMPLING-COMPONENT-*'))
++    _require(not paths, 'HIP sampling records appeared outside the candidate phase')
++    return None
+ 
+ 
+ def _gdn_required(sources: dict[str, Any]) -> bool:
+@@ -475,7 +449,7 @@
+                  and all(type(value) is int and 0 < value < 2**63 for value in values.values()),
+                  'bounded HTTP artifact primaries required')
+         fields.add('artifact_limits')
+-    if mtp_contract.settings()['phase'] in mtp_contract.FAIL_FAST_PHASES or mtp_contract.precision_reference_enabled():
++    if mtp_contract.precision_reference_enabled():
+         fields.add('diagnostic_environment')
+         _require(type(http) is dict and http.get('diagnostic_environment') == {
+             arm: mtp_contract.expected_environment(arm) for arm in ('control', 'mtp')},
+--- a/review/worker_entry.py
++++ b/review/worker_entry.py
+@@ -464,12 +464,12 @@
+         value['resolved_prefix_cache'] = cache_config
+     if pool_config is not None:
+         value['resolved_memory_pool'] = pool_config
+-    if contract_module.settings()['phase'] in contract_module.BATCH_PHASES:
+-        wanted = dict(enable_metrics=True, decode_log_interval=contract_module.expected_decode_log_interval(manifest['arm']))
+-        observed = {key: getattr(cfg, key, None) for key in wanted}
+-        _require(all(type(observed[key]) is type(item) and observed[key] == item
+-                     for key, item in wanted.items()), 'closure native observability configuration differs')
+-        value['resolved_observability'] = observed
++    contract_module.settings()
++    wanted = dict(enable_metrics=True, decode_log_interval=contract_module.expected_decode_log_interval(manifest['arm']))
++    observed = {key: getattr(cfg, key, None) for key in wanted}
++    _require(all(type(observed[key]) is type(item) and observed[key] == item
++                 for key, item in wanted.items()), 'closure native observability configuration differs')
++    value['resolved_observability'] = observed
+     _atomic_json(Path(manifest["evidence_dir"]) / f"MTP-PREFLIGHT-rank-{rank}.json", value)
+     if rank == 0:
+         _atomic_json(Path(manifest["evidence_dir"]) / "MTP-PREFLIGHT.json", value)
+--- a/review/model_benchmark.py
++++ b/review/model_benchmark.py
+@@ -214,7 +214,7 @@
+             module_spec = importlib.util.spec_from_file_location('frozen_http_phase_contract', path)
+             phase_contract = importlib.util.module_from_spec(module_spec)
+             module_spec.loader.exec_module(phase_contract)
+-            if phase_contract.settings()['phase'] not in phase_contract.FAIL_FAST_PHASES and (not phase_contract.precision_reference_enabled()) or http['diagnostic_environment'] != {arm: phase_contract.expected_environment(arm) for arm in ('control', 'mtp')}:
++            if not phase_contract.precision_reference_enabled() or http['diagnostic_environment'] != {arm: phase_contract.expected_environment(arm) for arm in ('control', 'mtp')}:
+                 raise ValueError('native diagnostic environment binding')
+             fields.add('diagnostic_environment')
+         if not (type(http) is dict and set(http) == fields and (http['schema'] == 1) and (http['mode'] == 'native-http-fp8-sprint01-v1') and (type(http['client_seconds']) is int) and (1 <= http['client_seconds'] <= 2040) and (type(http['bindings']) is dict) and (set(http['bindings']) == {'control', 'mtp'}) and all((type(row) is dict and set(row) == {'path', 'sha256'} and (type(row['path']) is str) and (row['path'] == 'review/HTTP-BINDING-' + arm + '.json') and valid_digest(row['sha256']) for arm, row in http['bindings'].items())) and (type(http['expected_devices']) is dict) and (len(http['expected_devices']) == 2) and all((type(bdf) is str and type(row) is dict and (set(row) == {'uuid', 'render'}) and (type(row['uuid']) is str) and (type(row['render']) is str) for bdf, row in http['expected_devices'].items()))):

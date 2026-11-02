@@ -1,0 +1,54 @@
+--- a/w5_configured_evidence.py
++++ b/w5_artifact_evidence.py
+@@ -21,6 +21,7 @@
+ """
+ import base64, contextlib, copy, hashlib, importlib, importlib.util, io, json, math, os, shutil, sys, tempfile, time, zlib
+ from pathlib import Path
++from dataclasses import asdict
+ from types import SimpleNamespace
+ 
+ HERE = Path(__file__).resolve().parent
+@@ -227,6 +228,7 @@
+         client_module, runtime = importlib.import_module('serving_client'), importlib.import_module('serving_runtime')
+         artifacts = controller.artifacts if hasattr(controller, 'artifacts') else importlib.import_module('benchmark_artifacts')
+         spec = json.loads((root / 'review/BENCHMARK-SPEC2.json').read_bytes())
++        artifact_plan = artifacts.HTTPArtifactLimits.from_limits(spec['http_serving']['artifact_limits'])
+         session = manifest['session_sha256']
+         assert not controller.mtp_contract.instrumentation_enabled()
+         expected_by_arm = {arm: controller.http_expected_binding(root, spec, owner_arm=arm, session_sha256=session, spec_sha256=controller.mapping_sha256(spec)) for arm in ('bf16', 'kv4')}
+@@ -251,30 +253,30 @@
+                             source_manifest_sha256=expected['source_manifest_sha256'], client_summary=summary, native_gate=gate, parent_error=None)
+             art_binding = dict(session_sha256=session, arm=owner_arm, spec_sha256=controller.mapping_sha256(spec), experiment_mode=artifacts.HTTP_MODE)
+             try:
+-                artifacts.pack_http_artifacts(output, art_binding)
++                artifacts.pack_http_artifacts(output, art_binding, limits=artifact_plan)
+             except ValueError as error:
+                 files = sorted(((p.stat().st_size, p.relative_to(output).as_posix()) for p in output.rglob('*') if p.is_file()), reverse=True)
+                 raise AssertionError(dict(error=str(error), owner_arm=owner_arm, client=sum(s for s, n in files if n.startswith('client/')),
+                                           files=len(files), largest=files[:4], responses=max(responses.values()))) from error
+             sizes = dict(native_files=sum(1 for p in native.rglob('*') if p.is_file()), native=sum(p.stat().st_size for p in native.rglob('*') if p.is_file()),
+                          client_files=sum(1 for p in client.rglob('*') if p.is_file()), client=sum(p.stat().st_size for p in client.rglob('*') if p.is_file()))
+-            export = artifacts.stage_artifacts(output, art_binding)
++            export = artifacts.stage_artifacts(output, art_binding, limits=artifact_plan)
+             sink = io.BytesIO()
+-            artifacts.export_bundle(export, art_binding, sink)
++            artifacts.export_bundle(export, art_binding, sink, limits=artifact_plan)
+             line = sink.getvalue()
+             scale = len(contract.requests()) / 19
+             resource = b'SPRY_RESOURCE_V1 {"phase":"initial"}\nSPRY_RESOURCE_V1 {"phase":"final"}\n'
+             stdout = filler(int(W1_REFERENCE['stdout']['non_bundle_bytes'] * scale * 2)) + resource + line
+             stderr = filler(int(W1_REFERENCE['stderr']['bytes'] * scale * 2))
+             destination = work / (owner_arm + '-artifacts')
+-            bundle = artifacts.receive_bundle(stdout, stderr, destination, art_binding)
++            bundle = artifacts.receive_bundle(stdout, stderr, destination, art_binding, limits=artifact_plan)
+             resources_raw = [l[len(b'SPRY_RESOURCE_V1 '):] for l in stdout.splitlines() if l.startswith(b'SPRY_RESOURCE_V1 ')]
+             assert len(resources_raw) == 2 and all(len(raw) <= 65536 for raw in resources_raw)  # the controller's own record check
+             inner = json.loads((destination / 'result.json').read_bytes())
+             controller.require_complete_artifact_members(bundle, spec, destination, inner, artifacts)
+             joins, supervision = live_observations(gate)
+             actual = controller.http_integration.read_http_artifacts(destination, extraction_root=work / (owner_arm + '-http-client-tree'),
+-                                                                     expected=expected, owner_arm=owner_arm, joins=joins, supervision=supervision)
++                                                                     expected=expected, owner_arm=owner_arm, joins=joins, supervision=supervision, limits=asdict(artifact_plan))
+             assert actual['status'] == 'HTTP_ARM_COMPLETE' and actual['instrumentation'] == 'production'
+             accepted = controller.http_integration.accept_with_owner(actual, campaign_record(bindings), owner_arm=owner_arm)
+             references[owner_arm] = controller._http_wire_reference(accepted, owner_arm=owner_arm)

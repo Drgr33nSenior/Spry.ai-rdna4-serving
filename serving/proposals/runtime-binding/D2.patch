@@ -1,0 +1,14 @@
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -321,9 +321,9 @@
+ 
+ 
+ MXFP4_FILES = {'review/__init__.py': '39cd59ab506e69df4cb77664d67392e6c510174be5eeb61c172e291b47c59539',
+- 'review/isolated_scheme.py': 'f396186d36fa83812d7d3d4ec538e47588d3513a06e9996539e1481bebe8c185',
++ 'review/isolated_scheme.py': '132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6',
+  'review/kernels.py': '5571b10654697561455081455b6cd28d43314702f56c80160ef2e33e535b3693',
+- 'review/ops.py': '66d25968516c6c9509923ad363a291d57d192918f1e7121f96481202391c3776',
++ 'review/ops.py': '0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85',
+  'review/prefill_reference.py': 'cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887',
+  'review/private_selection.py': 'e0120a933d0848de1fd82135274deac4ca850af82715112a2a1bfa94107c52ed'}
+ P1_FILES = {

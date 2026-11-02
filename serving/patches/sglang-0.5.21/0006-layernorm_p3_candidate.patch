@@ -1,0 +1,64 @@
+--- a/image-source/python/sglang/srt/layers/layernorm.py
++++ b/image-source/python/sglang/srt/layers/layernorm.py
+@@ -146,6 +146,49 @@
+         _has_rocm_triton_gemma_rms_norm = True
+     except ImportError:
+         _has_rocm_triton_gemma_rms_norm = False
++
++
++# --- P3 private fused Gemma RMSNorm (variant gemma-rmsnorm-triton-fp32-native-order-v1) ---
++# Mounted only on the dense MXFP4 arms through the package overlay row 'dense_layernorm'.
++# Kernel body verbatim from the sealed P3 component (operation 87): BF16 in/out, FP32
++# statistics, residual rounded to BF16 before statistics and returned, tl.rsqrt, (1+w) after.
++import triton as _p3_triton
++import triton.language as _p3_tl
++_P3_FUSED_GEMMA_NORM = _is_hip
++_p3_jit = _p3_triton.jit
++tl = _p3_tl
++
++
++@_p3_jit
++def norm_kernel(X,R,W,Y,S,V,N:tl.constexpr,XS:tl.constexpr,RS:tl.constexpr,RES:tl.constexpr,B:tl.constexpr,EPS:tl.constexpr):
++ row=tl.program_id(0);col=tl.arange(0,B);mask=col<N
++ x=tl.load(X+row*XS+col,mask,0).to(tl.float32)
++ if RES:
++  r=tl.load(R+row*RS+col,mask,0).to(tl.float32)
++  # Native's BF16 addition precedes FP32 statistics, including returned residual.
++  x=(x+r).to(tl.bfloat16).to(tl.float32)
++  tl.store(S+row*N+col,x,mask)
++ var=tl.sum(x*x,axis=0)/N
++ inv=tl.rsqrt(var+EPS)
++ weight=tl.load(W+col,mask,0).to(tl.float32)
++ y=(x*inv)*(1.0+weight)
++ tl.store(Y+row*N+col,y,mask);tl.store(V+row,var)
++
++
++def _p3_gemma_rmsnorm(x, residual, weight, eps):
++    n = x.shape[-1]
++    original_shape = x.shape
++    x2 = x.reshape(-1, n)
++    rows = x2.shape[0]
++    res = residual is not None
++    r2 = residual.reshape(-1, n) if res else x2
++    y = torch.empty((rows, n), dtype=x.dtype, device=x.device)
++    s = torch.empty((rows, n), dtype=x.dtype, device=x.device) if res else y
++    v = torch.empty((rows,), dtype=torch.float32, device=x.device)
++    norm_kernel[(rows,)](x2, r2, weight, y, s, v, n, x2.stride(0), r2.stride(0) if res else 0, res,
++                         _p3_triton.next_power_of_2(n), eps, num_warps=8 if n == 5120 else 4, enable_fp_fusion=False)
++    y = y.reshape(original_shape)
++    return (y, s.reshape(original_shape)) if res else y
+ 
+ if _is_cuda:
+     # HF-semantics RMSNorm kernel (JIT-compiled).  Used when `cast_x_before_out_mul=True`
+@@ -1161,6 +1204,11 @@
+         residual: Optional[torch.Tensor] = None,
+         post_residual_addition: Optional[torch.Tensor] = None,
+     ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
++        if (_P3_FUSED_GEMMA_NORM and x.dtype is torch.bfloat16 and self.weight.dtype is torch.bfloat16
++                and (residual is None or (residual.dtype is torch.bfloat16 and residual.shape == x.shape))):
++            if post_residual_addition is not None:
++                residual = residual + post_residual_addition
++            return _p3_gemma_rmsnorm(x, residual, self.weight.data, self.variance_epsilon)
+         if _use_aiter and _has_rocm_triton_gemma_rms_norm:
+             if residual is not None:
+                 if post_residual_addition is not None:

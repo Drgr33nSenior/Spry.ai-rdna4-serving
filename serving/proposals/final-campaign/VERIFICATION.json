@@ -1,0 +1,149 @@
+{
+  "baseline_proposal": "proposals/pre-replay",
+  "candidate_proposal": "proposals/final-campaign",
+  "comparison_scope": "verified pre-memory source versus final cleanup",
+  "complete_cleanup": false,
+  "launch_authorized": false,
+  "native_gpu_allowance": 0,
+  "native_snapshot": {
+    "all_four_implementation_files_match_tested_native_bytes": true,
+    "ceiling_bytes": 16777216,
+    "gzip_bytes": 3243176,
+    "history_verifier_update": "Local reverse-patch chain updated after native snapshot; all 11 history checks passed",
+    "tar_bytes": 14510080
+  },
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 269
+  },
+  "new_model_starts": 0,
+  "owner_approved": false,
+  "packet": {
+    "all_upload_pins_and_shell_syntax_checked": true,
+    "archive_members": {
+      "baseline": 78,
+      "cleanup": 79
+    },
+    "launch_authorized": false,
+    "model_starts": 0,
+    "native_execution": false,
+    "passed": true,
+    "production_decode_log_interval": 100,
+    "protected_common_upload": {
+      "baseline": false,
+      "cleanup": true
+    },
+    "source_only": true
+  },
+  "post_test_record_change": "cpu_verified false to true only; execution authority remains false",
+  "proofs": {
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/PUBLIC-CHECKS.json",
+      "sha256": "d7f2db524b5a1a02e4596e3e4c7918cc38de9c3572b58aa2dfc86eb276bfcdf3"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/STATIC-CHECKS.json",
+      "sha256": "f218c08222c7179a1ffccb965d37ce92f528e3171e7b19b8e7b74119745e35df"
+    },
+    "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "dd1cec91b9996c0f2f9cf06e85c2581cfa80a449e88866560373bf39ef26f4b0"
+    },
+    "native-source-preflight-v1/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/native-source-preflight-v1/SOURCE-INVENTORY.json",
+      "sha256": "e011d6ef8a31e441acd41e5d7db76e712af54560bc6f654ec9d3f5e5b8764a1a"
+    },
+    "native-source-preflight-v1/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/native-source-preflight-v1/native-cpu-source-preflight.json",
+      "sha256": "76c99eaa776ae4a8cb81c8eedba23ff51b0ac457c196edb411ef4192e14d4baa"
+    },
+    "packet-check-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/packet-check-attempt-1.json",
+      "sha256": "68ed01a803357ea158bcf13fc857fcb288efc0cd0ef531ac9512e23060fcaf90"
+    },
+    "packet-check-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/packet-check-attempt-1.log",
+      "sha256": "99a05231f352f975ad25471e4c1893fa845c8cd07931e50290262425075d0b3d"
+    },
+    "public-make-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/public-make-attempt-2.log",
+      "sha256": "ef92c9cb68edba9afe470b420ef1784b3f898e131250626611f3826fa692f33d"
+    },
+    "unit-caller-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/unit-caller-attempt-1.log",
+      "sha256": "678faba5bc2a02098314c7f52b928ccc32b7f941488dc8a6f2ca5fff77028dfd"
+    },
+    "unit-comparison-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/unit-comparison-attempt-1.log",
+      "sha256": "53ec6bfd32b426a23950e2fbbff5aba6e95df6d3ed7324d3edb40dd8151e63f8"
+    },
+    "unit-final-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/unit-final-attempt-2.log",
+      "sha256": "0cf57cbf8729980143491e1e90cf89ca373c60c2f055a0e4aa49946257c29314"
+    },
+    "unit-one-use-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/unit-one-use-attempt-1.log",
+      "sha256": "0a68351797b46269a480fc500f9330420dffe0f4f17c8c131796b2e1e5c5eaf8"
+    },
+    "unit-packaging-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/unit-packaging-attempt-1.log",
+      "sha256": "f9ac9d11ca408a88041b7ef3abfad4d4836dfed259a75dd305e3314381f0199e"
+    },
+    "worker-history-final.log": {
+      "path": ".test-build/serving-cleanup/final-campaign-v1/worker-history-final.log",
+      "sha256": "88815117eb18db80b95c17ecf864e190b00b49418b4ea184c12e8d3758239758"
+    }
+  },
+  "protected_set_sha256": "720217fecefc17891935232d119a5cabf6d4dc8576661122d8c889dc7329c123",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 998,
+    "suites": 81
+  },
+  "published_proposal_sha256": "d9888cef403b0b58ae67d1f5aaf637309c9bdd3fa003a9b17aca1a63924982a9",
+  "remaining": [
+    "Exact native CPU tensor structure envelope and execution approval",
+    "Final instrumented startup byte/token/quality packet preparation, review and one-use approval",
+    "Production comparison campaign seals, source-bound prelaunch and one-use approvals",
+    "Native greedy token identity, selected quality, BDF memory and independent release acceptance",
+    "Final retained evidence replay, source publication and closeout"
+  ],
+  "runtime_package_byte_identical_to_common_closure": true,
+  "schema": 1,
+  "source_changes": {
+    "launcher/run_native.py": {
+      "baseline_sha256": "444b3959166a5b99378cba7c4f13e6178784248fa072d12547becebd906d7107",
+      "proposed_sha256": "3a6147019d1973c459460a87113592044e6f0dccf4be95017bdbbc74992c2fee"
+    },
+    "prepare_gpu_run.py": {
+      "baseline_sha256": "d62ca69ba9b40ff20b8d10eb2e9de3bd7d035e11383b10f59f392679040bbb09",
+      "proposed_sha256": "73309fe681f7cc43baa1878f79297c4a8aceab00195c6fd6271dd920e33d485f"
+    },
+    "prepare_measurement.py": {
+      "baseline_sha256": "e01d70940624fd6aaa99265c4d8818d11706df302b2e31b062827455210a2552",
+      "proposed_sha256": "7a789ce2c61c412495bf0623ef2cc1a7753afb4d3da0715f5b909026edd47a73"
+    },
+    "tests/native_cpu_preflight.py": {
+      "baseline_sha256": "6f2bafaec19329372471bf029e280905591e9647b5fe1e24c4afdc54ee37252d",
+      "proposed_sha256": "ee45bc57afe2c73a4c4ed39260fe6bd54076fa07c99e3acf3df4960d5d286b1f"
+    }
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 299,
+    "native_runtime_imported": false,
+    "runtime_package_byte_identical_to_common_closure": true,
+    "source_patch_forward_reverse_exact": true
+  },
+  "status": "CPU_FINAL_CAMPAIGN_TOOLING_VERIFIED_NATIVE_QUALIFICATION_PENDING",
+  "tested_proposal_sha256": "340a42969d18fa2ce6ea56ab64f76a514917305e52291817470b50a3cd64b837"
+}

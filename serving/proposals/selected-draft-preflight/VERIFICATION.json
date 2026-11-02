@@ -1,0 +1,438 @@
+{
+  "actual_campaign_checks": {
+    "instrumented": 6,
+    "passed": true,
+    "production": 6
+  },
+  "actual_native_scheduler_model_quality_and_gpu_behavior_proven": false,
+  "actual_preflight_checks": {
+    "instrumented": {
+      "cases": [
+        {
+          "arm": "control",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 0,
+          "retained_files": 2,
+          "stock_precision_source_validation_substituted": true
+        },
+        {
+          "arm": "control",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 1,
+          "retained_files": 1,
+          "stock_precision_source_validation_substituted": true
+        },
+        {
+          "arm": "mtp",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 0,
+          "retained_files": 2,
+          "stock_precision_source_validation_substituted": true
+        },
+        {
+          "arm": "mtp",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 1,
+          "retained_files": 1,
+          "stock_precision_source_validation_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "complete actual selected draft preflight with real contract and writer"
+    },
+    "instrumented_materialization": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual template reader, complete materializer and written worker cross-binding"
+    },
+    "production": {
+      "cases": [
+        {
+          "arm": "control",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 0,
+          "retained_files": 2,
+          "stock_precision_source_validation_substituted": true
+        },
+        {
+          "arm": "control",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 1,
+          "retained_files": 1,
+          "stock_precision_source_validation_substituted": true
+        },
+        {
+          "arm": "mtp",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 0,
+          "retained_files": 2,
+          "stock_precision_source_validation_substituted": true
+        },
+        {
+          "arm": "mtp",
+          "complete_preflight": true,
+          "draft_file_digest_substituted": true,
+          "exact_observed_draft_summary": true,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 1,
+          "native_resolver_and_model_config_substituted": true,
+          "rank": 1,
+          "retained_files": 1,
+          "stock_precision_source_validation_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "complete actual selected draft preflight with real contract and writer"
+    },
+    "production_materialization": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "complete_materialization": true,
+          "empty_bytecode_mounts_substituted": true,
+          "expected_error": null,
+          "generated_manifest_files": 2,
+          "gpu_work": false,
+          "model_construction": false,
+          "native_entry_admission": false,
+          "output_filesystem_redirected": true,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true,
+          "template_reader_complete": true,
+          "worker_cross_binding_complete": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual template reader, complete materializer and written worker cross-binding"
+    },
+    "retained_failure": {
+      "cases": [
+        {
+          "arm": "control",
+          "expected_error": "only the selected DFlash2 speculative kind is supported",
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 0,
+          "rank": 0,
+          "refused_before_evidence": true
+        },
+        {
+          "arm": "control",
+          "expected_error": "only the selected DFlash2 speculative kind is supported",
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 0,
+          "rank": 1,
+          "refused_before_evidence": true
+        },
+        {
+          "arm": "mtp",
+          "expected_error": "only the selected DFlash2 speculative kind is supported",
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 0,
+          "rank": 0,
+          "refused_before_evidence": true
+        },
+        {
+          "arm": "mtp",
+          "expected_error": "only the selected DFlash2 speculative kind is supported",
+          "gpu_work": false,
+          "model_construction": false,
+          "native_metadata_constructor_calls": 0,
+          "rank": 1,
+          "refused_before_evidence": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "complete actual selected draft preflight with real contract and writer"
+    }
+  },
+  "all_ten_protected_inventory_members_unchanged": true,
+  "changed_worker_and_protected_python_sources": [
+    "worker_entry.py"
+  ],
+  "complete_cleanup": false,
+  "consumed_native_attempt": {
+    "caller_seconds_charged": 105,
+    "execution_seal": {
+      "manifest_sha256": "585e46f5be64b8ec64ffb4997bfc81cc9c88b5abd0b91e158cc7c6894093df41",
+      "members": 21,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/preweight-source-pins-v1/instrumented-pair-v1/cleanup/execution-v1"
+    },
+    "independent_gpu_release_verified": true,
+    "model_construction_reached": false,
+    "native_scheduler_processes_started": 2,
+    "operation": 194,
+    "owner_seconds_charged": 98,
+    "responses": 0,
+    "status": "INSTRUMENTED_CANDIDATE_RETIRED_DRAFT_PREFLIGHT_REFUSAL_PARKED",
+    "worker_start_attempts": 1
+  },
+  "correction": "Delete the unused eager none summary request; preserve the enabled native metadata constructor and exact DFlash2 summary equality",
+  "cpu_tensor_gate_reused": true,
+  "cpu_tensor_reuse": {
+    "all_five_runtime_sources_unchanged": {
+      "d3b_head_adapter.py": "2be5a50c5d9c2c44716b98e9ae58865dcc497a3cd51f17495df25893cef2b584",
+      "d3b_target_head_adapter.py": "dfd57322f2d2ecfdc6096a8785435d69d22f1d3d58b61324d704d4cc9023e181",
+      "isolated_scheme.py": "5c4068a835ba7762d83acc49ecf4e8ca96afd907a84dab12fcea4445b3defe16",
+      "p1_prefill.py": "50e239f2fb65e2484330a456a979eaeaeb27901816d82fa4818393d138692a0e",
+      "spry_fp8_head.py": "eba54bb8495e2df4042b5c0bea07cf4da38fbd6eec92891359bd46ca51d0d671"
+    },
+    "cpu_tensor_gate_passed": true,
+    "execution_seal": {
+      "manifest_sha256": "1d8573c4ee5bf9d63a7614e20003f138b7a7ba9345467d2c383252f72e835dfe",
+      "members": 33,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/tensor-review-v1/execution-v1"
+    },
+    "original_cpu_scope_helper_sources_retained_in_original_proof": [
+      "benchmark_gpu_identity.py",
+      "benchmark_resource_gate.py"
+    ],
+    "passed": true,
+    "repeat_cpu_tensor_run_requested": false,
+    "scope": "Reuse only the real tensor-structure result for these five unchanged computation sources; no current GPU or protected-helper proof",
+    "source_seal": {
+      "manifest_sha256": "ab40eb8ce97f1eb624fbfd6af1441203b592bc29521112a186d55d815ed4516e",
+      "members": 21,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/tensor-review-v1/source"
+    }
+  },
+  "fresh_candidate": {
+    "archive_members": 79,
+    "native_execution_authorized": false,
+    "nonce": "e201110200000095",
+    "owner_review_sha256": "7842311f325fa9183ce5222c654093b1855cdd6dd9e195530356711c7ffba0dc",
+    "source_seal": {
+      "manifest_sha256": "22d85b6d6d8898751607f167598c01712d0045afe5135a15a53903cc84012c31",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-pair-v1/cleanup/author"
+    }
+  },
+  "kernels_requests_settings_pools_and_owner_ceilings_changed": false,
+  "native_bundle_method": "Reuse exact common review bytes plus the old worker and four data replacements; authenticate complete old review against its original manifest",
+  "native_focused_checks": {
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "subprocess_denied": true,
+    "tests": 14
+  },
+  "native_gpu_allowance": 0,
+  "native_metadata_substitutions": [
+    "resolving_view",
+    "ModelConfig.from_server_args",
+    "draft config file digest",
+    "stock precision source validation"
+  ],
+  "native_source_transfer": {
+    "ceiling_bytes": 16777216,
+    "gzip_bytes": 11908197,
+    "tar_bytes": 13332480
+  },
+  "owner_approved": false,
+  "post_test_change": "cpu_verified false to true only",
+  "proofs": {
+    "ACTUAL-PREFLIGHT-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/ACTUAL-PREFLIGHT-CHECKS.json",
+      "sha256": "d67c9fb1b25b9fd7480812a67fa45a07ae1536b5768ce470c1d967857e78927e"
+    },
+    "CPU-TENSOR-REUSE.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/CPU-TENSOR-REUSE.json",
+      "sha256": "4d08cf54f17d7f6e792769cae1e78a0622ddcff0f1617aaa880ac65cdbf3db78"
+    },
+    "GPU-194-EXECUTION-SEAL.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/GPU-194-EXECUTION-SEAL.json",
+      "sha256": "d65b91dca159b6673e38f28e3db8f5d66e46a8636dfd37f69aa88741c248f028"
+    },
+    "NATIVE-DRAFT-PREFLIGHT-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/NATIVE-DRAFT-PREFLIGHT-CHECKS.json",
+      "sha256": "aae261961b6f920b193380f7214f3b5941fb780924c4a5d5968744dab50c4ad9"
+    },
+    "NATIVE-SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/NATIVE-SOURCE-INVENTORY.json",
+      "sha256": "46152e3c4374d415de755defce983f7bb1054025efc0356a924dd343e56fa49a"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/PUBLIC-CHECKS.json",
+      "sha256": "cea5bbd94c397fd74362658f2e08ea0d3e80d88ec1833b7db834371abf9c367e"
+    },
+    "SOURCE-SEALS.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/SOURCE-SEALS.json",
+      "sha256": "d057efb05b709e28e6ca92562b1f5d13f70c291d10aa2397502a46c2bce5f4bd"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/STATIC-CHECKS.json",
+      "sha256": "a1e2b1f8fd15061e5900ee2344753ab65fe30ef83b6eeefe731e1428047d21e1"
+    },
+    "instrumented-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-campaign-checks.json",
+      "sha256": "b0ac08ad159765f7772af9e359539ab77daccbd1bc1df098716f373cb9da5bd2"
+    },
+    "instrumented-packet-check.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-packet-check.json",
+      "sha256": "32c5bae119b12f11d36606e5664bc277a303f1a3f6111e908df612f39a6d3862"
+    },
+    "native-checks.log": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/native-checks.log",
+      "sha256": "071dbdac54b3238067dbf1b585554971f6ffdcb98dd1fe1f284a98a4a44ffaa1"
+    },
+    "native-draft-preflight-checks.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/native-draft-preflight-checks.json",
+      "sha256": "aae261961b6f920b193380f7214f3b5941fb780924c4a5d5968744dab50c4ad9"
+    },
+    "production-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/production-campaign-checks.json",
+      "sha256": "b0ac08ad159765f7772af9e359539ab77daccbd1bc1df098716f373cb9da5bd2"
+    },
+    "production-packet-check.json": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/production-packet-check.json",
+      "sha256": "3345a3b1d02c1d7b6fda6150f85854b4f80ba237986adc457fe4cceb1b652d92"
+    },
+    "public-make.log": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/public-make.log",
+      "sha256": "d54cbf3d13a7f14165c4397cff42292d1ad487cf8ce7bf57e4cd30d1219805de"
+    },
+    "unit-draft.log": {
+      "path": ".test-build/serving-cleanup/selected-draft-preflight-v1/unit-draft.log",
+      "sha256": "9e94d9a1415c6ae95c250e2a4ae542f8900bacf3f21afd6bf5ec7a1cbd8c97bf"
+    }
+  },
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed",
+    "passed": true,
+    "python_tests": 1021,
+    "suites": 84
+  },
+  "published_proposal_sha256": "9025f559fcae0999fe962493d7c448cf41d2a531642ab9eb1e2437378c1c860b",
+  "remaining": [
+    "Fresh exact approval for instrumented packet e201110200000095",
+    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Production comparison and final retained evidence closeout"
+  ],
+  "root_cause": "Selected preweight startup eagerly requested the retired none draft summary before resolving the enabled DFlash2 draft metadata",
+  "runtime_patch_removes_one_line": true,
+  "schema": 1,
+  "static_checks": {
+    "ast_symtable_compile_modules": 305,
+    "changed_worker_and_protected_python_sources": [
+      "worker_entry.py"
+    ],
+    "only_removed_retired_summary_initialization": true,
+    "passed": true,
+    "protected_inventory_unchanged": true,
+    "runtime_patch_forward_reverse_exact": true,
+    "unchanged_python_sources": 60
+  },
+  "status": "CPU_SELECTED_DRAFT_PREFLIGHT_FIXED_FRESH_GPU_APPROVAL_PENDING",
+  "tested_proposal_sha256": "4b1b21dfe26250396885a7a73f3da6cb84cf3b96cbe60a343ae56029c15e2c86",
+  "unchanged_python_sources": 60
+}

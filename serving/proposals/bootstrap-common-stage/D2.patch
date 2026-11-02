@@ -1,0 +1,11 @@
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -760,7 +760,7 @@
+         'root transport/package identity differs')
+     trusted = {name: root_source(source_root / name, manifest['package_files']['review/' + name])
+         for name in ('host_process_owner.py', 'benchmark_release_observer.py',
+-                     'collect_benchmark_platform.py', 'benchmark_artifacts.py')}
++                     'collect_benchmark_platform.py', 'benchmark_artifacts.py', 'spry_common_canon.py')}
+     artifacts = authenticated_module('spry_root_bounded_capture', source_root / 'benchmark_artifacts.py',
+         trusted['benchmark_artifacts.py'])
+     artifact_limits = artifacts.HTTPArtifactLimits.from_limits(decode(members[manifest['run_config']])['limits'])

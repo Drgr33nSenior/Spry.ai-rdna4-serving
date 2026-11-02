@@ -1,0 +1,36 @@
+{
+  "compact_head_shape": [
+    256,
+    128
+  ],
+  "execution_seal": {
+    "manifest_sha256": "1d8573c4ee5bf9d63a7614e20003f138b7a7ba9345467d2c383252f72e835dfe",
+    "members": 33,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/tensor-review-v1/execution-v1"
+  },
+  "gpu_work": false,
+  "head_quantizer_calls": [
+    1,
+    0
+  ],
+  "independent_release_verified": true,
+  "model_starts": 0,
+  "native_quantizer_or_kernel_equivalence": false,
+  "packed_shapes": [
+    [
+      8192,
+      2560
+    ],
+    [
+      48,
+      2560
+    ]
+  ],
+  "passed": true,
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "schema": 1,
+  "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes",
+  "status": "REAL_CPU_TENSOR_STRUCTURE_AND_INDEPENDENT_RELEASE_PASS",
+  "torch": "2.14.0+git2e66fe81.rocm10.2.0",
+  "transport_seconds": 18.168420125264674
+}

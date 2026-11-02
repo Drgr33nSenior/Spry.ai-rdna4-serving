@@ -1,0 +1,23 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -349,10 +349,7 @@
+         need(spec.get('context_length') == spec.get('physical_slots') == context and
+              spec.get('server_args', {}).get('context_length') == context and
+              http.get('client_seconds') == session_timing.client_seconds, 'final phase context/client binding')
+-        expected_devices = {
+-            "0000:c3:00.0": {"uuid": "39373864-6465-3038-6163-303837666533", "render": "/dev/dri/renderD128"},
+-            "0000:23:00.0": {"uuid": "34663466-6561-3362-3832-346261366439", "render": "/dev/dri/renderD129"},
+-        }
++        expected_devices = configured['host']['devices']
+         http_fields = {"schema", "mode", "bindings", "client_seconds", "expected_devices"}
+         if mtp_contract.settings()['phase'] in mtp_contract.FAIL_FAST_PHASES or mtp_contract.precision_reference_enabled():
+             http_fields.add('diagnostic_environment')
+@@ -953,7 +950,7 @@
+     verify_unchanged({'stamps': stamps})
+     need(clock() < deadline, 'configured spec verification deadline')
+     return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing,
+-            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits), 'menu': menu}
++            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits), 'menu': menu, 'host': host}
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,

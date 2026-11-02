@@ -1,0 +1,64 @@
+{
+  "added_lines": 0,
+  "baseline_protected_files": {
+    "benchmark_artifacts.py": "b602a28620aeee26d84f1ca313debaf4ea0dc545abe84fb9714767cf4e1b6f02",
+    "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "benchmark_host_transport.py": "a7a889351af95c9439b5b059b734c8afd158fff5ddfe5ec130f066fd1a8e0578",
+    "benchmark_owner_adapter.py": "c615e847aec7ed5c52dd5651ce3e9b1c63c3130f5620da9c5d1994de30fc1e47",
+    "benchmark_physical_controller.py": "6787350efccf418190f82f0a83793169e588629780ef63e10f936cd20051784e",
+    "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+  },
+  "baseline_protected_set_sha256": "ffda4f37c20ac88bb7c71840ae764e1a5c960ca0e192e59f7a35c35e1cdf3b31",
+  "baseline_sha256": "6787350efccf418190f82f0a83793169e588629780ef63e10f936cd20051784e",
+  "changed_file": "review/benchmark_physical_controller.py",
+  "config_migration_applied": false,
+  "entire_D1_complete": false,
+  "launch_authorized": false,
+  "owner_approved": false,
+  "package_inventory_changed": false,
+  "patch_sha256": "2ba2c92d4a073bb1ec7547fb2c4044f5bb5cc7761d95b9d20beaa794d82a5078",
+  "proposed_protected_files": {
+    "benchmark_artifacts.py": "b602a28620aeee26d84f1ca313debaf4ea0dc545abe84fb9714767cf4e1b6f02",
+    "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "benchmark_host_transport.py": "a7a889351af95c9439b5b059b734c8afd158fff5ddfe5ec130f066fd1a8e0578",
+    "benchmark_owner_adapter.py": "c615e847aec7ed5c52dd5651ce3e9b1c63c3130f5620da9c5d1994de30fc1e47",
+    "benchmark_physical_controller.py": "5d5c0e5489d21858c6055fe17af997448a20e75fb60f39603758f7a81a84d9ac",
+    "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+  },
+  "proposed_protected_set_sha256": "f5e68b8c4f3ea9e5623ffb6d8f20de01104c2edf54a0c0345abb26d61f335f7c",
+  "proposed_sha256": "5d5c0e5489d21858c6055fe17af997448a20e75fb60f39603758f7a81a84d9ac",
+  "protected_set_encoding": "review/ path keys; canonical JSON with trailing newline",
+  "removed_donor_line_ranges": [
+    {
+      "first": 62,
+      "last": 73
+    },
+    {
+      "first": 78,
+      "last": 81
+    },
+    {
+      "first": 101,
+      "last": 122
+    },
+    {
+      "first": 125,
+      "last": 128
+    },
+    {
+      "first": 786,
+      "last": 790
+    }
+  ],
+  "removed_lines": 47,
+  "schema": 1,
+  "selected_phase": "sprint01-paired-serving",
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "status": "PROPOSAL_ONLY"
+}

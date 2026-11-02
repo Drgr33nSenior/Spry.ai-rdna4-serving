@@ -1,0 +1,53 @@
+{
+  "acceptance_guards_changed": false,
+  "checkpoint": {
+    "path": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-544.json",
+    "sha256": "0c8d8c743ac2b1a0e8a2236993bd7f5ae9a97f1a61f092f7ab72dff015a55f3e"
+  },
+  "execution_seal": {
+    "manifest_sha256": "d767f928c62582cbb507dec3885359d84a02b796b9cb9748415338bae216de0c",
+    "members": 115,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/execution-v1"
+  },
+  "independent_gpu_release_verified": true,
+  "local_pty_probe": {
+    "elapsed_seconds": 960.4439245410003,
+    "full_campaign_durability_not_proven": true,
+    "gpu_work": false,
+    "heartbeat_rows": 97,
+    "last_heartbeat_seconds": 960.3865652089999,
+    "native_work": false,
+    "network_work": false,
+    "passed": true,
+    "pty": true
+  },
+  "local_pty_probe_seal": {
+    "manifest_sha256": "d56b4151e73c0cf7d49d8d034d363a30e1ee0cd1fdfe0e6bc846df4210c401b9",
+    "members": 6,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/caller-durability-v1"
+  },
+  "native_decode_or_grade_performed": false,
+  "offline_readout_failures_retained": [
+    "Receipt-envelope lookup assumed the later chunk layout; corrected to the reference source mapping",
+    "Collection continuation read protected_root from the grant; failed before dispatch, corrected to authenticated bindings in recovery-v2",
+    "Offline finalizer first used the outer power-post receipt name; corrected to actual helper receipt path"
+  ],
+  "operation": 198,
+  "original_local_caller_complete": false,
+  "original_native_source_unchanged": true,
+  "original_operation_fully_replayed": false,
+  "original_response_inspector_used": true,
+  "quality_grading_eligible": false,
+  "raw_http_receipts_recomputed": true,
+  "retry_authorized": false,
+  "schema": 1,
+  "source_closure_verified": true,
+  "status": "INTERRUPTED_REFERENCE_NATIVE_RECORDS_RETAINED_TOKEN_IDENTITY_AND_GPU_RELEASE_VERIFIED",
+  "token_comparison": {
+    "path": "TOKEN-COMPARISON.json",
+    "sha256": "79ff371b13151c90b5d3aee93a007aa39ce4f8331af8a52edf7abab082a8beb8"
+  },
+  "token_vectors_compared": 352,
+  "token_vectors_matched": 352,
+  "whole_cleanup_complete": false
+}

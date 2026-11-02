@@ -1,0 +1,233 @@
+{
+  "complete_cleanup": false,
+  "launch_authorized": false,
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 164
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "archive": {
+      "archive_members": 80,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "determinism": {
+      "content_sha256": "4a466ecd4cde841f3563904157ab9800b6d14cdd0a22a7b8a67adeb6bfd0a711",
+      "identical_file_bytes": true,
+      "package_members": 81
+    },
+    "fixture_scope": "Finite CPU producer/reader capacity fixtures; no native arithmetic or quality result",
+    "passed": true,
+    "payload_delta": {
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "PROTECTED-SHA256.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/benchmark_host_transport.py",
+        "review/isolated_scheme.py",
+        "review/mtp_contract.py",
+        "review/ops.py",
+        "review/worker_entry.py"
+      ],
+      "native_execution": false,
+      "request_settings_model_stack_and_overlays_byte_identical": true,
+      "unchanged_files": 69
+    },
+    "tests": 11
+  },
+  "post_test_record_change": "cpu_verified changed from false to true only; execution authority remains false",
+  "proofs": {
+    "PATCH-ROUNDTRIP.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/PATCH-ROUNDTRIP.json",
+      "sha256": "de4582f6c9991f83bd71fff1737585ab077fabee1655f36b7a9ea4c0bb76dd55"
+    },
+    "PUBLIC-CHECKS-FINAL.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/PUBLIC-CHECKS-FINAL.json",
+      "sha256": "9f076aed974bd589c51b837dd98aa6f02a053741fa17e77ab09038ef65ac5c61"
+    },
+    "full-chain-attempt-2.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/full-chain-attempt-2.json",
+      "sha256": "6f445394d9d91bbba45013b41d554b21a9033cd04b47de1a8d51f1722bb27c80"
+    },
+    "full-chain-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/full-chain-attempt-2.log",
+      "sha256": "2938bb83193dd32d37fede679f6610fe4cc82a2fba9fbb1bb5f0fadb469ebcd8"
+    },
+    "native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "f44eb8c3d588e953e143076fad8f8d92642c04c3472df888c0ec70aa0f376536"
+    },
+    "native-source-preflight-v2/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/native-source-preflight-v2/SOURCE-INVENTORY.json",
+      "sha256": "4c2804b9f049b0a2f244d5efc4c590b569cd9db8da3dc534e3b6227d40483696"
+    },
+    "native-source-preflight-v2/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/native-source-preflight-v2/native-cpu-source-preflight.json",
+      "sha256": "746bf70ac9cf663d14bdf201b4cb6ca5280a4ab43d5ac90802aa80aac35ff9d4"
+    },
+    "proposal-docs-audit-final.log": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/proposal-docs-audit-final.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/public-make-attempt-2.log",
+      "sha256": "b87b2956c1eefb6493b7d5585d73513c98afdc5dfa0451b6841ee583b7e82e5f"
+    },
+    "serving-docs-audit-final.log": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/serving-docs-audit-final.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "source-review-v2/SOURCE-REVIEW.json": {
+      "path": ".test-build/serving-cleanup/runtime-binding-v1/source-review-v2/SOURCE-REVIEW.json",
+      "sha256": "2ef6ea0f1f22655338f8231fa9e3ae267ee4267745b3b75c75e28925d724389f"
+    }
+  },
+  "protected_set_sha256": "f9776e5c2a5fae3a7318a3dab55a1d18b7e48b90bcff463d1aa9b80e64f4e689",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers_passed": true,
+    "passed": true,
+    "python_tests": 902,
+    "suites": 71
+  },
+  "published_proposal_sha256": "feb1238a4fef2f25470922524d4722afcc5f6464946e976df88ce8db5bea6096",
+  "quality_for_new_source_graded": false,
+  "remaining": [
+    "Fresh exact protected-source review and one-use native serving/token-ID/quality qualification",
+    "Repeated startup source hashing and remaining module/package closure",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Shared FP8 head and packed QKVZ/BA views after refactors",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "retained_superseded_attempts": {
+    "paths": [
+      "full-chain-attempt-1.json",
+      "public-make-attempt-1.log",
+      "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json"
+    ],
+    "reason": "Source review found the initial worker class-factory binding preceded native rank device selection. Binding moved to scheme instance construction and a rank-one regression was added. Earlier passing results do not qualify the corrected source."
+  },
+  "runtime_binding": {
+    "cold_calls_refuse": true,
+    "kernel_frontend_bodies_changed": false,
+    "one_resolution_per_device": true,
+    "per_call_current_device_and_tensor_validation": true,
+    "phase": "scheme instance construction after native rank device selection",
+    "retained_objects": "module references only",
+    "tests": 9
+  },
+  "runtime_changes": {
+    "isolated_scheme.py": {
+      "baseline_sha256": "f396186d36fa83812d7d3d4ec538e47588d3513a06e9996539e1481bebe8c185",
+      "proposed_sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "mtp_contract.py": {
+      "baseline_sha256": "a914c8b4e89a85bf70122c1a6f10985d1c55831fcbaee9ad83601307b8c2d67d",
+      "proposed_sha256": "1956863b99e25993d46f937a330b6fb19fb6512e3d604520af633a82d2a2348e"
+    },
+    "ops.py": {
+      "baseline_sha256": "66d25968516c6c9509923ad363a291d57d192918f1e7121f96481202391c3776",
+      "proposed_sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "worker_entry.py": {
+      "baseline_sha256": "eb8ad2a02d23f4b89b93f51337019c734b50f9ce37dbe4b3891accf17dd2e257",
+      "proposed_sha256": "e7d1a1f3a051dd237cbcfaa570b10a1febc3811a0e02a2bfe0d88c800a367259"
+    }
+  },
+  "schema": 1,
+  "source_review": {
+    "content_sha256": "da8161e97002afbaf241991f6f1f6db386762349988c980aded9b502737c6760",
+    "launch_authorized": false,
+    "maximum_model_starts": 0,
+    "proposed_package_members": 80,
+    "status": "PROPOSAL_REVIEW_ONLY"
+  },
+  "sources": {
+    "isolated_scheme.py": {
+      "file": "spry_serving/scheme.py",
+      "sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "mtp_contract.py": {
+      "file": "spry_serving/runtime_contract.py",
+      "sha256": "1956863b99e25993d46f937a330b6fb19fb6512e3d604520af633a82d2a2348e"
+    },
+    "ops.py": {
+      "file": "spry_serving/ops.py",
+      "sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "prefill_reference.py": {
+      "file": "spry_serving/prefill_reference.py",
+      "sha256": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887"
+    },
+    "request_receipts.py": {
+      "file": "spry_evidence/receipts.py",
+      "sha256": "72f8f6fecc09a4bc1721f037c44ea42f652c923f8aa7d326a2f854d940248c8e"
+    },
+    "serving_client.py": {
+      "file": "spry_evidence/client.py",
+      "sha256": "dadaa41497cd95211b39c2002f45bd4bbe15fdd89d658c0fd8eea880f2cfd6a6"
+    },
+    "serving_contract.py": {
+      "file": "spry_evidence/contract.py",
+      "sha256": "6882c2056f7ac9432308385c8a9db2021601dfad60e5754c668bb64c5e4616b2"
+    },
+    "serving_reader.py": {
+      "file": "spry_evidence/reader.py",
+      "sha256": "dfb39f84cfab5d65bc62bdb3105831146a56387a59711cd8971fbfbf2282a686"
+    },
+    "worker_entry.py": {
+      "file": "spry_serving/worker_entry.py",
+      "sha256": "e7d1a1f3a051dd237cbcfaa570b10a1febc3811a0e02a2bfe0d88c800a367259"
+    }
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 179,
+    "docs_audits": "Both READMEs passed with no technical-writing findings",
+    "native_runtime_imported": false
+  },
+  "status": "CPU_RUNTIME_BINDING_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+  "tested_proposal_sha256": "fe822e1f5199d81dc4e264e00eeab77d618e4de21ea4fad30326817967eabf03"
+}

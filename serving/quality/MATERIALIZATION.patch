@@ -1,0 +1,50 @@
+--- a/prepare_packet.py
++++ b/prepare_packet.py
+@@ -1,6 +1,6 @@
+ """Materialize the existing CPU packet after a separate complete serving/release readout.
+ 
+-This function validates the full352-row data contract and creates an inert packet.
++This function validates the declared paired-menu data contract and creates an inert packet.
+ It does NOT authenticate physical serving release, authorize execution, register an
+ operation or contact the host. Root must bind actual readout/release provenance
+ before using the existing execution branch. Synthetic fixture packets are never
+@@ -71,7 +71,7 @@
+     files['QUALITY-CPU-INPUT.json']=q.sha(input_raw)
+     donor=q.strict((ROOT/'donor/PACKAGE.json').read_bytes())
+     package=dict(donor,mode=q.MODE,payload='tokenizer_entry.py',
+-        final_quality=dict(decoder_runs=1,rows=352,grader_runs=0,input_bytes=q.INPUT_LIMIT,report_bytes=q.REPORT_LIMIT),
++        final_quality=dict(decoder_runs=1,rows=len(value['rows']),grader_runs=0,input_bytes=q.INPUT_LIMIT,report_bytes=q.REPORT_LIMIT),
+         remote_root='/home/developer/fp8-kv-benchmark.'+secrets.token_hex(8),sources=files)
+     package.pop('tokenization',None)
+     with (source/'PACKAGE.json').open('xb') as stream:stream.write(q.encoded(package))
+@@ -88,7 +88,7 @@
+     workstation.PROGRAMME=PROGRAMME
+     plan=workstation.prepare(source)
+     proof=dict(schema=1,status='SOURCE_PACKET_ONLY_PENDING_COMPLETE_SERVING_RELEASE_BINDING',
+-        fixture=fixture,input_sha256=q.sha(input_raw),input_bytes=len(input_raw),rows=352,cancellations=0,
++        fixture=fixture,input_sha256=q.sha(input_raw),input_bytes=len(input_raw),rows=len(value['rows']),cancellations=0,
+         template_inventory_sha256=q.sha((ROOT/'TEMPLATE-INVENTORY.json').read_bytes()) if (ROOT/'TEMPLATE-INVENTORY.json').exists() else None,
+         input_semantics_validated=True,physical_release_authenticated=False,
+         native_decode='NOT RUN',quality='NOT RUN',precision_accepted=False,execution_authorized=False,
+--- a/source/common.py
++++ b/source/common.py
+@@ -82,6 +82,8 @@
+     value = validate_contract(json.loads(data))
+     for name,digest in value['sources'].items():
+         checked_file(ROOT/name, digest, maximum=(53 << 20) if name=='QUALITY-CPU-INPUT.json' else (2 << 20))
++    expected=json.loads((ROOT/'EXPECTED-QUALITY.json').read_bytes())
++    assert type(expected) is list and len(expected)==value['final_quality']['rows'], 'declared quality menu row count'
+     return value
+ 
+ def runtime_identities(package, base):
+@@ -93,7 +95,9 @@
+ def validate_contract(value):
+     assert type(value)is dict and type(value['schema'])is int and value['schema']==1
+     assert value['mode']==MODE and value['qualification']is False and value['allow_gpu']is False and value['model_starts']==0 and type(value['model_starts'])is int
+-    assert value['payload']=='tokenizer_entry.py'and value['final_quality']==dict(decoder_runs=1,rows=352,grader_runs=0,input_bytes=55574528,report_bytes=4194304)
++    rows=value['final_quality']['rows']
++    assert type(rows) is int and 0<rows<=704 and rows%2==0
++    assert value['payload']=='tokenizer_entry.py'and value['final_quality']==dict(decoder_runs=1,rows=rows,grader_runs=0,input_bytes=55574528,report_bytes=4194304)
+     assert value['worker_seconds']==210 and value['source_seconds']==60 and value['total_seconds']==320
+     assert value['cpu_properties']==['CPUQuota=200%','MemoryMax=4294967296','MemorySwapMax=0','TasksMax=128']
+     assert type(value['sources'])is dict and REQUIRED_SOURCES==set(value['sources'])and len(value['sources'])<=64

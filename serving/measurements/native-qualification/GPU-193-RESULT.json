@@ -1,0 +1,71 @@
+{
+  "caller_seconds_charged": 79,
+  "closed_scopes": [
+    {
+      "absent": true,
+      "arm": "bf16",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-8cd16d5086335eae-bf16.scope",
+      "observed_monotonic": 154921.569098212
+    }
+  ],
+  "correction": "proposals/preweight-source-pins/PROPOSAL.json",
+  "deployed": false,
+  "execution_seal": {
+    "manifest_sha256": "6c55f7faa24cf7756deebe305e5417b71e97daaef52e4ffe4fb0c0edf4d68f61",
+    "members": 21,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-template-pins-v1/instrumented-pair-v1/cleanup/execution-v1"
+  },
+  "failure": "ServingRuntimeError: preweight helper source map differs: gpu_identity",
+  "fresh_packet": "e201110200000091",
+  "fresh_packet_approved": false,
+  "independent_gpu_release_verified": true,
+  "mismatches": [
+    {
+      "actual_sha256": "0492f5d19c5cd2ce26fa3adb326df91c2aa2683a622afb3c4ad16f876f7d506f",
+      "arm": "control",
+      "declared_sha256": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+      "path": "/mnt/review/benchmark_gpu_identity.py",
+      "role": "gpu_identity"
+    },
+    {
+      "actual_sha256": "0492f5d19c5cd2ce26fa3adb326df91c2aa2683a622afb3c4ad16f876f7d506f",
+      "arm": "mtp",
+      "declared_sha256": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+      "path": "/mnt/review/benchmark_gpu_identity.py",
+      "role": "gpu_identity"
+    }
+  ],
+  "model_construction_reached": false,
+  "native_startup_byte_proof": false,
+  "nonce": "e201110200000088",
+  "operation": 193,
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 73,
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 0,
+  "retry_authorized": false,
+  "schema": 1,
+  "seals": {
+    "operation": {
+      "manifest_sha256": "220e26b7a415a849d6e548689478b792bac948eed76c9474faced4472dbb901d",
+      "members": 191,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-template-pins-v1/instrumented-pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "179ff10c1f718a47e51cd71fb27b05ef6f7bd99a6f3907dfdfaef5c122a63545",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-template-pins-v1/instrumented-pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e201110200000088"
+    },
+    "workload": {
+      "manifest_sha256": "70258a495cdc8ed70aa77e171dec6aa2d70f412d1232fdb61b3ed3d6ca8c1316",
+      "members": 91,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-template-pins-v1/instrumented-pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e201110200000088"
+    }
+  },
+  "second_arm_started": false,
+  "source_selection_changed": false,
+  "status": "INSTRUMENTED_CANDIDATE_PREWEIGHT_SOURCE_REFUSAL_PARKED",
+  "worker_start_attempts": 1
+}

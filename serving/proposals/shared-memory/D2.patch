@@ -1,0 +1,55 @@
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -321,25 +321,26 @@
+ 
+ 
+ MXFP4_FILES = {'review/__init__.py': '39cd59ab506e69df4cb77664d67392e6c510174be5eeb61c172e291b47c59539',
+- 'review/isolated_scheme.py': '132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6',
++ 'review/isolated_scheme.py': '5c4068a835ba7762d83acc49ecf4e8ca96afd907a84dab12fcea4445b3defe16',
+  'review/kernels.py': '5571b10654697561455081455b6cd28d43314702f56c80160ef2e33e535b3693',
+  'review/ops.py': '0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85',
+  'review/prefill_reference.py': 'cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887',
+  'review/private_selection.py': 'e0120a933d0848de1fd82135274deac4ca850af82715112a2a1bfa94107c52ed'}
+ P1_FILES = {
+  "review/p1_fp8_kernels.py": "0d2919277f8cd0f2196e3b93f89444f434310841b7cedc935d02c5cd2ebbfcb1",
+- "review/p1_prefill.py": "c2aec66e246119f879c3afcf10c39ce0aa9f9e36e2baa596e56a8f0bc572d5fc"
++ "review/p1_prefill.py": "50e239f2fb65e2484330a456a979eaeaeb27901816d82fa4818393d138692a0e"
+ }
+ 
+ D3B_TARGET_FILES = {
+  "review/d3b_head_fp8_kernels.py": "32522a45ccb6bf11b887427257853f6af38ced5b1fb9e188fd49ed4867055c51",
+  "review/d3b_head_fp8_ops.py": "4814926eb6294f76d29516ad68f78271d1cf879c0de3815554d8044cd8251770",
+  "review/d3b_head_launches.py": "e88da9ee318a5e0fac1282a757e7c4282cfddd0b97a8c160419732e42e15a442",
+- "review/d3b_target_head_adapter.py": "88721f70837b6775bdabcca9bf9b9f44cac5c84da804699f864e0b080108bee4"
++ "review/d3b_target_head_adapter.py": "dfd57322f2d2ecfdc6096a8785435d69d22f1d3d58b61324d704d4cc9023e181"
+ }
+ POST_LOAD_FILES = {
+  "review/d3b_combined_model_runner.py": "034212ae8dae8d0eba591787bb53adadb7c331ba9f676ea517a4c8a834ab63da",
+- "review/spry_post_load.py": "84634fd9c4a5ffcac71643bb7263f8c71cd41e5206e4dda89fec331d26d890ed"
++ "review/spry_post_load.py": "6fb145e0bf5638e12c9da4ba68ba5524bc02080b3e3fd61194bc437f61ff068e",
++ "review/spry_fp8_head.py": "eba54bb8495e2df4042b5c0bea07cf4da38fbd6eec92891359bd46ca51d0d671"
+ }
+ 
+ 
+@@ -370,8 +371,8 @@
+         need(expected.get('review/qwen3_5_candidate.py') == '2a76ddea9a380dd8e8fd71a8919fc4aadae702ec5c5f35bd052c614ed07a78e8' and
+              sha(members.get('review/qwen3_5_candidate.py', b'')) == '2a76ddea9a380dd8e8fd71a8919fc4aadae702ec5c5f35bd052c614ed07a78e8',
+              'exact GDN copy model source closure required')
+-        need(expected.get('review/d3b_head_adapter.py') == 'd0eb6f467f29b24079254d5b5cdd0101291ae6e0a5e6f92ad2ed9798123ca942' and
+-             sha(members.get('review/d3b_head_adapter.py', b'')) == 'd0eb6f467f29b24079254d5b5cdd0101291ae6e0a5e6f92ad2ed9798123ca942',
++        need(expected.get('review/d3b_head_adapter.py') == '2be5a50c5d9c2c44716b98e9ae58865dcc497a3cd51f17495df25893cef2b584' and
++             sha(members.get('review/d3b_head_adapter.py', b'')) == '2be5a50c5d9c2c44716b98e9ae58865dcc497a3cd51f17495df25893cef2b584',
+              'exact current drafter-head source closure required')
+         need(all(expected.get(name) == pin and sha(members.get(name, b'')) == pin
+                  for name, pin in POST_LOAD_FILES.items()),
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -50,7 +50,7 @@
+                                    "verify_benchmark_runtime.py")
+ LIVE_SOURCE_NAMES += ('callback_profile.py', 'stall_trace.py')
+ LIVE_SOURCE_NAMES += ('spry_common_canon.py', 'graph_outer.py', 'graph_full_cuda_graph_backend.py')
+-LIVE_SOURCE_NAMES += ('spry_post_load.py',)
++LIVE_SOURCE_NAMES += ('spry_post_load.py', 'spry_fp8_head.py')
+ LIVE_SOURCE_NAMES += ('serving_contract.py', 'serving_client.py', 'serving_reader.py', 'serving_integration.py',
+                       'serving_projection.py', 'serving_entry.py', 'serving_launcher.py', 'worker_entry.py',
+                       'serving_runtime.py', 'serving_graph_observer.py', 'mtp_contract.py', 'serving_parity.py')

@@ -1,0 +1,322 @@
+{
+  "actual_campaign_checks": {
+    "instrumented": 6,
+    "passed": true,
+    "production": 6
+  },
+  "actual_worker_checks": {
+    "instrumented/baseline": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual worker source authentication loop before device/model admission"
+    },
+    "instrumented/cleanup": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual worker source authentication loop before device/model admission"
+    },
+    "production/baseline": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 37,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual worker source authentication loop before device/model admission"
+    },
+    "production/cleanup": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "expected_error": "expected device binding differs",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 38,
+          "production_evidence_mask_applied": true,
+          "stock_image_sources_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual worker source authentication loop before device/model admission"
+    },
+    "retained_failure": {
+      "arms": [
+        {
+          "actual_private_file_hashing": true,
+          "arm": "control",
+          "expected_error": "template source changed",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 14,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true
+        },
+        {
+          "actual_private_file_hashing": true,
+          "arm": "mtp",
+          "expected_error": "template source changed",
+          "gpu_work": false,
+          "model_construction": false,
+          "private_sources_checked": 14,
+          "production_evidence_mask_applied": false,
+          "stock_image_sources_substituted": true
+        }
+      ],
+      "native_serving_or_quality_proven": false,
+      "passed": true,
+      "scope": "actual worker source authentication loop before device/model admission"
+    }
+  },
+  "all_61_worker_and_protected_python_sources_unchanged": true,
+  "all_ten_protected_inventory_members_unchanged": true,
+  "complete_cleanup": false,
+  "consumed_native_attempt": {
+    "caller_seconds_charged": 80,
+    "execution_seal": {
+      "manifest_sha256": "ee543a4b91d4e8e340a9438808d6c4b5ec165b5b822ad962929f4443f55d75e1",
+      "members": 15,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/bootstrap-common-stage-v1/instrumented-pair-v1/cleanup/execution-v1"
+    },
+    "independent_gpu_release_verified": true,
+    "model_construction_reached": false,
+    "operation": 192,
+    "owner_seconds_charged": 75,
+    "responses": 0,
+    "status": "INSTRUMENTED_CANDIDATE_TEMPLATE_SOURCE_REFUSAL_PARKED",
+    "worker_start_attempts": 1
+  },
+  "correction": "Use the same source-binding refresh in the base builder and after final proposal replacements",
+  "cpu_tensor_gate_reused": true,
+  "default_builder": {
+    "changed_non_payload_records": [
+      "SOURCE-BUILD.json"
+    ],
+    "native_payload_byte_identical": true,
+    "native_payload_files": 78,
+    "passed": true
+  },
+  "exact_root_archive_prefix_passed": true,
+  "fresh_candidate": {
+    "archive_members": 79,
+    "native_execution_authorized": false,
+    "nonce": "e201110200000088",
+    "owner_review_sha256": "f72257b736db248f8e7e2367522d6203d380080f603bde0964499ba692e8a653",
+    "protected_set_sha256": "12eec6f8b63b486a218ad2d489ed966073894405e2e86f8306a9999c16a91f06",
+    "source_seal": {
+      "manifest_sha256": "d6ddd21269f6720cd183ec6d584529700140321a0822e770912b46b5f766c4a8",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-template-pins-v1/instrumented-pair-v1/cleanup/author"
+    }
+  },
+  "kernels_requests_settings_and_pools_changed": false,
+  "native_bundle_deduplication": {
+    "ceiling_changed": false,
+    "changed_old_data_files": [
+      "BENCHMARK-SPEC2.json",
+      "HTTP-BINDING-control.json",
+      "HTTP-BINDING-mtp.json",
+      "RESOURCE-MANIFEST.json"
+    ],
+    "delta_bytes": 1175722,
+    "method": "Reuse exact common review bytes and apply bounded recorded data replacements; authenticate the complete reconstructed old review against its original manifest",
+    "native_invocation_on_failed_packaging": false,
+    "reason": "Three complete archives exceeded the 16MiB uncompressed source transfer cap before SSH invocation",
+    "retained_all_old_review_files": true,
+    "retained_all_tests": true
+  },
+  "native_focused_source_checks": {
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "subprocess_denied": true,
+    "tests": 9
+  },
+  "native_gpu_allowance": 0,
+  "native_source_transfer": {
+    "ceiling_bytes": 16777216,
+    "gzip_bytes": 11838519,
+    "tar_bytes": 13045760
+  },
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "post_test_change": "cpu_verified false to true only",
+  "proofs": {
+    "DEFAULT-BUILDER-PARITY.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/DEFAULT-BUILDER-PARITY.json",
+      "sha256": "620415797d286197968e7b0d62efe82c47da4825183a0c6ff8920e5d892a64e2"
+    },
+    "NATIVE-BUNDLE-DEDUPLICATION.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/NATIVE-BUNDLE-DEDUPLICATION.json",
+      "sha256": "644e5fcf3fb051e346cacfb48b67fbae4da36ea8794d4a1c25ad360bcdf11649"
+    },
+    "NATIVE-SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/NATIVE-SOURCE-INVENTORY.json",
+      "sha256": "4454ecbb94015510035759b10116bcb2189aea9353de543c6acd6d3cc0c0455c"
+    },
+    "NATIVE-TEMPLATE-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/NATIVE-TEMPLATE-CHECKS.json",
+      "sha256": "c19f044368d0fec36a3124b1935c7ba954c168a5345d7137d3bc1badcf537871"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/PUBLIC-CHECKS.json",
+      "sha256": "272e9f1c08422aa5c689f5cb1d792d95594de6bcd750ee00bda340c586d6377e"
+    },
+    "SOURCE-SEALS.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/SOURCE-SEALS.json",
+      "sha256": "ee2b002abcd8810b40f6a2a25a3d5c570a8a63cfa607d12daebfce9b26bb4020"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/STATIC-CHECKS.json",
+      "sha256": "4428249ee9ef122148cc43202bff30a08ddece9f24f1974980b449b06461af40"
+    },
+    "WORKER-SOURCE-CHECK-FINAL.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/WORKER-SOURCE-CHECK-FINAL.json",
+      "sha256": "b7cedd0517abd39599ef6c819403065a7f1d0742eccf6651ae73b9e8f8bdb50b"
+    },
+    "instrumented-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/instrumented-campaign-checks.json",
+      "sha256": "297a5f41fe8086c7f3aacac2a776d7840ed36f32c86043f194cca677a760cb04"
+    },
+    "instrumented-packet-check.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/instrumented-packet-check.json",
+      "sha256": "32c5bae119b12f11d36606e5664bc277a303f1a3f6111e908df612f39a6d3862"
+    },
+    "native-bundle-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/native-bundle-attempt-1.log",
+      "sha256": "ea82f9b25517570309bda2b96905b6394a1fa49f43515ee53d6493ad4a739f00"
+    },
+    "native-checks-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/native-checks-attempt-2.log",
+      "sha256": "8bb3adddb4f9bc436bdff770f2b40fc2aa91ae77d526e11806999f40a9bf7206"
+    },
+    "native-template-source-checks.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/native-template-source-checks.json",
+      "sha256": "49552dd5c7f7791c3cbcd9c40247def6586ffda69f55c6c341ae4582a7fcb328"
+    },
+    "production-campaign-checks.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/production-campaign-checks.json",
+      "sha256": "297a5f41fe8086c7f3aacac2a776d7840ed36f32c86043f194cca677a760cb04"
+    },
+    "production-packet-check.json": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/production-packet-check.json",
+      "sha256": "3345a3b1d02c1d7b6fda6150f85854b4f80ba237986adc457fe4cceb1b652d92"
+    },
+    "public-make.log": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/public-make.log",
+      "sha256": "cc9713d5a87a600380db1f8daa1653552280707a84763307edc424f79b2c486f"
+    },
+    "unit-history.log": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/unit-history.log",
+      "sha256": "52c055be39cc8c149cfafbbca07165aa65b0a35abf35ce038a32c554a25906f9"
+    },
+    "unit-pins.log": {
+      "path": ".test-build/serving-cleanup/final-template-pins-v1/unit-pins.log",
+      "sha256": "bedc69ddc63d77b75aa91e9bcf59e11e843e0e5c863c8a442612f7e6ff898ba2"
+    }
+  },
+  "protected_python_sources_changed": false,
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed",
+    "passed": true,
+    "python_tests": 1011,
+    "suites": 83
+  },
+  "published_proposal_sha256": "502e9ca2c9376458ae8f2867c3a3ddb48a94aa03e2e58c0f07263d8593d8d138",
+  "remaining": [
+    "Fresh exact approval for instrumented packet e201110200000088",
+    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Production comparison and final retained evidence closeout"
+  ],
+  "root_cause": "The base builder refreshed HTTP source pins before the proposer replaced protected helpers; gpu_identity retained its earlier digest",
+  "schema": 1,
+  "static_checks": {
+    "ast_symtable_compile_modules": 302,
+    "changed_builder_proposer_and_tests_match_native_snapshot": true,
+    "passed": true,
+    "source_patch_forward_reverse_exact": true,
+    "worker_and_protected_python_sources_changed": false
+  },
+  "status": "CPU_FINAL_TEMPLATE_SOURCE_BINDINGS_FIXED_FRESH_GPU_APPROVAL_PENDING",
+  "tested_proposal_sha256": "6c75c43a6d38cc1664f29ec7220b353e0b60e741b16c0f0d5235c8c1770e1141",
+  "worker_python_sources_changed": false
+}

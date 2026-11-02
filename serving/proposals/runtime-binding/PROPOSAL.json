@@ -1,0 +1,138 @@
+{
+  "baseline_proposal": "../configuration-mutations/PROPOSAL.json",
+  "boot_independent_manifest_schema": 3,
+  "changed_file": "review/benchmark_host_transport.py",
+  "changes": {
+    "review/benchmark_host_transport.py": {
+      "baseline_sha256": "9265483dad0cf426307a8024ceaf61dad9a634beb93638690bd924d639e08bcf",
+      "proposed_sha256": "ca79912ea812b554c1c32c0dd787e4fd616fd3566969223067ab0e02755d9b82"
+    }
+  },
+  "client_binding_schema": 2,
+  "configuration_mutations_supported": true,
+  "consumed_by_builder": false,
+  "cpu_verified": true,
+  "direct_source_changes": {
+    "propose_packet.py": {
+      "baseline_sha256": "ff5a4a357f0e2f58081536382b8baf4996dbeed817fc68bf5e72776df1f3ae15",
+      "proposed_sha256": "e241929fc05d8b033a04e808e7701a284245d575a7b46a325325a64f1c47d1dc"
+    }
+  },
+  "entire_cleanup_complete": false,
+  "implementation_sources": {
+    "build.py": "49e37bd91297f9ec76aaff7fb21131ba53ecb9894472e4a92b66eaf47c66220d",
+    "propose_packet.py": "e241929fc05d8b033a04e808e7701a284245d575a7b46a325325a64f1c47d1dc",
+    "run_config.py": "f49d9c42fe1a55b568224cbfcf179d4ecd83373981c7b1e93600d13ba5c5dea9"
+  },
+  "instrumented_decode_log_interval": 1,
+  "kernel_frontend_bodies_changed": false,
+  "launch_authorized": false,
+  "native_execution_performed": false,
+  "owner_adapter_proposal": "../evidence-capacity/review/benchmark_owner_adapter.py",
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "patch_sha256": "a5aac3cef02195591b3f3265cf4713d9fa238d7c86da86f862018b6d2339ae71",
+  "path": "proposals/runtime-binding",
+  "production_decode_log_interval": 100,
+  "production_evidence_mount_isolation": true,
+  "proposed_sha256": "ca79912ea812b554c1c32c0dd787e4fd616fd3566969223067ab0e02755d9b82",
+  "protected_files": {
+    "benchmark_artifacts.py": "851a121161d7a76b391d8a9b052aa84984e798e4e223b8c19c6e36a45f53a11e",
+    "benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "benchmark_host_transport.py": "ca79912ea812b554c1c32c0dd787e4fd616fd3566969223067ab0e02755d9b82",
+    "benchmark_owner_adapter.py": "a5a244a8ae8823ba6bd0061ec63af6a56424efd0489258af0e97fa1794b9f614",
+    "benchmark_physical_controller.py": "01f3f523e28a741e1a482a35984a1ebdb2c6cc795111e08dd2e5bdd95bfc6f03",
+    "benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3"
+  },
+  "protected_set_sha256": "f9776e5c2a5fae3a7318a3dab55a1d18b7e48b90bcff463d1aa9b80e64f4e689",
+  "quality_sources": {
+    "compare_measurement.py": "678af1eeae2fb7e934bb4c7108845bf222df2cf4b5bbbd196bdbcd8ea2a62091",
+    "prepare_gpu_run.py": "d62ca69ba9b40ff20b8d10eb2e9de3bd7d035e11383b10f59f392679040bbb09",
+    "quality/bind_future.py": "619775fe082adfae2e59c5ea1c9f31cc5b38f0ef0f0fd1402e5f7ee2168cedc3",
+    "quality/common.py": "361ebd742b1ed49c4dbd75385126b57ee913ce8344ce8903e2b7095e3d3fd17d",
+    "quality/cpu_readout.py": "097d7ce70e34609a8ab8aac94ac4b838a9809ec8ae14cecd6e459ba71dc698ea",
+    "quality/final_quality_inputs.py": "0f3c25eb314b0972f97c4c84355e421bc9ab504bab21cb6073850825aed69478",
+    "quality/prepare_packet.py": "7ac5e3448834dc25a3c86fe8039f9bde8b46ea3cde58b1e547788e6721c4d1b1",
+    "quality/quality_contract.py": "9c59ccdbffcd5c11e2c6c649770d8262b9998863029dbeec5991dae165ea56da",
+    "quality/quality_stages.py": "8ace9cf62fe248452a7fe6bb8f85be1e947c2f93eba24bc9babea4dd356da62e",
+    "quality/retained_replay.py": "5117888fb86155459a7f4130ca843d593bb9df5687cee74e57a16d3fc879fd3a",
+    "quality/tokenizer_entry.py": "a14c950dc2bd649191d0680d5967d8477e522527876ca195133026f2522cac09"
+  },
+  "receipt_chunk_requests": 3,
+  "receipt_codec_schema": 3,
+  "receipt_outer_codec": "bounded zlib of complete canonical v3 chunk envelope",
+  "runtime_binding_after_device_selection": true,
+  "runtime_binding_at_startup": true,
+  "runtime_changes": {
+    "isolated_scheme.py": {
+      "baseline_sha256": "f396186d36fa83812d7d3d4ec538e47588d3513a06e9996539e1481bebe8c185",
+      "proposed_sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "mtp_contract.py": {
+      "baseline_sha256": "a914c8b4e89a85bf70122c1a6f10985d1c55831fcbaee9ad83601307b8c2d67d",
+      "proposed_sha256": "1956863b99e25993d46f937a330b6fb19fb6512e3d604520af633a82d2a2348e"
+    },
+    "ops.py": {
+      "baseline_sha256": "66d25968516c6c9509923ad363a291d57d192918f1e7121f96481202391c3776",
+      "proposed_sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "worker_entry.py": {
+      "baseline_sha256": "eb8ad2a02d23f4b89b93f51337019c734b50f9ce37dbe4b3891accf17dd2e257",
+      "proposed_sha256": "e7d1a1f3a051dd237cbcfaa570b10a1febc3811a0e02a2bfe0d88c800a367259"
+    }
+  },
+  "runtime_patch_sha256": "645e219e2110ca85184c9921f0beebcf0505675f201f255a455a4bf86ec1b7e4",
+  "schema": 1,
+  "scope": "Bind admitted MXFP4 runtime modules and architecture during scheme construction after native device selection; preserve all launch frontends and per-call device/layout/storage checks",
+  "source_changes": {
+    "propose_packet.py": {
+      "baseline_sha256": "ff5a4a357f0e2f58081536382b8baf4996dbeed817fc68bf5e72776df1f3ae15",
+      "proposed_sha256": "e241929fc05d8b033a04e808e7701a284245d575a7b46a325325a64f1c47d1dc"
+    }
+  },
+  "source_files": {
+    "isolated_scheme.py": {
+      "file": "spry_serving/scheme.py",
+      "sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "mtp_contract.py": {
+      "file": "spry_serving/runtime_contract.py",
+      "sha256": "1956863b99e25993d46f937a330b6fb19fb6512e3d604520af633a82d2a2348e"
+    },
+    "ops.py": {
+      "file": "spry_serving/ops.py",
+      "sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "prefill_reference.py": {
+      "file": "spry_serving/prefill_reference.py",
+      "sha256": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887"
+    },
+    "request_receipts.py": {
+      "file": "spry_evidence/receipts.py",
+      "sha256": "72f8f6fecc09a4bc1721f037c44ea42f652c923f8aa7d326a2f854d940248c8e"
+    },
+    "serving_client.py": {
+      "file": "spry_evidence/client.py",
+      "sha256": "dadaa41497cd95211b39c2002f45bd4bbe15fdd89d658c0fd8eea880f2cfd6a6"
+    },
+    "serving_contract.py": {
+      "file": "spry_evidence/contract.py",
+      "sha256": "6882c2056f7ac9432308385c8a9db2021601dfad60e5754c668bb64c5e4616b2"
+    },
+    "serving_reader.py": {
+      "file": "spry_evidence/reader.py",
+      "sha256": "dfb39f84cfab5d65bc62bdb3105831146a56387a59711cd8971fbfbf2282a686"
+    },
+    "worker_entry.py": {
+      "file": "spry_serving/worker_entry.py",
+      "sha256": "e7d1a1f3a051dd237cbcfaa570b10a1febc3811a0e02a2bfe0d88c800a367259"
+    }
+  },
+  "source_patch_sha256": "792b36e0dd3f4c58c9f94164260bccf5f9361da4083cb804d8d1bc1e1bb99355",
+  "source_review_only": true,
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "status": "PROPOSAL_REVIEW_ONLY"
+}

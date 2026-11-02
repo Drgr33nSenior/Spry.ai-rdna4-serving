@@ -1,0 +1,1147 @@
+{
+  "actual_worker_client_timing": {
+    "cases": [
+      {
+        "arm": "bf16",
+        "client_deadline": 2140,
+        "client_seconds": 2040,
+        "ready": 100,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2280
+      },
+      {
+        "arm": "bf16",
+        "client_deadline": 2380,
+        "client_seconds": 2040,
+        "ready": 500,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2280
+      },
+      {
+        "arm": "bf16",
+        "client_deadline": 2040,
+        "client_seconds": 1940,
+        "ready": 100,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2180
+      },
+      {
+        "arm": "bf16",
+        "client_deadline": 2280,
+        "client_seconds": 1940,
+        "ready": 500,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2180
+      },
+      {
+        "arm": "kv4",
+        "client_deadline": 2140,
+        "client_seconds": 2040,
+        "ready": 100,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2280
+      },
+      {
+        "arm": "kv4",
+        "client_deadline": 2380,
+        "client_seconds": 2040,
+        "ready": 500,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2280
+      },
+      {
+        "arm": "kv4",
+        "client_deadline": 2040,
+        "client_seconds": 1940,
+        "ready": 100,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2180
+      },
+      {
+        "arm": "kv4",
+        "client_deadline": 2280,
+        "client_seconds": 1940,
+        "ready": 500,
+        "socket_expiry_refused": true,
+        "worker_seconds": 2180
+      }
+    ],
+    "modules_imported_through_authenticated_chain": true,
+    "source_bytes_unchanged": true,
+    "substitutes": [
+      "virtual template paths",
+      "native HIP readiness",
+      "clock",
+      "HTTP request execution"
+    ],
+    "whole_run_config_mutations_supported": false
+  },
+  "adapter_only_shorter_worker": {
+    "adapter_complete": true,
+    "arm_envelope_seconds": 2390,
+    "arms": [
+      {
+        "arm": "bf16",
+        "inner_complete": true,
+        "release_verified": true
+      },
+      {
+        "arm": "kv4",
+        "inner_complete": true,
+        "release_verified": true
+      }
+    ],
+    "calls": [
+      "bf16",
+      "kv4"
+    ],
+    "cleanup_errors": [],
+    "collection_reserve_seconds": 330,
+    "deadlines": {
+      "admission": 1075,
+      "independent": 7060,
+      "release": {
+        "bf16": 3390,
+        "kv4": 3390
+      },
+      "supervision": {
+        "bf16": {
+          "kill_end": 3355,
+          "reap_end": 3360,
+          "term_end": 3350,
+          "work_end": 3330
+        },
+        "kv4": {
+          "kill_end": 3355,
+          "reap_end": 3360,
+          "term_end": 3350,
+          "work_end": 3330
+        }
+      }
+    },
+    "failure": null,
+    "fd_closed": true,
+    "independent_release_verified": true,
+    "journal_retained": false,
+    "physical_campaign_complete": false,
+    "qualification": false,
+    "status": "HOST_OWNER_ADAPTER_COMPLETE",
+    "unresolved": false
+  },
+  "archive": {
+    "ceiling": 80,
+    "configured_seal_reserve_seconds": 300,
+    "configured_total_seconds": 6360,
+    "inspected": true,
+    "member_81_refused": true,
+    "members": 80,
+    "owner_ceilings_changed": false,
+    "staged": true,
+    "synthetic_grant_accepted": true,
+    "timing_grant_refusals": 7
+  },
+  "artifact_helper_sha256": "47b973c406dc833d1d1f42a4ca0840c277c78dafe2d5b9cfd3fbe4e8c3301aa6",
+  "baseline_owner_campaign": {
+    "adapter_complete": true,
+    "arm_envelope_seconds": 2490,
+    "arms": [
+      {
+        "arm": "bf16",
+        "inner_complete": true,
+        "release_verified": true
+      },
+      {
+        "arm": "kv4",
+        "inner_complete": true,
+        "release_verified": true
+      }
+    ],
+    "calls": [
+      "bf16",
+      "kv4"
+    ],
+    "cleanup_errors": [],
+    "collection_reserve_seconds": 330,
+    "deadlines": {
+      "admission": 1075,
+      "independent": 7060,
+      "release": {
+        "bf16": 3490,
+        "kv4": 3490
+      },
+      "supervision": {
+        "bf16": {
+          "kill_end": 3455,
+          "reap_end": 3460,
+          "term_end": 3450,
+          "work_end": 3430
+        },
+        "kv4": {
+          "kill_end": 3455,
+          "reap_end": 3460,
+          "term_end": 3450,
+          "work_end": 3430
+        }
+      }
+    },
+    "failure": null,
+    "fd_closed": true,
+    "independent_release_verified": true,
+    "journal_retained": false,
+    "physical_campaign_complete": false,
+    "qualification": false,
+    "status": "HOST_OWNER_ADAPTER_COMPLETE",
+    "unresolved": false
+  },
+  "configuration_refusals": {
+    "reapproved_unsupported_run": true,
+    "wrong_approval_pins": 3
+  },
+  "configured_artifact_primaries_verified": 16,
+  "configured_controller_seal": {
+    "charged_seconds": 6360,
+    "exclusive_seal_and_closeout_written": true,
+    "original_receipt": 100,
+    "seal_deadline": 6460,
+    "verified_plan": true
+  },
+  "consumed_by_builder": false,
+  "contract_equal_comparisons": 134,
+  "contract_intentional_differences": 1,
+  "contract_test_source_sha256": "8a43b1c34e8c9e6bb0af70e8d125d8a18cfb7e08dd422a3cda582530fee36d4b",
+  "contract_tests": 15,
+  "controller_sha256": "5d53dc483890c398711a03897c2dc6fd6435ced539008761566680a0af989de6",
+  "controller_timing_arguments": {
+    "active_deadline": 7060,
+    "original_receipt": 1000,
+    "preparation_deadline": 1105,
+    "stopped_before_lease": true,
+    "substitutes": [
+      "prepared pre-launch result",
+      "scope argv",
+      "campaign endpoint"
+    ],
+    "verified_owner_plan": true
+  },
+  "corrected_fixture_failures": [
+    "Resolve the macOS /var symlink in the temporary test root.",
+    "Assert the intentional production-default difference instead of byte equality for that one comparison.",
+    "Synchronize fake concurrent HTTP responses; real client clocks and production overlap validation are unchanged."
+  ],
+  "exact_patch_verified": true,
+  "extracted_source_refusals": {
+    "before_staging": true,
+    "changed": 4,
+    "missing": 4
+  },
+  "fixture_adapter_patch_path": "../d2-spec-binding/FIXTURE-ADAPTER.patch",
+  "fixture_adapter_patch_sha256": "8863a9f6b058e215e5b485ba55d20f89dea019b71348a9dba49518186b82142b",
+  "fixture_adapter_sha256": "af0c708a976ace303a473578babffe89192a60ce37eaf0b48832c1ffbb789ba6",
+  "fixture_sha256": {
+    "test_controller_binding.py": "abd292c3a7d2574483f7fb9638584c48800dc284e82d73d9e9a4e4176edb99c6",
+    "w5_evidence.py": "624d1721ca179e037c79aec736a00bbe57751c509bc3bfd497c8ef609383f4c5"
+  },
+  "focused_tests": 249,
+  "full_prelaunch_completed": false,
+  "inherited_checker_sha256": "44590fd988c9c568e342618ff8106114f227242a5aa788571e8523d9ad34df56",
+  "inherited_owner_checker_sha256": "102cc6f74d218b53fef878dc32bd6049c1c01699b846c04aa9a8f8305b07fc16",
+  "inherited_session_checker_sha256": "f5e10c2d6cf684c7a22b533f924352dbfe151401ea3cf4b4b22abd7292204b3d",
+  "inherited_spec_checker_sha256": "aaddab0c4f7cf643dd9606e09ccb5bb190f2624a7b32be42f808fadf524dfcab",
+  "inherited_worker_checker_sha256": "c26c0ff31ca92aad8591e793082710d8d6209a74eca6ad85862dce0a97007bf7",
+  "intentional_difference": "Absent instrumentation now selects production; explicit on/production preserved.",
+  "inventory": {
+    "active_overlay_bytes_unchanged": true,
+    "configured_archive_members": 80,
+    "original_builder_protected_set": true,
+    "review_members": 75,
+    "source_names": 46
+  },
+  "launch_authorized": false,
+  "logs": {
+    ".test-build/serving-cleanup/artifact-limits/contract-current.log": "13e634cea667485ac835c1f3a6bf2271b88966b518397f90544b8af288e36484",
+    ".test-build/serving-cleanup/artifact-limits/contract-final.log": "7676ebdbceb5f1e5d20603b4014e9e55e1b46388967e28d82a1f553fc678da81",
+    ".test-build/serving-cleanup/artifact-limits/make-test.log": "26de177f928872483c82a4628d4362d051a5957cf733e2cb859db5347274b52f",
+    ".test-build/serving-cleanup/artifact-limits/migration-docs-audit.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/artifact-limits/packet-current.log": "90ee37f91b7fcf91ffc816a8930c9d8f02056099f6c1004acbaba99546f0cd86",
+    ".test-build/serving-cleanup/artifact-limits/packet-final.log": "2b0fa123074ce04420c84157f6e8b6fcdb3d3f9b40caf86a80c731dc20df6d06",
+    ".test-build/serving-cleanup/artifact-limits/packet-synchronized.log": "13524ff98c953be72a65c27c365c9b3b66e86788229e5088ab4aa746ff42a786",
+    ".test-build/serving-cleanup/artifact-limits/production-default.log": "a9b5e56016fbd9f3bf16167cc7fb267ea806983b4e24d983fe19d3ee6b8a3119",
+    ".test-build/serving-cleanup/artifact-limits/proposal-docs-audit.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/artifact-limits/readme-docs-audit.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/artifact-limits/targeted-1.log": "d21d23150001f95ac51bb942854e0d9a85c56af65e74f293765db85587684635",
+    ".test-build/serving-cleanup/artifact-limits/unit-attempt-1.log": "3da99c82e38df2899c09be96d3d94c4363e5e8d7a254edb81105c4f1f9c267d0",
+    ".test-build/serving-cleanup/artifact-limits/unit-final-2.log": "08a60dac237a4ba05e96c2652de63507dc6425dace93980fafbaea8cb375fdc4",
+    ".test-build/serving-cleanup/artifact-limits/unit-final.log": "6bcff959599846e933e967bdf286d95d803a422b5ba6099b7d2e4789bf608c95",
+    ".test-build/serving-cleanup/artifact-limits/upstream-inventory.log": "5165696965dc966a6b02ea927edf3e45a960b6f31fe625b417f1127d412d21ac"
+  },
+  "minimum_measured_margin": 1.59,
+  "native_runtime_tested": false,
+  "omitted_donor_members": {
+    "CAPTURE-BUILD-PROOF.json": "b9990bf8ab5053621c60225275a42fb61e6b2b17cb4b661e3acbb1dc2e845960",
+    "STOCK-BUILD-PROOF.json": "3d9d603b39f0aa297711bf5abca379933dcbccc7ec060a282404af39f7d40384",
+    "batch_telemetry.py": "0619773ea3ba5730381ef9dee0424d4488e69e8b33943e12b00b8d64a5720c74",
+    "cache_profile.py": "256250bc43c4dfd7146f14f60b03bfa09f7d3648dd5f5e9c3298e4edb34851e5",
+    "capture_model_runner.py": "5e2325bb08930cdffa55cc9d944cb1dc589b662c42de821eb391c82c8bdf37de",
+    "divergence_capture.py": "4e091d46696a25ea43ad2da930debef5bd3f67ea95df3d8dc478f7914d831255",
+    "prefill_row_audit.py": "4d35da70f4923fd34ce144d49f187be9ad2f6a36271659a7c35e5634f943c52e",
+    "prepare_benchmark_package.py": "1bc2fef5646ec5ee02f914dc34cd2ef4ed8e24cd7ba6c6f7434af9d18914b6fe"
+  },
+  "oversized_member_checker_sha256": "e5b7a951b36fc711c5c891d961bf05b95639359b2709936fc851c8838c771a7f",
+  "oversized_member_refusal": "artifact shape/size/hash",
+  "owner_adapter_sha256": "91d3d9f7426afc68fbd8d35cf8de5132e903ff467d82ffcbee59ca025c09d3be",
+  "owner_adapter_unchanged": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "owner_failure_cases": {
+    "bad_admission": {
+      "adapter_complete": false,
+      "arm_envelope_seconds": 2490,
+      "arms": [],
+      "calls": [],
+      "cleanup_errors": [
+        "AssertionError: False is not true : journal must survive until independent acceptance"
+      ],
+      "collection_reserve_seconds": 330,
+      "deadlines": {
+        "admission": 1075,
+        "independent": 7060,
+        "release": {},
+        "supervision": {}
+      },
+      "failure": "OwnerError: owned reserved journal differs",
+      "fd_closed": true,
+      "independent_release_verified": false,
+      "journal_retained": false,
+      "physical_campaign_complete": false,
+      "qualification": false,
+      "status": "HOST_OWNER_ADAPTER_INCOMPLETE",
+      "unresolved": false
+    },
+    "bad_independent": {
+      "adapter_complete": false,
+      "arm_envelope_seconds": 2490,
+      "arms": [
+        {
+          "arm": "bf16",
+          "inner_complete": true,
+          "release_verified": true
+        },
+        {
+          "arm": "kv4",
+          "inner_complete": true,
+          "release_verified": true
+        }
+      ],
+      "calls": [
+        "bf16",
+        "kv4"
+      ],
+      "cleanup_errors": [
+        "OwnerError: holder release is uncertain"
+      ],
+      "collection_reserve_seconds": 330,
+      "deadlines": {
+        "admission": 1075,
+        "independent": 7060,
+        "release": {
+          "bf16": 3490,
+          "kv4": 3490
+        },
+        "supervision": {
+          "bf16": {
+            "kill_end": 3455,
+            "reap_end": 3460,
+            "term_end": 3450,
+            "work_end": 3430
+          },
+          "kv4": {
+            "kill_end": 3455,
+            "reap_end": 3460,
+            "term_end": 3450,
+            "work_end": 3430
+          }
+        }
+      },
+      "failure": null,
+      "fd_closed": true,
+      "independent_release_verified": false,
+      "journal_retained": true,
+      "physical_campaign_complete": false,
+      "qualification": false,
+      "status": "HOST_OWNER_ADAPTER_INCOMPLETE",
+      "unresolved": true
+    },
+    "failed_arm": {
+      "adapter_complete": false,
+      "arm_envelope_seconds": 2490,
+      "arms": [
+        {
+          "arm": "bf16",
+          "inner_complete": false,
+          "release_verified": true
+        }
+      ],
+      "calls": [
+        "bf16"
+      ],
+      "cleanup_errors": [],
+      "collection_reserve_seconds": 330,
+      "deadlines": {
+        "admission": 1075,
+        "independent": 7060,
+        "release": {
+          "bf16": 3490
+        },
+        "supervision": {
+          "bf16": {
+            "kill_end": 3455,
+            "reap_end": 3460,
+            "term_end": 3450,
+            "work_end": 3430
+          }
+        }
+      },
+      "failure": "OwnerError: arm failed; no replacement or second arm",
+      "fd_closed": true,
+      "independent_release_verified": true,
+      "journal_retained": false,
+      "physical_campaign_complete": false,
+      "qualification": false,
+      "status": "HOST_OWNER_ADAPTER_INCOMPLETE",
+      "unresolved": false
+    },
+    "uncertain_release": {
+      "adapter_complete": false,
+      "arm_envelope_seconds": 2490,
+      "arms": [
+        {
+          "arm": "bf16",
+          "inner_complete": false,
+          "release_verified": false
+        }
+      ],
+      "calls": [
+        "bf16"
+      ],
+      "cleanup_errors": [
+        "OwnerError: independent finalization is not admissible"
+      ],
+      "collection_reserve_seconds": 330,
+      "deadlines": {
+        "admission": 1075,
+        "independent": 7060,
+        "release": {
+          "bf16": 3490
+        },
+        "supervision": {
+          "bf16": {
+            "kill_end": 3455,
+            "reap_end": 3460,
+            "term_end": 3450,
+            "work_end": 3430
+          }
+        }
+      },
+      "failure": "OwnerError: holder release is uncertain",
+      "fd_closed": true,
+      "independent_release_verified": false,
+      "journal_retained": true,
+      "physical_campaign_complete": false,
+      "qualification": false,
+      "status": "HOST_OWNER_ADAPTER_INCOMPLETE",
+      "unresolved": true
+    }
+  },
+  "owner_fixture_sha256": "8efb19cc5e7ca19e2c14bfb530c7cd43174d5e9606377db0067523bcbcaa83a4",
+  "package_inventory": {
+    "review/ALLOCATION-OVERLAY.json": "305293b4edafdbbd5e6c83c0cdb09630f2d33e9ad17aae5dec27ddd11ab395d4",
+    "review/BENCHMARK-SPEC2.json": "2cf09b27199769f41cc5ec12dfc78973a1a41d57591dae276d52833824487a63",
+    "review/COMMON-STACK-RECEIPT.json": "7ed6b470afbf132619ef21649c79f183c169179d0e706fcba8d8d9f4dd581413",
+    "review/COMPOSITION-FACTS.zlib": "376dcbd9eb70a39684d99e75e270083e45c66436eac51517eecce52642d77021",
+    "review/DRAFT-MODEL.json": "45f82c0840d69a0e68c7e9e340721b183f107c16d1b968bc102010ce070e3a81",
+    "review/FINAL-REQUESTS.zlib": "3990e581b9675f2ee893d3acb7596b4eb129f6128a3b4c87e830f7f3ca23e3aa",
+    "review/FINAL-SETTINGS.json": "099148986068e3d2a01761036f78e4d76d3c366402bfe3ff1e95f5ce327c12c4",
+    "review/GEMM-tail.py": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "review/HTTP-BINDING-control.json": "cfeb436d6cbbf3cfd0f20c88f19f25e40fc5fbbe7eacad0bd83f5deb8bbc9835",
+    "review/HTTP-BINDING-mtp.json": "6d54964555d048c65fb47532fba75f402eadcbb8c0296814b31483b947f7c455",
+    "review/MODEL-INVENTORY.json": "ce21ebd92e8625d6df250c89fafc1159f4ede0ce9eba9ec8ef62990f8431d238",
+    "review/PRECISION-REFERENCE.json": "0b6b37380bc084dd92b0f4319fb69cfc496d6ee7d4464859e766102299152988",
+    "review/RESOURCE-MANIFEST.json": "636624f465d1c6b47e7fea2edea4b7004466e4badd9de318ab220ba75362a5f9",
+    "review/SERVING-STACK.json": "58b6c125db80ab92f9a67f6b919fca58dcc037e648661fef066917f8a8843645",
+    "review/__init__.py": "39cd59ab506e69df4cb77664d67392e6c510174be5eeb61c172e291b47c59539",
+    "review/allocation_sizing_candidate.py": "09eba1769b666722c7a05bc0235290253dde04a96e4c3f864d308c84d8c16f87",
+    "review/analyze_model_benchmark.py": "9856eaa02e79bced866f5f0526dbabee3b00e87f26508d7a4471eabc78b2bc4c",
+    "review/benchmark_artifacts.py": "47b973c406dc833d1d1f42a4ca0840c277c78dafe2d5b9cfd3fbe4e8c3301aa6",
+    "review/benchmark_gpu_identity.py": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+    "review/benchmark_host_transport.py": "5836591ff4de7e4fb9fc694336487fc57901f4ccabe3feca05171987f19942c2",
+    "review/benchmark_owner_adapter.py": "91d3d9f7426afc68fbd8d35cf8de5132e903ff467d82ffcbee59ca025c09d3be",
+    "review/benchmark_physical_controller.py": "5d53dc483890c398711a03897c2dc6fd6435ced539008761566680a0af989de6",
+    "review/benchmark_release_observer.py": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+    "review/benchmark_resource_gate.py": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+    "review/capture_hybrid_linear_attn_backend.py": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+    "review/collect_benchmark_platform.py": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+    "review/context_tokenizer.py": "e0a5a7a1ea41f253ed0fbc08f0bfd83aa5d8037f0ac9f36bac875b5917d43160",
+    "review/d3b_combined_model_runner.py": "da81d4c393cf5910753c48036bedbe593e851ffe0985997f4eca02d79737df76",
+    "review/d3b_head_adapter.py": "d0eb6f467f29b24079254d5b5cdd0101291ae6e0a5e6f92ad2ed9798123ca942",
+    "review/d3b_head_fp8_kernels.py": "32522a45ccb6bf11b887427257853f6af38ced5b1fb9e188fd49ed4867055c51",
+    "review/d3b_head_fp8_ops.py": "4814926eb6294f76d29516ad68f78271d1cf879c0de3815554d8044cd8251770",
+    "review/d3b_head_launches.py": "e88da9ee318a5e0fac1282a757e7c4282cfddd0b97a8c160419732e42e15a442",
+    "review/d3b_target_head_adapter.py": "88721f70837b6775bdabcca9bf9b9f44cac5c84da804699f864e0b080108bee4",
+    "review/decode_attention_fwd_candidate.py": "50476ba1568f3eecfa543b53d0731acde791160c28ebfa833185988549b247ab",
+    "review/dflash_info_v2_candidate.py": "ba5eac1d30ad1a6e3163ba31c66f3c72bbf04e171771d99220eeb5407ce48973",
+    "review/extend_attention_fwd_candidate.py": "4ad29abda7d2e4f97627cfd638c33956118487ec185c3b0cb1f2dd586cceea59",
+    "review/gdn_verify_candidate.py": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+    "review/graph_full_cuda_graph_backend.py": "b5c0f89ef78ffa0d1e77d91fd298d7c1c9ca14673ae16aa6729eba874db435a2",
+    "review/graph_integration.py": "94420c034d841106a9863f8d8cc813cfe11c245f5cb4bacd45e9615a5558cb26",
+    "review/graph_outer.py": "3d88da7ed59e171fcc56cb773a74e7f2b08218a2d635c8403865e189e3a7e2bf",
+    "review/graph_screen.py": "9b5a1431b3d35770b1103a40212353eaea534d50a4b84d5f8be16aac7d56c8be",
+    "review/host_process_owner.py": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3",
+    "review/isolated_scheme.py": "f396186d36fa83812d7d3d4ec538e47588d3513a06e9996539e1481bebe8c185",
+    "review/j01_probe.py": "7662d0f8e417fbe60d8ed7ce8b8242ed1d342addd1f2ed1ad2d5eee3c80305f0",
+    "review/kernels.py": "5571b10654697561455081455b6cd28d43314702f56c80160ef2e33e535b3693",
+    "review/kv_graph_join.py": "032594fad3d41b9aafa6e94e46337eb07512e411e5e1ef2563f0d7e7142a9036",
+    "review/layernorm_p3_candidate.py": "f1855c99386c39802b07dd1848b0d9197994f67181cd1265dbf85b02da513b42",
+    "review/model_benchmark.py": "65dc853d058188b7c8db7a2880342a9f34f5d6ff3dcfd0f64d0813637a4d5d48",
+    "review/mtp_contract.py": "68f7e628eccc768fc5aba626cd9d2adf6ff2b9e530b390cb5c7b151f5c99fff3",
+    "review/observer_health.py": "a2a67f02670a7d9041c181df83f52973f72488e3afdae00782eee39e01974782",
+    "review/ops.py": "66d25968516c6c9509923ad363a291d57d192918f1e7121f96481202391c3776",
+    "review/p1_fp8_kernels.py": "0d2919277f8cd0f2196e3b93f89444f434310841b7cedc935d02c5cd2ebbfcb1",
+    "review/p1_prefill.py": "c2aec66e246119f879c3afcf10c39ce0aa9f9e36e2baa596e56a8f0bc572d5fc",
+    "review/prefill_reference.py": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887",
+    "review/private_selection.py": "e0120a933d0848de1fd82135274deac4ca850af82715112a2a1bfa94107c52ed",
+    "review/qwen3_5_candidate.py": "2a76ddea9a380dd8e8fd71a8919fc4aadae702ec5c5f35bd052c614ed07a78e8",
+    "review/replay_kv_cache_configurator_candidate.py": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+    "review/replay_memory_pool_candidate.py": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+    "review/request_receipts.py": "e5c6e5f1e469b0bf29dfa78f27340b2f7a978b33b3832edc09ddef16917b6357",
+    "review/serving_client.py": "f3487d24ada72a2c228a9783e62c0fa92bc74b92d77edf5cbd294eaa6905a9a6",
+    "review/serving_contract.py": "4cd35766324e8c5f46d2ad4e359d4670e38c7828f766dc316863aa47547590a0",
+    "review/serving_entry.py": "e994edecf87c7387a51504de64016979f4cdc460f5ddeb973a902494b065baee",
+    "review/serving_graph_observer.py": "4320efb65b090ea42c5b192f5c9a28769797e53b99b2c7d3d7149d83ebbecb4e",
+    "review/serving_integration.py": "fbb82bb540e3fe2b3a1feb866736bf172db0a3c8158281f3bbe144ea400f4ce4",
+    "review/serving_launcher.py": "29c162a80514cad9c28a81bae276a60f52a241d77cd0ce3f814ceda9b7d99454",
+    "review/serving_parity.py": "e4517a098c4502c3f2bf9c1d41db3e699cc3e9bf13a459909ca4a9aad9a90ea4",
+    "review/serving_projection.py": "ccdccfeccacedc3e432c91d510b937873ed0af4f94bed41e87945decc1e91921",
+    "review/serving_reader.py": "ec0b63cd0be30dc33a5af1e05a3ea7ae611f5e3e371b8b33fe3419cc3d46ec07",
+    "review/serving_runtime.py": "752d38c281bdfa81e6527fd7e2508a855dfba59b7d8160c96bc600e336152bd1",
+    "review/target_kv_metadata.py": "ba738674476b84dab5307282ee472715b9b088a93da6631a8d1a34e824fc1258",
+    "review/triton_backend_candidate.py": "c68eea50d7512dd7789940c091366fdd837c02304e68eb263d0f1286b1de27e3",
+    "review/validation_comparison.py": "607c5a44c3192329ec7566d0deadeafe5dcfcd7447fa306caa037aa20a7f5d28",
+    "review/verify_benchmark_runtime.py": "3ac5f6fc5cf84c9939ed4452edb68613c0c34b916108950fe55d8ba21b07a414",
+    "review/verify_decode_adapter.py": "731fdc22429376633785c9bd659128eedf0668575bdddbdb29c0e4816703223b",
+    "review/worker_entry.py": "4fde4f4c77c5929cb81290726efcea27a4ce7e95619f87730fa1775bd68616f1"
+  },
+  "passed": true,
+  "patch_sha256": "7763695e43eba89163e791c03d970a2b6a2d23ad92ed93c4ad7e48211566eca5",
+  "performance_improvement_measured": false,
+  "postrun_envelope": {
+    "configuration_verified_before_and_after": true,
+    "decisions": {
+      "bf16": {
+        "cancellation_count": 0,
+        "owner_arm": "bf16",
+        "qualification": false,
+        "request_count": 176,
+        "response_count": 176,
+        "status": "SERVING_SCREEN_COMPLETE",
+        "wire_complete": true
+      },
+      "kv4": {
+        "cancellation_count": 0,
+        "owner_arm": "kv4",
+        "qualification": false,
+        "request_count": 176,
+        "response_count": 176,
+        "status": "SERVING_SCREEN_COMPLETE",
+        "wire_complete": true
+      }
+    },
+    "http_fixture_synchronization": "C2 response barrier; real client clocks and overlap check unchanged",
+    "instrumentation": "production",
+    "length_stop_refusals": {
+      "bf16": "exact source-bound natural-stop response menu required",
+      "kv4": "exact source-bound natural-stop response menu required"
+    },
+    "margins": [
+      {
+        "limits": [
+          {
+            "bytes": 2097152,
+            "where": "serving_client MAX_RESPONSE_BYTES, serving_reader MAX_RAW_BYTES, serving_contract response object"
+          },
+          {
+            "bytes": 4194304,
+            "where": "_kv_receipts field"
+          }
+        ],
+        "margin": 7.913,
+        "measured": 265031,
+        "passes": true,
+        "row": "response.raw (largest)"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 1048576,
+            "where": "mtp_contract request asset, serving_reader request_raw, serving_integration composed body"
+          }
+        ],
+        "margin": 4.434,
+        "measured": 236486,
+        "passes": true,
+        "row": "request.raw (largest)"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 4194304,
+            "where": "_kv_receipts MEMBER_LIMIT"
+          },
+          {
+            "bytes": 8388608,
+            "where": "benchmark_artifacts per-file, serving_integration MAX_MEMBER_BYTES"
+          }
+        ],
+        "margin": 6.245,
+        "measured": 671622,
+        "passes": true,
+        "row": "request receipt (largest)"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 25165824,
+            "where": "_kv_receipts TREE_LIMIT, serving_reader, benchmark_artifacts client tree (protected)"
+          }
+        ],
+        "margin": 1.759,
+        "measured": 14308041,
+        "passes": true,
+        "row": "client tree"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 512,
+            "where": "_kv_receipts FILE_LIMIT, benchmark_artifacts files=512 (protected, W5)"
+          },
+          {
+            "bytes": 528,
+            "where": "serving_reader physical members"
+          }
+        ],
+        "margin": 1.59,
+        "measured": 322,
+        "passes": true,
+        "row": "client tree files"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 8388608,
+            "where": "serving_reader and serving_integration summary reads"
+          }
+        ],
+        "margin": 11.459,
+        "measured": 732071,
+        "passes": true,
+        "row": "RUN-SUMMARY.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 8388608,
+            "where": "HTTP_MEMBER_LIMITS (protected), controller inner read, retained replay"
+          }
+        ],
+        "margin": 5309.246,
+        "measured": 1580,
+        "passes": true,
+        "row": "result.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 4194304,
+            "where": "benchmark_artifacts native tree (protected)"
+          }
+        ],
+        "margin": 30.962,
+        "measured": 135468,
+        "passes": true,
+        "row": "native tree"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 256,
+            "where": "benchmark_artifacts native files (protected, W5)"
+          }
+        ],
+        "margin": 42.667,
+        "measured": 6,
+        "passes": true,
+        "row": "native tree files"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 34603008,
+            "where": "HTTP_MEMBER_LIMITS (protected)"
+          },
+          {
+            "bytes": 37748736,
+            "where": "serving_integration MAX_BUNDLE_BYTES"
+          }
+        ],
+        "margin": 1.809,
+        "measured": 19124990,
+        "passes": true,
+        "row": "http-client-bundle.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 6291456,
+            "where": "HTTP_MEMBER_LIMITS (protected)"
+          }
+        ],
+        "margin": 39.406,
+        "measured": 159657,
+        "passes": true,
+        "row": "native-http-bundle.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 66060288,
+            "where": "bundle_limit / encoded_limit (protected)"
+          }
+        ],
+        "margin": 2.569,
+        "measured": 25715622,
+        "passes": true,
+        "row": "export line"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 67108864,
+            "where": "HTTP_STREAM_LIMIT capture, receive, controller re-read (protected)"
+          }
+        ],
+        "margin": 1.956,
+        "measured": 34307810,
+        "passes": true,
+        "row": "stdout"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 67108864,
+            "where": "HTTP_STREAM_LIMIT (protected)"
+          }
+        ],
+        "margin": 3.453,
+        "measured": 19437625,
+        "passes": true,
+        "row": "stderr"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 8388608,
+            "where": "controller _publish (protected)"
+          }
+        ],
+        "margin": 17.326,
+        "measured": 484159,
+        "passes": true,
+        "row": "published controller result"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 16777216,
+            "where": "mtp_contract / serving_contract decoded request containers"
+          }
+        ],
+        "margin": 2.914,
+        "measured": 5757066,
+        "passes": true,
+        "row": "request containers, decoded"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 2097152,
+            "where": "mtp_contract / serving_contract stored containers"
+          }
+        ],
+        "margin": 3.631,
+        "measured": 577638,
+        "passes": true,
+        "row": "request containers, compressed"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 262144,
+            "where": "mtp_contract settings (W5)"
+          }
+        ],
+        "margin": 2.608,
+        "measured": 100532,
+        "passes": true,
+        "row": "FINAL-SETTINGS.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 55574528,
+            "where": "quality_contract INPUT_LIMIT (CPU grading template)"
+          }
+        ],
+        "margin": 4.416,
+        "measured": 12583890,
+        "passes": true,
+        "row": "quality CPU input"
+      }
+    ],
+    "native_and_process_observations": "retained CPU fixture substitutes",
+    "test_only_spec_pin_substitution": false
+  },
+  "postrun_expected": {
+    "configuration_verified_before_and_after": true,
+    "decisions": {
+      "bf16": {
+        "cancellation_count": 0,
+        "owner_arm": "bf16",
+        "qualification": false,
+        "request_count": 176,
+        "response_count": 176,
+        "status": "SERVING_SCREEN_COMPLETE",
+        "wire_complete": true
+      },
+      "kv4": {
+        "cancellation_count": 0,
+        "owner_arm": "kv4",
+        "qualification": false,
+        "request_count": 176,
+        "response_count": 176,
+        "status": "SERVING_SCREEN_COMPLETE",
+        "wire_complete": true
+      }
+    },
+    "http_fixture_synchronization": "C2 response barrier; real client clocks and overlap check unchanged",
+    "instrumentation": "production",
+    "length_stop_refusals": {
+      "bf16": "exact source-bound natural-stop response menu required",
+      "kv4": "exact source-bound natural-stop response menu required"
+    },
+    "margins": [
+      {
+        "limits": [
+          {
+            "bytes": 2097152,
+            "where": "serving_client MAX_RESPONSE_BYTES, serving_reader MAX_RAW_BYTES, serving_contract response object"
+          },
+          {
+            "bytes": 4194304,
+            "where": "_kv_receipts field"
+          }
+        ],
+        "margin": 8.086,
+        "measured": 259349,
+        "passes": true,
+        "row": "response.raw (largest)"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 1048576,
+            "where": "mtp_contract request asset, serving_reader request_raw, serving_integration composed body"
+          }
+        ],
+        "margin": 4.434,
+        "measured": 236486,
+        "passes": true,
+        "row": "request.raw (largest)"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 4194304,
+            "where": "_kv_receipts MEMBER_LIMIT"
+          },
+          {
+            "bytes": 8388608,
+            "where": "benchmark_artifacts per-file, serving_integration MAX_MEMBER_BYTES"
+          }
+        ],
+        "margin": 6.316,
+        "measured": 664046,
+        "passes": true,
+        "row": "request receipt (largest)"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 25165824,
+            "where": "_kv_receipts TREE_LIMIT, serving_reader, benchmark_artifacts client tree (protected)"
+          }
+        ],
+        "margin": 2.584,
+        "measured": 9737518,
+        "passes": true,
+        "row": "client tree"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 512,
+            "where": "_kv_receipts FILE_LIMIT, benchmark_artifacts files=512 (protected, W5)"
+          },
+          {
+            "bytes": 528,
+            "where": "serving_reader physical members"
+          }
+        ],
+        "margin": 1.59,
+        "measured": 322,
+        "passes": true,
+        "row": "client tree files"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 8388608,
+            "where": "serving_reader and serving_integration summary reads"
+          }
+        ],
+        "margin": 11.447,
+        "measured": 732815,
+        "passes": true,
+        "row": "RUN-SUMMARY.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 8388608,
+            "where": "HTTP_MEMBER_LIMITS (protected), controller inner read, retained replay"
+          }
+        ],
+        "margin": 5309.246,
+        "measured": 1580,
+        "passes": true,
+        "row": "result.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 4194304,
+            "where": "benchmark_artifacts native tree (protected)"
+          }
+        ],
+        "margin": 30.961,
+        "measured": 135469,
+        "passes": true,
+        "row": "native tree"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 256,
+            "where": "benchmark_artifacts native files (protected, W5)"
+          }
+        ],
+        "margin": 42.667,
+        "measured": 6,
+        "passes": true,
+        "row": "native tree files"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 34603008,
+            "where": "HTTP_MEMBER_LIMITS (protected)"
+          },
+          {
+            "bytes": 37748736,
+            "where": "serving_integration MAX_BUNDLE_BYTES"
+          }
+        ],
+        "margin": 2.655,
+        "measured": 13030905,
+        "passes": true,
+        "row": "http-client-bundle.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 6291456,
+            "where": "HTTP_MEMBER_LIMITS (protected)"
+          }
+        ],
+        "margin": 39.405,
+        "measured": 159661,
+        "passes": true,
+        "row": "native-http-bundle.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 66060288,
+            "where": "bundle_limit / encoded_limit (protected)"
+          }
+        ],
+        "margin": 3.756,
+        "measured": 17590243,
+        "passes": true,
+        "row": "export line"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 67108864,
+            "where": "HTTP_STREAM_LIMIT capture, receive, controller re-read (protected)"
+          }
+        ],
+        "margin": 2.563,
+        "measured": 26182431,
+        "passes": true,
+        "row": "stdout"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 67108864,
+            "where": "HTTP_STREAM_LIMIT (protected)"
+          }
+        ],
+        "margin": 3.453,
+        "measured": 19437625,
+        "passes": true,
+        "row": "stderr"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 8388608,
+            "where": "controller _publish (protected)"
+          }
+        ],
+        "margin": 17.326,
+        "measured": 484157,
+        "passes": true,
+        "row": "published controller result"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 16777216,
+            "where": "mtp_contract / serving_contract decoded request containers"
+          }
+        ],
+        "margin": 2.914,
+        "measured": 5757066,
+        "passes": true,
+        "row": "request containers, decoded"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 2097152,
+            "where": "mtp_contract / serving_contract stored containers"
+          }
+        ],
+        "margin": 3.631,
+        "measured": 577638,
+        "passes": true,
+        "row": "request containers, compressed"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 262144,
+            "where": "mtp_contract settings (W5)"
+          }
+        ],
+        "margin": 2.608,
+        "measured": 100532,
+        "passes": true,
+        "row": "FINAL-SETTINGS.json"
+      },
+      {
+        "limits": [
+          {
+            "bytes": 55574528,
+            "where": "quality_contract INPUT_LIMIT (CPU grading template)"
+          }
+        ],
+        "margin": 9.707,
+        "measured": 5725168,
+        "passes": true,
+        "row": "quality CPU input"
+      }
+    ],
+    "native_and_process_observations": "retained CPU fixture substitutes",
+    "test_only_spec_pin_substitution": false
+  },
+  "prelaunch": {
+    "configuration_spec_reproduction": true,
+    "exception": "FileNotFoundError",
+    "full_native_prelaunch_completed": false,
+    "retained_and_configured_boundary_identical": true,
+    "source_statement": "proof, _ = adapter.readout.read_json(runtime / proof_name, value[\"runtime_files\"][proof_name])",
+    "substitutes": [
+      "external root/tree observations",
+      "retained runtime attestation",
+      "external draft model tree"
+    ]
+  },
+  "prelease_timing_refusals": [
+    "missing_plan",
+    "wrong_type",
+    "corrupted_plan",
+    "worker_mismatch",
+    "short_active",
+    "no_admission"
+  ],
+  "proposal_sha256": "69551872c8372871a9630e1fded7b943b4d84138cc64be3bc19d9a1981456295",
+  "protected_set_sha256": "4ce4a72a561faffa290cd2d968c980e7097f9e88bd876bfc6063d84ee9e4eb25",
+  "public_test_source_sha256": "101a2b9a39f011ae83c0208663b37a66bd03428ca74b5460d8fb44e4c69f8673",
+  "public_tests": 13,
+  "raw_report_sha256": "69423862879c6ca3c09d96f786a7c567f01ddee5023668d7223d87b4c0caa62a",
+  "release_validators_unchanged": true,
+  "repository_make_test": "PASS",
+  "repository_python_unittest_count": 686,
+  "required_evidence_margin": 2.0,
+  "shared_runtime_timing_source": "review/benchmark_host_transport.py",
+  "source_bundle_content_sha256": "2148c5e4693500dc9291bfdfaf69d3ed373430777aaf922d21a16cd885646c80",
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "supported_config_mutations": false,
+  "test_only_spec_pin_substitution": false,
+  "test_source_sha256": "ddcbb7e5a5dd2764dce8bb6b1f93c8c79f79a31fa4de702b487dda82204e3abb",
+  "tests": 19,
+  "transport_sha256": "5836591ff4de7e4fb9fc694336487fc57901f4ccabe3feca05171987f19942c2",
+  "transport_unchanged": true,
+  "verified_owner_timing": {
+    "arm_release_seconds": 60,
+    "collection_reserve_seconds": 330,
+    "locked_admission_seconds": 75,
+    "owner_cleanup_seconds": 150,
+    "worker_seconds": 2280
+  },
+  "verified_plan_consumed_by_actual_owner": true,
+  "whole_run_config_mutations_supported": false,
+  "worker_export_config_binding_migrated": false,
+  "worker_source_pins": {
+    "legacy/review/model_benchmark.py": "65dc853d058188b7c8db7a2880342a9f34f5d6ff3dcfd0f64d0813637a4d5d48",
+    "legacy/review/serving_runtime.py": "752d38c281bdfa81e6527fd7e2508a855dfba59b7d8160c96bc600e336152bd1"
+  },
+  "wrong_spec_refusals": {
+    "before_external_proof": true,
+    "before_lease": true,
+    "repinned_cases": 3
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "complete_cleanup": false,
+  "documentation_audits": "Both READMEs passed with no technical-writing findings",
+  "launch_authorized": false,
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 178
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "fixture_scope": "Finite CPU producer/reader capacity fixtures; no native arithmetic or quality result",
+    "packaged_worker_regressions": {
+      "native_execution": false,
+      "passed": true,
+      "source_sha256": "d0d0fb11862099a5491afa50607e0a583e97f0c66c693418db61a71b3bf4e4ad",
+      "tests": 12
+    },
+    "passed": true,
+    "payload_delta": {
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/worker_entry.py"
+      ],
+      "native_execution": false,
+      "protected_helpers_byte_identical": true,
+      "requests_settings_model_stack_kernels_and_overlays_byte_identical": true,
+      "unchanged_files": 74
+    },
+    "runtime_archive": {
+      "archive_members": 80,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "tests": 13
+  },
+  "post_test_record_change": "cpu_verified changed from false to true only; execution authority remains false",
+  "proofs": {
+    "FINAL-SOURCE-MATCH.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/FINAL-SOURCE-MATCH.json",
+      "sha256": "5b2a47eda238caa363d7eea4269bb51f4e25bbc9e3cf738b62e37dd688c4ea68"
+    },
+    "PATCH-ROUNDTRIP.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/PATCH-ROUNDTRIP.json",
+      "sha256": "c1c27d6d6bdc0c35419d1a15e71b9ef5e1be9c787a94d601b56e55c5e72c51b7"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/PUBLIC-CHECKS.json",
+      "sha256": "9a3055b8b26accb78f0b2bd4a1b933e27d0d76adff55a4927a57ee1fbe1be5ab"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/STATIC-CHECKS.json",
+      "sha256": "a39ac7f33b646075b58e3b2c74375bef5f81ac14b790882f664a58370d4906fd"
+    },
+    "TESTED-SOURCE-MATCH.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/TESTED-SOURCE-MATCH.json",
+      "sha256": "16559f83f1a2a90a79713eaf0fb81d8266330e51b258137cb02bd3e10777ad77"
+    },
+    "full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/full-chain-attempt-1.json",
+      "sha256": "a4398a30ac558d44d631a0956d8abd08450edd2657615a09b9d2ee8d047bad21"
+    },
+    "full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/full-chain-attempt-1.log",
+      "sha256": "642138563af50ddaf0e6a01d55038a2299624726e1bb76909fc16826ccea2cbf"
+    },
+    "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "9ae96b7c6972df38346ba9584e2c0ad13a0842d457553b48bad5f88c542468f0"
+    },
+    "native-source-preflight-v1/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/native-source-preflight-v1/SOURCE-INVENTORY.json",
+      "sha256": "db3213c6546518a4a5c1e72b5cf44b495e1eb79b22e0b12f0c5c1737aaf1c86f"
+    },
+    "native-source-preflight-v1/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/native-source-preflight-v1/native-cpu-source-preflight.json",
+      "sha256": "92ca37cf08489d3adca0c6f0513fa1a12154a6bee84ef9ae282c6b107a42db24"
+    },
+    "packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/packet-attempt-1.json",
+      "sha256": "ee11a807b69c1a9d8fc08e8769f77f50a15771366b0b690407c078789ff9b7c6"
+    },
+    "proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/public-make-attempt-1.log",
+      "sha256": "5f6beb113c04875d646ed5efd117f497b8cc5c4502b0b8109bb2ae50a34a8732"
+    },
+    "serving-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/serving-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "source-review-v1/SOURCE-REVIEW.json": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/source-review-v1/SOURCE-REVIEW.json",
+      "sha256": "5f777b22f927c9309c113ac67eb38c7ceb74421ecc85d45ae16133da7a3c74f1"
+    },
+    "unit-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/startup-digests-v1/unit-attempt-2.log",
+      "sha256": "24a491c5786fcf0d8a243b799ac3f98f52eb94417d60d583aeaef9b84aba23e7"
+    }
+  },
+  "protected_helpers_changed": false,
+  "protected_set_sha256": "f9776e5c2a5fae3a7318a3dab55a1d18b7e48b90bcff463d1aa9b80e64f4e689",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers_passed": true,
+    "log_sha256": "5f6beb113c04875d646ed5efd117f497b8cc5c4502b0b8109bb2ae50a34a8732",
+    "passed": true,
+    "python_tests": 914,
+    "suites": 72
+  },
+  "published_proposal_sha256": "461d79cf1131f9341c622c46fde097311290931822d2c8eb0d1c097c43bd4967",
+  "quality_for_new_source_graded": false,
+  "remaining": [
+    "Exact source review and fresh one-use native serving/token-ID/quality qualification, including live read-only source-cache behavior",
+    "Remaining shared helpers, compatibility APIs and canonical module/package closure",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Startup tensor validation scans and item synchronization after the runner refactor",
+    "Shared FP8 head and packed QKVZ/BA views after refactors",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "retained_failures": [],
+  "runtime_changes": {
+    "worker_entry.py": {
+      "baseline_sha256": "e7d1a1f3a051dd237cbcfaa570b10a1febc3811a0e02a2bfe0d88c800a367259",
+      "proposed_sha256": "d0d0fb11862099a5491afa50607e0a583e97f0c66c693418db61a71b3bf4e4ad"
+    }
+  },
+  "schema": 1,
+  "source_review": {
+    "content_sha256": "813861a6a4736a7186a819300375729993cf3d6bee5b94862b774b2afd42c170",
+    "launch_authorized": false,
+    "maximum_model_starts": 0,
+    "proposed_package_members": 80,
+    "status": "PROPOSAL_REVIEW_ONLY"
+  },
+  "sources": {
+    "isolated_scheme.py": {
+      "file": "spry_serving/scheme.py",
+      "sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "mtp_contract.py": {
+      "file": "spry_serving/runtime_contract.py",
+      "sha256": "1956863b99e25993d46f937a330b6fb19fb6512e3d604520af633a82d2a2348e"
+    },
+    "ops.py": {
+      "file": "spry_serving/ops.py",
+      "sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "prefill_reference.py": {
+      "file": "spry_serving/prefill_reference.py",
+      "sha256": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887"
+    },
+    "request_receipts.py": {
+      "file": "spry_evidence/receipts.py",
+      "sha256": "72f8f6fecc09a4bc1721f037c44ea42f652c923f8aa7d326a2f854d940248c8e"
+    },
+    "serving_client.py": {
+      "file": "spry_evidence/client.py",
+      "sha256": "dadaa41497cd95211b39c2002f45bd4bbe15fdd89d658c0fd8eea880f2cfd6a6"
+    },
+    "serving_contract.py": {
+      "file": "spry_evidence/contract.py",
+      "sha256": "6882c2056f7ac9432308385c8a9db2021601dfad60e5754c668bb64c5e4616b2"
+    },
+    "serving_reader.py": {
+      "file": "spry_evidence/reader.py",
+      "sha256": "dfb39f84cfab5d65bc62bdb3105831146a56387a59711cd8971fbfbf2282a686"
+    },
+    "worker_entry.py": {
+      "file": "spry_serving/startup_worker.py",
+      "sha256": "d0d0fb11862099a5491afa50607e0a583e97f0c66c693418db61a71b3bf4e4ad"
+    }
+  },
+  "startup_digests": {
+    "changed_identity": "fresh full hash",
+    "eligible_sources": "Only manifest-declared paths on an observed read-only mount, within this worker invocation and PID",
+    "existing_native_startup_serving_and_cleanup_bodies_preserved": true,
+    "identity_fields": [
+      "device",
+      "inode",
+      "mode",
+      "uid",
+      "gid",
+      "link_count",
+      "size",
+      "mtime_ns",
+      "ctime_ns"
+    ],
+    "mount_observations_in_tests": "inert descriptors; live serving sandbox remains unqualified",
+    "source_pin_import_origin_and_callable_checks_preserved": true,
+    "tests": 12,
+    "writable_unknown_undeclared_outside_scope_or_different_pid": "fresh full hash"
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 185,
+    "native_runtime_imported": false
+  },
+  "status": "CPU_STARTUP_DIGEST_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+  "tested_proposal_sha256": "51bb3351dbb266be6ac89adcbf11a9f994b0ed06ed9e1291afecfe9f56279e95"
+}

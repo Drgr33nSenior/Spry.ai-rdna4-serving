@@ -1,0 +1,60 @@
+{
+  "caller_seconds_charged": 105,
+  "closed_scopes": [
+    {
+      "absent": true,
+      "arm": "bf16",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-179830dc099df7e3-bf16.scope",
+      "observed_monotonic": 156509.236135664
+    }
+  ],
+  "correction": "proposals/selected-draft-preflight/PROPOSAL.json",
+  "deployed": false,
+  "execution_seal": {
+    "manifest_sha256": "585e46f5be64b8ec64ffb4997bfc81cc9c88b5abd0b91e158cc7c6894093df41",
+    "members": 21,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/preweight-source-pins-v1/instrumented-pair-v1/cleanup/execution-v1"
+  },
+  "failure": "RuntimeError: Rank 0 scheduler died during initialization (exit code: 1). If exit code is -9 (SIGKILL), a common cause is the OS OOM killer. Run `dmesg -T | grep -i oom` to check.",
+  "fresh_packet": "e201110200000095",
+  "fresh_packet_approved": false,
+  "independent_gpu_release_verified": true,
+  "main_and_preweight_source_bindings_verified": true,
+  "model_construction_reached": false,
+  "native_root_cause": "mtp_contract.MtpContractError: only the selected DFlash2 speculative kind is supported",
+  "native_scheduler_processes_started": 2,
+  "native_startup_byte_proof": false,
+  "nonce": "e201110200000091",
+  "operation": 194,
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 98,
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 0,
+  "retry_authorized": false,
+  "root_cause": "Selected preweight startup eagerly requested the retired none draft summary before resolving the enabled DFlash2 draft metadata",
+  "schema": 1,
+  "seals": {
+    "operation": {
+      "manifest_sha256": "b74f4e559a8381729f79aa8fda5fe5bc0a740b5cc7c1d1ed801ed93c4ab42576",
+      "members": 191,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/preweight-source-pins-v1/instrumented-pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "0c46363d7f9e7ef81c405703b3f464d0ed174fd0cc863aa73cbe794ef898a394",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/preweight-source-pins-v1/instrumented-pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e201110200000091"
+    },
+    "workload": {
+      "manifest_sha256": "a1b022fc3e9e6ae31f7bb4937892b4df64a5bc0318a688cec05905e248e818dd",
+      "members": 91,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/preweight-source-pins-v1/instrumented-pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e201110200000091"
+    }
+  },
+  "second_arm_started": false,
+  "source_selection_changed": false,
+  "status": "INSTRUMENTED_CANDIDATE_RETIRED_DRAFT_PREFLIGHT_REFUSAL_PARKED",
+  "stderr_sha256": "cc42873bcdd6c19b4d6f89479be72e603067325cfee906a66258e0bc2e296d35",
+  "worker_start_attempts": 1
+}

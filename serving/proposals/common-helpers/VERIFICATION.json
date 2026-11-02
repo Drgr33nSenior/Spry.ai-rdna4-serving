@@ -1,0 +1,403 @@
+{
+  "archive_correction": "Exclude four unused historical protected-source copies from two review directories; retain the selected tests, current runtime source and controls, and the original 16 MiB limit",
+  "complete_cleanup": false,
+  "documentation_audits": "Both READMEs passed with no technical-writing findings",
+  "launch_authorized": false,
+  "native_preflight_archive": {
+    "ceiling_bytes": 16777216,
+    "excluded_unused_historical_review": [
+      "serving/proposals/d2-worker-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/source-fingerprints/review/benchmark_artifacts.py",
+      "serving/proposals/source-fingerprints/review/benchmark_host_transport.py",
+      "serving/proposals/source-fingerprints/review/benchmark_physical_controller.py"
+    ],
+    "gzip_bytes": 3659792,
+    "selected_test_suite_unchanged": true,
+    "tar_bytes": 16588800
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 186
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "other_eight_protected_helpers_unchanged": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "archive": {
+      "archive_members": 80,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "fixture_scope": "Finite CPU producer/reader fixtures; no native arithmetic or quality result",
+    "native_argv": {
+      "all_mount_resource_model_and_sampling_arguments_preserved": true,
+      "native_execution": false,
+      "only_expected_source_pins_changed": true
+    },
+    "passed": true,
+    "payload_delta": {
+      "added": [
+        "review/spry_common_canon.py"
+      ],
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "PROTECTED-SHA256.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/benchmark_physical_controller.py",
+        "review/graph_outer.py",
+        "review/model_benchmark.py",
+        "review/mtp_contract.py",
+        "review/request_receipts.py",
+        "review/serving_client.py",
+        "review/serving_contract.py"
+      ],
+      "native_execution": false,
+      "package_members": 81,
+      "removed": [
+        "review/graph_integration.py"
+      ],
+      "requests_settings_model_stack_kernels_and_active_overlays_byte_identical": true
+    },
+    "shared_consumers": {
+      "callable_identity_shared": true,
+      "consumers": 3,
+      "exact_previous_json_bytes": true,
+      "helper_sha256": "a1bdcb26c9a076ae3471a3a9182622b193aab113bfc18ba3657c5db4f44308e0",
+      "native_execution": false,
+      "request_rows": 176
+    },
+    "source_refusals": {
+      "before_execution": true,
+      "changed": true,
+      "missing": true
+    },
+    "tests": 14
+  },
+  "post_full_replay_normalization": {
+    "entry_only_expected_projection_source_pin_changed": true,
+    "final_native_cpu_checks": 186,
+    "final_packet_checks": 3,
+    "final_public_focused_checks": 7,
+    "final_source_history_checks": 11,
+    "full_transport_replay_reused": "Same encoder, receipt, request, kernel, controller, projection and serving bodies; source-pin checks rerun",
+    "graph_code_object_identical": true,
+    "kind": "EOF_NORMALIZATION",
+    "new_projection_sha256": "f797dad9ec5742d2056df358a33e42f062775f52a510a7bd2600d80fd725ae70",
+    "old_projection_sha256": "2bd5e3de24172a68d6bbd2a696418d49f0d9fa15309c7065082242fbc6028e65"
+  },
+  "post_test_record_change": "cpu_verified changed from false to true only; execution authority remains false",
+  "proofs": {
+    "EOF-NORMALIZATION.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/EOF-NORMALIZATION.json",
+      "sha256": "61cb5c00e0e2f0a35a7151d5077820c39402cfed9169d885dcfe507b0ab773fd"
+    },
+    "FINAL-SOURCE-MATCH-2.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/FINAL-SOURCE-MATCH-2.json",
+      "sha256": "4313db4f1b57de0cec65a74e796831f12d8e2cbd01cbfa05d4197a9f0a494970"
+    },
+    "FINAL-SOURCE-MATCH.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/FINAL-SOURCE-MATCH.json",
+      "sha256": "4313db4f1b57de0cec65a74e796831f12d8e2cbd01cbfa05d4197a9f0a494970"
+    },
+    "PATCH-ROUNDTRIP-FINAL.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/PATCH-ROUNDTRIP-FINAL.json",
+      "sha256": "8726d233a24b62d793b6160c16d4dfb6e0c3bc2f9cc8043cd916a03e24669ace"
+    },
+    "PATCH-ROUNDTRIP.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/PATCH-ROUNDTRIP.json",
+      "sha256": "22013f877be33ed84f08160de2e4000584e918782255370a8b8e0a1803c31a00"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/PUBLIC-CHECKS.json",
+      "sha256": "73ff5fd258d97bde2c14704bb7461abcee670a684814b0b3037371312754642c"
+    },
+    "SOURCE-REDUCTION.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/SOURCE-REDUCTION.json",
+      "sha256": "85741c0b998d4d57d94ae37ec140df7ba0c09849449991fd06d4800776f10105"
+    },
+    "STATIC-CHECKS-FINAL.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/STATIC-CHECKS-FINAL.json",
+      "sha256": "bae972f42a855e3250c5ce77f6cf3d27f02a7c83cb4e21f6d4657b1bac8ef89f"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/STATIC-CHECKS.json",
+      "sha256": "bae972f42a855e3250c5ce77f6cf3d27f02a7c83cb4e21f6d4657b1bac8ef89f"
+    },
+    "full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/full-chain-attempt-1.json",
+      "sha256": "3c55fc1d1a9384010c21cdca4bb80048b04bee9017863ca2f18e23573c808746"
+    },
+    "full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/full-chain-attempt-1.log",
+      "sha256": "f64232269e768e267919e3fceb4b9edc490f5be75fa4020a145b3be8acc0569d"
+    },
+    "native-source-preflight-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-attempt-1.log",
+      "sha256": "453d0e1e31161f4ef6d3e61fb62677f676c2ee59fed042a29ca50904e5fa51fe"
+    },
+    "native-source-preflight-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-attempt-2.log",
+      "sha256": "183ae89f7e5d61112203c8f7458cdaf510df3ce553b157388b3caeb5d505c75e"
+    },
+    "native-source-preflight-v3/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-v3/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "3a8a4c073bd6f0481558969c96d13a1f32eeb7ab3e9a60f5eb1723bcbf852a63"
+    },
+    "native-source-preflight-v3/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-v3/SOURCE-INVENTORY.json",
+      "sha256": "92adac0986058a3e28cdd85395c0e802566bdcf64cf55a8a1e6c10a88f72f70c"
+    },
+    "native-source-preflight-v3/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-v3/native-cpu-source-preflight.json",
+      "sha256": "d12dcf444e61e89d5a3a924ac67a71fb5043bf3c3407780728966edb5ab0ddd0"
+    },
+    "native-source-preflight-v4/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-v4/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "3a8a4c073bd6f0481558969c96d13a1f32eeb7ab3e9a60f5eb1723bcbf852a63"
+    },
+    "native-source-preflight-v4/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-v4/SOURCE-INVENTORY.json",
+      "sha256": "532482de4ea712d32b7468eba371a9562861f600c289920a4765f9aa3613eefb"
+    },
+    "native-source-preflight-v4/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/native-source-preflight-v4/native-cpu-source-preflight.json",
+      "sha256": "080113a9bde21660443cce8cc7d163f01b2e65500035c2ded03316eab980feb2"
+    },
+    "packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/packet-attempt-1.json",
+      "sha256": "8fbdabb08c0c812c00aa0ecb5712fdb277ef131b93ddf0e6b0e867a020ed4dcf"
+    },
+    "packet-final.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/packet-final.json",
+      "sha256": "33aead58bb274b27645bf3debcb6623615933525e257dbcd58ee7bc44a05bdd0"
+    },
+    "proposal-docs-audit-final.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/proposal-docs-audit-final.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/public-make-attempt-1.log",
+      "sha256": "c93b74f4a0e29476993d6696c0d6102a9d0dff9e2db6d4ba0d28c1c26c5bee49"
+    },
+    "serving-docs-audit-final.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/serving-docs-audit-final.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "serving-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/serving-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "source-review-final-2/SOURCE-REVIEW.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/source-review-final-2/SOURCE-REVIEW.json",
+      "sha256": "978266edcd94542cdfeb4bdee58231f7cae51f4f16c648fed368a5bfdc73df9d"
+    },
+    "source-review-final/SOURCE-REVIEW.json": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/source-review-final/SOURCE-REVIEW.json",
+      "sha256": "7a632558fd7fd09f84adb74fe4478205af70b6650c98b18f8e7648a7b090d935"
+    },
+    "unit-final.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/unit-final.log",
+      "sha256": "80e6be1578777c9ed2427f6269849b099670ba019afb0be9cf50b12820c79a6a"
+    },
+    "worker-history-final.log": {
+      "path": ".test-build/serving-cleanup/common-helpers-v1/worker-history-final.log",
+      "sha256": "12c1e2623b236a82960a5a9503856c5f2e5499db3a3ccb10c7a52f6725766a53"
+    }
+  },
+  "protected_changed_files": [
+    "benchmark_physical_controller.py"
+  ],
+  "protected_set_sha256": "eacb6e7158447f3276309cfba28c506f4cf4c764b643955e4f45ea3e716a94b7",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers_passed": true,
+    "log_sha256": "c93b74f4a0e29476993d6696c0d6102a9d0dff9e2db6d4ba0d28c1c26c5bee49",
+    "passed": true,
+    "python_tests": 921,
+    "suites": 73
+  },
+  "published_proposal_sha256": "55eae8ca2cbab5b60e7054f8c1c9ddd30c45e8d5b0c31d331813bdb106305cf9",
+  "quality_for_new_source_graded": false,
+  "remaining": [
+    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
+    "Remaining compatibility APIs, shared helpers and module/package closure beyond the three migrated serializers",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Startup tensor validation scans and item synchronization after the runner refactor",
+    "Shared FP8 head and packed QKVZ/BA views after refactors",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "removed_entry_hooks": [
+    "cache_arm",
+    "read_graph_evidence",
+    "_GRAPH"
+  ],
+  "retained_failures": [
+    {
+      "attempt": 1,
+      "kind": "LOCAL_SOURCE_ARCHIVE_LIMIT_REFUSAL",
+      "remote_upload": false
+    },
+    {
+      "attempt": 2,
+      "kind": "LOCAL_SOURCE_ARCHIVE_LIMIT_REFUSAL",
+      "remote_upload": false
+    }
+  ],
+  "retained_projection_api": [
+    "validate_projection",
+    "project_argv"
+  ],
+  "runtime_changes": {
+    "graph_outer.py": {
+      "baseline_sha256": "3d88da7ed59e171fcc56cb773a74e7f2b08218a2d635c8403865e189e3a7e2bf",
+      "proposed_sha256": "f797dad9ec5742d2056df358a33e42f062775f52a510a7bd2600d80fd725ae70"
+    },
+    "model_benchmark.py": {
+      "baseline_sha256": "4c5c134dc470652b97908c2d269119629becc4cee884aaa023848cb1f719a436",
+      "proposed_sha256": "6560fd90b11f67569227b960c9957d07dce899db6fefb3cec7b1c2bdf2acb8a8"
+    },
+    "mtp_contract.py": {
+      "baseline_sha256": "1956863b99e25993d46f937a330b6fb19fb6512e3d604520af633a82d2a2348e",
+      "proposed_sha256": "d1fae26492420cef8508df21180da0ccfbb01fb63741364fbd28beb8d649f555"
+    },
+    "request_receipts.py": {
+      "baseline_sha256": "72f8f6fecc09a4bc1721f037c44ea42f652c923f8aa7d326a2f854d940248c8e",
+      "proposed_sha256": "54419f977a5a344973b6f7679a40265848b353194a1c7992b1e2c2660a0a47ee"
+    },
+    "serving_client.py": {
+      "baseline_sha256": "dadaa41497cd95211b39c2002f45bd4bbe15fdd89d658c0fd8eea880f2cfd6a6",
+      "proposed_sha256": "25012408c7cdfd098e0ec485457f4911f81e3df7bf5f13d901bcbd45a5493960"
+    },
+    "serving_contract.py": {
+      "baseline_sha256": "6882c2056f7ac9432308385c8a9db2021601dfad60e5754c668bb64c5e4616b2",
+      "proposed_sha256": "321a3640367049a2c1ba5742473cafaedc49432e8c1d470af21054ffe67a1556"
+    }
+  },
+  "schema": 1,
+  "shared_common_source": {
+    "file": "spry_common/canon.py",
+    "replaced_sha256": "94420c034d841106a9863f8d8cc813cfe11c245f5cb4bacd45e9615a5558cb26",
+    "replaces": "graph_integration.py",
+    "sha256": "a1bdcb26c9a076ae3471a3a9182622b193aab113bfc18ba3657c5db4f44308e0"
+  },
+  "shared_serializers": 3,
+  "source_reduction": {
+    "after": {
+      "python_bytes": 2256378,
+      "python_files": 62,
+      "python_lines": 42206
+    },
+    "before": {
+      "python_bytes": 2322286,
+      "python_files": 62,
+      "python_lines": 43298
+    },
+    "native_execution": false,
+    "removed_python_bytes": 65908,
+    "removed_python_lines": 1092
+  },
+  "source_review": {
+    "content_sha256": "e60646059ff33d4e88d8259ce50437e67a15d491f7489044ad47cc03cf421f4c",
+    "launch_authorized": false,
+    "maximum_model_starts": 0,
+    "proposed_package_members": 80,
+    "status": "PROPOSAL_REVIEW_ONLY"
+  },
+  "sources": {
+    "graph_outer.py": {
+      "file": "spry_serving/graph_projection.py",
+      "sha256": "f797dad9ec5742d2056df358a33e42f062775f52a510a7bd2600d80fd725ae70"
+    },
+    "isolated_scheme.py": {
+      "file": "spry_serving/scheme.py",
+      "sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "model_benchmark.py": {
+      "file": "spry_serving/benchmark.py",
+      "sha256": "6560fd90b11f67569227b960c9957d07dce899db6fefb3cec7b1c2bdf2acb8a8"
+    },
+    "mtp_contract.py": {
+      "file": "spry_serving/shared_contract.py",
+      "sha256": "d1fae26492420cef8508df21180da0ccfbb01fb63741364fbd28beb8d649f555"
+    },
+    "ops.py": {
+      "file": "spry_serving/ops.py",
+      "sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "prefill_reference.py": {
+      "file": "spry_serving/prefill_reference.py",
+      "sha256": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887"
+    },
+    "request_receipts.py": {
+      "file": "spry_evidence/shared_receipts.py",
+      "sha256": "54419f977a5a344973b6f7679a40265848b353194a1c7992b1e2c2660a0a47ee"
+    },
+    "serving_client.py": {
+      "file": "spry_evidence/shared_client.py",
+      "sha256": "25012408c7cdfd098e0ec485457f4911f81e3df7bf5f13d901bcbd45a5493960"
+    },
+    "serving_contract.py": {
+      "file": "spry_evidence/shared_contract.py",
+      "sha256": "321a3640367049a2c1ba5742473cafaedc49432e8c1d470af21054ffe67a1556"
+    },
+    "serving_reader.py": {
+      "file": "spry_evidence/reader.py",
+      "sha256": "dfb39f84cfab5d65bc62bdb3105831146a56387a59711cd8971fbfbf2282a686"
+    },
+    "worker_entry.py": {
+      "file": "spry_serving/startup_worker.py",
+      "sha256": "d0d0fb11862099a5491afa50607e0a583e97f0c66c693418db61a71b3bf4e4ad"
+    }
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 197,
+    "native_runtime_imported": false
+  },
+  "status": "CPU_SHARED_CANON_AND_HTTP_CLOSURE_VERIFIED_NATIVE_SERVING_PENDING",
+  "tested_proposal_sha256": "cf182382c5fe2f792c8d5effa64c590d7de1fd0deec84865b59e44373c45e504"
+}

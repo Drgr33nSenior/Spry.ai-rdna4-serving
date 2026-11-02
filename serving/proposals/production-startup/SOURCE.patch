@@ -1,0 +1,55 @@
+--- a/legacy/review/worker_entry.py
++++ b/legacy/review/worker_entry.py
+@@ -426,6 +426,42 @@
+     return value
+ 
+ 
++def _validate_serving_startup(manifest: dict[str, Any], server_args: Any, contract: Any) -> None:
++    """Check effective W5 configuration and overlay selection in both modes."""
++    selected = contract.validate_contract(contract.contract_for_arm(manifest['arm']))
++    model_config = _native_module(manifest['sources']['model_config'])
++    resolver = getattr(model_config, 'resolving_view', None)
++    _require(callable(resolver), 'native resolved-config constructor missing')
++    cfg = resolver(server_args)
++    expected = {name: selected[name] for name in ('speculative_algorithm',
++        'speculative_num_steps', 'speculative_eagle_topk', 'speculative_num_draft_tokens',
++        'speculative_dflash_block_size', 'enable_multi_layer_eagle')}
++    expected.update(tp_size=len(manifest['expected_ranks']), pp_size=1,
++        disable_overlap_schedule=contract.cache_config()['disable_overlap_schedule'],
++        cuda_graph_backend_decode=selected['target_cuda_graph_backend_decode'],
++        cuda_graph_backend_prefill=selected['target_cuda_graph_backend_prefill'],
++        cuda_graph_bs_decode=selected['target_cuda_graph_capture_bs'],
++        cuda_graph_max_bs_decode=selected['target_cuda_graph_max_bs'])
++    for name, value in expected.items():
++        observed = getattr(cfg, name, None)
++        _require(type(observed) is type(value) and observed == value,
++                 'resolved serving startup field differs: ' + name)
++        if type(value) is list:
++            _require(all(type(item) is int for item in observed),
++                     'resolved serving startup graph batch types differ')
++    overlays = contract.runtime_overlays(manifest['arm'])
++    _require(any(row['key'] == 'model_runner' for row in overlays),
++             'selected startup runner overlay required')
++    for row in overlays:
++        source = manifest['sources'].get(row['key'])
++        _require(type(source) is dict and source.get('module') == row['module']
++                 and source.get('path') == row['target'] and source.get('sha256') == row['sha256']
++                 and source.get('stock_sha256') == row['original_sha256'],
++                 'selected startup overlay binding differs: ' + row['key'])
++        _require(_file_digest(_safe_regular(Path(source['path']))) == row['sha256'],
++                 'selected startup overlay source differs: ' + row['key'])
++
++
+ def _preweight_before_scheduler(manifest: dict[str, Any], rank: int, server_args: Any, *,
+                                 gpu_id: int, contract: Any, instrumented: bool) -> dict[str, Any]:
+     """Run only pinned native identity/config checks before Scheduler."""
+@@ -435,6 +471,9 @@
+              'native rank/index or observation mode differs')
+     if time.monotonic() >= config["deadline_monotonic"]:
+         raise WorkerEntryError("preweight deadline elapsed")
++    _validate_serving_startup(manifest, server_args, contract)
++    if time.monotonic() >= config["deadline_monotonic"]:
++        raise WorkerEntryError("preweight deadline elapsed during configuration checks")
+     gpu_identity = _source_module(config["gpu_identity"])
+     import torch
+ 

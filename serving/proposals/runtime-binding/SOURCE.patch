@@ -1,0 +1,12 @@
+--- a/propose_packet.py
++++ b/propose_packet.py
+@@ -75,7 +75,8 @@
+     projector=None
+     if record.get('configuration_mutations_supported') is True:
+         need('mtp_contract.py' in overrides,'configured runtime contract source required')
+-        contract=checked_module(HERE/'spry_serving','contract',digest(overrides['mtp_contract.py']))
++        contract_path=HERE/record['source_files']['mtp_contract.py']['file']
++        contract=checked_module(contract_path.parent,contract_path.stem,digest(overrides['mtp_contract.py']))
+         projector=functools.partial(run_config.project_configuration,contract=contract)
+     with tempfile.TemporaryDirectory(prefix='spry-packet-proposal-') as temporary:
+         baseline = Path(temporary).resolve() / 'source'

@@ -1,0 +1,57 @@
+{
+  "actual_memory_savings_measured": false,
+  "arm": "bf16",
+  "authenticated_original_seals": {
+    "author": {
+      "manifest_sha256": "0f4e971490fab34a91b5b514a7be067fc97d7bfde305585fa627b889b64aeb1c",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/author"
+    },
+    "caller": {
+      "manifest_sha256": "61b953231578e33202261bdad193c985accd47175fa9be5c72db60fc67449e17",
+      "members": 304,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller"
+    }
+  },
+  "complete_host_gate_sha256": "12b01e5cf2bfd4d04ea13b0f1e9dd95fd412a774e737ea03f6a6501d620edff4",
+  "five_storage_sources_equal_to207": {
+    "d3b_head_adapter.py": "2be5a50c5d9c2c44716b98e9ae58865dcc497a3cd51f17495df25893cef2b584",
+    "d3b_target_head_adapter.py": "dfd57322f2d2ecfdc6096a8785435d69d22f1d3d58b61324d704d4cc9023e181",
+    "isolated_scheme.py": "5c4068a835ba7762d83acc49ecf4e8ca96afd907a84dab12fcea4445b3defe16",
+    "p1_prefill.py": "50e239f2fb65e2484330a456a979eaeaeb27901816d82fa4818393d138692a0e",
+    "spry_fp8_head.py": "eba54bb8495e2df4042b5c0bea07cf4da38fbd6eec92891359bd46ca51d0d671"
+  },
+  "native_bundle_sha256": "26c51cceda6fdb4e0a570b1e80f188f4fafbbe61b807dd7f86bf0657b191a44a",
+  "operation": 206,
+  "original206_host_acceptance": false,
+  "original206_quality_grade_performed": false,
+  "passed": true,
+  "prospective_corrected_reader_chain_passed": true,
+  "ranks": [
+    {
+      "buffer_sha256_records": 192,
+      "head_transient_equality": true,
+      "observation_sha256": "d0e2af7d9054060f23b0df4cdc3b2bea1244ee885773bda883465ad90b455718",
+      "packed_layers": 48,
+      "packed_weight_and_scale_equality": true,
+      "predicted_released_payload_bytes": 1711668800,
+      "qkvz_p1_identity_rebound": true,
+      "rank": 0,
+      "target_and_draft_share_objects_and_pointers": true
+    },
+    {
+      "buffer_sha256_records": 192,
+      "head_transient_equality": true,
+      "observation_sha256": "b129829cca6a253841da67c6daf7016f67fc456b223596aeffd59bfea0ed4cbd",
+      "packed_layers": 48,
+      "packed_weight_and_scale_equality": true,
+      "predicted_released_payload_bytes": 1711668800,
+      "qkvz_p1_identity_rebound": true,
+      "rank": 1,
+      "target_and_draft_share_objects_and_pointers": true
+    }
+  ],
+  "schema": 1,
+  "scope": "Retained first-start GPU startup witnesses, accepted prospectively on CPU by the corrected full reader. Operation206 remains failed and partial; no native work repeated.",
+  "second_start_instrumented_witnesses": false
+}

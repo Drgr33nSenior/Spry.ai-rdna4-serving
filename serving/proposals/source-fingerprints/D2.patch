@@ -1,0 +1,93 @@
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -459,7 +459,10 @@
+     need(not configuration & set(expected), 'configuration must be independently approved')
+     need(set(members) == {'MANIFEST.json'} | set(expected) | configuration and all(sha(members[name]) == pin
+         and digest(pin) for name, pin in expected.items()), 'archive exact source inventory differs')
+-    need(manifest.get('schema') == 2 and manifest.get('scope') == 'matched-benchmark-physical-package-v2'
++    version = manifest.get('schema')
++    need(type(version) is int and version in (2, 3) and
++        manifest.get('scope') == 'matched-benchmark-physical-package-v' + str(version)
++        and (version != 3 or 'boot_id' not in manifest)
+         and manifest.get('launch_authorized') is False
+         and type(manifest.get('proposed_complete_seconds')) is int
+         and manifest['proposed_complete_seconds'] == timing.total_seconds
+@@ -469,7 +472,28 @@
+     return manifest, members
+ 
+ 
+-def new_grant(manifest, manifest_sha256, *, received_utc, received_monotonic, parent, configuration_pins, timing):
++def bind_manifest_boot(manifest, approved_boot_id):
++    """Project a boot-independent manifest into the existing runtime contract."""
++    need(type(manifest) is dict and type(manifest.get('schema')) is int and manifest['schema'] in (2, 3),
++         'physical manifest version required')
++    need(type(approved_boot_id) is str and
++         re.fullmatch(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', approved_boot_id),
++         'explicit approval boot identity required')
++    if manifest['schema'] == 2:
++        need(manifest.get('scope') == 'matched-benchmark-physical-package-v2' and
++             manifest.get('boot_id') == approved_boot_id, 'legacy manifest/approval boot differs')
++        return dict(manifest)
++    need(manifest.get('scope') == 'matched-benchmark-physical-package-v3' and 'boot_id' not in manifest,
++         'boot-independent manifest cannot contain a boot claim')
++    return dict(manifest, schema=2, scope='matched-benchmark-physical-package-v2', boot_id=approved_boot_id)
++
++
++def new_grant(manifest, manifest_sha256, *, received_utc, received_monotonic, parent, configuration_pins, timing,
++              approved_boot_id=None):
++    if manifest.get('schema') == 3:
++        manifest = bind_manifest_boot(manifest, approved_boot_id)
++    elif approved_boot_id is not None:
++        manifest = bind_manifest_boot(manifest, approved_boot_id)
+     need(type(timing) is SessionTiming, 'explicit configured session timing required')
+     timing = SessionTiming(**asdict(timing))
+     timing.deadlines(received_monotonic)
+@@ -694,7 +718,9 @@
+         + sum(map(len, trusted.values())) + len(read_file(Path(__file__).resolve(), 256 << 10))
+         <= artifact_limits.source_copies_bytes, 'combined protected archive/source and workload source limit')
+     boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+-    need(boot == manifest['boot_id'], 'new boot requires reviewed package rebinding')
++    if manifest.get('schema') == 3 or getattr(args, 'approved_boot_id', None) is not None:
++        manifest = bind_manifest_boot(manifest, getattr(args, 'approved_boot_id', None))
++    need(boot == manifest['boot_id'], 'observed boot differs from the approved package binding')
+     root = Path(manifest['target_root'])
+     timing.require_start_window(beginning, clock=time.monotonic)
+     root.mkdir(mode=0o700)  # Exclusive: never reuse/remove an earlier remote root.
+@@ -886,6 +912,7 @@
+     for name in ('archive', 'archive-sha256', 'manifest-sha256', 'expected-self-sha256',
+                  'run-config-sha256', 'host-sha256', 'protected-set-sha256'):
+         parser.add_argument('--' + name, required=True)
++    parser.add_argument('--approved-boot-id')
+     args = parser.parse_args(argv)
+     need(args.human_root_benchmark, 'explicit human physical invocation required')
+     args.original_receipt = (time.monotonic(), datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'))
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -284,6 +284,9 @@
+ def validate_manifest(path, expected_sha256, *, deadline, clock=time.monotonic, configuration_pins=None):
+     """Authenticate complete local inputs; no runtime import or remote query."""
+     value, _ = adapter.readout.read_json(path, expected_sha256)
++    if value.get('schema') == 3:
++        boot = configuration_pins.get('boot_id') if type(configuration_pins) is dict else None
++        value = transport.bind_manifest_boot(value, boot)
+     live = value.get("schema") == 2
+     need(set(value) == FIELDS | ({"runtime_scopes", "retained_base", "logical_package_inventory", "run_config"} if live else set()) and
+          value["schema"] in (1, 2) and
+@@ -967,6 +970,8 @@
+          and 0 < grant["cumulative_ceiling_seconds"] <= transport.TOTAL_SECONDS
+          and type(grant["fixed_reserve_seconds"]) is int
+          and grant["fixed_reserve_seconds"] == transport.SEAL_RESERVE, "exact separate two-start physical grant required")
++    if manifest.get('schema') == 3:
++        manifest = transport.bind_manifest_boot(manifest, grant['boot_id'])
+     need(manifest["schema"] == 2 and grant["manifest_sha256"] == manifest_sha256 and
+          grant["boot_id"] == manifest["boot_id"] and
+          grant["package_sha256"] == mapping_sha256(manifest["package_files"]) and
+@@ -1437,6 +1442,8 @@
+     manifest, _ = adapter.readout.read_json(manifest_path, manifest_sha256)
+     grant, _ = adapter.readout.read_json(grant_path, grant_sha256)
+     validate_physical_grant(grant, manifest, manifest_sha256, rpc.authenticate_parent())
++    if manifest.get('schema') == 3:
++        manifest = transport.bind_manifest_boot(manifest, grant['boot_id'])
+     # The retained proof authenticates the effective SGLang tree and built
+     # prefix, but not the expanded base containing Torch and the stdlib. OCI
+     # layer provenance alone is not a fresh expanded-tree identity check.

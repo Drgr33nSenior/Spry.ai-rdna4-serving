@@ -1,0 +1,28 @@
+{
+  "consumed_by_builder": false,
+  "launch_authorized": false,
+  "native_tokenizer_executed": false,
+  "schema": 1,
+  "scope": "Explicit run-menu projection and ungraded cap work in the CPU quality source",
+  "source_patch_sha256": "5c39ddd112020851c016e43c5ef812a579a09061763672f4111f7065764b5771",
+  "source_seal_sha256": "32947ff1f6d4552157f03e0de81780c9ad4c8710671aaffc334be20c9661e929",
+  "sources": {
+    "final_quality_inputs.py": {
+      "baseline_sha256": "3fef086d6d60afde253ebf6c98f13c51a4d8fe65c025e90ea77c363575f8f8cd",
+      "proposed_sha256": "842e1669e49cdb35ac188dd3492ba51367aa4e885a90d5a31967ed159e0fb4f0",
+      "source_member": "quality-template-w5/producer/final_quality_inputs.py"
+    },
+    "quality_contract.py": {
+      "baseline_sha256": "2774c80629d2be5de59c9f5c3d6afc7c4b37538a6eb24aaaf8de737adeed4b0d",
+      "proposed_sha256": "9c59ccdbffcd5c11e2c6c649770d8262b9998863029dbeec5991dae165ea56da",
+      "source_member": "quality-template-w5/source/quality_contract.py"
+    },
+    "thinking_segments.py": {
+      "baseline_sha256": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29",
+      "proposed_sha256": "231408f571eab7cc90ea500cc9edb525d5f95e5b127fadb628b1cb7916999c29",
+      "source_member": "quality-template-w5/source/thinking_segments.py"
+    }
+  },
+  "status": "SOURCE_PROPOSAL_ONLY",
+  "whole_run_mutations_supported": false
+}

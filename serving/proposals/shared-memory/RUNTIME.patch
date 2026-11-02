@@ -1,0 +1,361 @@
+--- a/review/isolated_scheme.py
++++ b/review/isolated_scheme.py
+@@ -109,8 +109,8 @@
+         def pack_rows(self, layers):
+             """Load time: one row-concatenated copy of loaded same-input shards.
+ 
+-            The separate parameters are left untouched (the P1 prefill route pins their identity);
+-            the copy is read only by apply_packed. Returns None unless every shard is admitted.
++            The original parameter objects become views of the packed storage.
++            P1 accepts their new identities only after exact load-time equality.
+             """
+             if not all(getattr(layer, '_isolated_mxfp4_loaded', False) for layer in layers):
+                 return None
+@@ -129,6 +129,37 @@
+             with torch.no_grad():
+                 weight = torch.cat([layer.weight for layer in layers], dim=0).contiguous()
+                 scale = torch.cat([layer.weight_scale for layer in layers], dim=0).contiguous()
++            import mtp_contract
++            instrumented = mtp_contract.settings().get("instrumentation", "on") != "production"
++            offset = 0
++            for layer, width in zip(layers, widths, strict=True):
++                old = (layer.weight.detach(), layer.weight_scale.detach())
++                p1_shard = route is not None and route.admits_shape(width, k)
++                before = route._identity(layer) if p1_shard else None
++                weight_view = weight[offset:offset + width]
++                scale_view = scale[offset:offset + width]
++                if (weight_view.data_ptr() % 256 or scale_view.data_ptr() % 256
++                        or not weight_view.is_contiguous() or not scale_view.is_contiguous()):
++                    raise ValueError('packed shard views require contiguous 256-byte alignment')
++                with torch.no_grad():
++                    layer.weight.set_(weight_view)
++                    layer.weight_scale.set_(scale_view)
++                if p1_shard:
++                    route.rebind(layer, before, old)
++                elif (not torch.equal(old[0], layer.weight)
++                      or not torch.equal(old[1], layer.weight_scale)):
++                    raise ValueError('packed shard rebinding changed weight or scale bytes')
++                layer._spry_packed_view = dict(weight_offset_bytes=offset * (k // 2),
++                    scale_offset_bytes=offset * (k // 32),
++                    weight_base_pointer=weight.data_ptr(), scale_base_pointer=scale.data_ptr(),
++                    weight_pointer=layer.weight.data_ptr(), scale_pointer=layer.weight_scale.data_ptr(),
++                    p1_identity_rebound=p1_shard, equal_at_startup=True,
++                    rebound_payload_bytes=sum(value.numel() * value.element_size() for value in old))
++                if instrumented:
++                    from spry_fp8_head import tensor_sha256
++                    layer._spry_packed_view.update(weight_sha256=tensor_sha256(layer.weight, torch),
++                        scale_sha256=tensor_sha256(layer.weight_scale, torch))
++                offset += width
+             return weight, scale, widths, k
+ 
+         def apply_packed(self, packed, x):
+--- a/review/p1_prefill.py
++++ b/review/p1_prefill.py
+@@ -145,6 +145,30 @@
+                 self.emit("P1_PREFILL_READY", {"device": device, "scratch_bytes": scratch_bytes(),
+                                                "warm_rows": list(WARM_ROWS), "setting": SETTING})
+ 
++    def rebind(self, layer, before, old_tensors):
++        """Update a validated shard identity after exact load-time storage rebinding."""
++        if self.validated.get(id(layer)) != before:
++            raise RuntimeError('P1 rebind requires its recorded original identity')
++        if self.torch.cuda.is_current_stream_capturing():
++            raise RuntimeError('P1 rebind must precede graph capture')
++        if type(old_tensors) is not tuple or len(old_tensors) != 2:
++            raise ValueError('P1 rebind requires original weight and scale tensors')
++        old_weight, old_scale = old_tensors
++        if (old_weight.data_ptr() != before[0] or old_scale.data_ptr() != before[1]
++                or tuple(old_weight.shape) != before[4] or tuple(old_scale.shape) != before[5]):
++            raise ValueError('P1 original shard identity differs')
++        n, k = before[4][0], before[4][1] * 2
++        if not self.admits_shape(n, k):
++            raise ValueError('P1 rebind of an undeclared shape')
++        self._check_layer(layer, n, k, old_weight.device.index)
++        if (not self.torch.equal(old_weight, layer.weight)
++                or not self.torch.equal(old_scale, layer.weight_scale)):
++            raise ValueError('P1 rebound weight or scale bytes differ')
++        # Metadata rebinding may increment a shared version counter. The
++        # recorded identity is checked before mutation; equality checks retain
++        # the original storage until both new views have been accepted.
++        self.validated[id(layer)] = self._identity(layer)
++
+     def apply(self, layer, x, n, k):
+         """One admitted prefill call: expand, quantize, GEMM; BF16 output in a fresh tensor."""
+         torch = self.torch
+--- a/review/d3b_target_head_adapter.py
++++ b/review/d3b_target_head_adapter.py
+@@ -8,8 +8,7 @@
+ FP32-head startup witness's wrapper during startup, the native method after it restores.
+ While that witness is active, each FP8 call is reported to it (metadata only; owner-approved D3b
+ amendment), so startup certifies the replaced branch instead of silently bypassing the witness.
+-The head module, its BF16 weight and the drafter's borrowed reference are never modified, so the
+-drafter's own candidate call keeps its BF16 dense path.
++The target and drafter share one FP8 allocation; the BF16 head weight remains immutable.
+ The owning process must already hold the exact GPU allowance for that serving packet.
+ """
+ 
+@@ -46,12 +45,9 @@
+             raise ValueError("D3b requires a versioned, immutable target head weight") from exc
+         self.torch, self.ops, self.device = torch, ops, device
+         self.n, self.k, self.name = N, K, NAME
+-        for row in range(0, N, 128):
+-            if not torch.isfinite(self.weight[row:row + 128]).all().item():
+-                raise ValueError("nonfinite D3b BF16 head weight")
+-        self.b8 = torch.empty((N, K), dtype=torch.float8_e4m3fn, device=self.weight.device)
+-        self.scales = torch.empty((N // 128, K // 128), dtype=torch.float32, device=self.weight.device)
+-        ops.quantize_weight_preallocated(self.weight, self.b8, self.scales, expected_device=device)
++        from spry_fp8_head import shared_fp8_head
++        self.b8, self.scales, self.shared_created = shared_fp8_head(
++            head, torch, ops, expected_device=device)
+ 
+     def _bound(self):
+         if (self.processor.__dict__.get("_compute_lm_head") is not self or self.head.weight is not self.weight
+--- a/review/d3b_head_adapter.py
++++ b/review/d3b_head_adapter.py
+@@ -1,9 +1,8 @@
+ """Private DFlash2 drafter-only FP8 head (D3b); import does not initialize a device.
+ 
+ Install from the draft runner's init_cuda_graphs: after the DFlash worker points the drafter's
+-lm_head at the target's head and before the draft graph is captured. The target's head module is
+-never modified. The drafter receives a separate proxy module whose quantized method serves only the
+-drafter's candidate call. The current target LogitsProcessor owns a separate FP8 copy for verification
++lm_head at the target's head and before the draft graph is captured. The target head owns the shared FP8 cache. The drafter receives a separate proxy module whose quantized method serves only the
++drafter's candidate call. The current target LogitsProcessor owns the shared FP8 allocation for verification
+ and retains its existing dense fallback. Both adapters read the same immutable BF16 head weight.
+ The owning process must already hold the exact GPU allowance for that serving packet.
+ """
+@@ -31,8 +30,8 @@
+     return {
+         "modules": 1, "tp_size": 2, "n": N, "k": K, "fp8_rows": list(ROWS),
+         "shared_bf16_target_head_bytes": 2 * N * K,
+-        "added_fp8_weight": fp8, "added_fp32_scales": scales,
+-        "added_persistent_bytes_per_rank": fp8 + scales,
++        "added_fp8_weight": 0, "added_fp32_scales": 0,
++        "added_persistent_bytes_per_rank": 0,
+         "per_call": {str(m): {"activation_fp8": m * K, "activation_scales": 4 * m * (K // 128),
+                               "output_bf16": 2 * m * N} for m in ROWS},
+     }
+@@ -53,12 +52,13 @@
+         self.n, self.k, self.name = N, K, NAME
+         self.graph_observer, self.proxy_id = None, None
+         self.rank, self.emit, self.captured_rows = rank, emit, set()
+-        for row in range(0, N, 128):
+-            if not torch.isfinite(self.weight[row:row + 128]).all().item():
+-                raise ValueError("nonfinite D3b BF16 head weight")
+-        self.b8 = torch.empty((N, K), dtype=torch.float8_e4m3fn, device=self.weight.device)
+-        self.scales = torch.empty((N // 128, K // 128), dtype=torch.float32, device=self.weight.device)
+-        ops.quantize_weight_preallocated(self.weight, self.b8, self.scales, expected_device=device)
++        from spry_fp8_head import shared_fp8_head
++        if getattr(head, "_spry_shared_fp8_head", None) is None:
++            raise RuntimeError("draft FP8 head requires the installed target allocation")
++        self.b8, self.scales, self.shared_created = shared_fp8_head(
++            head, torch, ops, expected_device=device)
++        if self.shared_created:
++            raise RuntimeError("draft FP8 head requires the installed target allocation")
+ 
+     def _bound(self, layer):
+         if (id(layer) != self.proxy_id or layer.quant_method is not self
+@@ -107,7 +107,7 @@
+ 
+ def proxy_type(torch):
+     class D3bDraftHead(torch.nn.Module):
+-        """Drafter-only head: shares the target's shard indices, owns an FP8 copy, no parameters."""
++        """Drafter-only head: shares the target's shard indices, borrows the shared FP8 buffers, no parameters."""
+ 
+         def __init__(self, head, method):
+             super().__init__()
+@@ -156,6 +156,8 @@
+                                    expected_rank, emit)
+     proxy = proxy_type(torch)(head, method)
+     method.proxy_id = id(proxy)
++    head._spry_shared_draft_binding = dict(fp8_id=id(method.b8), scales_id=id(method.scales),
++        fp8_pointer=method.b8.data_ptr(), scales_pointer=method.scales.data_ptr())
+     # Publish only when the FP8 copy is complete. A failure leaves the target head attached and
+     # must abort startup; it is never swallowed.
+     model.lm_head = proxy
+--- a/review/mtp_contract.py
++++ b/review/mtp_contract.py
+@@ -52,7 +52,11 @@
+ D3B_NATIVE_RUNNER = 'd8ce6f38279913d11b4a7e910a7fd1432e952a0bdcf33ebe726b6f49af0ba6ba'
+ D3B_RUNNER_TARGET = '/mnt/composition/image-source/python/sglang/srt/model_executor/model_runner.py'
+ POST_LOAD_SOURCE = dict(path='/mnt/review/spry_post_load.py', module='spry_post_load',
+-    sha256='84634fd9c4a5ffcac71643bb7263f8c71cd41e5206e4dda89fec331d26d890ed')
++    sha256='6fb145e0bf5638e12c9da4ba68ba5524bc02080b3e3fd61194bc437f61ff068e')
++SHARED_FP8_HEAD_SOURCE = dict(path='/mnt/review/spry_fp8_head.py', module='spry_fp8_head',
++    sha256='eba54bb8495e2df4042b5c0bea07cf4da38fbd6eec92891359bd46ca51d0d671')
++
++
+ D3B_TARGET_FILES = ('review/d3b_target_head_adapter.py', 'review/d3b_head_launches.py', 'review/d3b_head_fp8_ops.py', 'review/d3b_head_fp8_kernels.py')
+ PHASES = {PAIRED_PHASE: (131040, 2040, 176, ('dflash2', 'dflash2'), ('tail', 'tail'))}
+ TAIL_PHASES = frozenset()
+@@ -325,7 +329,7 @@
+                              'cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887'),
+  'mxfp4_scheme': ('isolated_scheme.py',
+                   'mxfp4_component.isolated_scheme',
+-                  '132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6'),
++                  '5c4068a835ba7762d83acc49ecf4e8ca96afd907a84dab12fcea4445b3defe16'),
+  'mxfp4_selection': ('private_selection.py',
+                      'mxfp4_component.private_selection',
+                      'e0120a933d0848de1fd82135274deac4ca850af82715112a2a1bfa94107c52ed')}
+@@ -570,7 +574,7 @@
+              'review/GEMM-tail.py', 'review/gdn_verify_candidate.py',
+              'review/replay_kv_cache_configurator_candidate.py',
+              'review/replay_memory_pool_candidate.py', 'review/capture_hybrid_linear_attn_backend.py'}
+-    names.add('review/spry_post_load.py')
++    names.update(('review/spry_post_load.py', 'review/spry_fp8_head.py'))
+     names.update('review/' + row['file'] for row in runtime_overlays())
+     if dense_mxfp4_enabled():
+         names.update('review/' + row[0] for row in MXFP4_PRIVATE_SOURCES.values())
+@@ -1446,7 +1450,7 @@
+     import importlib.util
+     from importlib.machinery import SourceFileLoader
+     path = Path(__file__).with_name('spry_common_canon.py')
+-    if Path(__file__).name in ('shared_contract.py', 'closed_contract.py', 'hook_contract.py'):
++    if Path(__file__).name in ('shared_contract.py', 'closed_contract.py', 'hook_contract.py', 'memory_contract.py'):
+         path = Path(__file__).resolve().parents[1] / 'spry_common/canon.py'
+     _require(path.is_absolute() and path.resolve(strict=True) == path
+              and path.is_file() and not path.is_symlink(), 'canonical shared helper source required')
+@@ -1478,3 +1482,19 @@
+ json_line = _SHARED_CANON.canonical_line
+ canonical_bare = _SHARED_CANON.canonical_bare
+ digest_bytes = _SHARED_CANON.digest
++
++
++def memory_recovery_helper(sources):
++    """Load the exact startup proof reader without native imports or bytecode."""
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    _require(sources.get('shared_fp8_head') == SHARED_FP8_HEAD_SOURCE,
++             'shared FP8 head reader source binding differs')
++    path = Path(__file__).with_name('spry_fp8_head.py')
++    raw = _asset_stable_read('spry_fp8_head.py', SHARED_FP8_HEAD_SOURCE['sha256'], 7907)
++    loader = SourceFileLoader('spry_fp8_head', str(path))
++    loader.get_code = lambda fullname: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('spry_fp8_head', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
+--- a/review/worker_entry.py
++++ b/review/worker_entry.py
+@@ -624,6 +624,16 @@
+     _require(inspect.isfunction(function) and len(matches) == 1
+              and function.__code__ == matches[0] and function.__globals__ is module.__dict__,
+              'post-load startup callable/code/globals changed')
++    shared = manifest['sources'].get('shared_fp8_head')
++    _require(shared == contract.SHARED_FP8_HEAD_SOURCE, 'selected shared FP8 head source binding differs')
++    helper = _source_module(shared)
++    code = SourceFileLoader(shared['module'], shared['path']).source_to_code(
++        Path(shared['path']).read_bytes(), shared['path'])
++    expected = {value.co_name: value for value in code.co_consts if type(value) is CodeType}
++    for name in ('shared_fp8_head', '_finite_weight', 'tensor_sha256', 'verify_shared_fp8_head', 'validate_memory_recovery'):
++        function = getattr(helper, name, None)
++        _require(inspect.isfunction(function) and function.__code__ == expected.get(name)
++                 and function.__globals__ is helper.__dict__, 'shared FP8 head callable/code/globals changed')
+     return module
+ 
+ 
+@@ -811,6 +821,13 @@
+         extra_model_forwards=0, qualification=False)
+     if mxfp4:
+         record['mxfp4'] = _mxfp4_loaded_weights(model, manifest, worker['rank'], contract)
++        proof = dict(runner._spry_memory_recovery)
++        head = model.lm_head
++        target = model.logits_processor.__dict__['_compute_lm_head']
++        proof['sharing'] = dict(target=dict(fp8_id=id(target.b8), scales_id=id(target.scales),
++            fp8_pointer=target.b8.data_ptr(), scales_pointer=target.scales.data_ptr()),
++            draft=dict(head._spry_shared_draft_binding))
++        record['memory_recovery'] = proof
+     observer.validate_precision_weights(record, binding=manifest, worker=worker)
+     _atomic_json(Path(manifest['evidence_dir']) / f"PRECISION-WEIGHTS-rank-{worker['rank']}.json", record)
+     if contract.full_enabled_benchmark():
+--- a/review/serving_graph_observer.py
++++ b/review/serving_graph_observer.py
+@@ -78,7 +78,7 @@
+     need(mtp_contract.precision_reference_enabled(), 'precision weight witness outside reference phase')
+     fields = {'schema', 'mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256', 'rank', 'pid', 'start_ticks', 'boot_id', 'worker_identity_sha256', 'profile', 'model_config_quantization', 'loading_policy', 'linear', 'head_startup', 'before_external_generations', 'extra_tensor_operations', 'extra_model_forwards', 'qualification'}
+     if mtp_contract.dense_mxfp4_enabled():
+-        fields.add('mxfp4')
++        fields.update(('mxfp4', 'memory_recovery'))
+     need(type(record) is dict and set(record) == fields and (type(record['schema']) is int) and (record['schema'] == 1) and (record['profile'] == mtp_contract.precision_profile()), 'precision weight witness schema/profile')
+     for key in ('mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256'):
+         need(record[key] == binding[key], 'precision weight binding identity: ' + key)
+@@ -95,6 +95,8 @@
+     fields = {'path', 'class_name', 'class_module', 'method_class', 'method_module', 'method_source', 'weight_dtype', 'weight_shape', 'weight_device', 'weight_is_cuda', 'weight_contiguous'}
+     if mtp_contract.dense_mxfp4_enabled():
+         validate_mxfp4_weights(record, binding=binding, worker=worker)
++        helper = mtp_contract.memory_recovery_helper(binding['sources'])
++        helper.validate_memory_recovery(record['memory_recovery'], rank=worker['rank'])
+         return record
+     bf16 = mtp_contract.precision_profile()['precision'] == 'bf16'
+     role = 'head_unquant' if bf16 else 'fp8_config'
+--- a/review/spry_post_load.py
++++ b/review/spry_post_load.py
+@@ -1,13 +1,8 @@
+-"""Install the selected W5 model adapters before target or draft graph capture.
+-
+-The worker authenticates this source before loading Scheduler. Importing it
+-performs no model imports, device access or adapter installation.
+-"""
++"""Bind the selected memory cleanup after loading and before graph capture."""
+ import logging
+ 
+ 
+ def run(runner):
+-    """Install once on the loaded runner; startup failures propagate."""
+     import mtp_contract
+ 
+     settings = mtp_contract.settings()
+@@ -16,21 +11,41 @@
+             or settings.get('d3b_draft_head_arm') != 'both'
+             or settings.get('gdn_layout_both') is not True):
+         raise ValueError('post-load hook requires the selected W5 adapter set')
+-    logger = logging.getLogger(type(runner).__module__)
++    if runner.startup_weight_load is not None:
++        raise RuntimeError('memory cleanup requires completed synchronous weight loading')
+     if not runner.is_draft_worker:
+         if hasattr(runner, 'd3b_target_head_inventory'):
+             raise RuntimeError('D3b target head installation is single-use per serving process')
+-        if runner.startup_weight_load is not None:
+-            raise RuntimeError('D3b target head requires completed synchronous target weight loading')
+-        from d3b_target_head_adapter import install as install_d3b_target_head
+-        runner.d3b_target_head_inventory = install_d3b_target_head(runner.model, expected_device=runner.gpu_id, expected_rank=runner.tp_rank)
+-        gdn_layers = [m for m in runner.model.modules() if type(m).__name__ == 'Qwen3_5GatedDeltaNet']
+-        gdn_packed = [m.finalize_packed_mxfp4_in_proj() for m in gdn_layers]
+-        if len(gdn_layers) != 48 or not all(gdn_packed):
++        layers = [m for m in runner.model.modules() if type(m).__name__ == 'Qwen3_5GatedDeltaNet']
++        if len(layers) != 48:
+             raise RuntimeError('packed MXFP4 GDN input projection must cover all 48 GDN layers')
+-        logger.info('Packed MXFP4 GDN input projection enabled for %d layers', len(gdn_layers))
+-    if runner.is_draft_worker:
++        for layer in layers:
++            if not layer.finalize_packed_mxfp4_in_proj():
++                raise RuntimeError('packed MXFP4 GDN input projection rejected a layer')
++        from d3b_target_head_adapter import install as install_target
++        runner.d3b_target_head_inventory = install_target(
++            runner.model, expected_device=runner.gpu_id, expected_rank=runner.tp_rank)
++        if settings.get('instrumentation', 'on') != 'production':
++            import torch
++            from d3b_head_launches import ServingOps
++            from spry_fp8_head import verify_shared_fp8_head
++            ops = ServingOps()
++            ops.runtime(runner.gpu_id)
++            proof = verify_shared_fp8_head(runner.model.lm_head, torch, ops,
++                                          expected_device=runner.gpu_id)
++            runner._spry_memory_recovery = dict(schema=1, policy='shared-head-packed-views-v1',
++                device=runner.gpu_id, head=proof,
++                packed=[dict(qkvz=dict(layer.in_proj_qkvz._spry_packed_view),
++                             ba=dict(layer.in_proj_ba._spry_packed_view)) for layer in layers],
++                before_graph_capture=True, predicted_released_payload_bytes=1711668800)
++        # Return released blocks to the driver without changing fixed pool sizes.
++        import torch
++        torch.cuda.empty_cache()
++        logging.getLogger(type(runner).__module__).info(
++            'Packed MXFP4 GDN input projection enabled for %d layers', len(layers))
++    else:
+         if hasattr(runner, 'd3b_draft_head_inventory'):
+             raise RuntimeError('D3b head installation is single-use per serving process')
+-        from d3b_head_adapter import install as install_d3b_draft_head
+-        runner.d3b_draft_head_inventory = install_d3b_draft_head(runner.model, expected_device=runner.gpu_id, expected_rank=runner.tp_rank)
++        from d3b_head_adapter import install as install_draft
++        runner.d3b_draft_head_inventory = install_draft(
++            runner.model, expected_device=runner.gpu_id, expected_rank=runner.tp_rank)

@@ -1,0 +1,149 @@
+{
+  "campaigns": {
+    "baseline": {
+      "approval_request_sha256": "1bdd62da22b420f38bc739ed3ec57200ce3bd2be1db16e8e7395f9bf3a7bf1f2",
+      "grading": {
+        "execution_authorized": false,
+        "native_cpu_seconds": 320,
+        "projection_inventory_sha256": "dc75adc3b3eb9470077c2cda393ddaa70cd95854fd3360d2bb80c5843532c9d4",
+        "rows": 352
+      },
+      "legacy_control_retains_original_gates": true,
+      "native_configuration_binding": false,
+      "package": {
+        "archive_sha256": "5517b992cb62cc2247fef1cbc30018b4eae961f9751bbdbba0ee6af94c0273fe",
+        "manifest_sha256": "4e48bdabf8c9e9cf1a8af90d79c40b2de0a87abe3d42a71496b1f222bafb138c",
+        "nonce": "65e6f0ed8417fcca",
+        "package_sha256": "449c844b586731d1d05b84ad0be41d7d95da2949f9f9e8e7d116ef2c47b86d78",
+        "session_sha256": "61c1a54827b02d6016fe267febb573895b178ac2d682bda46604e2a9d39fefd8",
+        "source_manifest_sha256": "793cfd142aa0a1b3e23a40f959c40f7b6d60cc9e62be591cec999406002a9d4f",
+        "target_root": "/home/developer/fp8-kv-benchmark.65e6f0ed8417fcca"
+      },
+      "protected_set_sha256": "ffda4f37c20ac88bb7c71840ae764e1a5c960ca0e192e59f7a35c35e1cdf3b31",
+      "source_archive_boot_independent": false,
+      "source_archive_bytes": 11642880
+    },
+    "cleanup": {
+      "approval_request_sha256": "b57a80d950e14a60a01c595842926cab8433244b492cb60c7e3b0b4759c0a319",
+      "grading": {
+        "execution_authorized": false,
+        "native_cpu_seconds": 320,
+        "projection_inventory_sha256": "dc75adc3b3eb9470077c2cda393ddaa70cd95854fd3360d2bb80c5843532c9d4",
+        "rows": 352
+      },
+      "legacy_control_retains_original_gates": false,
+      "native_configuration_binding": true,
+      "package": {
+        "archive_sha256": "fa7639e6e2bc7173b358359241c02c3149b6d5b8aa3b699d4b5f5219b0e64378",
+        "manifest_sha256": "0b53c80b567caaa9efd143728b84dd9fb32478cb681210b02eeed0039b0bef0e",
+        "nonce": "e201110100000203",
+        "package_sha256": "a91ba854e4f7b64a2362f5b372365da585ed659e2f5ee8bfdf1b29ecb3910d80",
+        "session_sha256": "de67ebfc995915234d126cda00fd4bc49fc2ab2b35e24c9b328b1238cccee992",
+        "source_manifest_sha256": "fd4fe64652ccbed0d288a9f0a18a8cf92665d92f30dd6492a5fd462373346688",
+        "target_root": "/home/developer/fp8-kv-benchmark.e201110100000203"
+      },
+      "protected_set_sha256": "6da65f49338a304885cdb5c20b3f032dbb4afcf9df1716e13fe8dab929e56d37",
+      "source_archive_boot_independent": true,
+      "source_archive_bytes": 5926473
+    }
+  },
+  "capacity_packet_tests": 37,
+  "cleanup_complete": false,
+  "cleanup_unittest_count": 407,
+  "complete_new_operation_replay_verified": false,
+  "final_checks": {
+    "approval_note_sha256": "b71589866bab4883dd02a3789aa741208a8e1ae8ef8af07a16ef12c0b274aa20",
+    "documentation_audits": 6,
+    "documentation_findings": 0,
+    "git_diff_check": "PASS",
+    "measurement_metadata_recheck_tests": 11,
+    "python_ast_and_symbol_tables": 146,
+    "shell_syntax": "PASS_BOTH_VARIANTS",
+    "source_builder_metadata_recheck_tests": 18,
+    "source_seals_reverified": true
+  },
+  "final_preparation_checks": 6,
+  "first_run_note": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/APPROVE-FIRST-RUN.md",
+  "launch_authorized": false,
+  "local_python": "3.14.8",
+  "model_starts_executed": 0,
+  "native_cpu_gpu_devices_denied": true,
+  "native_cpu_native_imports_denied": true,
+  "native_cpu_network_denied": true,
+  "native_cpu_python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+  "native_cpu_skips": 0,
+  "native_cpu_tests": 110,
+  "native_grading_executed": false,
+  "native_grading_template_materialized": true,
+  "native_production_sandbox_executed": false,
+  "native_source_payload_sha256": "c9f71b33df4102593d7c797d8061a03e17f8b417961010d5169c8f50dd2adb17",
+  "owner_approved": false,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "preparation_root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3",
+  "protected_complete_patch_approved": false,
+  "protected_complete_patch_prepared": true,
+  "readiness_path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/READINESS.json",
+  "registration_created": false,
+  "reports": {
+    ".test-build/serving-cleanup/gpu-preparation-v1/capacity-full-report-1.json": "ce65c44cea268307e24765066c174114bea4f276e54d514e639981216a2671bd",
+    ".test-build/serving-cleanup/gpu-preparation-v1/docs-evidence-capacity.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/gpu-preparation-v1/docs-first-run.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/gpu-preparation-v1/docs-gpu-run.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/gpu-preparation-v1/docs-launcher-readme.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/gpu-preparation-v1/docs-measurement-readme.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/gpu-preparation-v1/docs-serving-readme.log": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb",
+    ".test-build/serving-cleanup/gpu-preparation-v1/gpu-preparation-check-report-4.json": "e14fcf5932fe690231152d764bf519b5c0bce6f5613fdc35788f10b88fcbaeb7",
+    ".test-build/serving-cleanup/gpu-preparation-v1/metadata-builder-final.log": "9c2106bff2e656cf0424be1ede077282bfc3793ddf165f6eed350a86dcd7b586",
+    ".test-build/serving-cleanup/gpu-preparation-v1/metadata-measurement-final.log": "45737538f98c2fa0c7f7137cbdeb2526c9ec59ced0c524ff0f286c4cab92351c",
+    ".test-build/serving-cleanup/gpu-preparation-v1/native-cpu-preflight-final-2/NATIVE-CPU-PREFLIGHT.json": "8539fb040f6f130bfc5da14798e514b6dc56a4bee1575b9ace6e02b784818677",
+    ".test-build/serving-cleanup/gpu-preparation-v1/native-cpu-preflight-final-2/native-cpu-source-preflight.json": "318ca7ca833136d84b12426969dc194eaf00bbd0652e58c0da935c87c578df4b",
+    ".test-build/serving-cleanup/gpu-preparation-v1/native-cpu-preflight-final-2/native-cpu-source-preflight.stderr": "614b9578f7c37ce99bb707bd2b33c7dd8a7f05637766e1de1b017f9d5ec4336b",
+    ".test-build/serving-cleanup/gpu-preparation-v1/native-cpu-preflight-final-2/native-cpu-source-preflight.stdout": "0e375831513ae789e4a023c83e41527429973e9a43180ebaf6fd2a5f2a19442c",
+    ".test-build/serving-cleanup/gpu-preparation-v1/public-make-test-final-1.log": "7e2f0de83eb4183ac45e9f8461ac7227edf343f267f42d0ef1e166cffbdd2147"
+  },
+  "repository_make_test": "PASS",
+  "repository_make_test_command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+  "repository_python_unittest_count": 844,
+  "retained_failures": [
+    {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/validation-preflight-local-1.log",
+      "reason": "Optional frozen FP8 startup fixture was injected with an MXFP4 worker lacking that interface. The unchanged public corpus and actual MXFP4 startup checks passed separately."
+    },
+    {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/native-cpu-preflight-final",
+      "reason": "Source transfer omitted donor directory timestamps. Donor authentication refused; the corrected transfer preserved original metadata and passed in a fresh workspace."
+    }
+  ],
+  "schema": 1,
+  "source_pins": {
+    "launcher/execute_once.py": "e2a710a92ba39177612ceb810f8dbc47d320ad4ededf796b7e8dd83ed5d86075",
+    "launcher/run_native.py": "444b3959166a5b99378cba7c4f13e6178784248fa072d12547becebd906d7107",
+    "legacy/review/request_receipts.py": "0a4794eecc2b80749ba24c0bbedb423589e1e21b22fb543ae33db7af044ad481",
+    "legacy/review/serving_client.py": "9c19011318ceac6f101ff701499166861d2580ee912ef9da86b5f64be63959de",
+    "legacy/review/serving_reader.py": "82b78e44a76a592bf7a21babc9fb49ff2b43e35d5f317fec1dfb734b0565971d",
+    "prepare_gpu_run.py": "8013deeca52a60f2fd62a682e609bf32fdea69b3b88b6b7b2253101543116493",
+    "quality/bind_future.py": "b93cb499279be360c918f22c48a2b541baf7d8d573ef7a59407ec70af5ebc1dd",
+    "quality/retained_replay.py": "2c62f5646f982a934d5cd50230397ccf8f2e724cdc52401e37c6a92a3bab8ec1",
+    "tests/check_evidence_capacity_packet.py": "5ce50b3ad6c7909ca78a1620f59a098ad7a9e81b437028100422dc4b4957d055",
+    "tests/check_gpu_run_preparation.py": "ceaa64ede91a93a90fbc2cb1b2315a120bd8b1906ca835bf3047d7967c7de789",
+    "tests/native_cpu_preflight.py": "fb74ecb23bbf8a5e9a44f6496ad00a4716278c7f528b2382150d558cf9855352",
+    "tests/test_configured_caller.py": "b500c844fca615dd9b6254c52e2ce08217c95274773550275d9035fd803790a1",
+    "tests/test_evidence_capacity.py": "6220dc90897ff869b0ffd1663f4a3128fd05a6b59f5c84043ea0e06d6881a12b",
+    "tests/test_gpu_run_packaging.py": "0cc89f5f0f70434eb7300da15849d469dfc068c4eee709ea2caf2ddb272aadf7",
+    "tests/test_one_use_caller.py": "919cff4340dcad28fc8b0e89c952b0a7adc244942c4ac4a46ed661cd465c9f6c"
+  },
+  "source_seals": {
+    "baseline": {
+      "manifest_sha256": "411d8254564d8436f2d3fdced13abf0398f72585cde9ced93bab38a9ce90b900",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/author"
+    },
+    "cleanup": {
+      "manifest_sha256": "ee88338163cfebef4177150fe7cd860bb74b8c6fec4243beb00548166c2e4abd",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/cleanup/author"
+    }
+  },
+  "status": "SEALED_SOURCE_PACKETS_PREPARED_FOR_OWNER_REVIEW"
+}

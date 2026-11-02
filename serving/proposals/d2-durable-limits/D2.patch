@@ -1,0 +1,393 @@
+--- a/review/benchmark_artifacts.py
++++ b/review/benchmark_artifacts.py
+@@ -8,7 +8,7 @@
+ import hashlib
+ import json
+ import os
+-from pathlib import Path
++from pathlib import Path, PurePosixPath
+ import re
+ import selectors
+ import stat
+@@ -169,6 +169,119 @@
+         # a corrupted plan into permission to increase an owner ceiling.
+         limits.__post_init__()
+     return HTTPArtifactLimits() if limits is None else limits
++
++
++def audit_durable_trees(workload_root, *, limits, protected_root=None, pending=()):
++    """Account finalized evidence and planned seals; never authorize execution."""
++    plan = _http_limits({'experiment_mode': HTTP_MODE}, limits)
++    caps = {key: getattr(plan, key) for key in ('source_copies_bytes', 'observer_copies_bytes',
++        'outer_stdio_bytes', 'summary_closeout_bytes', 'small_metadata_bytes')}
++    for arm in ('bf16', 'kv4'):
++        caps.update({arm + ':member:' + name: maximum for name, maximum in plan.members.items()})
++        caps.update({arm + ':stream:' + name: plan.http_stream_bytes for name in ('stdout.raw', 'stderr.raw')})
++        caps[arm + ':client'] = plan.client_tree_bytes
++        caps[arm + ':metadata'] = plan.arm_metadata_bytes
++    used = dict.fromkeys(caps, 0)
++    counts, names, stamps = {}, set(), {}
++    total = 0
++
++    def charge(scope, name, size):
++        nonlocal total
++        need(type(name) is str, 'canonical durable evidence identity required')
++        relative = PurePosixPath(name)
++        need(scope in ('workload', 'protected', 'workload-closeout', 'protected-closeout')
++             and not relative.is_absolute() and str(relative) == name
++             and '..' not in relative.parts and name != '.' and type(size) is int and size >= 0,
++             'canonical durable evidence identity required')
++        key = (scope, name)
++        need(key not in names, 'duplicate durable evidence or pending seal')
++        names.add(key)
++        total += size
++        buckets = []
++        if scope.endswith('-closeout'):
++            buckets = ['summary_closeout_bytes']
++        elif scope == 'protected':
++            if name.startswith('review/') or name == 'payload.tar':
++                buckets = ['source_copies_bytes']
++            elif name in ('evidence/controller-capture/stdout.raw', 'evidence/controller-capture/stderr.raw'):
++                need(size <= min(8 << 20, plan.outer_stdio_bytes // 2), 'configured outer stream limit')
++                buckets = ['outer_stdio_bytes']
++            elif name == 'evidence/ROOT-TRANSPORT.json':
++                buckets = ['summary_closeout_bytes', 'observer_copies_bytes']
++            elif name.startswith('evidence/') and name not in (
++                    'evidence/GRANT.json', 'evidence/RECEIPT.json', 'evidence/CONTROLLER-IDENTITY.json'):
++                buckets = ['observer_copies_bytes']
++            else:
++                buckets = ['small_metadata_bytes']
++        elif name.startswith(('review/', 'config/')) or name in (
++                'MANIFEST.json', 'PROTECTED-SHA256.json', 'DERIVED-LIMITS.json', 'SOURCE-BUILD.json'):
++            buckets = ['source_copies_bytes']
++        elif name == 'results/CONTROLLER-RESULT.json':
++            # Charging complete reports conservatively includes every embedded
++            # observer snapshot/control copy, even when fields are repeated.
++            buckets = ['summary_closeout_bytes', 'observer_copies_bytes']
++        else:
++            for arm in ('bf16', 'kv4'):
++                capture = 'results/' + arm + '-capture/'
++                artifacts = 'results/' + arm + '-artifacts/'
++                client = 'results/' + arm + '-http-client-tree/'
++                if name.startswith(capture) and name[len(capture):] in ('stdout.raw', 'stderr.raw'):
++                    buckets = [arm + ':stream:' + name[len(capture):]]
++                elif name.startswith(artifacts):
++                    member = name[len(artifacts):]
++                    need(member in plan.members, 'unexpected configured HTTP artifact member')
++                    buckets = [arm + ':member:' + member]
++                elif name.startswith(client):
++                    need(size <= plan.http_member_read_bytes, 'configured decoded member bound')
++                    bucket = arm + ':client'
++                    counts[bucket] = counts.get(bucket, 0) + 1
++                    need(counts[bucket] <= plan.client_tree_files, 'configured decoded client file count')
++                    buckets = [bucket]
++                elif name.startswith('results/' + arm + '-'):
++                    buckets = [arm + ':metadata']
++                if buckets:
++                    break
++            if not buckets:
++                buckets = ['small_metadata_bytes']
++        for bucket in buckets:
++            used[bucket] += size
++            need(used[bucket] <= caps[bucket], 'configured durable partition exceeded: ' + bucket)
++        need(total <= min(plan.session_bytes, plan.http_session_max_bytes), 'configured complete session byte bound')
++
++    roots = [] if workload_root is None else [('workload', Path(workload_root))]
++    if protected_root is not None:
++        roots.append(('protected', Path(protected_root)))
++    need(bool(roots), 'durable evidence root required')
++    for _, root in roots:
++        need(root.is_absolute() and root.resolve(strict=True) == root and root.is_dir(),
++             'canonical durable evidence root required')
++    if len(roots) == 2:
++        left, right = (row[1] for row in roots)
++        need(not left.is_relative_to(right) and not right.is_relative_to(left), 'independent durable evidence roots required')
++    for scope, root in roots:
++        for path in (root, *sorted(root.rglob('*'))):
++            before = path.lstat()
++            need(not stat.S_ISLNK(before.st_mode), 'durable evidence link refused')
++            stamps[path] = _stamp(before)
++            if stat.S_ISDIR(before.st_mode):
++                continue
++            need(stat.S_ISREG(before.st_mode) and before.st_nlink == 1, 'regular singly linked durable evidence required')
++            charge(scope, path.relative_to(root).as_posix(), before.st_size)
++        for suffix in ('.closeout.json', '.refusal.json'):
++            closeout = root.with_name(root.name + suffix)
++            if closeout.exists() or closeout.is_symlink():
++                before = closeout.lstat()
++                need(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and closeout.resolve() == closeout,
++                     'canonical durable closeout required')
++                stamps[closeout] = _stamp(before)
++                charge(scope + '-closeout', suffix[1:], before.st_size)
++    for scope, name, size in pending:
++        charge(scope, name, size)
++    need(all(_stamp(path.lstat()) == stamp for path, stamp in stamps.items()), 'durable evidence changed during audit')
++    return dict(total_bytes=total, partition_bytes=used, files=len(names),
++        remaining_summary_bytes=plan.summary_closeout_bytes - used['summary_closeout_bytes'],
++        remaining_session_bytes=min(plan.session_bytes, plan.http_session_max_bytes) - total,
++        observer_reports_charged_conservatively=True, qualification=False)
+ 
+ 
+ def member_limits(binding, *, limits=None):
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -1342,9 +1342,10 @@
+         recompute='unchanged read_http_artifacts and accept_with_owner, then compare this reference')
+ 
+ 
+-def _publish(path, value):
++def _publish(path, value, *, maximum=8 << 20):
+     raw = (json.dumps(value, sort_keys=True, allow_nan=False) + "\n").encode()
+-    need(len(raw) <= 8 << 20, "bounded controller result")
++    need(type(maximum) is int and 0 <= maximum <= 8 << 20 and len(raw) <= maximum,
++         "bounded controller result")
+     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+     try:
+         view = memoryview(raw)
+@@ -1357,7 +1358,8 @@
+         os.close(fd)
+ 
+ 
+-def seal_result(root, *, timing, received_monotonic, received_utc, clock=time.monotonic):
++def seal_result(root, *, timing, received_monotonic, received_utc, clock=time.monotonic,
++                artifact_limits=None):
+     """Seal the stopped UID1000 tree; closeout stays outside the sealed tree."""
+     need(type(timing) is transport.SessionTiming, 'explicit configured session timing required')
+     timing = transport.SessionTiming(**asdict(timing))
+@@ -1367,6 +1369,11 @@
+     need(clock() < deadline, "seal deadline exhausted")
+     manifest = root / "FINAL-ARTIFACTS.sha256"
+     need(not manifest.exists(), "sealed result cannot be amended")
++    artifacts, plan, budget = None, None, None
++    if artifact_limits is not None:
++        artifacts = _adjacent("spry_seal_artifacts", "benchmark_artifacts.py")
++        plan = artifacts.HTTPArtifactLimits.from_limits(artifact_limits)
++        artifacts.audit_durable_trees(root, limits=plan)
+     members, total = {}, 0
+     for path in sorted(root.rglob("*")):
+         need(clock() < deadline and not path.is_symlink(), "seal cutoff/link refusal")
+@@ -1378,6 +1385,10 @@
+         need(total <= 512 << 20, "complete retained session exceeds 512MiB")
+         members[name] = pin
+     raw = "".join(pin + "  " + name + "\n" for name, pin in members.items()).encode()
++    need(total + len(raw) <= 512 << 20, "complete retained session including seal exceeds 512MiB")
++    if plan is not None:
++        budget = artifacts.audit_durable_trees(root, limits=plan,
++            pending=(("workload", "FINAL-ARTIFACTS.sha256", len(raw)),))
+     fd = os.open(manifest, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+     try:
+         offset = 0
+@@ -1399,7 +1410,11 @@
+     closeout = {"schema": 1, "root": str(root), "manifest_sha256": hashlib.sha256(raw).hexdigest(),
+         "member_count": len(members), "verified_completion_utc": completed, "received_utc": received_utc,
+         "elapsed_seconds": elapsed, "charged_seconds": math.ceil(elapsed), "qualification": False}
+-    _publish(root.with_name(root.name + ".closeout.json"), closeout)
++    maximum = 8 << 20
++    if budget is not None:
++        closeout['durable_budget'] = budget
++        maximum = min(maximum, budget['remaining_summary_bytes'], budget['remaining_session_bytes'])
++    _publish(root.with_name(root.name + ".closeout.json"), closeout, maximum=maximum)
+     return closeout
+ 
+ 
+@@ -1637,7 +1652,8 @@
+         report["live_namespace_joins"] = {arm: list(rows.values()) for arm, rows in joins.items()}
+         _publish(output / "CONTROLLER-RESULT.json", report)
+     seal_result(root, timing=configured['session_timing'],
+-        received_monotonic=grant["received_monotonic"], received_utc=grant["received_utc"])
++        received_monotonic=grant["received_monotonic"], received_utc=grant["received_utc"],
++        artifact_limits=configured['artifact_limits'])
+     return report
+ 
+ 
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -8,6 +8,7 @@
+ from dataclasses import asdict, dataclass
+ from datetime import datetime, timezone
+ import hashlib
++from importlib.machinery import SourceFileLoader
+ import importlib.util
+ import json
+ import math
+@@ -577,8 +578,52 @@
+     return snapshot
+ 
+ 
+-def seal(root, *, deadline):
++def authenticated_module(name, path, raw):
++    """Import previously authenticated bytes without reopening source or caches."""
++    need(type(raw) is bytes, 'checked root module bytes required')
++    loader = SourceFileLoader(name, str(path))
++    loader.get_code = lambda fullname: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader(name, loader)
++    module = importlib.util.module_from_spec(spec)
++    missing = object()
++    previous = sys.modules.get(name, missing)
++    sys.modules[name] = module
++    try:
++        spec.loader.exec_module(module)
++    except BaseException:
++        if previous is missing:
++            sys.modules.pop(name, None)
++        else:
++            sys.modules[name] = previous
++        raise
++    return module
++
++
++def outer_stream_limit(limits):
++    need(limits.outer_stdio_bytes >= 2, 'configured outer output needs two streams')
++    return min(8 << 20, limits.outer_stdio_bytes // 2)
++
++
++def closeout_bytes(value, *, budget=None):
++    raw = canonical(value)
++    maximum = 4 << 20
++    if budget is not None:
++        maximum = min(maximum, budget['remaining_summary_bytes'], budget['remaining_session_bytes'])
++    need(len(raw) <= maximum, 'configured closeout partition exceeded')
++    return raw
++
++
++def seal(root, *, deadline, artifacts=None, limits=None, workload_root=None):
+     """Exact regular-file membership; seal remains external to its own inventory."""
++    need((artifacts is None) == (limits is None) and (artifacts is not None or workload_root is None),
++         'complete configured durable audit inputs required')
++    maximum = 96 << 20
++    if artifacts is not None:
++        limits = artifacts._http_limits({'experiment_mode': artifacts.HTTP_MODE}, limits)
++        maximum = min(maximum, sum(getattr(limits, key) for key in (
++            'source_copies_bytes', 'observer_copies_bytes', 'outer_stdio_bytes',
++            'summary_closeout_bytes', 'small_metadata_bytes')))
++        artifacts.audit_durable_trees(workload_root, protected_root=root, limits=limits)
+     def files():
+         found, total = {}, 0
+         for path in sorted(root.rglob('*')):
+@@ -590,11 +635,17 @@
+                 continue
+             raw = read_file(path, 128 * 1024 * 1024)
+             total += len(raw)
+-            need(total <= 96 << 20, 'protected source/observer/outer-output partition exceeded')
++            need(total <= maximum, 'protected source/observer/outer-output partition exceeded')
+             found[str(path.relative_to(root))] = sha(raw)
+         return found
+     members = files()
+     manifest = ''.join(pin + '  ' + name + '\n' for name, pin in members.items()).encode()
++    need(sum(path.stat().st_size for path in root.rglob('*') if path.is_file()) + len(manifest) <= maximum,
++         'protected partition including seal exceeded')
++    budget = None
++    if artifacts is not None:
++        budget = artifacts.audit_durable_trees(workload_root, protected_root=root, limits=limits,
++            pending=(('protected', 'FINAL-ARTIFACTS.sha256', len(manifest)),))
+     path = root / 'FINAL-ARTIFACTS.sha256'
+     exclusive(path, manifest, 0o444)
+     # Directory timestamp changes on creating the seal. Put the seal timestamp
+@@ -604,7 +655,10 @@
+     timestamp = path.stat().st_mtime_ns
+     need(root.stat().st_mtime_ns <= timestamp and all(value.lstat().st_mtime_ns <= timestamp
+         for value in root.rglob('*')), 'entry newer than seal')
+-    return {'manifest_sha256': sha(manifest), 'member_count': len(members)}
++    result = {'manifest_sha256': sha(manifest), 'member_count': len(members)}
++    if budget is not None:
++        result['durable_budget'] = budget
++    return result
+ 
+ 
+ def human_main(args):
+@@ -626,6 +680,11 @@
+     trusted = {name: root_source(source_root / name, manifest['package_files']['review/' + name])
+         for name in ('host_process_owner.py', 'benchmark_release_observer.py',
+                      'collect_benchmark_platform.py', 'benchmark_artifacts.py')}
++    artifacts = authenticated_module('spry_root_bounded_capture', source_root / 'benchmark_artifacts.py',
++        trusted['benchmark_artifacts.py'])
++    artifact_limits = artifacts.HTTPArtifactLimits.from_limits(decode(members[manifest['run_config']])['limits'])
++    outer_limit = outer_stream_limit(artifact_limits)
++    args.artifact_audit = dict(artifacts=artifacts, limits=artifact_limits)
+     expected_stage = {str(source_root / name) for name in trusted} | {str(Path(__file__).resolve()),
+         str(source_root.parent / 'payload.tar')}
+     need(Path(args.archive) == source_root.parent / 'payload.tar' and
+@@ -633,12 +692,13 @@
+         'protected stage must contain only the reviewed source subset and archive')
+     need(Path(args.archive).stat().st_size + sum(map(len, members.values()))
+         + sum(map(len, trusted.values())) + len(read_file(Path(__file__).resolve(), 256 << 10))
+-        <= 32 << 20, 'combined protected archive/source and workload source limit')
++        <= artifact_limits.source_copies_bytes, 'combined protected archive/source and workload source limit')
+     boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+     need(boot == manifest['boot_id'], 'new boot requires reviewed package rebinding')
+     root = Path(manifest['target_root'])
+     timing.require_start_window(beginning, clock=time.monotonic)
+     root.mkdir(mode=0o700)  # Exclusive: never reuse/remove an earlier remote root.
++    args.artifact_audit['workload_root'] = root
+     root_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+     held = os.fstat(root_fd)
+     need(held.st_uid == 0 and stat.S_IMODE(held.st_mode) == 0o700, 'new root directory substituted')
+@@ -677,13 +737,8 @@
+     evidence.mkdir(mode=0o700)
+     exclusive(evidence / 'GRANT.json', raw, 0o444)
+     exclusive(evidence / 'RECEIPT.json', receipt, 0o444)
+-    spec = importlib.util.spec_from_file_location('spry_root_owned_core', source_root / 'host_process_owner.py')
+-    core = importlib.util.module_from_spec(spec)
+-    sys.modules[spec.name] = core
+-    exec(compile(trusted['host_process_owner.py'], str(source_root / 'host_process_owner.py'), 'exec'), core.__dict__)
+-    spec = importlib.util.spec_from_file_location('spry_root_bounded_capture', source_root / 'benchmark_artifacts.py')
+-    artifacts = importlib.util.module_from_spec(spec)
+-    exec(compile(trusted['benchmark_artifacts.py'], str(source_root / 'benchmark_artifacts.py'), 'exec'), artifacts.__dict__)
++    core = authenticated_module('spry_root_owned_core', source_root / 'host_process_owner.py',
++        trusted['host_process_owner.py'])
+     left, right = socket.socketpair(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+     # FD9 belongs exclusively to the later UID1000 canonical lock owner.
+     import fcntl
+@@ -708,7 +763,7 @@
+         for number in (signal.SIGINT, signal.SIGTERM)}
+     child = None
+     try:
+-        capture = artifacts.CapturePipes(evidence / 'controller-capture', stream_limit=8 << 20)
++        capture = artifacts.CapturePipes(evidence / 'controller-capture', stream_limit=outer_limit)
+         try:
+             child = subprocess.Popen(argv, user=1000, group=1000,
+                 extra_groups=os.getgrouplist('developer', 1000), pass_fds=(right.fileno(),),
+@@ -809,8 +864,9 @@
+         'all_observation_phases_complete': sequence.closed and sequence.releases == ['bf16', 'kv4'],
+         'physical_success': bool(child and child.returncode == 0 and not errors and not survivors
+             and not owner_signals and sequence.closed and sequence.releases == ['bf16', 'kv4'])}
+-    exclusive(evidence / 'ROOT-TRANSPORT.json', canonical(summary), maximum=4 << 20)
+-    result = seal(source_root.parent, deadline=seal_end)
++    exclusive(evidence / 'ROOT-TRANSPORT.json', canonical(summary),
++        maximum=min(4 << 20, artifact_limits.summary_closeout_bytes, artifact_limits.observer_copies_bytes))
++    result = seal(source_root.parent, deadline=seal_end, **args.artifact_audit)
+     completed = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+     elapsed = time.monotonic() - beginning
+     need(elapsed <= timing.total_seconds, 'verified seal deadline exceeded')
+@@ -818,7 +874,8 @@
+         'verified_completion_utc': completed,
+         'elapsed_seconds': elapsed, 'charged_seconds': math.ceil(elapsed),
+         'physical_success': summary['physical_success'], 'qualification': False}
+-    exclusive(Path(str(source_root.parent) + '.closeout.json'), canonical(closeout), 0o444)
++    exclusive(Path(str(source_root.parent) + '.closeout.json'),
++        closeout_bytes(closeout, budget=result['durable_budget']), 0o444)
+     print(canonical(closeout).decode(), end='', flush=True)
+     return 0 if summary['physical_success'] else 1
+ 
+@@ -844,13 +901,19 @@
+             'received_utc': args.original_receipt[1], 'release_authority': False}
+         if not os.path.lexists(stage / 'FINAL-ARTIFACTS.sha256'):
+             exclusive(stage / 'BOOTSTRAP-FAILURE.json', canonical(failure))
+-            result = seal(stage, deadline=getattr(args, 'seal_deadline', args.original_receipt[0] + TOTAL_SECONDS))
++            result = seal(stage, deadline=getattr(args, 'seal_deadline', args.original_receipt[0] + TOTAL_SECONDS),
++                **getattr(args, 'artifact_audit', {}))
+         else:
+             result = {'seal_verification_failed_or_already_closed': True}
+         elapsed = time.monotonic() - args.original_receipt[0]
+         closeout = {**failure, **result, 'elapsed_seconds': elapsed, 'charged_seconds': math.ceil(elapsed),
+             'verified_completion_utc': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}
+-        exclusive(Path(str(stage) + '.refusal.json'), canonical(closeout), 0o444)
++        budget = result.get('durable_budget')
++        if budget is None and hasattr(args, 'artifact_audit'):
++            audit = args.artifact_audit
++            budget = audit['artifacts'].audit_durable_trees(audit.get('workload_root'),
++                protected_root=stage, limits=audit['limits'])
++        exclusive(Path(str(stage) + '.refusal.json'), closeout_bytes(closeout, budget=budget), 0o444)
+         print(canonical(closeout).decode(), end='', flush=True)
+         return 1
+ 

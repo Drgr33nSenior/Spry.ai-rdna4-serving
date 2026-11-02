@@ -1,0 +1,28 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -40,13 +40,13 @@
+ METADATA_SHA256 = "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5"
+ SOURCE_NAMES = ("benchmark_physical_controller.py", "benchmark_owner_adapter.py",
+     "host_process_owner.py", "benchmark_resource_gate.py", "benchmark_release_observer.py",
+-    "collect_benchmark_platform.py", "model_benchmark.py", "analyze_model_benchmark.py", "cache_profile.py")
++    "collect_benchmark_platform.py", "model_benchmark.py", "analyze_model_benchmark.py")
+ PACKAGE_NAMES = {"review/" + name for name in SOURCE_NAMES} | {
+     "review/BENCHMARK-SPEC2.json", "review/RESOURCE-MANIFEST.json",
+     "review/MODEL-INVENTORY.json", "review/COMMON-STACK-RECEIPT.json"}
+ LIVE_SOURCE_NAMES = SOURCE_NAMES + ("benchmark_gpu_identity.py", "benchmark_artifacts.py",
+-                                   "prepare_benchmark_package.py", "benchmark_host_transport.py",
+-                                   "verify_benchmark_runtime.py", "validation_comparison.py", "batch_telemetry.py")
++                                   "benchmark_host_transport.py",
++                                   "verify_benchmark_runtime.py", "validation_comparison.py")
+ LIVE_SOURCE_NAMES += ('callback_profile.py', 'stall_trace.py')
+ LIVE_SOURCE_NAMES += ('graph_screen.py', 'graph_integration.py', 'graph_outer.py', 'graph_full_cuda_graph_backend.py', 'context_tokenizer.py')
+ LIVE_SOURCE_NAMES += ('serving_contract.py', 'serving_client.py', 'serving_reader.py', 'serving_integration.py',
+@@ -71,6 +71,8 @@
+     LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES
+                              if name not in ('callback_profile.py', 'stall_trace.py'))
+ LIVE_SOURCE_NAMES += ("layernorm_p3_candidate.py", "qwen3_5_candidate.py", "d3b_head_adapter.py", "d3b_combined_model_runner.py")
++LIVE_SOURCE_NAMES += ('observer_health.py', 'target_kv_metadata.py',
++                      'kv_graph_join.py', 'request_receipts.py')
+ LIVE_SOURCE_NAMES += ('p1_prefill.py', 'p1_fp8_kernels.py')
+ LIVE_SOURCE_NAMES += ('d3b_target_head_adapter.py', 'd3b_head_launches.py', 'd3b_head_fp8_ops.py', 'd3b_head_fp8_kernels.py')
+ LIVE_PACKAGE_NAMES = {"review/" + name for name in LIVE_SOURCE_NAMES} | {

@@ -1,0 +1,82 @@
+{
+  "changes": [
+    {
+      "after_bytes": 48474,
+      "after_sha256": "851a121161d7a76b391d8a9b052aa84984e798e4e223b8c19c6e36a45f53a11e",
+      "before_bytes": 50655,
+      "before_sha256": "662b377ebad9d24f4627ad36e1885f2616ce95122837edcbe84f8ec5a8086f70",
+      "name": "review/benchmark_artifacts.py"
+    },
+    {
+      "after_bytes": 16389,
+      "after_sha256": "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df",
+      "before_bytes": 18544,
+      "before_sha256": "0492f5d19c5cd2ce26fa3adb326df91c2aa2683a622afb3c4ad16f876f7d506f",
+      "name": "review/benchmark_gpu_identity.py"
+    },
+    {
+      "after_bytes": 52085,
+      "after_sha256": "9265483dad0cf426307a8024ceaf61dad9a634beb93638690bd924d639e08bcf",
+      "before_bytes": 54528,
+      "before_sha256": "a28a507df77805d2b7e77d7106a4f103486574d40c0b8beb1a100f516fe0e922",
+      "name": "review/benchmark_host_transport.py"
+    },
+    {
+      "after_bytes": 37642,
+      "after_sha256": "a5a244a8ae8823ba6bd0061ec63af6a56424efd0489258af0e97fa1794b9f614",
+      "before_bytes": 31792,
+      "before_sha256": "c685999dca9f8658792b6cdefd70c28155594c6caa75437e02f0133d56e32350",
+      "name": "review/benchmark_owner_adapter.py"
+    },
+    {
+      "after_bytes": 116573,
+      "after_sha256": "04ccdd9c18b32722d3dd05ff78125618143b18bed505de30e6535ab01002cebf",
+      "before_bytes": 93042,
+      "before_sha256": "899d9736330b3bff776bce77731eda7ca13d8f1cf9fcebd7bda6a4257241e463",
+      "name": "review/benchmark_physical_controller.py"
+    },
+    {
+      "after_bytes": 21194,
+      "after_sha256": "2bc3cc75eec3e468812433a49fee418933415896ba4697e2dfbf697d6d6a3c0b",
+      "before_bytes": 23371,
+      "before_sha256": "0eddebd8c281199d8e37342418475dcb384c2c28957c2fe957173f24742051af",
+      "name": "review/benchmark_release_observer.py"
+    },
+    {
+      "after_bytes": 28806,
+      "after_sha256": "5c19ec7e8edcb368cdceb841511c09bb9cdb7ac213a32b0d883a6408453ae0fd",
+      "before_bytes": 30987,
+      "before_sha256": "57be40fddc2b98164069eeecb577ced8be8307f38e75443a9ceb5e3632e2f64d",
+      "name": "review/benchmark_resource_gate.py"
+    },
+    {
+      "after_bytes": 28800,
+      "after_sha256": "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5",
+      "before_bytes": 31003,
+      "before_sha256": "47e3ca93178974cbcee81bf11dfaa26770fc84aeb6bdba2563dff68e667cbc32",
+      "name": "review/collect_benchmark_platform.py"
+    },
+    {
+      "after_bytes": 30363,
+      "after_sha256": "a940b3752fbe8f88f1bf86a5c7591dca1d14169ac37d1ff8cb42cb0e1ba959f3",
+      "before_bytes": 32477,
+      "before_sha256": "8d49e1fbdd33e2fe4b3fb74412d3d9c9fd16198fbc696d3aa5ee5a19d4c51ec3",
+      "name": "review/host_process_owner.py"
+    },
+    {
+      "after_bytes": 0,
+      "after_sha256": null,
+      "before_bytes": 855,
+      "before_sha256": "c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed",
+      "name": "review/spry_common_canon.py"
+    }
+  ],
+  "complete_protected_patch_sha256": "bd1544605c0098f84632a699c433be4a5c212e50473edd62a8de56fe9dc54ddf",
+  "patch_sha256": "927e596df3d31a9899e7c55b74318c3e9bf558fa442e88993d0e61260806ea40",
+  "previous_members": 10,
+  "previous_operation": 196,
+  "reference_all_protected_sources_match_B186": true,
+  "reference_members": 9,
+  "reference_protected_set_sha256": "6da65f49338a304885cdb5c20b3f032dbb4afcf9df1716e13fe8dab929e56d37",
+  "schema": 1
+}

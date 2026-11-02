@@ -1,0 +1,413 @@
+{
+  "complete_cleanup": false,
+  "documentation_audits": "Both READMEs passed with no technical-writing findings",
+  "launch_authorized": false,
+  "native_preflight_archive": {
+    "ceiling_bytes": 16777216,
+    "excluded_unused_historical_review": [
+      "serving/proposals/d2-durable-limits/review/benchmark_artifacts.py",
+      "serving/proposals/d2-durable-limits/review/benchmark_host_transport.py",
+      "serving/proposals/d2-durable-limits/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-host-binding/review/benchmark_artifacts.py",
+      "serving/proposals/d2-host-binding/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-owner-timing/review/benchmark_owner_adapter.py",
+      "serving/proposals/d2-owner-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-session-timing/review/benchmark_host_transport.py",
+      "serving/proposals/d2-session-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-stop-policy/review/benchmark_artifacts.py",
+      "serving/proposals/d2-stop-policy/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-worker-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/production-imports/review/benchmark_artifacts.py",
+      "serving/proposals/production-imports/review/benchmark_host_transport.py",
+      "serving/proposals/production-imports/review/benchmark_physical_controller.py",
+      "serving/proposals/production-startup/review/benchmark_artifacts.py",
+      "serving/proposals/production-startup/review/benchmark_host_transport.py",
+      "serving/proposals/production-startup/review/benchmark_physical_controller.py",
+      "serving/proposals/source-fingerprints/review/benchmark_artifacts.py",
+      "serving/proposals/source-fingerprints/review/benchmark_host_transport.py",
+      "serving/proposals/source-fingerprints/review/benchmark_physical_controller.py"
+    ],
+    "gzip_bytes": 3599806,
+    "selected_tests_retained": true,
+    "tar_bytes": 16465920
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 193
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "other_seven_protected_helpers_unchanged": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "archive": {
+      "archive_members": 77,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "fixture_scope": "Finite CPU producer/reader fixtures; no native arithmetic or quality result",
+    "native_argv": {
+      "all_mount_resource_model_and_sampling_arguments_preserved": true,
+      "native_execution": false,
+      "only_expected_source_pins_changed": true
+    },
+    "passed": true,
+    "payload_delta": {
+      "archive_members": 77,
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "PROTECTED-SHA256.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/analyze_model_benchmark.py",
+        "review/benchmark_owner_adapter.py",
+        "review/benchmark_physical_controller.py",
+        "review/graph_outer.py",
+        "review/model_benchmark.py",
+        "review/mtp_contract.py",
+        "review/serving_client.py",
+        "review/serving_contract.py",
+        "review/serving_entry.py",
+        "review/serving_graph_observer.py",
+        "review/serving_integration.py",
+        "review/serving_reader.py",
+        "review/worker_entry.py"
+      ],
+      "native_execution": false,
+      "owner_archive_ceiling": 80,
+      "removed": [
+        "review/context_tokenizer.py",
+        "review/graph_screen.py",
+        "review/validation_comparison.py"
+      ],
+      "requests_settings_model_stack_kernels_and_active_overlays_byte_identical": true
+    },
+    "shared_consumers": {
+      "callable_identity_shared": true,
+      "consumers": 3,
+      "exact_previous_json_bytes": true,
+      "helper_sha256": "a1bdcb26c9a076ae3471a3a9182622b193aab113bfc18ba3657c5db4f44308e0",
+      "native_execution": false,
+      "request_rows": 176
+    },
+    "source_refusals": {
+      "before_execution": true,
+      "changed": true,
+      "missing": true
+    },
+    "tests": 14
+  },
+  "post_test_record_change": "cpu_verified changed from false to true only; execution authority remains false",
+  "proofs": {
+    "FINAL-SOURCE-MATCH.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/FINAL-SOURCE-MATCH.json",
+      "sha256": "f46b2d4cf2c87ac2008087e9a7d1325f433d4b94bc023648c8eef8544a5ca1f1"
+    },
+    "PATCH-ROUNDTRIP.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/PATCH-ROUNDTRIP.json",
+      "sha256": "784c04a8d844bc75680cea9268ab61837746519749de1fa9cc242a5cf4a00ccf"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/PUBLIC-CHECKS.json",
+      "sha256": "65a4bf8bf26d3961e88d4c951a7a885051148ce3ac902d1c3aa15ec96200b169"
+    },
+    "SOURCE-REDUCTION.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/SOURCE-REDUCTION.json",
+      "sha256": "eaab903c95ed465a60b88a5c28de7d96b21f96ee91241ecc42b8e8a5d10efc33"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/STATIC-CHECKS.json",
+      "sha256": "09b16b62f3aa37b9af7af89ebb9cd26cd21986423b7dda188c1216a11340fee1"
+    },
+    "full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/full-chain-attempt-1.json",
+      "sha256": "c16a63b4b01e8d8dec932671f9ed9eb5bc9c255fdac379cd45c52cf23a5f5d22"
+    },
+    "full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/full-chain-attempt-1.log",
+      "sha256": "c7bbef81801d43bb102b21425612cd1b3561fbb8508fdef0ddcdd11a420b5300"
+    },
+    "full-chain-final.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/full-chain-final.json",
+      "sha256": "e05dc013f5e3db77e0d4b566cb6d25023ca820db47b2445686fcc7b4b2201dd1"
+    },
+    "full-chain-final.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/full-chain-final.log",
+      "sha256": "afacda79633b20bed6e453ad35e58eeaa28ff7f72203dae30dbee19dfe40ff70"
+    },
+    "native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "3be54dfaf93ab8bf5bfeb7352feaa481c97d7ea353b6449105ae7044dcbf2735"
+    },
+    "native-source-preflight-v2/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/native-source-preflight-v2/SOURCE-INVENTORY.json",
+      "sha256": "27931df250d68459cd7caf9a372e9aacdbbdd6a856885bf51838f4cfda97be0f"
+    },
+    "native-source-preflight-v2/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/native-source-preflight-v2/native-cpu-source-preflight.json",
+      "sha256": "dfc573fba47606c7f28653b3991dc2a2f85984a63916de7ef0de360387cbfbf9"
+    },
+    "packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/packet-attempt-1.json",
+      "sha256": "877b73e0ed45bfa137924f76b3ed2c133c4b04d2b02d4509eb8f93371c6194f1"
+    },
+    "packet-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/packet-attempt-1.log",
+      "sha256": "d1f933a49726a727c8bf0bd945784f08a936ad58187e8d0026210df597b4f41f"
+    },
+    "preview-final-2.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/preview-final-2.log",
+      "sha256": "2b0d7899b1a1c6a05081eaff41faaca7828722e6aa2a119a97ee574cf987bdbc"
+    },
+    "proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-final.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/public-make-final.log",
+      "sha256": "73209745738a89d3dd64818ae81ec85d92ddaae44456d335c11b452b31fa8141"
+    },
+    "serving-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/serving-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "source-review-final/SOURCE-REVIEW.json": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/source-review-final/SOURCE-REVIEW.json",
+      "sha256": "5cb0c03d8d452de66a91f70645bb10f47b2eae36aea7e9ea3d5e0b47c5615d49"
+    },
+    "unit-final.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/unit-final.log",
+      "sha256": "027d6d3cad0b15cb0f7dcfa15081e1abae2de11da694c367b802489e6b3e91b1"
+    },
+    "worker-history-final.log": {
+      "path": ".test-build/serving-cleanup/closed-http-v1/worker-history-final.log",
+      "sha256": "fe5987485cb0de84390f69391347ab040f1aeaf73f6f52c095e4a3085d75ceb1"
+    }
+  },
+  "protected_changed_files": [
+    "benchmark_physical_controller.py",
+    "benchmark_owner_adapter.py"
+  ],
+  "protected_set_sha256": "01e2d4cfeeea17235c398a1886b2f8a15ebbdf12db0416ed4911402381a79589",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 928,
+    "suites": 74
+  },
+  "published_proposal_sha256": "d52349f918024ac21f3f55c8c56ab6a3faad9c1c831cfd31c15937e1e1e3f638",
+  "quality_for_new_source_graded": false,
+  "remaining": [
+    "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
+    "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Startup tensor validation scans and item synchronization after the runner refactor",
+    "Shared FP8 head and packed QKVZ/BA views after refactors",
+    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "retained_failures": [
+    {
+      "kind": "MISSING_READOUT_BENCH_LOADER_INITIALIZATION",
+      "path": ".test-build/serving-cleanup/closed-http-v1/packet-attempt-1.json",
+      "resolution": "Restored module-level loader execution; actual baseline/scalar checks subsequently passed"
+    },
+    {
+      "kind": "SOURCE_IDENTITY_CHANGED_DURING_LOCAL_TEST",
+      "path": ".test-build/serving-cleanup/closed-http-v1/full-chain-attempt-1.json",
+      "resolution": "Retained intermediate failure and reran the entire packet suite against frozen final source"
+    }
+  ],
+  "retired_feature_apis": 13,
+  "retired_payloads": {
+    "context_tokenizer.py": "e0a5a7a1ea41f253ed0fbc08f0bfd83aa5d8037f0ac9f36bac875b5917d43160",
+    "graph_screen.py": "9b5a1431b3d35770b1103a40212353eaea534d50a4b84d5f8be16aac7d56c8be",
+    "validation_comparison.py": "607c5a44c3192329ec7566d0deadeafe5dcfcd7447fa306caa037aa20a7f5d28"
+  },
+  "retired_source_helper": "norm_source_for_arm",
+  "runtime_changes": {
+    "analyze_model_benchmark.py": {
+      "baseline_sha256": "9856eaa02e79bced866f5f0526dbabee3b00e87f26508d7a4471eabc78b2bc4c",
+      "proposed_sha256": "a5aa54f5b2620ee5b4c780445d4932de2a01e5065718b53893de4469c1f1fcc7"
+    },
+    "graph_outer.py": {
+      "baseline_sha256": "f797dad9ec5742d2056df358a33e42f062775f52a510a7bd2600d80fd725ae70",
+      "proposed_sha256": "9902d9103a0696edeba14fcfed5ce5c9047252c4223a2814f49f69583e288d74"
+    },
+    "model_benchmark.py": {
+      "baseline_sha256": "6560fd90b11f67569227b960c9957d07dce899db6fefb3cec7b1c2bdf2acb8a8",
+      "proposed_sha256": "6fc1918bda3b449ddee810417c3ea76fb1e0610ede2ab6c96bbf97334b9f7de1"
+    },
+    "mtp_contract.py": {
+      "baseline_sha256": "d1fae26492420cef8508df21180da0ccfbb01fb63741364fbd28beb8d649f555",
+      "proposed_sha256": "c42dccfeba276ecedaa98f3050b80373ae8863d8ca29118bfc7cffaa47106ddb"
+    },
+    "serving_client.py": {
+      "baseline_sha256": "25012408c7cdfd098e0ec485457f4911f81e3df7bf5f13d901bcbd45a5493960",
+      "proposed_sha256": "dd20fbf86851407d13ccbe78850faf7a5c0f7107e4921c98ccdf2b4821620c5f"
+    },
+    "serving_contract.py": {
+      "baseline_sha256": "321a3640367049a2c1ba5742473cafaedc49432e8c1d470af21054ffe67a1556",
+      "proposed_sha256": "4e1c75cc891d787f195b45f86a97fc23f2f02c55337fce560c999e6263f4cab9"
+    },
+    "serving_entry.py": {
+      "baseline_sha256": "e994edecf87c7387a51504de64016979f4cdc460f5ddeb973a902494b065baee",
+      "proposed_sha256": "d05628c85bc38dbbf0948fe08368611d574fca16132522071bcfd6b2a952a5e3"
+    },
+    "serving_graph_observer.py": {
+      "baseline_sha256": "4320efb65b090ea42c5b192f5c9a28769797e53b99b2c7d3d7149d83ebbecb4e",
+      "proposed_sha256": "a34519a07e765a2bc2ea7c6d4db0e42cb418542315c4954093c3a7064e0db667"
+    },
+    "serving_integration.py": {
+      "baseline_sha256": "87d21aa8a6174d411d526fbd7bc63314d494bc75c2c96a570384206a908c5796",
+      "proposed_sha256": "5e78f95f6dbdf45f6cc07022f306f48756cfed4b4cde81353b38e042540d6b51"
+    },
+    "serving_reader.py": {
+      "baseline_sha256": "dfb39f84cfab5d65bc62bdb3105831146a56387a59711cd8971fbfbf2282a686",
+      "proposed_sha256": "e6822360bcf9337e4cfe5d31bc1c7f3f3f3e56b40d5e4bf417e273e4293c4041"
+    },
+    "serving_runtime.py": {
+      "baseline_sha256": "4221a4f714d90bcd207619f7ea167178afb65ff20a6296abdebe2cf023eb033c",
+      "proposed_sha256": "4221a4f714d90bcd207619f7ea167178afb65ff20a6296abdebe2cf023eb033c"
+    },
+    "worker_entry.py": {
+      "baseline_sha256": "d0d0fb11862099a5491afa50607e0a583e97f0c66c693418db61a71b3bf4e4ad",
+      "proposed_sha256": "8131d8474a6c01ecca0ef15f5f45da3a9ac2de4d7f21eec173befc43fee6c414"
+    }
+  },
+  "schema": 1,
+  "source_reduction": {
+    "after": {
+      "python_bytes": 2082515,
+      "python_files": 59,
+      "python_lines": 39562
+    },
+    "before": {
+      "python_bytes": 2256378,
+      "python_files": 62,
+      "python_lines": 42206
+    },
+    "control": "common-helpers",
+    "removed_python_bytes": 173863,
+    "removed_python_files": 3,
+    "removed_python_lines": 2644
+  },
+  "source_review": {
+    "content_sha256": "e236a70b920a90eff4ea692d28078fee75d554763e7bc744f136a3ef8ac9d1b2",
+    "launch_authorized": false,
+    "packet_id": "e201110200000053",
+    "path": ".test-build/serving-cleanup/closed-http-v1/source-review-final",
+    "proposed_package_members": 77
+  },
+  "sources": {
+    "analyze_model_benchmark.py": {
+      "file": "spry_evidence/closed_readout.py",
+      "sha256": "a5aa54f5b2620ee5b4c780445d4932de2a01e5065718b53893de4469c1f1fcc7"
+    },
+    "graph_outer.py": {
+      "file": "spry_serving/closed_projection.py",
+      "sha256": "9902d9103a0696edeba14fcfed5ce5c9047252c4223a2814f49f69583e288d74"
+    },
+    "isolated_scheme.py": {
+      "file": "spry_serving/scheme.py",
+      "sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "model_benchmark.py": {
+      "file": "spry_serving/closed_benchmark.py",
+      "sha256": "6fc1918bda3b449ddee810417c3ea76fb1e0610ede2ab6c96bbf97334b9f7de1"
+    },
+    "mtp_contract.py": {
+      "file": "spry_serving/closed_contract.py",
+      "sha256": "c42dccfeba276ecedaa98f3050b80373ae8863d8ca29118bfc7cffaa47106ddb"
+    },
+    "ops.py": {
+      "file": "spry_serving/ops.py",
+      "sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "prefill_reference.py": {
+      "file": "spry_serving/prefill_reference.py",
+      "sha256": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887"
+    },
+    "request_receipts.py": {
+      "file": "spry_evidence/shared_receipts.py",
+      "sha256": "54419f977a5a344973b6f7679a40265848b353194a1c7992b1e2c2660a0a47ee"
+    },
+    "serving_client.py": {
+      "file": "spry_evidence/closed_client.py",
+      "sha256": "dd20fbf86851407d13ccbe78850faf7a5c0f7107e4921c98ccdf2b4821620c5f"
+    },
+    "serving_contract.py": {
+      "file": "spry_evidence/closed_contract.py",
+      "sha256": "4e1c75cc891d787f195b45f86a97fc23f2f02c55337fce560c999e6263f4cab9"
+    },
+    "serving_entry.py": {
+      "file": "spry_serving/closed_entry.py",
+      "sha256": "d05628c85bc38dbbf0948fe08368611d574fca16132522071bcfd6b2a952a5e3"
+    },
+    "serving_graph_observer.py": {
+      "file": "spry_evidence/closed_observer.py",
+      "sha256": "a34519a07e765a2bc2ea7c6d4db0e42cb418542315c4954093c3a7064e0db667"
+    },
+    "serving_integration.py": {
+      "file": "spry_evidence/closed_integration.py",
+      "sha256": "5e78f95f6dbdf45f6cc07022f306f48756cfed4b4cde81353b38e042540d6b51"
+    },
+    "serving_reader.py": {
+      "file": "spry_evidence/closed_reader.py",
+      "sha256": "e6822360bcf9337e4cfe5d31bc1c7f3f3f3e56b40d5e4bf417e273e4293c4041"
+    },
+    "serving_runtime.py": {
+      "file": "spry_serving/closed_runtime.py",
+      "sha256": "4221a4f714d90bcd207619f7ea167178afb65ff20a6296abdebe2cf023eb033c"
+    },
+    "worker_entry.py": {
+      "file": "spry_serving/closed_worker.py",
+      "sha256": "8131d8474a6c01ecca0ef15f5f45da3a9ac2de4d7f21eec173befc43fee6c414"
+    }
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 216,
+    "native_runtime_imported": false
+  },
+  "status": "CPU_CLOSED_HTTP_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+  "tested_proposal_sha256": "ada57c14d9d0d15b44fb0a22e758dedee12cc4e4e8033de66e999c735a68095e"
+}

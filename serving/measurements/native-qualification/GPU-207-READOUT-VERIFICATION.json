@@ -1,0 +1,64 @@
+{
+  "cpp_sanitizer_checks_passed": true,
+  "focused_comparison_tests": 18,
+  "logs": {
+    "focused": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/offline-comparison-tests.log",
+      "sha256": "cfdf82b42977357ffb9b8066238a4217cead6fffacc8bacc5c13d5cd6136654c"
+    },
+    "public": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/final-public-make.log",
+      "sha256": "20dc179ee786038a9a72cfda0071626ae678d16ea3befb514b5212dee4cf1a65"
+    }
+  },
+  "measurement_seals": {
+    "hostile_timing": {
+      "manifest_sha256": "8f0093e6e9a3f732abeeed2f0bf5e3c16a4a788f014d92aabaf1492be74a6f34",
+      "members": 2,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/timing-comparison-hostile-v1",
+      "verified_utc": "2026-11-02T19:51:30.445846+00:00"
+    },
+    "memory": {
+      "manifest_sha256": "fad9e278f01f96c534fa6cce582ad0f12d826976dc4267f193eccc3945704aa4",
+      "members": 1,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/memory-comparison-v1",
+      "verified_utc": "2026-11-02T19:51:30.451364+00:00"
+    },
+    "timing": {
+      "manifest_sha256": "8f0093e6e9a3f732abeeed2f0bf5e3c16a4a788f014d92aabaf1492be74a6f34",
+      "members": 2,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/timing-comparison-v2",
+      "verified_utc": "2026-11-02T19:51:30.377487+00:00"
+    }
+  },
+  "native_packet_source_changed": false,
+  "native_work_repeated": false,
+  "passed": true,
+  "public_test_suites": 89,
+  "public_tests": 1082,
+  "readout_only_change": true,
+  "real_comparison": {
+    "absent_and_hostile_reports_byte_identical": true,
+    "analyzer_sha256": "8e0dff142ce9590df465f02f961e3822f77ba3859d4ac699150cc752e4a90a99",
+    "complete_real_comparison": true,
+    "groups": 186,
+    "hostile_ambient_restored": true,
+    "matched_rows": 352,
+    "native_work": false,
+    "passed": true,
+    "rows": 352
+  },
+  "retained_failure": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/timing-comparison.log",
+    "sha256": "7579a4d6dd3b3bb99ce54550b8661cd957b85459989038c94aefcc48caecbecc"
+  },
+  "schema": 1,
+  "source_pins": {
+    "serving/compare_measurement.py": "8e0dff142ce9590df465f02f961e3822f77ba3859d4ac699150cc752e4a90a99",
+    "serving/tests/test_measurement_comparison.py": "5d6e8f4d95bca28efcdb58b75fe97be02450f6bdfada0df2ebc0d5fb513bbd91"
+  },
+  "status": "OFFLINE_ANALYZER_SCOPED_CONTRACT_AND_COMPLETE_RETAINED_REPLAY_PASS"
+}

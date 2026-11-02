@@ -1,0 +1,76 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -59,26 +59,10 @@
+     # The HTTP entry launches native model_runner/sampler paths from its source
+     # map; capture_sampler is used only by the separate historical layer screen.
+     LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES if name != 'capture_sampler.py') + ('j01_probe.py',)
+-if mtp_contract.final_norm_capture_enabled():
+-    # Exchange the inactive layer-screen overlay for the norm observer in
+-    # both executable and package inventories; retain the transport ceiling.
+-    LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES if name != 'capture_qwen3_5.py') + ('final_norm_probe.py',)
+-if mtp_contract.midpoint_capture_enabled():
+-    LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES if name != 'capture_qwen3_5.py') + ('midpoint_capture.py',)
+-    if mtp_contract.settings()['midpoint_capture'] == 'j01-block3-prepared-attention-v1':
+-        LIVE_SOURCE_NAMES += ('attention_capture.py',)
+-        if mtp_contract.raw_attention_capture_enabled():
+-            LIVE_SOURCE_NAMES += ('raw_attention.py',)
+-if mtp_contract.verify_attention_ab_enabled():
+-    LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES if name != 'capture_qwen3_5.py') + ('verify_decode_adapter.py',)
+ if mtp_contract.verify_attention_chain_enabled():
+     # This native HTTP diagnostic never installs the historical logits overlay.
+     # Exchange it for the adapter, preserving the transport member ceiling.
+     LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES if name != 'capture_logits_processor.py') + ('verify_decode_adapter.py',)
+-if mtp_contract.gdn_capture_enabled() or mtp_contract.norm_capture_enabled():
+-    # Native HTTP uses the authenticated runtime model runner. Exchange the
+-    # inactive historical overlay for the bounded layer-8 observer.
+-    LIVE_SOURCE_NAMES = tuple(name for name in LIVE_SOURCE_NAMES if name != 'capture_model_runner.py') + ('gdn_capture.py',)
+ if mtp_contract.norm_candidate_enabled() or mtp_contract.full_enabled_benchmark():
+     # The HTTP norm mode authenticates the stock hybrid backend directly.
+     # Reclaim only its inactive historical overlay for the candidate asset.
+@@ -98,34 +82,8 @@
+ LIVE_PACKAGE_NAMES.update({'review/CONTEXT-PROMPTS.zlib', 'review/TOKENIZER-CONTRACT.json', 'review/CONTROL-CASE.zlib'})
+ LIVE_PACKAGE_NAMES.update({'review/HTTP-BINDING-control.json', 'review/HTTP-BINDING-mtp.json'})
+ LIVE_PACKAGE_NAMES.add('review/DRAFT-MODEL.json')
+-if mtp_contract.precision_reference_enabled() and not mtp_contract.full_enabled_benchmark():
+-    LIVE_PACKAGE_NAMES.remove('review/DRAFT-MODEL.json')
+-LIVE_PACKAGE_NAMES.add('review/CAPTURE-FORMAT.json')
+-if mtp_contract.full_enabled_benchmark():LIVE_PACKAGE_NAMES.remove('review/CAPTURE-FORMAT.json')
+-if mtp_contract.settings()['phase'] in mtp_contract.TAIL_PHASES or mtp_contract.settings()['phase'] in (mtp_contract.GDN_PAIR_PHASE, mtp_contract.LIFECYCLE_PHASE):
+-    # No layer capture is enabled here. Trade this unused format asset for
+-    # the second GEMM source, preserving the exact 64-member archive ceiling.
+-    LIVE_PACKAGE_NAMES.remove('review/CAPTURE-FORMAT.json')
+-LIVE_PACKAGE_NAMES.add('review/DECODE-CAPTURE-FORMAT.json')
+-if mtp_contract.settings()['phase'] in mtp_contract.FAIL_FAST_PHASES:
+-    # No layer/decode capture is enabled by this diagnostic. Preserve the
+-    # unused format in authoring provenance without increasing transport bounds.
+-    LIVE_PACKAGE_NAMES.remove('review/DECODE-CAPTURE-FORMAT.json')
+-if mtp_contract.precision_reference_enabled():
+-    # The ordinary reference has no layer/decode capture and carries one
+-    # explicit checkpoint profile within the existing archive ceiling.
+-    LIVE_PACKAGE_NAMES.discard('review/CAPTURE-FORMAT.json')
+-    LIVE_PACKAGE_NAMES.discard('review/DECODE-CAPTURE-FORMAT.json')
+-# The HTTP sprint has no asynchronous layer-capture arm. Its historical
+-# format stays in authoring provenance, outside this exact live inventory.
+-if not mtp_contract.settings()['phase'].startswith('sprint01-'):
+-    LIVE_PACKAGE_NAMES.add('review/ASYNC-PREFILL-FORMAT.json')
+ LIVE_PACKAGE_NAMES.update({'review/STOCK-BUILD-PROOF.json', 'review/CAPTURE-BUILD-PROOF.json'})
+ LIVE_PACKAGE_NAMES.update(mtp_contract.package_assets())
+-# The fixed-work HTTP lane does not read the legacy context vector.
+-# Preserve it in author provenance; omit only this unused live archive member.
+-if mtp_contract.settings().get('performance_benchmark',{}).get('mode') == 'm2047-fixed1024-c1-v1':
+-    LIVE_PACKAGE_NAMES.remove('review/CONTEXT-PROMPTS.zlib')
+ LIVE_PACKAGE_NAMES.difference_update('review/' + name for name in mtp_contract.PACKED_REQUEST_NAMES if name != 'FINAL-REQUESTS.zlib')
+ INDEPENDENT_MODE = 'independent-bf16-reference-v1'
+ 
+@@ -783,11 +741,6 @@
+     return report
+ 
+ 
+-def run_controller(**kwargs):
+-    """Preserved inert CPU composition; cannot provide a physical context."""
+-    return _run_bound_controller(**kwargs)
+-
+-
+ def mapping_sha256(value):
+     return hashlib.sha256((json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode()).hexdigest()
+ 

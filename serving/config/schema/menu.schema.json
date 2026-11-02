@@ -1,0 +1,154 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "groups": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "concurrency": {
+            "maximum": 2,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "ordinals": {
+            "items": {
+              "maximum": 9223372036854775807,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "maxItems": 10000,
+            "minItems": 1,
+            "type": "array"
+          },
+          "task": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "concurrency",
+          "id",
+          "kind",
+          "ordinals",
+          "task"
+        ],
+        "type": "object"
+      },
+      "maxItems": 10000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "rows": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "case": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "context_envelope_tokens": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "expected": {
+            "type": "string"
+          },
+          "expected_sha256": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
+          "input_tokens": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "internal_reserve_tokens": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maximum_output_tokens": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "ordinal": {
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "source_ordinal": {
+            "maximum": 175,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "stop_policy": {
+            "enum": [
+              "natural",
+              "cap"
+            ],
+            "type": "string"
+          },
+          "task": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "bytes",
+          "case",
+          "category",
+          "context_envelope_tokens",
+          "expected",
+          "expected_sha256",
+          "group",
+          "input_tokens",
+          "internal_reserve_tokens",
+          "maximum_output_tokens",
+          "ordinal",
+          "path",
+          "sha256",
+          "task",
+          "stop_policy"
+        ],
+        "type": "object"
+      },
+      "maxItems": 10000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": 1,
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "rows",
+    "groups"
+  ],
+  "title": "W5 menu source-review configuration",
+  "type": "object"
+}

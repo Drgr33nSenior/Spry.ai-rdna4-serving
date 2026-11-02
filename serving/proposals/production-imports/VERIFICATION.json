@@ -1,0 +1,63 @@
+{
+  "actual_parity_import_matrix": {
+    "actual_source_modules": true,
+    "cases": [
+      {
+        "arm": "bf16",
+        "instrumented": false,
+        "parity_imported": false
+      },
+      {
+        "arm": "kv4",
+        "instrumented": false,
+        "parity_imported": false
+      },
+      {
+        "arm": "bf16",
+        "instrumented": true,
+        "parity_imported": true
+      },
+      {
+        "arm": "kv4",
+        "instrumented": true,
+        "parity_imported": true
+      }
+    ],
+    "instrumented_fixture": "Explicit mode and matching source JSON hashes at the import boundary only; whole-run mutation verifier unchanged",
+    "native_imports_executed": false
+  },
+  "byte_identical_contract_outputs": 134,
+  "documentation_audit": "PASS_NO_FINDINGS",
+  "exact_overlays_reproduced": 11,
+  "fixture_cleanup_after_full_run": "Removed four unused imports; the actual four-case import test passed again.",
+  "focused_tests": 342,
+  "historical_worker_source_tests": 11,
+  "import_source_tests": 21,
+  "initial_fixture_correction": "The isolated runtime stand-in now supplies both existing default callables, ServingClient and run_bound; no validator changed.",
+  "launch_authorized": false,
+  "lazy_import_source_tests": 4,
+  "native_runtime_tested": false,
+  "owner_approved": false,
+  "packet_tests": 34,
+  "passed": true,
+  "patch_series_checks": 17,
+  "patch_series_raw_report_sha256": "c4afbfa5f2cf93712d9d9e3eca18c7dd9a3ed09daf0aef891f5ffd3e49070a30",
+  "performance_improvement_measured": false,
+  "phase1_complete": false,
+  "production_mount_isolation_complete": false,
+  "proposal_sha256": "2d7db07ef1d42240989ba496c4ed9718abe6856329d7597c6b41b6731a039a36",
+  "protected_helpers_changed_from_previous_stage": false,
+  "raw_report_sha256": "0a712e04fc533377f6614b4ba2f564f7892c67b51a92620825c5a15e1ef88927",
+  "repository_make_test": "PASS",
+  "repository_python_unittest_count": 779,
+  "retained_contract_checks": 15,
+  "source_patch_sha256": "bb3eace1125a85519808997af40dbfeacfedcad351271858e9b38d743b83d54a",
+  "static_global_references": "PASS_THREE_CHANGED_MODULES",
+  "syntax_compilation": "PASS_ALL_116_PYTHON_MODULES",
+  "targeted_import_recheck": 1,
+  "targeted_recheck_report_sha256": "12edf60c7f0e23619fa9f876b4986a4a7ea58b7f521f4e20d26fd619cf5ee29f",
+  "test_adapter_patch_sha256": "9e171c93e7e6cf2f2863f1e4dcadb3aac0e840e176efd43ae7f127df20acbbe3",
+  "test_source_sha256_at_full_run": "3ecaf6b80d20d6177fcb099fc8e7c28eb851b5d91b665bef20baecd39503933e",
+  "test_source_sha256_current": "04a34b766dc0fe7efab329bf690d8e64d1e6bed7acb35fecc88d7492f4011c50",
+  "whole_run_config_mutations_supported": false
+}

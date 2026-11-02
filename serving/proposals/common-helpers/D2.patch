@@ -1,0 +1,38 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -31,7 +31,7 @@
+ http_integration = _adjacent("spry_http_serving_integration", "serving_integration.py")
+ mtp_contract = _adjacent("spry_mtp_contract", "mtp_contract.py")
+ transport = _adjacent("spry_physical_root_transport", "benchmark_host_transport.py")
+-SPEC_TEMPLATE_SHA256 = 'ac1b7afaf10e248d944a0d441ffa9abe30d72ed134860b93a7ec69aae09a07fd'
++SPEC_TEMPLATE_SHA256 = '2c8a2a5496473be5656eb3b117ad1c3313e3a05fcceb52f3dff470a167c1f5bb'
+ MODEL_INVENTORY_SHA256 = "892e95cdabf87bbf96298e258e5889e2572acf21659121d811ca9a09eac09986"
+ CONFIG_SHA256 = "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+ if mtp_contract.precision_reference_enabled():
+@@ -49,7 +49,7 @@
+                                    "benchmark_host_transport.py",
+                                    "verify_benchmark_runtime.py", "validation_comparison.py")
+ LIVE_SOURCE_NAMES += ('callback_profile.py', 'stall_trace.py')
+-LIVE_SOURCE_NAMES += ('graph_screen.py', 'graph_integration.py', 'graph_outer.py', 'graph_full_cuda_graph_backend.py', 'context_tokenizer.py')
++LIVE_SOURCE_NAMES += ('graph_screen.py', 'spry_common_canon.py', 'graph_outer.py', 'graph_full_cuda_graph_backend.py', 'context_tokenizer.py')
+ LIVE_SOURCE_NAMES += ('serving_contract.py', 'serving_client.py', 'serving_reader.py', 'serving_integration.py',
+                       'serving_projection.py', 'serving_entry.py', 'serving_launcher.py', 'worker_entry.py',
+                       'serving_runtime.py', 'serving_graph_observer.py', 'mtp_contract.py', 'serving_parity.py')
+@@ -892,7 +892,7 @@
+     sources = [(('http_serving', 'bindings', arm, 'sha256'), 'HTTP-BINDING-' + arm + '.json')
+                for arm in ('control', 'mtp')]
+     sources += [(('graph_projection', 'helpers', name), name) for name in
+-                ('context_tokenizer.py', 'graph_integration.py', 'graph_outer.py', 'graph_screen.py')]
++                ('context_tokenizer.py', 'spry_common_canon.py', 'graph_outer.py', 'graph_screen.py')]
+     for path, name in sources:
+         pin = package_files.get('review/' + name)
+         need(_digest(pin), 'configured spec source pin required')
+@@ -946,7 +946,7 @@
+          and type(client_value['schema']) is int and client_value['schema']==2
+          and client_value['mode']=='normal-stop-fp8-mxfp4-workload-v1','configuration-generated client assets differ')
+     for name in ('HTTP-BINDING-control.json', 'HTTP-BINDING-mtp.json', 'context_tokenizer.py',
+-                 'graph_integration.py', 'graph_outer.py', 'graph_screen.py'):
++                 'spry_common_canon.py', 'graph_outer.py', 'graph_screen.py'):
+         _configuration_file(root / 'review' / name, files.get('review/' + name),
+             64 << 10 if name.endswith('.json') else 2 << 20, deadline=deadline, clock=clock,
+             stamps=stamps, json_object=name.endswith('.json'))

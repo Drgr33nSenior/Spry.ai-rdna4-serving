@@ -1,0 +1,33 @@
+{
+  "matched_requests": 1,
+  "matched_token_vectors": 0,
+  "mismatched_token_vectors": 1,
+  "operation": 202,
+  "quality_grade_performed": false,
+  "reference_operation": 186,
+  "responses": 1,
+  "rows": [
+    {
+      "arm": "bf16",
+      "case": "00-warmup-c1",
+      "closing_marker_positions": [
+        1896,
+        3294
+      ],
+      "closing_markers": 2,
+      "finish_reason": "stop",
+      "output_tokens": 3318,
+      "reference_output_tokens": 4770,
+      "reference_request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+      "reference_token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b",
+      "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+      "requests_equal": true,
+      "token_ids_sha256": "9c67733793946807c999cecf672a1f56081d814d6686498d8449334a68622afc",
+      "token_vectors_equal": false,
+      "wire_response_sha256": "625a1e313c6c8b6bbcb10d1489649713877280892273dd089de5c107c5779294"
+    }
+  ],
+  "schema": 1,
+  "status": "RETAINED_TOKEN_VECTOR_COMPARISON",
+  "whole_cleanup_qualified": false
+}

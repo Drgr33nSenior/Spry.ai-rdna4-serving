@@ -1,0 +1,80 @@
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -534,7 +534,7 @@
+         for name,row in rows.items():need((Path(tc['root'])/name).stat().st_mode & 0o777 == row['mode'],'development file mode')
+         digest,size,stamp=_hash(Path(tc['manifest']['path']),deadline,clock);need(digest==tc['manifest']['sha256'] and size==tc['manifest']['bytes'],'development manifest current identity');stamps[tc['manifest']['path']]=stamp
+     return {"manifest": value, "spec": spec, "spec_path": str(spec_path), "spec_sha256": spec_sha256,
+-            "owner_timing": timing, "session_timing": session_timing,
++            "owner_timing": timing, "session_timing": session_timing, "menu": configured['menu'],
+             "resource_manifest": resource_manifest, "resource_path": str(resource_path), "stamps": stamps,
+             **({'retained_identity': retained_identity} if live else {})}
+ 
+@@ -725,7 +725,7 @@
+             arms = {arm: read_inner_result(arm) for arm in ("bf16", "kv4")}
+             campaign["experiment_mode"] = prepared["spec"]["experiment_mode"]
+             campaign["http_bindings"] = {arm: value["binding"] for arm, value in arms.items()}
+-            report.update(_http_serving_report(arms, campaign))
++            report.update(_http_serving_report(arms, campaign, menu=prepared['menu']))
+             report.update(experiment_mode=prepared["spec"]["experiment_mode"], qualification=False,
+                           source_promotion=False, serving_quality_qualified=False,
+                           http_throughput_measured=True)
+@@ -914,6 +914,11 @@
+         256 << 10, deadline=deadline, clock=clock, stamps=stamps)
+     host = _configuration_file(root / run['host']['file'], grant['host_sha256'],
+         64 << 10, deadline=deadline, clock=clock, stamps=stamps)
++    menu = _configuration_file((root / manifest['run_config']).parent / run['menu']['file'],
++        run['menu']['sha256'], 1 << 20, deadline=deadline, clock=clock, stamps=stamps)
++    need(type(menu.get('rows')) is list and all(type(row) is dict
++         and row.get('stop_policy') in ('natural', 'cap') for row in menu['rows']),
++         'explicit per-row stop policy required')
+     files = manifest['package_files']
+     settings_pin = files.get('review/FINAL-SETTINGS.json')
+     need(settings_pin == SUPPORTED_SETTINGS_SHA256, 'supported W5 settings required')
+@@ -948,7 +953,7 @@
+     verify_unchanged({'stamps': stamps})
+     need(clock() < deadline, 'configured spec verification deadline')
+     return {'spec': expected, 'spec_sha256': pin, 'stamps': stamps, 'owner_timing': timing,
+-            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits)}
++            'session_timing': session_timing, 'artifact_limits': asdict(artifact_limits), 'menu': menu}
+ 
+ 
+ def validate_physical_grant(grant, manifest, manifest_sha256, parent_identity, *,
+@@ -1272,17 +1277,17 @@
+              for row in value["rank_progress"]), "complete rank diagnostic evidence required")
+ 
+ 
+-def _http_serving_report(arms, campaign):
++def _http_serving_report(arms, campaign, *, menu=None):
+     """Terminal reporting boundary used by the real controller and CPU regression."""
+     need(type(arms) is dict and set(arms) == {'bf16', 'kv4'}, 'both HTTP arms required')
+     accepted = {arm: http_integration.accept_with_owner(arms[arm], campaign, owner_arm=arm)
+                 for arm in ('bf16', 'kv4')}
+     return dict(http_serving_report_format='retained-complete-http-wire-reference-v1',
+-                http_serving={arm: _http_wire_reference(accepted[arm], owner_arm=arm)
++                http_serving={arm: _http_wire_reference(accepted[arm], owner_arm=arm, menu=menu)
+                               for arm in ('bf16', 'kv4')})
+ 
+ 
+-def _http_wire_reference(value, *, owner_arm):
++def _http_wire_reference(value, *, owner_arm, menu=None):
+     """Call only after the unchanged accept_with_owner; keep raw evidence intact."""
+     if (owner_arm not in ('bf16','kv4') or type(value) is not dict or
+             value.get('status') != 'SERVING_SCREEN_COMPLETE' or
+@@ -1294,14 +1299,14 @@
+     rows=value.get('rows')
+     settings = mtp_contract.settings()
+     if settings.get('quality_screen') == 'normal-stop-fp8-mxfp4-v1':
+-        planned = settings['requests']
++        planned = settings['requests'] if menu is None else menu['rows']
+         if (type(rows) is not list or len(rows) != len(planned) or
+                 any(type(row) is not dict or type(row.get('ordinal')) is not int or
+                     row['ordinal'] != expected['ordinal'] or row.get('case') != expected['case'] or
+                     row.get('request_body_sha256') != expected['sha256'] or
+-                    row.get('status') != 'NORMAL_STOP_COMPLETE' or row.get('finish_reason') != 'stop'
++                    not mtp_contract.completion_allowed(row, expected)
+                     for row, expected in zip(rows, planned, strict=True))):
+-            raise ValueError('exact source-bound natural-stop response menu required')
++            raise ValueError('exact source-bound natural-stop response menu required; declared cap rows must meet their output cap')
+         request_count = response_count = len(planned)
+         cancellation_count = 0
+     else:

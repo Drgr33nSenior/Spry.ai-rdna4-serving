@@ -1,0 +1,55 @@
+{
+  "acceptance_guards_changed": false,
+  "arms": [
+    {
+      "arm": "bf16",
+      "matched_B186_vectors": 176,
+      "responses": 176,
+      "valid_complete_responses": 176
+    },
+    {
+      "arm": "kv4",
+      "matched_B186_vectors": 176,
+      "responses": 176,
+      "valid_complete_responses": 176
+    }
+  ],
+  "candidate_response_cause": "UNRESOLVED",
+  "final_performance_comparison": false,
+  "matched_vectors": 352,
+  "native_decode_or_quality_grade_performed": false,
+  "operation": 198,
+  "original_local_caller_interrupted": true,
+  "original_operation_fully_replayed": false,
+  "original_response_inspector_used": true,
+  "raw_http_receipts_recomputed": true,
+  "reference_cpu_evidence_seal": {
+    "manifest_sha256": "cf8a17f5c41b31dcfda1ab06715d404223a803bb7f6a348f12a71404c5c3c4d0",
+    "members": 77,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/quality-binding-v3/cpu"
+  },
+  "reference_operation": 186,
+  "request_bodies_matched": 352,
+  "schema": 1,
+  "source_closure_verified": true,
+  "status": "RETAINED_REFERENCE_ALL_352_TOKEN_VECTORS_MATCH_B186",
+  "vector_identity_sha256": "18ca286b468c04dc1c60af700d0d74fa7c482d9df314c40952e05a7817851b46",
+  "warmups": [
+    {
+      "arm": "bf16",
+      "closing_markers": 1,
+      "matches_B186": true,
+      "response_sha256": "1c6e8832c9dc1f5b8beddfcca3da6e9f1f064616df376d6b087b2336657b8c1e",
+      "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b",
+      "tokens": 4770
+    },
+    {
+      "arm": "kv4",
+      "closing_markers": 1,
+      "matches_B186": true,
+      "response_sha256": "ac1764f7629ecfe81e60a7c7f80531ec65e50b104a6856573c60a93f748aeed3",
+      "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b",
+      "tokens": 4770
+    }
+  ]
+}

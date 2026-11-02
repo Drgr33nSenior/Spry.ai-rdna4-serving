@@ -1,0 +1,209 @@
+--- a/final_quality_inputs.py
++++ b/final_quality_inputs.py
+@@ -5,12 +5,9 @@
+ and independent releases before admitting this input.
+ """
+ import copy
+-import hashlib
+-import json
+-from pathlib import Path
++from quality_contract import menu_rows
+ 
+ MODE = 'normal-stop-paired-native-quality-352-v1'
+-MENU_SHA256 = '921643cbd04dea426b9873557573d384b8910a685b5120aae230d0bf3f426309'
+ 
+ 
+ def need(value, reason):
+@@ -22,23 +19,41 @@
+     return type(value) is str and len(value) == 64 and all(c in '0123456789abcdef' for c in value)
+ 
+ 
+-def expected_menu():
+-    raw = Path(__file__).with_name('inputs').joinpath('QUALITY-MENU.json').read_bytes()
+-    need(hashlib.sha256(raw).hexdigest() == MENU_SHA256, 'exact current source menu')
+-    rows = json.loads(raw)['rows']
+-    return [dict(copy.deepcopy(row), arm=arm) for arm in ('bf16', 'kv4') for row in rows]
++def project_menu(private_rows, request_rows):
++    """Join already authenticated oracle and run rows without retaining cap oracles."""
++    need(type(private_rows) is list and type(request_rows) is list and
++         len(private_rows)==len(request_rows)>0, 'complete matching oracle/run menus')
++    rows=[]
++    for ordinal,(private,request) in enumerate(zip(private_rows,request_rows,strict=True)):
++        need(type(private) is dict and type(request) is dict and
++             type(private.get('ordinal')) is type(request.get('ordinal')) is int and
++             private['ordinal']==request['ordinal']==ordinal and private.get('case')==request.get('case') and
++             private.get('request_body_sha256')==request.get('sha256') and
++             type(private.get('maximum_output_tokens')) is type(request.get('maximum_output_tokens')) is int and
++             private['maximum_output_tokens']==request['maximum_output_tokens'], 'exact oracle/run identity and cap')
++        policy=request.get('stop_policy')
++        need(policy in ('natural','cap'), 'explicit configured stop policy')
++        row=copy.deepcopy(private)
++        row['scope']='natural-oracle' if policy=='natural' else 'ungraded-cap-work'
++        if policy=='cap': row.update(expected_answer=None,grade_kind=None,minimum_final_tokens=0)
++        rows.append(row)
++    projected=[dict(copy.deepcopy(row),arm=arm) for arm in ('bf16','kv4') for row in rows]
++    menu_rows(projected)
++    return projected
+ 
+ 
+-def build_input(arm_results):
++def build_input(arm_results, *, menu):
+     need(type(arm_results) is dict and set(arm_results) == {'bf16', 'kv4'}, 'exact two owner arms')
+-    menu = expected_menu()
++    menu_rows(menu)
++    count=len(menu)//2
+     rows, cancellations = [], []
+     for arm, logical in (('bf16', 'control'), ('kv4', 'mtp')):
+         result = arm_results[arm]
+         need(result['wire_complete'] is True and result['arm'] == logical and
+              result['qualification'] is result['precision_accepted'] is False and
+              result['answer_grade_status'] == 'PENDING_POST_RELEASE_NATIVE_DECODE' and
+-             len(result['rows']) == 176, 'complete recomputed unqualified serving arm')
++             type(result['rows']) is list and len(result['rows']) == count,
++             'complete recomputed unqualified serving arm')
+         plans = [row for row in menu if row['arm'] == arm]
+         for plan, actual in zip(plans, result['rows']):
+             ordinal = plan['ordinal']
+@@ -47,8 +62,9 @@
+                  actual['request_body_sha256'] == plan['request_body_sha256'] and
+                  digest(actual['response_raw_sha256']), 'exact source ordinal/body/raw response join')
+             natural = plan['scope'] == 'natural-oracle'
+-            need(actual['status'] == ('NORMAL_STOP_COMPLETE' if natural else 'OUTPUT_CAP_REACHED') and
+-                 actual['finish_reason'] == ('stop' if natural else 'length') and
++            terminal=(actual['status'],actual['finish_reason'])
++            need((terminal==('NORMAL_STOP_COMPLETE','stop') or
++                  not natural and terminal==('OUTPUT_CAP_REACHED','length')) and
+                  digest(actual['response_canonical_sha256']) and
+                  actual['response_canonical_sha256'] == actual['raw_response_sha256'],
+                  'terminal and independent canonical-response join')
+@@ -56,12 +72,14 @@
+             need(type(ids) is list and 0 < len(ids) <= plan['maximum_output_tokens'] and
+                  all(type(token) is int and 0 <= token < 248320 for token in ids) and
+                  type(actual['text']) is str, 'bounded complete raw token vector and text')
++            need(actual['finish_reason']!='length' or len(ids)==plan['maximum_output_tokens'],
++                 'length-stopped cap-work requires the exact declared token count')
+             rows.append(dict(arm=arm, ordinal=ordinal, case=plan['case'], scope=plan['scope'],
+                 output_token_ids=list(ids), wire_text=actual['text'], finish_reason=actual['finish_reason'],
+                 expected_answer=plan['expected_answer'], request_body_sha256=actual['request_body_sha256'],
+                 response_raw_sha256=actual['response_raw_sha256'],
+                 response_canonical_sha256=actual['response_canonical_sha256'],
+                 grade_kind=plan['grade_kind'],minimum_final_tokens=plan['minimum_final_tokens']))
+-    need(len(rows) == 352 and len(cancellations) == 0, '352 complete natural responses; no cancellation cases')
++    need(len(rows) == len(menu) and len(cancellations) == 0, 'all declared responses; no cancellation cases')
+     return dict(schema=1, mode=MODE, rows=rows, cancellations=cancellations,
+                 qualification=False, precision_accepted=False)
+--- a/quality_contract.py
++++ b/quality_contract.py
+@@ -1,4 +1,4 @@
+-"""352 full-wire native decodes and exact final-answer checks; no forced cap-work."""
++"""Full-wire native decodes, natural-answer checks and explicit ungraded cap work."""
+ import hashlib
+ import json
+ 
+@@ -36,13 +36,25 @@
+ 
+ 
+ def menu_rows(expected_menu):
+-    need(type(expected_menu) is list and len(expected_menu)==352,'exact frozen352 request menu')
+-    for row,(arm,ordinal) in zip(expected_menu,((arm,n) for arm in ('bf16','kv4') for n in range(176)),strict=True):
++    need(type(expected_menu) is list and len(expected_menu)>0 and len(expected_menu)%2==0,
++         'nonempty paired request menu')
++    count=len(expected_menu)//2
++    identities=set()
++    for row,(arm,ordinal) in zip(expected_menu,((arm,n) for arm in ('bf16','kv4') for n in range(count)),strict=True):
+         need(type(row) is dict and type(row.get('ordinal')) is int and row['ordinal']==ordinal and
+-             row.get('arm')==arm and row.get('scope')=='natural-oracle','frozen menu arm/order/scope')
++             row.get('arm')==arm and row.get('scope') in ('natural-oracle','ungraded-cap-work'),
++             'frozen menu arm/order/scope')
+         need(type(row.get('case')) is str and 0<len(row['case'])<=128 and
+-             type(row.get('maximum_output_tokens')) is int and row['maximum_output_tokens'] in (1024,4096,8192) and
++             type(row.get('maximum_output_tokens')) is int and 0<row['maximum_output_tokens']<=8192 and
+              digest(row.get('request_body_sha256')),'frozen request identity/cap')
++        identity=(arm,row['case'])
++        need(identity not in identities,'unique per-arm request case')
++        identities.add(identity)
++        if row['scope']=='ungraded-cap-work':
++            need(row.get('expected_answer') is None and row.get('grade_kind') is None and
++                 type(row.get('minimum_final_tokens')) is int and row['minimum_final_tokens']==0,
++                 'cap-work has no answer oracle or final-answer coverage claim')
++            continue
+         need(type(row.get('expected_answer')) is str and 0<len(row['expected_answer'].encode())<=16384 and
+              row.get('grade_kind') in ('exact_text','exact_json') and
+              type(row.get('minimum_final_tokens')) is int and row['minimum_final_tokens'] in (0,512),
+@@ -50,6 +62,9 @@
+         if row['grade_kind']=='exact_json':
+             need(encoded(strict(row['expected_answer'])).decode().strip()==row['expected_answer'],
+                  'canonical exact JSON oracle')
++    left,right=expected_menu[:count],expected_menu[count:]
++    need(all({k:v for k,v in a.items() if k!='arm'}=={k:v for k,v in b.items() if k!='arm'}
++             for a,b in zip(left,right,strict=True)), 'both arms share one request/oracle plan')
+     return expected_menu,[]
+ 
+ 
+@@ -59,7 +74,7 @@
+          value['qualification'] is value['precision_accepted'] is False, 'exact unqualified input envelope')
+     need(len(encoded(value))<=INPUT_LIMIT, 'proposed53MiB input cap; preserve complete input and refuse, never truncate')
+     expected,cancel=menu_rows(expected_menu)
+-    need(type(value['rows']) is list and len(value['rows'])==352, 'all352 normal responses required')
++    need(type(value['rows']) is list and len(value['rows'])==len(expected), 'all declared responses required')
+     for row,frozen in zip(value['rows'],expected):
+         need(type(row) is dict and set(row)==ROW_FIELDS, 'exact normal response row schema')
+         for key in ('arm','ordinal','case','scope','expected_answer','request_body_sha256','grade_kind','minimum_final_tokens'):
+@@ -71,9 +86,12 @@
+         need(len(encoded(dict(output_token_ids=ids,wire_text=row['wire_text'])))<=(512<<10)+64, 'projection of one canonical512KiB serving response')
+         need(all(digest(row[key]) for key in ('request_body_sha256','response_raw_sha256','response_canonical_sha256')),
+              'distinct rawHTTP and canonicalJSON response identity fields')
+-        need(type(row['finish_reason']) is str and row['finish_reason']=='stop', 'terminal response type')
++        need(type(row['finish_reason']) is str and row['finish_reason'] in ('stop','length'), 'terminal response type')
+         if row['scope']=='ungraded-cap-work':
+-            need(row['finish_reason']=='length' and len(ids)==frozen['maximum_output_tokens'], 'forced complete cap-work response')
++            need(row['finish_reason']=='stop' or len(ids)==frozen['maximum_output_tokens'],
++                 'length-stopped cap-work contains the exact declared token count')
++        else:
++            need(row['finish_reason']=='stop', 'natural oracle requires a normal stop')
+     need(type(value['cancellations']) is list and len(value['cancellations'])==0, 'no cancellation rows in this menu')
+     for row,frozen in zip(value['cancellations'],cancel):
+         need(type(row) is dict and set(row)==CANCEL_FIELDS and row['status']=='CANCELLED_COMPLETE' and
+@@ -118,7 +136,7 @@
+ def validate_answers(value, expected_menu, answers):
+     from thinking_segments import split_thinking_ids
+     validate_input(value,expected_menu)
+-    need(type(answers) is list and len(answers)==352, 'all352 decoded responses retained')
++    need(type(answers) is list and len(answers)==len(value['rows']), 'all decoded responses retained')
+     fields=set(IDENTITY_FIELDS)|{'output_ids_sha256','wire_text_sha256','wire_decode_matches','output_tokens',
+         'final_status','final_answer_sha256','final_answer_utf8_bytes','final_answer_token_count','reasoning_token_count','closing_marker_index','error','grade_value_sha256','grade_value_utf8_bytes'}
+     for row,answer in zip(value['rows'],answers):
+@@ -128,7 +146,7 @@
+              answer['output_tokens']==len(row['output_token_ids']), 'full token-vector/wire hashes and count')
+         if row['scope']=='ungraded-cap-work':
+             need(answer['final_status']=='UNGRADED_CAP_WORK' and all(answer[k] is None for k in
+-                 ('final_answer_sha256','final_answer_utf8_bytes','final_answer_token_count','reasoning_token_count','closing_marker_index','error')), 'cap-work never graded or segmented')
++                 ('final_answer_sha256','final_answer_utf8_bytes','final_answer_token_count','reasoning_token_count','closing_marker_index','error','grade_value_sha256','grade_value_utf8_bytes')), 'cap-work never graded or segmented')
+         elif answer['final_status']=='FINAL_SEGMENT_DECODED':
+             need(row['finish_reason']=='stop' and row['wire_text'].count('</think>')==1, 'normal natural stop and single text marker')
+             split=split_thinking_ids(row['output_token_ids'])
+@@ -149,6 +167,11 @@
+     need(type(python_results) is list and python_results==[],'no code execution in this JSON/text menu')
+     grades=[]
+     for row,answer in zip(value['rows'],answers,strict=True):
++        if row['scope']=='ungraded-cap-work':
++            grades.append(dict(arm=row['arm'],ordinal=row['ordinal'],case=row['case'],scope=row['scope'],
++                status='UNGRADED_CAP_WORK',quality_passed=None,minimum_final_tokens=0,
++                final_answer_token_count=None,long_answer_coverage_passed=None))
++            continue
+         passed=(answer['final_status']=='FINAL_SEGMENT_DECODED' and
+                 answer['grade_value_sha256']==sha(row['expected_answer'].encode()) and
+                 answer['grade_value_utf8_bytes']==len(row['expected_answer'].encode()))
+@@ -158,7 +181,9 @@
+             status='QUALITY_PASS' if passed else 'QUALITY_REFUSAL',quality_passed=passed,
+             minimum_final_tokens=row['minimum_final_tokens'],final_answer_token_count=answer['final_answer_token_count'],
+             long_answer_coverage_passed=coverage))
+-    return dict(grades=grades,decoded_rows=352,natural_rows=352,ungraded_cap_work_rows=0,state_only_cancellations=0,
+-        quality_pass=all(row['quality_passed'] for row in grades),
+-        long_answer_coverage_pass=all(row['long_answer_coverage_passed'] for row in grades),
++    natural=[row for row in grades if row['scope']=='natural-oracle']
++    return dict(grades=grades,decoded_rows=len(grades),natural_rows=len(natural),
++        ungraded_cap_work_rows=len(grades)-len(natural),state_only_cancellations=0,
++        quality_pass=bool(natural) and all(row['quality_passed'] for row in natural),
++        long_answer_coverage_pass=bool(natural) and all(row['long_answer_coverage_passed'] for row in natural),
+         precision_accepted=False,selected=False,qualification=False)

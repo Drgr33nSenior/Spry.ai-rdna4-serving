@@ -1,0 +1,67 @@
+{
+  "actual_preweight_guards": {
+    "actual_contract_and_overlay_bytes": true,
+    "cases": [
+      {
+        "arm": "control",
+        "rank": 0,
+        "validated_overlays": 9
+      },
+      {
+        "arm": "control",
+        "rank": 1,
+        "validated_overlays": 9
+      },
+      {
+        "arm": "mtp",
+        "rank": 0,
+        "validated_overlays": 9
+      },
+      {
+        "arm": "mtp",
+        "rank": 1,
+        "validated_overlays": 9
+      }
+    ],
+    "configuration_before_identity": true,
+    "negative_flag_cases": 8,
+    "no_observer_import_or_extra_receipt": true,
+    "substitutes": [
+      "native resolved-config constructor",
+      "HIP/device query",
+      "render/sysfs observation",
+      "clock"
+    ]
+  },
+  "documentation_audit": "PASS_NO_FINDINGS",
+  "focused_tests": 334,
+  "host_binding_tests": 8,
+  "host_fixture_adapter_sha256": "4372fd3956851362986f94e320fdcc24dbf10558bcf2f8639dd79f3fc425d8fb",
+  "inherited_fresh_projection": {
+    "caller_activation_complete": false,
+    "content_sha256": "ff836facfc984ea4d9a6a43d4558c34634c169536922cf694e8c2823bd5be160",
+    "deterministic": true,
+    "no_launchable_manifest_or_authorization": true,
+    "proposed_package_members": 80
+  },
+  "launch_authorized": false,
+  "native_runtime_tested": false,
+  "owner_approved": false,
+  "packet_tests": 33,
+  "passed": true,
+  "performance_improvement_measured": false,
+  "phase1_complete": false,
+  "production_mount_isolation_complete": false,
+  "production_parity_import_removed": false,
+  "proposal_sha256": "717ce12dbde5bbc985fb8bf1a8dfd859ebd8f93b1713d5993c2e7b12537a8acf",
+  "protected_helpers_changed_from_boot_stage": false,
+  "public_startup_tests": 9,
+  "raw_report_sha256": "a55f9b151ddd9abeae0d56319ddc63c5c073c90050093c3b346be07b5323f609",
+  "repository_make_test": "PASS",
+  "repository_python_unittest_count": 771,
+  "source_patch_sha256": "c4ad90139b0d4d936cdf9b801fdba8c82cc9bd715cf2a8208f9689afebbdc2fb",
+  "static_global_references": "PASS_CHANGED_WORKER_MODULE",
+  "syntax_compilation": "PASS_ALL_111_PYTHON_MODULES",
+  "whole_run_config_mutations_supported": false,
+  "worker_sha256": "7abe4240ba779680c053dcf2cb6aad12a20ec40dcf9993919ea56efe0b92373c"
+}

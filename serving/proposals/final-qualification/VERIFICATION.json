@@ -1,0 +1,127 @@
+{
+  "campaign_checks": {
+    "actual_archives_and_cli_parsers": true,
+    "caller_bindings_and_one_use_dispatch_refusals": true,
+    "grading_templates_materialized": true,
+    "instrumented_tests": 6,
+    "passed": true,
+    "production_tests": 6
+  },
+  "complete_cleanup": false,
+  "cpu_tensor_execution_allowance": 0,
+  "kernels_requests_pools_changed": false,
+  "launch_authorized": false,
+  "native_gpu_allowance": 0,
+  "native_snapshot": {
+    "ceiling_bytes": 16777216,
+    "current_python_and_patch_files_match": 456,
+    "gzip_bytes": 3258375,
+    "tar_bytes": 14581760
+  },
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_quality_grading": false,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "status": "PASS_NATIVE_CPU_SOURCE_BOUNDARY",
+    "tests": 270
+  },
+  "new_model_starts": 0,
+  "owner_approved": false,
+  "post_test_record_change": "cpu_verified false to true only",
+  "proofs": {
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/PUBLIC-CHECKS.json",
+      "sha256": "a5cc80f34e90cbd62e9fa8d9b520ed3b1adfee12607011ece7e380b524c46fbd"
+    },
+    "SOURCE-SEALS.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/SOURCE-SEALS.json",
+      "sha256": "d250b4b630ed6162d2b0d9101dc9e25fd502cceb51943234879c797cd93b5642"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/STATIC-CHECKS.json",
+      "sha256": "cc5c5f2dd6e5d4ce6244ea7a0ae8ce372c08dd4b810c1e06667342fe722137a8"
+    },
+    "STATIC-READER-CORRECTION.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/STATIC-READER-CORRECTION.json",
+      "sha256": "2c9a5618ab40e90f7ccb7b23fc2813fad8fc3d905f97b6c5daeb1a2bbdfdb658"
+    },
+    "instrumented-full-checks.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/instrumented-full-checks.json",
+      "sha256": "297a5f41fe8086c7f3aacac2a776d7840ed36f32c86043f194cca677a760cb04"
+    },
+    "instrumented-packet-check.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/instrumented-packet-check.json",
+      "sha256": "32c5bae119b12f11d36606e5664bc277a303f1a3f6111e908df612f39a6d3862"
+    },
+    "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "df77a6ab41cf8637bfb8cb7580a00ccc95daa257f0c9825b303e710dfa6409c2"
+    },
+    "native-source-preflight-v1/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/native-source-preflight-v1/SOURCE-INVENTORY.json",
+      "sha256": "f2307f39b8e8e5756e898169593de7c48991c1dbbb3e08d88e0c253cc55359a6"
+    },
+    "production-full-checks.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/production-full-checks.json",
+      "sha256": "297a5f41fe8086c7f3aacac2a776d7840ed36f32c86043f194cca677a760cb04"
+    },
+    "production-packet-check.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/production-packet-check.json",
+      "sha256": "3345a3b1d02c1d7b6fda6150f85854b4f80ba237986adc457fe4cceb1b652d92"
+    },
+    "public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/public-make-attempt-1.log",
+      "sha256": "41e23e0b3b3693996a80d116f84ee60e0844940c9f94948afb61a71970b4fa39"
+    },
+    "tensor-envelope-checks.log": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/tensor-envelope-checks.log",
+      "sha256": "ff0d9d76afc3dbb79c6b38117df28de76fbde4ee2cb805be51be5cfb3e97579d"
+    },
+    "tensor-review-v1/APPROVAL-REQUEST.json": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/tensor-review-v1/APPROVAL-REQUEST.json",
+      "sha256": "42c4f55ef054bdb72b8ff2bb1117627dffb016e6fce50d9713f392173b31eb9f"
+    },
+    "unit-comparison-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/unit-comparison-attempt-1.log",
+      "sha256": "53ec6bfd32b426a23950e2fbbff5aba6e95df6d3ed7324d3edb40dd8151e63f8"
+    },
+    "unit-final-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/unit-final-attempt-1.log",
+      "sha256": "2a59171d0417419fd86e31928f403285b3252feabc2cd2942099ab8c599a3383"
+    },
+    "worker-history.log": {
+      "path": ".test-build/serving-cleanup/final-qualification-v1/worker-history.log",
+      "sha256": "176086098a55091e0c2bfa77663efc88fb0d17c957cf8c895596639e8b374d21"
+    }
+  },
+  "protected_set_sha256": "720217fecefc17891935232d119a5cabf6d4dc8576661122d8c889dc7329c123",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 999,
+    "suites": 81
+  },
+  "published_proposal_sha256": "9628106cbf457ccf080edf4aaf1d921515c6a9ba8f913215c77d185538bca1e2",
+  "remaining": [
+    "One exact approved GPU-free real CPU tensor structure check",
+    "One exact approved instrumented candidate campaign with startup byte proofs, token/quality and independent release checks",
+    "Separate production baseline and final candidate campaigns with BDF memory sampling and token/work equality",
+    "Full-menu/configuration native qualification and retained evidence closeout"
+  ],
+  "runtime_and_protected_source_bytes_changed": false,
+  "schema": 1,
+  "source_seal_representation": "Verifier fields root/manifest_sha256/members; timestamps and qualification metadata remain in adjacent closeout records",
+  "status": "FINAL_NATIVE_ENVELOPES_PREPARED_UNFUNDED",
+  "tensor_envelope": {
+    "executed": false,
+    "local_namespace_and_unfunded_approval_tests": 2,
+    "sealed": true,
+    "source_ast_compile_passed": true,
+    "torch_imported_on_mac": false
+  },
+  "tested_proposal_sha256": "26122a0f70c034fffbad00c7df823a951e13e8eb75a299b266c08d16de8fbd83"
+}

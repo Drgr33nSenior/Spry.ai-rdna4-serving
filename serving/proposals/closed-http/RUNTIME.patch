@@ -1,0 +1,2176 @@
+--- a/review/mtp_contract.py
++++ b/review/mtp_contract.py
+@@ -183,10 +183,6 @@
+     return PHASES[value['phase']]
+ 
+ 
+-def prompt_minimization_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+ 
+ 
+ def precision_reference_enabled():
+@@ -421,72 +417,31 @@
+     return precision_reference_enabled()
+ 
+ 
+-def verify_attention_ab_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
++
++
++
++
++
++
++
++
++
++
++def verify_attention_observed(arm):
+     settings()
+-    return False
+-
+-
+-def verify_attention_chain_enabled():
+-    return full_enabled_benchmark()
+-
+-
+-def gdn_capture_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def norm_capture_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def norm_candidate_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def verify_attention_observed(arm):
+-    return verify_attention_ab_enabled() or (verify_attention_chain_enabled() and arm in LOGICAL_ARMS)
+-
+-
+-def greedy_quality_draft_ab():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def j01_probe_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def head_input_capture_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def final_norm_capture_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def midpoint_capture_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
+-
+-
+-def raw_attention_capture_enabled():
+-    # Retained API for consumers awaiting their separate source migration.
+-    settings()
+-    return False
++    return full_enabled_benchmark() and arm in LOGICAL_ARMS
++
++
++
++
++
++
++
++
++
++
++
++
+ 
+ 
+ def cache_config():
+@@ -736,8 +691,6 @@
+                 sha256=GDN_ALIGNED, stock_sha256=GDN_STOCK, alignment='beta-bf16')
+ 
+ 
+-def norm_source_for_arm(arm):
+-    _require(arm in LOGICAL_ARMS and norm_candidate_enabled(), 'norm candidate arm or scope')
+ 
+ 
+ def expected_environment(arm):
+@@ -975,8 +928,6 @@
+         return 1 if instrumentation_enabled() else 100
+     return 100 if host_path_cleanup_enabled(arm) else 1
+ 
+-def kv_composition_enabled():
+-    return True
+ 
+ 
+ def instrumentation_enabled():
+@@ -1492,7 +1443,7 @@
+     import importlib.util
+     from importlib.machinery import SourceFileLoader
+     path = Path(__file__).with_name('spry_common_canon.py')
+-    if Path(__file__).name == 'shared_contract.py':
++    if Path(__file__).name in ('shared_contract.py', 'closed_contract.py'):
+         path = Path(__file__).resolve().parents[1] / 'spry_common/canon.py'
+     _require(path.is_absolute() and path.resolve(strict=True) == path
+              and path.is_file() and not path.is_symlink(), 'canonical shared helper source required')
+--- a/review/worker_entry.py
++++ b/review/worker_entry.py
+@@ -821,23 +821,13 @@
+     path = _safe_regular(Path(source['path']))
+     raw = path.read_bytes()
+     _require(hashlib.sha256(raw).hexdigest() == source['sha256'], 'allocator scheduler source changed')
+-    # Compile without executing or importing native source. Code-object equality
+-    # also refuses substitutions that merely borrow the authentic co_filename.
+     compiled = SourceFileLoader(source['module'], str(path)).source_to_code(raw, str(path))
++
+     def code(parent, name):
+         matches = [item for item in parent.co_consts if type(item) is CodeType and item.co_name == name]
+         _require(len(matches) == 1, 'allocator native callable source missing')
+         return matches[0]
+-    _require(inspect.isfunction(target) and module is not None and
+-             target is getattr(module, source['target'], None) and target.__globals__ is module.__dict__ and
+-             target.__code__ == code(compiled, source['target']) and
+-             type(cls) is type and cls.__module__ == source['module'] and cls.__qualname__ == 'Scheduler' and
+-             inspect.isfunction(constructor) and constructor.__globals__ is module.__dict__ and
+-             constructor.__code__ == code(code(compiled, 'Scheduler'), '__init__') and
+-             target.__globals__.get('Scheduler') is cls and inspect.isfunction(original) and
+-             original.__globals__ is module.__dict__ and
+-             original.__code__ == code(code(compiled, 'Scheduler'), 'get_init_info'),
+-             'allocator native scheduler class/method identity differs')
++    _require(inspect.isfunction(target) and module is not None and (target is getattr(module, source['target'], None)) and (target.__globals__ is module.__dict__) and (target.__code__ == code(compiled, source['target'])) and (type(cls) is type) and (cls.__module__ == source['module']) and (cls.__qualname__ == 'Scheduler') and inspect.isfunction(constructor) and (constructor.__globals__ is module.__dict__) and (constructor.__code__ == code(code(compiled, 'Scheduler'), '__init__')) and (target.__globals__.get('Scheduler') is cls) and inspect.isfunction(original) and (original.__globals__ is module.__dict__) and (original.__code__ == code(code(compiled, 'Scheduler'), 'get_init_info')), 'allocator native scheduler class/method identity differs')
+     observer = _source_module(manifest['preweight']['graph_observer'])
+     _require(callable(getattr(observer, 'validate_allocator_record', None)), 'allocator validator missing')
+     _require(type(gpu_id) is int and gpu_id == rank, 'allocator GPU/TP mapping differs')
+@@ -853,29 +843,16 @@
+     def wrapper(self, *args, **kwargs):
+         nonlocal called, probe
+         restore()
+-        _require(not called and type(self) is cls and 'get_init_info' not in self.__dict__,
+-                 'allocator duplicate/substituted scheduler handshake')
++        _require(not called and type(self) is cls and ('get_init_info' not in self.__dict__), 'allocator duplicate/substituted scheduler handshake')
+         called = True
+         result = original(self, *args, **kwargs)
+         torch = sys.modules.get('torch')
+         cuda = getattr(torch, 'cuda', None)
+-        _require(cuda is not None and cuda.current_device() == gpu_id and
+-                 not cuda.is_current_stream_capturing(), 'allocator device/capture boundary differs')
++        _require(cuda is not None and cuda.current_device() == gpu_id and (not cuda.is_current_stream_capturing()), 'allocator device/capture boundary differs')
+         free, total = cuda.mem_get_info(gpu_id)
+-        record = {name: manifest[name] for name in
+-                  ('mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256')}
+-        record.update(schema=1, rank=rank, pid=os.getpid(), start_ticks=_process_start_ticks(), boot_id=_boot_id(),
+-            worker_identity_sha256=worker['identity_sha256'], gpu_index=gpu_id,
+-            device=preweight['devices'][gpu_id],
+-            scheduler_source=dict(source, class_name='Scheduler', method_name='get_init_info'),
+-            counters=dict(allocated_bytes=cuda.memory_allocated(gpu_id), reserved_bytes=cuda.memory_reserved(gpu_id),
+-                reported_peak_allocated_bytes=cuda.max_memory_allocated(gpu_id),
+-                reported_peak_reserved_bytes=cuda.max_memory_reserved(gpu_id),
+-                driver_free_bytes=free, driver_total_bytes=total),
+-            scope=observer.ALLOCATOR_SCOPE, after_native_get_init_info=True, before_external_generations=True,
+-            hook_restored=cls.__dict__.get('get_init_info') is original, qualification=False)
+-        observer.validate_allocator_record(record, binding=manifest, worker=worker,
+-            preweight=preweight, expected_devices=manifest['expected_devices'])
++        record = {name: manifest[name] for name in ('mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256')}
++        record.update(schema=1, rank=rank, pid=os.getpid(), start_ticks=_process_start_ticks(), boot_id=_boot_id(), worker_identity_sha256=worker['identity_sha256'], gpu_index=gpu_id, device=preweight['devices'][gpu_id], scheduler_source=dict(source, class_name='Scheduler', method_name='get_init_info'), counters=dict(allocated_bytes=cuda.memory_allocated(gpu_id), reserved_bytes=cuda.memory_reserved(gpu_id), reported_peak_allocated_bytes=cuda.max_memory_allocated(gpu_id), reported_peak_reserved_bytes=cuda.max_memory_reserved(gpu_id), driver_free_bytes=free, driver_total_bytes=total), scope=observer.ALLOCATOR_SCOPE, after_native_get_init_info=True, before_external_generations=True, hook_restored=cls.__dict__.get('get_init_info') is original, qualification=False)
++        observer.validate_allocator_record(record, binding=manifest, worker=worker, preweight=preweight, expected_devices=manifest['expected_devices'])
+         _require(_process_start_ticks() == record['start_ticks'], 'allocator process identity changed')
+         _atomic_json(Path(manifest['evidence_dir']) / f'GPU-ALLOCATOR-rank-{rank}.json', record)
+         contract = _source_module(dict(manifest['sources']['mtp_contract'], module='mtp_contract'))
+@@ -887,25 +864,16 @@
+         helper = _source_module(manifest['sources']['j01_probe'])
+         cache_record = helper.draft_kv_startup(self, manifest, worker)
+         print('SPRY_DRAFT_KV ' + helper.canonical(cache_record).decode().strip(), flush=True)
+-        if contract.settings().get('quality_screen') == 'sprint7-low-thinking-publisher-sampled-four-v1':
+-            _require(not contract.j01_probe_enabled(), 'sampling/J01 probe collision')
+-            timer=getattr(head_startup, 'phase_timing', None)
+-            probe = timer.attach(self) if timer is not None else helper.install_sampling_route(self, manifest, worker)
+-        if contract.kv_composition_enabled():
+-            _require(probe is None and not contract.j01_probe_enabled(), 'paired slot probe collision')
+-            probe = helper.install_lifecycle_slots(self, manifest, worker)
+-        if contract.settings().get('quality_screen') == 'sprint36-chunk-prefill-v1':
+-            _require(probe is None and not contract.j01_probe_enabled(), 'prefill probe collision')
+-            probe = helper.PrefillObservation(self, manifest, worker, observer.CURRENT, contract)
+-        if contract.j01_probe_enabled():
+-            helper = _source_module(manifest['sources']['j01_probe'])
+-            head_record = None if head_startup is None else head_startup.finish(self)
+-            probe = helper.install(self, manifest, worker, observer.CURRENT, contract,
+-                                   head_startup=head_record,
+-                                   head_inputs=None if head_startup is None else head_startup.input_capture)
++        contract.settings()
++        if probe is None:
++            contract.settings()
++        _require(probe is None, 'paired slot probe collision')
++        probe = helper.install_lifecycle_slots(self, manifest, worker)
++        contract.settings()
++        contract.settings()
+         return result
+-
+     cls.get_init_info = wrapper
++
+     def cleanup():
+         restore()
+         if probe is not None:
+@@ -934,34 +902,21 @@
+             display_moe_ep_rank=display_moe_ep_rank)
+ 
+ 
+-def _run_scheduler_process(
+-    value: dict[str, Any],
+-    server_args: Any,
+-    port_args: Any,
+-    gpu_id: int,
+-    tp_rank: int,
+-    pp_rank: int,
+-    dp_rank: Any,
+-    pipe_writer: Any,
+-    display_tp_rank: Any = None,
+-    display_dp_rank: Any = None,
+-    display_moe_ep_rank: Any = None,
+-) -> Any:
++def _run_scheduler_process(value: dict[str, Any], server_args: Any, port_args: Any, gpu_id: int, tp_rank: int, pp_rank: int, dp_rank: Any, pipe_writer: Any, display_tp_rank: Any=None, display_dp_rank: Any=None, display_moe_ep_rank: Any=None) -> Any:
+     manifest = _validate_manifest(value)
+-    _require(type(tp_rank) is int and tp_rank in manifest["expected_ranks"], "unexpected TP rank")
+-    _require(pp_rank == 0 and dp_rank is None, "unsupported native scheduler topology")
++    _require(type(tp_rank) is int and tp_rank in manifest['expected_ranks'], 'unexpected TP rank')
++    _require(pp_rank == 0 and dp_rank is None, 'unsupported native scheduler topology')
+     record = _worker_record(manifest, tp_rank)
+-    worker_path = Path(manifest["evidence_dir"]) / f"worker-rank-{tp_rank}.json"
++    worker_path = Path(manifest['evidence_dir']) / f'worker-rank-{tp_rank}.json'
+     _atomic_json(worker_path, record)
+     contract = _source_module(dict(manifest['sources']['mtp_contract'], module='mtp_contract'))
+-    instrumented = contract.instrumentation_enabled()  # production: no parity gate, probe, observer or evidence writer
++    instrumented = contract.instrumentation_enabled()
+     if instrumented:
+         parity = _source_module(dict(manifest['sources']['serving_parity'], module='serving_parity'))
+         parity.wait_before_weights(manifest)
+     _native_module(manifest['sources']['gemm'])
+-    preweight = _preweight_before_scheduler(manifest, tp_rank, server_args, gpu_id=gpu_id,
+-        contract=contract, instrumented=instrumented)
+-    target = _source_selection(manifest["sources"]["scheduler"])
++    preweight = _preweight_before_scheduler(manifest, tp_rank, server_args, gpu_id=gpu_id, contract=contract, instrumented=instrumented)
++    target = _source_selection(manifest['sources']['scheduler'])
+     head_startup = None
+     phase_timing = None
+     restore = None
+@@ -979,49 +934,41 @@
+         if instrumented and 'head_features' in manifest['sources']:
+             helper = _source_module(manifest['sources']['j01_probe'])
+             graph_observer = _source_module(manifest['preweight']['graph_observer'])
+-            norm_capture = (_source_module(manifest['sources']['final_norm_probe']).FinalNorm(
+-                                manifest, record, graph_observer.CURRENT)
+-                            if contract.final_norm_capture_enabled() else None)
+-            if contract.midpoint_capture_enabled():
+-                _require(norm_capture is None, 'multiple boundary capture modes')
+-                if contract.raw_attention_capture_enabled():
+-                    _source_module(manifest['sources']['raw_attention'])
+-                norm_capture = _source_module(manifest['sources']['midpoint_capture']).MidpointInputs(
+-                    manifest, record, graph_observer.CURRENT)
+-            input_capture = (helper.HeadInputs(manifest, record, graph_observer.CURRENT, norm_capture=norm_capture)
+-                             if contract.head_input_capture_enabled() else None)
+-            phase_timing=(helper.PhaseTiming(manifest, record) if contract.settings().get('phase_timing')=='sprint8-c1-phase-timing-v1' and manifest['arm']=='mtp' else None)
+-            if phase_timing is not None and contract.settings().get('target_timing')=='sprint9-native-target-families-v1':
++            contract.settings()
++            norm_capture = None
++            contract.settings()
++            contract.settings()
++            input_capture = None
++            phase_timing = helper.PhaseTiming(manifest, record) if contract.settings().get('phase_timing') == 'sprint8-c1-phase-timing-v1' and manifest['arm'] == 'mtp' else None
++            if phase_timing is not None and contract.settings().get('target_timing') == 'sprint9-native-target-families-v1':
+                 helper.TargetGraphHooks(phase_timing, helper.head_module, helper.checked_phase_function)
+             head_startup = helper.HeadStartup(manifest, input_capture=input_capture, phase_timing=phase_timing)
+-        restore = (_allocator_startup_hook(manifest, tp_rank, gpu_id, record, preweight, target,
+-                                          head_startup=head_startup)
+-                   if instrumented and contract.settings().get('allocator_snapshot') is True else None)
++        restore = _allocator_startup_hook(manifest, tp_rank, gpu_id, record, preweight, target, head_startup=head_startup) if instrumented and contract.settings().get('allocator_snapshot') is True else None
+         if contract.verify_attention_observed(manifest['arm']):
+             adapter = _source_module(manifest['sources']['verify_decode_adapter']).install(manifest, record)
+-        return target(
+-            server_args, port_args, gpu_id, tp_rank, pp_rank, dp_rank, pipe_writer,
+-            display_tp_rank=display_tp_rank,
+-            display_dp_rank=display_dp_rank,
+-            display_moe_ep_rank=display_moe_ep_rank,
+-        )
++        return target(server_args, port_args, gpu_id, tp_rank, pp_rank, dp_rank, pipe_writer, display_tp_rank=display_tp_rank, display_dp_rank=display_dp_rank, display_moe_ep_rank=display_moe_ep_rank)
+     finally:
+         primary = sys.exc_info()[1]
+         failures = []
+-        actions = ([adapter.restore] if adapter is not None else [])
+-        actions += ([restore] if restore is not None else [])
+-        actions += ([restore_target_kv] if restore_target_kv is not None else [])
+-        actions += ([restore_mxfp4] if restore_mxfp4 is not None else [])
++        actions = [adapter.restore] if adapter is not None else []
++        actions += [restore] if restore is not None else []
++        actions += [restore_target_kv] if restore_target_kv is not None else []
++        actions += [restore_mxfp4] if restore_mxfp4 is not None else []
+         if head_startup is not None:
+             actions.append(head_startup.restore)
+             if head_startup.input_capture is not None:
+                 actions.append(head_startup.input_capture.restore)
+-        if phase_timing is not None:actions.append(phase_timing.restore_all)
++        if phase_timing is not None:
++            actions.append(phase_timing.restore_all)
+         if graph_observer is not None and graph_observer.CURRENT is not None:
+             actions.append(lambda: graph_observer.CURRENT.finish(manifest, record))
+         for cleanup in actions:
+-            try:cleanup()
++            try:
++                cleanup()
+             except BaseException as error:
+-                if primary is not None:primary.add_note('Worker cleanup failed: '+type(error).__name__)
+-                else:failures.append(error)
+-        if failures:raise failures[0]
++                if primary is not None:
++                    primary.add_note('Worker cleanup failed: ' + type(error).__name__)
++                else:
++                    failures.append(error)
++        if failures:
++            raise failures[0]
+--- a/review/model_benchmark.py
++++ b/review/model_benchmark.py
+@@ -17,12 +17,7 @@
+ import sys
+ import time
+ SCOPE = 'reviewed-private-tp2-model-benchmark-v1'
+-CELLS = [('ctx16384-seed1729-depth50', 1, 16352), ('ctx32768-seed1729-depth10', 1, 32736), ('ctx32768-seed1729-depth50', 1, 32736), ('ctx32768-seed1729-depth90', 1, 32736), ('ctx32768-seed2718-depth10', 1, 32736), ('ctx32768-seed2718-depth50', 1, 32735), ('ctx32768-seed2718-depth90', 1, 32736)]
+ GPU_IDENTITY_SHA256 = '7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df'
+-CACHE_PROFILE_SHA256 = '256250bc43c4dfd7146f14f60b03bfa09f7d3648dd5f5e9c3298e4edb34851e5'
+-CACHE_PROFILE = {'schema': 1, 'mode': 'v4-host-attribution-v1', 'native_phase_abi_bytes': 64, 'extra_device_bytes': 0, 'extra_synchronizations': 0, 'reader_events': False}
+-COMPARISON_SHA256 = '607c5a44c3192329ec7566d0deadeafe5dcfcd7447fa306caa037aa20a7f5d28'
+-TELEMETRY_SHA256 = '0619773ea3ba5730381ef9dee0424d4488e69e8b33943e12b00b8d64a5720c74'
+ PHYSICAL_DEVICES = {'0000:c3:00.0': '39373864-6465-3038-6163-303837666533', '0000:23:00.0': '34663466-6561-3362-3832-346261366439'}
+ INDEPENDENT_MODE = 'independent-bf16-reference-v1'
+ 
+@@ -144,41 +139,7 @@
+ def valid_digest(value):
+     return type(value) is str and len(value) == 64 and all((c in '0123456789abcdef' for c in value))
+ 
+-def independent_runtime(spec):
+-    """Authenticate the separate runner before any native model imports."""
+-    validate_spec(spec)
+-    row = spec['independent_reference']
+-    raw = checked_file(Path(__file__).resolve().with_name('INDEPENDENT-REFERENCE.json'), row['sha256'])
+-
+-    def pairs(items):
+-        result = {}
+-        for key, value in items:
+-            if key in result:
+-                raise ValueError('duplicate independent manifest key')
+-            result[key] = value
+-        return result
+-    manifest = json.loads(raw, object_pairs_hook=pairs, parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite independent manifest')))
+-    runner = manifest.get('runner')
+-    if type(runner) is not dict or set(runner) != {'path', 'sha256', 'bytes'} or runner['path'] != '/mnt/review/independent_runner.py' or (not valid_digest(runner['sha256'])) or (type(runner['bytes']) is not int) or (not 0 < runner['bytes'] <= 256 << 10):
+-        raise ValueError('independent runner source binding')
+-    if len(checked_file(Path(__file__).resolve().with_name('independent_runner.py'), runner['sha256'], 256 << 10)) != runner['bytes']:
+-        raise ValueError('independent runner source size')
+-    module = authenticated_adjacent('independent_runner.py', runner['sha256'])
+-    module.validate_manifest(manifest)
+-    candidate = manifest.get('torch_candidate')
+-    if candidate is not None and (row.get('torch_candidate_root') != candidate['root'] or row.get('torch_candidate_metadata') != candidate['metadata_directory']):
+-        raise ValueError('candidate Torch mount/manifest binding')
+-    if candidate is None and set(row) != {'path', 'sha256'}:
+-        raise ValueError('unexpected candidate Torch projection')
+-    sdk = candidate.get('sdk') if candidate is not None else None
+-    if (sdk is None) != ('runtime_overlay_root' not in row) or (sdk is not None and row['runtime_overlay_root'] != sdk['root']):
+-        raise ValueError('source SDK mount/manifest binding')
+-    return (module, manifest)
+-
+-def checked_independent_result(spec, value, *, arm, session_sha256, spec_sha256):
+-    module, manifest = independent_runtime(spec)
+-    module.validate_result(value, manifest, arm=arm, session_sha256=session_sha256, spec_sha256=spec_sha256)
+-    return value
++
+ 
+ class _LazyAdjacent:
+     """Load graph-shell projection and compatibility readers only on demand."""
+@@ -191,164 +152,22 @@
+             self.module = authenticated_adjacent(self.filename, self.pin)
+         return getattr(self.module, name)
+ 
+-def stall_module(spec):
+-    config = spec.get('stall_trace')
+-    helper = authenticated_adjacent('stall_trace.py', config['helper_sha256'])
+-    helper.validate_config(config)
+-    return helper
+-
+-def read_stall_trace_evidence(spec, directory, inner, require_complete=True):
+-    return stall_module(spec).read_evidence(spec['stall_trace'], Path(directory), inner, require_complete=require_complete)
+-
+-def callback_module(spec, register=False):
+-    config = spec.get('callback_profile')
+-    if config is None:
+-        return None
+-    helper = authenticated_adjacent('callback_profile.py', config['helper_sha256'])
+-    helper.validate_config(config)
+-    if config['capture_helper_sha256'] != spec['validation_comparison']['capture']['helper_sha256']:
+-        raise ValueError('callback counter source differs from capture helper')
+-    if register:
+-        if helper.ALIAS in sys.modules:
+-            raise ValueError('callback helper alias already installed')
+-        sys.modules[helper.ALIAS] = helper
+-    return helper
+-
+-def read_callback_profile_evidence(spec, directory, inner, require_complete=True):
+-    helper = callback_module(spec)
+-    reports = []
+-    for rank in (0, 1):
+-        raw = read_bounded_file(Path(directory) / f'rank-{rank}-callback-profile.json', 256 << 10)
+-
+-        def pairs(items):
+-            value = {}
+-            for key, item in items:
+-                if key in value:
+-                    raise ValueError('duplicate callback profile JSON key')
+-                value[key] = item
+-            return value
+-        report = json.loads(raw, object_pairs_hook=pairs, parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite callback profile JSON')))
+-        rows = inner.get('ranks', [])
+-        row = rows[rank] if len(rows) == 2 and type(rows[rank]) is dict else {}
+-        helper.validate_report(report, spec['callback_profile'], inner['arm'], rank, inner['session_sha256'], inner['spec_sha256'], batches=row.get('batches'), capture_report=row.get('capture'), require_complete=require_complete)
+-        if require_complete and row.get('callback_profile') != report:
+-            raise ValueError('rank callback profile differs from durable report')
+-        if require_complete and row.get('callback_profile_identity') != dict(alias=helper.ALIAS, path='/mnt/review/callback_profile.py', helper_sha256=spec['callback_profile']['helper_sha256'], arm=inner['arm'], rank=rank, configured=True, instrumentation_only=True):
+-            raise ValueError('callback configured helper identity differs')
+-        reports.append(report)
+-    return reports
+-
+-def comparison():
+-    return authenticated_adjacent('validation_comparison.py', COMPARISON_SHA256)
+-
+-def comparison_mode(spec):
+-    return spec.get('experiment_mode') in ('v4-repeatability-control-v1', 'v4-first-divergence-capture-v1', 'native-repeatability-capture-v1', 'native-decode-layer-capture-v1', 'native-prefill-row-audit-v1', 'native-async-prefill-layer-capture-v1')
+-
+-def capture_mode(spec):
+-    return False
+-
+-def native_capture_mode(spec):
+-    return spec.get('experiment_mode') == 'native-model-context-retrieval-32k-v1'
+-
+-def capture_module(spec):
+-    comparison().validate_spec(spec)
+-    return authenticated_adjacent('divergence_capture.py', spec['validation_comparison']['capture']['helper_sha256'])
+-
+-def row_audit_module(spec):
+-    comparison().validate_spec(spec)
+-    if spec.get('experiment_mode') != 'native-prefill-row-audit-v1':
+-        raise ValueError('prefill row audit mode required')
+-    return authenticated_adjacent('prefill_row_audit.py', spec['validation_comparison']['capture']['prefill_row_audit']['helper_sha256'])
+-
+-def capture_binding(spec, native):
+-    return dict(schema=1, mode=spec['experiment_mode'], arm=native['arm'], rank=native['rank'], session_sha256=native['session_sha256'], spec_sha256=native['spec_sha256'], worker=native['process'], source_contract_sha256=hashlib.sha256(comparison().canonical(spec['validation_comparison']['capture']).encode()).hexdigest())
++
++
++
++
++
++
++
++
++
++
+ 
+ 
+ PROGRESS_LIMIT = 64 << 10
+ PROGRESS_PHASES = ('rank_started', 'preflight_complete', 'torch_import', 'native_identity_complete', 'serving_imports', 'arguments', 'model_config', 'parallel_runtime', 'layer_runtime', 'model_runner', 'memory_pool', 'attention_backends', 'graphs', 'cache', 'ready', 'batch_intent', 'batch_complete', 'cleanup', 'rank_finished')
+ 
+-def progress_readout(raw, *, rank, arm, session_sha256, spec_sha256):
+-    """Retain validated prefix counts; absence or a torn tail never means zero work."""
+-    summary = dict(rank=rank, valid=False, counts_complete=False, finished=False, intent_batches=None, completed_batches=None, intent_requests=None, completed_requests=None, last_phase=None, pid=None, error=None, counts_semantics='validated-prefix-lower-bounds', qualification=False)
+-    if raw is None:
+-        summary['error'] = 'progress unavailable'
+-        return summary
+-    intents = completed = 0
+-    plans = list(request_plan({}))
+-    previous_time = -1.0
+-    ready = finished = False
+-    startup = [phase for phase in PROGRESS_PHASES[:PROGRESS_PHASES.index('ready') + 1] if phase != 'native_identity_complete' or session_sha256 is not None]
+-    startup_index = 0
+-    cleaning = False
+-    try:
+-        if not raw or len(raw) > PROGRESS_LIMIT:
+-            raise ValueError('progress empty/oversized')
+-        for sequence, line in enumerate(raw.splitlines(keepends=True)):
+-            if not line.endswith(b'\n'):
+-                raise ValueError('partial progress line')
+-
+-            def pairs(items):
+-                value = {}
+-                for key, item in items:
+-                    if key in value:
+-                        raise ValueError('duplicate progress key')
+-                    value[key] = item
+-                return value
+-            row = json.loads(line, object_pairs_hook=pairs, parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite progress')))
+-            expected = dict(schema=1, rank=rank, arm=arm, session_sha256=session_sha256, spec_sha256=spec_sha256, sequence=sequence)
+-            if type(row) is not dict or set(row) != set(expected) | {'pid', 'phase', 'utc_unix', 'monotonic', 'details'} or any((type(row.get(key)) is not type(value) or row[key] != value for key, value in expected.items())) or (type(row['pid']) is not int) or (row['pid'] <= 0) or (sequence and row['pid'] != summary['pid']) or (row['phase'] not in PROGRESS_PHASES) or (type(row['details']) is not dict) or any((type(row[key]) not in (int, float) or not math.isfinite(row[key]) or row[key] < 0 for key in ('utc_unix', 'monotonic'))) or (row['monotonic'] < previous_time) or finished:
+-                raise ValueError('progress identity/order/type')
+-            phase, details = (row['phase'], row['details'])
+-            if (sequence == 0) != (phase == 'rank_started'):
+-                raise ValueError('progress start order')
+-            if cleaning and phase != 'rank_finished':
+-                raise ValueError('progress after cleanup')
+-            if phase in startup:
+-                if startup_index >= len(startup) or phase != startup[startup_index] or intents:
+-                    raise ValueError('progress startup order')
+-                startup_index += 1
+-            elif phase == 'native_identity_complete':
+-                raise ValueError('unexpected native identity phase')
+-            if phase == 'cleanup':
+-                cleaning = True
+-            if phase == 'ready':
+-                if ready or intents:
+-                    raise ValueError('duplicate/late readiness')
+-                ready = True
+-            if phase in ('batch_intent', 'batch_complete'):
+-                ordinal = intents if phase == 'batch_intent' else completed
+-                if not ready or ordinal >= len(plans) or json.dumps(details, sort_keys=True) != json.dumps(dict(plans[ordinal], ordinal=ordinal), sort_keys=True) or (phase == 'batch_intent' and intents != completed) or (phase == 'batch_complete' and intents != completed + 1):
+-                    raise ValueError('progress batch binding/order')
+-                if phase == 'batch_intent':
+-                    intents += 1
+-                else:
+-                    completed += 1
+-            elif details and phase != 'rank_finished':
+-                raise ValueError('unexpected phase details')
+-            if phase == 'rank_finished':
+-                if not cleaning or set(details) != {'success'} or type(details['success']) is not bool:
+-                    raise ValueError('progress finish record')
+-                if details['success'] and (intents != 7 or completed != 7):
+-                    raise ValueError('premature successful finish')
+-                finished = True
+-                summary['finished'] = details['success']
+-            previous_time = row['monotonic']
+-            summary.update(last_phase=phase, pid=row['pid'], intent_batches=intents, completed_batches=completed, intent_requests=sum((p['concurrency'] for p in plans[:intents])), completed_requests=sum((p['concurrency'] for p in plans[:completed])))
+-        summary.update(valid=True, counts_complete=finished)
+-    except (ValueError, TypeError, KeyError) as error:
+-        summary['error'] = type(error).__name__ + ': ' + str(error)[:256]
+-    return summary
+-
+-def read_progress(output, *, rank, arm, session_sha256, spec_sha256):
+-    try:
+-        raw = read_bounded_file(output / f'rank-{rank}-progress.jsonl', PROGRESS_LIMIT)
+-    except FileNotFoundError:
+-        raw = None
+-    except (OSError, ValueError) as error:
+-        result = progress_readout(None, rank=rank, arm=arm, session_sha256=session_sha256, spec_sha256=spec_sha256)
+-        result['error'] = type(error).__name__ + ': ' + str(error)[:256]
+-        return result
+-    return progress_readout(raw, rank=rank, arm=arm, session_sha256=session_sha256, spec_sha256=spec_sha256)
++
+ 
+ def validate_native_process(record):
+     if type(record) is not dict or set(record) != {'pid', 'start_ticks', 'uid', 'gid', 'boot_id', 'pid_namespace'} or any((type(record[key]) is not int or record[key] <= 0 for key in ('pid', 'start_ticks'))) or (type(record['uid']) is not int) or (type(record['gid']) is not int) or ((record['uid'], record['gid']) != (1000, 1000)) or (type(record['boot_id']) is not str) or (re.fullmatch('[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', record['boot_id']) is None) or (type(record['pid_namespace']) is not str) or (re.fullmatch('pid:\\[[1-9][0-9]*\\]', record['pid_namespace']) is None):
+@@ -369,14 +188,13 @@
+     validate_physical_details(helper, record['devices'], record['hip'])
+     return record
+ 
+-def write_result(path, value):
+-    raw = json.dumps(value, sort_keys=True, allow_nan=False).encode() + b'\n'
+-    if len(raw) > 8 << 20:
+-        raise ValueError('result bound')
+-    with open(path, 'xb') as stream:
+-        stream.write(raw)
+ 
+ def validate_spec(spec):
++    if type(spec) is not dict or spec.get('experiment_mode') != 'native-http-fp8-sprint01-v1':
++        raise ValueError('only the W5 native HTTP serving specification is supported')
++    if any(spec.get(key) is not None for key in ('independent_reference','validation_comparison','cache_profile','callback_profile','stall_trace')):
++        raise ValueError('retired experiment fields are not admitted in the HTTP specification')
++
+     if type(spec) is dict and spec.get('experiment_mode') == 'native-http-fp8-sprint01-v1':
+         http = spec.get('http_serving')
+         fields = {'schema', 'mode', 'bindings', 'client_seconds', 'expected_devices'}
+@@ -404,67 +222,8 @@
+         return spec
+     raise ValueError('only the W5 native HTTP serving specification is supported')
+ 
+-def request_plan(spec):
+-    """Exactly seven cold singleton cases per arm, with no workload warmups."""
+-    for cell, concurrency, length in CELLS:
+-        for sample in range(1):
+-            yield {'cell': cell, 'concurrency': concurrency, 'input_tokens': length, 'sample': sample, 'measured': True, 'request_ids': [f'{cell}-{sample}-{i}' for i in range(concurrency)]}
+-
+-def validate_cache_profiles(records, arm, contract, spec_sha256, comparison_contract=None):
+-    if contract is None:
+-        if any((row.get('cache_profile') is not None for row in records)):
+-            raise ValueError('unexpected cache profile without spec binding')
+-        return
+-    if json.dumps(contract, sort_keys=True) != json.dumps(CACHE_PROFILE, sort_keys=True):
+-        raise ValueError('cache profile contract differs')
+-    if comparison_contract is not None:
+-        comparison().validate_contract(comparison_contract)
+-    if arm == 'bf16' and comparison_contract is None:
+-        if any((row.get('cache_profile') is not None for row in records)):
+-            raise ValueError('baseline must use ordinary unprofiled BF16 backend')
+-        return
+-    module = authenticated_adjacent('cache_profile.py', CACHE_PROFILE_SHA256)
+-    for row in records:
+-        native = row['native_identity']
+-        if native['spec_sha256'] != spec_sha256 or native['rank'] != row['rank'] or native['arm'] != arm:
+-            raise ValueError('cache profile/native identity binding')
+-        module.validate_report(row.get('cache_profile'), row['rank'], row['batches'], native['session_sha256'], spec_sha256, native['process']['pid'])
+-
+-def summarize(records, expected_arm, profile_contract=None, profile_spec_sha256=None, comparison_contract=None):
+-    if expected_arm not in ('bf16', 'kv4'):
+-        raise ValueError('explicit expected arm required')
+-    if len(records) != 2 or any((row is None or row['failure'] is not None or row['cleanup_errors'] or (not row['owner_cleanup']) or (row['intent_batches'] != 7) or (row['completed_batches'] != 7) or (row['intent_requests'] != 7) or (row['completed_requests'] != 7) or (row['arm'] != expected_arm) or (len(row['batches']) != 7) for row in records)):
+-        raise ValueError('incomplete arm')
+-    if [record['rank'] for record in records] != [0, 1]:
+-        raise ValueError('exact ordered rank identities required')
+-    validate_cache_profiles(records, expected_arm, profile_contract, profile_spec_sha256, comparison_contract)
+-    if comparison_contract is not None:
+-        module = comparison()
+-        module.validate_contract(comparison_contract)
+-        telemetry = authenticated_adjacent('batch_telemetry.py', TELEMETRY_SHA256)
+-        for row in records:
+-            native = row['native_identity']
+-            if module.native_mode(comparison_contract['mode']):
+-                if row.get('actual_pool') != 'MHATokenToKVPool':
+-                    raise ValueError('native comparison requires ordinary BF16 pool')
+-                module.validate_native_cache_identity(row.get('native_cache_identity'), expected_arm, row['rank'], native['session_sha256'], profile_spec_sha256, native['process']['pid'], comparison_contract)
+-            elif row.get('actual_pool') != 'QwenBF16MixedPool':
+-                raise ValueError('both comparison arms require the compact hybrid pool')
+-            module.validate_identity(row.get('validation_identity'), expected_arm, row['rank'], native['session_sha256'], profile_spec_sha256, native['process']['pid'], comparison_contract)
+-            telemetry.validate_report(row.get('batch_telemetry'), native, expected_arm, row['rank'])
+-    samples = []
+-    for index, plan in enumerate(request_plan({})):
+-        a, b = (record['batches'][index] for record in records)
+-        if any((row[key] != plan[key] for row in (a, b) for key in plan)) or not a['complete'] or (not b['complete']) or (a['generated_ids'] != b['generated_ids']) or any((len(row['step_seconds']) != 32 for row in (a, b))):
+-            raise ValueError('rank schedule/output mismatch')
+-        for row in (a, b):
+-            if not all((type(x) in (int, float) and math.isfinite(x) and (x >= 0) for x in row['step_seconds'])) or not math.isfinite(row['batch_wall_seconds']) or row['batch_wall_seconds'] < 0 or (len(row['generated_ids']) != plan['concurrency']) or (len(row['generated_logprobs']) != plan['concurrency']) or any((len(ids) != 32 or any((type(x) is not int or x < 0 for x in ids)) for ids in row['generated_ids'])) or any((len(scores) != 32 or not all((math.isfinite(x) for x in scores)) for scores in row['generated_logprobs'])):
+-                raise ValueError('malformed rank measurements')
+-        steps = [max(x, y) for x, y in zip(a['step_seconds'], b['step_seconds'])]
+-        if not all((math.isfinite(x) and x >= 0 for x in steps)):
+-            raise ValueError('invalid timing')
+-        samples.append({**plan, 'prefill_rank_max_seconds': steps[0], 'decode_rank_max_step_seconds': steps[1:], 'decode_31_seconds': sum(steps[1:]), 'forward_sample_total_seconds': sum(steps), 'batch_wall_rank_max_seconds': max(a['batch_wall_seconds'], b['batch_wall_seconds'])})
+-    return samples
++
++
+ def prepare_serving_scratch_directories():
+     """Create only the three reviewed directories in the already bounded tmpfs."""
+     expected = {'HOME': '/mnt/output/home', 'TMPDIR': '/mnt/output/tmp', 'XDG_CACHE_HOME': '/mnt/output/cache'}
+@@ -526,27 +285,22 @@
+     output.mkdir(mode=448)
+     serving_runtime = http_runtime_module(spec, args.arm)
+     binding = {'session_sha256': args.session_sha256, 'arm': args.arm, 'spec_sha256': args.spec_sha256, 'experiment_mode': 'native-http-fp8-sprint01-v1'}
+-    raw_transport = serving_runtime.mtp_contract.raw_attention_capture_enabled()
+-    if raw_transport and artifact_options:
+-        raise ValueError('configured artifact limits do not support raw-frame transport')
+-    if raw_transport:
+-        binding['artifact_transport'] = artifacts.RAW_TRANSPORT
++    serving_runtime.mtp_contract.settings()
++    raw_transport = False
+     result = None
+     try:
+-        result = serving_runtime.execute(args, spec, output,
+-            deadline=time.monotonic() + worker_seconds, artifacts=artifacts)
++        result = serving_runtime.execute(args, spec, output, deadline=time.monotonic() + worker_seconds, artifacts=artifacts)
+     finally:
+         if (output / 'result.json').is_file():
+             artifacts.pack_http_artifacts(output, binding, **artifact_options)
+-            if raw_transport:
+-                sys.stdout.flush()
+-                artifacts.export_raw_frames(output, binding=binding, sink=sys.stdout.buffer)
+-            else:
+-                staged = artifacts.stage_artifacts(output, binding, **artifact_options)
+-                artifacts.export_bundle(staged, binding=binding, sink=sys.stdout.buffer, **artifact_options)
++            staged = artifacts.stage_artifacts(output, binding, **artifact_options)
++            artifacts.export_bundle(staged, binding=binding, sink=sys.stdout.buffer, **artifact_options)
+     raise SystemExit(0 if type(result) is dict and result.get('status') == 'HTTP_ARM_COMPLETE' else 1)
+ 
+-_GRAPH_OUTER = _LazyAdjacent('graph_outer.py', 'f797dad9ec5742d2056df358a33e42f062775f52a510a7bd2600d80fd725ae70')
++_GRAPH_OUTER = _LazyAdjacent('graph_outer.py', '9902d9103a0696edeba14fcfed5ce5c9047252c4223a2814f49f69583e288d74')
+ 
+ if __name__ == '__main__':
+     main()
++
++
++HTTP_REFERENCE = {'schema': 1, 'mode': 'ordered-score-v4-model-v1', 'entry': 'uq_bf16_attention_scores_v3', 'workspace_limit_bytes': 268435456, 'binary_sha256': '1ca7efb0cf9220adb16a56e30e4cd2931b5d49edbe3277fc15d68e629500cd7b', 'device_sha256': '48d2c77e69df1e8b352fbafbf2f1ff832d8cc6717b1a1ffc47970a4f59ee64df', 'source_sha256': '661441715312cba400f04bc0168818092d031fc6799affbcbe78fa0e8fa2557b', 'reader_events': False}
+--- a/review/serving_contract.py
++++ b/review/serving_contract.py
+@@ -76,12 +76,9 @@
+ 
+ 
+ def prompt_flush_contract():
+-    _need(mtp_contract.prompt_minimization_enabled(), 'prompt flush outside minimization phase')
+-    return dict(schema=1, before_ordinals=[1, 2], method='POST', endpoint=PROMPT_FLUSH_ENDPOINT,
+-        request_bytes=0, success_http_status=200,
+-        acknowledgment_scope='native TP leader acknowledgment; no per-rank completion acknowledgments are exported',
+-        tp_reset_inference='authenticated native broadcast, serial dispatch and state-synchronous TP group contract',
+-        cache_hit_count_observed=False)
++    mtp_contract.settings()
++    _need(False, 'prompt flush outside minimization phase')
++    return dict(schema=1, before_ordinals=[1, 2], method='POST', endpoint=PROMPT_FLUSH_ENDPOINT, request_bytes=0, success_http_status=200, acknowledgment_scope='native TP leader acknowledgment; no per-rank completion acknowledgments are exported', tp_reset_inference='authenticated native broadcast, serial dispatch and state-synchronous TP group contract', cache_hit_count_observed=False)
+ 
+ 
+ def screen_policy():
+@@ -99,32 +96,18 @@
+ 
+ def validate_sampling_parameters(body, ordinal):
+     if mtp_contract.settings().get('quality_screen') == 'sprint7-low-thinking-publisher-sampled-four-v1':
+-        _need(type(body.get('temperature')) is float and body['temperature']==1.0 and
+-              type(body.get('top_p')) is float and body['top_p']==0.95 and
+-              type(body.get('top_k')) is int and body['top_k']==20 and
+-              type(body.get('min_p')) is float and body['min_p']==0.0 and
+-              type(body.get('presence_penalty')) is float and body['presence_penalty']==0.0 and
+-              type(body.get('repetition_penalty')) is float and body['repetition_penalty']==1.0 and
+-              'seed' not in body and body.get('stream') is False and type(body.get('n')) is int and body['n']==1 and
+-              body.get('return_token_ids') is True and body.get('return_meta_info') is True,
+-              'frozen publisher sampling recipe differs')
++        _need(type(body.get('temperature')) is float and body['temperature'] == 1.0 and (type(body.get('top_p')) is float) and (body['top_p'] == 0.95) and (type(body.get('top_k')) is int) and (body['top_k'] == 20) and (type(body.get('min_p')) is float) and (body['min_p'] == 0.0) and (type(body.get('presence_penalty')) is float) and (body['presence_penalty'] == 0.0) and (type(body.get('repetition_penalty')) is float) and (body['repetition_penalty'] == 1.0) and ('seed' not in body) and (body.get('stream') is False) and (type(body.get('n')) is int) and (body['n'] == 1) and (body.get('return_token_ids') is True) and (body.get('return_meta_info') is True), 'frozen publisher sampling recipe differs')
+         return
+     reference = mtp_contract.precision_reference_enabled()
+-    greedy = mtp_contract.greedy_quality_draft_ab() or reference
+-    seed_valid = ('seed' not in body if reference or mtp_contract.settings()['phase'] in HIP_PHASE_ARMS else
+-                  type(body.get('seed')) is int and body['seed'] == 1729 + ordinal)
+-    _need(type(body.get('temperature')) is float and body['temperature'] == (0.0 if greedy else 0.7) and
+-          type(body.get('top_p')) is float and body['top_p'] == (1.0 if greedy else 0.9) and
+-          type(body.get('top_k')) is int and body['top_k'] == (1 if greedy else 40) and
+-          seed_valid and
+-          body.get('stream') is False and type(body.get('n')) is int and body['n'] == 1 and
+-          body.get('return_token_ids') is True and body.get('return_meta_info') is True,
+-          'frozen native sampling parameters differ')
++    mtp_contract.settings()
++    greedy = reference
++    seed_valid = 'seed' not in body if reference or mtp_contract.settings()['phase'] in HIP_PHASE_ARMS else type(body.get('seed')) is int and body['seed'] == 1729 + ordinal
++    _need(type(body.get('temperature')) is float and body['temperature'] == (0.0 if greedy else 0.7) and (type(body.get('top_p')) is float) and (body['top_p'] == (1.0 if greedy else 0.9)) and (type(body.get('top_k')) is int) and (body['top_k'] == (1 if greedy else 40)) and seed_valid and (body.get('stream') is False) and (type(body.get('n')) is int) and (body['n'] == 1) and (body.get('return_token_ids') is True) and (body.get('return_meta_info') is True), 'frozen native sampling parameters differ')
+ 
+ 
+ def hip_sampling_arm(phase, arm):
+-    if phase == GDN_PAIR_PHASE and mtp_contract.greedy_quality_draft_ab():
+-        return arm in ('control', 'mtp') if mtp_contract.verify_attention_ab_enabled() else arm == 'mtp'
++    if phase == GDN_PAIR_PHASE:
++        mtp_contract.settings()
+     if phase == mtp_contract.LIFECYCLE_PHASE:
+         return arm in ('control', 'mtp')
+     selected = HIP_PHASE_ARMS.get(phase)
+@@ -272,17 +255,10 @@
+         known = history_branch(case, case['history_branch_index'])
+         if 'history_binding' in case:
+             known['history_binding'] = case['history_binding']
+-    _need(known is not None and canonical(case) == canonical(known),
+-          'unfrozen request body')
+-    result = dict(schema=1, mode=MODE, case=case['case'], request_sha256=digest(case['body']),
+-        raw_response_sha256=None, client_elapsed_seconds=None,
+-        status='UNREADABLE_RESPONSE', metric_eligible=False, qualification=False,
+-        code_execution_performed=False, code_correctness_graded=False,
+-        numerical_equivalence_established=False, normal_stop_is_not_strict_eos_proof=True,
+-        ttft_measured=False, decode_latency_measured=False)
++    _need(known is not None and canonical(case) == canonical(known), 'unfrozen request body')
++    result = dict(schema=1, mode=MODE, case=case['case'], request_sha256=digest(case['body']), raw_response_sha256=None, client_elapsed_seconds=None, status='UNREADABLE_RESPONSE', metric_eligible=False, qualification=False, code_execution_performed=False, code_correctness_graded=False, numerical_equivalence_established=False, normal_stop_is_not_strict_eos_proof=True, ttft_measured=False, decode_latency_measured=False)
+     try:
+-        _need(type(client_elapsed_seconds) in (int, float) and math.isfinite(client_elapsed_seconds)
+-              and client_elapsed_seconds > 0, 'positive finite client duration required')
++        _need(type(client_elapsed_seconds) in (int, float) and math.isfinite(client_elapsed_seconds) and (client_elapsed_seconds > 0), 'positive finite client duration required')
+         result['client_elapsed_seconds'] = client_elapsed_seconds
+         _need(type(response) is dict and len(canonical(response)) <= 2 << 20, 'bounded response object required')
+         result['raw_response_sha256'] = digest(response)
+@@ -290,28 +266,23 @@
+             result.update(status='SERVER_ERROR', error=copy.deepcopy(response['error']))
+             return result
+         choices = response.get('choices')
+-        _need(type(choices) is list and len(choices) == 1 and type(choices[0]) is dict, 'one choice required')
++        _need(type(choices) is list and len(choices) == 1 and (type(choices[0]) is dict), 'one choice required')
+         choice = choices[0]
+         _need(type(choice.get('index')) is int and choice['index'] == 0, 'choice index required')
+         message = choice.get('message')
+-        _need(type(message) is dict and message.get('role') == 'assistant' and
+-              type(message.get('content')) is str, 'assistant text required')
+-        meta, usage = choice.get('meta_info'), response.get('usage')
++        _need(type(message) is dict and message.get('role') == 'assistant' and (type(message.get('content')) is str), 'assistant text required')
++        meta, usage = (choice.get('meta_info'), response.get('usage'))
+         _need(type(meta) is dict and type(usage) is dict, 'terminal metadata and usage required')
+         if case['_kv_block'] == 'paired':
+             _need(response.get('id') == meta.get('id') == case['body']['rid'], 'paired wire RID differs')
+-        _need(_ids(choice.get('prompt_token_ids')) and _ids(choice.get('response_token_ids')),
+-              'retained prompt and response token vectors required')
++        _need(_ids(choice.get('prompt_token_ids')) and _ids(choice.get('response_token_ids')), 'retained prompt and response token vectors required')
+         finish = choice.get('finish_reason')
+-        _need(type(finish) is str and type(meta.get('finish_reason')) is dict and
+-              meta['finish_reason'].get('type') == finish, 'finish representations differ')
++        _need(type(finish) is str and type(meta.get('finish_reason')) is dict and (meta['finish_reason'].get('type') == finish), 'finish representations differ')
+         for key in ('prompt_tokens', 'completion_tokens', 'reasoning_tokens', 'cached_tokens'):
+             _need(_count(meta.get(key)), 'missing or invalid terminal count: ' + key)
+         for key in ('prompt_tokens', 'completion_tokens', 'total_tokens'):
+             _need(_count(usage.get(key)), 'missing or invalid usage: ' + key)
+-        _need(type(meta.get('e2e_latency')) in (int, float) and
+-              math.isfinite(meta['e2e_latency']) and meta['e2e_latency'] >= 0,
+-              'finite terminal e2e_latency metadata required')
++        _need(type(meta.get('e2e_latency')) in (int, float) and math.isfinite(meta['e2e_latency']) and (meta['e2e_latency'] >= 0), 'finite terminal e2e_latency metadata required')
+         _need(0 < meta['completion_tokens'] <= case['body']['max_completion_tokens'], 'completion cap differs')
+         if mtp_contract.settings().get('quality_screen') == 'sprint35-long-prefix-reuse-v1':
+             policy = s35_cache_policy(case['case'])
+@@ -320,57 +291,34 @@
+         elif case['_kv_block'] == 'lifecycle':
+             policy = expected_case(case['case'])['cache_policy']
+             result.update(cached_tokens=meta['cached_tokens'], cache_policy=copy.deepcopy(policy))
+-            _need(policy['minimum_cached_tokens'] <= meta['cached_tokens'] <= policy['maximum_cached_tokens'],
+-                  'observed native cached_tokens violates frozen ' + policy['intent'] + ' bounds')
++            _need(policy['minimum_cached_tokens'] <= meta['cached_tokens'] <= policy['maximum_cached_tokens'], 'observed native cached_tokens violates frozen ' + policy['intent'] + ' bounds')
+         else:
+             _need(meta['cached_tokens'] == 0, 'final verification requires zero cache hits')
+-        _need(type(meta.get('num_retractions')) is int and meta['num_retractions'] == 0,
+-              'final verification requires observed zero retractions')
+-        _need(meta['prompt_tokens'] == usage['prompt_tokens'] == len(choice['prompt_token_ids']) and
+-              meta['completion_tokens'] == usage['completion_tokens'] == len(choice['response_token_ids']) and
+-              usage['total_tokens'] == usage['prompt_tokens'] + usage['completion_tokens'],
+-              'terminal token counts differ')
++        _need(type(meta.get('num_retractions')) is int and meta['num_retractions'] == 0, 'final verification requires observed zero retractions')
++        _need(meta['prompt_tokens'] == usage['prompt_tokens'] == len(choice['prompt_token_ids']) and meta['completion_tokens'] == usage['completion_tokens'] == len(choice['response_token_ids']) and (usage['total_tokens'] == usage['prompt_tokens'] + usage['completion_tokens']), 'terminal token counts differ')
+         frozen = expected_for_case(case)
+         if frozen is not None:
+             _need(choice['prompt_token_ids'] == frozen['input_ids'], 'frozen prompt IDs differ')
+-        result.update(finish_reason=finish, matched_stop=choice.get('matched_stop'),
+-            terminal_meta_info=copy.deepcopy(meta), usage=copy.deepcopy(usage),
+-            prompt_token_ids_sha256=digest(choice['prompt_token_ids']), prompt_token_count=len(choice['prompt_token_ids']),
+-            response_token_ids=list(choice['response_token_ids']),
+-            response_id_count=len(choice['response_token_ids']),
+-            reported_completion_tokens=meta['completion_tokens'],
+-            id_count_equals_reported_count=len(choice['response_token_ids']) == meta['completion_tokens'],
+-            id_eos_inclusion='UNPROVEN', text=message['content'],
+-            server_timing_interpretation='raw terminal metadata retained; units/scope not asserted',
+-            frozen_history_exact_answer=(message['content'] == 'SPRUCE-7|32') if case['case'] == 'frozen-two-turn' else None)
++        result.update(finish_reason=finish, matched_stop=choice.get('matched_stop'), terminal_meta_info=copy.deepcopy(meta), usage=copy.deepcopy(usage), prompt_token_ids_sha256=digest(choice['prompt_token_ids']), prompt_token_count=len(choice['prompt_token_ids']), response_token_ids=list(choice['response_token_ids']), response_id_count=len(choice['response_token_ids']), reported_completion_tokens=meta['completion_tokens'], id_count_equals_reported_count=len(choice['response_token_ids']) == meta['completion_tokens'], id_eos_inclusion='UNPROVEN', text=message['content'], server_timing_interpretation='raw terminal metadata retained; units/scope not asserted', frozen_history_exact_answer=message['content'] == 'SPRUCE-7|32' if case['case'] == 'frozen-two-turn' else None)
+         sampled = mtp_contract.settings()['phase'] in SAMPLING_PHASES
+         if sampled:
+-            result.update(sampled_request=not (mtp_contract.greedy_quality_draft_ab() or mtp_contract.precision_reference_enabled()),
+-                sampling_parameters={key: case['body'][key] for key in ('temperature', 'top_p', 'top_k', 'seed')
+-                                     if key in case['body']},
+-                sampling_distribution_verified=False,
+-                expected_answer_matches=None,
+-                answer_grade_status='PENDING_POST_RELEASE_NATIVE_DECODE')
++            mtp_contract.settings()
++            result.update(sampled_request=not mtp_contract.precision_reference_enabled(), sampling_parameters={key: case['body'][key] for key in ('temperature', 'top_p', 'top_k', 'seed') if key in case['body']}, sampling_distribution_verified=False, expected_answer_matches=None, answer_grade_status='PENDING_POST_RELEASE_NATIVE_DECODE')
+         if 'history_binding' in case:
+             result['generated_history'] = copy.deepcopy(case['history_binding'])
+-        if finish == 'length' and case['_kv_block'] == 'paired' and screen_policy() == 'exploratory-stop-or-length-v1':
+-            _need(meta['completion_tokens'] == case['body']['max_completion_tokens'],
+-                  'length finish does not match frozen output cap')
++        if finish == 'length' and case['_kv_block'] == 'paired' and (screen_policy() == 'exploratory-stop-or-length-v1'):
++            _need(meta['completion_tokens'] == case['body']['max_completion_tokens'], 'length finish does not match frozen output cap')
+             if message.get('tool_calls') or message.get('reasoning_content'):
+                 result['status'] = 'UNREQUESTED_TOOL_OR_REASONING_REFUSAL'
+             else:
+-                result.update(status='OUTPUT_CAP_REACHED', output_cap_reached=True,
+-                    screen_policy=screen_policy(), metric_eligible=False,
+-                    answer_grade_status='UNGRADED_CAP_WORK', native_full_wire_decode_required=True)
++                result.update(status='OUTPUT_CAP_REACHED', output_cap_reached=True, screen_policy=screen_policy(), metric_eligible=False, answer_grade_status='UNGRADED_CAP_WORK', native_full_wire_decode_required=True)
+         elif finish != 'stop':
+             result['status'] = 'STOP_LENGTH_REFUSAL' if finish == 'length' else 'STOP_REFUSAL'
+         elif message.get('tool_calls') or message.get('reasoning_content'):
+             result['status'] = 'UNREQUESTED_TOOL_OR_REASONING_REFUSAL'
+         else:
+             segmentation = split_thinking_ids(choice['response_token_ids'])
+-            result.update(status='NORMAL_STOP_COMPLETE', metric_eligible=True,
+-                thinking_segments=segmentation, answer_grade_status='PENDING_POST_RELEASE_NATIVE_DECODE',
+-                native_full_wire_decode_required=True, natural_answer_graded=False)
++            result.update(status='NORMAL_STOP_COMPLETE', metric_eligible=True, thinking_segments=segmentation, answer_grade_status='PENDING_POST_RELEASE_NATIVE_DECODE', native_full_wire_decode_required=True, natural_answer_graded=False)
+     except (ValueError, KeyError, TypeError) as error:
+         result.update(status='STRUCTURAL_REFUSAL', error=type(error).__name__ + ': ' + str(error)[:512])
+     return result
+@@ -602,47 +550,28 @@
+ 
+ 
+ def compare(left, right):
+-    _need(left.get('case') == right.get('case') and left.get('mode') == right.get('mode') == MODE,
+-          'paired case/mode differs')
+-    result = dict(schema=1, mode=MODE, case=left['case'], qualification=False,
+-        numerical_equivalence_established=False, comparison_eligible=False,
+-        client_seconds=dict(control=left.get('client_elapsed_seconds'), mtp=right.get('client_elapsed_seconds')),
+-        completion_tokens=dict(control=left.get('reported_completion_tokens'), mtp=right.get('reported_completion_tokens')),
+-        interpretation=('same accepted candidate repeated; client request-to-terminal; stream TTFT reported separately; no speedup claim'
+-            if mtp_contract.settings()['phase'] == COMBINED_PHASE else
+-            'non-stream client request-to-terminal latency, not decode TPOT or TTFT'))
+-    if not (left.get('metric_eligible') is right.get('metric_eligible') is True):
++    _need(left.get('case') == right.get('case') and left.get('mode') == right.get('mode') == MODE, 'paired case/mode differs')
++    result = dict(schema=1, mode=MODE, case=left['case'], qualification=False, numerical_equivalence_established=False, comparison_eligible=False, client_seconds=dict(control=left.get('client_elapsed_seconds'), mtp=right.get('client_elapsed_seconds')), completion_tokens=dict(control=left.get('reported_completion_tokens'), mtp=right.get('reported_completion_tokens')), interpretation='same accepted candidate repeated; client request-to-terminal; stream TTFT reported separately; no speedup claim' if mtp_contract.settings()['phase'] == COMBINED_PHASE else 'non-stream client request-to-terminal latency, not decode TPOT or TTFT')
++    if not left.get('metric_eligible') is right.get('metric_eligible') is True:
+         result['reason'] = 'one or both responses did not complete normally'
+     elif left['request_sha256'] != right['request_sha256'] or left['prompt_token_ids'] != right['prompt_token_ids']:
+         result['reason'] = 'different request bytes or actual prompt IDs'
+     else:
+-        result.update(
+-            full_response_ids_equal=left['response_token_ids'] == right['response_token_ids'],
+-            generated_id_difference_count=(sum(left_id != right_id for left_id, right_id in
+-                zip(left['response_token_ids'], right['response_token_ids'])) +
+-                abs(len(left['response_token_ids']) - len(right['response_token_ids']))),
+-            equal_output_counts_do_not_establish_quality_or_numerical_equivalence=True)
++        result.update(full_response_ids_equal=left['response_token_ids'] == right['response_token_ids'], generated_id_difference_count=sum((left_id != right_id for left_id, right_id in zip(left['response_token_ids'], right['response_token_ids']))) + abs(len(left['response_token_ids']) - len(right['response_token_ids'])), equal_output_counts_do_not_establish_quality_or_numerical_equivalence=True)
+         if mtp_contract.settings()['phase'] == SAMPLING_PHASE:
+-            result.update(sampled_request=True, sampling_distribution_verified=False,
+-                seed_reproducibility_observed=result['full_response_ids_equal'] and left['text'] == right['text'],
+-                interpretation='same requested seed repeated across two native sampling starts; output equality is descriptive',
+-                reason='sampled outputs retained without a cross-start exactness or speedup gate')
++            result.update(sampled_request=True, sampling_distribution_verified=False, seed_reproducibility_observed=result['full_response_ids_equal'] and left['text'] == right['text'], interpretation='same requested seed repeated across two native sampling starts; output equality is descriptive', reason='sampled outputs retained without a cross-start exactness or speedup gate')
+             return result
+         if mtp_contract.settings()['phase'] in HIP_PHASE_ARMS:
+-            greedy = mtp_contract.greedy_quality_draft_ab()
+-            result.update(sampled_request=not greedy, sampling_distribution_verified=False,
+-                request_seed_present=False,
+-                interpretation=('greedy target-only versus greedy DFlash; quality and output differences are data'
+-                    if greedy else 'native sampling versus HIP DFlash sampling; stochastic output differences are data'),
+-                reason='outputs retained without a cross-arm exactness or paired-output speedup gate')
++            mtp_contract.settings()
++            greedy = False
++            result.update(sampled_request=not greedy, sampling_distribution_verified=False, request_seed_present=False, interpretation='greedy target-only versus greedy DFlash; quality and output differences are data' if greedy else 'native sampling versus HIP DFlash sampling; stochastic output differences are data', reason='outputs retained without a cross-arm exactness or paired-output speedup gate')
+             return result
+         if left['reported_completion_tokens'] != right['reported_completion_tokens']:
+             result['reason'] = 'different actual completion counts; retain raw latency without a paired speed claim'
+         elif not result['full_response_ids_equal'] or left['text'] != right['text']:
+             result['reason'] = 'different generated IDs or text; no paired speed claim'
+         else:
+-            result.update(comparison_eligible=True,
+-                control_over_mtp_client_latency=left['client_elapsed_seconds'] / right['client_elapsed_seconds'])
++            result.update(comparison_eligible=True, control_over_mtp_client_latency=left['client_elapsed_seconds'] / right['client_elapsed_seconds'])
+     return result
+ 
+ 
+--- a/review/serving_client.py
++++ b/review/serving_client.py
+@@ -92,16 +92,10 @@
+ 
+ def inspect_prompt_flush(bundle, ordinal):
+     """Require the exact immediate stock flush acknowledgment before another send."""
+-    _require(serving_contract.mtp_contract.prompt_minimization_enabled() and type(ordinal) is int and ordinal in (1, 2),
+-             'prompt flush phase/ordinal differs')
++    serving_contract.mtp_contract.settings()
++    _require(False, 'prompt flush phase/ordinal differs')
+     record = bundle['record']
+-    _require(bundle['request_raw'] == b'' and bundle['response_raw'] == serving_contract.PROMPT_FLUSH_ACK and
+-             record['name'] == f'prompt-flush-before-{ordinal:02d}' and record['method'] == 'POST' and
+-             record['endpoint'] == serving_contract.PROMPT_FLUSH_ENDPOINT and record['status'] == 200 and
+-             record['failure'] is None and record['response_truncated'] is False and
+-             record['request_sha256'] == _sha256(b'') and
+-             record['response_sha256'] == _sha256(serving_contract.PROMPT_FLUSH_ACK),
+-             'native immediate prompt flush acknowledgment differs')
++    _require(bundle['request_raw'] == b'' and bundle['response_raw'] == serving_contract.PROMPT_FLUSH_ACK and (record['name'] == f'prompt-flush-before-{ordinal:02d}') and (record['method'] == 'POST') and (record['endpoint'] == serving_contract.PROMPT_FLUSH_ENDPOINT) and (record['status'] == 200) and (record['failure'] is None) and (record['response_truncated'] is False) and (record['request_sha256'] == _sha256(b'')) and (record['response_sha256'] == _sha256(serving_contract.PROMPT_FLUSH_ACK)), 'native immediate prompt flush acknowledgment differs')
+     return serving_contract.prompt_flush_contract()
+ 
+ 
+--- a/review/serving_reader.py
++++ b/review/serving_reader.py
+@@ -150,61 +150,41 @@
+ 
+ 
+ def _check_body(directory, files, case, ordinal, present, headers, expected_arm):
+-    _need(("raw" in present) != ("partial" in present), "missing or duplicate raw response")
+-    raw_key = "partial" if "partial" in present else "raw"
++    _need(('raw' in present) != ('partial' in present), 'missing or duplicate raw response')
++    raw_key = 'partial' if 'partial' in present else 'raw'
+     body = _read(directory / files[raw_key])
+-    record = _object(directory / files["record"])
+-    _need(set(record) == {"schema", "ordinal", "case", "status", "reason", "response_sha256", "response_bytes",
+-                           "received_monotonic", "received_utc", "response_observed", "client_elapsed_seconds",
+-                           "response_truncated", "raw_body_path"}, "response record schema differs")
+-    _need(record["schema"] == 1 and record["ordinal"] == ordinal and record["case"] == case["case"] and
+-          record["status"] == headers["status"] and record["reason"] == headers["reason"] and
+-          record["response_sha256"] == _sha(body) and record["response_bytes"] == len(body) and
+-          record["response_observed"] is True and record["raw_body_path"] == files[raw_key],
+-          "response body binding")
+-    _time(record["received_monotonic"], "response time")
+-    _utc(record["received_utc"], "response UTC")
+-    _need(type(record["client_elapsed_seconds"]) in (int, float) and
+-          math.isfinite(record["client_elapsed_seconds"]) and record["client_elapsed_seconds"] > 0,
+-          "positive finite client elapsed required")
+-    _need(record["response_truncated"] is (raw_key == "partial"), "response truncation binding")
++    record = _object(directory / files['record'])
++    _need(set(record) == {'schema', 'ordinal', 'case', 'status', 'reason', 'response_sha256', 'response_bytes', 'received_monotonic', 'received_utc', 'response_observed', 'client_elapsed_seconds', 'response_truncated', 'raw_body_path'}, 'response record schema differs')
++    _need(record['schema'] == 1 and record['ordinal'] == ordinal and (record['case'] == case['case']) and (record['status'] == headers['status']) and (record['reason'] == headers['reason']) and (record['response_sha256'] == _sha(body)) and (record['response_bytes'] == len(body)) and (record['response_observed'] is True) and (record['raw_body_path'] == files[raw_key]), 'response body binding')
++    _time(record['received_monotonic'], 'response time')
++    _utc(record['received_utc'], 'response UTC')
++    _need(type(record['client_elapsed_seconds']) in (int, float) and math.isfinite(record['client_elapsed_seconds']) and (record['client_elapsed_seconds'] > 0), 'positive finite client elapsed required')
++    _need(record['response_truncated'] is (raw_key == 'partial'), 'response truncation binding')
+     stream = case['body'].get('stream') is True
+     _need(('stream' in present) is stream, 'missing or unrequested stream receive evidence')
+     observation = _object(directory / files['stream'], 1 << 20) if stream else None
+-    if contract.mtp_contract.prompt_minimization_enabled():
+-        intent = _object(directory / files['intent'])
+-        entered = _object(directory / files['entered'])
+-        returned = _object(directory / files['returned'])
+-        times = [intent['prepared_monotonic'], entered['entered_monotonic'], returned['returned_monotonic'],
+-                 headers['headers_observed_monotonic'], record['received_monotonic']]
+-        _need(times == sorted(times) and
+-              math.isclose(record['client_elapsed_seconds'], times[-1] - times[0], rel_tol=0, abs_tol=1e-7),
+-              'prompt request chronology differs')
+-    if raw_key == "partial":
+-        return dict(status="PARTIAL_RESPONSE_REFUSAL", metric_eligible=False, qualification=False)
++    contract.mtp_contract.settings()
++    if raw_key == 'partial':
++        return dict(status='PARTIAL_RESPONSE_REFUSAL', metric_eligible=False, qualification=False)
+     try:
+         if stream:
+             intent = _object(directory / files['intent'])
+             entered = _object(directory / files['entered'])
+             returned = _object(directory / files['returned'])
+-            times = [intent['prepared_monotonic'], entered['entered_monotonic'], returned['returned_monotonic'],
+-                     headers['headers_observed_monotonic'], record['received_monotonic']]
+-            _need(times == sorted(times) and
+-                  math.isclose(record['client_elapsed_seconds'], times[-1] - times[0], rel_tol=0, abs_tol=1e-7),
+-                  'stream request chronology differs')
++            times = [intent['prepared_monotonic'], entered['entered_monotonic'], returned['returned_monotonic'], headers['headers_observed_monotonic'], record['received_monotonic']]
++            _need(times == sorted(times) and math.isclose(record['client_elapsed_seconds'], times[-1] - times[0], rel_tol=0, abs_tol=1e-07), 'stream request chronology differs')
+             result = contract.inspect_stream_response(case, body, record['client_elapsed_seconds'])
+             if result['status'] == 'NORMAL_STOP_COMPLETE':
+-                result.update(contract.inspect_stream_observation(case, body, observation, ordinal=ordinal,
+-                    prepared=times[0], sent=times[2], headers=times[3], received=times[4]))
++                result.update(contract.inspect_stream_observation(case, body, observation, ordinal=ordinal, prepared=times[0], sent=times[2], headers=times[3], received=times[4]))
+         else:
+             decoded = _json(body)
+-            result = contract.inspect_response(case, decoded, record["client_elapsed_seconds"])
++            result = contract.inspect_response(case, decoded, record['client_elapsed_seconds'])
+             if contract.mtp_contract.contract_for_arm(expected_arm)['enabled']:
+-                result["spec_tokens_details"] = contract.inspect_speculation(decoded)
++                result['spec_tokens_details'] = contract.inspect_speculation(decoded)
+     except (ValueError, TypeError, UnicodeError, json.JSONDecodeError):
+-        result = dict(status="STRUCTURAL_REFUSAL", metric_eligible=False, qualification=False)
+-    if headers["status"] != 200:
+-        result.update(status="HTTP_STATUS_REFUSAL", metric_eligible=False)
++        result = dict(status='STRUCTURAL_REFUSAL', metric_eligible=False, qualification=False)
++    if headers['status'] != 200:
++        result.update(status='HTTP_STATUS_REFUSAL', metric_eligible=False)
+     return result
+ 
+ 
+@@ -259,153 +239,117 @@
+ def _read_context_client(directory, *, expected, native_gate_raw):
+     """Return recomputed wire status only; it is not release or quality evidence."""
+     directory = Path(directory)
+-    _need(directory.is_absolute() and directory.resolve(strict=True) == directory and directory.is_dir(),
+-          "canonical client directory")
+-    _need(type(native_gate_raw) is bytes and 0 < len(native_gate_raw) <= MAX_JSON_BYTES,
+-          "bounded raw readiness record required")
++    _need(directory.is_absolute() and directory.resolve(strict=True) == directory and directory.is_dir(), 'canonical client directory')
++    _need(type(native_gate_raw) is bytes and 0 < len(native_gate_raw) <= MAX_JSON_BYTES, 'bounded raw readiness record required')
+     gate = _json(native_gate_raw)
+-    _need(type(gate) is dict, "readiness record must be an object")
+-    workers, gate_sha = serving_client.validate_gate(gate, expected), _sha(native_gate_raw)
++    _need(type(gate) is dict, 'readiness record must be an object')
++    workers, gate_sha = (serving_client.validate_gate(gate, expected), _sha(native_gate_raw))
+     names = _names(directory)
+-    root = {"readiness/accepted-gate.json", "readiness/live-workers-before-first-generation.json", "RUN-SUMMARY.json"}
+-    _need(root <= names, "missing readiness or terminal evidence")
+-    accepted = _object(directory / "readiness/accepted-gate.json")
+-    _need(set(accepted) == {"schema", "gate_sha256", "expected", "mode", "accepted_utc", "workers"} and
+-          accepted["schema"] == 1 and accepted["gate_sha256"] == gate_sha and accepted["expected"] == expected and
+-          accepted["mode"] == contract.MODE and accepted["workers"] == workers, "accepted readiness binding")
+-    _utc(accepted["accepted_utc"], "accepted readiness UTC")
+-    live = _object(directory / "readiness/live-workers-before-first-generation.json")
+-    _need(set(live) == {"schema", "gate_sha256", "observed_utc", "workers"} and live["schema"] == 1 and
+-          live["gate_sha256"] == gate_sha and type(live["workers"]) is list and len(live["workers"]) == 2,
+-          "pre-request worker evidence")
+-    _utc(live["observed_utc"], "live-worker UTC")
+-    for actual, worker in zip(live["workers"], workers):
+-        _need(actual == dict(pid=worker["pid"], start_ticks=worker["start_ticks"], boot_id=worker["boot_id"],
+-                             alive=True, rank=worker["rank"], identity_sha256=worker["identity_sha256"]),
+-              "pre-request worker identity differs")
+-
+-    counts = dict(intent_count=0, send_attempt_entered_count=0, send_call_returned_count=0,
+-                  response_observed_count=0, response_body_observed_count=0, normal_complete_count=0)
++    root = {'readiness/accepted-gate.json', 'readiness/live-workers-before-first-generation.json', 'RUN-SUMMARY.json'}
++    _need(root <= names, 'missing readiness or terminal evidence')
++    accepted = _object(directory / 'readiness/accepted-gate.json')
++    _need(set(accepted) == {'schema', 'gate_sha256', 'expected', 'mode', 'accepted_utc', 'workers'} and accepted['schema'] == 1 and (accepted['gate_sha256'] == gate_sha) and (accepted['expected'] == expected) and (accepted['mode'] == contract.MODE) and (accepted['workers'] == workers), 'accepted readiness binding')
++    _utc(accepted['accepted_utc'], 'accepted readiness UTC')
++    live = _object(directory / 'readiness/live-workers-before-first-generation.json')
++    _need(set(live) == {'schema', 'gate_sha256', 'observed_utc', 'workers'} and live['schema'] == 1 and (live['gate_sha256'] == gate_sha) and (type(live['workers']) is list) and (len(live['workers']) == 2), 'pre-request worker evidence')
++    _utc(live['observed_utc'], 'live-worker UTC')
++    for actual, worker in zip(live['workers'], workers):
++        _need(actual == dict(pid=worker['pid'], start_ticks=worker['start_ticks'], boot_id=worker['boot_id'], alive=True, rank=worker['rank'], identity_sha256=worker['identity_sha256']), 'pre-request worker identity differs')
++    counts = dict(intent_count=0, send_attempt_entered_count=0, send_call_returned_count=0, response_observed_count=0, response_body_observed_count=0, normal_complete_count=0)
+     if contract.screen_policy() is not None:
+         counts['valid_complete_count'] = 0
+-    allowed, rows, stopped = set(root), [], False
+-    frozen = [c for c in contract.requests() if c['_kv_block']=='context']
++    allowed, rows, stopped = (set(root), [], False)
++    frozen = [c for c in contract.requests() if c['_kv_block'] == 'context']
+     for ordinal, case in enumerate(frozen):
+-        prefix, files = "%02d-%s" % (ordinal, case["case"]), _files("%02d-%s" % (ordinal, case["case"]))
++        prefix, files = ('%02d-%s' % (ordinal, case['case']), _files('%02d-%s' % (ordinal, case['case'])))
+         present = {key for key, path in files.items() if path in names}
+         if stopped:
+-            _need(not present, "post-stop request evidence")
++            _need(not present, 'post-stop request evidence')
+             continue
+         if not present:
+             stopped = True
+             continue
+-        allowed.update(files[key] for key in present)
++        allowed.update((files[key] for key in present))
+         if 'generated_history' in case:
+-            _need(ordinal > 0 and len(rows) == ordinal and contract.response_completed(rows[-1]),
+-                  'valid generated history parent required')
++            _need(ordinal > 0 and len(rows) == ordinal and contract.response_completed(rows[-1]), 'valid generated history parent required')
+             previous = frozen[ordinal - 1]
+             previous_files = _files('%02d-%s' % (ordinal - 1, previous['case']))
+             previous_raw = _read(directory / previous_files['raw'])
+             try:
+                 case = contract.materialize_history(case, previous['case'], previous_raw)
+             except contract.HistoryRefusal:
+-                _need(present == {'preparation_failure'} and
+-                      _object(directory / files['preparation_failure']) == contract.history_refusal(case, previous_raw),
+-                      'unsupported generated history must refuse without submission')
++                _need(present == {'preparation_failure'} and _object(directory / files['preparation_failure']) == contract.history_refusal(case, previous_raw), 'unsupported generated history must refuse without submission')
+                 rows.append(contract.history_refusal(case, previous_raw))
+                 stopped = True
+                 continue
+-            _need('history' in present and 'preparation_failure' not in present and
+-                  _object(directory / files['history']) == case['history_binding'], 'generated history wire binding differs')
++            _need('history' in present and 'preparation_failure' not in present and (_object(directory / files['history']) == case['history_binding']), 'generated history wire binding differs')
+             present.remove('history')
+         else:
+-            _need(not ({'history', 'preparation_failure'} & present), 'unrequested generated history evidence')
+-        _need({"request_raw", "intent"} <= present, "missing or reordered request evidence")
++            _need(not {'history', 'preparation_failure'} & present, 'unrequested generated history evidence')
++        _need({'request_raw', 'intent'} <= present, 'missing or reordered request evidence')
+         raw = _check_intent(directory, files, case, ordinal)
+-        counts["intent_count"] += 1
++        counts['intent_count'] += 1
+         returned = _check_send(directory, files, case, ordinal, raw, present)
+-        counts["send_attempt_entered_count"] += 1
+-        counts["send_call_returned_count"] += int(returned)
++        counts['send_attempt_entered_count'] += 1
++        counts['send_call_returned_count'] += int(returned)
+         if not returned:
+-            _need(present == {"request_raw", "intent", "entered", "failure"}, "incomplete pre-response failure")
+-            failure = _object(directory / files["failure"])
+-            _need(failure.get("ordinal") == ordinal and failure.get("case") == case["case"] and
+-                  failure.get("response_observed") is False, "pre-response failure binding")
+-            rows.append(dict(status="PARTIAL_FAILURE", metric_eligible=False, qualification=False))
+-            stopped = True
+-            continue
+-        if "headers" not in present:
+-            _need(present == {"request_raw", "intent", "entered", "returned", "failure"},
+-                  "missing response-header failure")
+-            failure = _object(directory / files["failure"])
+-            _need(failure.get("ordinal") == ordinal and failure.get("case") == case["case"] and
+-                  failure.get("response_observed") is False, "header failure binding")
+-            rows.append(dict(status="PARTIAL_FAILURE", metric_eligible=False, qualification=False))
++            _need(present == {'request_raw', 'intent', 'entered', 'failure'}, 'incomplete pre-response failure')
++            failure = _object(directory / files['failure'])
++            _need(failure.get('ordinal') == ordinal and failure.get('case') == case['case'] and (failure.get('response_observed') is False), 'pre-response failure binding')
++            rows.append(dict(status='PARTIAL_FAILURE', metric_eligible=False, qualification=False))
++            stopped = True
++            continue
++        if 'headers' not in present:
++            _need(present == {'request_raw', 'intent', 'entered', 'returned', 'failure'}, 'missing response-header failure')
++            failure = _object(directory / files['failure'])
++            _need(failure.get('ordinal') == ordinal and failure.get('case') == case['case'] and (failure.get('response_observed') is False), 'header failure binding')
++            rows.append(dict(status='PARTIAL_FAILURE', metric_eligible=False, qualification=False))
+             stopped = True
+             continue
+         headers = _check_headers(directory, files, case, ordinal)
+-        counts["response_observed_count"] += 1
+-        if "record" not in present:
+-            _need(present == {"request_raw", "intent", "entered", "returned", "headers", "failure"},
+-                  "missing raw response failure")
+-            failure = _object(directory / files["failure"])
+-            _need(failure.get("ordinal") == ordinal and failure.get("case") == case["case"] and
+-                  failure.get("response_observed") is False, "body failure binding")
+-            rows.append(dict(status="PARTIAL_FAILURE", metric_eligible=False, qualification=False))
+-            stopped = True
+-            continue
+-        result = _check_body(directory, files, case, ordinal, present, headers, expected["arm"])
+-        counts["response_body_observed_count"] += 1
+-        if result["status"] == "PARTIAL_RESPONSE_REFUSAL":
+-            _need("failure" in present, "truncated response lacks failure record")
++        counts['response_observed_count'] += 1
++        if 'record' not in present:
++            _need(present == {'request_raw', 'intent', 'entered', 'returned', 'headers', 'failure'}, 'missing raw response failure')
++            failure = _object(directory / files['failure'])
++            _need(failure.get('ordinal') == ordinal and failure.get('case') == case['case'] and (failure.get('response_observed') is False), 'body failure binding')
++            rows.append(dict(status='PARTIAL_FAILURE', metric_eligible=False, qualification=False))
++            stopped = True
++            continue
++        result = _check_body(directory, files, case, ordinal, present, headers, expected['arm'])
++        counts['response_body_observed_count'] += 1
++        if result['status'] == 'PARTIAL_RESPONSE_REFUSAL':
++            _need('failure' in present, 'truncated response lacks failure record')
+             stopped = True
+         else:
+-            _need("failure" not in present, "complete response has contradictory failure")
+-            if result["status"] == "NORMAL_STOP_COMPLETE":
+-                counts["normal_complete_count"] += 1
++            _need('failure' not in present, 'complete response has contradictory failure')
++            if result['status'] == 'NORMAL_STOP_COMPLETE':
++                counts['normal_complete_count'] += 1
+             if 'valid_complete_count' in counts and contract.response_completed(result):
+                 counts['valid_complete_count'] += 1
+             if not contract.response_completed(result):
+                 stopped = True
+         rows.append(result)
+-    if contract.mtp_contract.prompt_minimization_enabled():
+-        allowed.update(_prompt_controls(directory, names, rows, frozen))
+-    _need(names == allowed, "extra, duplicate, or post-stop client evidence member")
+-    summary = _object(directory / "RUN-SUMMARY.json", 4 << 20)
+-    _need(summary.get("schema") == 1 and summary.get("mode") == contract.MODE and
+-          summary.get("qualification") is False and summary.get("frozen_case_count") == len(frozen) and
+-          summary.get("executed_case_count") == len(rows) and summary.get("counts") == counts and
+-          summary.get("stopped_early") is (len(rows) != len(frozen)), "summary disagrees with durable evidence")
++    contract.mtp_contract.settings()
++    _need(names == allowed, 'extra, duplicate, or post-stop client evidence member')
++    summary = _object(directory / 'RUN-SUMMARY.json', 4 << 20)
++    _need(summary.get('schema') == 1 and summary.get('mode') == contract.MODE and (summary.get('qualification') is False) and (summary.get('frozen_case_count') == len(frozen)) and (summary.get('executed_case_count') == len(rows)) and (summary.get('counts') == counts) and (summary.get('stopped_early') is (len(rows) != len(frozen))), 'summary disagrees with durable evidence')
+     count_key = 'valid_complete_count' if contract.screen_policy() is not None else 'normal_complete_count'
+-    complete = counts[count_key] == len(frozen) and len(rows) == len(frozen) and not stopped
++    complete = counts[count_key] == len(frozen) and len(rows) == len(frozen) and (not stopped)
+     _need(summary.get('screen_policy') == contract.screen_policy(), 'summary screen policy differs')
+-    if contract.mtp_contract.prompt_minimization_enabled():
+-        _need(summary.get('prompt_cache_isolation') == contract.prompt_flush_contract(),
+-              'prompt cache isolation summary differs')
++    contract.mtp_contract.settings()
+     sampling = contract.sampling_contract()
+     if sampling is not None:
+         _need(summary.get('sampling') == sampling, 'sampled summary contract differs')
+     speculation = None
+     if contract.mtp_contract.contract_for_arm(expected['arm'])['enabled'] and complete:
+-        details = [row.get("spec_tokens_details") for row in rows]
+-        _need(all(type(row) is dict for row in details), "MTP details missing from completed response")
+-        speculation = dict(
+-            response_count=len(details),
+-            spec_verify_ct=sum(row["spec_verify_ct"] for row in details),
+-            spec_num_proposed_drafts=sum(row["spec_num_proposed_drafts"] for row in details),
+-            spec_num_correct_drafts=sum(row["spec_num_correct_drafts"] for row in details),
+-        )
+-        _need(speculation["spec_verify_ct"] > 0, "MTP produced no verification telemetry")
+-    return dict(schema=1, mode=contract.MODE, arm=expected["arm"], binding=dict(expected), counts=counts, rows=rows,
+-                wire_complete=complete, qualification=False, source_promotion=False,
+-                code_correctness_graded=False,
+-                speculation=speculation,
+-                **({'prompt_cache_isolation': contract.prompt_flush_contract()}
+-                   if contract.mtp_contract.prompt_minimization_enabled() else {}),
+-                **({'screen_policy': contract.screen_policy()} if contract.screen_policy() is not None else {}),
+-                **({'sampling': sampling} if sampling is not None else {}),
+-                status="HTTP_WIRE_COMPLETE" if complete else "HTTP_WIRE_INCOMPLETE",
+-                independent_release_required=True)
++        details = [row.get('spec_tokens_details') for row in rows]
++        _need(all((type(row) is dict for row in details)), 'MTP details missing from completed response')
++        speculation = dict(response_count=len(details), spec_verify_ct=sum((row['spec_verify_ct'] for row in details)), spec_num_proposed_drafts=sum((row['spec_num_proposed_drafts'] for row in details)), spec_num_correct_drafts=sum((row['spec_num_correct_drafts'] for row in details)))
++        _need(speculation['spec_verify_ct'] > 0, 'MTP produced no verification telemetry')
++    _wire_result = dict(schema=1, mode=contract.MODE, arm=expected['arm'], binding=dict(expected), counts=counts, rows=rows, wire_complete=complete, qualification=False, source_promotion=False, code_correctness_graded=False, speculation=speculation)
++    contract.mtp_contract.settings()
++    _wire_result.update(**{'screen_policy': contract.screen_policy()} if contract.screen_policy() is not None else {}, **{'sampling': sampling} if sampling is not None else {}, status='HTTP_WIRE_COMPLETE' if complete else 'HTTP_WIRE_INCOMPLETE', independent_release_required=True)
++    return _wire_result
+ 
+ 
+ def accept_with_owner(wire, campaign, *, owner_arm):
+--- a/review/serving_integration.py
++++ b/review/serving_integration.py
+@@ -265,9 +265,9 @@
+     return module
+ 
+ def _validate_final_norm(observations, binding, workers, states):
+-    if not _mtp_contract().final_norm_capture_enabled():
+-        _need(not any((name.startswith('final-norm-') for name in observations)), 'unbound final-norm artifact')
+-        return None
++    _mtp_contract().settings()
++    _need(not any((name.startswith('final-norm-') for name in observations)), 'unbound final-norm artifact')
++    return None
+     _need({name for name in observations if name.startswith('final-norm-')} == {f'final-norm-rank-{rank}.json' for rank in (0, 1)}, 'final-norm rank membership differs')
+     helper = _final_norm_helper(binding['sources'])
+     contexts = []
+@@ -281,9 +281,9 @@
+ 
+ def _validate_midpoint(observations, binding, workers, states):
+     names = {name for name in observations if name.startswith('midpoint-')}
+-    if not _mtp_contract().midpoint_capture_enabled():
+-        _need(not names, 'unbound midpoint artifacts')
+-        return None
++    _mtp_contract().settings()
++    _need(not names, 'unbound midpoint artifacts')
++    return None
+     _need(names == {f'midpoint-rank-{rank}.json' for rank in (0, 1)}, 'midpoint rank membership differs')
+     module = _final_norm_helper(binding['sources'], 'midpoint_capture')
+     contexts, boundaries = ([], [])
+@@ -298,15 +298,9 @@
+                 reference = record['pending_reference']
+                 _need(len(raw) == reference['bytes'] and hashlib.sha256(raw).hexdigest() == reference['sha256'], 'prepared pending packet raw reference differs')
+                 module.validate_record(record, binding=binding, worker=worker, state=state, head_record=head, pending_packet=packet)
+-            elif _mtp_contract().norm_capture_enabled():
+-                name = f'norm-operands-rank-{rank}.bin'
+-                module.validate_record(record, binding=binding, worker=worker, state=state, head_record=head, artifacts={name: observations[name]})
+-            elif _mtp_contract().gdn_capture_enabled():
+-                names = [f'gdn-operands-rank-{rank}.bin']
+-                if binding['arm'] == 'mtp' and rank == 0:
+-                    names.append('gdn-state-initial-rank-0.bin')
+-                module.validate_record(record, binding=binding, worker=worker, state=state, head_record=head, artifacts={name: observations[name] for name in names})
+             else:
++                _mtp_contract().settings()
++                _mtp_contract().settings()
+                 module.validate_record(record, binding=binding, worker=worker, state=state, head_record=head)
+             contexts.append(record['context_sha256'])
+             boundaries.append(record['boundary'])
+@@ -321,20 +315,7 @@
+     helper = _probe_helper(binding['sources'])
+     states = [_observation_json(observations, f'graph-captures-rank-{rank}.json').get('token_probe') for rank in (0, 1)]
+     result = helper.validate_wire(states, binding=binding, workers=workers, contract=contract, wire=wire)
+-    if contract.head_input_capture_enabled():
+-        _need(type(workers) is list and len(workers) == 2 and all((type(worker) is dict and worker.get('rank') == rank for rank, worker in enumerate(workers))) and ({name for name in observations if name.startswith('head-input-')} == {f'head-input-rank-{rank}.json' for rank in (0, 1)}), 'head-input rank membership differs')
+-        _need(result['complete'] is True and len(result['ranks']) == 2 and all((all(row['wire_join'].values()) for row in result['ranks'])), 'head-input probe capture/wire join incomplete')
+-        for rank, (state, worker) in enumerate(zip(states, workers)):
+-            helper.validate_head_input(_observation_json(observations, f'head-input-rank-{rank}.json'), binding=binding, worker=worker, state=state, complete=True)
+-        records = [state['record'] for state in states]
+-        _need(all((row['rid'] == records[0]['rid'] and row['context_sha256'] == records[0]['context_sha256'] for row in records)), 'head-input rank request/context differs')
+-        result['head_inputs'] = dict(ranks=[0, 1], context_sha256=records[0]['context_sha256'], captured=True)
+-        norm = _validate_final_norm(observations, binding, workers, states)
+-        if norm is not None:
+-            result['final_norm'] = norm
+-        midpoint = _validate_midpoint(observations, binding, workers, states)
+-        if midpoint is not None:
+-            result['midpoint'] = midpoint
++    contract.settings()
+     return result
+ 
+ def validate_prefill_wire(observations, workers, wire):
+@@ -342,16 +323,15 @@
+     contract = _mtp_contract()
+     if contract.settings().get('quality_screen') != 'sprint36-chunk-prefill-v1':
+         return None
+-    _need(not contract.j01_probe_enabled(), 'prefill/J01 mode collision')
+-    _need(type(workers) is list and len(workers) == 2 and
+-          [worker.get('rank') for worker in workers] == [0, 1], 'prefill worker rank coverage')
++    contract.settings()
++    _need(True, 'prefill/J01 mode collision')
++    _need(type(workers) is list and len(workers) == 2 and ([worker.get('rank') for worker in workers] == [0, 1]), 'prefill worker rank coverage')
+     binding = _observation_json(observations, 'SERVING-BINDING.json')
+     helper = _probe_helper(binding['sources'])
+     _need(callable(getattr(helper, 'validate_prefill_observation', None)), 'prefill validator missing')
+     for rank, worker in enumerate(workers):
+         capture = _observation_json(observations, f'graph-captures-rank-{rank}.json')
+-        helper.validate_prefill_observation(capture.get('token_probe'), binding=binding,
+-            worker=worker, contract=contract, responses=wire['rows'])
++        helper.validate_prefill_observation(capture.get('token_probe'), binding=binding, worker=worker, contract=contract, responses=wire['rows'])
+ 
+ def _validate_precision_observations(observations, binding, workers, observer):
+     """Validate both loaded-weight witnesses under the authenticated contract."""
+@@ -423,12 +403,11 @@
+     required.update({f'graph-counter-rank-{rank}.bin' for rank in (0, 1)})
+     required.update({f'replay-commit-counter-rank-{rank}.bin' for rank in (0, 1)})
+     required.update({f'request-{ordinal:02d}-{phase}.json' for ordinal in range(_mtp_contract().phase_config()[2]) for phase in ('before', 'after')})
+-    required.update({'TARGET-KV-STARTUP-rank-%d.json'%rank for rank in (0,1)})
+-    required.update({f'OBSERVER-HEALTH-{observer}-rank-{rank}.json'
+-                     for observer in ('graph', 'target_kv') for rank in (0, 1)})
+-    if _mtp_contract().kv_composition_enabled():
+-        required.update({f'LIFECYCLE-HEALTH-rank-{rank}.json' for rank in (0, 1)})
+-    if _mtp_contract().cache_profile(expected['arm'])['target'] == 'fp8_e4m3':required.update({'TARGET-KV-ROUTES-rank-%d.jsonl'%rank for rank in (0,1)})
++    required.update({'TARGET-KV-STARTUP-rank-%d.json' % rank for rank in (0, 1)})
++    required.update({f'OBSERVER-HEALTH-{observer}-rank-{rank}.json' for observer in ('graph', 'target_kv') for rank in (0, 1)})
++    required.update({f'LIFECYCLE-HEALTH-rank-{rank}.json' for rank in (0, 1)})
++    if _mtp_contract().cache_profile(expected['arm'])['target'] == 'fp8_e4m3':
++        required.update({'TARGET-KV-ROUTES-rank-%d.jsonl' % rank for rank in (0, 1)})
+     phase = _mtp_contract().settings()['phase']
+     screen_contract, _ = _private_reader()
+     hip_components_required = screen_contract.hip_sampling_arm(phase, expected['arm'])
+@@ -439,23 +418,13 @@
+         required.update({f'GPU-ALLOCATOR-rank-{rank}.json' for rank in (0, 1)})
+     if _mtp_contract().precision_reference_enabled():
+         required.update({f'PRECISION-WEIGHTS-rank-{rank}.json' for rank in (0, 1)})
+-    head_input_required = _mtp_contract().head_input_capture_enabled()
++    _mtp_contract().settings()
++    head_input_required = False
+     if head_input_required:
+         required.update({f'head-input-rank-{rank}.json' for rank in (0, 1)})
+-    if _mtp_contract().final_norm_capture_enabled():
+-        required.update({f'final-norm-rank-{rank}.json' for rank in (0, 1)})
+-    if _mtp_contract().midpoint_capture_enabled():
+-        required.update({f'midpoint-rank-{rank}.json' for rank in (0, 1)})
+-        if _mtp_contract().settings()['midpoint_capture'] == 'j01-block3-prepared-attention-v1':
+-            required.update({f'prepared-pending-rank-{rank}.json' for rank in (0, 1)})
+-        if _mtp_contract().norm_capture_enabled():
+-            required.update({f'norm-operands-rank-{rank}.bin' for rank in (0, 1)})
+-        if _mtp_contract().gdn_capture_enabled():
+-            required.update({f'gdn-operands-rank-{rank}.bin' for rank in (0, 1)})
+-            if expected['arm'] == 'mtp':
+-                required.add('gdn-state-initial-rank-0.bin')
+-    if _mtp_contract().raw_attention_capture_enabled():
+-        required.update({f'attention-launch-rank-{rank}.json' for rank in (0, 1)})
++    _mtp_contract().settings()
++    _mtp_contract().settings()
++    _mtp_contract().settings()
+     if _mtp_contract().full_enabled_benchmark():
+         required.update({f'FULL-ENABLED-rank-{rank}.json' for rank in (0, 1)})
+     _need(set(observations) == required, 'native observation membership differs')
+@@ -463,8 +432,7 @@
+     binding = _observation_json(observations, 'SERVING-BINDING.json')
+     worker_manifest = _observation_json(observations, 'WORKER-MANIFEST.json')
+     _need(type(binding) is dict and type(worker_manifest) is dict and (binding.get('mode') == worker_manifest.get('mode') == MODE) and (binding.get('arm') == worker_manifest.get('arm') == expected['arm']) and (binding.get('session_sha256') == worker_manifest.get('session_sha256') == expected['session_sha256']) and (binding.get('spec_sha256') == worker_manifest.get('spec_sha256') == expected['spec_sha256']) and (binding.get('source_manifest_sha256') == worker_manifest.get('source_manifest_sha256') == expected['source_manifest_sha256']) and (binding.get('sources') == worker_manifest.get('sources')) and (hashlib.sha256(json.dumps(binding.get('sources'), sort_keys=True, separators=(',', ':'), allow_nan=False).encode()).hexdigest() == expected['source_manifest_sha256']), 'native source/binding observation differs')
+-    if _mtp_contract().kv_composition_enabled():
+-        _validate_lifecycle_health(observations, binding=binding, workers=full_workers)
++    _validate_lifecycle_health(observations, binding=binding, workers=full_workers)
+     gdn_observer = _gdn_observer(binding['sources'])
+     health_validator = gdn_observer or _gdn_observer(binding['sources'], require_gdn=False)
+     _validate_observer_health(observations, binding=binding, workers=full_workers, graph=health_validator)
+@@ -567,8 +535,7 @@
+         elif mtp_contract.settings().get('quality_screen') == 'sprint36-chunk-prefill-v1':
+             helper = _probe_helper(binding['sources'])
+             prefill = capture.get('token_probe')
+-            _need(type(prefill) is dict and prefill.get('mode') == helper.PREFILL_MODE,
+-                  'explicit prefill observation missing or wrong mode')
++            _need(type(prefill) is dict and prefill.get('mode') == helper.PREFILL_MODE, 'explicit prefill observation missing or wrong mode')
+         else:
+             _need('token_probe' not in capture, 'unexpected J01 probe record')
+         counter = observations[f'graph-counter-rank-{rank}.bin']
+@@ -656,8 +623,8 @@
+ 
+ def validate_prompt_cache_chronology(observations, client_root, wire):
+     """Join authenticated flush completion, native snapshot and next wire intent."""
+-    if not _mtp_contract().prompt_minimization_enabled():
+-        return
++    _mtp_contract().settings()
++    return
+     for ordinal, row in enumerate(wire['rows']):
+         if ordinal == 0 or row.get('status') != 'NORMAL_STOP_COMPLETE':
+             continue
+@@ -724,11 +691,8 @@
+ def read_http_artifacts(directory, *, extraction_root, expected, owner_arm, joins, supervision, limits=None):
+     """Recompute one complete HTTP arm from exactly three exported raw members."""
+     if limits is not None:
+-        fields = {'client_bundle_bytes','native_bundle_bytes','result_json_bytes','client_tree_files',
+-                  'client_tree_bytes','native_tree_files','native_tree_bytes','http_member_read_bytes'}
+-        _need(type(limits) is dict and len(limits) == 16 and fields <= set(limits)
+-              and all(type(value) is int and 0 < value < 2**63 for value in limits.values()),
+-              'configured artifact readout primaries required')
++        fields = {'client_bundle_bytes', 'native_bundle_bytes', 'result_json_bytes', 'client_tree_files', 'client_tree_bytes', 'native_tree_files', 'native_tree_bytes', 'http_member_read_bytes'}
++        _need(type(limits) is dict and len(limits) == 16 and (fields <= set(limits)) and all((type(value) is int and 0 < value < 2 ** 63 for value in limits.values())), 'configured artifact readout primaries required')
+         limits = dict(limits)
+     if not _mtp_contract().instrumentation_enabled():
+         return _production_readback(directory, extraction_root=extraction_root, expected=expected, owner_arm=owner_arm, joins=joins, supervision=supervision, limits=limits)
+@@ -741,8 +705,7 @@
+     gate_raw, workers, full_workers, observations, native_sha, reader = _native(native_raw, expected, limits=limits)
+     _joined(workers, joins, supervision)
+     observation_storage = None
+-    if _mtp_contract().kv_composition_enabled():
+-        observations, observation_storage = _bb_expand_observations(observations)
++    observations, observation_storage = _bb_expand_observations(observations)
+     hip_components = _validate_native_observations(observations, expected=expected, gate=_json(gate_raw), full_workers=full_workers)
+     wire = reader.read_client(client_root, expected=expected, native_gate_raw=gate_raw)
+     validate_prefill_wire(observations, full_workers, wire)
+@@ -751,46 +714,40 @@
+     frozen = reader.contract.requests()
+     for ordinal, row in enumerate(wire['rows']):
+         case = frozen[ordinal]
+-        path = client_root / row['block'] / ('requests/%02d-%s.raw' % (row['local_ordinal'],row['case']))
+-        raw = reader.serving_client._kv_receipts.read(path,1<<20)
++        path = client_root / row['block'] / ('requests/%02d-%s.raw' % (row['local_ordinal'], row['case']))
++        raw = reader.serving_client._kv_receipts.read(path, 1 << 20)
+         _need(raw == reader.contract.canonical(case['body']), 'exact source-bound composed request bytes')
+-        for phase in ('before','after'):
+-            observed = _observation_json(observations,'request-%02d-%s.json' % (ordinal,phase))
+-            _need(observed['body_sha256']==hashlib.sha256(raw.rstrip(b'\n')).hexdigest(),
+-                  'native composed request body join')
+-        intent=_json(reader.serving_client._kv_receipts.read(path.with_suffix('.intent.json')))
+-        response=client_root/row['block']/('responses/%02d-%s.record.json'%(row['local_ordinal'],row['case']))
+-        received=_json(reader.serving_client._kv_receipts.read(response))
+-        before=_observation_json(observations,'request-%02d-before.json'%ordinal)['observed_monotonic']
+-        after=_observation_json(observations,'request-%02d-after.json'%ordinal)['observed_monotonic']
+-        _need(before<=intent['prepared_monotonic']<received['received_monotonic']<=after,
+-              'composed native/wire group chronology')
+-    groups = _kv_graph_join.planned_groups(frozen,reader.contract.mtp_contract.paired_groups(logical))
+-    decoded = {name:_json(raw) for name,raw in observations.items() if name.startswith('request-')}
+-    joined = _kv_graph_join.validate(decoded,frozen,wire,groups,full_workers,
+-        paired_group_counts=reader.contract.paired_group_counts)
++        for phase in ('before', 'after'):
++            observed = _observation_json(observations, 'request-%02d-%s.json' % (ordinal, phase))
++            _need(observed['body_sha256'] == hashlib.sha256(raw.rstrip(b'\n')).hexdigest(), 'native composed request body join')
++        intent = _json(reader.serving_client._kv_receipts.read(path.with_suffix('.intent.json')))
++        response = client_root / row['block'] / ('responses/%02d-%s.record.json' % (row['local_ordinal'], row['case']))
++        received = _json(reader.serving_client._kv_receipts.read(response))
++        before = _observation_json(observations, 'request-%02d-before.json' % ordinal)['observed_monotonic']
++        after = _observation_json(observations, 'request-%02d-after.json' % ordinal)['observed_monotonic']
++        _need(before <= intent['prepared_monotonic'] < received['received_monotonic'] <= after, 'composed native/wire group chronology')
++    groups = _kv_graph_join.planned_groups(frozen, reader.contract.mtp_contract.paired_groups(logical))
++    decoded = {name: _json(raw) for name, raw in observations.items() if name.startswith('request-')}
++    joined = _kv_graph_join.validate(decoded, frozen, wire, groups, full_workers, paired_group_counts=reader.contract.paired_group_counts)
+     wire['composed_native_groups'] = joined
+-    binding = _observation_json(observations,'SERVING-BINDING.json')
++    binding = _observation_json(observations, 'SERVING-BINDING.json')
+     helper = _probe_helper(binding['sources'])
+     metadata = helper._target_kv_metadata
+     with _gdn_contract_scope(binding['sources']):
+-        wire['target_kv_startup'] = [_kv_graph_join.startup_record(
+-            _observation_json(observations,'TARGET-KV-STARTUP-rank-%d.json'%worker['rank']),
+-            manifest=binding,worker=worker,validate_startup=metadata.validate_startup) for worker in full_workers]
+-        records=[]
++        wire['target_kv_startup'] = [_kv_graph_join.startup_record(_observation_json(observations, 'TARGET-KV-STARTUP-rank-%d.json' % worker['rank']), manifest=binding, worker=worker, validate_startup=metadata.validate_startup) for worker in full_workers]
++        records = []
+         if _mtp_contract().cache_profile(logical)['target'] == 'fp8_e4m3':
+-            for rank in (0,1):
+-                raw=observations['TARGET-KV-ROUTES-rank-%d.jsonl'%rank]
+-                _need(0<len(raw)<=1<<20 and raw.endswith(b'\n'),'bounded complete target KV journal')
+-                lines=raw.splitlines(keepends=True)
+-                _need(1<=len(lines)<=128 and all(len(line)<=8192 for line in lines),'target KV journal row caps')
++            for rank in (0, 1):
++                raw = observations['TARGET-KV-ROUTES-rank-%d.jsonl' % rank]
++                _need(0 < len(raw) <= 1 << 20 and raw.endswith(b'\n'), 'bounded complete target KV journal')
++                lines = raw.splitlines(keepends=True)
++                _need(1 <= len(lines) <= 128 and all((len(line) <= 8192 for line in lines)), 'target KV journal row caps')
+                 for line in lines:
+-                    row=_json(line)
+-                    _need(row['rank']==rank and helper.canonical(row)==line,'canonical per-rank route journal')
++                    row = _json(line)
++                    _need(row['rank'] == rank and helper.canonical(row) == line, 'canonical per-rank route journal')
+                     records.append(row)
+-        wire['target_kv_routes'] = _kv_graph_join.route_groups(records,joined,target_fp8=_mtp_contract().cache_profile(logical)['target'] == 'fp8_e4m3',
+-            validate_bound_routes=metadata.validate_bound_routes,manifest=binding,workers=full_workers)
+-    raw_attention=None
++        wire['target_kv_routes'] = _kv_graph_join.route_groups(records, joined, target_fp8=_mtp_contract().cache_profile(logical)['target'] == 'fp8_e4m3', validate_bound_routes=metadata.validate_bound_routes, manifest=binding, workers=full_workers)
++    raw_attention = None
+     _need(not any(directory.glob('raw-rank-*')), 'unbound raw attention files')
+     result = _json(result_raw)
+     required = {'schema', 'mode', 'status', 'arm', 'logical_arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256', 'client_summary', 'native_gate', 'parent_error', 'qualification'}
+@@ -837,42 +794,36 @@
+ def validate_paired_graph_groups(observations, wire):
+     """Native worker/graph identities are authenticated by _validate_native first."""
+     _, reader = _private_reader()
+-    contract=reader.contract
+-    _need(contract.mtp_contract.kv_composition_enabled(), 'paired native phase')
+-    groups=contract.mtp_contract.paired_groups(wire['arm'])
+-    _need(wire.get('wire_complete') is True and len(wire.get('paired_groups',[]))==len(groups),
+-        'paired complete wire groups required')
+-    results=[];previous_after=None
+-    for group,measured in zip(groups,wire['paired_groups'],strict=True):
+-        _need(measured['group_id']==group['id'] and measured['ordinals']==group['ordinals'], 'paired group order')
+-        before=[_observation_json(observations,f'request-{i:02d}-before.json') for i in group['ordinals']]
+-        after=[_observation_json(observations,f'request-{i:02d}-after.json') for i in group['ordinals']]
+-        for records,phase in ((before,'before'),(after,'after')):
+-            for ordinal,row in zip(group['ordinals'],records,strict=True):
+-                _need(row['ordinal']==ordinal and row['phase']==phase and row['group_id']==group['id'] and
+-                    row['group_ordinals']==group['ordinals'] and row['arm']==wire['arm'] and
+-                    row['snapshot']==records[0]['snapshot'] and row['observed_monotonic']==records[0]['observed_monotonic'],
+-                    'paired shared group snapshot differs')
+-        first,last=before[0],after[0]
+-        _need(first['observed_monotonic']<=measured['prepared_monotonic']<measured['received_monotonic']<=last['observed_monotonic'],
+-            'paired native/wire group chronology')
++    contract = reader.contract
++    _need(True, 'paired native phase')
++    groups = contract.mtp_contract.paired_groups(wire['arm'])
++    _need(wire.get('wire_complete') is True and len(wire.get('paired_groups', [])) == len(groups), 'paired complete wire groups required')
++    results = []
++    previous_after = None
++    for group, measured in zip(groups, wire['paired_groups'], strict=True):
++        _need(measured['group_id'] == group['id'] and measured['ordinals'] == group['ordinals'], 'paired group order')
++        before = [_observation_json(observations, f'request-{i:02d}-before.json') for i in group['ordinals']]
++        after = [_observation_json(observations, f'request-{i:02d}-after.json') for i in group['ordinals']]
++        for records, phase in ((before, 'before'), (after, 'after')):
++            for ordinal, row in zip(group['ordinals'], records, strict=True):
++                _need(row['ordinal'] == ordinal and row['phase'] == phase and (row['group_id'] == group['id']) and (row['group_ordinals'] == group['ordinals']) and (row['arm'] == wire['arm']) and (row['snapshot'] == records[0]['snapshot']) and (row['observed_monotonic'] == records[0]['observed_monotonic']), 'paired shared group snapshot differs')
++        first, last = (before[0], after[0])
++        _need(first['observed_monotonic'] <= measured['prepared_monotonic'] < measured['received_monotonic'] <= last['observed_monotonic'], 'paired native/wire group chronology')
+         if previous_after is not None:
+-            _need(previous_after['observed_monotonic']<=first['observed_monotonic'], 'paired native group chronology')
+-        ranks=[]
+-        for rank,(left,right) in enumerate(zip(first['snapshot']['ranks'],last['snapshot']['ranks'],strict=True)):
+-            _need(left['rank']==right['rank']==rank and left['captures']==right['captures']==2,
+-                'paired graph recapture or rank differs')
+-            _need(all(left[k]==right[k] for k in ('pid','backend_identity','gdn_sha256')), 'paired graph identity drift')
++            _need(previous_after['observed_monotonic'] <= first['observed_monotonic'], 'paired native group chronology')
++        ranks = []
++        for rank, (left, right) in enumerate(zip(first['snapshot']['ranks'], last['snapshot']['ranks'], strict=True)):
++            _need(left['rank'] == right['rank'] == rank and left['captures'] == right['captures'] == 2, 'paired graph recapture or rank differs')
++            _need(all((left[k] == right[k] for k in ('pid', 'backend_identity', 'gdn_sha256'))), 'paired graph identity drift')
+             if previous_after is not None:
+-                prior=previous_after['snapshot']['ranks'][rank]
+-                _need(all(prior[k]==left[k] for k in ('replays','completed_commits','bs1_replays','bs2_replays','captures')),
+-                    'unattributed graph work between paired groups')
+-            delta={key:right[key]-left[key] for key in ('replays','completed_commits','bs1_replays','bs2_replays')}
+-            counts=[wire['rows'][i]['spec_tokens_details']['spec_verify_ct'] for i in group['ordinals']]
+-            ranks.append(dict(rank=rank,**contract.paired_group_counts(delta,counts,group['concurrency'])))
+-        _need(len(ranks)==2, 'paired graph rank count')
+-        results.append(dict(group_id=group['id'],ordinals=group['ordinals'],concurrency=group['concurrency'],ranks=ranks))
+-        previous_after=last
++                prior = previous_after['snapshot']['ranks'][rank]
++                _need(all((prior[k] == left[k] for k in ('replays', 'completed_commits', 'bs1_replays', 'bs2_replays', 'captures'))), 'unattributed graph work between paired groups')
++            delta = {key: right[key] - left[key] for key in ('replays', 'completed_commits', 'bs1_replays', 'bs2_replays')}
++            counts = [wire['rows'][i]['spec_tokens_details']['spec_verify_ct'] for i in group['ordinals']]
++            ranks.append(dict(rank=rank, **contract.paired_group_counts(delta, counts, group['concurrency'])))
++        _need(len(ranks) == 2, 'paired graph rank count')
++        results.append(dict(group_id=group['id'], ordinals=group['ordinals'], concurrency=group['concurrency'], ranks=ranks))
++        previous_after = last
+     return results
+ 
+ 
+--- a/review/serving_graph_observer.py
++++ b/review/serving_graph_observer.py
+@@ -231,8 +231,7 @@
+     metadata(temporal, 5)
+     need(temporal['shape'][1] == 20, 'Sprint7 matched physical recurrent slots including padding')
+     if mtp_contract.dense_mxfp4_enabled():
+-        need(temporal['dtype'] == 'torch.float32' and temporal['shape'] == [48, 20, 24, 128, 128],
+-             'MXFP4 exact FP32 recurrent temporal pool')
++        need(temporal['dtype'] == 'torch.float32' and temporal['shape'] == [48, 20, 24, 128, 128], 'MXFP4 exact FP32 recurrent temporal pool')
+     need(type(layer_ids) is list and 0 < len(layer_ids) <= 256 and all((type(n) is int and 0 <= n < 512 for n in layer_ids)) and (len(set(layer_ids)) == len(layer_ids)) and (len(layer_ids) == temporal['shape'][0]), 'GDN pool layers')
+     need(offsets == [temporal['offset'] + n * temporal['stride'][0] for n in range(len(layer_ids))] and len(set(offsets)) == len(offsets), 'GDN layer offsets')
+     if aligned_pair:
+@@ -246,7 +245,8 @@
+     method = '_replayssm_fold_target_verify' if fold else 'packed_decode' if speculation['algorithm'] is None else 'target_verify'
+     if aligned_pair:
+         import mtp_contract
+-        allowed_route = method == ('_replayssm_fold_target_verify' if fold else 'target_verify') if mtp_contract.full_enabled_benchmark() else method == 'packed_decode' if mtp_contract.precision_reference_enabled() else method == 'target_verify' or (mtp_contract.greedy_quality_draft_ab() and arm == 'control')
++        mtp_contract.settings()
++        allowed_route = method == ('_replayssm_fold_target_verify' if fold else 'target_verify')
+         expected_flags = {name: False for name in flags if name != 'supports_packed_decode'}
+         if fold:
+             expected_flags.update(enable_linear_replayssm_spec=True, replayssm_spec_fold=True, rawv_present=True, g_present=True)
+--- a/review/serving_entry.py
++++ b/review/serving_entry.py
+@@ -76,8 +76,7 @@
+         expected_source = dict(path=overlay['target'], sha256=overlay['sha256'], module=overlay['module'], stock_sha256=overlay['original_sha256'])
+         if overlay['key'] == 'gdn_verify':
+             expected_source = mtp_contract.gdn_source_for_arm(value['arm'])
+-        if overlay['key'] == 'midpoint_layernorm':
+-            expected_source = mtp_contract.norm_source_for_arm(value['arm'])
++        _require(overlay['key'] != 'midpoint_layernorm', 'retired norm overlay is not admitted')
+         _require(value['sources'].get(overlay['key']) == expected_source, 'allocation repair source identity differs')
+         _require(any(overlay['bytecode_mask'] == parent or
+                      overlay['bytecode_mask'].startswith(parent + '/')
+@@ -96,8 +95,7 @@
+     _validate_overlay_bindings(value)
+     if mtp_contract.settings()['phase'] == mtp_contract.GDN_PAIR_PHASE:
+         _require(value['sources'].get('gdn_verify') == mtp_contract.gdn_source_for_arm(value['arm']), 'GDN pair original/effective source binding differs')
+-    if mtp_contract.norm_candidate_enabled():
+-        _require(value['sources'].get('midpoint_layernorm') == mtp_contract.norm_source_for_arm(value['arm']), 'norm candidate original/effective source binding differs')
++    mtp_contract.settings()
+     for name, source in value['sources'].items():
+         _require(type(name) is str and type(source) is dict and (set(source) >= {'path', 'sha256'}), 'source pin shape differs')
+         path = _canonical_regular(source['path'])
+@@ -145,7 +143,7 @@
+     mtp_contract.validate_recurrent_capacity_cli(value['canonical_server_cli'])
+     contract = value['resolved_contract']
+     cli = value['canonical_server_cli']
+-    _require(contract.get('speculative_draft_kv_cache_dtype') == 'bf16' and cli.count('--speculative-draft-kv-cache-dtype') == 1 and cli[cli.index('--speculative-draft-kv-cache-dtype')+1:cli.index('--speculative-draft-kv-cache-dtype')+2] == ['bf16'], 'explicit BF16 draft KV override binding differs')
++    _require(contract.get('speculative_draft_kv_cache_dtype') == 'bf16' and cli.count('--speculative-draft-kv-cache-dtype') == 1 and (cli[cli.index('--speculative-draft-kv-cache-dtype') + 1:cli.index('--speculative-draft-kv-cache-dtype') + 2] == ['bf16']), 'explicit BF16 draft KV override binding differs')
+     _require(type(contract) is dict and set(contract) == required_contract, 'resolved contract fields differ')
+     _require(contract['enable_linear_replayssm'] is False and type(contract['enable_linear_replayssm_spec']) is bool and (contract['enable_linear_replayssm_spec'] is mtp_contract.replay_serving_enabled(value['arm'])) and ('--enable-linear-replayssm' not in value['canonical_server_cli']) and (value['canonical_server_cli'].count('--enable-linear-replayssm-spec') == int(mtp_contract.replay_serving_enabled(value['arm']))), 'ReplaySSM exact arm/CLI binding differs')
+     if lifecycle or reference:
+--- a/review/graph_outer.py
++++ b/review/graph_outer.py
+@@ -30,7 +30,7 @@
+          row['file'] == 'graph_full_cuda_graph_backend.py' and row['path'] == BACKEND_PATH and
+          row['original_sha256'] == 'fcfca3c5d286a77594742fd05791fe5ad4c7fd46327ab7f126b2cdcf697b685d', 'one native backend overlay')
+     need(type(contract['helpers']) is dict and set(contract['helpers']) ==
+-         {'graph_screen.py','spry_common_canon.py','graph_outer.py','context_tokenizer.py'}, 'private helper inventory')
++         {'spry_common_canon.py','graph_outer.py'}, 'private helper inventory')
+     for pin in [row['sha256'],*contract['helpers'].values()]:
+         need(type(pin) is str and len(pin)==64 and all(c in '0123456789abcdef' for c in pin), 'source pin')
+     return contract
+--- a/review/analyze_model_benchmark.py
++++ b/review/analyze_model_benchmark.py
+@@ -1,20 +1,11 @@
+-"""Offline descriptive comparison of two complete inner-model timing records.
+-
+-This tool neither starts work nor authenticates protected-host cleanup. Input
+-measurements must come from the separately reviewed physical owner workflow.
+-"""
+-import argparse
++"""Source-bound HTTP owner readout; no native imports or standalone launch."""
+ import hashlib
+ import importlib.util
+-from itertools import combinations
+ import json
+-import math
+ from pathlib import Path
+-import statistics
+ 
+-
+-_ENTRY = Path(__file__).resolve().with_name("model_benchmark.py")
+-_MODULE_SPEC = importlib.util.spec_from_file_location("spry_benchmark_contract", _ENTRY)
++_ENTRY = Path(__file__).resolve().with_name('model_benchmark.py')
++_MODULE_SPEC = importlib.util.spec_from_file_location('spry_benchmark_contract', _ENTRY)
+ bench = importlib.util.module_from_spec(_MODULE_SPEC)
+ _MODULE_SPEC.loader.exec_module(bench)
+ MAXIMUM_BYTES = 8 << 20
+@@ -44,66 +35,6 @@
+     return value, digest
+ 
+ 
+-def checked_arm(result, arm, spec_sha256, profile_contract=None, comparison_contract=None):
+-    """Recompute the complete native-record contract, without native imports."""
+-    required = {"schema", "scope", "arm", "status", "spec_sha256", "timed_out", "exits",
+-                "groups_observed_absent", "parent_error", "cleanup_errors", "rank_parse_errors",
+-                "qualification", "serving_quality_qualified", "http_throughput_measured",
+-                "independent_release_required", "ranks", "samples"}
+-    if (not required.issubset(result) or result.get("schema") != 1 or result.get("scope") != bench.SCOPE
+-            or result.get("arm") != arm
+-            or result.get("status") != "MODEL_BENCHMARK_COMPLETE"
+-            or result.get("spec_sha256") != spec_sha256
+-            or result.get("timed_out") is not False
+-            or result.get("exits") != [0, 0]
+-            or any(type(value) is not int for value in result["exits"])
+-            or result.get("groups_observed_absent") != [True, True]
+-            or any(value is not True for value in result["groups_observed_absent"])
+-            or result.get("parent_error") is not None
+-            or result.get("cleanup_errors") != []
+-            or result.get("rank_parse_errors") != []
+-            or result.get("qualification") is not False
+-            or result.get("serving_quality_qualified") is not False
+-            or result.get("http_throughput_measured") is not False
+-            or result.get("independent_release_required") is not True):
+-        raise ValueError("incomplete or unbound inner-model arm")
+-    ranks = result.get("ranks")
+-    if not isinstance(ranks, list) or len(ranks) != 2:
+-        raise ValueError("exactly two rank records required")
+-    for rank in ranks:
+-        if (not isinstance(rank, dict) or rank.get("qualification") is not False
+-                or rank.get("serving_quality_qualified") is not False
+-                or type(rank.get("rank")) is not int):
+-            raise ValueError("rank qualification contract")
+-        for batch in rank.get("batches", []):
+-            if any(type(value) not in (int, float) or not math.isfinite(value) or value <= 0
+-                   for value in batch.get("step_seconds", [])):
+-                raise ValueError("positive finite per-rank step timing required")
+-            if any(type(value) not in (int, float) or not math.isfinite(value)
+-                   for row in batch.get("generated_logprobs", []) for value in row):
+-                raise ValueError("finite numeric logprobs required")
+-    if comparison_contract is not None:
+-        bench.comparison().validate_contract(comparison_contract)
+-        if (result.get("experiment_mode") != comparison_contract['mode'] or
+-                result.get("validation_comparison") != comparison_contract):
+-            raise ValueError("comparison result mode/contract")
+-    elif "validation_comparison" in result or bench.comparison_mode(result):
+-        raise ValueError("comparison result cannot use legacy acceptance")
+-    samples = bench.summarize(ranks, arm, profile_contract, spec_sha256, comparison_contract)
+-    if result.get("samples") != samples:
+-        raise ValueError("stored summary differs from rank measurements")
+-    for sample in samples:
+-        for key in ("prefill_rank_max_seconds", "decode_31_seconds",
+-                    "forward_sample_total_seconds", "batch_wall_rank_max_seconds"):
+-            value = sample[key]
+-            if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+-                raise ValueError("positive finite timing required")
+-        if any(type(value) not in (int, float) or not math.isfinite(value) or value <= 0
+-               for value in sample["decode_rank_max_step_seconds"]):
+-            raise ValueError("positive finite decode steps required")
+-    return samples
+-
+-
+ def checked_http_arm(result, arm, spec_sha256):
+     """Check the narrow owner-facing result from the raw HTTP evidence reader.
+ 
+@@ -128,406 +59,3 @@
+                 telemetry["spec_verify_ct"] > 0):
+             raise ValueError("MTP arm lacks verified speculation telemetry")
+     return result
+-
+-
+-def _statistics(values):
+-    return {"median": statistics.median(values), "minimum": min(values), "maximum": max(values)}
+-
+-
+-def compare_outputs(left, right):
+-    """Only equal generated tokens with equal preceding histories are comparable."""
+-    observations = []
+-    for ordinal, (a, b) in enumerate(zip(left["ranks"][0]["batches"],
+-                                           right["ranks"][0]["batches"])):
+-        for request, request_id in enumerate(a["request_ids"]):
+-            x, y = a["generated_ids"][request], b["generated_ids"][request]
+-            first = next((index for index, pair in enumerate(zip(x, y))
+-                          if pair[0] != pair[1]), None)
+-            common = len(x) if first is None else first
+-            gaps = []
+-            for rank in (0, 1):
+-                p = left["ranks"][rank]["batches"][ordinal]["generated_logprobs"][request]
+-                q = right["ranks"][rank]["batches"][ordinal]["generated_logprobs"][request]
+-                gaps.extend({"rank": rank, "generated_position": index,
+-                             "absolute_gap": abs(p[index] - q[index])}
+-                            for index in range(common))
+-            observations.append({"cell": a["cell"], "sample": a["sample"],
+-                "measured": a["measured"], "request_id": request_id,
+-                "bf16_generated_ids": x, "kv4_generated_ids": y,
+-                "generated_ids_equal": first is None,
+-                "first_different_generated_token": first,
+-                "matching_generated_common_prefix_tokens": common,
+-                "largest_common_prefix_logprob_gap": (
+-                    max(gaps, key=lambda item: item["absolute_gap"]) if gaps else None)})
+-    return observations
+-
+-
+-def capture_arm(spec, result, directory):
+-    """Read both real capture files and join to native workers and responses."""
+-    if not bench.capture_mode(spec):
+-        raise ValueError('capture reader requires explicit capture mode')
+-    module = bench.capture_module(spec)
+-    expected_sources = {name: {key: row[key] for key in ('path', 'sha256', 'bytes')}
+-        for name, row in spec['validation_comparison']['capture']['sources'].items()}
+-    decoded = []
+-    for rank, row in enumerate(result['ranks']):
+-        if spec['experiment_mode'] == 'native-decode-layer-capture-v1':
+-            operation = module.read_operation(Path(directory) / f'rank-{rank}-operation.json',
+-                bench.capture_binding(spec, row['native_identity']))
+-            if operation['phase'] != 'capture_closed' or operation['complete'] is not True:
+-                raise ValueError('capture operation journal incomplete')
+-        if bench.native_capture_mode(spec):
+-            identity = row.get('native_cache_identity')
+-            native = row['native_identity']
+-            bench.comparison().validate_native_cache_identity(identity, result['arm'], rank,
+-                native['session_sha256'], native['spec_sha256'], native['process']['pid'],
+-                spec['validation_comparison'])
+-            raw_identity = bench.read_bounded_file(Path(directory) / f'rank-{rank}-native-cache.json', 8192)
+-            expected_identity = json.dumps(identity, sort_keys=True, allow_nan=False).encode() + b'\n'
+-            if raw_identity != expected_identity:
+-                raise ValueError('durable native cache identity differs from rank observation')
+-        report = row.get('capture')
+-        if (not isinstance(report, dict) or report.get('records_complete') is not True
+-                or report.get('qualification') is not False or report.get('file') != f'rank-{rank}-capture.bin'
+-                or not bench.valid_digest(report.get('sha256'))):
+-            raise ValueError('capture rank report incomplete')
+-        workspace = report.get('workspace')
+-        if (type(workspace) is not dict or workspace.get('cpu_tensor_cap_bytes') != 16 << 20
+-                or workspace.get('device_cap_bytes') != 8 << 20
+-                or type(workspace.get('largest_cpu_tensor_copy_bytes')) is not int
+-                or not 0 <= workspace['largest_cpu_tensor_copy_bytes'] <= 16 << 20
+-                or type(workspace.get('maximum_observed_device_current_growth_bytes')) is not int
+-                or not 0 <= workspace['maximum_observed_device_current_growth_bytes'] <= 8 << 20
+-                or (spec['experiment_mode'] == 'native-async-prefill-layer-capture-v1'
+-                    and workspace.get('deferred_device_buffer_bytes') != 2703360)
+-                or workspace.get('transient_peak_measured') is not False):
+-            raise ValueError('capture workspace observations missing or outside configured bounds')
+-        value = module.read_file(Path(directory) / report['file'], bench.capture_binding(spec, row['native_identity']),
+-            row['batches'], expected_sha256=report['sha256'],
+-            expected_prompts=spec['frozen_prompt_ids'])
+-        preflight = value['metadata'].get('pre_import')
+-        masks = {'/mnt/capture-bytecode/mnt/composition/image-source/python/sglang/srt/' + name: 1 << 20
+-            for name in ('model_executor', 'layers', 'layers/attention', 'models')}
+-        loaders = {name: dict(origin=source['path'], loader='SourceFileLoader') for name, source in expected_sources.items()}
+-        expected_preflight = dict(sources=expected_sources, masks=masks, loaders=loaders,
+-            pycache_prefix='/mnt/capture-bytecode', bytecode_disabled=True)
+-        if preflight != expected_preflight or row.get('capture_preflight') != expected_preflight:
+-            raise ValueError('durable native pre-import source/mask/loader observations missing or substituted')
+-        if (value['metadata'].get('sources') != expected_sources
+-                or value['callback_elapsed_ns'] != report.get('callback_elapsed_ns')
+-                or type(report.get('bytes')) is not int
+-                or report['bytes'] != (Path(directory) / report['file']).stat().st_size):
+-            raise ValueError('capture source/elapsed observations differ')
+-        if spec['experiment_mode'] == 'native-prefill-row-audit-v1':
+-            value['prefill_row_audit'] = prefill_row_audit(spec, row, value, directory)
+-        decoded.append(value)
+-    return decoded
+-
+-
+-def prefill_row_audit(spec, rank_record, capture, directory):
+-    """Join complete-row hashes to the independently validated last-row capture."""
+-    helper = bench.row_audit_module(spec)
+-    rank = rank_record['rank']
+-    report = rank_record['capture'].get('prefill_row_audit')
+-    if (type(report) is not dict or set(report) != {'file', 'sha256', 'bytes', 'records_complete',
+-            'record_count', 'qualification'} or report['file'] != f'rank-{rank}-prefill-rows.jsonl'
+-            or report['records_complete'] is not True or report['qualification'] is not False
+-            or type(report['record_count']) is not int
+-            or report['record_count'] != len(helper.ROW_AUDIT_RECORDS)
+-            or type(report['bytes']) is not int
+-            or not 0 < report['bytes'] <= helper.FILE_CAP
+-            or not bench.valid_digest(report['sha256'])):
+-        raise ValueError('prefill row audit complete rank report')
+-    prompts = [hashlib.sha256(bench.capture_module(spec).canonical(ids)).hexdigest()
+-        for ids in spec['frozen_prompt_ids']['C2-1024']]
+-    contract = spec['validation_comparison']['capture']['prefill_row_audit']
+-    if contract['prompt_sha256'] != prompts:
+-        raise ValueError('prefill row audit frozen prompts')
+-    expected = {}
+-    for ordinal, boundary, tensor in helper.ROW_AUDIT_RECORDS:
+-        field = 'v' if tensor == 'value' else 'r'
+-        rows = [capture['layer_rows'][ordinal, row, 0, boundary] for row in (0, 1)]
+-        values = [row[field] for row in rows]
+-        if any(value is None for value in values) or values[0][:2] != values[1][:2]:
+-            raise ValueError('prefill row audit binary dtype/layout')
+-        expected[ordinal, boundary, tensor] = dict(dtype=values[0][0],
+-            sha256=[value[2] for value in values], monotonic_ns=[row['n'] for row in rows])
+-    path = Path(directory) / report['file']
+-    observed = helper.read_file(path, bench.capture_binding(spec, rank_record['native_identity']),
+-        {ordinal: prompts for ordinal in range(24, 30)}, report['sha256'], expected)
+-    if path.stat().st_size != report['bytes']:
+-        raise ValueError('prefill row audit retained size differs')
+-    for item in observed['records']:
+-        layers = [capture['layer_rows'][item['ordinal'], row, 0, item['boundary']] for row in (0, 1)]
+-        completion = item['completion']
+-        if any(layer['o'] != completion['kind'] for layer in layers):
+-            raise ValueError('prefill row audit completion/binary binding')
+-        if completion['kind'] == 'CarriedSum':
+-            expected_group = dict(qualname='sglang.srt.distributed.parallel_state.GroupCoordinator',
+-                ranks=[0, 1], world_size=2, rank=rank, rank_in_group=rank)
+-            if (completion['group'] != expected_group or completion['branch'] != 'group-all-reduce'
+-                    or completion['redistribution'] != 'absent'):
+-                raise ValueError('prefill row audit exact native TP completion')
+-        elif completion['kind'] != 'none':
+-            raise ValueError('prefill row audit unsupported completion')
+-    return observed
+-
+-
+-def compare_prefill_rows(captures):
+-    """Describe every same-boundary repeat without overriding numerical refusal."""
+-    comparisons = []
+-    for rank in (0, 1):
+-        indexed = {arm: {(row['ordinal'], row['boundary'], row['tensor']): row
+-            for row in captures[arm][rank]['prefill_row_audit']['records']} for arm in ('bf16', 'kv4')}
+-        samples = [(arm, sample, 24 + sample) for arm in ('bf16', 'kv4') for sample in range(6)]
+-        for left, right in combinations(samples, 2):
+-            for boundary, names in ((0, ('value',)), (16, ('value', 'residual')), (32, ('value', 'residual'))):
+-                for tensor in names:
+-                    a, b = (indexed[arm][ordinal, boundary, tensor] for arm, _, ordinal in (left, right))
+-                    context_equal = (a['dtype'], a['shape'], a['prompt_sha256'], a['completion']) == (
+-                        b['dtype'], b['shape'], b['prompt_sha256'], b['completion'])
+-                    comparisons.append(dict(rank=rank, left=list(left), right=list(right),
+-                        relation='within_start' if left[0] == right[0] else 'cross_start',
+-                        boundary=boundary, tensor=tensor, context_equal=context_equal,
+-                        complete_matrix_equal=a['raw_sha256'] == b['raw_sha256'],
+-                        last_rows_equal=a['last_row_sha256'] == b['last_row_sha256'],
+-                        qualification=False))
+-    if len(comparisons) != 660:
+-        raise ValueError('prefill row audit pair coverage')
+-    return dict(schema=1, mode='native-prefill-row-audit-v1', records_complete=True,
+-        comparisons=comparisons, qualification=False, cause_identified=False,
+-        interpretation='Full row hashes do not establish equality of unmeasured KV/recurrent contents or future collective execution.')
+-
+-
+-def native_repeatability(left, right, captures):
+-    """Compare every repeat pair after complete arm and capture validation."""
+-    mode = left.get('experiment_mode')
+-    if not bench.comparison().native_mode(mode):
+-        raise ValueError('native repeatability requires explicit native capture mode')
+-    records = {'bf16': left, 'kv4': right}
+-    if type(captures) is not dict or set(captures) != set(records):
+-        raise ValueError('native repeatability requires both complete captures')
+-    expected_keys = {(cell_index * 6 + sample, request, step)
+-        for cell_index, (_, count, _) in enumerate(bench.CELLS)
+-        for sample in range(6) for request in range(count) for step in range(32)}
+-    for arm, value in records.items():
+-        if (value.get('experiment_mode') != mode or type(value.get('ranks')) is not list
+-                or len(value['ranks']) != 2 or type(captures[arm]) is not list or len(captures[arm]) != 2):
+-            raise ValueError('native repeatability mode/two-rank structure')
+-        for rank, row in enumerate(value['ranks']):
+-            capture = captures[arm][rank]
+-            if (row.get('rank') != rank or type(row.get('batches')) is not list
+-                    or len(row['batches']) != 30 or capture.get('mode') != mode
+-                    or capture.get('records_complete') is not True
+-                    or capture.get('binding', {}).get('arm') != arm
+-                    or capture.get('binding', {}).get('rank') != rank
+-                    or set(capture.get('steps', {})) != expected_keys):
+-                raise ValueError('native repeatability complete schedule/capture membership')
+-            for ordinal, batch in enumerate(row['batches']):
+-                cell, count, _ = bench.CELLS[ordinal // 6]
+-                if (batch.get('cell') != cell or batch.get('sample') != ordinal % 6
+-                        or len(batch.get('request_ids', [])) != count
+-                        or len(batch.get('generated_ids', [])) != count
+-                        or len(batch.get('generated_logprobs', [])) != count
+-                        or any(len(values) != 32 for values in
+-                            batch['generated_ids'] + batch['generated_logprobs'])):
+-                    raise ValueError('native repeatability fixed response shape')
+-    boundary_order = ['hidden', 'model_logits', 'sampler_input', 'post_sample_logits', 'normalized_scores']
+-    pairs = []
+-    pair_counts = dict(within_start=0, cross_start=0)
+-    request_pairs = step_pairs = 0
+-    for rank in (0, 1):
+-        for cell_index, (cell, count, _) in enumerate(bench.CELLS):
+-            samples = [(arm, sample, cell_index * 6 + sample)
+-                for arm in ('bf16', 'kv4') for sample in range(6)]
+-            for a, b in combinations(samples, 2):
+-                relation = 'within_start' if a[0] == b[0] else 'cross_start'
+-                pair_counts[relation] += 1
+-                batches = [records[arm]['ranks'][rank]['batches'][ordinal] for arm, _, ordinal in (a, b)]
+-                requests = []
+-                for request in range(count):
+-                    steps = []
+-                    passed = True
+-                    for step in range(32):
+-                        x, y = [captures[arm][rank]['steps'][(ordinal, request, step)]
+-                            for arm, _, ordinal in (a, b)]
+-                        aligned = x['c'] == y['c']
+-                        same_token = batches[0]['generated_ids'][request][step] == batches[1]['generated_ids'][request][step]
+-                        comparable = aligned and same_token
+-                        score_equal = x['s'] == y['s'] if comparable else None
+-                        score_gap = abs(batches[0]['generated_logprobs'][request][step] -
+-                            batches[1]['generated_logprobs'][request][step]) if comparable else None
+-                        mask = sum(1 << index for index, values in enumerate(zip(x['h'], y['h']))
+-                            if values[0] == values[1]) if aligned else None
+-                        passed = passed and aligned and same_token and score_equal is True and mask == 31
+-                        steps.append([step, aligned, same_token, comparable, score_equal, score_gap, mask])
+-                        step_pairs += 1
+-                    requests.append(dict(request=request,
+-                        left_request_id=batches[0]['request_ids'][request],
+-                        right_request_id=batches[1]['request_ids'][request], passed=passed, steps=steps))
+-                    request_pairs += 1
+-                pairs.append(dict(relation=relation, rank=rank, cell=cell,
+-                    left=list(a), right=list(b), passed=all(row['passed'] for row in requests), requests=requests))
+-    if pair_counts != {'within_start': 300, 'cross_start': 360} or request_pairs != 924 or step_pairs != 29568:
+-        raise ValueError('native repeatability pair coverage')
+-    return dict(schema=1, mode=mode, passed=all(pair['passed'] for pair in pairs),
+-        pair_counts=pair_counts, request_pairs=request_pairs, step_pairs=step_pairs,
+-        sample_columns=['arm', 'sample', 'ordinal'],
+-        step_columns=['step', 'conditioning_equal', 'generated_ids_equal', 'score_comparable',
+-            'selected_logprob_equal', 'selected_logprob_gap', 'boundary_equal_mask'],
+-        boundary_order=boundary_order, boundary_equal_mask_all=31, pairs=pairs,
+-        score_rule='Compare scores only when conditioning histories and generated token identity match.',
+-        raw_vectors='Every generated ID and score vector remains in the bound per-rank batch records.',
+-        tolerance=None, qualification=False, cause_identified=False, independent_cleanup_required=True)
+-
+-
+-def analyze(spec, spec_sha256, left, right, capture_directories=None):
+-    if spec.get("experiment_mode") == "native-model-context-retrieval-32k-v1":
+-        checked_arm(left, "bf16", spec_sha256)
+-        checked_arm(right, "kv4", spec_sha256)
+-        return bench._GRAPH.analyze(bench.__dict__, spec, spec_sha256, left, right, capture_directories)
+-    bench.validate_spec(spec)
+-    if capture_directories is None:
+-        raise ValueError('callback profile requires artifact directories')
+-    for arm, record in (('bf16', left), ('kv4', right)):
+-        bench.read_callback_profile_evidence(spec, capture_directories[arm], record)
+-        bench.read_stall_trace_evidence(spec, capture_directories[arm], record)
+-    profile = spec.get("cache_profile")
+-    comparison = spec.get("validation_comparison")
+-    samples = {"bf16": checked_arm(left, "bf16", spec_sha256, profile, comparison),
+-               "kv4": checked_arm(right, "kv4", spec_sha256, profile, comparison)}
+-    cells = []
+-    metrics = ("prefill_rank_max_seconds", "decode_31_seconds", "forward_sample_total_seconds")
+-    for name, concurrency, length in bench.CELLS:
+-        arms = {}
+-        for arm in ("bf16", "kv4"):
+-            rows = [dict(row, decode_tokens_per_second=31 * concurrency / row["decode_31_seconds"])
+-                    for row in samples[arm] if row["cell"] == name]
+-            arms[arm] = {"warmup": rows[0], "measured_samples": rows[1:],
+-                "statistics": {key: _statistics([row[key] for row in rows[1:]])
+-                               for key in (*metrics, "decode_tokens_per_second")}}
+-        faster = {key: 100 * (arms["bf16"]["statistics"][key]["median"]
+-                              / arms["kv4"]["statistics"][key]["median"] - 1)
+-                  for key in metrics}
+-        cells.append({"cell": name, "concurrency": concurrency, "input_tokens": length,
+-                      "arms": arms, "kv4_faster_percent_by_latency_median": faster})
+-    result = {"schema": 1, "status": "OFFLINE_COMPARISON_COMPLETE",
+-        "scope": "inner-model-timing-only", "spec_sha256": spec_sha256,
+-        "qualification": False, "serving_quality_qualified": False,
+-        "physical_campaign_complete": False, "independent_release_verified": False,
+-        "accepted_live_cleanup_authority": False, "http_throughput_measured": False,
+-        "ttft_measured": False, "end_to_end_throughput_measured": False,
+-        "overall_winner": None, "cells": cells, "output_comparisons": compare_outputs(left, right),
+-        "interpretation": ["One fixed-order two-arm inner-model screen, not independent-start evidence.",
+-            "Warmups are retained but excluded from the five-sample statistics.",
+-            "Positive latency-ratio percent means KV4 faster in that cell and metric only.",
+-            "Logprob comparisons stop before the first different generated token.",
+-            "Worker/process-group records do not establish protected-host or device release.",
+-            "No quality, HTTP, native performance or general serving winner is established."]}
+-    if profile is not None:
+-        result["cache_attribution"] = cache_attribution(right)
+-    if comparison is not None:
+-        module = bench.comparison()
+-        result.update(experiment_mode=comparison['mode'], arm_labels=comparison["arm_labels"],
+-            exact_output_gate=module.exact_outputs(left, right),
+-            telemetry_available=all(row["batch_telemetry"]["sensors_available"]
+-                for arm in (left, right) for row in arm["ranks"]),
+-            source_promotion=False)
+-        for cell in cells:
+-            cell["candidate_faster_percent_by_latency_median"] = cell.pop("kv4_faster_percent_by_latency_median")
+-        if module.native_mode(comparison['mode']):
+-            result["interpretation"][0] = "Two fresh starts use the same native BF16 KV cache and current FP8 weights."
+-            result["interpretation"][2] = "Latency ratios describe instrumented starts only and do not establish native performance."
+-            result["interpretation"].append("Internal bf16/kv4 ownership keys mean native BF16 KV start 1/start 2; BF16 cache does not mean BF16 weights.")
+-            result["interpretation"].append("Exact agreement is non-reproduction; it does not establish a cure or attribute earlier failures to V4.")
+-        else:
+-            result["reference_cache_attribution"] = cache_attribution(left)
+-            result["interpretation"][2] = "Positive latency-ratio percent means candidate faster than V4 compact in that cell only."
+-            result["interpretation"].append("Internal bf16/kv4 ownership keys mean compact reference/candidate in this explicit mode; neither arm is ordinary BF16 KV.")
+-        result["interpretation"].append("Boundary sensor reads are outside timed forwards but can perturb TP arrival and thermal history. They are not DRAM bandwidth counters.")
+-    if bench.capture_mode(spec):
+-        if type(capture_directories) is not dict or set(capture_directories) != {'bf16', 'kv4'}:
+-            raise ValueError('both raw capture directories required')
+-        raw = {arm: capture_arm(spec, record, capture_directories[arm]) for arm, record in (('bf16', left), ('kv4', right))}
+-        module = bench.capture_module(spec)
+-        result['capture'] = dict(records_complete=True,
+-            comparisons=[module.compare(raw['bf16'][rank], raw['kv4'][rank]) for rank in (0, 1)],
+-            qualification=False, independent_cleanup_required=True, timing_is_instrumented=True)
+-        if bench.comparison().native_mode(comparison['mode']):
+-            result['native_repeatability_gate'] = native_repeatability(left, right, raw)
+-        if spec['experiment_mode'] == 'native-prefill-row-audit-v1':
+-            result['prefill_row_audit'] = compare_prefill_rows(raw)
+-    return result
+-
+-
+-def cache_attribution(right):
+-    """Use the same slower rank as each model timing, without adding rank times."""
+-    module = bench.authenticated_adjacent("cache_profile.py", bench.CACHE_PROFILE_SHA256)
+-    rows = []
+-    for ordinal, batch in enumerate(right["ranks"][0]["batches"]):
+-        phases = {"prefill": {}, "decode_31": {}}
+-        for step in range(32):
+-            rank = max((0, 1), key=lambda r: right["ranks"][r]["batches"][ordinal]["step_seconds"][step])
+-            record = right["ranks"][rank]["cache_profile"]["steps"][ordinal * 32 + step]
+-            parts = {"metadata": record["metadata_ns"], "other_model": record["total_ns"] -
+-                     record["metadata_ns"] - sum(v[1] for v in record["layers"])}
+-            for values in record["layers"]:
+-                physical, full, append, attention, native_append, native_read, host, validation, reader = values[:9]
+-                prefix = "protected_" if physical in module.PROTECTED else "compact_"
+-                costs = {"adapter_checks_and_views": full - append - attention,
+-                         "append_host": append - native_append, "append_native": native_append,
+-                         "attention_host": attention - native_read,
+-                         "attention_native_overhead": native_read - host - validation - reader,
+-                         "native_host_checks": host, "native_validation_and_wait": validation,
+-                         "native_reader_and_wait": reader}
+-                for name, value in costs.items():
+-                    parts[prefix + name] = parts.get(prefix + name, 0) + value
+-            if sum(parts.values()) != record["total_ns"] or any(v < 0 for v in parts.values()):
+-                raise ValueError("cache profile accounting partition")
+-            dest = phases["prefill" if step == 0 else "decode_31"]
+-            for name, value in parts.items():
+-                dest[name] = dest.get(name, 0) + value
+-        rows.append(dict(ordinal=ordinal, cell=batch["cell"], sample=batch["sample"],
+-                         measured=batch["measured"], partition_ns=phases))
+-    cells = []
+-    for cell, _, _ in bench.CELLS:
+-        selected = [r for r in rows if r["cell"] == cell and r["measured"]]
+-        cells.append({"cell": cell, "statistics_seconds": {
+-            phase: {name: _statistics([r["partition_ns"][phase][name] / 1e9 for r in selected])
+-                    for name in selected[0]["partition_ns"][phase]}
+-            for phase in ("prefill", "decode_31")}})
+-    return {"schema": 1, "qualification": False, "cells": cells, "samples": rows,
+-            "units": "inclusive host wait attribution partition, seconds; raw integers are nanoseconds",
+-            "rank_rule": "slower measured model rank per step; both raw rank profiles retained",
+-            "caveats": ["A synchronization can charge earlier queued work to the observed call.",
+-                "Native reader time combines all reader kernels and its existing stream wait.",
+-                "Append native time combines validation, packing/write and existing waits.",
+-                "Getter and Python observer overhead is included; this is instrumented timing.",
+-                "Phase medians need not sum to the median of a complete window."]}
+-
+-
+-def main():
+-    parser = argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument("--spec", required=True)
+-    parser.add_argument("--expected-spec-sha256", required=True)
+-    parser.add_argument("--bf16", required=True)
+-    parser.add_argument("--kv4", required=True)
+-    parser.add_argument("--output", required=True)
+-    args = parser.parse_args()
+-    spec, digest = read_json(args.spec, args.expected_spec_sha256)
+-    left, left_digest = read_json(args.bf16)
+-    right, right_digest = read_json(args.kv4)
+-    directories = {'bf16': Path(args.bf16).parent, 'kv4': Path(args.kv4).parent} if bench.capture_mode(spec) else None
+-    report = analyze(spec, digest, left, right, directories)
+-    report["input_result_sha256"] = {"bf16": left_digest, "kv4": right_digest}
+-    report["analysis_source_sha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+-    # This identifies this offline parser contract, not the physically executed file.
+-    report["analysis_contract_source_sha256"] = hashlib.sha256(_ENTRY.read_bytes()).hexdigest()
+-    output = Path(args.output)
+-    if not output.is_absolute() or not output.parent.is_dir() or output.parent.is_symlink():
+-        raise ValueError("absolute output under existing owned parent required")
+-    bench.write_result(output, report)
+-
+-
+-if __name__ == "__main__":
+-    main()

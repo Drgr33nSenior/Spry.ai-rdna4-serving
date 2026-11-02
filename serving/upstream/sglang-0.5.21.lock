@@ -1,0 +1,107 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "original_sha256": "fcfca3c5d286a77594742fd05791fe5ad4c7fd46327ab7f126b2cdcf697b685d",
+      "overlay": "graph_full_cuda_graph_backend.py",
+      "overlay_sha256": "b5c0f89ef78ffa0d1e77d91fd298d7c1c9ca14673ae16aa6729eba874db435a2",
+      "patch": "patches/sglang-0.5.21/0001-graph_full_cuda_graph_backend.patch",
+      "patch_sha256": "ae64b6ee84ded92580f285229e05976fa278c8feb464a0d878f9a73b43008d77",
+      "source": "python/sglang/srt/model_executor/runner_backend/full_cuda_graph_backend.py",
+      "target": "image-source/python/sglang/srt/model_executor/runner_backend/full_cuda_graph_backend.py"
+    },
+    {
+      "original_sha256": "6f7c1ca7e17c9d7b686255f6c4e9fa9830e8ef4f6f898c15c26f0b834722c3da",
+      "overlay": "GEMM-tail.py",
+      "overlay_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+      "patch": "patches/sglang-0.5.21/0002-GEMM-tail.patch",
+      "patch_sha256": "267311d785c2f2fca4e5dcae7ccbb4fc889ca16a506a7120c178fc0b9ff63384",
+      "source": "python/sglang/kernels/ops/gemm/fp8_kernel.py",
+      "target": "image-source/python/sglang/kernels/ops/gemm/fp8_kernel.py"
+    },
+    {
+      "original_sha256": "e5dc3befbe93b2908a79fb8f279a643d2c4aeb098ec46f16b740560c04070de1",
+      "overlay": "allocation_sizing_candidate.py",
+      "overlay_sha256": "09eba1769b666722c7a05bc0235290253dde04a96e4c3f864d308c84d8c16f87",
+      "patch": "patches/sglang-0.5.21/0003-allocation_sizing_candidate.patch",
+      "patch_sha256": "9e227402e72b7ca2460b9268629f4d141b037af951eb4d895b567c21402dd201",
+      "source": "python/sglang/srt/mem_cache/allocation_sizing.py",
+      "target": "image-source/python/sglang/srt/mem_cache/allocation_sizing.py"
+    },
+    {
+      "original_sha256": "c66fd2a9629c5f0f36ad4eca34f2910dc8e8af509fd8c6b2fa3fd2722f18004f",
+      "overlay": "dflash_info_v2_candidate.py",
+      "overlay_sha256": "ba5eac1d30ad1a6e3163ba31c66f3c72bbf04e171771d99220eeb5407ce48973",
+      "patch": "patches/sglang-0.5.21/0004-dflash_info_v2_candidate.patch",
+      "patch_sha256": "37c3a3d629b3d9ea6c70ff1d5614c21022b4c904a1588a5a44e6a9850220acfa",
+      "source": "python/sglang/srt/speculative/dflash_info_v2.py",
+      "target": "image-source/python/sglang/srt/speculative/dflash_info_v2.py"
+    },
+    {
+      "original_sha256": "7cad2a1b690b15c8d13f15cf1e458a7fba85f2bca9e47327a9804a1e7ba92943",
+      "overlay": "gdn_verify_candidate.py",
+      "overlay_sha256": "0ae8788fc8194505fb6a0ee5e320456f5fb9ebf45d4b83a4d28e2e196ec15b87",
+      "patch": "patches/sglang-0.5.21/0005-gdn_verify_candidate.patch",
+      "patch_sha256": "035bfeda07a610838ffec734de7c0c6a11bf1b1519ee973e5649cb0dcb7c9bdb",
+      "source": "python/sglang/kernels/ops/attention/fla/fused_sigmoid_gating_recurrent.py",
+      "target": "image-source/python/sglang/kernels/ops/attention/fla/fused_sigmoid_gating_recurrent.py"
+    },
+    {
+      "original_sha256": "cb87d85a89fdd06c5ab2f362e9f06b11dc32a6b5519440805bde038172e4c82b",
+      "overlay": "layernorm_p3_candidate.py",
+      "overlay_sha256": "f1855c99386c39802b07dd1848b0d9197994f67181cd1265dbf85b02da513b42",
+      "patch": "patches/sglang-0.5.21/0006-layernorm_p3_candidate.patch",
+      "patch_sha256": "e87dfdfeb6dc7e5a0edb19af7566e6b92b45bfa8ed62272b7d45fd929ab58c09",
+      "source": "python/sglang/srt/layers/layernorm.py",
+      "target": "image-source/python/sglang/srt/layers/layernorm.py"
+    },
+    {
+      "original_sha256": "d8ce6f38279913d11b4a7e910a7fd1432e952a0bdcf33ebe726b6f49af0ba6ba",
+      "overlay": "d3b_combined_model_runner.py",
+      "overlay_sha256": "da81d4c393cf5910753c48036bedbe593e851ffe0985997f4eca02d79737df76",
+      "patch": "patches/sglang-0.5.21/0007-d3b_combined_model_runner.patch",
+      "patch_sha256": "1540514aea6b75ff8bd93f29ebbec5d45fcfd583e193d853e602c1d7b36fe431",
+      "source": "python/sglang/srt/model_executor/model_runner.py",
+      "target": "image-source/python/sglang/srt/model_executor/model_runner.py"
+    },
+    {
+      "original_sha256": "9ccff88d991fc492daff984e73b5f88fb4daac62d19a2c19c6c686c9bbe5499c",
+      "overlay": "qwen3_5_candidate.py",
+      "overlay_sha256": "2a76ddea9a380dd8e8fd71a8919fc4aadae702ec5c5f35bd052c614ed07a78e8",
+      "patch": "patches/sglang-0.5.21/0008-qwen3_5_candidate.patch",
+      "patch_sha256": "cdeb5dd60ec5a343a3c8970caf3e44ef22a1017af124cbdcc02dfb28981972f8",
+      "source": "python/sglang/srt/models/qwen3_5.py",
+      "target": "image-source/python/sglang/srt/models/qwen3_5.py"
+    },
+    {
+      "original_sha256": "47e13954eb8b06836a5279fedd1f79f03dbd40245819ae152af3a02f3887c1ac",
+      "overlay": "replay_memory_pool_candidate.py",
+      "overlay_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+      "patch": "patches/sglang-0.5.21/0009-replay_memory_pool_candidate.patch",
+      "patch_sha256": "b7d101016246878cf02d64e9bff22d11e358871af4cbbc16c5c5df08352fda0c",
+      "source": "python/sglang/srt/mem_cache/memory_pool.py",
+      "target": "image-source/python/sglang/srt/mem_cache/memory_pool.py"
+    },
+    {
+      "original_sha256": "8339a92ed5e4fd91f306f81f48d29c60f93a9e0e2ae4974cb6916f9f9a46f858",
+      "overlay": "capture_hybrid_linear_attn_backend.py",
+      "overlay_sha256": "4106e9b9981b0f18e415114d8fbc6512fab25c5841d1a1a06f3e8ca2cb4e2804",
+      "patch": "patches/sglang-0.5.21/0010-capture_hybrid_linear_attn_backend.patch",
+      "patch_sha256": "496177996eabfe205681482b9164129363cb743b1bcdbbc773f685fcf00f81ae",
+      "source": "python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py",
+      "target": "image-source/python/sglang/srt/layers/attention/hybrid_linear_attn_backend.py"
+    },
+    {
+      "original_sha256": "afaac626b5ad14440521666310379c84dcc109e3d9f48ef09c9a0fd470cc0d52",
+      "overlay": "replay_kv_cache_configurator_candidate.py",
+      "overlay_sha256": "cf7341e9f31593488f10fc19d1e95ab469817c56f8cb022b5cadf5734e83ea04",
+      "patch": "patches/sglang-0.5.21/0011-replay_kv_cache_configurator_candidate.patch",
+      "patch_sha256": "de40b624e13215bf8d63fe24da448d088193f9dd5af04921936aec722f39197b",
+      "source": "python/sglang/srt/mem_cache/kv_cache_configurator.py",
+      "target": "image-source/python/sglang/srt/mem_cache/kv_cache_configurator.py"
+    }
+  ],
+  "schema": 1,
+  "scope": "active W5 runtime and graph/GEMM overlays",
+  "version": "sglang-0.5.21-retained-effective-base"
+}
