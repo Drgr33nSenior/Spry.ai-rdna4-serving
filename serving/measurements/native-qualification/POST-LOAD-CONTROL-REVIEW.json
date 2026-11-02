@@ -43,12 +43,13 @@
   },
   "metadata_preparation_inside_forward_graph": true,
   "metadata_preparation_policy": "within-explicit-forward-v1",
-  "model_starts_executed": 0,
+  "model_starts_executed": 2,
   "native_preflight": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-replay-control-v1/NATIVE-CONTROL-CHECKS.json",
     "sha256": "c2a6aa17dae3587940bca455caacef8006e7a635bd3ffd2ea2e385b48f8cdf09"
   },
   "nonce": "ca3598712e150f21",
+  "operation": 203,
   "own_closeout_checkpoint": "CHECKPOINT-553.json",
   "packed_parameter_storage_rebinding": false,
   "performance_comparison": false,
@@ -73,7 +74,9 @@
     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "protected_entries": 9,
-  "registration_created": false,
+  "registration_created": true,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
   "reproduction": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-replay-control-v1/REPRODUCTION-FINAL.json",
     "sha256": "1b20feac13a7088d5aa200d06a1fc472ce0cc5c9d8cb345c8f9267407e30cfad"
@@ -83,6 +86,8 @@
   "requested_generations": 352,
   "requested_model_starts": 2,
   "requested_owner_seconds": 6360,
+  "responses": 352,
+  "result": "GPU-203-RESULT.json",
   "schema": 1,
   "selected_variant": "baseline",
   "source_identity": {
@@ -101,7 +106,7 @@
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/proposals/post-load-control/VERIFICATION.json",
     "sha256": "74e2489188fd787091790fa35c1013f70add88856d6aab19e67420f246f2d223"
   },
-  "status": "POST_LOAD_CONTROL_REVIEWED_UNFUNDED",
+  "status": "EXECUTED_ONCE_352_TOKEN_IDENTITY_QUALITY_RELEASE_PASS_PARKED",
   "unchanged_python_since202": 57,
   "uses_pty": true,
   "whole_cleanup_complete": false

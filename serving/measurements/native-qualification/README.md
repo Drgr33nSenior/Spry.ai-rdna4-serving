@@ -26,9 +26,23 @@ passed. No second arm, CPU grade or retry ran; checkpoint 553 is parked. See
 [token comparison](GPU-202-TOKEN-COMPARISON.json).
 
 The [control before replay metadata](../../proposals/post-load-control/README.md)
-reverses only that increment's adapter, startup producer and reader relative to
-operation 202. Its other 57 Python files, nine protected helpers and 176 frozen
-requests match. This comparison needs fresh exact one-use approval.
+ran as operation 203. Both starts completed all 352 responses, and every raw
+request/output vector matches B186. Native CPU grading passed all 352 natural
+responses and long-answer coverage. The corpus contains eight distinct prompt
+message sequences in 176 frozen request cases per start. The original caller
+completed in 4,005.93 seconds with its receipt; GPU and CPU independent releases
+passed. Checkpoint 557 is parked, with no remaining allowance or retry. See
+[GPU-203-RESULT.json](GPU-203-RESULT.json) and its
+[token comparison](GPU-203-TOKEN-COMPARISON.json). This establishes full caller
+continuity for this control; operation 198's interruption cause remains unknown.
+
+The pinned native initializer and actual adapter reproduce a stale-map defect
+after eager prefill replaces the backend metadata object. The
+[correction](../../proposals/replay-metadata-scope/README.md) retains the captured
+metadata view per backend and batch size. CPU graph tests and the native
+source-only checks pass. Only the adapter differs from operation 196. Corrected
+instrumented packet `e2011102000000a0` needs fresh exact one-use approval. GPU
+recovery, full-cleanup qualification and production measurement remain open.
 The separate Hyperloom session is investigating zero warm C2 cached tokens in
 operation 200. That failure has not been shown to explain the thinking-marker
 regression here. No GPU memory or performance improvement has been measured.

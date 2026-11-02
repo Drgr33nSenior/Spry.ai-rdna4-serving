@@ -1436,12 +1436,15 @@
     "syntax_compilation": "PASS_ALL_TWENTY_TWO_PYTHON_MODULES"
   },
   "last_control_native_attempt": {
+    "independent_cpu_release_verified": true,
     "independent_gpu_release_verified": true,
-    "local_caller_completed_with_receipt": true,
-    "operation": 202,
-    "path": "measurements/native-qualification/GPU-202-RESULT.json",
-    "sha256": "4d8af15bc2b4592d0f2ae6ea674d5b4e7fe45a197ec04d4e97b51197814539d5",
-    "status": "PRE_MEMORY_CONTROL_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
+    "matched_B186_vectors": 352,
+    "natural_quality_passes": 352,
+    "operation": 203,
+    "original_caller_full_duration_receipt_verified": true,
+    "path": "measurements/native-qualification/GPU-203-RESULT.json",
+    "sha256": "c48e5ccd3db7900c2c67f0c9f191a0c436d3fac9da468fdfdd356dd85f951561",
+    "status": "POST_LOAD_CONTROL_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED"
   },
   "last_instrumented_native_attempt": {
     "model_construction_reached": true,
@@ -1495,7 +1498,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact one-use approval for post-load control ca3598712e150f21. Operation202 reproduced the invalid first warmup vector without head sharing or packed rebinding. The next control reverses only the replay-metadata adapter, producer and reader; all other57 Python files and protected helpers match202. Operation202 is sealed and parked with no retry or grading allowance.",
+  "next_bounded_action": "Obtain fresh exact one-use approval for corrected instrumented candidate e2011102000000a0. Control203 reproduced all352 B186 outputs and passed native quality with full original-caller continuity and independent releases. A stale replay-map defect after eager metadata replacement is reproduced and corrected on CPU; only the adapter differs from196. Native correction qualification, production memory/performance measurement and final closeout remain open.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1897,10 +1900,12 @@
   "post_load_control": {
     "cleanup_complete": false,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-203-RESULT.json",
     "nonce": "ca3598712e150f21",
+    "operation": 203,
     "path": "proposals/post-load-control/PROPOSAL.json",
     "record_sha256": "c5de4d372a9199ba5ef7987764049116fd76561fa830a781b53f9d63fda2451d",
-    "status": "CPU_POST_LOAD_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+    "status": "POST_LOAD_CONTROL_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED",
     "verification": "proposals/post-load-control/VERIFICATION.json",
     "verification_sha256": "74e2489188fd787091790fa35c1013f70add88856d6aab19e67420f246f2d223"
   },
@@ -2686,6 +2691,16 @@
     "verification": "quality/VERIFICATION.json",
     "verification_sha256": "9b57c5e787869f0ab544b7f27d3d87654084d07be886e4e82c794ae6486211f4",
     "whole_run_mutations_supported": false
+  },
+  "replay_metadata_scope": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "e2011102000000a0",
+    "path": "proposals/replay-metadata-scope/PROPOSAL.json",
+    "record_sha256": "c5641defa616d52b410bdc40a2209573d007a0f126bb589d700b02ad712377f2",
+    "status": "CPU_REPLAY_METADATA_SCOPE_FIXED_NATIVE_QUALIFICATION_PENDING",
+    "verification": "proposals/replay-metadata-scope/VERIFICATION.json",
+    "verification_sha256": "4f8582550ccdba5563c80014084f833a1b77b52db161afd823246b9f4ad44cda"
   },
   "resource_manifest_verification": {
     "actual_http_and_readout_import_chains": "PASS_BOTH_ARMS_NATIVE_IMPORTS_BLOCKED",

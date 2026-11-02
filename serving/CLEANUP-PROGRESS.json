@@ -157,7 +157,11 @@
     "Production operation201 passed readiness but reproduced operation196 token-for-token: first warmup refused two thinking closures; original finite caller completed, independent release verified, checkpoint551 parked",
     "Pre-memory control corrects only two startup paths; all176 B186 request bodies/input records match; six local packet checks, thirteen exact-archive native source checks and final1038 public tests pass; author reproduction byte-identical",
     "Pre-memory operation202 reproduced the exact same3318-token invalid warmup as196/201 without shared head or packed rebinding; original caller and independent release verified, checkpoint553 parked, no CPU grade or retry",
-    "Earlier post-load control reverses only three metadata runtime files from202; other57 Python files, protected helpers, execution contract and all176 requests match. Six local packet checks,21 native source-only checks and1046 public tests pass; final author reproduction is byte-identical"
+    "Earlier post-load control reverses only three metadata runtime files from202; other57 Python files, protected helpers, execution contract and all176 requests match. Six local packet checks,21 native source-only checks and1046 public tests pass; final author reproduction is byte-identical",
+    "Post-load control203 completed both starts and all352 responses: every raw request/output vector matches B186; native CPU quality352/352 and long-answer coverage pass, across8 distinct prompt-message sequences",
+    "Control203 original PTY caller completed4005.93seconds with receipt; independent GPU/CPU release verified, checkpoint557 parked, no retry or allowance remains",
+    "Actual pinned native initializer reproduces stale captured maps after eager metadata replacement. Corrected per-backend/batch-size capture views match the old graph and refuse missing, incompatible or failed preparations",
+    "Corrected full-cleanup candidate e2011102000000a0 prepared: only adapter differs from196;1055 public tests,43 boundary tests,six actual packet checks and31 native source-only tests pass; final source authors reproduce byte-for-byte"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -253,16 +257,22 @@
     "worker_start_attempts": 1
   },
   "last_control_native_attempt": {
+    "independent_cpu_release_verified": true,
     "independent_gpu_release_verified": true,
-    "local_caller_completed_with_receipt": true,
-    "operation": 202,
-    "path": "measurements/native-qualification/GPU-202-RESULT.json",
-    "sha256": "4d8af15bc2b4592d0f2ae6ea674d5b4e7fe45a197ec04d4e97b51197814539d5",
-    "status": "PRE_MEMORY_CONTROL_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
+    "matched_B186_vectors": 352,
+    "natural_quality_passes": 352,
+    "operation": 203,
+    "original_caller_full_duration_receipt_verified": true,
+    "path": "measurements/native-qualification/GPU-203-RESULT.json",
+    "sha256": "c48e5ccd3db7900c2c67f0c9f191a0c436d3fac9da468fdfdd356dd85f951561",
+    "status": "POST_LOAD_CONTROL_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED"
   },
-  "latest_verification": "proposals/post-load-control/VERIFICATION.json",
+  "latest_verification": "proposals/replay-metadata-scope/VERIFICATION.json",
   "local_caller_durability": {
-    "full_campaign_proven": false,
+    "full_campaign_elapsed_seconds": 4005.930301042001,
+    "full_campaign_operation": 203,
+    "full_campaign_proven": true,
+    "full_campaign_scope": "Earlier post-load control; corrected full cleanup remains unqualified",
     "original_interruption_cause": "UNRESOLVED",
     "probe_seconds": 960,
     "pty_probe_passed": true
@@ -280,7 +290,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000098. Reuse the sealed real CPU tensor-structure proof for the same five computation sources. Operation195 is parked with no retry or grading allowance.",
+    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e2011102000000a0. Control203 passed token identity and native quality with full caller continuity. Reuse the CPU tensor proof only for the five unchanged tensor sources; corrected GPU qualification and production comparison remain open.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -311,10 +321,12 @@
   "post_load_control": {
     "cleanup_complete": false,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-203-RESULT.json",
     "nonce": "ca3598712e150f21",
+    "operation": 203,
     "path": "proposals/post-load-control/PROPOSAL.json",
     "record_sha256": "c5de4d372a9199ba5ef7987764049116fd76561fa830a781b53f9d63fda2451d",
-    "status": "CPU_POST_LOAD_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+    "status": "POST_LOAD_CONTROL_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED",
     "verification": "proposals/post-load-control/VERIFICATION.json",
     "verification_sha256": "74e2489188fd787091790fa35c1013f70add88856d6aab19e67420f246f2d223"
   },
@@ -421,18 +433,28 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact one-use approval for post-load control ca3598712e150f21",
-    "Isolate and resolve the response regression at the metadata increment or earlier cleanup stage; preserve strict acceptance",
-    "Complete current candidate greedy token identity, selected quality, BDF memory and remaining native gates",
-    "Complete production comparison and final retained evidence closeout"
+    "Fresh exact one-use approval for corrected instrumented candidate e2011102000000a0",
+    "Validate corrected replay maps, greedy token identity and selected quality on the full cleanup",
+    "Measure production memory/performance at the matched request profile",
+    "Complete final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact one-use approval for post-load control ca3598712e150f21",
-    "Isolate and resolve the response regression at the metadata increment or earlier cleanup stage; preserve strict acceptance",
-    "Complete current candidate greedy token identity, selected quality, BDF memory and remaining native gates",
-    "Complete production comparison and final retained evidence closeout"
+    "Fresh exact one-use approval for corrected instrumented candidate e2011102000000a0",
+    "Validate corrected replay maps, greedy token identity and selected quality on the full cleanup",
+    "Measure production memory/performance at the matched request profile",
+    "Complete final retained evidence closeout"
   ],
   "remaining_local": [],
+  "replay_metadata_scope": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "e2011102000000a0",
+    "path": "proposals/replay-metadata-scope/PROPOSAL.json",
+    "record_sha256": "c5641defa616d52b410bdc40a2209573d007a0f126bb589d700b02ad712377f2",
+    "status": "CPU_REPLAY_METADATA_SCOPE_FIXED_NATIVE_QUALIFICATION_PENDING",
+    "verification": "proposals/replay-metadata-scope/VERIFICATION.json",
+    "verification_sha256": "4f8582550ccdba5563c80014084f833a1b77b52db161afd823246b9f4ad44cda"
+  },
   "requested": "Continue until all remaining cleanup steps are complete",
   "runtime_binding_increment": {
     "native_cpu_source_tests": 164,

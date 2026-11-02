@@ -21,12 +21,13 @@ proofs; production skips the diagnostic quantization and hashes.
 The 79-member package stays within the existing 80-member ceiling.
 The predicted 1.71 GB reduction per card has not been measured.
 
-Native operations 196, 201 and pre-memory control 202 reached readiness, then
-produced identical invalid first warmup responses. The failure occurs without
-head sharing or packed parameter rebinding. The current candidate remains
-unqualified. The [earlier metadata control](proposals/post-load-control/README.md)
-reverses three runtime files relative to operation 202 and is ready for exact
-owner review. See [native results](measurements/native-qualification/README.md).
+Native operations 196, 201 and pre-memory control 202 produced identical invalid
+first warmup responses. Earlier control 203 completed all 352 responses with
+B186 token identity, native quality and independent release passing. Its original
+finite caller completed. A stale replay-map defect after eager metadata
+replacement is reproduced and [corrected on CPU](proposals/replay-metadata-scope/README.md).
+The correction still needs native GPU qualification and production measurement.
+See [native results](measurements/native-qualification/README.md).
 
 This builds on [metadata preparation before replay](proposals/pre-replay/README.md),
 the [runner post-load hook](proposals/post-load/README.md),

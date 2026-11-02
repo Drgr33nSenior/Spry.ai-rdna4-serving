@@ -1,0 +1,94 @@
+--- a/verify_decode_adapter.py
++++ b/verify_decode_adapter.py
+@@ -145,6 +145,7 @@
+             getattr(cls, 'init_forward_metadata_in_graph'))
+         self.buffers = {}
+         self.metadata_scopes = {}
++        self.graph_metadata = {}
+         self.metadata_build_host_calls = self.metadata_reuse_host_calls = 0
+         self.metadata_capture_build_host_calls = 0
+         self.host_calls = self.eligible_host_calls = self.capture_host_calls = 0
+@@ -199,6 +200,34 @@
+                         need(adapter._ready(backend, forward_batch),
+                              'verify metadata must be prepared before capture')
+                     return result
++            elif name == 'init_forward_metadata_out_graph':
++                def initialize(backend, forward_batch, *args, _method=method, **kwargs):
++                    adapter.invalidate(backend)
++                    in_capture = kwargs.get('in_capture', args[0] if args else False)
++                    verify = (forward_batch.forward_mode.is_target_verify()
++                              and type(forward_batch.batch_size) is int
++                              and forward_batch.batch_size in (1, 2))
++                    key = (id(backend), 8 * forward_batch.batch_size) if verify else None
++                    if in_capture and verify:
++                        adapter.graph_metadata.pop(key, None)
++                    result = _method(backend, forward_batch, *args, **kwargs)
++                    if verify:
++                        if in_capture:
++                            metadata = backend.forward_metadata
++                            need(adapter._policy(backend, forward_batch, metadata) is not None,
++                                 'captured verify metadata is incompatible')
++                        else:
++                            # Eager prefill can replace backend.forward_metadata.
++                            # Replay refills buffers without restoring that view.
++                            metadata = adapter.graph_metadata.get(key)
++                            need(metadata is not None, 'captured verify metadata is unavailable')
++                        need(adapter.prepare(backend, forward_batch, metadata=metadata),
++                             'captured verify metadata is incompatible')
++                        if in_capture:
++                            adapter.graph_metadata[key] = metadata
++                    else:
++                        adapter.prepare(backend, forward_batch)
++                    return result
+             else:
+                 def initialize(backend, forward_batch, *args, _method=method, **kwargs):
+                     adapter.invalidate(backend)
+@@ -213,8 +242,8 @@
+     def invalidate(self, backend):
+         self.metadata_scopes.pop(id(backend), None)
+ 
+-    def _policy(self, backend, batch):
+-        metadata = backend.forward_metadata
++    def _policy(self, backend, batch, metadata=None):
++        metadata = backend.forward_metadata if metadata is None else metadata
+         bs = batch.batch_size
+         if (not batch.forward_mode.is_target_verify() or type(bs) is not int or bs not in (1, 2)
+                 or metadata is None or getattr(metadata, 'max_extend_len', None) != 8
+@@ -242,16 +271,17 @@
+         return (all(a is b for a, b in zip(scope['references'], refs))
+                 and scope['stream'] == self.torch.cuda.current_stream(ptr.device).cuda_stream)
+ 
+-    def prepare(self, backend, batch):
++    def prepare(self, backend, batch, *, metadata=None):
+         """Prepare singleton causal maps before eager forward, capture or replay."""
+         self.invalidate(backend)
+-        policy = self._policy(backend, batch)
++        metadata = backend.forward_metadata if metadata is None else metadata
++        policy = self._policy(backend, batch, metadata)
+         if policy is None:
+             return False
+         torch = self.torch
+         need(not torch.cuda.is_current_stream_capturing(),
+              'verify metadata must be prepared outside the forward graph')
+-        ptr = backend.forward_metadata.kv_indptr
++        ptr = metadata.kv_indptr
+         bs, rows = batch.batch_size, 8 * batch.batch_size
+         key = (id(backend), rows)
+         if key not in self.buffers:
+@@ -279,7 +309,7 @@
+             backend.get_num_kv_splits(b['splits'][row:row+1], b['lengths'][row:row+1])
+         self.metadata_build_host_calls += 1
+         self.metadata_scopes[id(backend)] = dict(backend=backend, batch=batch,
+-            metadata=backend.forward_metadata, policy=policy,
++            metadata=metadata, policy=policy,
+             references=(ptr, batch.req_pool_indices, backend.kv_index_translator),
+             stream=torch.cuda.current_stream(ptr.device).cuda_stream)
+         return True
+@@ -353,6 +383,7 @@
+             else:
+                 delattr(self.cls, name)
+         self.metadata_scopes.clear()
++        self.graph_metadata.clear()
+ 
+ 
+ def install(manifest, worker):

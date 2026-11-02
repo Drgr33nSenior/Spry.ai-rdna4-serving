@@ -35,5 +35,12 @@ network and subprocesses are denied inside the check.
 The paired current candidate is an inert preparation artifact. It is not
 scheduled for execution. A baseline result can narrow the regression to the
 replay-metadata increment or an earlier stage. It cannot establish a performance
-improvement or qualify the current cleanup. Fresh exact one-use owner approval
-is required before registration. See [verification](VERIFICATION.json).
+improvement or qualify the current cleanup.
+
+Approved operation 203 completed both starts and all 352 responses. Every raw
+request/output vector matches B186; native CPU quality and long-answer coverage
+pass. The original caller completed, and GPU/CPU releases are verified. Checkpoint
+557 is parked. See [the result](../../measurements/native-qualification/GPU-203-RESULT.json)
+and the [CPU correction](../replay-metadata-scope/README.md). The correction needs
+its own native qualification and fresh exact approval. The earlier
+[source verification](VERIFICATION.json) remains retained.
