@@ -124,11 +124,22 @@ def install_post_load_source(files, record, metadata):
     need('retired_http_sources' in record, 'post-load hook requires the closed HTTP package')
     row = record['post_load_source']
     need(type(row) is dict and set(row) == {'file', 'sha256'}
-         and row['file'] == 'spry_serving/post_load.py', 'exact post-load source role required')
+         and row['file'] in ('spry_serving/post_load.py', 'spry_serving/memory_post_load.py'),
+         'exact post-load source role required')
     raw = source_builder.read_regular(HERE / row['file'], 8192)
     need(digest(raw) == row['sha256'] and 'spry_post_load.py' not in files,
          'fresh authenticated post-load source required')
     files['spry_post_load.py'] = raw
+    shared = record.get('shared_fp8_head_source')
+    need((shared is not None) == (row['file'] == 'spry_serving/memory_post_load.py'),
+         'memory post-load hook and shared head source must be selected together')
+    if shared is not None:
+        need(type(shared) is dict and set(shared) == {'file', 'sha256'}
+             and shared['file'] == 'spry_serving/fp8_head.py', 'exact shared FP8 head source role required')
+        helper = source_builder.read_regular(HERE / shared['file'], 16384)
+        need(digest(helper) == shared['sha256'] and 'spry_fp8_head.py' not in files,
+             'fresh authenticated shared FP8 head source required')
+        files['spry_fp8_head.py'] = helper
     spec = parse_json(files['BENCHMARK-SPEC2.json'])
     for arm in ('control', 'mtp'):
         name = 'HTTP-BINDING-' + arm + '.json'
@@ -144,6 +155,10 @@ def install_post_load_source(files, record, metadata):
         runner['sha256'] = digest(files['d3b_combined_model_runner.py'])
         sources['post_load'] = dict(path='/mnt/review/spry_post_load.py', module='spry_post_load',
                                     sha256=row['sha256'])
+        if shared is not None:
+            need('shared_fp8_head' not in sources, 'shared FP8 head source already bound')
+            sources['shared_fp8_head'] = dict(path='/mnt/review/spry_fp8_head.py', module='spry_fp8_head',
+                                              sha256=shared['sha256'])
         pin = digest(canonical_bare(sources))
         value['source_manifest_sha256'] = pin
         for template in ('binding_template', 'worker_template'):
@@ -228,6 +243,8 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         package['package/MANIFEST-PROPOSAL.json'] = canonical(manifest)
         member_count = 77 if 'retired_http_sources' in record else 80
         if 'post_load_source' in record:
+            member_count += 1
+        if 'shared_fp8_head_source' in record:
             member_count += 1
         need(len(package) == member_count, 'exact proposed HTTP package membership required')
         # These dependencies are code/public connection metadata only. Their

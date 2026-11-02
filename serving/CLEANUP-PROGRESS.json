@@ -93,7 +93,13 @@
     "Startup witness and reader require outside-forward-graph policy, complete capture and zero captured metadata builds; legacy witness refuses",
     "Optional bounded target source-access inventory; unused historical patch copies excluded from test archive without deleting repository files or tests",
     "Public regression suite: 962 Python tests across 77 suites plus C++ sanitizers",
-    "Target CPython 3.14.7 source preflight: 229 checks without GPU/model/grading work; complete consumed-packet suite: 16 checks"
+    "Target CPython 3.14.7 source preflight: 229 checks without GPU/model/grading work; complete consumed-packet suite: 16 checks",
+    "One immutable FP8 head cache used by actual target and draft constructors; one finite-scan scalar read and zero draft-added persistent head bytes",
+    "QKVZ/BA parameters rebind to aligned packed views while preserving their objects and loader metadata; P1 accepts only verified old/new identity and byte equality",
+    "Instrumented startup memory witness and actual producer/304-row observer/byte-proof reader; incomplete, old and changed-source witnesses refuse",
+    "79-member consumed package; six self-consistent rollback sources refused; seven protected helpers, compute frontends, other active overlays, requests, settings and pool limits unchanged",
+    "Public regression suite: 983 Python tests across 78 suites plus C++ sanitizers",
+    "Target CPython 3.14.7 source preflight: 251 checks without GPU/model/grading work; complete consumed-packet suite: 17 checks"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -134,7 +140,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/pre-replay/VERIFICATION.json",
+  "latest_verification": "proposals/shared-memory/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -148,7 +154,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Runner and pre-replay metadata source are CPU-verified; startup scan/memory implementation, remaining helper consumers and exact native qualification remain.",
+    "next_stage": "Memory source is CPU-verified with stand-ins. Real CPU tensor semantics, native startup bytes and serving/quality/memory qualification remain; finish common helper and phase-marker consumers first.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -197,11 +203,12 @@
     "visibility": "public"
   },
   "remaining": [
-    "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
-    "Startup tensor validation scans and item synchronization",
-    "Shared FP8 head and packed QKVZ/BA views after refactors",
-    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
-    "Native startup memory equality and retained headroom proof",
+    "Remaining shared helper consumers, including protected common-source authentication without weaker trust",
+    "Inactive phase-marker consumers outside the closed HTTP controller/readout",
+    "Any further startup scan consolidation justified by retained failure timing",
+    "Real CPU tensor structure proof under an approved GPU-free tensor envelope",
+    "Exact source/protected-delta review and fresh one-use native greedy token/selected-quality qualification",
+    "Instrumented native startup bytes, deterministic head quantization and whole-device memory by BDF",
     "Broader configuration and instrumented full-menu capacity qualification"
   ],
   "remaining_external": [
@@ -210,9 +217,9 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
-    "Startup tensor validation scans and item synchronization",
-    "Shared FP8 head and packed QKVZ/BA views after refactors"
+    "Remaining shared helper consumers, including protected common-source authentication without weaker trust",
+    "Inactive phase-marker consumers outside the closed HTTP controller/readout",
+    "Any further startup scan consolidation justified by retained failure timing"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",
   "runtime_binding_increment": {
@@ -225,6 +232,18 @@
     "whole_cleanup_complete": false
   },
   "schema": 1,
+  "shared_memory_increment": {
+    "archive_members": 79,
+    "memory_recovery_measured": false,
+    "native_cpu_source_tests": 251,
+    "native_tensor_and_serving_pending": true,
+    "new_model_starts": 0,
+    "packet_checks": 17,
+    "predicted_tensor_payload_reduction_bytes_per_rank": 1711668800,
+    "public_tests": 983,
+    "status": "CPU_SHARED_MEMORY_SOURCE_AND_PACKET_VERIFIED_NATIVE_TENSOR_AND_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
   "startup_digest_increment": {
     "native_cpu_source_tests": 178,
     "native_serving_pending": true,

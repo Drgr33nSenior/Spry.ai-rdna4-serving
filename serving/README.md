@@ -5,23 +5,26 @@ This directory holds the observer safety and structural cleanup increments from
 cleanup source. These files are not a launch packet or a new serving selection.
 
 The latest runtime increment is the
-[verify metadata preparation](proposals/pre-replay/README.md).
-The adapter prepares causal maps before forward-graph capture or replay;
-its startup witness and reader require the new preparation policy. It retains
-the decode frontends and the [runner post-load hook](proposals/post-load/README.md).
-The candidate has 78 members under the existing
-80-member ceiling. The [source reference proposal](proposals/source-references/README.md)
-reuses unchanged protected files and produces an identical package without
-adding review copies. The runtime builds on the
-[closed HTTP package](proposals/closed-http/README.md), which removes disabled
-feature APIs, legacy diagnostics and three unused payloads, and the
-[shared helper cleanup](proposals/common-helpers/README.md), the
-[startup source digest proposal](proposals/startup-digests/README.md), the
-[MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and the
-[configured request and evidence proposal](proposals/configuration-mutations/README.md).
-The retained A/B pilot predates these changes. Replay metadata, startup scans
-and memory cleanup remain; [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json) records
-the gates. The new sources still need native serving qualification.
+[shared head and packed views proposal](proposals/shared-memory/README.md).
+It shares one FP8 head allocation and rebinds projection parameters to packed
+storage while preserving their objects, metadata and P1 validation. The head
+scan reads one startup scalar. Instrumented startup requires byte and sharing
+proofs; production skips the diagnostic quantization and hashes.
+The 79-member package stays within the existing 80-member ceiling.
+The predicted 1.71 GB reduction per card has not been measured.
+
+This builds on [metadata preparation before replay](proposals/pre-replay/README.md),
+the [runner post-load hook](proposals/post-load/README.md),
+[source references](proposals/source-references/README.md),
+the [closed HTTP package](proposals/closed-http/README.md),
+[shared helper cleanup](proposals/common-helpers/README.md),
+[startup source digest cache](proposals/startup-digests/README.md),
+[MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and
+[configured request and evidence](proposals/configuration-mutations/README.md).
+The retained A/B pilot predates these changes. Remaining helper consumers,
+phase markers and native qualification are recorded in
+[CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json). The new sources still need real
+CPU tensor structure checks and native serving qualification.
 
 ## Implemented
 

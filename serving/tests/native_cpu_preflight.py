@@ -23,13 +23,15 @@ def main():
     proposal_group.add_argument('--post-load-proposal',action='store_true')
     proposal_group.add_argument('--source-references-proposal',action='store_true')
     proposal_group.add_argument('--pre-replay-proposal',action='store_true')
+    proposal_group.add_argument('--shared-memory-proposal',action='store_true')
     parser.add_argument('--metrics-reporter',type=Path)
     parser.add_argument('--source-access-inventory',action='store_true')
     args=parser.parse_args()
     if sys.version_info[:2]!=(3,14) or platform.machine()!='x86_64' or sys.platform!='linux':
         raise ValueError('native Linux x86_64 CPython 3.14 required')
     repository=args.repository.resolve(strict=True);donor=args.donor.resolve(strict=True)
-    source_references=args.source_references_proposal or args.pre_replay_proposal
+    replay=args.pre_replay_proposal or args.shared_memory_proposal
+    source_references=args.source_references_proposal or replay
     post_load=args.post_load_proposal or source_references
     closed=args.closed_http_proposal or post_load
     common=args.common_helpers_proposal or closed
@@ -76,8 +78,10 @@ def main():
     if closed:scripts+=('serving/tests/test_closed_http.py',)
     if post_load:scripts+=('serving/tests/test_post_load.py',)
     if source_references:scripts+=('serving/tests/test_protected_source_references.py',)
-    if args.pre_replay_proposal:scripts+=('serving/tests/test_pre_replay_metadata.py',)
-    private=('serving/tests/check_pre_replay_packet.py' if args.pre_replay_proposal else
+    if replay:scripts+=('serving/tests/test_pre_replay_metadata.py',)
+    if args.shared_memory_proposal:scripts+=('serving/tests/test_shared_memory.py',)
+    private=('serving/tests/check_shared_memory_packet.py' if args.shared_memory_proposal else
+             'serving/tests/check_pre_replay_packet.py' if replay else
              'serving/tests/check_source_references_packet.py' if source_references else
              'serving/tests/check_post_load_packet.py' if post_load else
              'serving/tests/check_closed_http_packet.py' if closed else
@@ -93,10 +97,11 @@ def main():
             spec=importlib.util.spec_from_file_location('native_cpu_preflight_'+str(number),path)
             module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
             if relative.endswith(('check_configuration_mutations_packet.py','check_runtime_binding_packet.py',
-                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py','check_post_load_packet.py','check_source_references_packet.py','check_pre_replay_packet.py')):
+                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py','check_post_load_packet.py','check_source_references_packet.py','check_pre_replay_packet.py','check_shared_memory_packet.py')):
                 context=module.configured if runtime else module
                 context.PACKET=donor;context.METRICS_REPORTER=args.metrics_reporter
-                prefix=('PreReplayPacket.' if args.pre_replay_proposal else
+                prefix=('SharedMemoryPacket.' if args.shared_memory_proposal else
+                        'PreReplayPacket.' if replay else
                         'SourceReferencePacket.' if source_references else
                         'PostLoadPacket.' if post_load else
                         'ClosedHttpPacket.' if closed else
@@ -123,8 +128,10 @@ def main():
                         'test_native_workload_argv_keeps_every_mount_resource_and_model_argument')]
                 if post_load:
                     names += [prefix+'test_packaged_hook_is_source_bound_in_both_workers_and_refuses_changed_bytes']
-                if args.pre_replay_proposal:
+                if replay:
                     names += [prefix+'test_packaged_adapter_prepares_before_capture_and_strict_witness_refuses_old_counts']
+                if args.shared_memory_proposal:
+                    names += [prefix+'test_packaged_memory_reader_refuses_incomplete_and_old_witnesses']
                 suite=unittest.defaultTestLoader.loadTestsFromNames(names,module)
             elif relative.endswith('check_evidence_capacity_packet.py'):
                 module.inventory_checks.PACKET=donor
