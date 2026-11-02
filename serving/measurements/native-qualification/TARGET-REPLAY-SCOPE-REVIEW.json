@@ -1,5 +1,6 @@
 {
   "all_five_tensor_structure_sources_unchanged": true,
+  "approval_consumed": true,
   "approval_request": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/APPROVAL-REQUEST.json",
     "sha256": "47c3298d10654b7aadfbe3f16d9b169a62be4ec749f7f6249eb8f9da004c6912"
@@ -39,7 +40,7 @@
     "sha256": "fecb66cccef0a00f165a73fcc832b105808de284ea3bcb4898fa8e453edc982c"
   },
   "metadata_preparation_policy": "outside-forward-graph-v1",
-  "model_starts_executed": 0,
+  "model_starts_executed": 1,
   "native_draft_geometry": {
     "num_head": 16,
     "num_kv_head": 4
@@ -49,7 +50,9 @@
     "sha256": "db5e129d10b1c90874a01cb3f6473acb13047bbf43d2a274be3d4dc687c300ad"
   },
   "nonce": "e2011102000000a1",
-  "own_closeout_checkpoint": "CHECKPOINT-561.json",
+  "operation": 206,
+  "original_host_acceptance_passed": false,
+  "own_closeout_checkpoint": "CHECKPOINT-563.json",
   "performance_comparison": false,
   "previous_execution_seal": {
     "manifest_sha256": "f22c3360518e1b10083433e8e0f69d8a06c20aedbdf719bb9521f7696486e10d",
@@ -71,7 +74,9 @@
     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "protected_entries": 10,
-  "registration_created": false,
+  "registration_created": true,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
   "reproduction": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/REPRODUCTION-FINAL.json",
     "sha256": "ba3af72f3dcc4fe1c02fdc6941ba3de053d252ca862a16781252f3c6112d2c34"
@@ -81,6 +86,11 @@
   "requested_generations": 352,
   "requested_model_starts": 2,
   "requested_owner_seconds": 6360,
+  "responses": 176,
+  "result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-206-RESULT.json",
+    "sha256": "e306c8fb367af24d473ee8d496f324b444ea9e796b1478d38792b475d7053d88"
+  },
   "schema": 1,
   "selected_variant": "cleanup",
   "source_identity": {
@@ -99,7 +109,7 @@
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/proposals/target-replay-scope/VERIFICATION.json",
     "sha256": "6a88cb0104038f8bb1612a68cc7f8dde2f87b07cfb31fc27be5b57df9c0a9c2d"
   },
-  "status": "TARGET_ONLY_REPLAY_QUALIFICATION_REVIEWED_UNFUNDED",
+  "status": "EXECUTED_ONCE_PARTIAL176_HOST_READOUT_REFUSAL_RELEASED_PARKED",
   "target_geometry": {
     "num_head": 12,
     "num_kv_head": 2

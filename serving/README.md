@@ -27,9 +27,14 @@ B186 token identity, native quality and independent release passing. Its origina
 finite caller completed. A stale replay-map defect after eager metadata
 replacement is reproduced and [corrected on CPU](proposals/replay-metadata-scope/README.md).
 Operation 205 then refused draft graph capture before readiness or any response.
-The [target-only correction](proposals/target-replay-scope/README.md) preserves the
-native draft path and passes CPU source checks. Native GPU qualification and
-production measurement remain open.
+The [target-only correction](proposals/target-replay-scope/README.md) then
+completed the first 176 responses in operation 206, all matching B186 token
+vectors. Host observer-health readback failed on a missing contract import. The
+[host import correction](proposals/host-readout-scope/README.md) passes real
+retained artifact replay through the reader, resource and owner validators.
+The [revised test gates](measurements/native-qualification/TESTING.md) precede
+one combined production qualification and measurement run. Native sign-off
+remains open; no performance or memory improvement is established.
 See [native results](measurements/native-qualification/README.md).
 
 This builds on [metadata preparation before replay](proposals/pre-replay/README.md),

@@ -1,5 +1,26 @@
 # Native cleanup qualification
 
+Operation 206 completed the first 176 responses with exact B186 request and
+output token identity, then host observer-health validation failed on a missing
+`mtp_contract` import. The original caller returned its failure receipt and
+independent GPU release passed. No second start or CPU quality grade ran;
+checkpoint 563 is parked. See [result](GPU-206-RESULT.json) and
+[token comparison](GPU-206-TOKEN-COMPARISON.json).
+
+The [host import correction](../../proposals/host-readout-scope/README.md) passes
+nine real-validator regressions. Astra's complete retained CPU gate passes six
+reader/resource/owner chains and 27 expected refusals. The public suite passes
+1,079 Python tests in 89 suites plus C++ sanitizer checks; 43 boundary, six exact
+packet/caller and 57 source-only native checks also pass. See the
+[gate summary](HOST-READOUT-CPU-GATE.json) and [testing procedure](TESTING.md).
+
+Packet `e2011102000000a3` is prepared, reproducible and unfunded for one combined
+production qualification and descriptive measurement campaign. No additional
+instrumented campaign is planned. Production omits those diagnostics and does
+not establish second-start instrumented witness coverage. The original 206
+failure is not retroactively accepted. See the
+[production review](HOST-READOUT-PRODUCTION-REVIEW.json).
+
 The current cleanup remains unqualified. Reference operation 198 completed
 352 responses whose request and output token vectors all match passing B186.
 Collection and independent GPU release passed. Its original local caller was
@@ -50,11 +71,11 @@ GPU release passed and checkpoint 561 is parked. See
 
 The [target-only correction](../../proposals/target-replay-scope/README.md)
 limits strict captured-map admission to the supported target head geometry.
-The draft retains its native path. Candidate `e2011102000000a1` passes 1,070
+The draft retains its native path. Candidate `e2011102000000a1` passed 1,070
 public tests, 43 boundary tests, six exact packet checks and 48 native source-only
-checks, including the actual native target and draft initializer paths. Only the
-adapter differs from operation 205. Native response recovery, full-cleanup
-qualification and production measurement remain open.
+checks before operation 206. Only the adapter differed from operation 205.
+Operation 206 recovered the first 176 reference responses; the later host import
+failure and remaining production qualification are recorded above.
 
 The separate Hyperloom operation 204 completed and released the workstation.
 That result has not been joined to this cleanup qualification. Hyperloom remains

@@ -1,0 +1,50 @@
+{
+  "checkpoint_sha256": "3fdd78c5b639a48f5b33e9389c956592394fac420bbe59dc980800b423988f86",
+  "cpu_grade_ineligible": true,
+  "execution_seal": {
+    "manifest_sha256": "bb408cc43fa400f4515dc463f2872a741b2b1b7f8872f245c18c50fbfc4afd02",
+    "members": 82,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T17:50:49.280606+00:00"
+  },
+  "independent_gpu_release": true,
+  "native_quality_grade_performed": false,
+  "native_seals": {
+    "operation": {
+      "manifest_sha256": "61b953231578e33202261bdad193c985accd47175fa9be5c72db60fc67449e17",
+      "members": 304,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "fb069b579a7ea360faf70be4e70468d53c2d567ef40884baa67d672731dddfa5",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller/collected/protected/fp8-benchmark-source.e2011102000000a1"
+    },
+    "workload": {
+      "manifest_sha256": "35b760f93a68da67ad0f61ff53e237febee909d000c3f70edf9a02926f43f664",
+      "members": 204,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller/collected/workload/fp8-kv-benchmark.e2011102000000a1"
+    }
+  },
+  "operation": 206,
+  "original_caller_failure_receipt_verified": true,
+  "original_host_failure_authenticated": true,
+  "original_operation_accepted": false,
+  "passed": true,
+  "raw_requests_and_token_vectors_match_B186": 176,
+  "result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-206-RESULT.json",
+    "sha256": "e306c8fb367af24d473ee8d496f324b444ea9e796b1478d38792b475d7053d88"
+  },
+  "result_sha256": "47707b21fd753adbf63eb03c9ecfa52178206d383dc9a44f7227d5ed62a1709c",
+  "schema": 1,
+  "second_start_not_run": true,
+  "source_seal": {
+    "manifest_sha256": "0f4e971490fab34a91b5b514a7be067fc97d7bfde305585fa627b889b64aeb1c",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/author"
+  },
+  "status": "PARTIAL_HTTP_TOKEN_IDENTITY_HOST_REFUSAL_AND_GPU_RELEASE_AUTHENTICATED",
+  "whole_cleanup_complete": false
+}

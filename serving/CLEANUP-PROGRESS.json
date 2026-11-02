@@ -150,7 +150,7 @@
     "Operation196 native readiness and both startup readers passed; first warmup response contained two closing thinking markers and correctly failed unchanged acceptance",
     "Operation196 collection and independent GPU release passed; sealed failure retained, checkpoint539 parked, no second arm or CPU grade",
     "Exact B186 production reference replay prepared: all62 Python files and nine frozen inputs match; six local and six native packet checks pass without GPU work",
-    "Reference operation198 completed two native starts and all352 valid responses; request and output token vectors exactly match B186 through the original response inspector",
+    "Reference operation198 completed two native starts and all 352 valid responses; request and output token vectors exactly match B186 through the original response inspector",
     "Original local caller interruption retained; separate collection and independent GPU release passed; no conditional CPU grade and no retry; checkpoint544 parked",
     "Bounded 960-second local PTY heartbeat passed; full-campaign durability and original interruption cause remain unproven",
     "Production packet99 rechecked: all61 Python files match candidate196 and all176 request bodies match B186; source remains sealed and unfunded",
@@ -158,12 +158,17 @@
     "Pre-memory control corrects only two startup paths; all176 B186 request bodies/input records match; six local packet checks, thirteen exact-archive native source checks and final1038 public tests pass; author reproduction byte-identical",
     "Pre-memory operation202 reproduced the exact same3318-token invalid warmup as196/201 without shared head or packed rebinding; original caller and independent release verified, checkpoint553 parked, no CPU grade or retry",
     "Earlier post-load control reverses only three metadata runtime files from202; other57 Python files, protected helpers, execution contract and all176 requests match. Six local packet checks,21 native source-only checks and1046 public tests pass; final author reproduction is byte-identical",
-    "Post-load control203 completed both starts and all352 responses: every raw request/output vector matches B186; native CPU quality352/352 and long-answer coverage pass, across8 distinct prompt-message sequences",
+    "Post-load control203 completed both starts and all 352 responses: every raw request/output vector matches B186; native CPU quality352/352 and long-answer coverage pass, across8 distinct prompt-message sequences",
     "Control203 original PTY caller completed4005.93seconds with receipt; independent GPU/CPU release verified, checkpoint557 parked, no retry or allowance remains",
     "Actual pinned native initializer reproduces stale captured maps after eager metadata replacement. Corrected per-backend/batch-size capture views match the old graph and refuse missing, incompatible or failed preparations",
     "Corrected full-cleanup candidate e2011102000000a0 prepared: only adapter differs from196;1055 public tests,43 boundary tests,six actual packet checks and31 native source-only tests pass; final source authors reproduce byte-for-byte",
     "Operation205 retained and parked at561: first-start draft graph capture refused before readiness, zero responses, independent GPU release verified, original caller failure receipt retained; no CPU grade or retry",
-    "Target-only metadata hook preserves the native draft path and target refusal. Fifteen focused tests,1070 public tests,43 boundary tests,six exact packet checks and48 native source-only checks pass; final author packages reproduce byte-for-byte."
+    "Target-only metadata hook preserves the native draft path and target refusal. Fifteen focused tests,1070 public tests,43 boundary tests,six exact packet checks and48 native source-only checks pass; final author packages reproduce byte-for-byte.",
+    "Operation206: first 176 raw request/output vectors match B186; host observer-health contract import failed after completed HTTP, GPU independently released, failed operation retained and parked at checkpoint 563",
+    "Host observer-health contract execution scoped to its authenticated source; nine real-validator regression tests pass with absent and hostile ambient modules",
+    "Astra complete retained host reader/resource/owner gate: six chains and 27 expected refusals passed, ten seals authenticated; operation206 acceptance unchanged",
+    "Public regression suite 1079 Python tests in 89 suites plus C++ sanitizer checks; 43 boundary checks; six exact packet/caller checks; 57 source-only native checks",
+    "One unfunded production packet e2011102000000a3 prepared for combined bounded qualification and descriptive measurement; all author and approval bytes reproduce"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -246,6 +251,16 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
+  "host_readout_scope": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "e2011102000000a3",
+    "path": "proposals/host-readout-scope/PROPOSAL.json",
+    "record_sha256": "470b4c811095d70a515d87a18d69cbb31e13c045fc52336c780bc624627c3190",
+    "status": "CPU_HOST_READOUT_GATES_PASSED_COMBINED_PRODUCTION_RUN_PENDING",
+    "verification": "proposals/host-readout-scope/VERIFICATION.json",
+    "verification_sha256": "8b8bd88047eef098289478133bca1d64b8b283a26f0888baf96f4369bc416141"
+  },
   "instrumented_native_attempt": {
     "independent_gpu_release_verified": true,
     "model_construction_reached": true,
@@ -272,16 +287,16 @@
   "last_instrumented_native_attempt": {
     "independent_gpu_release_verified": true,
     "model_start_attempts": 1,
-    "native_readiness_reached": false,
-    "operation": 205,
-    "path": "measurements/native-qualification/GPU-205-RESULT.json",
+    "native_readiness_reached": true,
+    "operation": 206,
+    "path": "measurements/native-qualification/GPU-206-RESULT.json",
     "quality_grading_eligible": false,
-    "responses": 0,
+    "responses": 176,
     "retry_authorized": false,
-    "sha256": "9c9c35d6ac9a47a38e7b6fb3ff6cbb72987d86517f45634af3cf1547e02931fa",
-    "status": "REPLAY_SCOPE_DRAFT_GRAPH_CAPTURE_REFUSAL_RELEASED_PARKED"
+    "sha256": "e306c8fb367af24d473ee8d496f324b444ea9e796b1478d38792b475d7053d88",
+    "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED"
   },
-  "latest_verification": "proposals/target-replay-scope/VERIFICATION.json",
+  "latest_verification": "proposals/host-readout-scope/VERIFICATION.json",
   "local_caller_durability": {
     "full_campaign_elapsed_seconds": 4005.930301042001,
     "full_campaign_operation": 203,
@@ -304,7 +319,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Obtain fresh exact one-use approval for target-only replay candidate e2011102000000a1. Operation205 failed during draft graph capture before readiness or any response and is released and parked. The strict captured-map hook now applies only to the supported target head geometry; the native draft path is preserved. CPU/source checks pass; GPU recovery, production measurement and closeout remain open.",
+    "next_stage": "Complete freshly approved production packet e2011102000000a3 for bounded qualification and descriptive measurement after the passed complete retained CPU host gate; operation206 remains failed partial and parked.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -391,11 +406,10 @@
   },
   "production_candidate_review": {
     "native_execution_authorized": false,
-    "nonce": "e201110200000099",
-    "path": "measurements/native-qualification/PRODUCTION-CANDIDATE-REVIEW.json",
-    "result": "measurements/native-qualification/GPU-201-RESULT.json",
-    "sha256": "f86b7d4294a01be5caabba3e19a0c10102b28c3c159e37dc35ec7163cc89b369",
-    "status": "EXECUTED_ONCE_RESPONSE_FAILED_PARKED",
+    "nonce": "e2011102000000a3",
+    "path": "measurements/native-qualification/HOST-READOUT-PRODUCTION-REVIEW.json",
+    "sha256": "2b672b95b056cd63ad2eb92a400f2f212911c99b9769610c367ee3a6d56f2441",
+    "status": "COMBINED_PRODUCTION_QUALIFICATION_MEASUREMENT_REVIEWED_UNFUNDED",
     "whole_cleanup_complete": false
   },
   "production_native_attempt": {
@@ -447,16 +461,16 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact one-use approval for target-only instrumented candidate e2011102000000a1",
-    "Qualify target replay maps, native draft fallback, B186 token identity and quality for the corrected full cleanup",
-    "Measure production memory/performance at the matched request profile",
-    "Complete final retained evidence closeout"
+    "Fresh exact one-use approval for combined production qualification and measurement packet e2011102000000a3",
+    "Complete both starts, authenticate all 352 reference request/output vectors and original host acceptance, then independently release the GPU",
+    "Run the eligible network-free CPU quality grade with all 352 answers and required long-answer coverage passing, then independently release the CPU",
+    "Retain descriptive production memory/timing comparison, close evidence and sign off the exact tested source"
   ],
   "remaining_external": [
-    "Fresh exact one-use approval for target-only instrumented candidate e2011102000000a1",
-    "Qualify target replay maps, native draft fallback, B186 token identity and quality for the corrected full cleanup",
-    "Measure production memory/performance at the matched request profile",
-    "Complete final retained evidence closeout"
+    "Fresh exact one-use approval for combined production qualification and measurement packet e2011102000000a3",
+    "Complete both starts, authenticate all 352 reference request/output vectors and original host acceptance, then independently release the GPU",
+    "Run the eligible network-free CPU quality grade with all 352 answers and required long-answer coverage passing, then independently release the CPU",
+    "Retain descriptive production memory/timing comparison, close evidence and sign off the exact tested source"
   ],
   "remaining_local": [],
   "replay_metadata_scope": {
@@ -551,10 +565,12 @@
   "target_replay_scope": {
     "cleanup_complete": false,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-206-RESULT.json",
     "nonce": "e2011102000000a1",
+    "operation": 206,
     "path": "proposals/target-replay-scope/PROPOSAL.json",
     "record_sha256": "63a0a14eaa43f5a330121030acbd33ff560d2f6a9aad7ffe43fe84b57f7f65b6",
-    "status": "CPU_TARGET_REPLAY_SCOPE_FIXED_NATIVE_QUALIFICATION_PENDING",
+    "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED",
     "verification": "proposals/target-replay-scope/VERIFICATION.json",
     "verification_sha256": "6a88cb0104038f8bb1612a68cc7f8dde2f87b07cfb31fc27be5b57df9c0a9c2d"
   }

@@ -1,0 +1,79 @@
+{
+  "accepted_owner_arms": 0,
+  "caller_seconds_charged": 2057,
+  "closed_scopes": [
+    {
+      "absent": true,
+      "arm": "bf16",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-3ea20e41bfb3392b-bf16.scope",
+      "observed_monotonic": 186315.533874966
+    }
+  ],
+  "current_cleanup_candidate_qualified": false,
+  "deployed": false,
+  "execution_seal": {
+    "manifest_sha256": "bb408cc43fa400f4515dc463f2872a741b2b1b7f8872f245c18c50fbfc4afd02",
+    "members": 82,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T17:50:49.280606+00:00"
+  },
+  "failure": "resource receipt: ModuleNotFoundError: No module named 'mtp_contract'",
+  "failure_stage": "Original host post-run read_http_artifacts observer health validation lacked scoped mtp_contract",
+  "gpu_memory_improvement_measured": false,
+  "http_starts_completed": 1,
+  "independent_gpu_release_verified": true,
+  "inference_speedup_measured": false,
+  "matched_B186_vectors": 176,
+  "mismatched_B186_vectors": 0,
+  "model_start_attempts": 1,
+  "native_model_child_exit_code": 0,
+  "native_quality_grade_performed": false,
+  "native_readiness_reached": true,
+  "nonce": "e2011102000000a1",
+  "operation": 206,
+  "original_caller_completed_with_failure_receipt": true,
+  "original_caller_elapsed_seconds": 2056.279273458,
+  "original_host_acceptance_passed": false,
+  "own_closeout_checkpoint": "CHECKPOINT-563.json",
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 2048,
+  "quality_grading_eligible": false,
+  "remaining_approved_responses_not_run": 176,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 176,
+  "retry_authorized": false,
+  "schema": 1,
+  "seals": {
+    "operation": {
+      "manifest_sha256": "61b953231578e33202261bdad193c985accd47175fa9be5c72db60fc67449e17",
+      "members": 304,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "fb069b579a7ea360faf70be4e70468d53c2d567ef40884baa67d672731dddfa5",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller/collected/protected/fp8-benchmark-source.e2011102000000a1"
+    },
+    "workload": {
+      "manifest_sha256": "35b760f93a68da67ad0f61ff53e237febee909d000c3f70edf9a02926f43f664",
+      "members": 204,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/caller/collected/workload/fp8-kv-benchmark.e2011102000000a1"
+    }
+  },
+  "second_arm_started": false,
+  "source_seal": {
+    "manifest_sha256": "0f4e971490fab34a91b5b514a7be067fc97d7bfde305585fa627b889b64aeb1c",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/author"
+  },
+  "source_selection_changed": false,
+  "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED",
+  "structurally_complete_http_responses": 176,
+  "token_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/execution-v1/TOKEN-COMPARISON.json",
+    "sha256": "57bde6a754aa318389e40bc301e8604040c9d748d1ee269dc97a54512fe92735"
+  },
+  "whole_cleanup_complete": false
+}

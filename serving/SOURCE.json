@@ -1391,6 +1391,16 @@
     "worker_client_timing_migrated": true,
     "worker_export_config_binding_migrated": false
   },
+  "host_readout_scope": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "e2011102000000a3",
+    "path": "proposals/host-readout-scope/PROPOSAL.json",
+    "record_sha256": "470b4c811095d70a515d87a18d69cbb31e13c045fc52336c780bc624627c3190",
+    "status": "CPU_HOST_READOUT_GATES_PASSED_COMBINED_PRODUCTION_RUN_PENDING",
+    "verification": "proposals/host-readout-scope/VERIFICATION.json",
+    "verification_sha256": "8b8bd88047eef098289478133bca1d64b8b283a26f0888baf96f4369bc416141"
+  },
   "import_cleanup": {
     "authenticated_bytes_preserved": true,
     "legacy_graph_pin_refusal_preserved": true,
@@ -1449,14 +1459,14 @@
   "last_instrumented_native_attempt": {
     "independent_gpu_release_verified": true,
     "model_start_attempts": 1,
-    "native_readiness_reached": false,
-    "operation": 205,
-    "path": "measurements/native-qualification/GPU-205-RESULT.json",
+    "native_readiness_reached": true,
+    "operation": 206,
+    "path": "measurements/native-qualification/GPU-206-RESULT.json",
     "quality_grading_eligible": false,
-    "responses": 0,
+    "responses": 176,
     "retry_authorized": false,
-    "sha256": "9c9c35d6ac9a47a38e7b6fb3ff6cbb72987d86517f45634af3cf1547e02931fa",
-    "status": "REPLAY_SCOPE_DRAFT_GRAPH_CAPTURE_REFUSAL_RELEASED_PARKED"
+    "sha256": "e306c8fb367af24d473ee8d496f324b444ea9e796b1478d38792b475d7053d88",
+    "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED"
   },
   "last_production_native_attempt": {
     "independent_gpu_release_verified": true,
@@ -1501,7 +1511,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact one-use approval for target-only replay candidate e2011102000000a1. Operation205 failed during draft graph capture before readiness or any response and is released and parked. The strict captured-map hook now applies only to the supported target head geometry; the native draft path is preserved. CPU/source checks pass; GPU recovery, production measurement and closeout remain open.",
+  "next_bounded_action": "Complete one freshly approved production campaign e2011102000000a3 for bounded native qualification and descriptive measurement. The complete retained CPU readback/resource/owner gate passed six chains and 27 expected refusals. Operation206 remains failed partial 176/352, independently released and parked at checkpoint 563. No additional instrumented run is planned; complete original host acceptance, conditional quality grading and final closeout remain required.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1975,11 +1985,10 @@
   },
   "production_candidate_review": {
     "native_execution_authorized": false,
-    "nonce": "e201110200000099",
-    "path": "measurements/native-qualification/PRODUCTION-CANDIDATE-REVIEW.json",
-    "result": "measurements/native-qualification/GPU-201-RESULT.json",
-    "sha256": "f86b7d4294a01be5caabba3e19a0c10102b28c3c159e37dc35ec7163cc89b369",
-    "status": "EXECUTED_ONCE_RESPONSE_FAILED_PARKED",
+    "nonce": "e2011102000000a3",
+    "path": "measurements/native-qualification/HOST-READOUT-PRODUCTION-REVIEW.json",
+    "sha256": "2b672b95b056cd63ad2eb92a400f2f212911c99b9769610c367ee3a6d56f2441",
+    "status": "COMBINED_PRODUCTION_QUALIFICATION_MEASUREMENT_REVIEWED_UNFUNDED",
     "whole_cleanup_complete": false
   },
   "production_default_change": {
@@ -3593,10 +3602,12 @@
   "target_replay_scope": {
     "cleanup_complete": false,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-206-RESULT.json",
     "nonce": "e2011102000000a1",
+    "operation": 206,
     "path": "proposals/target-replay-scope/PROPOSAL.json",
     "record_sha256": "63a0a14eaa43f5a330121030acbd33ff560d2f6a9aad7ffe43fe84b57f7f65b6",
-    "status": "CPU_TARGET_REPLAY_SCOPE_FIXED_NATIVE_QUALIFICATION_PENDING",
+    "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED",
     "verification": "proposals/target-replay-scope/VERIFICATION.json",
     "verification_sha256": "6a88cb0104038f8bb1612a68cc7f8dde2f87b07cfb31fc27be5b57df9c0a9c2d"
   },

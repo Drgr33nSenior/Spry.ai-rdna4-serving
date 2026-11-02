@@ -1,0 +1,12 @@
+--- a/serving_integration.py
++++ b/serving_integration.py
+@@ -413,7 +413,8 @@
+                   0 < len(observations[name]) <= 4096, 'observer health missing or oversized')
+             record = _observation_json(observations, name)
+             _need(helper.canonical(record) == observations[name], 'noncanonical observer health')
+-            counters = validator(record, binding=binding, worker=worker)
++            with _gdn_contract_scope(binding['sources']):
++                counters = validator(record, binding=binding, worker=worker)
+             if observer == 'graph':
+                 raw = observations[f'graph-counter-rank-{rank}.bin']
+                 _need(len(raw) in (16, 32), 'observer health graph counter layout')

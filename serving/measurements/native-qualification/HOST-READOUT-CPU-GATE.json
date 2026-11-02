@@ -1,0 +1,136 @@
+{
+  "candidate": {
+    "changed_functions": [
+      "_validate_observer_health"
+    ],
+    "complete_module_code_sha256": "02caba0546e5f3bfa875430ffc23286f168c5fc0e185c164a6775447f3479624",
+    "function_ast_sha256": "c291843740a7dbffa3c3c7f0efbb4b73f820c14823329d97401653373ce2fbe1",
+    "function_code_sha256": "77c8e9278f11ee55fcd44f13521d3f42a4a41e9195019f4e2516c8df1d12de1e",
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/spry_evidence/common_host_scope_integration.py",
+    "source_sha256": "c6badc9a3049911ffa58bac3fb75a6e5e2f55ab10f145b1efb66e727a6ce6793",
+    "substitution": "Only function code from completely compiled candidate module installed in original sealed reader globals; original validators and artifact pins unchanged"
+  },
+  "complete_chains": 6,
+  "expected_refusals": 27,
+  "limitations": [
+    "206 remains failed partial176/352; prospective CPU validation is not retroactive operation acceptance.",
+    "203 retains original production evidence; no new native production candidate evidence or grading.",
+    "Production branch equivalence is AST identity of entry/readback bodies; instrumented host health remains separately tested.",
+    "Authenticated-loading negative uses deliberately failing contract bytes only in fresh scratch with explicit scope relocation."
+  ],
+  "native_work": false,
+  "negative_cases": [
+    "original206_exact_failure",
+    "graph_observer_failed",
+    "graph_complete",
+    "graph_missing",
+    "target_kv_observer_failed",
+    "target_kv_complete",
+    "target_kv_missing",
+    "graph-counter-rank-0.bin",
+    "replay-commit-counter-rank-0.bin",
+    "mtp_contract_digest",
+    "j01_probe_digest",
+    "graph_observer_digest",
+    "resource_final_incomplete",
+    "authenticated_contract_loading_exception",
+    "graph_observer_failed",
+    "graph_complete",
+    "graph_missing",
+    "target_kv_observer_failed",
+    "target_kv_complete",
+    "target_kv_missing",
+    "graph-counter-rank-0.bin",
+    "replay-commit-counter-rank-0.bin",
+    "mtp_contract_digest",
+    "j01_probe_digest",
+    "graph_observer_digest",
+    "resource_final_incomplete",
+    "authenticated_contract_loading_exception"
+  ],
+  "operation206_original_acceptance": false,
+  "production_function_equivalence": {
+    "_production_readback": true,
+    "read_http_artifacts": true
+  },
+  "quality_grading": false,
+  "report": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/astra-retained-gate/run-2/report.json",
+    "sha256": "12b01e5cf2bfd4d04ea13b0f1e9dd95fd412a774e737ea03f6a6501d620edff4"
+  },
+  "reusable_script": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/tests/retained_host_readout_gate.py",
+    "sha256": "0b6d12b123911ff3729a34978f393408a65116d2d2828ccd8cc9207be7f3ef30"
+  },
+  "runs": [
+    {
+      "ambient_restored": true,
+      "arm": "bf16",
+      "checked_http_arm": true,
+      "checked_physical_resources": true,
+      "hostile_ambient": false,
+      "operation": 206,
+      "prospective_function": true,
+      "read_http_artifacts": true,
+      "rows": 176
+    },
+    {
+      "ambient_restored": true,
+      "arm": "bf16",
+      "checked_http_arm": true,
+      "checked_physical_resources": true,
+      "hostile_ambient": true,
+      "operation": 206,
+      "prospective_function": true,
+      "read_http_artifacts": true,
+      "rows": 176
+    },
+    {
+      "ambient_restored": true,
+      "arm": "bf16",
+      "checked_http_arm": true,
+      "checked_physical_resources": true,
+      "hostile_ambient": false,
+      "operation": 203,
+      "prospective_function": false,
+      "read_http_artifacts": true,
+      "rows": 176
+    },
+    {
+      "ambient_restored": true,
+      "arm": "kv4",
+      "checked_http_arm": true,
+      "checked_physical_resources": true,
+      "hostile_ambient": false,
+      "operation": 203,
+      "prospective_function": false,
+      "read_http_artifacts": true,
+      "rows": 176
+    },
+    {
+      "ambient_restored": true,
+      "arm": "bf16",
+      "checked_http_arm": true,
+      "checked_physical_resources": true,
+      "hostile_ambient": true,
+      "operation": 203,
+      "prospective_function": false,
+      "read_http_artifacts": true,
+      "rows": 176
+    },
+    {
+      "ambient_restored": true,
+      "arm": "kv4",
+      "checked_http_arm": true,
+      "checked_physical_resources": true,
+      "hostile_ambient": true,
+      "operation": 203,
+      "prospective_function": false,
+      "read_http_artifacts": true,
+      "rows": 176
+    }
+  ],
+  "schema": 1,
+  "seals_authenticated": 10,
+  "status": "PASS"
+}

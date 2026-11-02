@@ -1,0 +1,38 @@
+{
+  "distinct_prompt_message_sequences": 8,
+  "full_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/execution-v1/TOKEN-COMPARISON.json",
+    "sha256": "57bde6a754aa318389e40bc301e8604040c9d748d1ee269dc97a54512fe92735"
+  },
+  "matched_requests": 176,
+  "matched_token_vectors": 176,
+  "mismatched_token_vectors": 0,
+  "operation": 206,
+  "original_operation_accepted": false,
+  "quality_grade_performed": false,
+  "reference_operation": 186,
+  "responses": 176,
+  "schema": 1,
+  "second_start_run": false,
+  "status": "RETAINED_TOKEN_VECTOR_COMPARISON",
+  "warmup": {
+    "arm": "bf16",
+    "case": "00-warmup-c1",
+    "closing_marker_positions": [
+      3507
+    ],
+    "closing_markers": 1,
+    "finish_reason": "stop",
+    "output_tokens": 4770,
+    "reference_output_tokens": 4770,
+    "reference_request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+    "reference_token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b",
+    "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+    "requests_equal": true,
+    "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b",
+    "token_vectors_equal": true,
+    "wire_response_sha256": "57e23840a4639a1cd20ce3fa8b2672ad7c3cc29b7dae8ddc1b13ffc8dfe2fbe4"
+  },
+  "whole_cleanup_complete": false,
+  "whole_cleanup_qualified": false
+}
