@@ -19,8 +19,11 @@ from spry_common.canon import canonical_bare, canonical_line as canonical, diges
 def install_shared_common(files, record):
     """Exchange the unused legacy graph integration for one pinned common source."""
     row = record['shared_common_source']
-    need(type(row) is dict and set(row) == {'file', 'sha256', 'replaces', 'replaced_sha256'}
-         and row['file'] == 'spry_common/canon.py' and row['replaces'] == 'graph_integration.py',
+    legacy = type(row) is dict and set(row) == {'file', 'sha256', 'replaces', 'replaced_sha256'}
+    protected = type(row) is dict and set(row) == {'file', 'sha256', 'replaces', 'replaced_sha256', 'protected'}
+    need((legacy and row['file'] == 'spry_common/canon.py'
+          or protected and row['file'] == 'spry_common/selected.py' and row['protected'] is True)
+         and row['replaces'] == 'graph_integration.py',
          'exact shared common source exchange required')
     raw = source_builder.read_regular(HERE / row['file'], 4096)
     need(digest(raw) == row['sha256'] and digest(files[row['replaces']]) == row['replaced_sha256'],
@@ -50,6 +53,20 @@ def install_shared_common(files, record):
         files[binding_name] = canonical(value)
         spec['http_serving']['bindings'][arm]['sha256'] = digest(files[binding_name])
     files['BENCHMARK-SPEC2.json'] = canonical(spec)
+
+
+def protected_inventory(selected, record):
+    """Bind the nine helper roles and any common code they execute."""
+    result = {'review/' + name: digest(raw) for name, raw in selected.items()}
+    common = record.get('shared_common_source', {})
+    need(type(common) is dict, 'shared common source descriptor required')
+    if 'protected' in common:
+        need(common.get('protected') is True and common.get('file') == 'spry_common/selected.py',
+             'exact protected common source role required')
+        raw = source_builder.read_regular(HERE / common['file'], 4096)
+        need(digest(raw) == common['sha256'], 'protected common source identity differs')
+        result['review/spry_common_canon.py'] = digest(raw)
+    return result
 
 
 def retire_http_experiment_sources(files, record):
@@ -114,7 +131,7 @@ def protected_sources(proposal, donor, metadata):
             raw = source_builder.read_regular(owner, 512 << 10)
         need(digest(raw) == pin, 'proposed helper source differs: ' + name)
         selected[name] = raw
-    protected = {'review/' + name: digest(raw) for name, raw in selected.items()}
+    protected = protected_inventory(selected, record)
     need(digest(canonical(protected)) == record['protected_set_sha256'], 'proposed protected set differs')
     return selected, record, digest(record_raw)
 
@@ -238,7 +255,7 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         for path in (baseline / 'config').rglob('*'):
             if path.is_file():
                 package['package/' + path.relative_to(baseline).as_posix()] = source_builder.read_regular(path)
-        protected = canonical({'review/' + name: digest(raw) for name, raw in selected.items()})
+        protected = canonical(protected_inventory(selected, record))
         package['package/PROTECTED-SHA256.json'] = protected
         package['package/MANIFEST-PROPOSAL.json'] = canonical(manifest)
         member_count = 77 if 'retired_http_sources' in record else 80
