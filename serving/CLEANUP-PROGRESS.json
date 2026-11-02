@@ -146,7 +146,10 @@
     "Operation195 reached model/cache initialization and draft verify graph capture on both ranks, then failed in proof export; collection/release passed and checkpoint537 parked",
     "Proof exporter reads metadata policy and CURRENT from the same authenticated module; adapter and numerical sources unchanged",
     "Complete producer-to-real-reader tests reproduce the retained instance-attribute failure and pass both arms/ranks in both corrected modes",
-    "1,029 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged"
+    "1,029 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged",
+    "Operation196 native readiness and both startup readers passed; first warmup response contained two closing thinking markers and correctly failed unchanged acceptance",
+    "Operation196 collection and independent GPU release passed; sealed failure retained, checkpoint539 parked, no second arm or CPU grade",
+    "Exact B186 production reference replay prepared: all62 Python files and nine frozen inputs match; six local and six native packet checks pass without GPU work"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -232,14 +235,16 @@
   "instrumented_native_attempt": {
     "independent_gpu_release_verified": true,
     "model_construction_reached": true,
-    "native_readiness_reached": false,
-    "operation": 195,
-    "responses": 0,
+    "native_readiness_reached": true,
+    "operation": 196,
+    "responses": 1,
     "retry_authorized": false,
-    "status": "INSTRUMENTED_CANDIDATE_STARTUP_PROOF_EXPORT_REFUSAL_PARKED",
+    "status": "INSTRUMENTED_CANDIDATE_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED",
+    "valid_complete_responses": 0,
+    "whole_native_qualification": false,
     "worker_start_attempts": 1
   },
-  "latest_verification": "proposals/startup-proof-policy/VERIFICATION.json",
+  "latest_verification": "measurements/reference-replay/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -260,6 +265,17 @@
     "verification": "measurements/production-cleanup/VERIFICATION.json"
   },
   "no_measured_inference_speedup": true,
+  "passing_reference_replay": {
+    "fixed_native_inputs_identical_to_B186": 9,
+    "fresh_reference": "e20111020000009b",
+    "launch_authorized": false,
+    "local_packet_checks": 6,
+    "native_packet_checks": 6,
+    "not_a_final_performance_comparison": true,
+    "python_sources_identical_to_B186": 62,
+    "status": "REFERENCE_SOURCE_AND_PACKET_VERIFIED_UNFUNDED",
+    "whole_cleanup_complete": false
+  },
   "post_load_increment": {
     "archive_members": 78,
     "native_cpu_source_tests": 205,
@@ -334,13 +350,15 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact approval for instrumented packet e201110200000098",
-    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Fresh exact approval for B186 production reference replay e20111020000009b",
+    "Resolve candidate warmup response divergence; retain strict thinking-boundary acceptance",
+    "Complete candidate native quality, greedy token identity, BDF memory and remaining startup/precision gates",
     "Production comparison and final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact approval for instrumented packet e201110200000098",
-    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Fresh exact approval for B186 production reference replay e20111020000009b",
+    "Resolve candidate warmup response divergence; retain strict thinking-boundary acceptance",
+    "Complete candidate native quality, greedy token identity, BDF memory and remaining startup/precision gates",
     "Production comparison and final retained evidence closeout"
   ],
   "remaining_local": [],
@@ -412,9 +430,13 @@
     "fresh_candidate": "e201110200000098",
     "native_focused_tests": 14,
     "native_gpu_allowance": 0,
+    "native_readiness_reached": true,
+    "native_result": "measurements/native-qualification/GPU-196-RESULT.json",
     "protected_python_bytes_unchanged": true,
     "public_tests": 1029,
-    "status": "CPU_STARTUP_PROOF_POLICY_FIXED_FRESH_GPU_APPROVAL_PENDING",
-    "whole_cleanup_complete": false
+    "startup_readers_passed_ranks": 2,
+    "status": "NATIVE_STARTUP_PROOF_PASSED_WARMUP_RESPONSE_FAILED_PARKED",
+    "whole_cleanup_complete": false,
+    "whole_native_qualification": false
   }
 }

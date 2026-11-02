@@ -36,7 +36,14 @@ protected inventory entries, kernels, requests, settings, pools and ceilings
 retain their values. The five computation sources covered by the passed real
 CPU tensor proof retain their hashes; reuse remains limited to tensor structure.
 
-Fresh instrumented packet `e201110200000098` requires one-use approval. GPU
-startup byte proofs, greedy token identity, selected quality, BDF memory,
-production comparison and final evidence closeout remain pending. No memory
-or performance improvement has been measured.
+Approved packet `e201110200000098` ran as operation 196. Native readiness and
+both ranks' startup byte/structure proofs passed. Its first warmup response
+contained two closing thinking markers, so the unchanged response contract
+stopped the run. Collection and independent release passed; no second arm or
+CPU grade ran. See [the result](../../measurements/native-qualification/GPU-196-RESULT.json).
+
+The response difference remains unresolved. A fresh exact B186 production
+[reference replay](../../measurements/reference-replay/README.md) is prepared
+for diagnosis and awaits one-use approval. Greedy token identity, selected
+quality, BDF memory, production comparison and final closeout remain pending.
+No memory or performance improvement has been measured.

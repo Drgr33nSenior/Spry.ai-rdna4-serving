@@ -1,0 +1,90 @@
+{
+  "cause": "UNRESOLVED",
+  "confounds": "Changes since pilot include instrumentation and cleanup stages; no isolated causal conclusion",
+  "current": {
+    "closing_marker_count": 2,
+    "closing_marker_positions": [
+      1896,
+      3294
+    ],
+    "operation": 196,
+    "response_sha256": "bab308e1cc86884de99c22f14947a5922b20c7aa09813a2135b38a174ac1f7a6",
+    "response_token_ids": 3318,
+    "token_ids_sha256": "9c67733793946807c999cecf672a1f56081d814d6686498d8449334a68622afc"
+  },
+  "reference_replay_prepared": true,
+  "reference_vectors": [
+    {
+      "arm": "bf16",
+      "closing_marker_count": 1,
+      "closing_marker_positions": [
+        3507
+      ],
+      "cpu_evidence_seal": {
+        "manifest_sha256": "a0cd0688b9d3c0eccb55c5b4c286f520e3d0f4acaa8dacdc4c1bc7852416f536",
+        "members": 77,
+        "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/quality-binding-v4/cpu"
+      },
+      "output_tokens": 4770,
+      "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+      "response_sha256": "422ec52bfa6af88ad3e43a5889fc77867079ca7598eecb89b72e12634966f9c4",
+      "run": "A184",
+      "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b"
+    },
+    {
+      "arm": "kv4",
+      "closing_marker_count": 1,
+      "closing_marker_positions": [
+        3507
+      ],
+      "cpu_evidence_seal": {
+        "manifest_sha256": "a0cd0688b9d3c0eccb55c5b4c286f520e3d0f4acaa8dacdc4c1bc7852416f536",
+        "members": 77,
+        "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-3/baseline/quality-binding-v4/cpu"
+      },
+      "output_tokens": 4770,
+      "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+      "response_sha256": "f7d83aeb2aa9359824ff76f91ce02bf4789f808272a9006a167f6909309d309b",
+      "run": "A184",
+      "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b"
+    },
+    {
+      "arm": "bf16",
+      "closing_marker_count": 1,
+      "closing_marker_positions": [
+        3507
+      ],
+      "cpu_evidence_seal": {
+        "manifest_sha256": "cf8a17f5c41b31dcfda1ab06715d404223a803bb7f6a348f12a71404c5c3c4d0",
+        "members": 77,
+        "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/quality-binding-v3/cpu"
+      },
+      "output_tokens": 4770,
+      "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+      "response_sha256": "226ca0d058986e29e3f3a171a0f89e8f859c68143cbe56f9bc764068c5e38156",
+      "run": "B186",
+      "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b"
+    },
+    {
+      "arm": "kv4",
+      "closing_marker_count": 1,
+      "closing_marker_positions": [
+        3507
+      ],
+      "cpu_evidence_seal": {
+        "manifest_sha256": "cf8a17f5c41b31dcfda1ab06715d404223a803bb7f6a348f12a71404c5c3c4d0",
+        "members": 77,
+        "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/gpu-preparation-v1/pair-review-4/cleanup/quality-binding-v3/cpu"
+      },
+      "output_tokens": 4770,
+      "request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+      "response_sha256": "373e57a1fd6cade33a14c0f752910226152a3ca200344cd99eb7f2153424d7a0",
+      "run": "B186",
+      "token_ids_sha256": "6dcda92ccb08f11728bbf2779c67ff290dfb2782a6166f7ae46b34dbbdd0520b"
+    }
+  ],
+  "same_request_sha256": "1ee4b2b420bc79d8e0564dd73a02f52770931bf6891d9d79de7cc30b8b5d5a25",
+  "schema": 1,
+  "status": "CURRENT_WARMUP_DIFFERS_FROM_FOUR_IDENTICAL_PASSING_REFERENCE_VECTORS",
+  "strict_acceptance_unchanged": true
+}

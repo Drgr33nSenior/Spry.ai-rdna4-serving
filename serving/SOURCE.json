@@ -1861,6 +1861,15 @@
     "verification": "launcher/PROJECTION-VERIFICATION.json",
     "verification_sha256": "320caefd07d431806334fe1aa2e624080b4d0c87082a061f6ab10f13baa14ba6"
   },
+  "passing_reference_replay": {
+    "native_execution_authorized": false,
+    "nonce": "e20111020000009b",
+    "path": "measurements/reference-replay",
+    "status": "REFERENCE_SOURCE_AND_PACKET_VERIFIED_UNFUNDED",
+    "verification": "measurements/reference-replay/VERIFICATION.json",
+    "verification_sha256": "4688c7e6a3f78ca6dc3ad5f2de5a517d127d5dbe08213dcdf0e182d73773af95",
+    "whole_cleanup_complete": false
+  },
   "post_load_proposal": {
     "cleanup_complete": false,
     "native_serving_qualified": false,
@@ -3347,11 +3356,15 @@
   },
   "startup_proof_policy": {
     "native_execution_authorized": false,
+    "native_readiness_reached": true,
+    "native_result": "measurements/native-qualification/GPU-196-RESULT.json",
+    "native_result_sha256": "519ad20c3d57df6ad791dc8e613fdbe41e95bb6d5dbb75c67c6080d461914466",
     "path": "proposals/startup-proof-policy",
     "record_sha256": "43e202e05091f00c79f2744c08a6ca31d80c3c6b178cc1e739c3e42903fd2fd0",
-    "status": "CPU_STARTUP_PROOF_POLICY_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "status": "NATIVE_STARTUP_PROOF_PASSED_WARMUP_RESPONSE_FAILED_PARKED",
     "verification": "proposals/startup-proof-policy/VERIFICATION.json",
-    "verification_sha256": "6d56d55eb3d09bc01cd24053dfe46d5f47f88b740d372b414feab4253e298598"
+    "verification_sha256": "6d56d55eb3d09bc01cd24053dfe46d5f47f88b740d372b414feab4253e298598",
+    "whole_native_qualification": false
   },
   "status": "SOURCE_ONLY_NOT_A_LAUNCH_PACKET",
   "stop_policy_proposal": {

@@ -70,6 +70,23 @@ passed; checkpoint 537 is parked. See [GPU-195-RESULT.json](GPU-195-RESULT.json)
 The [proof policy correction](../../proposals/startup-proof-policy/README.md)
 reads the constant from the authenticated adapter module. Complete producer and
 reader tests reproduce the old failure and pass both arms and ranks in both
-corrected modes, using declared native metadata substitutes. Fresh packet
-`e201110200000098` requires one-use approval. GPU acceptance and production
-measurement remain pending.
+corrected modes, using declared native metadata substitutes.
+
+Approved operation 196 passed native readiness. Both ranks passed the existing
+full-enabled startup reader: head byte equality and shared objects validated,
+with all 48 packed layers and 96 shards per rank. Its first warmup response then
+contained two closing thinking markers. The contract requires exactly one and
+correctly refused the response. One of 352 requests ran; no valid complete
+response, second arm or CPU grade followed. Collection and independent GPU
+release passed; checkpoint 539 is parked. See [GPU-196-RESULT.json](GPU-196-RESULT.json).
+
+The four historical A184/B186 warmup controls used the exact same request and
+produced identical valid token vectors. The current response differs; the cause
+is unresolved. Startup byte/structure checks do not prove end-to-end arithmetic
+or quality. The candidate remains unqualified. No GPU memory or performance
+improvement has been measured.
+
+The [passing-reference replay](../reference-replay/README.md) prepares the exact
+B186 source and frozen inputs in production mode. Its fresh packet
+`e20111020000009b` requires one-use approval and is excluded from final
+performance comparison. The response acceptance checks remain unchanged.
