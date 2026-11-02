@@ -1402,7 +1402,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Remove repeated startup source hashing while preserving source authentication, then finish module/package closure, stock runner/replay metadata and memory cleanup. Fresh native qualification remains required; no native execution allowance remains.",
+  "next_bounded_action": "Finish shared helpers and canonical module/package closure, then stock runner/post-load hook and replay metadata. Startup tensor scans and memory recovery follow the runner refactor. Fresh native qualification remains required; no native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -3173,6 +3173,16 @@
     "verification_sha256": "8b84ae8f28a459faf0f636391fd48def14deb365326e41e230fcaea30b8cb22c",
     "w5_spec_reproduction_verified": true,
     "whole_migration_verified": false
+  },
+  "startup_digest_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/startup-digests",
+    "record_sha256": "461d79cf1131f9341c622c46fde097311290931822d2c8eb0d1c097c43bd4967",
+    "source_review_only": true,
+    "status": "CPU_STARTUP_DIGEST_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "verification": "proposals/startup-digests/VERIFICATION.json",
+    "verification_sha256": "5ed9e13cd18692d3514edf4091015e730131237c5fadb23fe5341b03ef37abe4"
   },
   "status": "SOURCE_ONLY_NOT_A_LAUNCH_PACKET",
   "stop_policy_proposal": {

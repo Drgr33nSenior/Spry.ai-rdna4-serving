@@ -41,7 +41,11 @@
     "MXFP4 runtime modules and architecture bound during scheme construction after native rank device selection; per-call device/tensor checks and kernel frontends preserved",
     "Rank-one startup regression, actual archive rollback refusal and byte-identical request/settings/overlay comparison",
     "Public regression suite: 902 Python tests across 71 suites plus C++ sanitizers",
-    "Native CPython 3.14.7 source preflight: 164 checks, no GPU/model/grading work"
+    "Native CPython 3.14.7 source preflight: 164 checks, no GPU/model/grading work",
+    "Worker-scoped reuse of unchanged declared source digests on read-only mounts, with fresh hashing for writable or unknown views",
+    "Actual manifest/import checks reject stale pins and symlinks; inode, link and byte changes force fresh hashing in local and packaged-worker tests",
+    "Public regression suite: 914 Python tests across 72 suites plus C++ sanitizers",
+    "Native CPython 3.14.7 source preflight: 178 checks, plus 12 nested packaged-worker regressions, without GPU/model/grading work"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -82,7 +86,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/runtime-binding/VERIFICATION.json",
+  "latest_verification": "proposals/startup-digests/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -96,7 +100,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "New configuration and runtime-binding proposals are CPU-verified; native qualification and remaining startup/module/runner/memory cleanup remain",
+    "next_stage": "Configuration, runtime-binding and startup-digest proposals are CPU-verified; native qualification and remaining module/runner/replay/startup-scan/memory cleanup remain",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -112,9 +116,10 @@
     "visibility": "public"
   },
   "remaining": [
-    "Fresh exact protected-source review and one-use native serving/token-ID/quality qualification",
-    "Repeated startup source hashing and remaining module/package closure",
+    "Exact source review and fresh one-use native serving/token-ID/quality qualification, including live read-only source-cache behavior",
+    "Remaining shared helpers, compatibility APIs and canonical module/package closure",
     "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Startup tensor validation scans and item synchronization after the runner refactor",
     "Shared FP8 head and packed QKVZ/BA views after refactors",
     "Native startup memory equality and retained headroom proof",
     "Broader configuration and instrumented full-menu capacity qualification"
@@ -125,9 +130,9 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Repeated startup source hashing while preserving exact source checks",
     "Remaining compatibility APIs, shared helpers and canonical import/package closure",
     "Stock runner/post-load hook and verify metadata preparation before replay",
+    "Startup tensor validation scans and item synchronization after the runner refactor",
     "Memory recovery after the refactor phases"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",
@@ -140,5 +145,15 @@
     "status": "CPU_RUNTIME_BINDING_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "whole_cleanup_complete": false
   },
-  "schema": 1
+  "schema": 1,
+  "startup_digest_increment": {
+    "native_cpu_source_tests": 178,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "packaged_worker_checks": 12,
+    "packet_checks": 13,
+    "public_tests": 914,
+    "status": "CPU_STARTUP_DIGEST_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  }
 }

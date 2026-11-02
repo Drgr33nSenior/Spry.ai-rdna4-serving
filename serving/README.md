@@ -5,10 +5,11 @@ This directory holds the observer safety and structural cleanup increments from
 cleanup source. These files are not a launch packet or a new serving selection.
 
 The latest increment is the
-[MXFP4 startup runtime binding](proposals/runtime-binding/README.md). It resolves
-operator modules and architecture once during scheme construction, after the
-native loader selects the rank's device. Per-call device and tensor checks
-remain. It builds on the
+[startup source digest proposal](proposals/startup-digests/README.md). The worker
+reuses digests for unchanged declared source files on read-only mounts while
+retaining source-pin, path, import and callable checks. Writable files keep
+fresh hashing. It builds on the
+[MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and the
 [configured request and evidence proposal](proposals/configuration-mutations/README.md).
 The retained A/B pilot predates these changes. The larger runner, replay metadata
 and memory cleanup remains; [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json) records
