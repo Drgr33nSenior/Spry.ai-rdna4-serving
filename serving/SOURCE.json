@@ -1422,7 +1422,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Finish remaining common helper/phase-marker consumers and implement the stock runner/post-load hook and replay metadata. Startup scans and memory recovery follow. No native execution allowance remains.",
+  "next_bounded_action": "Prepare verify metadata outside graph replay, then consolidate startup scans and recover shared-head/packed-view memory. Finish remaining common helper/phase-marker consumers. No native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1803,6 +1803,16 @@
     "source_sha256": "26a9bf3bc2a8a719ac21af980c1203dcd8cecda8520c7d7f381e241122399cb4",
     "verification": "launcher/PROJECTION-VERIFICATION.json",
     "verification_sha256": "320caefd07d431806334fe1aa2e624080b4d0c87082a061f6ab10f13baa14ba6"
+  },
+  "post_load_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/post-load",
+    "record_sha256": "5cb8509616621638fd690513e667c97f7116f4a2ba8fb89e2c5500cb4b36b9f7",
+    "source_review_only": true,
+    "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "verification": "proposals/post-load/VERIFICATION.json",
+    "verification_sha256": "b22843f002e193e42e8d339c1eeba8be7cf5f75906f935d43338ddde5b8c72e1"
   },
   "prior_verification": {
     "diff_whitespace": "PASS",
@@ -2916,6 +2926,7 @@
   },
   "source_files": {
     "analyze_model_benchmark.py": "9856eaa02e79bced866f5f0526dbabee3b00e87f26508d7a4471eabc78b2bc4c",
+    "d3b_combined_model_runner.py": "da81d4c393cf5910753c48036bedbe593e851ffe0985997f4eca02d79737df76",
     "graph_integration.py": "8eeb2874592e66994d02be7466163106b4dc2dc4c490647fde592cfa0586ea45",
     "graph_outer.py": "3d88da7ed59e171fcc56cb773a74e7f2b08218a2d635c8403865e189e3a7e2bf",
     "graph_screen.py": "9b5a1431b3d35770b1103a40212353eaea534d50a4b84d5f8be16aac7d56c8be",

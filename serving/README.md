@@ -5,17 +5,18 @@ This directory holds the observer safety and structural cleanup increments from
 cleanup source. These files are not a launch packet or a new serving selection.
 
 The latest increment is the
-[closed HTTP package](proposals/closed-http/README.md).
-The owner/controller and installed consumers now use the HTTP module APIs.
-The candidate removes disabled feature APIs, legacy diagnostic branches and
-three unused payload files. It contains 77 members under the existing
-80-member ceiling. Three serializers share one authenticated canonical source.
-It builds on the [shared helper cleanup](proposals/common-helpers/README.md), the
+[runner post-load hook](proposals/post-load/README.md).
+The runner delegates target/draft installation to one authenticated module
+before graph capture. The candidate has 78 members under the existing
+80-member ceiling. It builds on the
+[closed HTTP package](proposals/closed-http/README.md), which removes disabled
+feature APIs, legacy diagnostics and three unused payloads, and the
+[shared helper cleanup](proposals/common-helpers/README.md), the
 [startup source digest proposal](proposals/startup-digests/README.md), the
 [MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and the
 [configured request and evidence proposal](proposals/configuration-mutations/README.md).
-The retained A/B pilot predates these changes. The larger runner, replay metadata
-and memory cleanup remains; [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json) records
+The retained A/B pilot predates these changes. Replay metadata, startup scans
+and memory cleanup remain; [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json) records
 the gates. The new sources still need native serving qualification.
 
 ## Implemented
@@ -508,53 +509,33 @@ Earlier logs and preparation scratch files remain retained.
 
 ## Remaining gates
 
-Phase 1 is **not complete**. Next work:
+The complete cleanup is **not finished**. The current proposals have CPU proof
+for observer containment, production evidence masks, resolved startup settings,
+configured requests and limits, source imports, bounded transport, closed HTTP
+consumers and the runner post-load hook. The default builder retains its
+original protected set. Native adoption needs the exact protected diff and a
+fresh one-use approval.
 
-1. Exclude evidence modules from production mounts and imports. The
-   [shared startup checks](proposals/production-startup/README.md) now validate
-   effective width, overlap, graph settings and the selected runner/overlays in
-   both modes. Their native proof remains open.
-2. Extend the pinned run configuration to the runtime consumers, fresh packet
-   identities, package membership/limits and protected controller.
-   The resource manifest now has consistent source bindings for the fixed W5 template;
-   arbitrary configuration changes and caller activation remain open. Fresh
-   session, manifest and caller source proposals are now tested.
-   All four extracted/shared helpers are in the source bundle and binding maps;
-   review the remaining code pins before producing a launch packet.
-   Test the actual worker cleanup, export and readout together under the
-   packet's declared Linux Python 3.14 runtime.
-3. Generate the real-menu and worst-case evidence on CPU. Account for all six
-   health receipts under existing member/byte limits. Each receipt requires the
-   scheduler to return through its cleanup path; forced termination must
-   remain an incomplete evidence result.
+Implementation still required:
 
-The owner's Phase 1 proof decision permits the retained W5 v2 result plus CPU
-saturation proof. These local tests do not establish native readiness, token
-identity or completion of that gate. No consumed protected helper, sealed root,
-installed native runtime, GPU approval, Git commit or publication is changed by
-these increments.
+1. Prepare verify metadata before graph replay. Update the instrumented counters
+   and reader together so the evidence proves the new preparation path.
+2. Finish the remaining common helper consumers and inactive phase markers.
+3. Consolidate startup tensor scans and scalar synchronizations.
+4. Share the FP8 head and rebind QKVZ/BA shards as packed-buffer views. Preserve
+   P1 identity checks and keep recovered memory as headroom.
 
-Phase 3 is **not complete**. The retained client's source literal is extracted;
-the graph/model sites were file loaders, not embedded modules. Next structural
-work is to complete the dependency inventory and migrate retained controller/
-readout compatibility APIs with their consumers. Common helper consolidation, the
-canonical package layout and shared imports need the complete run-config builder.
-The native import closure, offline evidence equivalence and native equality
-gates remain open. The [source-fingerprint cleanup](proposals/source-fingerprints/README.md)
-replaces six direct compilation sites with equivalent standard loader calls.
-All 21 canonical sources and every Python source in the proposed package pass
-the no-direct-`exec`/`compile` AST check. The protected root-loader change remains
-an isolated proposal; the canonical builder retains its original protected set.
+Native qualification still requires live production mount/import isolation,
+greedy token equality, selected answer quality, startup byte equality, memory
+sampling per BDF, and independent resource release. The configured and
+instrumented full-menu capacity gates also remain. Source-only and finite CPU
+fixtures do not establish these native results.
 
-The [production evidence isolation proposal](proposals/production-isolation/README.md)
-adds matching owner/controller support for the six file masks. It authenticates
-the generated refusal source and includes it in durable accounting. CPU checks
-reproduce both final launch projections at 246 arguments under the existing
-256-argument ceiling. Linux sandbox and GPU verification remain open.
-
-Later work remains: the complete run-config builder, remaining protected
-helper proposals and owner review, the stock
-runner hook, and memory recovery after the refactors.
+The [patch series](patches/README.md) reproduces all 11 active overlays against
+the pinned retained effective base. The [post-load proposal](proposals/post-load/README.md)
+replaces inline runner installation with the startup hook. Historical packets
+retain their own source and readers; selecting an earlier sealed package is
+the rollback path. No sealed root or installed runtime is edited in place.
 
 The [production measurement preparation](measurements/production-cleanup/README.md)
 stages matched W5 baseline and cleanup source reviews. Both use production

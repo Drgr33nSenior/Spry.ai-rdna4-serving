@@ -79,7 +79,12 @@
     "Removed 13 disabled or forwarding feature APIs and an unused normalization helper; settings validation effects retained",
     "Retired graph screen, context tokenizer and comparison payloads; archive reduced to 77 members under unchanged 80-member ceiling",
     "Public regression suite: 928 Python tests across 74 suites plus C++ sanitizers",
-    "Target CPython 3.14.7 source preflight: 193 checks without GPU/model/grading work; complete consumed-packet suite: 14 checks"
+    "Target CPython 3.14.7 source preflight: 193 checks without GPU/model/grading work; complete consumed-packet suite: 14 checks",
+    "Selected target and draft head/packing installation moved into an authenticated startup hook before graph capture; other runner methods and installation order preserved",
+    "Exact runner patch applies and reverses against the retained effective base",
+    "Both worker bindings authenticate the hook; callable/code/globals and rollback/substitution refusals verified",
+    "Public regression suite: 939 Python tests across 75 suites plus C++ sanitizers",
+    "Target CPython 3.14.7 source preflight: 205 checks without GPU/model/grading work; complete consumed-packet suite: 15 checks"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -120,7 +125,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/closed-http/VERIFICATION.json",
+  "latest_verification": "proposals/post-load/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -134,13 +139,24 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Closed HTTP, startup digest and runtime binding proposals are CPU-verified. Runner/replay/startup scan/memory implementation and exact native qualification remain.",
+    "next_stage": "Post-load runner, closed HTTP and startup proposals are CPU-verified. Replay metadata, startup scan/memory implementation and exact native qualification remain.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
     "verification": "measurements/production-cleanup/VERIFICATION.json"
   },
   "no_measured_inference_speedup": true,
+  "post_load_increment": {
+    "archive_members": 78,
+    "native_cpu_source_tests": 205,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "owner_archive_ceiling": 80,
+    "packet_checks": 15,
+    "public_tests": 939,
+    "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
   "publication": {
     "branch": "cleanup/serving-source-20261101",
     "owner_authorized": true,
@@ -150,9 +166,9 @@
     "visibility": "public"
   },
   "remaining": [
+    "Verify metadata preparation before replay, with new strict instrumented counter/readout semantics",
     "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
-    "Stock runner/post-load hook and verify metadata preparation before replay",
-    "Startup tensor validation scans and item synchronization after the runner refactor",
+    "Startup tensor validation scans and item synchronization",
     "Shared FP8 head and packed QKVZ/BA views after refactors",
     "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
     "Native startup memory equality and retained headroom proof",
@@ -164,9 +180,9 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
+    "Verify metadata preparation before replay, with new strict instrumented counter/readout semantics",
     "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
-    "Stock runner/post-load hook and verify metadata preparation before replay",
-    "Startup tensor validation scans and item synchronization after the runner refactor",
+    "Startup tensor validation scans and item synchronization",
     "Shared FP8 head and packed QKVZ/BA views after refactors"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",

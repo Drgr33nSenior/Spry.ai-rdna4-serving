@@ -109,6 +109,42 @@ def protected_sources(proposal, donor, metadata):
     return selected, record, digest(record_raw)
 
 
+def install_post_load_source(files, record, metadata):
+    """Add the pinned startup hook and bind it to both native workers."""
+    need('retired_http_sources' in record, 'post-load hook requires the closed HTTP package')
+    row = record['post_load_source']
+    need(type(row) is dict and set(row) == {'file', 'sha256'}
+         and row['file'] == 'spry_serving/post_load.py', 'exact post-load source role required')
+    raw = source_builder.read_regular(HERE / row['file'], 8192)
+    need(digest(raw) == row['sha256'] and 'spry_post_load.py' not in files,
+         'fresh authenticated post-load source required')
+    files['spry_post_load.py'] = raw
+    spec = parse_json(files['BENCHMARK-SPEC2.json'])
+    for arm in ('control', 'mtp'):
+        name = 'HTTP-BINDING-' + arm + '.json'
+        value = parse_json(files[name])
+        sources = value['binding_template']['sources']
+        alias = value['worker_template']['sources']
+        need('post_load' not in sources and set(alias) == {'same_as', 'source_manifest_sha256'}
+             and alias['same_as'] == 'binding_template.sources', 'post-load source alias differs')
+        runner = sources['model_runner']
+        need(runner['path'] == '/mnt/composition/image-source/python/sglang/srt/model_executor/model_runner.py'
+             and runner['sha256'] == metadata['source_files']['d3b_combined_model_runner.py'],
+             'inherited runner source binding differs')
+        runner['sha256'] = digest(files['d3b_combined_model_runner.py'])
+        sources['post_load'] = dict(path='/mnt/review/spry_post_load.py', module='spry_post_load',
+                                    sha256=row['sha256'])
+        pin = digest(canonical_bare(sources))
+        value['source_manifest_sha256'] = pin
+        for template in ('binding_template', 'worker_template'):
+            value[template]['source_manifest_sha256'] = pin
+        alias['source_manifest_sha256'] = pin
+        files[name] = canonical(value)
+        need(len(files[name]) < 65536, 'post-load HTTP template exceeds retained byte limit')
+        spec['http_serving']['bindings'][arm]['sha256'] = digest(files[name])
+    files['BENCHMARK-SPEC2.json'] = canonical(spec)
+
+
 def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/runs/w5-v2'):
     """Authenticate all inputs before publishing an inert, deterministic review tree."""
     output, donor_root, run_dir = Path(output), Path(donor_root), Path(run_dir)
@@ -149,6 +185,8 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
             install_shared_common(files, record)
         if 'retired_http_sources' in record:
             retire_http_experiment_sources(files, record)
+        if 'post_load_source' in record:
+            install_post_load_source(files, record, metadata)
         policy=source_builder.production_evidence_policy(files)
         need(policy is None or record.get('production_evidence_mount_isolation') is True,
              'production evidence view requires matching protected consumers')
@@ -179,6 +217,8 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         package['package/PROTECTED-SHA256.json'] = protected
         package['package/MANIFEST-PROPOSAL.json'] = canonical(manifest)
         member_count = 77 if 'retired_http_sources' in record else 80
+        if 'post_load_source' in record:
+            member_count += 1
         need(len(package) == member_count, 'exact proposed HTTP package membership required')
         # These dependencies are code/public connection metadata only. Their
         # private key path is retained; this renderer never opens that path.
