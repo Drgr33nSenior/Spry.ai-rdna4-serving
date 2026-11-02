@@ -1,0 +1,250 @@
+{
+  "complete_cleanup": false,
+  "kernels_heads_projection_replay_adapter_requests_settings_and_pools_unchanged": true,
+  "launch_authorized": false,
+  "native_preflight_archive": {
+    "ceiling_bytes": 16777216,
+    "excluded_sources_opened": 0,
+    "excluded_unused_historical_sources": 88,
+    "extra_unaccessed_fixture_copies": 3,
+    "gzip_bytes": 3619814,
+    "repository_files_deleted": 0,
+    "selected_tests_and_required_controls_retained": true,
+    "tar_bytes": 16465920
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 256
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "other_seven_protected_helpers_unchanged": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "archive": {
+      "archive_members": 79,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "memory_reader": {
+      "actual_packaged_producer_observer_and_helper": true,
+      "changed_helper_refused": true,
+      "incomplete_sharing_and_missing_layer_refused": true,
+      "loaded_weight_rows": 304,
+      "native_execution": false,
+      "old_witness_refused": true,
+      "source_only_descriptors": true
+    },
+    "native_argv": {
+      "all_mount_resource_model_and_sampling_arguments_preserved": true,
+      "native_execution": false,
+      "only_expected_source_pins_changed": true
+    },
+    "passed": true,
+    "payload_delta": {
+      "archive_members": 79,
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "PROTECTED-SHA256.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/benchmark_owner_adapter.py",
+        "review/benchmark_physical_controller.py",
+        "review/model_benchmark.py",
+        "review/mtp_contract.py",
+        "review/serving_contract.py",
+        "review/serving_entry.py",
+        "review/serving_graph_observer.py",
+        "review/serving_integration.py",
+        "review/serving_parity.py",
+        "review/serving_runtime.py",
+        "review/worker_entry.py"
+      ],
+      "kernel_head_projection_request_settings_and_pool_bytes_unchanged": true,
+      "native_execution": false
+    },
+    "selected_contract": {
+      "actual_packaged_contract_and_observer": true,
+      "alignment": "beta-bf16",
+      "inactive_marker_names_removed": 16,
+      "native_execution": false,
+      "request_rows": 176,
+      "unsupported_stream_history_closure_refused": true,
+      "width": 8
+    },
+    "tests": 18
+  },
+  "phase_closure": {
+    "inactive_marker_names_removed": [
+      "GDN_PAIR_PHASE",
+      "LIFECYCLE_PHASE",
+      "PRECISION_REFERENCE_PHASES",
+      "CLOSURE_PHASES",
+      "BATCH_PHASES",
+      "CACHE_PHASES",
+      "HISTORY_PHASES",
+      "TAIL_PHASES",
+      "FAIL_FAST_PHASES",
+      "CLOSURE_PHASE",
+      "COMBINED_PHASE",
+      "SAMPLING_PHASE",
+      "HIP_SAMPLING_PHASE",
+      "CONFIRMATION_PHASE",
+      "HIP_PHASE_ARMS",
+      "SAMPLING_PHASES"
+    ],
+    "instrumented_witness_format_changed": false,
+    "removed_python_lines": 285,
+    "retired_stream_history_and_closure_modes_refused": true,
+    "selected_phase": "sprint01-paired-serving",
+    "selected_request_and_response_behavior_preserved": true,
+    "settings_validation_effects_retained": true,
+    "unexpected_hip_component_files_refused": true
+  },
+  "post_test_record_change": "cpu_verified false to true only; execution authority remains false",
+  "proofs": {
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/PUBLIC-CHECKS.json",
+      "sha256": "ec83b702cbeb89793f832629c0d1bab673345566171028d826e79caa0b318898"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/STATIC-CHECKS.json",
+      "sha256": "783a1918b32480f88fc917961814fd53b1a7b0aff35d3777487814ccdad67164"
+    },
+    "UNUSED-HISTORICAL-FIXTURES.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/UNUSED-HISTORICAL-FIXTURES.json",
+      "sha256": "ca2a50ec0e1cb946762ea6cc6f4184de14da8c74b6fb169da48146c425d88329"
+    },
+    "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "2dbb35c11bfd16d6e4a8833fa2e9103db66e09350de15875c8b5bbd006986c9a"
+    },
+    "native-source-preflight-v1/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/native-source-preflight-v1/SOURCE-INVENTORY.json",
+      "sha256": "d72c682e8d1f2f46cdce9b0d89a930ddf9cfdb251c90b5b3b9b1f557ebba164b"
+    },
+    "native-source-preflight-v1/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/native-source-preflight-v1/native-cpu-source-preflight.json",
+      "sha256": "f5153360b614bf7914a6d708ea2d06597fb6c53332afaee650c78eb3c530c8a3"
+    },
+    "phase-full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-full-chain-attempt-1.json",
+      "sha256": "812de47503f50c018ee0c71d2ae12b707479e8be3493f8c619ec9657379ab91c"
+    },
+    "phase-full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-full-chain-attempt-1.log",
+      "sha256": "ede26778c808b5fcd08193e2e094e779da2eca63bd836aa2207c55f49ea85bb0"
+    },
+    "phase-packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-packet-attempt-1.json",
+      "sha256": "c52ec20effbaedd99358139675b900aa0d288988616ad008d96015f79885bdad"
+    },
+    "phase-packet-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-packet-attempt-1.log",
+      "sha256": "ac80c675a5b6c14a25730b0aeb9aafec5454df39809dab8c678238ac52b9bd12"
+    },
+    "phase-proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "phase-public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-public-make-attempt-1.log",
+      "sha256": "5e9c08156f543c2d5957423559dbf7d36235c15f574a4c8100b62a889549258f"
+    },
+    "phase-unit-attempt-3.log": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-unit-attempt-3.log",
+      "sha256": "ba7c91a77f8e9b3c4a4ae8fee9ee3b3554c509d3dfc8fea6f6b3605790303a2a"
+    },
+    "phase-worker-history.log": {
+      "path": ".test-build/serving-cleanup/helper-closure-v1/phase-worker-history.log",
+      "sha256": "d7ad2364fc1adda1463324e1028fac6069ef39df7a81725a623b8d0190f36f0d"
+    }
+  },
+  "protected_helpers_changed": [
+    "benchmark_owner_adapter.py",
+    "benchmark_physical_controller.py"
+  ],
+  "protected_set_sha256": "972dda5b000da6b4344a1bfb4378bffd0b41a6c41b7a735939b650fa089f460d",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 987,
+    "suites": 79
+  },
+  "published_proposal_sha256": "bd0928e3bdb747faac1795a320decf6ded0ee869b24d86928b4d0954b52307e5",
+  "remaining": [
+    "Remaining shared need/canonical/digest consumers with preserved exception semantics and protected common-source authentication",
+    "Any further startup scan consolidation justified by retained failure timing",
+    "Real CPU tensor structure proof under an approved GPU-free tensor envelope",
+    "Exact source/protected-delta review and fresh one-use native greedy token/selected-quality qualification",
+    "Instrumented native startup bytes, deterministic head quantization and whole-device memory by BDF",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "retained_private_fixture_failures": [
+    "Runtime import fixture lacked the existing ServingClient and run_bound default callables; added explicit inert import substitutes"
+  ],
+  "schema": 1,
+  "static_analysis": {
+    "active_kernel_and_tensor_source_unchanged": true,
+    "ast_symtable_compile_modules": 262,
+    "native_runtime_imported": false,
+    "patches": {
+      "D2.patch": {
+        "files": 2,
+        "forward_and_reverse_exact": true,
+        "sha256": "90dd65bbf7ccacb668326d24cf9a025c1edb27d156fd42afccbc097df32d7ca1"
+      },
+      "RUNTIME.patch": {
+        "files": 9,
+        "forward_and_reverse_exact": true,
+        "sha256": "3fa451ff54f2bfb694f56e57e2bb48a91795a2aaa40bacb0dd7d91dedd0cc252"
+      },
+      "SOURCE.patch": {
+        "files": 1,
+        "forward_and_reverse_exact": true,
+        "sha256": "c24ce947b76f967ed17c15cabc2af5204fdeaf7c4b920a63eb1073c1226777bd"
+      }
+    }
+  },
+  "status": "CPU_SELECTED_PHASE_CLOSURE_VERIFIED_NATIVE_SERVING_PENDING",
+  "tested_proposal_sha256": "8a39dc8a8edc847563c4f5460ecbfef8381ff9f8a9c8650164b1867127ef660b"
+}

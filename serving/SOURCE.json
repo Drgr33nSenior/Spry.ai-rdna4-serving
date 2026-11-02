@@ -1422,7 +1422,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Finish remaining common helper/phase-marker consumers and any justified startup scan consolidation. Prepare exact native CPU tensor, startup byte, greedy token, selected quality and BDF memory qualification. No native execution allowance remains.",
+  "next_bounded_action": "Finish shared need/JSON/digest consumers with protected common-source authentication and any justified startup scan consolidation. Prepare exact native CPU tensor, startup byte, greedy token, selected quality and BDF memory qualification. No native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -2720,6 +2720,16 @@
   },
   "schema": 1,
   "scope": "Observer safety and source cleanup, deterministic source assembly, pinned W5 configuration, resource-manifest bindings, isolated controller/transport approval proposals, and removal-only retained-package pruning. Source review only; complete cleaned-source integration, protected migration and native gates remain pending.",
+  "selected_phase_closure_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/phase-closure",
+    "record_sha256": "bd0928e3bdb747faac1795a320decf6ded0ee869b24d86928b4d0954b52307e5",
+    "source_review_only": true,
+    "status": "CPU_SELECTED_PHASE_CLOSURE_VERIFIED_NATIVE_SERVING_PENDING",
+    "verification": "proposals/phase-closure/VERIFICATION.json",
+    "verification_sha256": "eb711f03b3a11534ce006c345f58a9efb07c36ad1a4088caa3cd50f832f1f135"
+  },
   "session_timing_proposal": {
     "added_source_names": [
       "kv_graph_join.py",

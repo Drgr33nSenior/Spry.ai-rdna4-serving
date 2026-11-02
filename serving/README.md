@@ -4,7 +4,11 @@ This directory holds the observer safety and structural cleanup increments from
 `CLEANUP-HANDOFF-20261031-v1.md`. The owner selected this repository for the
 cleanup source. These files are not a launch packet or a new serving selection.
 
-The latest runtime increment is the
+The latest structural increment is the
+[selected phase closure](proposals/phase-closure/README.md), which removes
+16 inactive marker names and 285 lines from their consumers. The paired HTTP
+behavior, startup observability and 79-member package remain fixed.
+The latest memory increment is the
 [shared head and packed views proposal](proposals/shared-memory/README.md).
 It shares one FP8 head allocation and rebinds projection parameters to packed
 storage while preserving their objects, metadata and P1 validation. The head
@@ -21,8 +25,7 @@ the [closed HTTP package](proposals/closed-http/README.md),
 [startup source digest cache](proposals/startup-digests/README.md),
 [MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and
 [configured request and evidence](proposals/configuration-mutations/README.md).
-The retained A/B pilot predates these changes. Remaining helper consumers,
-phase markers and native qualification are recorded in
+The retained A/B pilot predates these changes. Remaining helper consumers and native qualification are recorded in
 [CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json). The new sources still need real
 CPU tensor structure checks and native serving qualification.
 
