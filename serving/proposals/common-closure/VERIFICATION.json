@@ -1,0 +1,335 @@
+{
+  "common_closure": {
+    "ambient_modules_and_bytecode_ignored": true,
+    "canonical_encodings_and_raw_pins_preserved": true,
+    "error_classes_args_and_prefix_laziness_preserved": true,
+    "guard_consumers": 26,
+    "instrumented_witness_format_changed": false,
+    "protected_common_sources": 1,
+    "protected_helper_roles": 9,
+    "protected_inventory_members": 10,
+    "regular_file_hash_and_snapshot_checks": true,
+    "root_does_not_import_unprotected_serving_contract_for_common": true,
+    "self_consistent_common_substitution_refused": true,
+    "serializer_functions": 27
+  },
+  "complete_cleanup": false,
+  "kernels_heads_projection_requests_settings_and_pools_unchanged": true,
+  "launch_authorized": false,
+  "native_preflight_archive": {
+    "ceiling_bytes": 16777216,
+    "excluded_sources_opened": 0,
+    "excluded_unused_historical_sources": 110,
+    "extra_unaccessed_fixture_copies": 22,
+    "gzip_bytes": 3240003,
+    "repository_files_deleted": 0,
+    "selected_tests_and_required_controls_retained": true,
+    "tar_bytes": 14499840
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 265
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "archive": {
+      "archive_members": 79,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "common_semantics": {
+      "actual_packaged_modules": 30,
+      "canonical_json_assets": 11,
+      "guards": 26,
+      "native_execution": false,
+      "source_only": true
+    },
+    "common_substitution": {
+      "data_pins_cannot_override_frozen_common_code": true,
+      "native_execution": false,
+      "self_consistent_manifest_and_inventory": true
+    },
+    "memory_reader": {
+      "actual_packaged_producer_observer_and_helper": true,
+      "changed_helper_refused": true,
+      "incomplete_sharing_and_missing_layer_refused": true,
+      "loaded_weight_rows": 304,
+      "native_execution": false,
+      "old_witness_refused": true,
+      "source_only_descriptors": true
+    },
+    "native_argv": {
+      "all_mount_resource_model_and_sampling_arguments_preserved": true,
+      "native_execution": false,
+      "only_expected_source_pins_changed": true
+    },
+    "passed": true,
+    "payload_delta": {
+      "archive_members": 79,
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "PROTECTED-SHA256.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/benchmark_artifacts.py",
+        "review/benchmark_gpu_identity.py",
+        "review/benchmark_host_transport.py",
+        "review/benchmark_owner_adapter.py",
+        "review/benchmark_physical_controller.py",
+        "review/benchmark_release_observer.py",
+        "review/benchmark_resource_gate.py",
+        "review/collect_benchmark_platform.py",
+        "review/graph_outer.py",
+        "review/host_process_owner.py",
+        "review/j01_probe.py",
+        "review/kv_graph_join.py",
+        "review/model_benchmark.py",
+        "review/mtp_contract.py",
+        "review/observer_health.py",
+        "review/request_receipts.py",
+        "review/serving_client.py",
+        "review/serving_contract.py",
+        "review/serving_entry.py",
+        "review/serving_graph_observer.py",
+        "review/serving_integration.py",
+        "review/serving_launcher.py",
+        "review/serving_parity.py",
+        "review/serving_projection.py",
+        "review/serving_reader.py",
+        "review/serving_runtime.py",
+        "review/spry_common_canon.py",
+        "review/target_kv_metadata.py",
+        "review/verify_benchmark_runtime.py",
+        "review/verify_decode_adapter.py",
+        "review/worker_entry.py"
+      ],
+      "kernel_and_tensor_request_settings_and_pool_bytes_unchanged": true,
+      "native_execution": false,
+      "protected_common_sources": 1,
+      "protected_helper_roles": 9
+    },
+    "selected_contract": {
+      "actual_packaged_contract_and_observer": true,
+      "alignment": "beta-bf16",
+      "inactive_marker_names_removed": 16,
+      "native_execution": false,
+      "request_rows": 176,
+      "unsupported_stream_history_closure_refused": true,
+      "width": 8
+    },
+    "tests": 20
+  },
+  "post_test_record_change": "cpu_verified false to true only; execution authority remains false",
+  "proofs": {
+    "NATIVE-PREPARATION-GAPS.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/NATIVE-PREPARATION-GAPS.json",
+      "sha256": "476df8116bbf741bb3a351e1198fe59e68e71dcdfda8d0cebf32a645955e7d40"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/PUBLIC-CHECKS.json",
+      "sha256": "7e9b67afba898bfcf5b8894f55a73ad9395006293bed40b7a38e576e2d061216"
+    },
+    "STARTUP-SCAN-AUDIT.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/STARTUP-SCAN-AUDIT.json",
+      "sha256": "655e1f296a5f8fca28c706dbc9827b1950242dc2c21952b75c3cc3bda47a8951"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/STATIC-CHECKS.json",
+      "sha256": "ab600ee4ab9a1c7c9926412ed27e31070aefe3fea790075602615500a3b3a382"
+    },
+    "UNUSED-HISTORICAL-FIXTURES.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/UNUSED-HISTORICAL-FIXTURES.json",
+      "sha256": "685275a4ae2f1489638dea0785f25720ed6193ca644783d6671386060dc39d96"
+    },
+    "full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/full-chain-attempt-1.json",
+      "sha256": "a804a066c8dccc31942ab04f9d24f35842f46af300bd1ecfb04c45f87e8162f1"
+    },
+    "full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/full-chain-attempt-1.log",
+      "sha256": "a52a1da148d990eeb588fe0a9a301564c6eb4f90982908a32bbaadaa268a60ff"
+    },
+    "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "32ea8e87efff6ad55fad7bcefb983d0f2cba8bae57d040551816f6ebe27aa69f"
+    },
+    "native-source-preflight-v1/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/native-source-preflight-v1/SOURCE-INVENTORY.json",
+      "sha256": "446d8f1bc9bc4908f2e517717c5ea4c4ee0fd86581aca1f6347a71d0416da619"
+    },
+    "native-source-preflight-v1/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/native-source-preflight-v1/native-cpu-source-preflight.json",
+      "sha256": "95b13fa17bacd5b9f6ce50a572fac4706717fe237828846af7eee2d5450c2f0f"
+    },
+    "packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/packet-attempt-1.json",
+      "sha256": "279718e6c123e562b3db687f1b4d857d0f4712081ef3bac61b5235d9b683313a"
+    },
+    "packet-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/packet-attempt-1.log",
+      "sha256": "ab7a20ebc1949a04eb7cf915ca836035fa9d9a83cab8b9150db6e0897172a561"
+    },
+    "packet-attempt-2.json": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/packet-attempt-2.json",
+      "sha256": "b80b15d347acb2e635de544fdb2a2cb3f0776c1ca35ac34033d70580d21fcdda"
+    },
+    "packet-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/packet-attempt-2.log",
+      "sha256": "058872dd98cfd8982645cb93e21cd7c029454734f26137221085387b88425c61"
+    },
+    "proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/public-make-attempt-1.log",
+      "sha256": "4dc607f8223e96f2c6e9c4d6b2342802dc2b4207e5d8a6221336c007aa79d7c7"
+    },
+    "unit-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/unit-attempt-2.log",
+      "sha256": "618d7e468ad40b5e70a568c476a1fed8eed8b0ce0b4fcaed74957c11c73b1251"
+    },
+    "worker-history-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/common-closure-v1/worker-history-attempt-1.log",
+      "sha256": "b44d12c5fbd6808b76ad5a2d36e9cf45be8a18b015b0bf16c8638901484e05c9"
+    }
+  },
+  "protected_common_sha256": "c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed",
+  "protected_helpers_changed": [
+    "benchmark_artifacts.py",
+    "benchmark_gpu_identity.py",
+    "benchmark_host_transport.py",
+    "benchmark_owner_adapter.py",
+    "benchmark_physical_controller.py",
+    "benchmark_release_observer.py",
+    "benchmark_resource_gate.py",
+    "collect_benchmark_platform.py",
+    "host_process_owner.py"
+  ],
+  "protected_set_sha256": "720217fecefc17891935232d119a5cabf6d4dc8576661122d8c889dc7329c123",
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 994,
+    "suites": 80
+  },
+  "published_proposal_sha256": "c376a5ff9b0197f178d0250636728c17b96ebd953e5e90d72b6e7f0ff70812e8",
+  "remaining": [
+    "Update final native campaign preparation for the selected proposal, 79-member package and protected common bootstrap upload",
+    "Real CPU tensor structure proof under an approved GPU-free tensor envelope",
+    "Exact complete protected/source review and fresh one-use native greedy token/selected-quality qualification",
+    "Instrumented native startup bytes, deterministic head quantization and whole-device memory by BDF",
+    "Native full-menu/configuration qualification and final evidence closeout"
+  ],
+  "retained_private_fixture_failures": [
+    "Stale-bytecode assertion initially checked the semantic adapter instead of its shared callee; corrected assertion",
+    "Whole-module test loader initially omitted dataclass module registration; corrected to production import semantics"
+  ],
+  "schema": 1,
+  "startup_scan_audit": {
+    "further_scan_changes_required": false,
+    "native_execution": false,
+    "reason": "Deferring per-layer reads would change failure sequencing before dependent expansion or warmup; this cleanup preserves those gates",
+    "sources": [
+      {
+        "file": "serving/spry_serving/memory_scheme.py",
+        "purpose": "Reject E8M0 NaN scales before P1 expansion/validation",
+        "remaining_scalar_reads": [
+          {
+            "expression": "torch.any(layer.weight_scale == 255).item()",
+            "line": 77
+          }
+        ],
+        "sha256": "5c4068a835ba7762d83acc49ecf4e8ca96afd907a84dab12fcea4445b3defe16"
+      },
+      {
+        "file": "serving/spry_serving/memory_p1.py",
+        "purpose": "Reject expanded block guard flags before recording validation or warming GEMM",
+        "remaining_scalar_reads": [
+          {
+            "expression": "torch.count_nonzero(flags).item()",
+            "line": 128
+          }
+        ],
+        "sha256": "50e239f2fb65e2484330a456a979eaeaeb27901816d82fa4818393d138692a0e"
+      },
+      {
+        "file": "serving/spry_serving/fp8_head.py",
+        "purpose": "Combine finite chunk reductions before the single head scalar read",
+        "remaining_scalar_reads": [
+          {
+            "expression": "finite.item()",
+            "line": 19
+          }
+        ],
+        "sha256": "eba54bb8495e2df4042b5c0bea07cf4da38fbd6eec92891359bd46ca51d0d671"
+      }
+    ],
+    "status": "REDUNDANT_HEAD_SCAN_REMOVED_REMAINING_FATAL_STARTUP_GUARDS_RETAINED"
+  },
+  "static_analysis": {
+    "active_kernel_and_tensor_source_unchanged": true,
+    "ast_symtable_compile_modules": 297,
+    "native_runtime_imported": false,
+    "patches": {
+      "D2.patch": {
+        "files": 10,
+        "forward_and_reverse_exact": true,
+        "sha256": "82a56704d32add2643ce95026b9dcf55b43d67a92bc1378951280252c82bab50"
+      },
+      "RUNTIME.patch": {
+        "files": 21,
+        "forward_and_reverse_exact": true,
+        "sha256": "dcc43117a9d8b216a5d38d5a8b8f1e751881d5c6af517bc84b5d4604f298753d"
+      },
+      "SOURCE.patch": {
+        "files": 2,
+        "forward_and_reverse_exact": true,
+        "sha256": "513186f464a9c97c746266d76ec2321cef4c74dcc6818ea8374f63afc76e49ca"
+      }
+    }
+  },
+  "status": "CPU_PROTECTED_COMMON_CLOSURE_VERIFIED_NATIVE_PREPARATION_AND_QUALIFICATION_PENDING",
+  "tested_proposal_sha256": "fac589700333fd5e43d9c5c5c119571c4750fd7fd9ec11d446075906f7d0d397"
+}

@@ -1,0 +1,661 @@
+--- a/review/benchmark_artifacts.py
++++ b/review/benchmark_artifacts.py
+@@ -342,9 +342,54 @@
+     return len(PREFIX) + sum(4 * ((n + 2) // 3) for n in member_limits(binding, limits=limits).values()) + 8193
+ 
+ 
+-def need(value, message):
+-    if not value:
+-        raise ValueError(message)
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ValueError)
++
++
++need = _SPRY_COMMON.need
+ 
+ 
+ def _digest(value):
+--- a/review/benchmark_gpu_identity.py
++++ b/review/benchmark_gpu_identity.py
+@@ -16,8 +16,55 @@
+ HEADER_SHA256 = '06d7c70c870d4306087291d5559f3077a78719863470e6348e309fc62028bfed'
+ 
+ 
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, RuntimeError)
++
++
+ def need(value, message):
+-    if not value: raise RuntimeError(message)
++    return _SPRY_COMMON.need(value, message, error=RuntimeError, prefix='')
+ 
+ 
+ def canonical_bdf(raw):
+@@ -112,10 +159,9 @@
+ import json,zipfile
+ from pathlib import PurePosixPath
+ 
+-def canonical(value):
+-    return json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False).encode() + b'\n'
+-
+-def sha(raw): return hashlib.sha256(raw).hexdigest()
++canonical = _SPRY_COMMON.canonical_line
++
++sha = _SPRY_COMMON.digest
+ 
+ def strict_json(raw):
+     def pairs(items):
+--- a/review/benchmark_host_transport.py
++++ b/review/benchmark_host_transport.py
+@@ -40,9 +40,54 @@
+ USER_CGROUP = '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/'
+ 
+ 
+-def need(value, message):
+-    if not value:
+-        raise ValueError(message)
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ValueError)
++
++
++need = _SPRY_COMMON.need
+ 
+ 
+ @dataclass(frozen=True)
+@@ -122,16 +167,14 @@
+              'complete preparation/owner envelope does not fit')
+ 
+ 
+-def sha(raw):
+-    return hashlib.sha256(raw).hexdigest()
++sha = _SPRY_COMMON.digest
+ 
+ 
+ def digest(value):
+     return type(value) is str and re.fullmatch(r'[0-9a-f]{64}', value) is not None
+ 
+ 
+-def canonical(value):
+-    return (json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False) + '\n').encode()
++canonical = _SPRY_COMMON.canonical_line
+ 
+ 
+ def decode(raw):
+@@ -387,6 +430,7 @@
+     'benchmark_owner_adapter.py', 'benchmark_physical_controller.py',
+     'benchmark_release_observer.py', 'benchmark_resource_gate.py',
+     'collect_benchmark_platform.py', 'host_process_owner.py')
++PROTECTED_SOURCE_NAMES += ('spry_common_canon.py',)
+ 
+ 
+ def configuration_members(manifest, members, configuration_pins):
+@@ -405,6 +449,8 @@
+     protected = read('PROTECTED-SHA256.json', configuration_pins['protected_set_sha256'], 64 << 10)
+     need(set(protected) == {'review/' + name for name in PROTECTED_SOURCE_NAMES}
+          and all(digest(pin) for pin in protected.values()), 'exact protected file set required')
++    need(protected['review/spry_common_canon.py'] == _SPRY_COMMON_SHA256,
++         'frozen common source pin differs')
+     for name, pin in protected.items():
+         raw = members.get(name)
+         need(manifest['package_files'].get(name) == pin and type(raw) is bytes
+--- a/review/benchmark_owner_adapter.py
++++ b/review/benchmark_owner_adapter.py
+@@ -37,9 +37,55 @@
+     return type(value) is str and len(value) == 64 and all(c in '0123456789abcdef' for c in value)
+ 
+ 
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, owner.OwnerError)
++
++
+ def _need(value, message):
+-    if not value:
+-        raise owner.OwnerError(message)
++    return _SPRY_COMMON.need(value, message, error=owner.OwnerError, prefix='')
+ 
+ 
+ def draft_model_mount(binding):
+--- a/review/benchmark_physical_controller.py
++++ b/review/benchmark_physical_controller.py
+@@ -38,7 +38,7 @@
+     MODEL_INVENTORY_SHA256 = mtp_contract.precision_profile()['inventory_sha256']
+     CONFIG_SHA256 = mtp_contract.target_config_sha256()
+ BINARY_SHA256 = "1ca7efb0cf9220adb16a56e30e4cd2931b5d49edbe3277fc15d68e629500cd7b"
+-METADATA_SHA256 = "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5"
++METADATA_SHA256 = "47e3ca93178974cbcee81bf11dfaa26770fc84aeb6bdba2563dff68e667cbc32"
+ SOURCE_NAMES = ("benchmark_physical_controller.py", "benchmark_owner_adapter.py",
+     "host_process_owner.py", "benchmark_resource_gate.py", "benchmark_release_observer.py",
+     "collect_benchmark_platform.py", "model_benchmark.py", "analyze_model_benchmark.py")
+@@ -94,7 +94,7 @@
+ 
+ 
+ FACTS_SHA256 = "d414db807ccec0f7c285be99cd040c86e0230521b03996f64f9bc4f9392d3072"
+-GPU_IDENTITY_SHA256 = "7324842c4f779749d561dc586168bd923e84e6900d17e3d22c140647bcd133df"
++GPU_IDENTITY_SHA256 = "0492f5d19c5cd2ce26fa3adb326df91c2aa2683a622afb3c4ad16f876f7d506f"
+ PROOF_NAME = "image-source/python/sglang/srt/layers/attention/ultraquant-bf16-build.json"
+ BINARY_NAME = "image-source/python/sglang/srt/layers/attention/libuq_bf16_v2.so"
+ RUNTIME_SCOPES = ("image-source/python/sglang", "codec", "runtime")
+@@ -138,9 +138,54 @@
+     return [selected[pid] for pid in sorted(selected)]
+ 
+ 
+-def need(value, message):
+-    if not value:
+-        raise ValueError(message)
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ValueError)
++
++
++need = _SPRY_COMMON.need
+ 
+ 
+ def retained_proof_attention_reader(spec):
+@@ -545,6 +590,7 @@
+     'benchmark_owner_adapter.py', 'benchmark_physical_controller.py',
+     'benchmark_release_observer.py', 'benchmark_resource_gate.py',
+     'collect_benchmark_platform.py', 'host_process_owner.py')
++PROTECTED_SOURCE_NAMES += ('spry_common_canon.py',)
+ 
+ 
+ def _configuration_file(path, expected_sha256, maximum, *, deadline, clock, stamps, json_object=True):
+@@ -596,6 +642,8 @@
+     names = {'review/' + name for name in PROTECTED_SOURCE_NAMES}
+     need(set(protected) == names and all(_digest(pin) for pin in protected.values()),
+          'exact protected file set required')
++    need(protected['review/spry_common_canon.py'] == _SPRY_COMMON_SHA256,
++         'frozen common source pin differs')
+     for name, pin in protected.items():
+         need(manifest['package_files'].get(name) == pin, 'protected set/package binding differs')
+         _configuration_file(root / name, pin, 1 << 20, deadline=deadline, clock=clock,
+--- a/review/benchmark_release_observer.py
++++ b/review/benchmark_release_observer.py
+@@ -17,7 +17,7 @@
+ import time
+ 
+ 
+-COLLECTOR_SHA256 = "c33222c324bf841b32d71544450bbf8b418954d373b005f1d032c860f065b4c5"
++COLLECTOR_SHA256 = "47e3ca93178974cbcee81bf11dfaa26770fc84aeb6bdba2563dff68e667cbc32"
+ LOCK = Path("/home/developer/model-serving.izR2m1O9/diagnostic.lock")
+ PROCESS_FIELDS = {"boot_id", "pid", "ppid", "pgid", "sid", "start_ticks", "uid", "gid", "pid_namespace", "command_sha256", "state"}
+ REQUEST_FIELDS = {"schema", "mode", "root", "session_sha256", "boot_id", "lock_device", "lock_inode",
+@@ -32,13 +32,58 @@
+     return type(value) is str and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+ 
+ 
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ObservationError)
++
++
+ def require(value, reason):
+-    if not value:
+-        raise ObservationError(reason)
+-
+-
+-def canonical_json(value):
+-    return (json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode()
++    return _SPRY_COMMON.need(value, reason, error=ObservationError, prefix='')
++
++
++canonical_json = _SPRY_COMMON.canonical_line
+ 
+ 
+ def _pairs(rows):
+--- a/review/benchmark_resource_gate.py
++++ b/review/benchmark_resource_gate.py
+@@ -32,9 +32,54 @@
+           "units", "workload_argv", "workload_argv_sha256"}
+ 
+ 
+-def need(value, message):
+-    if not value:
+-        raise ValueError(message)
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ValueError)
++
++
++need = _SPRY_COMMON.need
+ 
+ 
+ def digest(value):
+--- a/review/collect_benchmark_platform.py
++++ b/review/collect_benchmark_platform.py
+@@ -49,8 +49,54 @@
+     pass
+ 
+ 
+-def sha(raw):
+-    return hashlib.sha256(raw).hexdigest()
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ValueError)
++
++
++sha = _SPRY_COMMON.digest
+ 
+ 
+ def utc():
+--- a/review/host_process_owner.py
++++ b/review/host_process_owner.py
+@@ -23,16 +23,61 @@
+     pass
+ 
+ 
+-def _sha(value):
+-    return hashlib.sha256(value).hexdigest()
++def _load_spry_common(caller, pin, error):
++    """Authenticate common source before any shared guard can execute."""
++    import hashlib
++    import importlib.util
++    from importlib.machinery import SourceFileLoader
++    import os
++    from pathlib import Path
++    import stat
++
++    def check(value, message):
++        if not value:
++            raise error('shared common source: ' + message)
++
++    origin = Path(caller)
++    path = origin.with_name('spry_common_canon.py')
++    if origin.name.startswith('common_') and origin.parent.name in ('spry_serving', 'spry_evidence'):
++        path = origin.resolve().parents[1] / 'spry_common/selected.py'
++    elif (origin.parent.name == 'review' and origin.parent.parent.name == 'common-closure'
++          and origin.parent.parent.parent.name == 'proposals'):
++        path = origin.resolve().parents[3] / 'spry_common/selected.py'
++    check(path.is_absolute() and path.resolve(strict=True) == path, 'canonical path required')
++    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++    try:
++        before = os.fstat(descriptor)
++        check(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
++              and 0 < before.st_size <= 4096, 'bounded regular file required')
++        raw = os.read(descriptor, 4097)
++        stamp = lambda row: (row.st_dev, row.st_ino, row.st_mode, row.st_nlink,
++                             row.st_size, row.st_mtime_ns, row.st_ctime_ns)
++        check(len(raw) == before.st_size and stamp(before) == stamp(os.fstat(descriptor))
++              == stamp(path.lstat()), 'file changed during read')
++    finally:
++        os.close(descriptor)
++    check(hashlib.sha256(raw).hexdigest() == pin, 'digest differs')
++    # Use the checked bytes, ignoring ambient modules and cached bytecode.
++    loader = SourceFileLoader('_spry_common', str(path))
++    loader.get_code = lambda name: loader.source_to_code(raw, str(path))
++    spec = importlib.util.spec_from_loader('_spry_common', loader)
++    module = importlib.util.module_from_spec(spec)
++    loader.exec_module(module)
++    return module
++
++
++_SPRY_COMMON_SHA256 = 'c2cb7702d6ae482b0f9d70b6b838af3d0b9eb312140ff09d001df0880a9e6bed'
++_SPRY_COMMON = _load_spry_common(__file__, _SPRY_COMMON_SHA256, ValueError)
++
++
++_sha = _SPRY_COMMON.digest
+ 
+ 
+ def _digest(value):
+     return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+ 
+ 
+-def _json(value):
+-    return (json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode()
++_json = _SPRY_COMMON.canonical_line
+ 
+ 
+ def _bounded(path, limit=65536):
+--- a/review/spry_common_canon.py
++++ b/review/spry_common_canon.py
+@@ -3,9 +3,9 @@
+ import json
+ 
+ 
+-def need(condition, message):
++def need(condition, message, *, error=ValueError, prefix=""):
+     if not condition:
+-        raise ValueError(message)
++        raise error(prefix + message if prefix else message)
+ 
+ 
+ def canonical_bare(value):

@@ -104,7 +104,13 @@
     "Retired streaming/history/closure entry points refuse; unexpected HIP component records remain a startup error",
     "Unchanged 79-member package, kernel/head/projection/replay sources, requests, settings, pool limits and native argv beyond source pins",
     "Public regression suite: 987 Python tests across 79 suites plus C++ sanitizers",
-    "Target CPython 3.14.7 source preflight: 256 checks without GPU/model/grading work; complete consumed-packet suite: 18 checks"
+    "Target CPython 3.14.7 source preflight: 256 checks without GPU/model/grading work; complete consumed-packet suite: 18 checks",
+    "Shared guard and strict JSON/raw digest implementation with preserved error types, args and prefix laziness; semantic wrappers retained",
+    "Common source joins the protected inventory; root consumers authenticate it directly and ignore ambient modules and bytecode",
+    "Controller and transport refuse self-consistent substituted common source hashes before admission",
+    "Startup scan audit: duplicated head scan removed; per-layer scale and P1 reads retained before dependent expansion and warmup",
+    "Public regression suite: 994 Python tests across 80 suites plus C++ sanitizers",
+    "Target CPython 3.14.7 source preflight: 265 checks without GPU/model/grading work; complete consumed-packet suite: 20 checks"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -145,7 +151,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/phase-closure/VERIFICATION.json",
+  "latest_verification": "proposals/common-closure/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -159,7 +165,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Selected-phase closure is CPU-verified. Finish protected shared helpers; real CPU tensor semantics and native byte/token/quality/memory qualification remain.",
+    "next_stage": "Runtime/structural source cleanup is CPU-verified. Final native campaign tooling, CPU tensor semantics and native byte/token/quality/memory qualification remain.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -187,6 +193,20 @@
     "status": "CPU_PRE_REPLAY_METADATA_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "whole_cleanup_complete": false
   },
+  "protected_common_closure_increment": {
+    "archive_members": 79,
+    "native_cpu_source_tests": 265,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "packet_checks": 20,
+    "protected_common_sources": 1,
+    "protected_helper_roles": 9,
+    "public_tests": 994,
+    "shared_guards": 26,
+    "shared_serializers": 27,
+    "status": "CPU_PROTECTED_COMMON_CLOSURE_VERIFIED_NATIVE_PREPARATION_AND_QUALIFICATION_PENDING",
+    "whole_cleanup_complete": false
+  },
   "protected_source_references_increment": {
     "archive_members": 78,
     "native_cpu_source_tests": 211,
@@ -208,12 +228,11 @@
     "visibility": "public"
   },
   "remaining": [
-    "Remaining shared need/canonical/digest consumers with preserved exception semantics and protected common-source authentication",
-    "Any further startup scan consolidation justified by retained failure timing",
+    "Update final native campaign preparation for the selected proposal, 79-member package and protected common bootstrap upload",
     "Real CPU tensor structure proof under an approved GPU-free tensor envelope",
-    "Exact source/protected-delta review and fresh one-use native greedy token/selected-quality qualification",
+    "Exact complete protected/source review and fresh one-use native greedy token/selected-quality qualification",
     "Instrumented native startup bytes, deterministic head quantization and whole-device memory by BDF",
-    "Broader configuration and instrumented full-menu capacity qualification"
+    "Native full-menu/configuration qualification and final evidence closeout"
   ],
   "remaining_external": [
     "Exact review of the new protected-source proposal before native adoption",
@@ -221,8 +240,7 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Remaining shared need/canonical/digest consumers with preserved exception semantics and protected common-source authentication",
-    "Any further startup scan consolidation justified by retained failure timing"
+    "Update final native campaign preparation for the selected proposal, 79-member package and protected common bootstrap upload"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",
   "runtime_binding_increment": {

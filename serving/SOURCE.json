@@ -1422,7 +1422,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Finish shared need/JSON/digest consumers with protected common-source authentication and any justified startup scan consolidation. Prepare exact native CPU tensor, startup byte, greedy token, selected quality and BDF memory qualification. No native execution allowance remains.",
+  "next_bounded_action": "Update native campaign preparation for final selected source, package membership and protected common bootstrap; prepare exact CPU tensor, GPU startup byte/token/quality and BDF memory qualification. No native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -2404,6 +2404,16 @@
     "worker_client_timing_migrated": true,
     "worker_export_config_binding_migrated": true
   },
+  "protected_common_closure_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/common-closure",
+    "record_sha256": "c376a5ff9b0197f178d0250636728c17b96ebd953e5e90d72b6e7f0ff70812e8",
+    "source_review_only": true,
+    "status": "CPU_PROTECTED_COMMON_CLOSURE_VERIFIED_NATIVE_PREPARATION_AND_QUALIFICATION_PENDING",
+    "verification": "proposals/common-closure/VERIFICATION.json",
+    "verification_sha256": "6b0d928f33484f71e426b530244334df3e57599103e918ce29a4897acff8895f"
+  },
   "protected_proposal": {
     "D2_implemented": false,
     "added_lines": 0,
@@ -2986,9 +2996,11 @@
     "serving_integration.py": "148a391e832066fe9345f73313c2bf5165f280b13eaa0b60b6d73a52e4312015",
     "serving_launcher.py": "29c162a80514cad9c28a81bae276a60f52a241d77cd0ce3f814ceda9b7d99454",
     "serving_parity.py": "e4517a098c4502c3f2bf9c1d41db3e699cc3e9bf13a459909ca4a9aad9a90ea4",
+    "serving_projection.py": "ccdccfeccacedc3e432c91d510b937873ed0af4f94bed41e87945decc1e91921",
     "serving_reader.py": "ec0b63cd0be30dc33a5af1e05a3ea7ae611f5e3e371b8b33fe3419cc3d46ec07",
     "serving_runtime.py": "2934db7c042493184384bf6c28dfe3687d62e3f7e58bfd19feee592b5a3c19f3",
     "triton_backend_candidate.py": "b120bc1c4c172caa854c41c691b14e34c592a39a83e0046b8c1f697594cdacc9",
+    "verify_benchmark_runtime.py": "3ac5f6fc5cf84c9939ed4452edb68613c0c34b916108950fe55d8ba21b07a414",
     "verify_decode_adapter.py": "731fdc22429376633785c9bd659128eedf0668575bdddbdb29c0e4816703223b",
     "worker_entry.py": "c6f3704ef7eddb1533b43b6bc953b816ccbd1444c62df7752061f4e43a63f4bb"
   },

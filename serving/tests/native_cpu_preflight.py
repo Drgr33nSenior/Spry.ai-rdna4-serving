@@ -25,13 +25,15 @@ def main():
     proposal_group.add_argument('--pre-replay-proposal',action='store_true')
     proposal_group.add_argument('--shared-memory-proposal',action='store_true')
     proposal_group.add_argument('--phase-closure-proposal',action='store_true')
+    proposal_group.add_argument('--common-closure-proposal',action='store_true')
     parser.add_argument('--metrics-reporter',type=Path)
     parser.add_argument('--source-access-inventory',action='store_true')
     args=parser.parse_args()
     if sys.version_info[:2]!=(3,14) or platform.machine()!='x86_64' or sys.platform!='linux':
         raise ValueError('native Linux x86_64 CPython 3.14 required')
     repository=args.repository.resolve(strict=True);donor=args.donor.resolve(strict=True)
-    memory=args.shared_memory_proposal or args.phase_closure_proposal
+    phase=args.phase_closure_proposal or args.common_closure_proposal
+    memory=args.shared_memory_proposal or phase
     replay=args.pre_replay_proposal or memory
     source_references=args.source_references_proposal or replay
     post_load=args.post_load_proposal or source_references
@@ -82,8 +84,10 @@ def main():
     if source_references:scripts+=('serving/tests/test_protected_source_references.py',)
     if replay:scripts+=('serving/tests/test_pre_replay_metadata.py',)
     if memory:scripts+=('serving/tests/test_shared_memory.py',)
-    if args.phase_closure_proposal:scripts+=('serving/tests/test_phase_closure.py',)
-    private=('serving/tests/check_phase_closure_packet.py' if args.phase_closure_proposal else
+    if phase:scripts+=('serving/tests/test_phase_closure.py',)
+    if args.common_closure_proposal:scripts+=('serving/tests/test_common_closure.py',)
+    private=('serving/tests/check_common_closure_packet.py' if args.common_closure_proposal else
+             'serving/tests/check_phase_closure_packet.py' if phase else
              'serving/tests/check_shared_memory_packet.py' if memory else
              'serving/tests/check_pre_replay_packet.py' if replay else
              'serving/tests/check_source_references_packet.py' if source_references else
@@ -101,10 +105,11 @@ def main():
             spec=importlib.util.spec_from_file_location('native_cpu_preflight_'+str(number),path)
             module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
             if relative.endswith(('check_configuration_mutations_packet.py','check_runtime_binding_packet.py',
-                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py','check_post_load_packet.py','check_source_references_packet.py','check_pre_replay_packet.py','check_shared_memory_packet.py','check_phase_closure_packet.py')):
+                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py','check_post_load_packet.py','check_source_references_packet.py','check_pre_replay_packet.py','check_shared_memory_packet.py','check_phase_closure_packet.py','check_common_closure_packet.py')):
                 context=module.configured if runtime else module
                 context.PACKET=donor;context.METRICS_REPORTER=args.metrics_reporter
-                prefix=('PhaseClosurePacket.' if args.phase_closure_proposal else
+                prefix=('CommonClosurePacket.' if args.common_closure_proposal else
+                        'PhaseClosurePacket.' if phase else
                         'SharedMemoryPacket.' if memory else
                         'PreReplayPacket.' if replay else
                         'SourceReferencePacket.' if source_references else
@@ -137,8 +142,12 @@ def main():
                     names += [prefix+'test_packaged_adapter_prepares_before_capture_and_strict_witness_refuses_old_counts']
                 if memory:
                     names += [prefix+'test_packaged_memory_reader_refuses_incomplete_and_old_witnesses']
-                if args.phase_closure_proposal:
+                if phase:
                     names += [prefix+'test_packaged_selected_contract_and_consumers_have_no_legacy_phase_dependency']
+                if args.common_closure_proposal:
+                    names += [prefix+name for name in (
+                        'test_packaged_guard_semantics_and_frozen_json_pins_match_the_parent',
+                        'test_self_consistent_substituted_common_inventory_refuses')]
                 suite=unittest.defaultTestLoader.loadTestsFromNames(names,module)
             elif relative.endswith('check_evidence_capacity_packet.py'):
                 module.inventory_checks.PACKET=donor

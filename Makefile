@@ -9,6 +9,7 @@ test: test-serving-cleanup test-target-graph-timing test-device-phase-timing tes
 
 # Observer safety and structural cleanup; standard library only, no native imports.
 test-serving-cleanup:
+	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_common_closure.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_phase_closure.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_shared_memory.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_pre_replay_metadata.py
