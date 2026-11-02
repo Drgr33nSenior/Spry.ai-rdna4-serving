@@ -46,11 +46,14 @@ def execution_contract(raw, *, paired_cleanup=False):
     return value
 
 
-def compare_inputs(before, after, *, run, canonical_sources, protected_sources, paired_cleanup=False):
+def compare_inputs(before, after, *, run, canonical_sources, protected_sources, paired_cleanup=False,
+                   qualification=False):
     """Refuse a mode, request, native overlay, model, stack or execution confound."""
     settings = parse_json(before['FINAL-SETTINGS.json'])
-    need(settings.get('instrumentation') == run.get('instrumentation') == 'production',
-         'both measurement variants must use explicit production mode')
+    need(type(qualification) is bool, 'explicit boolean qualification mode required')
+    mode = 'on' if qualification else 'production'
+    need(settings.get('instrumentation') == run.get('instrumentation') == mode,
+         'both variants must use explicit '+('instrumented qualification' if qualification else 'production mode'))
     removed = set() if paired_cleanup else set(source_builder.RETIRED_W5_MEMBERS)
     added = {'spry_fp8_head.py'} if paired_cleanup else {name + '.py' for name in source_builder.EXTRACTED_HELPERS}
     need(set(before) - set(after) == removed and set(after) - set(before) == added,
@@ -76,7 +79,7 @@ def compare_inputs(before, after, *, run, canonical_sources, protected_sources, 
         need(canonical(execution_contract(before[name],paired_cleanup=paired_cleanup)) ==
              canonical(execution_contract(after[name],paired_cleanup=paired_cleanup)),
              'native execution contract differs: ' + arm)
-    return dict(instrumentation='production', attention='retained-W5-stock',
+    return dict(instrumentation=mode, qualification_only=qualification, attention='retained-W5-stock',
                 c4_included=False, fixed_files={name: digest(before[name]) for name in sorted(fixed)},
                 native_execution_contracts_equal=True, output_token_identity_verified=False,
                 comparison_scope='verified pre-memory source versus final cleanup' if paired_cleanup else 'retained donor versus cleanup')

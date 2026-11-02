@@ -1198,6 +1198,15 @@
     "verification": "proposals/final-campaign/VERIFICATION.json",
     "verification_sha256": "4c4093304ffed8904eb1d67dae6223b40ce23f5e2153900cae0def0f2161db32"
   },
+  "final_native_qualification": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "path": "proposals/final-qualification",
+    "record_sha256": "9628106cbf457ccf080edf4aaf1d921515c6a9ba8f913215c77d185538bca1e2",
+    "status": "FINAL_NATIVE_ENVELOPES_PREPARED_UNFUNDED",
+    "verification": "proposals/final-qualification/VERIFICATION.json",
+    "verification_sha256": "a6a10cec7cdd28c222791a84326ddac3ec37532f5bad9832dcbcbea838d08916"
+  },
   "fresh_identity_renderer": {
     "builder_sha256": "2b55ce2e2dd672a17102a5bd27365ec866a9762d40e7fc5c4f3247dda994dad4",
     "fresh_launch_manifest_created": false,
@@ -1431,7 +1440,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Prepare exact GPU-free CPU tensor and instrumented/production native qualification envelopes; retain complete source/protected review, seals and one-use approvals. No native execution allowance remains.",
+  "next_bounded_action": "Review sealed GPU-free CPU tensor envelope and the exact instrumented final candidate; obtain one-use authority, run once and park. Production pair sources are sealed for later separate approvals.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",

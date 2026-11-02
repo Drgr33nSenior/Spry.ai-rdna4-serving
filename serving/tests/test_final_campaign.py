@@ -9,6 +9,7 @@ HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE));sys.path.insert(0,str(HERE.parent))
 import prepare_gpu_run as prepare
 import test_configured_caller as caller_tests
+import test_measurement_preparation as measurement_tests
 caller=caller_tests.caller
 from spry_common.canon import canonical_line as canonical,digest
 
@@ -20,6 +21,23 @@ class FinalArchive(unittest.TestCase):
             self.assertTrue(prepare.archive_bytes(files,compressed=True,expected_members=count))
         for count in (0,77,81,True):
             with self.assertRaises(ValueError):prepare.archive_bytes({},compressed=True,expected_members=count)
+
+
+class InstrumentedQualification(unittest.TestCase):
+    def test_explicit_qualification_preserves_work_checks_and_cannot_be_a_production_comparison(self):
+        fixture=measurement_tests.MeasurementPreparation();fixture.setUp()
+        fixture.run['instrumentation']='on'
+        for files in (fixture.before,fixture.after):
+            files['FINAL-SETTINGS.json']=canonical(dict(instrumentation='on'))
+        compare=lambda **kwargs: prepare.prepare_measurement.compare_inputs(fixture.before,fixture.after,
+            run=fixture.run,canonical_sources={'worker_entry.py'},protected_sources={},**kwargs)
+        with self.assertRaisesRegex(ValueError,'production mode'):compare()
+        result=compare(qualification=True)
+        self.assertTrue(result['qualification_only']);self.assertEqual(result['instrumentation'],'on')
+        fixture.after['FINAL-REQUESTS.zlib']+=b'changed'
+        with self.assertRaisesRegex(ValueError,'measurement input differs'):compare(qualification=True)
+        for value in (1,None,'on'):
+            with self.assertRaisesRegex(ValueError,'boolean qualification'):compare(qualification=value)
 
 
 class ProtectedBootstrapCaller(unittest.TestCase):

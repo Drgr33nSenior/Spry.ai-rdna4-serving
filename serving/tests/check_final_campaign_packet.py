@@ -15,6 +15,10 @@ def main():
     parser.add_argument('--report',required=True,type=Path);args=parser.parse_args()
     root=args.root.resolve(strict=True);summary=json.loads((root/'GPU-PREPARATION.json').read_bytes())
     need(summary['launch_authorized'] is False and summary['model_starts_executed']==0,'inert preparation required')
+    qualification=summary.get('qualification_only',False)
+    need(type(qualification) is bool,'explicit qualification flag')
+    mode='on' if qualification else 'production';interval='1' if qualification else '100'
+    need(summary['matched_inputs']['instrumentation']==mode,'campaign instrumentation mode')
     counts={};common={}
     for variant,expected in (('baseline',78),('cleanup',79)):
         author=root/variant/'author';review=author/'package-v2/review'
@@ -24,6 +28,8 @@ def main():
         need(approval['model_start_authorized'] is False and approval['maximum_starts']==0 and
              approval['cpu_execution_authorized'] is False,'unfunded request required')
         protection=json.loads((author/'package-v2/PROTECTED-SHA256.json').read_bytes())
+        settings=json.loads((review/'FINAL-SETTINGS.json').read_bytes())
+        need(settings['instrumentation']==mode,'actual campaign instrumentation')
         counts[variant]=len(manifest['package_files'])+len(list((author/'package-v2/config').rglob('*.json')))+2
         need(counts[variant]==expected,'exact final archive membership required')
         script=author/'owner-upload/RUN-ON-WORKSTATION.sh'
@@ -41,10 +47,11 @@ def main():
                  'benchmark_artifacts.py spry_common_canon.py; do' in shell,'complete root common staging')
         for arm in ('control','mtp'):
             source=json.loads((review/('HTTP-BINDING-'+arm+'.json')).read_bytes())['binding_template']
-            cli=source['canonical_server_cli'];need(cli[cli.index('--decode-log-interval')+1]=='100','matched production logging')
+            cli=source['canonical_server_cli'];need(cli[cli.index('--decode-log-interval')+1]==interval,'matched mode logging')
     need(common=={'baseline':False,'cleanup':True},'protected common membership')
     out=dict(passed=True,source_only=True,archive_members=counts,protected_common_upload=common,
-        production_decode_log_interval=100,all_upload_pins_and_shell_syntax_checked=True,
+        instrumentation=mode,qualification_only=qualification,decode_log_interval=int(interval),
+        all_upload_pins_and_shell_syntax_checked=True,
         model_starts=0,launch_authorized=False,native_execution=False)
     with args.report.open('xb') as stream:stream.write(canonical(out))
     print(json.dumps(out,sort_keys=True))

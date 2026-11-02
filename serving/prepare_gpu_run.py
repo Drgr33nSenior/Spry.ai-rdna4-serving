@@ -101,11 +101,14 @@ def quality_template(authenticated,destination,request_rows,*,source_plan=None):
                 native_cpu_seconds=320,execution_authorized=False)
 
 
-def prepare(donor,output,*,packet_id,observed_boot_id,proposal=None,baseline_proposal=None):
+def prepare(donor,output,*,packet_id,observed_boot_id,proposal=None,baseline_proposal=None,
+            run_dir=HERE/'config/runs/w5-v2',qualification=False):
     output,donor=Path(output),Path(donor)
     need(output.is_absolute() and output.resolve()==output and output.parent.is_dir()
          and not output.exists() and not output.is_symlink(),'fresh canonical GPU preparation output required')
     need(not output.is_relative_to(HERE) and not output.is_relative_to(donor),'output must be outside source and donor')
+    need(type(qualification) is bool and (not qualification or baseline_proposal is not None),
+         'instrumented qualification requires an explicit matched baseline proposal')
     import re
     need(type(observed_boot_id) is str and re.fullmatch(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}',observed_boot_id),
          'explicit observed target boot identity required for baseline preparation')
@@ -121,7 +124,7 @@ def prepare(donor,output,*,packet_id,observed_boot_id,proposal=None,baseline_pro
     with tempfile.TemporaryDirectory(prefix='gpu-candidate-review-') as temporary:
         review=Path(temporary).resolve()/'review'
         selected=HERE/'proposals/evidence-capacity' if proposal is None else Path(proposal)
-        report=propose_packet.build(donor,review,packet_id=packet_id,proposal=selected)
+        report=propose_packet.build(donor,review,packet_id=packet_id,proposal=selected,run_dir=run_dir)
         after={p.name:builder.read_regular(p) for p in (review/'package/review').iterdir()}
         run_raw=builder.read_regular(review/'package/config/runs/w5-v2/run.json');run=parse_json(run_raw)
         menu=parse_json(builder.read_regular(review/'package/config/runs/w5-v2/menu.json'))
@@ -131,11 +134,12 @@ def prepare(donor,output,*,packet_id,observed_boot_id,proposal=None,baseline_pro
         if baseline_proposal is not None:
             baseline_review=Path(temporary).resolve()/'baseline'
             baseline_report=propose_packet.build(donor,baseline_review,packet_id=baseline_id,
-                proposal=Path(baseline_proposal))
+                proposal=Path(baseline_proposal),run_dir=run_dir)
             before={p.name:builder.read_regular(p) for p in (baseline_review/'package/review').iterdir()}
             seed=parse_json(builder.read_regular(baseline_review/'package/MANIFEST-PROPOSAL.json'))
         comparison=prepare_measurement.compare_inputs(before,after,run=run,canonical_sources=canonical_names,
-            protected_sources=metadata['protected_source_files'],paired_cleanup=baseline_proposal is not None)
+            protected_sources=metadata['protected_source_files'],paired_cleanup=baseline_proposal is not None,
+            qualification=qualification)
         limits=derive(run['limits']);run_pin=digest(run_raw)
         config={p.relative_to(review/'package').as_posix():builder.read_regular(p) for p in (review/'package/config').rglob('*') if p.is_file()}
         baseline_files=dict(before)
@@ -223,6 +227,7 @@ def prepare(donor,output,*,packet_id,observed_boot_id,proposal=None,baseline_pro
                 native_configuration_binding=configured,legacy_control_retains_original_gates=not configured)
         result=dict(schema=1,status='GPU_PREPARATION_PENDING_PREFLIGHT_AND_APPROVAL',campaigns=campaigns,
             matched_inputs=comparison,pilot_order=['baseline','cleanup'],launch_authorized=False,model_starts_executed=0,
+            qualification_only=qualification,
             automatic_sequence=False,hyperloom_launch_delegation=False,profilers_enabled=False,
             remaining_gates=['CPU caller/quality integration checks','native interpreter preflight',
                 'exact protected checkpoint review','source seal and fresh one-use approval for the first campaign'])
@@ -235,8 +240,11 @@ def main():
     parser.add_argument('--donor',required=True,type=Path);parser.add_argument('--output',required=True,type=Path)
     parser.add_argument('--packet-id',required=True);parser.add_argument('--observed-boot-id',required=True)
     parser.add_argument('--proposal',type=Path);parser.add_argument('--baseline-proposal',type=Path)
+    parser.add_argument('--run-dir',type=Path,default=HERE/'config/runs/w5-v2')
+    parser.add_argument('--qualification',action='store_true')
     args=parser.parse_args();result=prepare(args.donor,args.output,packet_id=args.packet_id,
-        observed_boot_id=args.observed_boot_id,proposal=args.proposal,baseline_proposal=args.baseline_proposal)
+        observed_boot_id=args.observed_boot_id,proposal=args.proposal,baseline_proposal=args.baseline_proposal,
+        run_dir=args.run_dir,qualification=args.qualification)
     print(json.dumps(dict(status=result['status'],variants=list(result['campaigns']),launch_authorized=False),sort_keys=True))
 
 

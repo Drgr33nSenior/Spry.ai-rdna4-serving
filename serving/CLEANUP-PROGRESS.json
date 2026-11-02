@@ -113,7 +113,10 @@
     "Target CPython 3.14.7 source preflight: 265 checks without GPU/model/grading work; complete consumed-packet suite: 20 checks",
     "Matched pre-memory/final production campaign preparation with exact 78/79-member archives and unchanged runtime package bytes",
     "Protected common bootstrap file joins standalone upload, shell hash checks and caller manifest/protected/template validation",
-    "998 public Python tests across 81 suites plus C++ checks; 269 target source checks without native imports, GPU work or model starts"
+    "998 public Python tests across 81 suites plus C++ checks; 269 target source checks without native imports, GPU work or model starts",
+    "Separate instrumented qualification and production measurement paths preserve default production refusal semantics",
+    "Four source campaign authors and one GPU-free CPU tensor envelope sealed; all actual archive, caller, quality materialization and one-use checks pass",
+    "Protected approval review includes exact forward/reverse diffs from executed operation 186, separate from the pre-memory measurement control"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -133,6 +136,16 @@
     "protected_common_upload": true,
     "public_tests": 998,
     "status": "CPU_FINAL_CAMPAIGN_TOOLING_VERIFIED_NATIVE_QUALIFICATION_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "final_native_preparation": {
+    "cpu_tensor_envelope_sealed": true,
+    "instrumented_and_production_campaigns_sealed": true,
+    "native_cpu_source_tests": 270,
+    "native_execution_authorized": false,
+    "public_tests": 999,
+    "runtime_source_cleanup_complete": true,
+    "status": "FINAL_NATIVE_ENVELOPES_PREPARED_UNFUNDED",
     "whole_cleanup_complete": false
   },
   "gpu_run_preparation": {
@@ -166,7 +179,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/final-campaign/VERIFICATION.json",
+  "latest_verification": "proposals/final-qualification/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -180,7 +193,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Final campaign tooling is CPU-verified. Seal and review CPU tensor, instrumented startup and production campaign envelopes; obtain exact one-use execution authority.",
+    "next_stage": "Review sealed GPU-free CPU tensor envelope and the exact instrumented final candidate; obtain one-use authority, run once and park. Production pair sources are sealed for later separate approvals.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -243,22 +256,18 @@
     "visibility": "public"
   },
   "remaining": [
-    "Exact native CPU tensor structure envelope and execution approval",
-    "Final instrumented startup byte/token/quality packet preparation, review and one-use approval",
-    "Production comparison campaign seals, source-bound prelaunch and one-use approvals",
-    "Native greedy token identity, selected quality, BDF memory and independent release acceptance",
-    "Final retained evidence replay, source publication and closeout"
+    "One exact approved GPU-free real CPU tensor structure check",
+    "One exact approved instrumented candidate campaign with startup byte proofs, token/quality and independent release checks",
+    "Separate production baseline and final candidate campaigns with BDF memory sampling and token/work equality",
+    "Full-menu/configuration native qualification and retained evidence closeout"
   ],
   "remaining_external": [
-    "Exact review of the new protected-source proposal before native adoption",
-    "Fresh one-use native serving, token-ID, quality and startup-memory proofs",
-    "Native timing and full instrumented qualification for broader configurations"
+    "One exact approved GPU-free real CPU tensor structure check",
+    "One exact approved instrumented candidate campaign with startup byte proofs, token/quality and independent release checks",
+    "Separate production baseline and final candidate campaigns with BDF memory sampling and token/work equality",
+    "Full-menu/configuration native qualification and retained evidence closeout"
   ],
-  "remaining_local": [
-    "Exact native CPU tensor structure envelope and execution approval",
-    "Final instrumented startup byte/token/quality packet preparation, review and one-use approval",
-    "Production comparison campaign seals, source-bound prelaunch and one-use approvals"
-  ],
+  "remaining_local": [],
   "requested": "Continue until all remaining cleanup steps are complete",
   "runtime_binding_increment": {
     "native_cpu_source_tests": 164,
