@@ -31,3 +31,8 @@ campaigns require separate approvals. Greedy token identity, selected quality,
 startup byte proofs, BDF memory evidence and final retained replay remain open.
 The cleanup is not complete and no execution allowance remains. No memory or
 performance improvement has been measured for the final source.
+
+For the later offline comparison correction, see
+[final campaign readout](../../measurements/final-campaign/README.md). Its
+separate source checks supplement this increment's snapshot; sealed runtime
+and protected source bytes remain unchanged.

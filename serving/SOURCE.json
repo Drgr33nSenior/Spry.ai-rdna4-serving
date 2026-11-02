@@ -1189,6 +1189,14 @@
     "verification": "proposals/evidence-capacity/VERIFICATION.json",
     "verification_sha256": "60957307eb501f5e750939517517dfecd528f6fed448e78987befa85b3eda05b"
   },
+  "final_campaign_readout": {
+    "execution_authorized": false,
+    "path": "compare_measurement.py",
+    "sha256": "c5b791d5e8139f6c68088c43dbfccf18ace148b95d21e8fe030e35dcba12c914",
+    "status": "CPU_FINAL_COMPARISON_READOUT_VERIFIED_NATIVE_RUNS_PENDING",
+    "verification": "measurements/final-campaign/VERIFICATION.json",
+    "verification_sha256": "4796f9d2d7abd6d707ea5221b76c45ae81c36b03634588a6739dbb2c3df30ef4"
+  },
   "final_campaign_tooling": {
     "cleanup_complete": false,
     "native_execution_authorized": false,

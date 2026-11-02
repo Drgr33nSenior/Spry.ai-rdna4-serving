@@ -116,7 +116,9 @@
     "998 public Python tests across 81 suites plus C++ checks; 269 target source checks without native imports, GPU work or model starts",
     "Separate instrumented qualification and production measurement paths preserve default production refusal semantics",
     "Four source campaign authors and one GPU-free CPU tensor envelope sealed; all actual archive, caller, quality materialization and one-use checks pass",
-    "Protected approval review includes exact forward/reverse diffs from executed operation 186, separate from the pre-memory measurement control"
+    "Protected approval review includes exact forward/reverse diffs from executed operation 186, separate from the pre-memory measurement control",
+    "Explicit final-pair selection through the offline comparison entry point; legacy default and all work/quality/release checks preserved",
+    "Changed readout passes 15 native source checks; actual sealed A/B replay retains all 352 matches and identical timing populations"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -136,6 +138,15 @@
     "protected_common_upload": true,
     "public_tests": 998,
     "status": "CPU_FINAL_CAMPAIGN_TOOLING_VERIFIED_NATIVE_QUALIFICATION_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "final_comparison_readout": {
+    "changed_readout_native_source_tests": 15,
+    "legacy_actual_sealed_replay_matched_rows": 352,
+    "prior_runtime_native_source_tests": 270,
+    "public_tests": 1001,
+    "sealed_runtime_sources_changed": false,
+    "status": "CPU_FINAL_COMPARISON_READOUT_VERIFIED_NATIVE_RUNS_PENDING",
     "whole_cleanup_complete": false
   },
   "final_native_preparation": {
@@ -179,7 +190,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/final-qualification/VERIFICATION.json",
+  "latest_verification": "measurements/final-campaign/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,

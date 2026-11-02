@@ -169,8 +169,9 @@ def report_html(report):
     return '<!doctype html><html lang="en"><meta charset="utf-8"><title>Production cleanup pilot</title><style>body{font:16px var(--font-sans,system-ui);color:var(--foreground,#222);margin:0}svg{width:100%;height:330px}svg text{font-size:14px;fill:currentColor}td,th{text-align:left;padding:6px;border-bottom:1px solid var(--border,#ccc)}table{border-collapse:collapse}details{overflow-x:auto;margin:12px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px var(--font-mono,monospace)}.legend{display:inline-block;width:12px;height:12px;margin-right:5px}.baseline{background:var(--chart-1,#3274a1)}.cleanup{background:var(--chart-2,#df8f44)}</style><h2>'+title+'</h2><p>Production mode, stock W5 attention. Output tokens per second combine both GPUs and include prefill and completion. C1/C2 refer to HTTP concurrency; native batch size is unproven.</p><p><span class="legend baseline"></span>Baseline A &nbsp; <span class="legend cleanup"></span>Cleanup B</p>'+''.join(svg)+'<p>Warmup and non-timing groups are excluded from the chart and pooled metrics. All groups and mismatches are retained below. Reverse-order confirmation has not run; this pilot establishes no causal speedup.</p><details><summary>All group observations</summary><table><tr><th>Arm</th><th>Group</th><th>Timing</th><th>A wall (s)</th><th>B wall (s)</th><th>A tokens</th><th>B tokens</th></tr>'+rows+'</table></details><details><summary>Work mismatches ('+str(len(report['work_differences']))+')</summary><pre>'+html.escape(json.dumps(report['work_differences'],indent=2))+'</pre></details></html>'
 
 
-def compare(baseline,baseline_pin,candidate,candidate_pin,sealer_path,output):
+def compare(baseline,baseline_pin,candidate,candidate_pin,sealer_path,output,*,paired_cleanup=False):
     need(sys.flags.optimize==0,'unoptimized original seal verifier required')
+    need(type(paired_cleanup) is bool,'explicit boolean paired cleanup selection required')
     output=Path(output)
     need(output.is_absolute() and output.resolve()==output and output.parent.is_dir() and not output.exists(),'fresh canonical comparison output required')
     need(not output.is_relative_to(HERE),'comparison output must be outside the canonical source tree')
@@ -183,7 +184,8 @@ def compare(baseline,baseline_pin,candidate,candidate_pin,sealer_path,output):
     metadata=read(HERE/'SOURCE.json');run=read(b['package'].parent/'config/runs/w5-v2/run.json')
     names=set(metadata['source_files'])|set(metadata['source_extractions'])|{Path(name).name for name in metadata['new_sources']}
     comparison=prepare_measurement.compare_inputs({p.name:held(p) for p in (a['package']/'review').iterdir()},
-        {p.name:held(p) for p in (b['package']/'review').iterdir()},run=run,canonical_sources=names,protected_sources=metadata['protected_source_files'])
+        {p.name:held(p) for p in (b['package']/'review').iterdir()},run=run,canonical_sources=names,
+        protected_sources=metadata['protected_source_files'],paired_cleanup=paired_cleanup)
     manifest=read(b['package']/'MANIFEST.json');codec=checked_module(b['package']/'review','request_receipts',manifest['package_files']['review/request_receipts.py'])
     differences=[];groups=[]
     for arm in ARMS:
@@ -219,5 +221,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('baseline','candidate','sealer','output'):parser.add_argument('--'+name,type=Path,required=True)
     for name in ('baseline-seal','candidate-seal'):parser.add_argument('--'+name,required=True)
-    args=parser.parse_args();result=compare(args.baseline,args.baseline_seal,args.candidate,args.candidate_seal,args.sealer,args.output)
+    parser.add_argument('--paired-cleanup',action='store_true')
+    args=parser.parse_args();result=compare(args.baseline,args.baseline_seal,args.candidate,args.candidate_seal,
+        args.sealer,args.output,paired_cleanup=args.paired_cleanup)
     print(json.dumps({key:result[key] for key in ('status','rows_compared','matched_rows','mismatched_rows','matched_work_all_rows')},sort_keys=True))

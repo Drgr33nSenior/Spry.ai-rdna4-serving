@@ -2,13 +2,16 @@
 import copy
 from pathlib import Path
 import sys
+import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
 HERE=Path(__file__).resolve().parent
+sys.path.insert(0,str(HERE))
 sys.path.insert(0,str(HERE.parent))
 import compare_measurement as comparison
+import test_measurement_preparation as preparation_tests
 
 
 def groups():
@@ -39,6 +42,71 @@ def response_fixture():
 
 
 class MeasurementComparison(unittest.TestCase):
+    def final_pair(self,root):
+        fixture=preparation_tests.MeasurementPreparation();fixture.setUp()
+        before=copy.deepcopy(fixture.after)
+        for arm in comparison.ARMS.values():
+            name='HTTP-BINDING-'+arm+'.json';value=comparison.strict(before[name])
+            value['binding_template']['sources']['mxfp4_scheme']['module']='mxfp4_component.isolated_scheme'
+            before[name]=comparison.canonical(value)
+        for name in ('kernels.py','GEMM-tail.py','ops.py','p1_fp8_kernels.py',
+                     'd3b_head_fp8_kernels.py','d3b_head_fp8_ops.py','d3b_head_launches.py'):
+            before[name]=b'fixed kernel source'
+        after=dict(before,**{'spry_fp8_head.py':b'shared head source'})
+        sides=[]
+        for label,files in (('baseline',before),('cleanup',after)):
+            package=root/label/'package-v2';review=package/'review';review.mkdir(parents=True)
+            for name,raw in files.items():(review/name).write_bytes(raw)
+            run=package.parent/'config/runs/w5-v2';run.mkdir(parents=True)
+            (run/'run.json').write_bytes(comparison.canonical(fixture.run))
+            (package/'MANIFEST.json').write_bytes(comparison.canonical(dict(package_files={'review/request_receipts.py':'a'*64})))
+            execution=root/(label+'-execution');execution.mkdir()
+            sides.append(dict(root=execution,cpu=root/(label+'-cpu'),package=package,
+                seals={},execution_seal=dict(root=str(execution),manifest_sha256='b'*64,members=1),
+                result=dict(operation=1 if label=='baseline' else 2),
+                summaries={arm:dict(value=dict(rows=[dict(ordinal=n) for n in range(176)])) for arm in comparison.ARMS}))
+        return sides
+
+    def run_final_pair(self,root,output,*,paired_cleanup=False):
+        a,b=self.final_pair(root)
+        metadata=dict(source_files={'worker_entry.py':{}},source_extractions={},new_sources={},protected_source_files={})
+        read=comparison.read
+        def configured_read(path,*args,**kwargs):
+            return metadata if path==comparison.HERE/'SOURCE.json' else read(path,*args,**kwargs)
+        sealer=SimpleNamespace(verify=lambda path,pin:next(side['execution_seal'] for side in (a,b) if side['root']==path))
+        work=dict(case='same frozen request',body_sha256='a'*64,prompt_ids=[10],output_ids=[20],
+            speculative_work={},cache_work={},sampling_parameters={'temperature':0},finish_reason='stop')
+        with patch.object(comparison,'load_side',side_effect=[a,b]), \
+             patch.object(comparison,'checked_module',side_effect=[sealer,SimpleNamespace()]), \
+             patch.object(comparison,'read',side_effect=configured_read), \
+             patch.object(comparison,'request_work',return_value=work) as requests, \
+             patch.object(comparison,'paired_groups',side_effect=lambda arm,*args:[g for g in groups() if g['arm']==arm]):
+            report=comparison.compare(a['root'],'b'*64,b['root'],'b'*64,root/'seal_evidence.py',
+                output,paired_cleanup=paired_cleanup)
+        self.assertEqual(requests.call_count,704)
+        return report
+
+    def test_final_pair_requires_explicit_membership_selection_and_preserves_all_work_checks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();output=root/'comparison'
+            with self.assertRaisesRegex(ValueError,'membership'):
+                self.run_final_pair(root,output)
+            self.assertFalse(output.exists())
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();report=self.run_final_pair(root,root/'comparison',paired_cleanup=True)
+            self.assertTrue(report['matched_work_all_rows']);self.assertEqual(report['rows_compared'],352)
+            self.assertEqual(report['source_comparison']['comparison_scope'],'verified pre-memory source versus final cleanup')
+            self.assertTrue(report['source_comparison']['native_execution_contracts_equal'])
+            self.assertFalse(report['causal_speedup_established'])
+            self.assertTrue((root/'comparison/COMPARISON.json').is_file())
+
+    def test_paired_selection_refuses_non_boolean_before_source_or_output_access(self):
+        for value in (1,None,'true'):
+            with self.subTest(value=value),patch.object(comparison,'checked_module') as loader:
+                with self.assertRaisesRegex(ValueError,'boolean paired cleanup'):
+                    comparison.compare(None,None,None,None,None,None,paired_cleanup=value)
+            loader.assert_not_called()
+
     def test_optimized_python_refuses_before_any_source_or_output_access(self):
         with patch.object(comparison.sys,'flags',SimpleNamespace(optimize=1)),patch.object(comparison,'checked_module') as loader:
             with self.assertRaisesRegex(ValueError,'unoptimized original seal verifier'):
