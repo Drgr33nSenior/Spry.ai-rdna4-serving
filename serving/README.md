@@ -5,10 +5,12 @@ This directory holds the observer safety and structural cleanup increments from
 cleanup source. These files are not a launch packet or a new serving selection.
 
 The latest increment is the
-[shared JSON and HTTP package cleanup](proposals/common-helpers/README.md).
-Three serializers use one authenticated canonical source. The candidate removes
-the retired graph-integration payload and keeps the active graph projection API,
-with 1,092 fewer Python lines and the same 80 archive members. It builds on the
+[closed HTTP package](proposals/closed-http/README.md).
+The owner/controller and installed consumers now use the HTTP module APIs.
+The candidate removes disabled feature APIs, legacy diagnostic branches and
+three unused payload files. It contains 77 members under the existing
+80-member ceiling. Three serializers share one authenticated canonical source.
+It builds on the [shared helper cleanup](proposals/common-helpers/README.md), the
 [startup source digest proposal](proposals/startup-digests/README.md), the
 [MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and the
 [configured request and evidence proposal](proposals/configuration-mutations/README.md).

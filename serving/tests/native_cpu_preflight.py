@@ -19,12 +19,14 @@ def main():
     proposal_group.add_argument('--runtime-binding-proposal',action='store_true')
     proposal_group.add_argument('--startup-digests-proposal',action='store_true')
     proposal_group.add_argument('--common-helpers-proposal',action='store_true')
+    proposal_group.add_argument('--closed-http-proposal',action='store_true')
     parser.add_argument('--metrics-reporter',type=Path)
     args=parser.parse_args()
     if sys.version_info[:2]!=(3,14) or platform.machine()!='x86_64' or sys.platform!='linux':
         raise ValueError('native Linux x86_64 CPython 3.14 required')
     repository=args.repository.resolve(strict=True);donor=args.donor.resolve(strict=True)
-    startup=args.startup_digests_proposal or args.common_helpers_proposal
+    common=args.common_helpers_proposal or args.closed_http_proposal
+    startup=args.startup_digests_proposal or common
     runtime=args.runtime_binding_proposal or startup
     configured=args.configuration_proposal or runtime
     if configured and args.metrics_reporter is None:
@@ -53,8 +55,10 @@ def main():
                   'serving/tests/test_quality_materialization.py','serving/tests/test_quality_policy.py')
     if runtime:scripts+=('serving/tests/test_runtime_binding.py',)
     if startup:scripts+=('serving/tests/test_startup_digests.py',)
-    if args.common_helpers_proposal:scripts+=('serving/tests/test_common_helpers.py',)
-    private=('serving/tests/check_common_helpers_packet.py' if args.common_helpers_proposal else
+    if common:scripts+=('serving/tests/test_common_helpers.py',)
+    if args.closed_http_proposal:scripts+=('serving/tests/test_closed_http.py',)
+    private=('serving/tests/check_closed_http_packet.py' if args.closed_http_proposal else
+             'serving/tests/check_common_helpers_packet.py' if common else
              'serving/tests/check_startup_digests_packet.py' if startup else
              'serving/tests/check_runtime_binding_packet.py' if runtime else
              'serving/tests/check_configuration_mutations_packet.py' if configured else 'serving/tests/check_evidence_capacity_packet.py')
@@ -66,10 +70,11 @@ def main():
             spec=importlib.util.spec_from_file_location('native_cpu_preflight_'+str(number),path)
             module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
             if relative.endswith(('check_configuration_mutations_packet.py','check_runtime_binding_packet.py',
-                                  'check_startup_digests_packet.py','check_common_helpers_packet.py')):
+                                  'check_startup_digests_packet.py','check_common_helpers_packet.py','check_closed_http_packet.py')):
                 context=module.configured if runtime else module
                 context.PACKET=donor;context.METRICS_REPORTER=args.metrics_reporter
-                prefix=('CommonHelperPacket.' if args.common_helpers_proposal else
+                prefix=('ClosedHttpPacket.' if args.closed_http_proposal else
+                        'CommonHelperPacket.' if common else
                         'StartupDigestPacket.' if startup else
                         'RuntimeBindingPacket.' if runtime else 'ConfigurationPacket.')
                 names=[prefix+name for name in (
@@ -80,12 +85,12 @@ def main():
                 if runtime:
                     names += [prefix+'test_actual_transport_binds_new_ops_and_rejects_rollback_with_self_consistent_package_pins']
                     names += [prefix+('test_runtime_payload_changes_only_shared_helpers_and_derived_source_bindings'
-                        if args.common_helpers_proposal else 'test_runtime_payload_changes_only_reviewed_code_and_derived_source_bindings')]
+                        if common else 'test_runtime_payload_changes_only_reviewed_code_and_derived_source_bindings')]
                 if args.startup_digests_proposal:
                     names += [prefix+name for name in (
                         'test_only_worker_and_derived_source_bindings_change_from_runtime_control',
                         'test_packaged_worker_passes_all_source_digest_regressions')]
-                if args.common_helpers_proposal:
+                if common:
                     names += [prefix+name for name in (
                         'test_all_three_actual_consumers_share_exact_json_functions_and_bytes',
                         'test_packaged_common_source_change_or_removal_refuses_before_code_exec',
@@ -119,6 +124,7 @@ def main():
     report['runtime_binding_proposal']=args.runtime_binding_proposal
     report['startup_digests_proposal']=args.startup_digests_proposal
     report['common_helpers_proposal']=args.common_helpers_proposal
+    report['closed_http_proposal']=args.closed_http_proposal
     with args.report.open('x') as stream:json.dump(report,stream,sort_keys=True,indent=2);stream.write('\n')
     print(json.dumps(report,sort_keys=True),flush=True)
     return 0 if passed else 1

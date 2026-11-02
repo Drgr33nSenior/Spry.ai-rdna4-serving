@@ -52,6 +52,29 @@ def install_shared_common(files, record):
     files['BENCHMARK-SPEC2.json'] = canonical(spec)
 
 
+def retire_http_experiment_sources(files, record):
+    """Remove only the three source-pinned experiment payloads outside HTTP."""
+    retired = record['retired_http_sources']
+    need(type(retired) is dict and set(retired) == {
+        'graph_screen.py', 'context_tokenizer.py', 'validation_comparison.py'},
+        'exact retired HTTP experiment source set required')
+    need(all(name in files and digest(files[name]) == pin for name, pin in retired.items()),
+         'retired HTTP source bytes differ')
+    spec = parse_json(files['BENCHMARK-SPEC2.json'])
+    need(spec.get('experiment_mode') == source_builder.MODE and
+         not any(spec.get(key) is not None for key in (
+             'independent_reference', 'validation_comparison', 'cache_profile', 'callback_profile', 'stall_trace')),
+         'only the closed HTTP specification admits source retirement')
+    helpers = spec['graph_projection']['helpers']
+    need(set(helpers) == {'context_tokenizer.py', 'graph_screen.py', 'graph_outer.py', 'spry_common_canon.py'},
+         'exact inherited HTTP projection helper set required')
+    for name in ('context_tokenizer.py', 'graph_screen.py'):
+        del helpers[name]
+    for name in retired:
+        del files[name]
+    files['BENCHMARK-SPEC2.json'] = canonical(spec)
+
+
 def protected_sources(proposal, donor, metadata):
     """Select only exact proposed helper bytes; never alter the canonical builder."""
     proposal = Path(proposal)
@@ -124,6 +147,8 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         files.update(selected)
         if 'shared_common_source' in record:
             install_shared_common(files, record)
+        if 'retired_http_sources' in record:
+            retire_http_experiment_sources(files, record)
         policy=source_builder.production_evidence_policy(files)
         need(policy is None or record.get('production_evidence_mount_isolation') is True,
              'production evidence view requires matching protected consumers')
@@ -153,7 +178,8 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         protected = canonical({'review/' + name: digest(raw) for name, raw in selected.items()})
         package['package/PROTECTED-SHA256.json'] = protected
         package['package/MANIFEST-PROPOSAL.json'] = canonical(manifest)
-        need(len(package) == 80, 'exact proposed 80-member package required')
+        member_count = 77 if 'retired_http_sources' in record else 80
+        need(len(package) == member_count, 'exact proposed HTTP package membership required')
         # These dependencies are code/public connection metadata only. Their
         # private key path is retained; this renderer never opens that path.
         caller = {'caller/' + name: authenticated['launcher/caller-preview/' + name]
@@ -182,7 +208,7 @@ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/run
         source_builder_sha256=original['inputs']['builder_sha256'],
         donor_seal_sha256=metadata['source_seal_sha256'], protected_proposal_sha256=proposal_pin,
         protected_set_sha256=record['protected_set_sha256'], session_identity=identity,
-        source_builder_protected_sources_unchanged=True, proposed_package_members=80,
+        source_builder_protected_sources_unchanged=True, proposed_package_members=len(package),
         caller_activation_complete=False, caller_dependencies_staged=True,
         production_evidence_view=None if policy is None else dict(files=list(policy['files']),
             mask_sha256=policy['sha256'],generated_on_native_execution=True),

@@ -1,4 +1,16 @@
 {
+  "closed_http_increment": {
+    "archive_members": 77,
+    "native_cpu_source_tests": 193,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "owner_archive_ceiling": 80,
+    "packet_checks": 14,
+    "public_tests": 928,
+    "retired_feature_apis": 13,
+    "status": "CPU_CLOSED_HTTP_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
   "common_helpers_increment": {
     "archive_members": 80,
     "native_cpu_source_tests": 186,
@@ -62,7 +74,12 @@
     "Unused legacy graph-integration payload replaced by the canonical helper; active graph projection API retained",
     "Candidate package: 1,092 fewer Python lines, 65,908 fewer source bytes, same 80 archive members and native workload arguments apart from source pins",
     "Public regression suite: 921 Python tests across 73 suites plus C++ sanitizers",
-    "Native CPython 3.14.7 source preflight: 186 checks without GPU/model/grading work; original 16 MiB archive limit retained"
+    "Native CPython 3.14.7 source preflight: 186 checks without GPU/model/grading work; original 16 MiB archive limit retained",
+    "Closed HTTP owner/controller consumers and removed unreachable non-HTTP diagnostics with strict domain admission",
+    "Removed 13 disabled or forwarding feature APIs and an unused normalization helper; settings validation effects retained",
+    "Retired graph screen, context tokenizer and comparison payloads; archive reduced to 77 members under unchanged 80-member ceiling",
+    "Public regression suite: 928 Python tests across 74 suites plus C++ sanitizers",
+    "Target CPython 3.14.7 source preflight: 193 checks without GPU/model/grading work; complete consumed-packet suite: 14 checks"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -103,7 +120,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/common-helpers/VERIFICATION.json",
+  "latest_verification": "proposals/closed-http/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -117,7 +134,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Configured runtime, startup digest and shared-canonical proposals are CPU-verified; native qualification and remaining module/runner/replay/startup-scan/memory cleanup remain",
+    "next_stage": "Closed HTTP, startup digest and runtime binding proposals are CPU-verified. Runner/replay/startup scan/memory implementation and exact native qualification remain.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -133,11 +150,11 @@
     "visibility": "public"
   },
   "remaining": [
-    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
-    "Remaining compatibility APIs, shared helpers and module/package closure beyond the three migrated serializers",
+    "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
     "Stock runner/post-load hook and verify metadata preparation before replay",
     "Startup tensor validation scans and item synchronization after the runner refactor",
     "Shared FP8 head and packed QKVZ/BA views after refactors",
+    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
     "Native startup memory equality and retained headroom proof",
     "Broader configuration and instrumented full-menu capacity qualification"
   ],
@@ -147,10 +164,10 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Remaining compatibility APIs, shared helpers and module/package closure beyond the three migrated serializers",
+    "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
     "Stock runner/post-load hook and verify metadata preparation before replay",
     "Startup tensor validation scans and item synchronization after the runner refactor",
-    "Memory recovery after the refactor phases"
+    "Shared FP8 head and packed QKVZ/BA views after refactors"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",
   "runtime_binding_increment": {
