@@ -110,7 +110,10 @@
     "Controller and transport refuse self-consistent substituted common source hashes before admission",
     "Startup scan audit: duplicated head scan removed; per-layer scale and P1 reads retained before dependent expansion and warmup",
     "Public regression suite: 994 Python tests across 80 suites plus C++ sanitizers",
-    "Target CPython 3.14.7 source preflight: 265 checks without GPU/model/grading work; complete consumed-packet suite: 20 checks"
+    "Target CPython 3.14.7 source preflight: 265 checks without GPU/model/grading work; complete consumed-packet suite: 20 checks",
+    "Matched pre-memory/final production campaign preparation with exact 78/79-member archives and unchanged runtime package bytes",
+    "Protected common bootstrap file joins standalone upload, shell hash checks and caller manifest/protected/template validation",
+    "998 public Python tests across 81 suites plus C++ checks; 269 target source checks without native imports, GPU work or model starts"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -118,6 +121,18 @@
     "new_model_starts": 0,
     "public_tests": 893,
     "status": "CPU_CONFIGURED_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "final_campaign_tooling_increment": {
+    "baseline_package_members": 78,
+    "candidate_package_members": 79,
+    "native_cpu_source_tests": 269,
+    "native_qualification_pending": true,
+    "new_model_starts": 0,
+    "production_decode_log_interval": 100,
+    "protected_common_upload": true,
+    "public_tests": 998,
+    "status": "CPU_FINAL_CAMPAIGN_TOOLING_VERIFIED_NATIVE_QUALIFICATION_PENDING",
     "whole_cleanup_complete": false
   },
   "gpu_run_preparation": {
@@ -151,7 +166,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/common-closure/VERIFICATION.json",
+  "latest_verification": "proposals/final-campaign/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -165,7 +180,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Runtime/structural source cleanup is CPU-verified. Final native campaign tooling, CPU tensor semantics and native byte/token/quality/memory qualification remain.",
+    "next_stage": "Final campaign tooling is CPU-verified. Seal and review CPU tensor, instrumented startup and production campaign envelopes; obtain exact one-use execution authority.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -228,11 +243,11 @@
     "visibility": "public"
   },
   "remaining": [
-    "Update final native campaign preparation for the selected proposal, 79-member package and protected common bootstrap upload",
-    "Real CPU tensor structure proof under an approved GPU-free tensor envelope",
-    "Exact complete protected/source review and fresh one-use native greedy token/selected-quality qualification",
-    "Instrumented native startup bytes, deterministic head quantization and whole-device memory by BDF",
-    "Native full-menu/configuration qualification and final evidence closeout"
+    "Exact native CPU tensor structure envelope and execution approval",
+    "Final instrumented startup byte/token/quality packet preparation, review and one-use approval",
+    "Production comparison campaign seals, source-bound prelaunch and one-use approvals",
+    "Native greedy token identity, selected quality, BDF memory and independent release acceptance",
+    "Final retained evidence replay, source publication and closeout"
   ],
   "remaining_external": [
     "Exact review of the new protected-source proposal before native adoption",
@@ -240,7 +255,9 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Update final native campaign preparation for the selected proposal, 79-member package and protected common bootstrap upload"
+    "Exact native CPU tensor structure envelope and execution approval",
+    "Final instrumented startup byte/token/quality packet preparation, review and one-use approval",
+    "Production comparison campaign seals, source-bound prelaunch and one-use approvals"
   ],
   "requested": "Continue until all remaining cleanup steps are complete",
   "runtime_binding_increment": {

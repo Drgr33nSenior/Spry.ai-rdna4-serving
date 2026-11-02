@@ -72,7 +72,8 @@ def main():
         'tests/test_platform_collector.py','serving/tests/test_evidence_capacity.py',
         'serving/tests/test_startup_configuration.py','serving/tests/test_host_binding.py',
         'serving/tests/test_source_fingerprints.py','serving/tests/test_configured_caller.py',
-        'serving/tests/test_gpu_run_packaging.py','serving/tests/test_one_use_caller.py')
+        'serving/tests/test_gpu_run_packaging.py','serving/tests/test_one_use_caller.py',
+        'serving/tests/test_final_campaign.py')
     if configured:
         scripts+=('serving/tests/test_configuration_projection.py','serving/tests/test_chunked_receipts.py',
                   'serving/tests/test_quality_materialization.py','serving/tests/test_quality_policy.py')

@@ -94,6 +94,14 @@ def validate_context(root,authorization_sha256):
          binding['protected_root']=='/var/tmp/fp8-benchmark-source.'+binding['nonce'] and
          binding['remote_upload_root']=='/home/developer/fp8-benchmark-upload.'+binding['nonce'],'fresh configured paths differ')
     inventory=binding['upload_inventory'];expected={'payload.tar','RUN-ON-WORKSTATION.sh'}|{'review/'+name for name in HELPERS}
+    if 'bootstrap_common_sha256' in binding:
+        pin=binding['bootstrap_common_sha256']
+        need(type(pin) is str and re.fullmatch('[0-9a-f]{64}',pin),'bootstrap common digest required')
+        name='review/spry_common_canon.py'
+        protected=strict(held(source/'package-v2/PROTECTED-SHA256.json',binding['protected_set_sha256'],64<<10))
+        need(manifest.get('package_files',{}).get(name)==protected.get(name)==inventory.get(name)==pin,
+             'bootstrap common manifest/inventory binding differs')
+        expected.add(name)
     need(set(inventory)==expected,'exact retained upload subset required')
     upload=source/'owner-upload'
     need({p.relative_to(upload).as_posix() for p in upload.rglob('*') if not p.is_dir()}==expected,'upload source membership differs')

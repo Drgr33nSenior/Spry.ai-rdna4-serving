@@ -15,7 +15,7 @@ from spry_common.canon import canonical_line as canonical, digest, need, parse_j
 from spry_common.limits import derive
 
 
-def execution_contract(raw):
+def execution_contract(raw, *, paired_cleanup=False):
     """Keep native sources and every execution setting; exclude private code pins."""
     value = copy.deepcopy(parse_json(raw))
     value.pop('source_manifest_sha256')
@@ -25,8 +25,17 @@ def execution_contract(raw):
     for name, row in binding['sources'].items():
         if name in source_builder.EXTRACTED_HELPERS:
             continue
+        if paired_cleanup and name == 'shared_fp8_head':
+            need(row['path'] == '/mnt/review/spry_fp8_head.py' and row['module'] == 'spry_fp8_head',
+                 'exact shared head comparison source required')
+            continue
         private = row['path'].startswith('/mnt/review/')
         fixed = name.startswith(('mxfp4_', 'asset-')) and name != 'asset-ALLOCATION-OVERLAY.json'
+        if paired_cleanup and name == 'mxfp4_scheme':
+            need(row['path'] == '/mnt/review/isolated_scheme.py'
+                 and row['module'] == 'mxfp4_component.isolated_scheme',
+                 'exact packed scheme comparison source required')
+            fixed = False
         if private and not fixed:
             row.pop('sha256')
         sources[name] = row
@@ -37,32 +46,40 @@ def execution_contract(raw):
     return value
 
 
-def compare_inputs(before, after, *, run, canonical_sources, protected_sources):
+def compare_inputs(before, after, *, run, canonical_sources, protected_sources, paired_cleanup=False):
     """Refuse a mode, request, native overlay, model, stack or execution confound."""
     settings = parse_json(before['FINAL-SETTINGS.json'])
     need(settings.get('instrumentation') == run.get('instrumentation') == 'production',
          'both measurement variants must use explicit production mode')
-    need(set(before) - set(after) == set(source_builder.RETIRED_W5_MEMBERS)
-         and set(after) - set(before) == {name + '.py' for name in source_builder.EXTRACTED_HELPERS},
+    removed = set() if paired_cleanup else set(source_builder.RETIRED_W5_MEMBERS)
+    added = {'spry_fp8_head.py'} if paired_cleanup else {name + '.py' for name in source_builder.EXTRACTED_HELPERS}
+    need(set(before) - set(after) == removed and set(after) - set(before) == added,
          'exact reviewed cleanup membership changes required')
     allowed = set(canonical_sources) | set(protected_sources) | {
         'ALLOCATION-OVERLAY.json', 'BENCHMARK-SPEC2.json', 'RESOURCE-MANIFEST.json',
         'HTTP-BINDING-control.json', 'HTTP-BINDING-mtp.json'}
+    if paired_cleanup:
+        allowed.update(('spry_common_canon.py', 'spry_post_load.py'))
     fixed = (set(before) & set(after)) - allowed
     fixed.update(run['overlays'])
     fixed.update(('FINAL-SETTINGS.json', 'FINAL-REQUESTS.zlib', 'MODEL-INVENTORY.json',
                   'DRAFT-MODEL.json', 'PRECISION-REFERENCE.json', 'SERVING-STACK.json',
                   'COMMON-STACK-RECEIPT.json', 'COMPOSITION-FACTS.zlib'))
+    if paired_cleanup:
+        fixed.update(('kernels.py', 'GEMM-tail.py', 'ops.py', 'p1_fp8_kernels.py',
+                      'd3b_head_fp8_kernels.py', 'd3b_head_fp8_ops.py', 'd3b_head_launches.py'))
     for name in sorted(fixed):
         need(name in before and name in after and before[name] == after[name],
              'measurement input differs: ' + name)
     for arm in ('control', 'mtp'):
         name = 'HTTP-BINDING-' + arm + '.json'
-        need(canonical(execution_contract(before[name])) == canonical(execution_contract(after[name])),
+        need(canonical(execution_contract(before[name],paired_cleanup=paired_cleanup)) ==
+             canonical(execution_contract(after[name],paired_cleanup=paired_cleanup)),
              'native execution contract differs: ' + arm)
     return dict(instrumentation='production', attention='retained-W5-stock',
                 c4_included=False, fixed_files={name: digest(before[name]) for name in sorted(fixed)},
-                native_execution_contracts_equal=True, output_token_identity_verified=False)
+                native_execution_contracts_equal=True, output_token_identity_verified=False,
+                comparison_scope='verified pre-memory source versus final cleanup' if paired_cleanup else 'retained donor versus cleanup')
 
 
 def prepare(donor, output, *, packet_id, hyperloom_root=None):

@@ -1189,6 +1189,15 @@
     "verification": "proposals/evidence-capacity/VERIFICATION.json",
     "verification_sha256": "60957307eb501f5e750939517517dfecd528f6fed448e78987befa85b3eda05b"
   },
+  "final_campaign_tooling": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "path": "proposals/final-campaign",
+    "record_sha256": "d9888cef403b0b58ae67d1f5aaf637309c9bdd3fa003a9b17aca1a63924982a9",
+    "status": "CPU_FINAL_CAMPAIGN_TOOLING_VERIFIED_NATIVE_QUALIFICATION_PENDING",
+    "verification": "proposals/final-campaign/VERIFICATION.json",
+    "verification_sha256": "4c4093304ffed8904eb1d67dae6223b40ce23f5e2153900cae0def0f2161db32"
+  },
   "fresh_identity_renderer": {
     "builder_sha256": "2b55ce2e2dd672a17102a5bd27365ec866a9762d40e7fc5c4f3247dda994dad4",
     "fresh_launch_manifest_created": false,
@@ -1422,7 +1431,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Update native campaign preparation for final selected source, package membership and protected common bootstrap; prepare exact CPU tensor, GPU startup byte/token/quality and BDF memory qualification. No native execution allowance remains.",
+  "next_bounded_action": "Prepare exact GPU-free CPU tensor and instrumented/production native qualification envelopes; retain complete source/protected review, seals and one-use approvals. No native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
