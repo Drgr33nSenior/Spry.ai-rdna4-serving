@@ -1437,10 +1437,10 @@
   },
   "last_instrumented_native_attempt": {
     "model_construction_reached": false,
-    "operation": 192,
-    "result": "measurements/native-qualification/GPU-192-RESULT.json",
-    "sha256": "edcb578109e8e5e04de43c5799071ae1abbb1bf7d5db562007518a6403ded134",
-    "status": "INSTRUMENTED_CANDIDATE_TEMPLATE_SOURCE_REFUSAL_PARKED",
+    "operation": 193,
+    "result": "measurements/native-qualification/GPU-193-RESULT.json",
+    "sha256": "e49882f79f79b418bfafeabe48729b5375f15f3557a37b4057b84680bf262ab2",
+    "status": "INSTRUMENTED_CANDIDATE_PREWEIGHT_SOURCE_REFUSAL_PARKED",
     "worker_start_attempts": 1
   },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
@@ -1478,7 +1478,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000088. Reuse the unchanged sealed real CPU tensor proof. Operation192 is parked with no retry or grading allowance.",
+  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000091. Reuse the unchanged sealed real CPU tensor proof. Operation193 is parked with no retry or grading allowance.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1879,6 +1879,14 @@
     "status": "CPU_PRE_REPLAY_METADATA_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "verification": "proposals/pre-replay/VERIFICATION.json",
     "verification_sha256": "46d2009f285d14810751a14b2c027ab30b3155b3ad9958b990f16806a050833e"
+  },
+  "preweight_source_pins": {
+    "native_execution_authorized": false,
+    "path": "proposals/preweight-source-pins",
+    "record_sha256": "ebd0ab266b92861e8a53f8d262d55ac27072606f428c5d8e37c7aeb0d97f598b",
+    "status": "CPU_PREWEIGHT_SOURCE_BINDINGS_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "verification": "proposals/preweight-source-pins/VERIFICATION.json",
+    "verification_sha256": "7e359ab0f43d06b8a2ee4cf54bb524507626b1d5d3f4dea49ee111b16744df88"
   },
   "prior_verification": {
     "diff_whitespace": "PASS",

@@ -31,3 +31,17 @@ The [final template pin correction](../../proposals/final-template-pins/README.m
 refreshes source bindings after protected replacements. Its CPU checks execute
 the actual worker authentication loop for both modes and arms. Runtime and
 protected Python bytes are unchanged. A fresh exact GPU approval is required.
+
+Operation 193 passed root staging and the main source checks, then refused a
+stale nested GPU identity digest in the preweight configuration before model
+construction. No response, second arm or quality grade ran. Collection and
+independent GPU release passed; checkpoint 533 is parked. See
+[GPU-193-RESULT.json](GPU-193-RESULT.json).
+
+The [nested preweight correction](../../proposals/preweight-source-pins/README.md)
+refreshes both nested helper references. The earlier CPU check stopped before
+this guard. The expanded check runs the actual template reader, complete worker
+materializer and written worker cross-binding in both modes and arms. All worker
+and protected Python bytes remain unchanged. Fresh packet `e201110200000091`
+requires exact one-use approval; GPU acceptance and production measurement are
+still pending.

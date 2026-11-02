@@ -42,7 +42,8 @@ def execution_contract(raw, *, paired_cleanup=False):
     binding['sources'] = sources
     worker.pop('source_manifest_sha256')
     worker['sources'].pop('source_manifest_sha256')
-    worker['preweight']['graph_observer'].pop('sha256')
+    for helper in ('gpu_identity', 'graph_observer'):
+        worker['preweight'][helper].pop('sha256')
     return value
 
 

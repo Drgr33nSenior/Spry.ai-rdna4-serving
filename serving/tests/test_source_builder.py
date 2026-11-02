@@ -45,6 +45,8 @@ class SourceBuild(unittest.TestCase):
                    for name in names if name[:-3] in builder.HTTP_IMPORTS}
         sources['graph_observer'] = dict(path='/mnt/review/serving_graph_observer.py',
             module='serving_graph_observer', sha256=builder.digest(self.files['serving_graph_observer.py']))
+        sources['gpu_identity'] = dict(path='/mnt/review/benchmark_gpu_identity.py',
+            module='benchmark_gpu_identity', sha256=builder.digest(self.files['benchmark_gpu_identity.py']))
         sources['stock'] = dict(path='/mnt/composition/stock.py', sha256='e' * 64)
         source_pin = builder.digest(builder.canonical(sources)[:-1])
         for arm in ('control', 'mtp'):
@@ -53,7 +55,7 @@ class SourceBuild(unittest.TestCase):
                 binding_template=dict(sources=sources, source_manifest_sha256=source_pin),
                 worker_template=dict(sources=dict(same_as='binding_template.sources',
                     source_manifest_sha256=source_pin), source_manifest_sha256=source_pin,
-                    preweight=dict(graph_observer=sources['graph_observer']))))
+                    preweight={name:copy.deepcopy(sources[name]) for name in ('gpu_identity','graph_observer')})))
         self.files['ALLOCATION-OVERLAY.json'] = builder.canonical(dict(schema=1, files=[dict(
             file='triton_backend_candidate.py', original_sha256='f' * 64,
             sha256=builder.digest(self.files['triton_backend_candidate.py']))]))

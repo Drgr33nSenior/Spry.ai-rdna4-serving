@@ -25,11 +25,14 @@ class MeasurementPreparation(unittest.TestCase):
                 canonical_server_cli=['--speculative-num-draft-tokens', '8'],
                 sources=dict(native=dict(path='/mnt/composition/native.py', sha256='b'*64),
                              mxfp4_scheme=dict(path='/mnt/review/isolated_scheme.py', sha256='d'*64),
+                             gpu_identity=dict(path='/mnt/review/benchmark_gpu_identity.py', module='benchmark_gpu_identity', sha256='e'*64),
                              worker=dict(path='/mnt/review/worker_entry.py', sha256='c'*64))),
             worker_template=dict(source_manifest_sha256='a'*64,
                 sources=dict(same_as='binding_template.sources', source_manifest_sha256='a'*64),
                 arm_config=dict(disable_cuda_graph=False),
-                preweight=dict(graph_observer=dict(path='/mnt/review/serving_graph_observer.py', sha256='d'*64))))
+                preweight=dict(
+                    gpu_identity=dict(path='/mnt/review/benchmark_gpu_identity.py', module='benchmark_gpu_identity', sha256='e'*64),
+                    graph_observer=dict(path='/mnt/review/serving_graph_observer.py', sha256='d'*64))))
         for arm in ('control','mtp'):
             self.before['HTTP-BINDING-'+arm+'.json'] = measurement.canonical(template)
         self.after = {name: raw for name,raw in self.before.items()
@@ -50,6 +53,7 @@ class MeasurementPreparation(unittest.TestCase):
     def test_checked_cleanup_changes_preserve_execution_contract_without_claiming_token_identity(self):
         self.mutate_binding(lambda v: v['binding_template']['sources']['worker'].update(sha256='e'*64))
         self.mutate_binding(lambda v: v['worker_template']['preweight']['graph_observer'].update(sha256='f'*64))
+        self.mutate_binding(lambda v: v['worker_template']['preweight']['gpu_identity'].update(sha256='f'*64))
         before = copy.deepcopy(self.after)
         result = self.compare()
         self.assertEqual(self.after, before)
@@ -76,6 +80,14 @@ class MeasurementPreparation(unittest.TestCase):
     def test_changed_native_source_pin_refuses(self):
         self.mutate_binding(lambda v: v['binding_template']['sources']['native'].update(sha256='f'*64))
         with self.assertRaisesRegex(ValueError, 'native execution contract differs'): self.compare()
+
+    def test_preweight_identity_path_and_module_remain_fixed(self):
+        for key,value in (('path','/mnt/review/other.py'),('module','other_helper')):
+            original=copy.deepcopy(self.after)
+            self.mutate_binding(lambda v: v['worker_template']['preweight']['gpu_identity'].update({key:value}))
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError,'native execution contract differs'):
+                self.compare()
+            self.after=original
 
     def test_changed_private_numeric_source_pin_refuses(self):
         self.mutate_binding(lambda v: v['binding_template']['sources']['mxfp4_scheme'].update(sha256='f'*64))

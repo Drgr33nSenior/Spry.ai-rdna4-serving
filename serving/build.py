@@ -161,7 +161,8 @@ def refresh_http_source_bindings(files):
         for template in ('binding_template', 'worker_template'):
             value[template]['source_manifest_sha256'] = pin
         alias['source_manifest_sha256'] = pin
-        value['worker_template']['preweight']['graph_observer'] = dict(sources['graph_observer'])
+        for helper in ('gpu_identity', 'graph_observer'):
+            value['worker_template']['preweight'][helper] = dict(sources[helper])
         files[name] = canonical(value)
         need(len(files[name]) < 65536, 'HTTP template exceeds retained byte limit')
         spec['http_serving']['bindings'][arm]['sha256'] = digest(files[name])

@@ -26,7 +26,8 @@ class FinalTemplatePins(unittest.TestCase):
             value=dict(mode=builder.MODE,arm=arm,source_manifest_sha256='d'*64,
                 binding_template=dict(sources=sources,source_manifest_sha256='d'*64),
                 worker_template=dict(sources=dict(same_as='binding_template.sources',source_manifest_sha256='d'*64),
-                    source_manifest_sha256='d'*64,preweight=dict(graph_observer=copy.deepcopy(sources['graph_observer']))))
+                    source_manifest_sha256='d'*64,preweight={
+                        name:copy.deepcopy(sources[name]) for name in ('gpu_identity','graph_observer')}))
             self.files['HTTP-BINDING-'+arm+'.json']=builder.canonical(value)
     def templates(self):return {arm:json.loads(self.files['HTTP-BINDING-'+arm+'.json']) for arm in ('control','mtp')}
     def test_final_identity_bytes_refresh_both_templates_aliases_and_spec_pins(self):
@@ -39,11 +40,22 @@ class FinalTemplatePins(unittest.TestCase):
             self.assertEqual(value['source_manifest_sha256'],pin)
             for name in ('binding_template','worker_template'):self.assertEqual(value[name]['source_manifest_sha256'],pin)
             self.assertEqual(value['worker_template']['sources']['source_manifest_sha256'],pin)
-            self.assertEqual(value['worker_template']['preweight']['graph_observer'],sources['graph_observer'])
+            for helper in ('gpu_identity','graph_observer'):
+                self.assertEqual(value['worker_template']['preweight'][helper],sources[helper])
             self.assertEqual(spec['http_serving']['bindings'][arm]['sha256'],builder.digest(self.files['HTTP-BINDING-'+arm+'.json']))
     def test_refresh_is_idempotent_without_registering_extracted_helpers_again(self):
         builder.refresh_http_source_bindings(self.files);before=copy.deepcopy(self.files)
         builder.refresh_http_source_bindings(self.files);self.assertEqual(self.files,before)
+    def test_both_stale_preweight_aliases_refresh_after_each_helper_replacement(self):
+        builder.refresh_http_source_bindings(self.files)
+        for filename in ('benchmark_gpu_identity.py','serving_graph_observer.py'):
+            self.files[filename]+=b'# changed final helper\n'
+        builder.refresh_http_source_bindings(self.files)
+        for value in self.templates().values():
+            sources=value['binding_template']['sources']
+            for helper in ('gpu_identity','graph_observer'):
+                self.assertEqual(value['worker_template']['preweight'][helper],sources[helper])
+                self.assertEqual(sources[helper]['sha256'],builder.digest(self.files[Path(sources[helper]['path']).name]))
     def test_production_mask_remains_bound_while_identity_source_uses_its_real_bytes(self):
         self.files['FINAL-SETTINGS.json']=builder.canonical(dict(instrumentation='production'))
         self.files['mtp_contract.py']=(HERE/'spry_serving/common_mtp_contract.py').read_bytes()
@@ -54,6 +66,8 @@ class FinalTemplatePins(unittest.TestCase):
             sources=value['binding_template']['sources']
             self.assertEqual(sources['graph_observer']['sha256'],policy['sha256'])
             self.assertEqual(sources['gpu_identity']['sha256'],builder.digest(self.files['benchmark_gpu_identity.py']))
+            for helper in ('gpu_identity','graph_observer'):
+                self.assertEqual(value['worker_template']['preweight'][helper],sources[helper])
     def test_missing_declared_private_source_refuses(self):
         self.files.pop('benchmark_gpu_identity.py')
         with self.assertRaisesRegex(ValueError,'private source missing'):builder.refresh_http_source_bindings(self.files)
