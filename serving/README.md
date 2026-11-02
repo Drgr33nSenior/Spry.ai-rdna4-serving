@@ -26,7 +26,10 @@ first warmup responses. Earlier control 203 completed all 352 responses with
 B186 token identity, native quality and independent release passing. Its original
 finite caller completed. A stale replay-map defect after eager metadata
 replacement is reproduced and [corrected on CPU](proposals/replay-metadata-scope/README.md).
-The correction still needs native GPU qualification and production measurement.
+Operation 205 then refused draft graph capture before readiness or any response.
+The [target-only correction](proposals/target-replay-scope/README.md) preserves the
+native draft path and passes CPU source checks. Native GPU qualification and
+production measurement remain open.
 See [native results](measurements/native-qualification/README.md).
 
 This builds on [metadata preparation before replay](proposals/pre-replay/README.md),

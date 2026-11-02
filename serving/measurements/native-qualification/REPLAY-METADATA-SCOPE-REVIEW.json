@@ -40,13 +40,15 @@
     "sha256": "9c01c83d31e62460eadec055cddbc058e91d408cb0932a0f87885bf8b0266afe"
   },
   "metadata_preparation_policy": "outside-forward-graph-v1",
+  "model_start_attempts": 1,
   "model_starts_executed": 0,
   "native_preflight": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/final-source-checks-v2/NATIVE-CONTROL-CHECKS.json",
     "sha256": "7ca66da6d27fe5ac0648b2e52a42cce55cb338623e5e1c9162b12882f7d6a878"
   },
   "nonce": "e2011102000000a0",
-  "own_closeout_checkpoint": "CHECKPOINT-557.json",
+  "operation": 205,
+  "own_closeout_checkpoint": "CHECKPOINT-561.json",
   "performance_comparison": false,
   "previous_cpu_evidence_seal": {
     "manifest_sha256": "299ad9c0d9e4c91d94e1721be575204b592d0743ac99ddf94f8ff7451082ba15",
@@ -73,7 +75,9 @@
     "sha256": "8444265af063f5c16b4056cf985065821911a5722d8be8f46dab2f2e33db8d30"
   },
   "protected_entries": 10,
-  "registration_created": false,
+  "registration_created": true,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
   "reproduction": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/REPRODUCTION-FINAL.json",
     "sha256": "1837a559a55566dd608fa70a60d3e07f16ec0d7f3f17e0c68c4c3e4fa5df1853"
@@ -83,6 +87,9 @@
   "requested_generations": 352,
   "requested_model_starts": 2,
   "requested_owner_seconds": 6360,
+  "responses": 0,
+  "result": "GPU-205-RESULT.json",
+  "review_checkpoint": "CHECKPOINT-557.json",
   "schema": 1,
   "selected_variant": "cleanup",
   "source_identity": {
@@ -101,7 +108,7 @@
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/proposals/replay-metadata-scope/VERIFICATION.json",
     "sha256": "4f8582550ccdba5563c80014084f833a1b77b52db161afd823246b9f4ad44cda"
   },
-  "status": "CORRECTED_REPLAY_METADATA_QUALIFICATION_REVIEWED_UNFUNDED",
+  "status": "EXECUTED_ONCE_DRAFT_CAPTURE_REFUSAL_RELEASED_PARKED",
   "tensor_structure_reuse": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/CPU-TENSOR-REUSE.json",
     "sha256": "b39eb50f72261a6c5c312f7e2d6137570269dbb91d1292e951898fa7dcb0ac34"

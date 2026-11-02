@@ -232,6 +232,7 @@ class ProposalIntegrity(unittest.TestCase):
                     stages.insert(0,HERE.parent/'proposals/pre-memory-startup')
                     stages.insert(0,HERE.parent/'proposals/post-load-control')
                     stages.insert(0,HERE.parent/'proposals/replay-metadata-scope')
+                    stages.insert(0,HERE.parent/'proposals/target-replay-scope')
             records=[json.loads((stage/'PROPOSAL.json').read_bytes()) for stage in stages]
             with tempfile.TemporaryDirectory(prefix='worker-source-history-') as temporary:
                 root=Path(temporary).resolve()

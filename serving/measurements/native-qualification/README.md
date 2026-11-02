@@ -41,11 +41,25 @@ after eager prefill replaces the backend metadata object. The
 [correction](../../proposals/replay-metadata-scope/README.md) retains the captured
 metadata view per backend and batch size. CPU graph tests and the native
 source-only checks pass. Only the adapter differs from operation 196. Corrected
-instrumented packet `e2011102000000a0` needs fresh exact one-use approval. GPU
-recovery, full-cleanup qualification and production measurement remain open.
-The separate Hyperloom session is investigating zero warm C2 cached tokens in
-operation 200. That failure has not been shown to explain the thinking-marker
-regression here. No GPU memory or performance improvement has been measured.
+instrumented packet `e2011102000000a0` ran once as operation 205. Target graph
+capture completed on both ranks, then the class-wide hook refused draft graph
+capture. Readiness was not reached, no response was produced and CPU grading
+was ineligible. The original caller returned its failure receipt; independent
+GPU release passed and checkpoint 561 is parked. See
+[GPU-205-RESULT.json](GPU-205-RESULT.json).
+
+The [target-only correction](../../proposals/target-replay-scope/README.md)
+limits strict captured-map admission to the supported target head geometry.
+The draft retains its native path. Candidate `e2011102000000a1` passes 1,070
+public tests, 43 boundary tests, six exact packet checks and 48 native source-only
+checks, including the actual native target and draft initializer paths. Only the
+adapter differs from operation 205. Native response recovery, full-cleanup
+qualification and production measurement remain open.
+
+The separate Hyperloom operation 204 completed and released the workstation.
+That result has not been joined to this cleanup qualification. Hyperloom remains
+disabled in this campaign. No GPU memory or performance improvement has been
+established.
 
 The approved GPU-free CPU tensor check passed with independent release in
 18.17 seconds. Real CPU tensors established shared head objects, packed view

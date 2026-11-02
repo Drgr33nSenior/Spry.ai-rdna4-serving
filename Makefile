@@ -20,6 +20,7 @@ test-serving-cleanup:
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_shared_memory.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_pre_replay_metadata.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_replay_metadata_scope.py
+	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_target_replay_scope.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_protected_source_references.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_post_load.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_closed_http.py

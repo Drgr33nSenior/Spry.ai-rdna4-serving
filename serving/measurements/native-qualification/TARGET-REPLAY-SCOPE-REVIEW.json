@@ -1,0 +1,114 @@
+{
+  "all_five_tensor_structure_sources_unchanged": true,
+  "approval_request": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/APPROVAL-REQUEST.json",
+    "sha256": "47c3298d10654b7aadfbe3f16d9b169a62be4ec749f7f6249eb8f9da004c6912"
+  },
+  "automatic_counterpart_run": false,
+  "automatic_retry": false,
+  "changed_python_since205": [
+    "verify_decode_adapter.py"
+  ],
+  "complete_protected_patch": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/author/PROTECTED-COMPLETE.patch",
+    "sha256": "8444265af063f5c16b4056cf985065821911a5722d8be8f46dab2f2e33db8d30"
+  },
+  "conditional_cpu_grade_requires_complete_authenticated_operation_and_independent_gpu_release": true,
+  "configuration_pins": {
+    "archive_sha256": "713590d920c13f5a58b9fa1d40a554dca0fb421bb47370a699332924175d5be6",
+    "binding_template_sha256": "9ae004961b8c902bfc266da2b3bef0a0d53703ab816e1e8cf16b1f0820c01628",
+    "host_sha256": "5fc702096026cb3ad426bf0baef9ee90774ab0fc55079fdb074b3c85446e4f30",
+    "manifest_sha256": "b5a7c70c6f44ef0805b710476b02f7f3338abdd5e83d61baa75d9c02dfd5a2b1",
+    "protected_set_sha256": "12eec6f8b63b486a218ad2d489ed966073894405e2e86f8306a9999c16a91f06",
+    "run_config_sha256": "b35bbacb9d22c97d2254b6eb8184fd5e4ac92e894c31bee08de38bafeab4d648"
+  },
+  "counterpart_nonce_not_selected": "1c696b597de78969",
+  "deployment": false,
+  "hyperloom_enabled": false,
+  "instrumentation": "on",
+  "launch_authorized": false,
+  "limitations": [
+    "Operation205 failed before readiness or any response; CPU grading was ineligible. Its source and failure remain sealed.",
+    "Actual native initializer CPU checks reproduce the draft refusal and verify the scoped correction, with explicit tensor, fill-helper and native admission substitutes. GPU response recovery is unproven.",
+    "Only the adapter differs from205. Protected helpers, all settings and frozen request inputs remain identical.",
+    "The unchanged five tensor-storage sources reuse the earlier bounded compact/stubbed CPU proof.",
+    "This packet is instrumented qualification. Production measurement remains separate; no performance or memory gain is established."
+  ],
+  "local_campaign_checks": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/LOCAL-PACKET-CHECKS-FINAL.json",
+    "sha256": "fecb66cccef0a00f165a73fcc832b105808de284ea3bcb4898fa8e453edc982c"
+  },
+  "metadata_preparation_policy": "outside-forward-graph-v1",
+  "model_starts_executed": 0,
+  "native_draft_geometry": {
+    "num_head": 16,
+    "num_kv_head": 4
+  },
+  "native_preflight": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/native-source-checks-v2/NATIVE-CONTROL-CHECKS.json",
+    "sha256": "db5e129d10b1c90874a01cb3f6473acb13047bbf43d2a274be3d4dc687c300ad"
+  },
+  "nonce": "e2011102000000a1",
+  "own_closeout_checkpoint": "CHECKPOINT-561.json",
+  "performance_comparison": false,
+  "previous_execution_seal": {
+    "manifest_sha256": "f22c3360518e1b10083433e8e0f69d8a06c20aedbdf719bb9521f7696486e10d",
+    "members": 28,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T16:37:48.246461+00:00"
+  },
+  "previous_operation": 205,
+  "previous_result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-205-RESULT.json",
+    "sha256": "9c9c35d6ac9a47a38e7b6fb3ff6cbb72987d86517f45634af3cf1547e02931fa"
+  },
+  "profile": "TP2, DFlash8, low thinking, BF16 target/draft KV, aligned GDN, eleven overlays, fixed pools, 235W",
+  "profilers_enabled": false,
+  "protected_bytes_identical_to205": true,
+  "protected_delta_since205": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/PROTECTED-SINCE-205.patch",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "protected_entries": 10,
+  "registration_created": false,
+  "reproduction": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/REPRODUCTION-FINAL.json",
+    "sha256": "ba3af72f3dcc4fe1c02fdc6941ba3de053d252ca862a16781252f3c6112d2c34"
+  },
+  "requested_caller_seconds": 7160,
+  "requested_cpu_grading_seconds": 320,
+  "requested_generations": 352,
+  "requested_model_starts": 2,
+  "requested_owner_seconds": 6360,
+  "schema": 1,
+  "selected_variant": "cleanup",
+  "source_identity": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/SOURCE-AND-REQUEST-IDENTITY-FINAL.json",
+    "sha256": "e4f95cc663675b925b5e035346a8d655336c4f89a6caeaff45cbb592316b7ad8"
+  },
+  "source_promotion": false,
+  "source_seal": {
+    "manifest_sha256": "0f4e971490fab34a91b5b514a7be067fc97d7bfde305585fa627b889b64aeb1c",
+    "members": 148,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/instrumented-pair-v2/cleanup/author",
+    "verified_utc": "2026-11-02T16:49:05.266170+00:00"
+  },
+  "source_verification": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/proposals/target-replay-scope/VERIFICATION.json",
+    "sha256": "6a88cb0104038f8bb1612a68cc7f8dde2f87b07cfb31fc27be5b57df9c0a9c2d"
+  },
+  "status": "TARGET_ONLY_REPLAY_QUALIFICATION_REVIEWED_UNFUNDED",
+  "target_geometry": {
+    "num_head": 12,
+    "num_kv_head": 2
+  },
+  "tensor_structure_reuse": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/target-replay-scope-v1/CPU-TENSOR-REUSE.json",
+    "sha256": "63f62da73cb3b40b5fbeaf7fe833539b6bf2a1871b4205ed3c648a3ed86e0e56"
+  },
+  "unchanged_python_since205": 60,
+  "uses_pty": true,
+  "whole_cleanup_complete": false
+}

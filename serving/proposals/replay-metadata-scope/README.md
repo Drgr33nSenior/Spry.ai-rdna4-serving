@@ -39,7 +39,15 @@ draft preflight and startup producer/reader. Native metadata, tensor objects and
 root admission are explicitly substituted. GPU access, native serving imports,
 network and subprocesses are denied inside that check.
 
-Candidate `e2011102000000a0` is an instrumented qualification packet. It has no
-registration or launch authority. Production measurement and final cleanup
-qualification remain open. The paired baseline is an inert preparation artifact;
-it is not an automatic additional run. See [verification](VERIFICATION.json).
+Candidate `e2011102000000a0` was prepared for instrumented qualification.
+Operation 205 consumed its approval; no further invocation is authorized.
+Production measurement and final cleanup qualification remain open. The paired
+baseline was an inert preparation artifact and was not included in the run.
+See the retained [source verification](VERIFICATION.json).
+
+This candidate ran once as operation 205 and stopped during draft graph capture,
+before readiness or any response. Independent GPU release passed; no CPU grade
+or retry ran. The strict hook also applied to the draft backend that shares the
+native class. The [next correction](../target-replay-scope/README.md) limits that
+hook to the supported target head geometry. The consumed source and failure
+remain retained.

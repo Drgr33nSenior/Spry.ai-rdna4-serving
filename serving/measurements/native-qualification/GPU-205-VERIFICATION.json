@@ -1,0 +1,51 @@
+{
+  "current_cleanup_candidate_qualified": false,
+  "execution_seal": {
+    "manifest_sha256": "f22c3360518e1b10083433e8e0f69d8a06c20aedbdf719bb9521f7696486e10d",
+    "members": 28,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T16:37:48.246461+00:00"
+  },
+  "failure_log": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/caller/collected/workload/fp8-kv-benchmark.e2011102000000a0/results/bf16-capture/stderr.raw",
+    "sha256": "f4644d9f79b97c314437b61dc9e7317c331dabbd94a5c7205af2ce9f69d90b4d"
+  },
+  "independent_gpu_release": true,
+  "native_quality_grade_performed": false,
+  "native_seals": {
+    "operation": {
+      "manifest_sha256": "01c32e9784679b58367c1d3f97ba134e30ed06e30a497f1e592191efe058f262",
+      "members": 188,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "60628333062a6bfcbcc902e8e7bfc38dfabe9a25877c6a9e0b02497068992c76",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/caller/collected/protected/fp8-benchmark-source.e2011102000000a0"
+    },
+    "workload": {
+      "manifest_sha256": "c9ff1d3452f73c1cbf984bd8eb8151446c839509b78ace2dc6410a37a63526c0",
+      "members": 88,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/caller/collected/workload/fp8-kv-benchmark.e2011102000000a0"
+    }
+  },
+  "operation": 205,
+  "passed": true,
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 0,
+  "result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-205-RESULT.json",
+    "sha256": "9c9c35d6ac9a47a38e7b6fb3ff6cbb72987d86517f45634af3cf1547e02931fa"
+  },
+  "schema": 1,
+  "source_seal": {
+    "manifest_sha256": "3d089db78c415ba8c54cd7c0f6ca10d595222909d1370a48aeb90a9b488b9b0c",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/replay-metadata-scope-v1/instrumented-pair-v2/cleanup/author"
+  },
+  "status": "STARTUP_FAILURE_AND_INDEPENDENT_GPU_RELEASE_AUTHENTICATED",
+  "whole_cleanup_complete": false
+}
