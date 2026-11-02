@@ -414,6 +414,14 @@
     "worker_client_timing_migrated": true,
     "worker_export_config_binding_migrated": false
   },
+  "bootstrap_common_stage": {
+    "native_execution_authorized": false,
+    "path": "proposals/bootstrap-common-stage",
+    "record_sha256": "fca04fe619c3d773bf9860bde20d299d4b1f59a185e3b96e98964f3ddefdf8e2",
+    "status": "CPU_BOOTSTRAP_COMMON_STAGE_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "verification": "proposals/bootstrap-common-stage/VERIFICATION.json",
+    "verification_sha256": "70bcb2c7a5f69cdea976720cf1465de881d239bfaa9d58dd78a29bebba4d36dd"
+  },
   "caller_power_source": {
     "configured_host_api_implemented": true,
     "generated_caller_binding_complete": false,
@@ -1419,6 +1427,13 @@
     "static_global_references": "PASS_CHANGED_FRONTENDS_AND_TESTS",
     "syntax_compilation": "PASS_ALL_TWENTY_TWO_PYTHON_MODULES"
   },
+  "last_instrumented_native_attempt": {
+    "model_starts": 0,
+    "operation": 191,
+    "result": "measurements/native-qualification/GPU-191-RESULT.json",
+    "sha256": "812ed0f9d110b9d4a4d34fcadf9cc590a1175899af57be6c82a4a5212a52e274",
+    "status": "INSTRUMENTED_CANDIDATE_PREOWNER_STAGING_REFUSAL_PARKED"
+  },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
   "measurement_comparison": {
     "causal_speedup_established": false,
@@ -1445,10 +1460,16 @@
     "status": "SOURCE_REVIEW_ONLY_NOT_LAUNCHABLE",
     "verification": "measurements/production-cleanup/VERIFICATION.json"
   },
+  "native_tensor_structure": {
+    "gpu_arithmetic_proven": false,
+    "result": "measurements/native-qualification/CPU-STRUCTURE-RESULT.json",
+    "sha256": "6e6e6b2259bc20117c221284caba51892864ad40fb16252e91a0defbe3107f45",
+    "status": "REAL_CPU_TENSOR_STRUCTURE_AND_INDEPENDENT_RELEASE_PASS"
+  },
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Review sealed GPU-free CPU tensor envelope and the exact instrumented final candidate; obtain one-use authority, run once and park. Production pair sources are sealed for later separate approvals.",
+  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000084. Reuse the sealed real CPU tensor structure proof; no retry under operation191 authority.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",

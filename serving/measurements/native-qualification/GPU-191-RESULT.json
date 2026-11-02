@@ -1,0 +1,46 @@
+{
+  "caller_seal": {
+    "manifest_sha256": "92a57256e9c80e4942ccbd102396b34af332e91d13b49515d1e88b06bf478294",
+    "members": 67,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/instrumented-pair-v1/cleanup/caller"
+  },
+  "caller_seconds_charged": 5,
+  "canonical_lock_unheld": true,
+  "correction": "proposals/bootstrap-common-stage/PROPOSAL.json",
+  "cpu_tensor_gate_passed": true,
+  "deployed": false,
+  "execution_seal": {
+    "manifest_sha256": "18ee59a4a4f0e779003efcb572fa90e5ef1d90dbbbc80eac17babf2e6e004f9d",
+    "members": 23,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/final-qualification-v1/instrumented-pair-v1/cleanup/execution-v1"
+  },
+  "failed_stage": "protected bootstrap source subset check before workload root creation",
+  "failure": "ValueError: protected stage must contain only the reviewed source subset and archive",
+  "fresh_packet": "e201110200000084",
+  "fresh_packet_approved": false,
+  "gpu_device_holders": {
+    "/dev/dri/renderD128": [],
+    "/dev/dri/renderD129": [],
+    "/dev/kfd": []
+  },
+  "independent_preowner_absence_verified": true,
+  "model_starts": 0,
+  "native_quantizer_or_memory_equality_proven": false,
+  "native_serving_executed": false,
+  "nonce": "e201110200000080",
+  "normal_gpu_owner_release_not_applicable": true,
+  "operation": 191,
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 1,
+  "protected_refusal_receipt_sha256": "046c42a0c5e4c047131cf124f55c17e3eb0a5817306506f4d45c2fb46a06c064",
+  "protected_refusal_seal_sha256": "14c39f1f9a3153d731b5ac19e72af588adddaef45d2dd9a58c39c6327b48eb79",
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 0,
+  "retry_authorized": false,
+  "schema": 1,
+  "source_selection_changed": false,
+  "status": "INSTRUMENTED_CANDIDATE_PREOWNER_STAGING_REFUSAL_PARKED",
+  "workload_root_absent": true
+}

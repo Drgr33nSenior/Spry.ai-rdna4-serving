@@ -1,4 +1,13 @@
 {
+  "bootstrap_common_stage_increment": {
+    "complete_campaign_checks": 6,
+    "fresh_candidate": "e201110200000084",
+    "native_focused_source_tests": 6,
+    "native_gpu_allowance": 0,
+    "public_tests": 1006,
+    "status": "CPU_BOOTSTRAP_COMMON_STAGE_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "whole_cleanup_complete": false
+  },
   "closed_http_increment": {
     "archive_members": 77,
     "native_cpu_source_tests": 193,
@@ -118,7 +127,10 @@
     "Four source campaign authors and one GPU-free CPU tensor envelope sealed; all actual archive, caller, quality materialization and one-use checks pass",
     "Protected approval review includes exact forward/reverse diffs from executed operation 186, separate from the pre-memory measurement control",
     "Explicit final-pair selection through the offline comparison entry point; legacy default and all work/quality/release checks preserved",
-    "Changed readout passes 15 native source checks; actual sealed A/B replay retains all 352 matches and identical timing populations"
+    "Changed readout passes 15 native source checks; actual sealed A/B replay retains all 352 matches and identical timing populations",
+    "Approved real CPU tensor storage/sharing/version proof passed with independent CPU release",
+    "Operation191 refused before model start; complete bootstrap refusal, source seals and independent no-holder/no-lock observation retained",
+    "Root trusted subset now authenticates and accounts for the common helper; old refusal reproduced and exact fresh packet reaches the stopped workload boundary on native CPython"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -190,7 +202,15 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "measurements/final-campaign/VERIFICATION.json",
+  "instrumented_native_attempt": {
+    "independent_preowner_absence_verified": true,
+    "model_starts": 0,
+    "operation": 191,
+    "responses": 0,
+    "retry_authorized": false,
+    "status": "INSTRUMENTED_CANDIDATE_PREOWNER_STAGING_REFUSAL_PARKED"
+  },
+  "latest_verification": "proposals/bootstrap-common-stage/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -204,7 +224,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Review sealed GPU-free CPU tensor envelope and the exact instrumented final candidate; obtain one-use authority, run once and park. Production pair sources are sealed for later separate approvals.",
+    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000084. Reuse the sealed real CPU tensor structure proof; no retry under operation191 authority.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -266,17 +286,21 @@
     "source_publication_only": true,
     "visibility": "public"
   },
+  "real_cpu_tensor_structure": {
+    "gpu_arithmetic_proven": false,
+    "independent_release": true,
+    "passed": true,
+    "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
+  },
   "remaining": [
-    "One exact approved GPU-free real CPU tensor structure check",
-    "One exact approved instrumented candidate campaign with startup byte proofs, token/quality and independent release checks",
-    "Separate production baseline and final candidate campaigns with BDF memory sampling and token/work equality",
-    "Full-menu/configuration native qualification and retained evidence closeout"
+    "Fresh exact approval for corrected instrumented GPU packet e201110200000084",
+    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Final production comparison and retained evidence closeout"
   ],
   "remaining_external": [
-    "One exact approved GPU-free real CPU tensor structure check",
-    "One exact approved instrumented candidate campaign with startup byte proofs, token/quality and independent release checks",
-    "Separate production baseline and final candidate campaigns with BDF memory sampling and token/work equality",
-    "Full-menu/configuration native qualification and retained evidence closeout"
+    "Fresh exact approval for corrected instrumented GPU packet e201110200000084",
+    "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
+    "Final production comparison and retained evidence closeout"
   ],
   "remaining_local": [],
   "requested": "Continue until all remaining cleanup steps are complete",
