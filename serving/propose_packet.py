@@ -188,13 +188,16 @@ def install_post_load_source(files, record, metadata):
 
 
 def correct_pre_memory_worker(raw, correction):
-    """Apply the two proven startup corrections to the exact pre-memory worker."""
+    """Apply exact startup corrections to a reviewed pre-memory control worker."""
     if correction is None:
         return raw
-    need(correction == dict(
+    pre_replay = correction == dict(
         original_sha256='6b4622b92c2f759b9346909fbb87f56b55eb3b22c7c9a6c0ec2fac918d8da1b0',
-        corrected_sha256='d46fd8f749e26af4e4bb761a5f835fb9aac20ce2796d9bf23e3d36a470c3444f'),
-        'exact pre-memory startup correction required')
+        corrected_sha256='d46fd8f749e26af4e4bb761a5f835fb9aac20ce2796d9bf23e3d36a470c3444f')
+    post_load = correction == dict(
+        original_sha256='5ea61d216dcd91c0d7f3de8d9816d5e44643385776cd712124424eb2fee2e330',
+        corrected_sha256='f9b9f962da347c31289f4ea31998bbdcff2d936da6c888ecf1b64bcdc3bcf0f7')
+    need(pre_replay or post_load, 'exact pre-memory startup correction required')
     need(digest(raw) == correction['original_sha256'], 'pre-memory worker input differs')
     replacements = (
         (b"    draft_summary: dict[str, Any] = contract_module.expected_draft_summary('none')\n", b''),
@@ -205,7 +208,7 @@ def correct_pre_memory_worker(raw, correction):
         (b"proof['metadata_preparation_policy'] = adapter.METADATA_PREPARATION_POLICY if adapter else None",
          b"proof['metadata_preparation_policy'] = adapter_module.METADATA_PREPARATION_POLICY if adapter else None"),
     )
-    for before, after in replacements:
+    for before, after in (replacements if pre_replay else replacements[:1]):
         need(raw.count(before) == 1, 'pre-memory startup call site differs')
         raw = raw.replace(before, after)
     need(digest(raw) == correction['corrected_sha256'], 'pre-memory worker output differs')

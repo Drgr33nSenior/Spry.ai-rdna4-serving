@@ -1,0 +1,10 @@
+--- a/worker_entry.py
++++ b/worker_entry.py
+@@ -404,7 +404,6 @@
+     _require((explicit is None or explicit is False) if not contract['enabled'] else
+              explicit is contract['speculative_draft_quantization_explicit'],
+              "native draft quantization intent differs")
+-    draft_summary: dict[str, Any] = contract_module.expected_draft_summary('none')
+     if contract["enabled"]:
+         if contract['speculative_kind'] == 'dflash2':
+             config_path = _safe_regular(Path(contract['speculative_draft_model_path']) / 'config.json')

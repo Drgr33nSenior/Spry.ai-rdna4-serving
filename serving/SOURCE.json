@@ -1435,6 +1435,14 @@
     "static_global_references": "PASS_CHANGED_FRONTENDS_AND_TESTS",
     "syntax_compilation": "PASS_ALL_TWENTY_TWO_PYTHON_MODULES"
   },
+  "last_control_native_attempt": {
+    "independent_gpu_release_verified": true,
+    "local_caller_completed_with_receipt": true,
+    "operation": 202,
+    "path": "measurements/native-qualification/GPU-202-RESULT.json",
+    "sha256": "4d8af15bc2b4592d0f2ae6ea674d5b4e7fe45a197ec04d4e97b51197814539d5",
+    "status": "PRE_MEMORY_CONTROL_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
+  },
   "last_instrumented_native_attempt": {
     "model_construction_reached": true,
     "native_readiness_reached": false,
@@ -1487,7 +1495,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact one-use approval for pre-memory control c21e0b4ce8f4ed17. Operations196 and201 produce identical invalid first warmup vectors; strict response acceptance remains unchanged. Operation201 is sealed and parked with no retry or grading allowance.",
+  "next_bounded_action": "Obtain fresh exact one-use approval for post-load control ca3598712e150f21. Operation202 reproduced the invalid first warmup vector without head sharing or packed rebinding. The next control reverses only the replay-metadata adapter, producer and reader; all other57 Python files and protected helpers match202. Operation202 is sealed and parked with no retry or grading allowance.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1865,7 +1873,7 @@
     "caller_dependencies_staged": true,
     "path": "propose_packet.py",
     "source_review_only": true,
-    "source_sha256": "b3c0af86c67cd2deb39145b86f2366e734b5f0c5cabb5091bbd4b3531b63b633",
+    "source_sha256": "6fb62aac17185843eca90916940c916810b9cb8ad36e68e0b52c79903bb195d8",
     "verification": "launcher/PROJECTION-VERIFICATION.json",
     "verification_sha256": "320caefd07d431806334fe1aa2e624080b4d0c87082a061f6ab10f13baa14ba6"
   },
@@ -1886,6 +1894,16 @@
     "verification_sha256": "58f24bdfdb772c98538544481c94f0ad0a64c8dddaae60ce79ab11ab63d7396d",
     "whole_cleanup_complete": false
   },
+  "post_load_control": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "ca3598712e150f21",
+    "path": "proposals/post-load-control/PROPOSAL.json",
+    "record_sha256": "c5de4d372a9199ba5ef7987764049116fd76561fa830a781b53f9d63fda2451d",
+    "status": "CPU_POST_LOAD_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+    "verification": "proposals/post-load-control/VERIFICATION.json",
+    "verification_sha256": "74e2489188fd787091790fa35c1013f70add88856d6aab19e67420f246f2d223"
+  },
   "post_load_proposal": {
     "cleanup_complete": false,
     "native_serving_qualified": false,
@@ -1899,10 +1917,12 @@
   "pre_memory_startup_control": {
     "cleanup_complete": false,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-202-RESULT.json",
     "nonce": "c21e0b4ce8f4ed17",
+    "operation": 202,
     "path": "proposals/pre-memory-startup/PROPOSAL.json",
     "record_sha256": "fdc144b3129d2228d4273d010f349195746d5b8dc86435461e7fe709080ad2b8",
-    "status": "CPU_PRE_MEMORY_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+    "status": "PRE_MEMORY_CONTROL_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED",
     "verification": "proposals/pre-memory-startup/VERIFICATION.json",
     "verification_sha256": "a3c0910bdcfbab70f90d8f0520821e09afd4aaf78c41c3295caadb16983ae3e9"
   },

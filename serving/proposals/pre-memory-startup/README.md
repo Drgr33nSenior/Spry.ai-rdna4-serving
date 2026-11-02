@@ -32,4 +32,8 @@ is prepared for source comparison only. It has no execution authority.
 
 See [verification](VERIFICATION.json) and
 [operation 201](../../measurements/native-qualification/GPU-201-RESULT.json).
-The baseline requires fresh exact one-use owner approval before registration.
+Approved operation 202 executed this baseline and reproduced the same invalid
+first warmup token vector as operations 196 and 201. Collection, the original
+finite caller and independent GPU release passed; checkpoint 553 is parked. No
+second arm, CPU grade or retry ran. See the
+[earlier control](../post-load-control/README.md) for the next reviewed comparison.

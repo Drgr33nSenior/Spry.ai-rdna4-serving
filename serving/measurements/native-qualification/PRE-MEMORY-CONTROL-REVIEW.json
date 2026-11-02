@@ -41,7 +41,9 @@
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/NATIVE-CONTROL-CHECKS.json",
     "sha256": "c28c14866a0f6c9cb78234df293aafa6912ae10ae7dc91cfa04863fb0ea3b67b"
   },
+  "next_control_packet": "ca3598712e150f21",
   "nonce": "c21e0b4ce8f4ed17",
+  "operation": 202,
   "own_closeout_checkpoint": "CHECKPOINT-551.json",
   "packed_parameter_storage_rebinding": false,
   "performance_comparison": false,
@@ -64,6 +66,8 @@
   "protected_entries": 9,
   "protected_helpers_are_the_pre_replay_stage": true,
   "registration_created": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
   "reproduction": {
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/REPRODUCTION.json",
     "sha256": "31d0eff45454fe4a29145480786d169a181ebeeb691ff3ea6b0bd480f8200ff6"
@@ -73,6 +77,7 @@
   "requested_generations": 352,
   "requested_model_starts": 2,
   "requested_owner_seconds": 6360,
+  "result": "GPU-202-RESULT.json",
   "schema": 1,
   "selected_variant": "baseline",
   "source_identity": {
@@ -91,7 +96,7 @@
     "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/proposals/pre-memory-startup/VERIFICATION.json",
     "sha256": "a3c0910bdcfbab70f90d8f0520821e09afd4aaf78c41c3295caadb16983ae3e9"
   },
-  "status": "PRE_MEMORY_CONTROL_REVIEWED_UNFUNDED",
+  "status": "EXECUTED_ONCE_RESPONSE_FAILED_PARKED",
   "uses_pty": true,
   "whole_cleanup_complete": false
 }

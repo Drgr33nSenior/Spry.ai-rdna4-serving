@@ -1,0 +1,41 @@
+{
+  "execution_seal": {
+    "manifest_sha256": "9d4da5897aeb193d1a96cf003c8a3bbea1779d2d1080bf61668cb413005b9741",
+    "members": 28,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/execution-v1",
+    "verified_utc": "2026-11-02T13:58:56.197988+00:00"
+  },
+  "independent_gpu_release_verified": true,
+  "local_caller_completed_with_receipt": true,
+  "native_seals": {
+    "operation": {
+      "manifest_sha256": "af17d0384948ecabf4dbbbbc4bd547c59500e1f8e1d44314bc29fea61f7ad0fd",
+      "members": 198,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/caller"
+    },
+    "protected": {
+      "manifest_sha256": "2831743a6d3bb8aa4766dd06fdd17929a1e1906da210d82661bf66c7e16b0dd0",
+      "members": 26,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/caller/collected/protected/fp8-benchmark-source.c21e0b4ce8f4ed17"
+    },
+    "workload": {
+      "manifest_sha256": "a659949f83c77aea2d8a0add0725db2bd607fae286311444ad5015c6f8b4e95d",
+      "members": 99,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/caller/collected/workload/fp8-kv-benchmark.c21e0b4ce8f4ed17"
+    }
+  },
+  "no_retry_or_cpu_grade": true,
+  "passed": true,
+  "result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-202-RESULT.json",
+    "sha256": "4d8af15bc2b4592d0f2ae6ea674d5b4e7fe45a197ec04d4e97b51197814539d5"
+  },
+  "schema": 1,
+  "status": "SEALED_PRE_MEMORY_FAILURE_AND_RELEASE_VERIFIED",
+  "token_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-202-TOKEN-COMPARISON.json",
+    "sha256": "802f7a5cb03570b6ac4574ef17cc66331a6b5b7cd09d3f2b8e8725bd29bb78fb"
+  },
+  "whole_native_qualification": false
+}

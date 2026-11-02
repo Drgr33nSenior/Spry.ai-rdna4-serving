@@ -16,10 +16,19 @@ second arm and conditional CPU grade did not run; checkpoint 551 is parked. See
 [GPU-201-RESULT.json](GPU-201-RESULT.json) and the
 [response comparison](PRODUCTION-RESPONSE-COMPARISON.json).
 
-Instrumentation alone does not explain this failure. The
-[pre-memory control](../../proposals/pre-memory-startup/README.md) prepares an
-earlier cleanup stage with only the two proven startup corrections. Its source
-and frozen requests pass CPU checks; native execution needs fresh exact approval.
+Instrumentation alone does not explain this failure. Approved pre-memory
+operation 202 then ran the earlier stage without head sharing or packed
+parameter rebinding. Its first warmup produced exactly the same invalid
+3,318-token vector. Both ranks passed readiness, the original finite caller
+completed, and collection, power, host-fault and independent release checks
+passed. No second arm, CPU grade or retry ran; checkpoint 553 is parked. See
+[GPU-202-RESULT.json](GPU-202-RESULT.json) and its
+[token comparison](GPU-202-TOKEN-COMPARISON.json).
+
+The [control before replay metadata](../../proposals/post-load-control/README.md)
+reverses only that increment's adapter, startup producer and reader relative to
+operation 202. Its other 57 Python files, nine protected helpers and 176 frozen
+requests match. This comparison needs fresh exact one-use approval.
 The separate Hyperloom session is investigating zero warm C2 cached tokens in
 operation 200. That failure has not been shown to explain the thinking-marker
 regression here. No GPU memory or performance improvement has been measured.

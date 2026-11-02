@@ -28,12 +28,14 @@ def loaded(review):
 
 def run_case(contract,worker,adapter_module,adapter_source,reader,*,arm='control',rank=0,
              mutate_adapter=None,module_policy=None,remove_module_policy=False,expected_error=None,
-             reader_error=None):
+             reader_error=None, expected_policy='outside-forward-graph-v1'):
     """Keep the producer, private module authentication, writer and full-enabled reader real."""
     context=contract.precision_profile()['context_length']
     adapter=object.__new__(adapter_module.Adapter)
     adapter.enabled=True;adapter.eligible_host_calls=40;adapter.capture_host_calls=32
     adapter.metadata_build_host_calls=2;adapter.metadata_reuse_host_calls=40;adapter.metadata_capture_build_host_calls=0
+    if expected_policy is None:
+        adapter.metadata_reuse_host_calls=38;adapter.metadata_capture_build_host_calls=2
     adapter.layers=set(range(16))
     adapter.buffers={n:dict(indices=SimpleNamespace(numel=lambda n=n:n*(context+8))) for n in (8,16)}
     assert not hasattr(adapter,'METADATA_PREPARATION_POLICY')
@@ -67,7 +69,12 @@ def run_case(contract,worker,adapter_module,adapter_source,reader,*,arm='control
                 patch.object(worker,'_precision_loading_policy',return_value=dict(cpu_metadata_fixture=True)), \
                 patch.object(worker,'_mxfp4_loaded_weights',return_value=dict(cpu_metadata_fixture=True)), \
                 patch.object(worker,'_source_module',wraps=original_source) as module_loader:
-            original_policy=adapter_module.METADATA_PREPARATION_POLICY
+            assert expected_policy in (None,'outside-forward-graph-v1')
+            original_policy=getattr(adapter_module,'METADATA_PREPARATION_POLICY',None)
+            assert original_policy==expected_policy, 'declared startup metadata policy differs'
+            if expected_policy is None:
+                assert not hasattr(adapter_module,'METADATA_PREPARATION_POLICY')
+                assert not remove_module_policy and module_policy is None
             try:
                 if remove_module_policy:del adapter_module.METADATA_PREPARATION_POLICY
                 elif module_policy is not None:adapter_module.METADATA_PREPARATION_POLICY=module_policy
@@ -78,7 +85,8 @@ def run_case(contract,worker,adapter_module,adapter_source,reader,*,arm='control
                     assert not (root/f'FULL-ENABLED-rank-{rank}.json').exists()
                     return dict(arm=arm,rank=rank,expected_error=expected_error,precision_witness_retained=True,
                         incomplete_full_enabled_witness_absent=True,model_construction=False,gpu_work=False)
-            finally:adapter_module.METADATA_PREPARATION_POLICY=original_policy
+            finally:
+                if expected_policy is not None:adapter_module.METADATA_PREPARATION_POLICY=original_policy
             assert expected_error is None,('expected refusal',expected_error)
             observer.validate_precision_weights.assert_called_once()
             module_loader.assert_called_once_with(adapter_source)
@@ -91,18 +99,19 @@ def run_case(contract,worker,adapter_module,adapter_source,reader,*,arm='control
                 return dict(arm=arm,rank=rank,expected_reader_error=reader_error,reader_refused=True,
                     model_construction=False,gpu_work=False)
             assert reader_error is None,('expected reader refusal',reader_error)
-            assert proof['metadata_preparation_policy']==original_policy=='outside-forward-graph-v1'
+            if expected_policy is None:assert 'metadata_preparation_policy' not in proof
+            else:assert proof['metadata_preparation_policy']==original_policy=='outside-forward-graph-v1'
             return dict(arm=arm,rank=rank,complete_producer=True,real_full_enabled_reader_passed=True,
-                authenticated_adapter_module_used=True,metadata_policy_read_from_module=True,
+                authenticated_adapter_module_used=True,metadata_policy_read_from_module=expected_policy is not None,
                 native_linear_and_weight_validation_substituted=True,metadata_buffers_and_adapter_lifecycle_substituted=True,
                 retained_files=2,model_construction=False,gpu_work=False)
 
 
-def check(review,*,expected_error=None):
+def check(review,*,expected_error=None,expected_policy='outside-forward-graph-v1'):
     reports=[]
     with loaded(review) as values:
         for arm in ('control','mtp'):
-            for rank in (0,1):reports.append(run_case(*values,arm=arm,rank=rank,expected_error=expected_error))
+            for rank in (0,1):reports.append(run_case(*values,arm=arm,rank=rank,expected_error=expected_error,expected_policy=expected_policy))
     return dict(passed=True,scope='complete actual startup proof producer and full-enabled reader with metadata substitutes',
         cases=reports,native_serving_or_quality_proven=False)
 
