@@ -1437,10 +1437,11 @@
   },
   "last_instrumented_native_attempt": {
     "model_construction_reached": false,
-    "operation": 193,
-    "result": "measurements/native-qualification/GPU-193-RESULT.json",
-    "sha256": "e49882f79f79b418bfafeabe48729b5375f15f3557a37b4057b84680bf262ab2",
-    "status": "INSTRUMENTED_CANDIDATE_PREWEIGHT_SOURCE_REFUSAL_PARKED",
+    "native_scheduler_processes_started": 2,
+    "operation": 194,
+    "result": "measurements/native-qualification/GPU-194-RESULT.json",
+    "sha256": "39510b2bc3bed771e7cb1b63bb44d535ee8c7304ee646c97da192786b01d50c0",
+    "status": "INSTRUMENTED_CANDIDATE_RETIRED_DRAFT_PREFLIGHT_REFUSAL_PARKED",
     "worker_start_attempts": 1
   },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
@@ -1478,7 +1479,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000091. Reuse the unchanged sealed real CPU tensor proof. Operation193 is parked with no retry or grading allowance.",
+  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000095. Reuse the sealed real CPU tensor-structure proof for the unchanged five computation sources. Operation194 is parked with no retry or grading allowance.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -2794,6 +2795,14 @@
   },
   "schema": 1,
   "scope": "Observer safety and source cleanup, deterministic source assembly, pinned W5 configuration, resource-manifest bindings, isolated controller/transport approval proposals, and removal-only retained-package pruning. Source review only; complete cleaned-source integration, protected migration and native gates remain pending.",
+  "selected_draft_preflight": {
+    "native_execution_authorized": false,
+    "path": "proposals/selected-draft-preflight",
+    "record_sha256": "9025f559fcae0999fe962493d7c448cf41d2a531642ab9eb1e2437378c1c860b",
+    "status": "CPU_SELECTED_DRAFT_PREFLIGHT_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "verification": "proposals/selected-draft-preflight/VERIFICATION.json",
+    "verification_sha256": "391a9117b87ca0deb09914699e759b6b21c56687b98895e574a56e982c63352e"
+  },
   "selected_phase_closure_proposal": {
     "cleanup_complete": false,
     "native_serving_qualified": false,

@@ -138,7 +138,11 @@
     "Operation193 nested preweight source refusal retained and independent GPU release verified; checkpoint533 parked",
     "Both nested preweight references refreshed; private comparison digests excluded while paths, modules and settings remain fixed",
     "Earlier stopped CPU check replaced by actual complete template reader, worker materializer and written manifest cross-binding in both modes and arms",
-    "Default payload byte-identical; 1,013 public tests, 22 focused native CPU checks and six campaign checks per mode pass"
+    "Default payload byte-identical; 1,013 public tests, 22 focused native CPU checks and six campaign checks per mode pass",
+    "Operation194 native preweight refusal retained; two scheduler processes reached preflight, no model construction or responses; release passed and checkpoint535 parked",
+    "Removed one eager retired none draft-summary call; actual enabled draft metadata equality and refusal checks remain",
+    "Complete selected preflight tested with real contract and metadata-only native substitutes for both arms and ranks in both corrected modes",
+    "1,021 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -224,13 +228,14 @@
   "instrumented_native_attempt": {
     "independent_gpu_release_verified": true,
     "model_construction_reached": false,
-    "operation": 193,
+    "native_scheduler_processes_started": 2,
+    "operation": 194,
     "responses": 0,
     "retry_authorized": false,
-    "status": "INSTRUMENTED_CANDIDATE_PREWEIGHT_SOURCE_REFUSAL_PARKED",
+    "status": "INSTRUMENTED_CANDIDATE_RETIRED_DRAFT_PREFLIGHT_REFUSAL_PARKED",
     "worker_start_attempts": 1
   },
-  "latest_verification": "proposals/preweight-source-pins/VERIFICATION.json",
+  "latest_verification": "proposals/selected-draft-preflight/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -244,7 +249,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000091. Reuse the unchanged sealed real CPU tensor proof. Operation193 is parked with no retry or grading allowance.",
+    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000095. Reuse the sealed real CPU tensor-structure proof for the unchanged five computation sources. Operation194 is parked with no retry or grading allowance.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -325,12 +330,12 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact approval for instrumented packet e201110200000091",
+    "Fresh exact approval for instrumented packet e201110200000095",
     "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
     "Production comparison and final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact approval for instrumented packet e201110200000091",
+    "Fresh exact approval for instrumented packet e201110200000095",
     "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
     "Production comparison and final retained evidence closeout"
   ],
@@ -346,6 +351,20 @@
     "whole_cleanup_complete": false
   },
   "schema": 1,
+  "selected_draft_preflight_increment": {
+    "changed_worker_sources": [
+      "worker_entry.py"
+    ],
+    "complete_actual_preflight_in_both_modes_and_ranks": true,
+    "complete_campaign_checks_per_mode": 6,
+    "fresh_candidate": "e201110200000095",
+    "native_focused_tests": 14,
+    "native_gpu_allowance": 0,
+    "protected_python_bytes_unchanged": true,
+    "public_tests": 1021,
+    "status": "CPU_SELECTED_DRAFT_PREFLIGHT_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "whole_cleanup_complete": false
+  },
   "selected_phase_closure_increment": {
     "archive_members": 79,
     "inactive_marker_names_removed": 16,

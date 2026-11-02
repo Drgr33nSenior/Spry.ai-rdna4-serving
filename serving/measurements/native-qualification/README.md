@@ -45,3 +45,17 @@ materializer and written worker cross-binding in both modes and arms. All worker
 and protected Python bytes remain unchanged. Fresh packet `e201110200000091`
 requires exact one-use approval; GPU acceptance and production measurement are
 still pending.
+
+Operation 194 passed source authentication and reached both native scheduler
+processes. Each refused before Scheduler construction because the preweight
+path requested the retired `none` draft summary. No response, second arm or
+quality grade ran. Collection and independent GPU release passed; checkpoint
+535 is parked. See [GPU-194-RESULT.json](GPU-194-RESULT.json).
+
+The [selected draft correction](../../proposals/selected-draft-preflight/README.md)
+removes that eager call. Complete preflight tests use the real selected contract
+and metadata-only native substitutes, reproduce the failure and pass both arms
+and ranks in both corrected modes. Actual draft metadata equality and all
+existing refusal checks remain in place. Fresh packet `e201110200000095`
+requires one-use approval. GPU acceptance and production measurement remain
+pending.
