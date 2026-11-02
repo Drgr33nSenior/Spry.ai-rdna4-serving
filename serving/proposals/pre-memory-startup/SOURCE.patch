@@ -1,0 +1,55 @@
+--- a/../Makefile
++++ b/../Makefile
+@@ -14,6 +14,7 @@
+ 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_final_template_pins.py
+ 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_draft_preflight.py
+ 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_startup_proof.py
++	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_pre_memory_startup.py
+ 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_common_closure.py
+ 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_phase_closure.py
+ 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_shared_memory.py
+--- a/propose_packet.py
++++ b/propose_packet.py
+@@ -187,6 +187,31 @@
+     files['BENCHMARK-SPEC2.json'] = canonical(spec)
+ 
+ 
++def correct_pre_memory_worker(raw, correction):
++    """Apply the two proven startup corrections to the exact pre-memory worker."""
++    if correction is None:
++        return raw
++    need(correction == dict(
++        original_sha256='6b4622b92c2f759b9346909fbb87f56b55eb3b22c7c9a6c0ec2fac918d8da1b0',
++        corrected_sha256='d46fd8f749e26af4e4bb761a5f835fb9aac20ce2796d9bf23e3d36a470c3444f'),
++        'exact pre-memory startup correction required')
++    need(digest(raw) == correction['original_sha256'], 'pre-memory worker input differs')
++    replacements = (
++        (b"    draft_summary: dict[str, Any] = contract_module.expected_draft_summary('none')\n", b''),
++        (b"        enabled=contract.contract_for_arm(manifest['arm'])['enabled'];adapter=(_source_module(manifest['sources']['verify_decode_adapter']).CURRENT if enabled else None)\n",
++         b"        enabled=contract.contract_for_arm(manifest['arm'])['enabled']\n"
++         b"        adapter_module = _source_module(manifest['sources']['verify_decode_adapter']) if enabled else None\n"
++         b"        adapter = adapter_module.CURRENT if adapter_module else None\n"),
++        (b"proof['metadata_preparation_policy'] = adapter.METADATA_PREPARATION_POLICY if adapter else None",
++         b"proof['metadata_preparation_policy'] = adapter_module.METADATA_PREPARATION_POLICY if adapter else None"),
++    )
++    for before, after in replacements:
++        need(raw.count(before) == 1, 'pre-memory startup call site differs')
++        raw = raw.replace(before, after)
++    need(digest(raw) == correction['corrected_sha256'], 'pre-memory worker output differs')
++    return raw
++
++
+ def build(donor_root, output, *, packet_id, proposal, run_dir=HERE / 'config/runs/w5-v2'):
+     """Authenticate all inputs before publishing an inert, deterministic review tree."""
+     output, donor_root, run_dir = Path(output), Path(donor_root), Path(run_dir)
+@@ -209,6 +234,10 @@
+         raw=source_builder.read_regular(path,2<<20)
+         need(digest(raw)==row['sha256'],'proposed non-protected source identity differs')
+         overrides[name]=raw
++    if 'pre_memory_worker_startup_correction' in record:
++        need('worker_entry.py' in overrides, 'pre-memory worker source required')
++        overrides['worker_entry.py'] = correct_pre_memory_worker(
++            overrides['worker_entry.py'], record['pre_memory_worker_startup_correction'])
+     projector=None
+     if record.get('configuration_mutations_supported') is True:
+         need('mtp_contract.py' in overrides,'configured runtime contract source required')

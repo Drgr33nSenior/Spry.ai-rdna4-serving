@@ -1,0 +1,39 @@
+{
+  "execution_seal": {
+    "manifest_sha256": "469595c25755e5254f1311dce27845dc5cc147d91966bc91510ca52b323e645a",
+    "members": 20,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/startup-proof-policy-v1/production-pair-v1/cleanup/execution-v1"
+  },
+  "independent_gpu_release_verified": true,
+  "local_caller_completed_with_receipt": true,
+  "native_seals": {
+    "operation": {
+      "manifest_sha256": "be5fd985f9060e5830e53752dab18f3ac98b292115a6aca0178cf7d5862b3cb6",
+      "members": 200,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/startup-proof-policy-v1/production-pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "ad17ec530c8e85a67e880517f34a91775fff8fb8198621dc25a755c516f313b1",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/startup-proof-policy-v1/production-pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e201110200000099"
+    },
+    "workload": {
+      "manifest_sha256": "fe283baa28ecccf39069b4dca54e8aa2e209ebf20e960161dc393bb55698c8f3",
+      "members": 100,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/startup-proof-policy-v1/production-pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e201110200000099"
+    }
+  },
+  "no_retry_or_cpu_grade": true,
+  "passed": true,
+  "response_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/PRODUCTION-RESPONSE-COMPARISON.json",
+    "sha256": "0a13d1c0f9ba761c5eb27b83fd4f06a28d6254634b08d08ed6c913a5d022ce61"
+  },
+  "result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-201-RESULT.json",
+    "sha256": "af6ff5adb6f6da282572bbd3a075be0389c34588483a2dd3e24c369fddce6fae"
+  },
+  "schema": 1,
+  "status": "SEALED_FAILURE_AND_RELEASE_VERIFIED",
+  "whole_native_qualification": false
+}

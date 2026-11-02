@@ -21,6 +21,12 @@ proofs; production skips the diagnostic quantization and hashes.
 The 79-member package stays within the existing 80-member ceiling.
 The predicted 1.71 GB reduction per card has not been measured.
 
+Native operations 196 and 201 reached readiness, then produced identical invalid
+first warmup responses. The current candidate remains unqualified. The
+[pre-memory control](proposals/pre-memory-startup/README.md) retains the earlier
+computation stage and corrects only its two known startup failures. It is ready
+for exact owner review; see [native results](measurements/native-qualification/README.md).
+
 This builds on [metadata preparation before replay](proposals/pre-replay/README.md),
 the [runner post-load hook](proposals/post-load/README.md),
 [source references](proposals/source-references/README.md),
@@ -30,8 +36,8 @@ the [closed HTTP package](proposals/closed-http/README.md),
 [MXFP4 startup runtime binding](proposals/runtime-binding/README.md) and
 [configured request and evidence](proposals/configuration-mutations/README.md).
 The retained A/B pilot predates these changes. Final native campaign tooling and qualification are recorded in
-[CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json). The new sources still need real
-CPU tensor structure checks and native serving qualification.
+[CLEANUP-PROGRESS.json](CLEANUP-PROGRESS.json). The current memory sources passed the bounded real CPU tensor structure check.
+Native serving qualification remains open.
 
 ## Implemented
 

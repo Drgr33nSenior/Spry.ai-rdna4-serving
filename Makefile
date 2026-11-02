@@ -14,6 +14,7 @@ test-serving-cleanup:
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_final_template_pins.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_draft_preflight.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_startup_proof.py
+	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_pre_memory_startup.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_common_closure.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_phase_closure.py
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S serving/tests/test_shared_memory.py

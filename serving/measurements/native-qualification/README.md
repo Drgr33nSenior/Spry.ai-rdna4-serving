@@ -6,11 +6,23 @@ Collection and independent GPU release passed. Its original local caller was
 interrupted, so complete operation replay and conditional CPU grading remain
 unestablished. See [GPU-198-RESULT.json](GPU-198-RESULT.json).
 
-Production candidate `e201110200000099` uses operation 196's same 61 Python
-sources and all 176 B186 request bodies. It tests whether the response difference
-persists in production mode and awaits fresh exact one-use approval. See
-[PRODUCTION-CANDIDATE-REVIEW.json](PRODUCTION-CANDIDATE-REVIEW.json).
-No GPU memory or performance improvement has been measured.
+Production operation 201 used candidate `e201110200000099`: the same 61 Python
+sources as operation 196 and all 176 B186 request bodies. Its first warmup
+produced exactly operation 196's 3,318 token IDs, including two closing thinking
+markers. The unchanged response guard refused it. Both ranks passed production
+readiness; the original finite caller completed with its receipt. Collection,
+power restoration, host-fault checks and independent GPU release passed. The
+second arm and conditional CPU grade did not run; checkpoint 551 is parked. See
+[GPU-201-RESULT.json](GPU-201-RESULT.json) and the
+[response comparison](PRODUCTION-RESPONSE-COMPARISON.json).
+
+Instrumentation alone does not explain this failure. The
+[pre-memory control](../../proposals/pre-memory-startup/README.md) prepares an
+earlier cleanup stage with only the two proven startup corrections. Its source
+and frozen requests pass CPU checks; native execution needs fresh exact approval.
+The separate Hyperloom session is investigating zero warm C2 cached tokens in
+operation 200. That failure has not been shown to explain the thinking-marker
+regression here. No GPU memory or performance improvement has been measured.
 
 The approved GPU-free CPU tensor check passed with independent release in
 18.17 seconds. Real CPU tensors established shared head objects, packed view

@@ -1,0 +1,103 @@
+{
+  "actual_archives": {
+    "baseline": 78,
+    "cleanup": 79
+  },
+  "author_seals": {
+    "baseline": {
+      "manifest_sha256": "b4ac840c8506da4b48c62097b53070c4234096393f26c660c537d3355690fd16",
+      "members": 146,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/baseline/author",
+      "verified_utc": "2026-11-02T13:30:11.802815+00:00"
+    },
+    "cleanup": {
+      "manifest_sha256": "d340037b4b5aabda06c769fc4342890caf48cbabd5675b2165d8eb3866fda47a",
+      "members": 148,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/pair-v1/cleanup/author",
+      "verified_utc": "2026-11-02T13:30:12.015353+00:00"
+    }
+  },
+  "launch_authorized": false,
+  "local_campaign_checks": 6,
+  "logs": {
+    "local-packet-checks.log": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/local-packet-checks.log",
+      "sha256": "abc8981de8e5ada33ae79851d13c5930b1ec89d6a621bba6b4ecc26f8b85bda6"
+    },
+    "native-control-checks.stderr": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/native-control-checks.stderr",
+      "sha256": "d36b6c1f70eabb24fadc1f640bd4307e25f50a83e824aed9598392926fd92da0"
+    },
+    "native-control-checks.stdout": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/native-control-checks.stdout",
+      "sha256": "4ef1fcf23cffa6c4d3855567ef04a5ca2c5a31631d0e9a736b59bf55147ad3f9"
+    },
+    "owner-adapter-diagnostic.log": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/owner-adapter-diagnostic.log",
+      "sha256": "ea249d1da3b26792faeace9495b76b393a8f4d440930aa857a18e6f6527a319d"
+    },
+    "public-make-v3.log": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/public-make-v3.log",
+      "sha256": "cf941debef120f9405912c77903e33e20d864dd99cbe6408e9bc23bfcf8969cd"
+    },
+    "validation-preflight.log": {
+      "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/validation-preflight.log",
+      "sha256": "769b2e0552e56aada5d894575d4c898f246cc0f060a4e3109d01a83e3ef7cb07"
+    }
+  },
+  "native_gpu_execution_performed": false,
+  "native_python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+  "native_report": {
+    "actual_archives": 2,
+    "complete_worker_materialization_both_arms": true,
+    "denied_events": [],
+    "gpu_access_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "scope": "source-only actual pre-memory and current closures with declared native metadata and ownership substitutes",
+    "subprocess_denied": true,
+    "tests": 13
+  },
+  "native_serving_or_quality_proven": false,
+  "native_source_inventory": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/NATIVE-SOURCE-INVENTORY.json",
+    "sha256": "40fbba7ce8e95493c69652b2fe7dec4fc118c328f8ce91d639572c228c7cad56"
+  },
+  "native_source_tests": 13,
+  "new_focused_tests": 9,
+  "passed": true,
+  "proposal_sha256": "fdc144b3129d2228d4273d010f349195746d5b8dc86435461e7fe709080ad2b8",
+  "public_test_suites": 86,
+  "public_tests": 1038,
+  "registration_created": false,
+  "reproduction": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/REPRODUCTION.json",
+    "sha256": "31d0eff45454fe4a29145480786d169a181ebeeb691ff3ea6b0bd480f8200ff6"
+  },
+  "retained_failed_check": {
+    "failure": "Three unchanged owner-adapter fixture assertions failed. The focused suite and final full suite passed without changing those sources; initial failure cause remains unconfirmed.",
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/public-make-v2.log"
+  },
+  "schema": 1,
+  "source_identity": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/pre-memory-control-v1/SOURCE-AND-REQUEST-IDENTITY.json",
+    "sha256": "1083f6f5fb23a1489d34e3bcf2d0724734cecbf879f592e46f2ee403db066ab2"
+  },
+  "source_pins": {
+    "Makefile": "9012b712dd5620bb65f9573fd22faab8670b0c395bc3719af552023393168f6e",
+    "serving/proposals/pre-memory-startup/RUNTIME.patch": "03599f1d55396918e6149f330672cad47c6ec64dc2539244bcd15d945ade0497",
+    "serving/proposals/pre-memory-startup/SOURCE.patch": "4eefcd6e67da6d941f329f3f4e79e7cf7d7d8dd6c3780eb863f53a6a0868991a",
+    "serving/propose_packet.py": "b3c0af86c67cd2deb39145b86f2366e734b5f0c5cabb5091bbd4b3531b63b633",
+    "serving/tests/test_pre_memory_startup.py": "65c59580fb579addca2b61ab5ad292897e3df3bcd2aa61df437dae4875b3b85a",
+    "serving/tests/test_worker_timing.py": "71abe15f0398259de510c667a97d0b1a4e0bf3f96fbe8bc21a3f70f62d70613d"
+  },
+  "status": "CPU_PRE_MEMORY_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+  "validation_preflight_tests": 43,
+  "whole_cleanup_complete": false
+}

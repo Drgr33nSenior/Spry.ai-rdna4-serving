@@ -1444,6 +1444,14 @@
     "status": "INSTRUMENTED_CANDIDATE_STARTUP_PROOF_EXPORT_REFUSAL_PARKED",
     "worker_start_attempts": 1
   },
+  "last_production_native_attempt": {
+    "independent_gpu_release_verified": true,
+    "local_caller_completed_with_receipt": true,
+    "operation": 201,
+    "path": "measurements/native-qualification/GPU-201-RESULT.json",
+    "sha256": "af6ff5adb6f6da282572bbd3a075be0389c34588483a2dd3e24c369fddce6fae",
+    "status": "PRODUCTION_CANDIDATE_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
+  },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
   "measurement_comparison": {
     "causal_speedup_established": false,
@@ -1479,7 +1487,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000098. Reuse the sealed real CPU tensor-structure proof for the same five computation sources. Operation195 is parked with no retry or grading allowance.",
+  "next_bounded_action": "Obtain fresh exact one-use approval for pre-memory control c21e0b4ce8f4ed17. Operations196 and201 produce identical invalid first warmup vectors; strict response acceptance remains unchanged. Operation201 is sealed and parked with no retry or grading allowance.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1857,7 +1865,7 @@
     "caller_dependencies_staged": true,
     "path": "propose_packet.py",
     "source_review_only": true,
-    "source_sha256": "26a9bf3bc2a8a719ac21af980c1203dcd8cecda8520c7d7f381e241122399cb4",
+    "source_sha256": "b3c0af86c67cd2deb39145b86f2366e734b5f0c5cabb5091bbd4b3531b63b633",
     "verification": "launcher/PROJECTION-VERIFICATION.json",
     "verification_sha256": "320caefd07d431806334fe1aa2e624080b4d0c87082a061f6ab10f13baa14ba6"
   },
@@ -1887,6 +1895,16 @@
     "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "verification": "proposals/post-load/VERIFICATION.json",
     "verification_sha256": "b22843f002e193e42e8d339c1eeba8be7cf5f75906f935d43338ddde5b8c72e1"
+  },
+  "pre_memory_startup_control": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "c21e0b4ce8f4ed17",
+    "path": "proposals/pre-memory-startup/PROPOSAL.json",
+    "record_sha256": "fdc144b3129d2228d4273d010f349195746d5b8dc86435461e7fe709080ad2b8",
+    "status": "CPU_PRE_MEMORY_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+    "verification": "proposals/pre-memory-startup/VERIFICATION.json",
+    "verification_sha256": "a3c0910bdcfbab70f90d8f0520821e09afd4aaf78c41c3295caadb16983ae3e9"
   },
   "pre_replay_metadata_proposal": {
     "cleanup_complete": false,
@@ -1931,8 +1949,9 @@
     "native_execution_authorized": false,
     "nonce": "e201110200000099",
     "path": "measurements/native-qualification/PRODUCTION-CANDIDATE-REVIEW.json",
+    "result": "measurements/native-qualification/GPU-201-RESULT.json",
     "sha256": "f86b7d4294a01be5caabba3e19a0c10102b28c3c159e37dc35ec7163cc89b369",
-    "status": "SAME_SOURCE_PRODUCTION_CANDIDATE_REVIEWED_UNFUNDED",
+    "status": "EXECUTED_ONCE_RESPONSE_FAILED_PARKED",
     "whole_cleanup_complete": false
   },
   "production_default_change": {

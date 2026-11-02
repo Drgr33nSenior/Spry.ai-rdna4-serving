@@ -153,7 +153,9 @@
     "Reference operation198 completed two native starts and all352 valid responses; request and output token vectors exactly match B186 through the original response inspector",
     "Original local caller interruption retained; separate collection and independent GPU release passed; no conditional CPU grade and no retry; checkpoint544 parked",
     "Bounded 960-second local PTY heartbeat passed; full-campaign durability and original interruption cause remain unproven",
-    "Production packet99 rechecked: all61 Python files match candidate196 and all176 request bodies match B186; source remains sealed and unfunded"
+    "Production packet99 rechecked: all61 Python files match candidate196 and all176 request bodies match B186; source remains sealed and unfunded",
+    "Production operation201 passed readiness but reproduced operation196 token-for-token: first warmup refused two thinking closures; original finite caller completed, independent release verified, checkpoint551 parked",
+    "Pre-memory control corrects only two startup paths; all176 B186 request bodies/input records match; six local packet checks, thirteen exact-archive native source checks and final1038 public tests pass; author reproduction byte-identical"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -248,7 +250,7 @@
     "whole_native_qualification": false,
     "worker_start_attempts": 1
   },
-  "latest_verification": "measurements/reference-replay/RESULT-VERIFICATION.json",
+  "latest_verification": "proposals/pre-memory-startup/VERIFICATION.json",
   "local_caller_durability": {
     "full_campaign_proven": false,
     "original_interruption_cause": "UNRESOLVED",
@@ -307,6 +309,16 @@
     "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "whole_cleanup_complete": false
   },
+  "pre_memory_control": {
+    "cleanup_complete": false,
+    "native_execution_authorized": false,
+    "nonce": "c21e0b4ce8f4ed17",
+    "path": "proposals/pre-memory-startup/PROPOSAL.json",
+    "record_sha256": "fdc144b3129d2228d4273d010f349195746d5b8dc86435461e7fe709080ad2b8",
+    "status": "CPU_PRE_MEMORY_CONTROL_SOURCE_AND_PACKET_VERIFIED_NATIVE_APPROVAL_PENDING",
+    "verification": "proposals/pre-memory-startup/VERIFICATION.json",
+    "verification_sha256": "a3c0910bdcfbab70f90d8f0520821e09afd4aaf78c41c3295caadb16983ae3e9"
+  },
   "pre_replay_metadata_increment": {
     "archive_members": 78,
     "native_cpu_source_tests": 229,
@@ -333,9 +345,18 @@
     "native_execution_authorized": false,
     "nonce": "e201110200000099",
     "path": "measurements/native-qualification/PRODUCTION-CANDIDATE-REVIEW.json",
+    "result": "measurements/native-qualification/GPU-201-RESULT.json",
     "sha256": "f86b7d4294a01be5caabba3e19a0c10102b28c3c159e37dc35ec7163cc89b369",
-    "status": "SAME_SOURCE_PRODUCTION_CANDIDATE_REVIEWED_UNFUNDED",
+    "status": "EXECUTED_ONCE_RESPONSE_FAILED_PARKED",
     "whole_cleanup_complete": false
+  },
+  "production_native_attempt": {
+    "independent_gpu_release_verified": true,
+    "local_caller_completed_with_receipt": true,
+    "operation": 201,
+    "path": "measurements/native-qualification/GPU-201-RESULT.json",
+    "sha256": "af6ff5adb6f6da282572bbd3a075be0389c34588483a2dd3e24c369fddce6fae",
+    "status": "PRODUCTION_CANDIDATE_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
   },
   "protected_common_closure_increment": {
     "archive_members": 79,
@@ -378,16 +399,16 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact approval for same-source production candidate e201110200000099",
-    "Resolve candidate response divergence and establish local caller continuity; preserve strict acceptance",
-    "Complete candidate greedy token identity, selected quality, BDF memory and remaining native gates",
-    "Production comparison and final retained evidence closeout"
+    "Fresh exact one-use approval for pre-memory control c21e0b4ce8f4ed17",
+    "Bracket the response regression and resolve its computation source; preserve strict acceptance",
+    "Complete current candidate greedy token identity, selected quality, BDF memory and remaining native gates",
+    "Complete production comparison and final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact approval for same-source production candidate e201110200000099",
-    "Resolve candidate response divergence and establish local caller continuity; preserve strict acceptance",
-    "Complete candidate greedy token identity, selected quality, BDF memory and remaining native gates",
-    "Production comparison and final retained evidence closeout"
+    "Fresh exact one-use approval for pre-memory control c21e0b4ce8f4ed17",
+    "Bracket the response regression and resolve its computation source; preserve strict acceptance",
+    "Complete current candidate greedy token identity, selected quality, BDF memory and remaining native gates",
+    "Complete production comparison and final retained evidence closeout"
   ],
   "remaining_local": [],
   "requested": "Continue until all remaining cleanup steps are complete",
