@@ -142,7 +142,11 @@
     "Operation194 native preweight refusal retained; two scheduler processes reached preflight, no model construction or responses; release passed and checkpoint535 parked",
     "Removed one eager retired none draft-summary call; actual enabled draft metadata equality and refusal checks remain",
     "Complete selected preflight tested with real contract and metadata-only native substitutes for both arms and ranks in both corrected modes",
-    "1,021 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged"
+    "1,021 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged",
+    "Operation195 reached model/cache initialization and draft verify graph capture on both ranks, then failed in proof export; collection/release passed and checkpoint537 parked",
+    "Proof exporter reads metadata policy and CURRENT from the same authenticated module; adapter and numerical sources unchanged",
+    "Complete producer-to-real-reader tests reproduce the retained instance-attribute failure and pass both arms/ranks in both corrected modes",
+    "1,029 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -227,15 +231,15 @@
   },
   "instrumented_native_attempt": {
     "independent_gpu_release_verified": true,
-    "model_construction_reached": false,
-    "native_scheduler_processes_started": 2,
-    "operation": 194,
+    "model_construction_reached": true,
+    "native_readiness_reached": false,
+    "operation": 195,
     "responses": 0,
     "retry_authorized": false,
-    "status": "INSTRUMENTED_CANDIDATE_RETIRED_DRAFT_PREFLIGHT_REFUSAL_PARKED",
+    "status": "INSTRUMENTED_CANDIDATE_STARTUP_PROOF_EXPORT_REFUSAL_PARKED",
     "worker_start_attempts": 1
   },
-  "latest_verification": "proposals/selected-draft-preflight/VERIFICATION.json",
+  "latest_verification": "proposals/startup-proof-policy/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -249,7 +253,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000095. Reuse the sealed real CPU tensor-structure proof for the unchanged five computation sources. Operation194 is parked with no retry or grading allowance.",
+    "next_stage": "Obtain fresh exact approval for corrected instrumented packet e201110200000098. Reuse the sealed real CPU tensor-structure proof for the same five computation sources. Operation195 is parked with no retry or grading allowance.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -330,12 +334,12 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact approval for instrumented packet e201110200000095",
+    "Fresh exact approval for instrumented packet e201110200000098",
     "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
     "Production comparison and final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact approval for instrumented packet e201110200000095",
+    "Fresh exact approval for instrumented packet e201110200000098",
     "Native startup byte proofs, greedy token identity, selected quality and BDF memory",
     "Production comparison and final retained evidence closeout"
   ],
@@ -397,6 +401,20 @@
     "packet_checks": 13,
     "public_tests": 914,
     "status": "CPU_STARTUP_DIGEST_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "startup_proof_policy_increment": {
+    "changed_worker_sources": [
+      "worker_entry.py"
+    ],
+    "complete_campaign_checks_per_mode": 6,
+    "complete_producer_and_real_reader_in_both_modes_and_ranks": true,
+    "fresh_candidate": "e201110200000098",
+    "native_focused_tests": 14,
+    "native_gpu_allowance": 0,
+    "protected_python_bytes_unchanged": true,
+    "public_tests": 1029,
+    "status": "CPU_STARTUP_PROOF_POLICY_FIXED_FRESH_GPU_APPROVAL_PENDING",
     "whole_cleanup_complete": false
   }
 }

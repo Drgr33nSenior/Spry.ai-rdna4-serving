@@ -1436,12 +1436,12 @@
     "syntax_compilation": "PASS_ALL_TWENTY_TWO_PYTHON_MODULES"
   },
   "last_instrumented_native_attempt": {
-    "model_construction_reached": false,
-    "native_scheduler_processes_started": 2,
-    "operation": 194,
-    "result": "measurements/native-qualification/GPU-194-RESULT.json",
-    "sha256": "39510b2bc3bed771e7cb1b63bb44d535ee8c7304ee646c97da192786b01d50c0",
-    "status": "INSTRUMENTED_CANDIDATE_RETIRED_DRAFT_PREFLIGHT_REFUSAL_PARKED",
+    "model_construction_reached": true,
+    "native_readiness_reached": false,
+    "operation": 195,
+    "result": "measurements/native-qualification/GPU-195-RESULT.json",
+    "sha256": "aa4fab1b53bb559d291a07bbec71376ff142f411dee17126d418a0668dd09255",
+    "status": "INSTRUMENTED_CANDIDATE_STARTUP_PROOF_EXPORT_REFUSAL_PARKED",
     "worker_start_attempts": 1
   },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
@@ -1479,7 +1479,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000095. Reuse the sealed real CPU tensor-structure proof for the unchanged five computation sources. Operation194 is parked with no retry or grading allowance.",
+  "next_bounded_action": "Obtain fresh exact approval for corrected instrumented packet e201110200000098. Reuse the sealed real CPU tensor-structure proof for the same five computation sources. Operation195 is parked with no retry or grading allowance.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -3344,6 +3344,14 @@
     "status": "CPU_STARTUP_DIGEST_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "verification": "proposals/startup-digests/VERIFICATION.json",
     "verification_sha256": "5ed9e13cd18692d3514edf4091015e730131237c5fadb23fe5341b03ef37abe4"
+  },
+  "startup_proof_policy": {
+    "native_execution_authorized": false,
+    "path": "proposals/startup-proof-policy",
+    "record_sha256": "43e202e05091f00c79f2744c08a6ca31d80c3c6b178cc1e739c3e42903fd2fd0",
+    "status": "CPU_STARTUP_PROOF_POLICY_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "verification": "proposals/startup-proof-policy/VERIFICATION.json",
+    "verification_sha256": "6d56d55eb3d09bc01cd24053dfe46d5f47f88b740d372b414feab4253e298598"
   },
   "status": "SOURCE_ONLY_NOT_A_LAUNCH_PACKET",
   "stop_policy_proposal": {

@@ -59,3 +59,17 @@ and ranks in both corrected modes. Actual draft metadata equality and all
 existing refusal checks remain in place. Fresh packet `e201110200000095`
 requires one-use approval. GPU acceptance and production measurement remain
 pending.
+
+Operation 195 reached model/cache initialization and logged draft verify graph
+capture completion on both ranks. It then failed during startup proof export
+because the worker read a module constant from the adapter instance. No requests,
+second arm or quality grade ran. The native HTTP export is absent; raw captures,
+owner records and independent release remain retained. Collection and release
+passed; checkpoint 537 is parked. See [GPU-195-RESULT.json](GPU-195-RESULT.json).
+
+The [proof policy correction](../../proposals/startup-proof-policy/README.md)
+reads the constant from the authenticated adapter module. Complete producer and
+reader tests reproduce the old failure and pass both arms and ranks in both
+corrected modes, using declared native metadata substitutes. Fresh packet
+`e201110200000098` requires one-use approval. GPU acceptance and production
+measurement remain pending.

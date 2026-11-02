@@ -875,12 +875,14 @@ def _precision_weights(scheduler, manifest, worker, observer, contract, head_rec
     observer.validate_precision_weights(record, binding=manifest, worker=worker)
     _atomic_json(Path(manifest['evidence_dir']) / f"PRECISION-WEIGHTS-rank-{worker['rank']}.json", record)
     if contract.full_enabled_benchmark():
-        enabled=contract.contract_for_arm(manifest['arm'])['enabled'];adapter=(_source_module(manifest['sources']['verify_decode_adapter']).CURRENT if enabled else None)
+        enabled=contract.contract_for_arm(manifest['arm'])['enabled']
+        adapter_module = _source_module(manifest['sources']['verify_decode_adapter']) if enabled else None
+        adapter = adapter_module.CURRENT if adapter_module else None
         proof={key:manifest[key] for key in ('mode','arm','session_sha256','spec_sha256','source_manifest_sha256')}
         proof.update(schema=1,rank=worker['rank'],pid=worker['pid'],worker_identity_sha256=worker['identity_sha256'],enabled=enabled,block_size=contract.contract_for_arm(manifest['arm'])['speculative_dflash_block_size'],before_external_generations=True,extra_tensor_operations=0,extra_model_forwards=0,qualification=False)
         proof.update(adapter_source=manifest['sources']['verify_decode_adapter'] if enabled else None,eligible_host_calls=adapter.eligible_host_calls if adapter else 0,capture_host_calls=adapter.capture_host_calls if adapter else 0,layers=sorted(adapter.layers) if adapter else [],buffers=len(adapter.buffers) if adapter else 0)
         proof.update(metadata_build_host_calls=adapter.metadata_build_host_calls if adapter else 0,metadata_reuse_host_calls=adapter.metadata_reuse_host_calls if adapter else 0,metadata_capture_build_host_calls=adapter.metadata_capture_build_host_calls if adapter else 0)
-        proof['metadata_preparation_policy'] = adapter.METADATA_PREPARATION_POLICY if adapter else None
+        proof['metadata_preparation_policy'] = adapter_module.METADATA_PREPARATION_POLICY if adapter else None
         proof['indices_elements'] = sorted(int(v['indices'].numel()) for v in adapter.buffers.values()) if adapter else []
         context = contract.precision_profile()['context_length']
         _require(proof['indices_elements'] == [8 * (context + 8), 16 * (context + 8)], 'batch-size-1/2 split-KV indices geometry differs')

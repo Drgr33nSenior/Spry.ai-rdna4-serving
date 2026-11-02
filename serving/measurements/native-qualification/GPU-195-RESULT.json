@@ -1,0 +1,61 @@
+{
+  "caller_seconds_charged": 141,
+  "closed_scopes": [
+    {
+      "absent": true,
+      "arm": "bf16",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-2c3d2a1b351209ef-bf16.scope",
+      "observed_monotonic": 158061.012292037
+    }
+  ],
+  "correction": "proposals/startup-proof-policy/PROPOSAL.json",
+  "deployed": false,
+  "draft_verify_graph_capture_end_observed_on_both_ranks": true,
+  "execution_seal": {
+    "manifest_sha256": "05bc946386721654cc962b39d9f7251f0e228da3c22729c777cee03d5195198d",
+    "members": 18,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-pair-v1/cleanup/execution-v1"
+  },
+  "failure": "AttributeError: 'Adapter' object has no attribute 'METADATA_PREPARATION_POLICY'",
+  "fresh_packet": "e201110200000098",
+  "fresh_packet_approved": false,
+  "independent_gpu_release_verified": true,
+  "main_and_preweight_source_bindings_verified": true,
+  "model_construction_reached": true,
+  "native_http_export_missing": true,
+  "native_model_and_cache_initialization_observed": true,
+  "native_startup_byte_proof": false,
+  "nonce": "e201110200000095",
+  "operation": 195,
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 135,
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 0,
+  "retry_authorized": false,
+  "root_cause": "Startup proof exporter read the module-owned metadata policy constant from the live Adapter instance",
+  "schema": 1,
+  "seals": {
+    "operation": {
+      "manifest_sha256": "cdbf7a114ad509def66c0c78da93bd4c2f329742cf339d0e14ac2034dda3b27f",
+      "members": 188,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "cabf3464e43cec55eee4b746f5c6eaaaa47d53eaad3f6996401c020007aaee73",
+      "members": 27,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e201110200000095"
+    },
+    "workload": {
+      "manifest_sha256": "3399cd94ca2ec56847547f9357841108b336a3490584de9e03ad957214e51d26",
+      "members": 88,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/selected-draft-preflight-v1/instrumented-pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e201110200000095"
+    }
+  },
+  "second_arm_started": false,
+  "source_selection_changed": false,
+  "status": "INSTRUMENTED_CANDIDATE_STARTUP_PROOF_EXPORT_REFUSAL_PARKED",
+  "stderr_sha256": "499d1545c3518e26aff191d68369169a66907e9a1f91778ddace0850a3e7edaa",
+  "worker_start_attempts": 1
+}
