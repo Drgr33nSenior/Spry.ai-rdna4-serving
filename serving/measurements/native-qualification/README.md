@@ -1,5 +1,17 @@
 # Native cleanup qualification
 
+The current cleanup remains unqualified. Reference operation 198 completed
+352 responses whose request and output token vectors all match passing B186.
+Collection and independent GPU release passed. Its original local caller was
+interrupted, so complete operation replay and conditional CPU grading remain
+unestablished. See [GPU-198-RESULT.json](GPU-198-RESULT.json).
+
+Production candidate `e201110200000099` uses operation 196's same 61 Python
+sources and all 176 B186 request bodies. It tests whether the response difference
+persists in production mode and awaits fresh exact one-use approval. See
+[PRODUCTION-CANDIDATE-REVIEW.json](PRODUCTION-CANDIDATE-REVIEW.json).
+No GPU memory or performance improvement has been measured.
+
 The approved GPU-free CPU tensor check passed with independent release in
 18.17 seconds. Real CPU tensors established shared head objects, packed view
 offsets, clone equality, parameter/loader metadata preservation and P1 stale
@@ -86,7 +98,8 @@ is unresolved. Startup byte/structure checks do not prove end-to-end arithmetic
 or quality. The candidate remains unqualified. No GPU memory or performance
 improvement has been measured.
 
-The [passing-reference replay](../reference-replay/README.md) prepares the exact
-B186 source and frozen inputs in production mode. Its fresh packet
-`e20111020000009b` requires one-use approval and is excluded from final
-performance comparison. The response acceptance checks remain unchanged.
+The [passing-reference replay](../reference-replay/README.md) ran the exact B186
+source and frozen inputs in production mode as operation 198. All 352 retained
+vectors match B186. The original caller interruption remains a separate
+failure; its conditional CPU grade did not run. The reference is excluded from
+final performance comparison. Response acceptance checks remain unchanged.

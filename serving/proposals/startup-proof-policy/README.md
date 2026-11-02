@@ -42,8 +42,11 @@ contained two closing thinking markers, so the unchanged response contract
 stopped the run. Collection and independent release passed; no second arm or
 CPU grade ran. See [the result](../../measurements/native-qualification/GPU-196-RESULT.json).
 
-The response difference remains unresolved. A fresh exact B186 production
-[reference replay](../../measurements/reference-replay/README.md) is prepared
-for diagnosis and awaits one-use approval. Greedy token identity, selected
-quality, BDF memory, production comparison and final closeout remain pending.
-No memory or performance improvement has been measured.
+The B186 production [reference replay](../../measurements/reference-replay/README.md)
+completed two native starts and reproduced all 352 request/output token vectors.
+Its original local caller was interrupted; separate collection and independent
+GPU release passed, but no conditional CPU grade ran. The response difference
+remains unresolved. Same-source production candidate `e201110200000099` awaits
+one-use approval. Candidate greedy token identity, selected quality, BDF memory,
+production comparison and final closeout remain pending. No memory or
+performance improvement has been measured.

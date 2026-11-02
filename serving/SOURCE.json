@@ -1862,12 +1862,20 @@
     "verification_sha256": "320caefd07d431806334fe1aa2e624080b4d0c87082a061f6ab10f13baa14ba6"
   },
   "passing_reference_replay": {
+    "independent_gpu_release_verified": true,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-198-RESULT.json",
+    "native_result_sha256": "b279fae6802fb0b9d68c6596549329f74cf56b12589edca1b078b9754ac43a2f",
     "nonce": "e20111020000009b",
+    "original_local_caller_complete": false,
     "path": "measurements/reference-replay",
-    "status": "REFERENCE_SOURCE_AND_PACKET_VERIFIED_UNFUNDED",
-    "verification": "measurements/reference-replay/VERIFICATION.json",
-    "verification_sha256": "4688c7e6a3f78ca6dc3ad5f2de5a517d127d5dbe08213dcdf0e182d73773af95",
+    "preparation_verification": "measurements/reference-replay/VERIFICATION.json",
+    "preparation_verification_sha256": "4688c7e6a3f78ca6dc3ad5f2de5a517d127d5dbe08213dcdf0e182d73773af95",
+    "quality_grade_performed": false,
+    "reference_native_token_vectors_matched": 352,
+    "status": "REFERENCE_TOKEN_IDENTITY_REPRODUCED_LOCAL_CALLER_INTERRUPTED_PARKED",
+    "verification": "measurements/reference-replay/RESULT-VERIFICATION.json",
+    "verification_sha256": "58f24bdfdb772c98538544481c94f0ad0a64c8dddaae60ce79ab11ab63d7396d",
     "whole_cleanup_complete": false
   },
   "post_load_proposal": {
@@ -1918,6 +1926,14 @@
     "repository_make_test": "PASS",
     "retained_packet_tests": 4,
     "syntax_compilation": "PASS_ALL_FOUR_PYTHON_MODULES"
+  },
+  "production_candidate_review": {
+    "native_execution_authorized": false,
+    "nonce": "e201110200000099",
+    "path": "measurements/native-qualification/PRODUCTION-CANDIDATE-REVIEW.json",
+    "sha256": "f86b7d4294a01be5caabba3e19a0c10102b28c3c159e37dc35ec7163cc89b369",
+    "status": "SAME_SOURCE_PRODUCTION_CANDIDATE_REVIEWED_UNFUNDED",
+    "whole_cleanup_complete": false
   },
   "production_default_change": {
     "baseline_sha256": "2e40331b0ddf98a02ac9f08b659d5ecc8389d8a010bf9f62ec8edf0546c4e2cf",

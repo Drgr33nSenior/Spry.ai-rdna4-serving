@@ -1,0 +1,82 @@
+{
+  "caller_charge_basis": "Approved ceiling charged conservatively because original finite caller receipt is missing",
+  "caller_elapsed_seconds": null,
+  "caller_seconds_charged": 7160,
+  "closed_scopes": [
+    {
+      "absent": true,
+      "arm": "bf16",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-a751c63e2c858c11-bf16.scope",
+      "observed_monotonic": 166880.738197472
+    },
+    {
+      "absent": true,
+      "arm": "kv4",
+      "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/spry-fp8-benchmark-a751c63e2c858c11-kv4.scope",
+      "observed_monotonic": 166880.738214097
+    }
+  ],
+  "closeout_checkpoint": "CHECKPOINT-544.json",
+  "collection_continuation": "recovery-v2",
+  "collection_pre_dispatch_failure_retained": "recovery-v1",
+  "deployed": false,
+  "execution_seal": {
+    "manifest_sha256": "d767f928c62582cbb507dec3885359d84a02b796b9cb9748415338bae216de0c",
+    "members": 115,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/execution-v1"
+  },
+  "independent_gpu_release_verified": true,
+  "local_interruption_cause": "UNRESOLVED",
+  "matched_B186_token_vectors": 352,
+  "model_starts": 2,
+  "native_physical_success": true,
+  "native_quality_grade_performed": false,
+  "native_workload_complete": true,
+  "next_packet_approved": false,
+  "next_production_packet": "e201110200000099",
+  "nonce": "e20111020000009b",
+  "operation": 198,
+  "original_caller_receipt_missing": true,
+  "original_launch_receipt_missing": true,
+  "original_local_caller_complete": false,
+  "original_operation_fully_replayed": false,
+  "owner_journal_absent": true,
+  "owner_seconds_charged": 4015,
+  "performance_improvement_measured": false,
+  "quality_grading_eligible": false,
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 352,
+  "retry_authorized": false,
+  "schema": 1,
+  "seals": {
+    "collected_operation_retention": {
+      "manifest_sha256": "57ce126271e74876cb2eecd720ba1251a7e72ad15a27b529dab0e7e854464dc0",
+      "members": 647,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "887394a9aa52a16bd21cb3cd1e2c919b048d33ae1c141420699370a01232340d",
+      "members": 31,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e20111020000009b"
+    },
+    "source_author": {
+      "manifest_sha256": "ee4d8e11fb08515b6e1ad3f6be22a3220f7fd885275b37f4282b5be416be4f93",
+      "members": 148,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/author"
+    },
+    "workload": {
+      "manifest_sha256": "928d9f4a82c3bcbc32e30a8ecd6b619bfb4958dd051183c18a273ac811c04fa0",
+      "members": 558,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e20111020000009b"
+    }
+  },
+  "source_selection_changed": false,
+  "status": "REFERENCE_TOKEN_IDENTITY_REPRODUCED_LOCAL_CALLER_INTERRUPTED_PARKED",
+  "token_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/reference-replay-v1/pair-v1/cleanup/execution-v1/TOKEN-COMPARISON.json",
+    "sha256": "79ff371b13151c90b5d3aee93a007aa39ce4f8331af8a52edf7abab082a8beb8"
+  },
+  "valid_complete_responses": 352,
+  "whole_cleanup_complete": false
+}

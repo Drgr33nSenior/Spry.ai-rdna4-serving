@@ -1,41 +1,41 @@
 # Passing-reference replay
 
-Operation 196 passed native startup validation but failed on its first warmup
-response: two closing thinking markers were present, where the contract
-requires exactly one. The same request produced an identical valid token
-vector in all four retained A184/B186 control responses. The response difference
-is real; its cause remains unresolved. Instrumentation and cleanup stages have
-changed since that pilot, so the comparison does not isolate a cause.
+Operation 198 completed two native starts and 352 responses. All 352 request
+bodies and output token vectors match passing B186. The original response
+inspector accepts every retained response, including the warmup's single
+closing thinking marker. Collection and independent GPU release passed;
+checkpoint 544 is parked. See
+[GPU-198-RESULT.json](../native-qualification/GPU-198-RESULT.json) and
+[TOKEN-COMPARISON.json](TOKEN-COMPARISON.json).
 
-Reference packet `e20111020000009b` restores the exact passing B186 production
-source. All 62 Python files, nine fixed native inputs and nine protected
-inventory entries match B186 byte for byte. See
+The original local caller disappeared before writing its launch and completion
+receipts. Its cause remains unresolved. The empty receipts remain retained.
+A separate continuation collected the sealed native evidence through the
+unchanged finite helpers. This does not establish complete original operation
+replay. The conditional CPU decode and grade was ineligible and did not run.
+The operation remains recorded as interrupted.
+
+Reference packet `e20111020000009b` used the exact passing B186 production
+source. All 62 Python files, nine fixed native inputs and nine protected entries
+match B186 byte for byte. Its preparation is retained in
 [MATCHED-REFERENCE.json](MATCHED-REFERENCE.json) and
-[RESPONSE-COMPARISON.json](RESPONSE-COMPARISON.json). Raw requests and outputs
-remain in the private evidence workspace.
+[VERIFICATION.json](VERIFICATION.json). Six local packet checks passed for both
+variants; six native CPython 3.14.7 checks passed for the selected reference.
+All 62 modules passed AST, symbol-table and compilation checks. Raw requests,
+outputs, failed preflights and collection attempts remain private.
 
-The unfunded packet requests one invocation, two starts and 352 frozen requests,
-with 6,360 owner seconds and 7,160 caller seconds. One eligible post-release CPU
-decode and grade is capped at 320 seconds. No automatic retry, promotion or
-deployment is included. TP2, DFlash8, low thinking, BF16 target/draft KV, aligned
-GDN, eleven overlays, fixed pools and 235 W caps retain their selected values.
-Hyperloom and profilers are disabled.
+Operation 196's first warmup response differs from this reproduced reference
+at the third token and contains two closing thinking markers. That response
+correctly fails the unchanged contract. Cleanup stages and instrumentation
+differ between these sources; the cause remains unresolved. See the earlier
+[response comparison](RESPONSE-COMPARISON.json).
 
-This replay checks whether the earlier reference still reproduces its passing
-behavior. It is excluded from the final performance comparison. The full
-frozen workload avoids changing the old source or adding a diagnostic menu;
-the existing client stops at a failed warmup. A reference pass alone would not
-identify the cause of the candidate failure or qualify the current cleanup.
+A bounded local PTY heartbeat passed for 960 seconds with verified child/group
+closure. This does not prove full-campaign durability or explain the original
+caller interruption. See [RESULT-VERIFICATION.json](RESULT-VERIFICATION.json).
 
-Six local packet checks pass for both variants. Six native CPython 3.14.7 checks
-pass for the selected reference; all 62 modules also pass AST, symbol-table and
-compilation checks. The first native fixture failed on a Mac-only path. The
-second fixture relocates its connection-file lookup to the staged, byte-identical
-source. All assertions remain unchanged. GPU access, native serving imports,
-network and subprocesses are denied, with no denied events. External dispatch
-is substituted in the one-use CPU fixture. See [VERIFICATION.json](VERIFICATION.json).
-
-The source author is sealed. No registration, model start, GPU work, native
-decoding or quality grading has run for this packet. Fresh exact one-use
-approval is pending. The current candidate remains unqualified; GPU memory
-savings and performance improvement remain unmeasured.
+The [same-source production candidate](../native-qualification/PRODUCTION-CANDIDATE-REVIEW.json)
+retains operation 196's 61 Python sources and all 176 B186 request bodies. It
+awaits fresh exact approval as packet `e201110200000099`. The current cleanup
+remains unqualified. These diagnostic runs are excluded from final performance
+comparison; GPU memory savings and performance improvement remain unmeasured.

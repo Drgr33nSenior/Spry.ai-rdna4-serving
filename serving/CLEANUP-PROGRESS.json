@@ -149,7 +149,11 @@
     "1,029 public tests, 14 focused native CPU checks and six campaign checks per mode pass; five CPU tensor computation sources unchanged",
     "Operation196 native readiness and both startup readers passed; first warmup response contained two closing thinking markers and correctly failed unchanged acceptance",
     "Operation196 collection and independent GPU release passed; sealed failure retained, checkpoint539 parked, no second arm or CPU grade",
-    "Exact B186 production reference replay prepared: all62 Python files and nine frozen inputs match; six local and six native packet checks pass without GPU work"
+    "Exact B186 production reference replay prepared: all62 Python files and nine frozen inputs match; six local and six native packet checks pass without GPU work",
+    "Reference operation198 completed two native starts and all352 valid responses; request and output token vectors exactly match B186 through the original response inspector",
+    "Original local caller interruption retained; separate collection and independent GPU release passed; no conditional CPU grade and no retry; checkpoint544 parked",
+    "Bounded 960-second local PTY heartbeat passed; full-campaign durability and original interruption cause remain unproven",
+    "Production packet99 rechecked: all61 Python files match candidate196 and all176 request bodies match B186; source remains sealed and unfunded"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -244,7 +248,13 @@
     "whole_native_qualification": false,
     "worker_start_attempts": 1
   },
-  "latest_verification": "measurements/reference-replay/VERIFICATION.json",
+  "latest_verification": "measurements/reference-replay/RESULT-VERIFICATION.json",
+  "local_caller_durability": {
+    "full_campaign_proven": false,
+    "original_interruption_cause": "UNRESOLVED",
+    "probe_seconds": 960,
+    "pty_probe_passed": true
+  },
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -268,12 +278,22 @@
   "passing_reference_replay": {
     "fixed_native_inputs_identical_to_B186": 9,
     "fresh_reference": "e20111020000009b",
+    "independent_gpu_release_verified": true,
     "launch_authorized": false,
     "local_packet_checks": 6,
+    "matched_B186_token_vectors": 352,
+    "model_starts": 2,
     "native_packet_checks": 6,
+    "native_quality_grade_performed": false,
     "not_a_final_performance_comparison": true,
+    "operation": 198,
+    "original_local_caller_complete": false,
     "python_sources_identical_to_B186": 62,
-    "status": "REFERENCE_SOURCE_AND_PACKET_VERIFIED_UNFUNDED",
+    "quality_grading_eligible": false,
+    "remaining_cpu_grading_allowance": 0,
+    "remaining_gpu_allowance": 0,
+    "responses": 352,
+    "status": "REFERENCE_TOKEN_IDENTITY_REPRODUCED_LOCAL_CALLER_INTERRUPTED_PARKED",
     "whole_cleanup_complete": false
   },
   "post_load_increment": {
@@ -307,6 +327,14 @@
     "native_gpu_allowance": 0,
     "public_tests": 1013,
     "status": "CPU_PREWEIGHT_SOURCE_BINDINGS_FIXED_FRESH_GPU_APPROVAL_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "production_candidate_review": {
+    "native_execution_authorized": false,
+    "nonce": "e201110200000099",
+    "path": "measurements/native-qualification/PRODUCTION-CANDIDATE-REVIEW.json",
+    "sha256": "f86b7d4294a01be5caabba3e19a0c10102b28c3c159e37dc35ec7163cc89b369",
+    "status": "SAME_SOURCE_PRODUCTION_CANDIDATE_REVIEWED_UNFUNDED",
     "whole_cleanup_complete": false
   },
   "protected_common_closure_increment": {
@@ -350,15 +378,15 @@
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
   "remaining": [
-    "Fresh exact approval for B186 production reference replay e20111020000009b",
-    "Resolve candidate warmup response divergence; retain strict thinking-boundary acceptance",
-    "Complete candidate native quality, greedy token identity, BDF memory and remaining startup/precision gates",
+    "Fresh exact approval for same-source production candidate e201110200000099",
+    "Resolve candidate response divergence and establish local caller continuity; preserve strict acceptance",
+    "Complete candidate greedy token identity, selected quality, BDF memory and remaining native gates",
     "Production comparison and final retained evidence closeout"
   ],
   "remaining_external": [
-    "Fresh exact approval for B186 production reference replay e20111020000009b",
-    "Resolve candidate warmup response divergence; retain strict thinking-boundary acceptance",
-    "Complete candidate native quality, greedy token identity, BDF memory and remaining startup/precision gates",
+    "Fresh exact approval for same-source production candidate e201110200000099",
+    "Resolve candidate response divergence and establish local caller continuity; preserve strict acceptance",
+    "Complete candidate greedy token identity, selected quality, BDF memory and remaining native gates",
     "Production comparison and final retained evidence closeout"
   ],
   "remaining_local": [],
