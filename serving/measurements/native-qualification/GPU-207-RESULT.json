@@ -1,0 +1,81 @@
+{
+  "actual_input_binding_sha256": "e44a3a27ecd78c9ba94792d8960fb6434edc216fdeb003f35bfc63b2a0a1f764",
+  "bounded_production_qualification_passed": true,
+  "caller_seconds_charged": 4010,
+  "complete_original_caller": true,
+  "cpu_elapsed_seconds": 35.41914574999828,
+  "cpu_evidence_seal": {
+    "manifest_sha256": "76955f4265a9f97a3e5ce9e56f0a2ba6c854ffa6a69f8ce0a78735b88b748fe8",
+    "members": 77,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/quality-binding-v1/cpu"
+  },
+  "cpu_execution_seal": {
+    "manifest_sha256": "1d9777611178e9590056c4ad80dfbf0aace1eb491fb1272c2fd3b4a05ad91113",
+    "members": 7,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/cpu-execution-v1"
+  },
+  "cpu_grading_seconds": 320,
+  "current_cleanup_candidate_qualified": true,
+  "distinct_prompt_message_sequences": 8,
+  "execution_seal": {
+    "manifest_sha256": "a62d1e9c71ed98422d6add0c0bb62177b4e8045afb78e51b0e125435d83c760d",
+    "members": 98,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T19:43:32.814480+00:00"
+  },
+  "final_cleanup_signoff": "CLEANUP-SIGNOFF.json",
+  "gpu_memory_improvement_measured": false,
+  "independent_cpu_release_verified": true,
+  "independent_gpu_release_verified": true,
+  "inference_speedup_measured": false,
+  "long_answer_coverage_pass": true,
+  "matched_B186_vectors": 352,
+  "mismatched_B186_vectors": 0,
+  "model_starts": 2,
+  "native_cpu_transport_elapsed_seconds": 30.55797254200297,
+  "native_quality_grade_performed": true,
+  "natural_quality_failures": 0,
+  "natural_quality_passes": 352,
+  "nonce": "e2011102000000a3",
+  "operation": 207,
+  "original_caller_full_duration_receipt_verified": true,
+  "own_closeout_checkpoint": "CHECKPOINT-567.json",
+  "owner_seconds_charged": 4002,
+  "performance_comparison": false,
+  "production_measurement_complete": false,
+  "quality_grading_eligible": true,
+  "quality_summary_sha256": "131b223ab095d56fc733785c6178266e15042894b4ef47f8020a78e419738fd0",
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "responses": 352,
+  "retry_authorized": false,
+  "schema": 1,
+  "seals": {
+    "operation": {
+      "manifest_sha256": "a1bcb5fab8ec167b41f5f2a88084701a6471561b167c8b33f4157dda3aad70e4",
+      "members": 428,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller"
+    },
+    "protected": {
+      "manifest_sha256": "549f2daaacfaa860808d26eca8417eaabfa9a820d1583cf2e2a83c3894f522f5",
+      "members": 32,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller/collected/protected/fp8-benchmark-source.e2011102000000a3"
+    },
+    "workload": {
+      "manifest_sha256": "017b64a0094737d977ecacadb99f71f33857a4c1da6bd026ba12333c4a73151f",
+      "members": 323,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/caller/collected/workload/fp8-kv-benchmark.e2011102000000a3"
+    }
+  },
+  "second_start_instrumented_witness_coverage": false,
+  "source_seal": {
+    "manifest_sha256": "430da555d2892402b589c6c0a5ed677284b9c68ea8fd2002bdeeea28b5aad8f5",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/author"
+  },
+  "source_selection_changed": false,
+  "status": "HOST_READOUT_PRODUCTION_CLEANUP_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED",
+  "valid_complete_responses": 352,
+  "whole_cleanup_complete": false
+}

@@ -8,6 +8,15 @@
     "status": "CPU_BOOTSTRAP_COMMON_STAGE_FIXED_FRESH_GPU_APPROVAL_PENDING",
     "whole_cleanup_complete": false
   },
+  "cleanup_signoff": {
+    "operation": 207,
+    "own_closeout_checkpoint": "CHECKPOINT-567.json",
+    "path": "measurements/native-qualification/CLEANUP-SIGNOFF.json",
+    "sha256": "ae84debca4a1ea4a665be801cb47d63be4973a4f49a246e4441cf48852b0c75b",
+    "verification": "measurements/native-qualification/CLEANUP-SIGNOFF-VERIFICATION.json",
+    "verification_sha256": "646dd122190d19bc41b4995ff49baa9ee65a91769c22e6eb8297efb28a7e78a8",
+    "whole_cleanup_complete": true
+  },
   "closed_http_increment": {
     "archive_members": 77,
     "native_cpu_source_tests": 193,
@@ -32,7 +41,7 @@
     "status": "CPU_SHARED_CANON_AND_HTTP_CLOSURE_VERIFIED_NATIVE_SERVING_PENDING",
     "whole_cleanup_complete": false
   },
-  "complete": false,
+  "complete": true,
   "completed_in_this_loop": [
     "Configured artifact consumer APIs and controller capture/receive",
     "Production default",
@@ -168,7 +177,13 @@
     "Host observer-health contract execution scoped to its authenticated source; nine real-validator regression tests pass with absent and hostile ambient modules",
     "Astra complete retained host reader/resource/owner gate: six chains and 27 expected refusals passed, ten seals authenticated; operation206 acceptance unchanged",
     "Public regression suite 1079 Python tests in 89 suites plus C++ sanitizer checks; 43 boundary checks; six exact packet/caller checks; 57 source-only native checks",
-    "One unfunded production packet e2011102000000a3 prepared for combined bounded qualification and descriptive measurement; all author and approval bytes reproduce"
+    "One unfunded production packet e2011102000000a3 prepared for combined bounded qualification and descriptive measurement; all author and approval bytes reproduce",
+    "Operation207 completed both production starts: all352 raw request/output vectors match B186; original host/owner/resource acceptance and independent GPU release passed",
+    "One conditional CPU grade completed in35.42 seconds: all352 natural answers and long-answer coverage passed, independent CPU release verified",
+    "Complete work comparison retains all186 groups and352 matches; throughput changes range from-0.1563% to+0.0583%, with no causal speedup established",
+    "External10-second samples show about1.63GB lower median VRAM use per card in both starts; fixed pools retained and no whole-device peak claim",
+    "Offline comparator now loads its authenticated receipt contract and restores ambient modules;18 focused tests and byte-identical absent/hostile complete replays pass;1082 public tests in89 suites plus C++ sanitizers pass",
+    "Final closeout sealed against operation207 checkpoint567 with independent GPU/CPU release; newer unrelated shared-ledger events preserved; all requested cleanup steps complete for the declared bounded profile, no native allowance or retry remaining"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -252,12 +267,14 @@
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
   "host_readout_scope": {
-    "cleanup_complete": false,
+    "cleanup_complete": true,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-207-RESULT.json",
     "nonce": "e2011102000000a3",
+    "operation": 207,
     "path": "proposals/host-readout-scope/PROPOSAL.json",
     "record_sha256": "470b4c811095d70a515d87a18d69cbb31e13c045fc52336c780bc624627c3190",
-    "status": "CPU_HOST_READOUT_GATES_PASSED_COMBINED_PRODUCTION_RUN_PENDING",
+    "status": "BOUNDED_PRODUCTION_TOKEN_IDENTITY_QUALITY_RELEASE_AND_MEASUREMENT_PASS",
     "verification": "proposals/host-readout-scope/VERIFICATION.json",
     "verification_sha256": "8b8bd88047eef098289478133bca1d64b8b283a26f0888baf96f4369bc416141"
   },
@@ -296,7 +313,19 @@
     "sha256": "e306c8fb367af24d473ee8d496f324b444ea9e796b1478d38792b475d7053d88",
     "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED"
   },
-  "latest_verification": "proposals/host-readout-scope/VERIFICATION.json",
+  "last_production_native_attempt": {
+    "independent_cpu_release_verified": true,
+    "independent_gpu_release_verified": true,
+    "model_starts": 2,
+    "natural_quality_passes": 352,
+    "operation": 207,
+    "path": "measurements/native-qualification/GPU-207-RESULT.json",
+    "responses": 352,
+    "retry_authorized": false,
+    "sha256": "0ff4ae312ddb2adfb8685452186fe87f7c7ad11cdb3f6732064badfe26c8ca10",
+    "status": "HOST_READOUT_PRODUCTION_CLEANUP_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED"
+  },
+  "latest_verification": "measurements/native-qualification/CLEANUP-SIGNOFF-VERIFICATION.json",
   "local_caller_durability": {
     "full_campaign_elapsed_seconds": 4005.930301042001,
     "full_campaign_operation": 203,
@@ -319,7 +348,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Complete freshly approved production packet e2011102000000a3 for bounded qualification and descriptive measurement after the passed complete retained CPU host gate; operation206 remains failed partial and parked.",
+    "next_stage": "Cleanup scope complete; no additional native work.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -407,18 +436,24 @@
   "production_candidate_review": {
     "native_execution_authorized": false,
     "nonce": "e2011102000000a3",
+    "operation": 207,
     "path": "measurements/native-qualification/HOST-READOUT-PRODUCTION-REVIEW.json",
-    "sha256": "2b672b95b056cd63ad2eb92a400f2f212911c99b9769610c367ee3a6d56f2441",
-    "status": "COMBINED_PRODUCTION_QUALIFICATION_MEASUREMENT_REVIEWED_UNFUNDED",
+    "result": "measurements/native-qualification/GPU-207-RESULT.json",
+    "sha256": "1f80dc56f56d2947fdea262d4736bd008090832c86df302b4cfd142d52188a3b",
+    "status": "EXECUTED_ONCE_352_TOKEN_IDENTITY_QUALITY_RELEASE_PASS_PARKED",
     "whole_cleanup_complete": false
   },
   "production_native_attempt": {
+    "independent_cpu_release_verified": true,
     "independent_gpu_release_verified": true,
-    "local_caller_completed_with_receipt": true,
-    "operation": 201,
-    "path": "measurements/native-qualification/GPU-201-RESULT.json",
-    "sha256": "af6ff5adb6f6da282572bbd3a075be0389c34588483a2dd3e24c369fddce6fae",
-    "status": "PRODUCTION_CANDIDATE_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
+    "model_starts": 2,
+    "natural_quality_passes": 352,
+    "operation": 207,
+    "path": "measurements/native-qualification/GPU-207-RESULT.json",
+    "responses": 352,
+    "retry_authorized": false,
+    "sha256": "0ff4ae312ddb2adfb8685452186fe87f7c7ad11cdb3f6732064badfe26c8ca10",
+    "status": "HOST_READOUT_PRODUCTION_CLEANUP_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED"
   },
   "protected_common_closure_increment": {
     "archive_members": 79,
@@ -460,18 +495,8 @@
     "passed": true,
     "scope": "real CPU storage and version semantics with stub ops and explicit CUDA-admission substitutes"
   },
-  "remaining": [
-    "Fresh exact one-use approval for combined production qualification and measurement packet e2011102000000a3",
-    "Complete both starts, authenticate all 352 reference request/output vectors and original host acceptance, then independently release the GPU",
-    "Run the eligible network-free CPU quality grade with all 352 answers and required long-answer coverage passing, then independently release the CPU",
-    "Retain descriptive production memory/timing comparison, close evidence and sign off the exact tested source"
-  ],
-  "remaining_external": [
-    "Fresh exact one-use approval for combined production qualification and measurement packet e2011102000000a3",
-    "Complete both starts, authenticate all 352 reference request/output vectors and original host acceptance, then independently release the GPU",
-    "Run the eligible network-free CPU quality grade with all 352 answers and required long-answer coverage passing, then independently release the CPU",
-    "Retain descriptive production memory/timing comparison, close evidence and sign off the exact tested source"
-  ],
+  "remaining": [],
+  "remaining_external": [],
   "remaining_local": [],
   "replay_metadata_scope": {
     "cleanup_complete": false,

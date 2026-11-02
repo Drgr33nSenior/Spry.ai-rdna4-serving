@@ -3,7 +3,7 @@ import copy
 from pathlib import Path
 import sys
 import tempfile
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -39,6 +39,60 @@ def response_fixture():
             spec_tokens_details={'spec_verify_ct':2},sampling_parameters={'temperature':0}))
     side=dict(rows={('bf16',0):quality},summaries={'bf16':dict(tree=Path('/retained/paired'))})
     return body,raw,side,row
+
+
+class ReceiptCodecLoading(unittest.TestCase):
+    def setUp(self):
+        temporary=tempfile.TemporaryDirectory(prefix='measurement-codec-')
+        self.addCleanup(temporary.cleanup);self.package=Path(temporary.name).resolve()
+        review=self.package/'review';review.mkdir()
+        for name,source in {'mtp_contract.py':'spry_serving/common_mtp_contract.py',
+                'request_receipts.py':'spry_evidence/common_request_receipts.py',
+                'spry_common_canon.py':'spry_common/selected.py'}.items():
+            (review/name).write_bytes((HERE.parent/source).read_bytes())
+        self.manifest=dict(package_files={'review/'+p.name:comparison.digest(p.read_bytes())
+                                        for p in review.iterdir()})
+
+    def test_real_codec_uses_authenticated_contract_and_restores_ambient_modules(self):
+        class Hostile(ModuleType):
+            def __getattr__(self,name):raise AssertionError('ambient module used: '+name)
+        for state in ('absent','hostile','none'):
+            with self.subTest(state=state),patch.dict(sys.modules):
+                for name in ('mtp_contract','request_receipts'):
+                    sys.modules.pop(name,None)
+                    if state!='absent':sys.modules[name]=Hostile(name) if state=='hostile' else None
+                before={name:sys.modules.get(name) for name in ('mtp_contract','request_receipts')}
+                codec=comparison.receipt_codec(self.package,self.manifest)
+                for name,value in before.items():
+                    if state=='absent':self.assertNotIn(name,sys.modules)
+                    else:self.assertIs(sys.modules[name],value)
+                import base64
+                data=b'{}\n';field='responses/00-case.raw'
+                row=dict(bytes=len(data),sha256=codec.sha(data),base64=base64.b64encode(data).decode())
+                envelope=dict(schema=1,kind='native-http-request-receipts-v1',fields={field:row})
+                self.assertEqual(codec.decode(codec.canonical(envelope))[1],{field:data})
+                row['sha256']='0'*64
+                with self.assertRaisesRegex(ValueError,'bytes/hash'):codec.decode(codec.canonical(envelope))
+
+    def test_wrong_contract_and_codec_digests_refuse_and_restore(self):
+        for name in ('mtp_contract','request_receipts'):
+            manifest=copy.deepcopy(self.manifest);manifest['package_files']['review/'+name+'.py']='0'*64
+            with self.subTest(name=name),patch.dict(sys.modules):
+                before={key:ModuleType(key) for key in ('mtp_contract','request_receipts')}
+                sys.modules.update(before)
+                with self.assertRaisesRegex(ValueError,'source hash differs'):
+                    comparison.receipt_codec(self.package,manifest)
+                for key,value in before.items():self.assertIs(sys.modules[key],value)
+
+    def test_authenticated_contract_execution_failure_restores_both_modules(self):
+        path=self.package/'review/mtp_contract.py';path.write_bytes(b'raise RuntimeError("contract fixture failure")\n')
+        self.manifest['package_files']['review/mtp_contract.py']=comparison.digest(path.read_bytes())
+        with patch.dict(sys.modules):
+            before={name:ModuleType(name) for name in ('mtp_contract','request_receipts')}
+            sys.modules.update(before)
+            with self.assertRaisesRegex(RuntimeError,'contract fixture failure'):
+                comparison.receipt_codec(self.package,self.manifest)
+            for name,value in before.items():self.assertIs(sys.modules[name],value)
 
 
 class MeasurementComparison(unittest.TestCase):
@@ -77,7 +131,8 @@ class MeasurementComparison(unittest.TestCase):
         work=dict(case='same frozen request',body_sha256='a'*64,prompt_ids=[10],output_ids=[20],
             speculative_work={},cache_work={},sampling_parameters={'temperature':0},finish_reason='stop')
         with patch.object(comparison,'load_side',side_effect=[a,b]), \
-             patch.object(comparison,'checked_module',side_effect=[sealer,SimpleNamespace()]), \
+             patch.object(comparison,'checked_module',return_value=sealer), \
+             patch.object(comparison,'receipt_codec',return_value=SimpleNamespace()), \
              patch.object(comparison,'read',side_effect=configured_read), \
              patch.object(comparison,'request_work',return_value=work) as requests, \
              patch.object(comparison,'paired_groups',side_effect=lambda arm,*args:[g for g in groups() if g['arm']==arm]):

@@ -29,7 +29,11 @@ prospective CPU validation; it does not accept or grade operation 206.
 See [verification](VERIFICATION.json), the
 [gate summary](../../measurements/native-qualification/HOST-READOUT-CPU-GATE.json)
 and the [testing procedure](../../measurements/native-qualification/TESTING.md).
-The production packet `e2011102000000a3` combines the remaining bounded native
-qualification and descriptive measurement. It has no launch authority yet.
-Production omits the instrumented diagnostics, so this plan does not establish
-second-start instrumented witness coverage. Cleanup sign-off remains pending.
+Approved production packet `e2011102000000a3` completed once as operation 207:
+both starts, all 352 reference vectors and native quality grades, long-answer
+coverage, original host acceptance and independent GPU/CPU release passed.
+The descriptive timing and memory report is retained. See the
+[cleanup sign-off](../../measurements/native-qualification/CLEANUP-SIGNOFF.md).
+Production omits instrumented diagnostics; no second-start instrumented witness
+set is claimed. The linked pre-launch verification remains a historical snapshot.
+No further native invocation is authorized.

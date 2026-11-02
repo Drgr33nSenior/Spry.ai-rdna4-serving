@@ -35,16 +35,16 @@ syntax outside the corrected health function to match 206. Production readback
 entry points must match the passing 203 control. It does no native work or
 quality grading and never changes original operation acceptance.
 
-## Remaining bounded native acceptance
+## Bounded native acceptance
 
-Astra reviewed using one production campaign for the remaining qualification
-and measurement after these CPU gates pass. Packet `e2011102000000a3` requests
-two starts and 352 responses over the unchanged eight distinct prompt-message
-sequences. The paired baseline is inert; reuse authenticated 203 evidence only
+Astra reviewed using one production campaign for qualification and measurement
+after these CPU gates pass. Approved packet `e2011102000000a3` completed once as
+operation 207: two starts and 352 responses over the unchanged eight distinct
+prompt-message sequences. The paired baseline is inert; reuse authenticated 203 evidence only
 for a descriptive comparison. Do not schedule another instrumented campaign for
 this host-only correction.
 
-Sign-off requires all of the following observed results:
+The [completed sign-off](CLEANUP-SIGNOFF.md) records all of these observed gates:
 
 - Both starts complete through the original host and owner validators. All 352
   request and output token vectors match the reference.
@@ -55,6 +55,11 @@ Sign-off requires all of the following observed results:
   absence of improvement. A speedup is not an acceptance requirement.
 - Authenticate final evidence, park the operation and update cleanup status
   against the exact tested source. Retain every failure without automatic retry.
+
+The offline comparator must also load the receipt codec with its authenticated
+contract and restore ambient modules. The real closed 203/207 comparison passes
+with absent and hostile modules and produces byte-identical reports. Local
+readout corrections do not require another native run.
 
 Production omits graph and observer diagnostics. This acceptance does not claim
 a complete two-start instrumented witness set, broad production readiness,

@@ -24,6 +24,20 @@ def positive(value):return type(value) in (int,float) and math.isfinite(value) a
 def ids(value):return type(value) is list and bool(value) and all(type(x) is int and 0<=x<248320 for x in value)
 
 
+def receipt_codec(package,manifest):
+    """Load the codec with its authenticated contract, preserving ambient modules."""
+    missing=object();names=('mtp_contract','request_receipts')
+    previous={name:sys.modules.get(name,missing) for name in names}
+    try:
+        for name in names:
+            module=checked_module(package/'review',name,manifest['package_files']['review/'+name+'.py'])
+        return module
+    finally:
+        for name,value in previous.items():
+            if value is missing:sys.modules.pop(name,None)
+            else:sys.modules[name]=value
+
+
 def load_side(root,pin,sealer):
     root=Path(root);execution_seal=sealer.verify(root,pin);result=read(root/'RESULT.json')
     need(result['decoded_rows']==result['natural_quality_passes']==result['total_responses']==352
@@ -186,7 +200,7 @@ def compare(baseline,baseline_pin,candidate,candidate_pin,sealer_path,output,*,p
     comparison=prepare_measurement.compare_inputs({p.name:held(p) for p in (a['package']/'review').iterdir()},
         {p.name:held(p) for p in (b['package']/'review').iterdir()},run=run,canonical_sources=names,
         protected_sources=metadata['protected_source_files'],paired_cleanup=paired_cleanup)
-    manifest=read(b['package']/'MANIFEST.json');codec=checked_module(b['package']/'review','request_receipts',manifest['package_files']['review/request_receipts.py'])
+    manifest=read(b['package']/'MANIFEST.json');codec=receipt_codec(b['package'],manifest)
     differences=[];groups=[]
     for arm in ARMS:
         for left,right in zip(a['summaries'][arm]['value']['rows'],b['summaries'][arm]['value']['rows'],strict=True):

@@ -19,23 +19,24 @@ storage while preserving their objects, metadata and P1 validation. The head
 scan reads one startup scalar. Instrumented startup requires byte and sharing
 proofs; production skips the diagnostic quantization and hashes.
 The 79-member package stays within the existing 80-member ceiling.
-The predicted 1.71 GB reduction per card has not been measured.
+The predicted live-payload saving is 1.71 GB per card; the separate driver
+measurement below reports sampled VRAM use.
 
-Native operations 196, 201 and pre-memory control 202 produced identical invalid
-first warmup responses. Earlier control 203 completed all 352 responses with
-B186 token identity, native quality and independent release passing. Its original
-finite caller completed. A stale replay-map defect after eager metadata
-replacement is reproduced and [corrected on CPU](proposals/replay-metadata-scope/README.md).
-Operation 205 then refused draft graph capture before readiness or any response.
-The [target-only correction](proposals/target-replay-scope/README.md) then
-completed the first 176 responses in operation 206, all matching B186 token
-vectors. Host observer-health readback failed on a missing contract import. The
-[host import correction](proposals/host-readout-scope/README.md) passes real
-retained artifact replay through the reader, resource and owner validators.
-The [revised test gates](measurements/native-qualification/TESTING.md) precede
-one combined production qualification and measurement run. Native sign-off
-remains open; no performance or memory improvement is established.
-See [native results](measurements/native-qualification/README.md).
+Operation 207 completed both production starts. All 352 raw request and output
+token vectors match B186; all 352 native quality grades and long-answer coverage
+pass. Original host acceptance and independent GPU/CPU release pass. The complete
+work comparison retains all 186 groups. Throughput observations differ by at
+most 0.16%; no causal speedup is established. Median external VRAM-use samples
+are about 1.63 GB lower per card in both starts, with fixed pools. These are
+10-second point samples, not whole-device peaks.
+
+See the [cleanup sign-off](measurements/native-qualification/CLEANUP-SIGNOFF.md),
+[measurement](measurements/native-qualification/GPU-207-MEASUREMENT.html) and
+[test procedure](measurements/native-qualification/TESTING.md). Earlier failures,
+including operation 206's post-run host import refusal, remain retained. The
+[host correction](proposals/host-readout-scope/README.md) and offline receipt
+loader use their authenticated contracts without ambient module assumptions.
+No deployment, source promotion or further native run is included.
 
 This builds on [metadata preparation before replay](proposals/pre-replay/README.md),
 the [runner post-load hook](proposals/post-load/README.md),

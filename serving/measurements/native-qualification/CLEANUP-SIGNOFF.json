@@ -1,0 +1,161 @@
+{
+  "additional_instrumented_or_baseline_gpu_invocations": 0,
+  "caller_elapsed_seconds": 4009.6796490829984,
+  "causal_speedup_established": false,
+  "complete_host_chains": 6,
+  "complete_host_cpu_gate": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/HOST-READOUT-CPU-GATE.json",
+    "sha256": "93835d2eee5c711be65e34bf7d66d32f3c3936fe7ef239c0b1f87ac5ac486000"
+  },
+  "completed_utc": "2026-11-02T19:55:46.211424+00:00",
+  "cpu_grade_invocations_for_this_approval": 1,
+  "cpu_grading_elapsed_seconds": 35.41914574999828,
+  "deployed": false,
+  "distinct_prompt_message_sequences": 8,
+  "documentation_audits": 5,
+  "exact_packet_native_cpu_tests": 57,
+  "expected_host_refusals": 27,
+  "final_source_history_tests": {
+    "builder": 18,
+    "history": 11
+  },
+  "gpu_invocations_for_this_approval": 1,
+  "host_integration_sha256": "c6badc9a3049911ffa58bac3fb75a6e5e2f55ab10f145b1efb66e727a6ce6793",
+  "independent_cpu_release": true,
+  "independent_gpu_release": true,
+  "latest_shared_checkpoint_observed": {
+    "path": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-569.json",
+    "sha256": "6b31ca1526ca147e20695cc4de3064e1a182a01a25c27efc9bba0d932d8d13de"
+  },
+  "limitations": [
+    "Bounded validation of the unchanged eight distinct prompt-message sequences repeated in 176 frozen cases per start; no broad quality or endurance claim.",
+    "Both production starts and all 352 raw vectors/native grades pass. GPU startup byte witnesses cover both ranks of the retained206 first start through prospective CPU readback;206 itself remains failed and partial. No second-start instrumented witness set is claimed.",
+    "Memory values are medians of external sysfs point samples every 10 seconds within HTTP windows; they are not whole-device peaks.",
+    "One sequential control 203/cleanup 207 comparison with unchanged work is descriptive; throughput changes do not establish a causal speedup.",
+    "The earlier separate numerical mismatch remains under its recorded owner disposition; no outliers or failed evidence are erased."
+  ],
+  "local_packet_checks": 6,
+  "long_answer_coverage_pass": true,
+  "matched_reference_vectors": 352,
+  "measurement_chart": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-207-MEASUREMENT.html",
+    "sha256": "a5922fe9eef4a65d0eb300a03d2a43e03f4192ba7a2053c4153ed22214eb1ef7"
+  },
+  "measurement_seals": {
+    "hostile_timing": {
+      "manifest_sha256": "8f0093e6e9a3f732abeeed2f0bf5e3c16a4a788f014d92aabaf1492be74a6f34",
+      "members": 2,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/timing-comparison-hostile-v1",
+      "verified_utc": "2026-11-02T19:51:30.445846+00:00"
+    },
+    "memory": {
+      "manifest_sha256": "fad9e278f01f96c534fa6cce582ad0f12d826976dc4267f193eccc3945704aa4",
+      "members": 1,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/memory-comparison-v1",
+      "verified_utc": "2026-11-02T19:51:30.451364+00:00"
+    },
+    "timing": {
+      "manifest_sha256": "8f0093e6e9a3f732abeeed2f0bf5e3c16a4a788f014d92aabaf1492be74a6f34",
+      "members": 2,
+      "qualification": false,
+      "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/timing-comparison-v2",
+      "verified_utc": "2026-11-02T19:51:30.377487+00:00"
+    }
+  },
+  "memory_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-207-MEMORY-COMPARISON.json",
+    "sha256": "5c5ed35b90a46c7d9d1ff92a61ad3294387353b67e7bc7b67ff4e6f0322fe7ff"
+  },
+  "model_starts": 2,
+  "native_execution_seal": {
+    "manifest_sha256": "a62d1e9c71ed98422d6add0c0bb62177b4e8045afb78e51b0e125435d83c760d",
+    "members": 98,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/execution-v1",
+    "verified_utc": "2026-11-02T19:43:32.814480+00:00"
+  },
+  "native_result": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-207-RESULT.json",
+    "sha256": "0ff4ae312ddb2adfb8685452186fe87f7c7ad11cdb3f6732064badfe26c8ca10"
+  },
+  "natural_quality_failures": 0,
+  "natural_quality_passes": 352,
+  "newer_unrelated_global_operations_preserved": true,
+  "nonce": "e2011102000000a3",
+  "observed_throughput_change_percent": [
+    -0.13602872649445263,
+    0.058320171184966796,
+    -0.15633044667576756,
+    -0.07564333706909787
+  ],
+  "offline_comparison_tests": 18,
+  "operation": 207,
+  "own_closeout_checkpoint": "CHECKPOINT-567.json",
+  "prelaunch_boundary_tests": 43,
+  "profile": "TP2, DFlash8, low thinking, BF16 target/draft KV, aligned GDN, eleven overlays, fixed pools, 235W; Hyperloom and profilers disabled",
+  "public_test_suites": 89,
+  "public_tests": 1082,
+  "pull_request_remains_draft": true,
+  "readout_verification": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-207-READOUT-VERIFICATION.json",
+    "sha256": "2cfb088abebc6ec8117d1ca8377d29de42ab7bdf022312d3b842308f5ecd2889"
+  },
+  "remaining_cleanup_steps": [],
+  "remaining_cpu_grading_allowance": 0,
+  "remaining_gpu_allowance": 0,
+  "retries": 0,
+  "runtime_python_sources": 61,
+  "runtime_source_manifest_sha256": "a7ee73ea8095faa1585332ed10bc9bfe45bb1c8ab84035aa18dea5a646564c27",
+  "sampled_http_vram_median_reductions": [
+    {
+      "arm": "bf16",
+      "baseline_median_bytes": 29745872896.0,
+      "bdf": "0000:23:00.0",
+      "cleanup_median_bytes": 28113879040.0,
+      "median_used_reduction_bytes": 1631993856.0
+    },
+    {
+      "arm": "bf16",
+      "baseline_median_bytes": 30006190080.0,
+      "bdf": "0000:c3:00.0",
+      "cleanup_median_bytes": 28374171648.0,
+      "median_used_reduction_bytes": 1632018432.0
+    },
+    {
+      "arm": "kv4",
+      "baseline_median_bytes": 29745942528.0,
+      "bdf": "0000:23:00.0",
+      "cleanup_median_bytes": 28113764352,
+      "median_used_reduction_bytes": 1632178176.0
+    },
+    {
+      "arm": "kv4",
+      "baseline_median_bytes": 30006284288.0,
+      "bdf": "0000:c3:00.0",
+      "cleanup_median_bytes": 28374073344,
+      "median_used_reduction_bytes": 1632210944.0
+    }
+  ],
+  "schema": 1,
+  "source_promotion": false,
+  "source_seal": {
+    "manifest_sha256": "430da555d2892402b589c6c0a5ed677284b9c68ea8fd2002bdeeea28b5aad8f5",
+    "members": 148,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/production-pair-v1/cleanup/author"
+  },
+  "source_selection_changed": false,
+  "startup_memory_witnesses": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-206-STARTUP-WITNESSES.json",
+    "sha256": "c146e1fe509dd0221bd153a4d0c00ef8b70f8a490327856fb84d5984ee966fe1"
+  },
+  "status": "CLEANUP_IMPLEMENTATION_BOUNDED_QUALIFICATION_MEASUREMENT_AND_CLOSEOUT_COMPLETE",
+  "tested_source_commit": "5cc29f4ed48fecb929e26d78445f8afd35411a4d",
+  "timing_comparison": {
+    "path": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/serving/measurements/native-qualification/GPU-207-TIMING-COMPARISON.json",
+    "sha256": "b016e79e128a1a4d4fa947a75b08781e2eb4796717a977a5ddec129f4eba6b27"
+  },
+  "whole_cleanup_complete": true,
+  "whole_device_peak_memory_advantage_established": false
+}

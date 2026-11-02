@@ -1,0 +1,32 @@
+{
+  "all352_reference_vectors_and_quality_grades": true,
+  "checkpoint": {
+    "path": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-567.json",
+    "sha256": "cf6890a9ae73b534fa861234934005ec4c5afdeee79bdb20077c81916e1ef935"
+  },
+  "closeout_seal": {
+    "manifest_sha256": "8870bad4ec0fcc2df3083f8a4053a3234124b4d42a71da3af695df0ef3f80414",
+    "members": 3,
+    "qualification": false,
+    "root": "/Users/uk-gr9yjx0l0y/GolandProjects/Spry.ai-rdna4-serving/.test-build/serving-cleanup/host-readout-scope-v1/final-closeout-v1",
+    "verified_utc": "2026-11-02T19:57:21.430938+00:00"
+  },
+  "documentation_audits": 5,
+  "latest_shared_checkpoint_observed": {
+    "path": "/Users/uk-gr9yjx0l0y/Projects/ArchLinuxThreadripperAI/scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-569.json",
+    "sha256": "6b31ca1526ca147e20695cc4de3064e1a182a01a25c27efc9bba0d932d8d13de"
+  },
+  "measurement_reports_authenticated": true,
+  "native_gpu_and_cpu_release": true,
+  "newer_unrelated_global_operations_preserved": true,
+  "passed": true,
+  "readout_source_sha256": "8e0dff142ce9590df465f02f961e3822f77ba3859d4ac699150cc752e4a90a99",
+  "schema": 1,
+  "signoff_sha256": "ae84debca4a1ea4a665be801cb47d63be4973a4f49a246e4441cf48852b0c75b",
+  "source_history_tests": {
+    "builder": 18,
+    "history": 11
+  },
+  "status": "COMPLETE_BOUNDED_CLEANUP_SIGNOFF_AUTHENTICATED",
+  "whole_cleanup_complete": true
+}

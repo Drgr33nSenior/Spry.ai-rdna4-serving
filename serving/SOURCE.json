@@ -724,6 +724,15 @@
     "transport_unchanged_owner_control_flow": "PASS_EXCEPT_EXPLICIT_CONFIGURATION_PINS",
     "unsupported_config_mutation": "REFUSED_BEFORE_OUTPUT"
   },
+  "cleanup_signoff": {
+    "operation": 207,
+    "own_closeout_checkpoint": "CHECKPOINT-567.json",
+    "path": "measurements/native-qualification/CLEANUP-SIGNOFF.json",
+    "sha256": "ae84debca4a1ea4a665be801cb47d63be4973a4f49a246e4441cf48852b0c75b",
+    "verification": "measurements/native-qualification/CLEANUP-SIGNOFF-VERIFICATION.json",
+    "verification_sha256": "646dd122190d19bc41b4995ff49baa9ee65a91769c22e6eb8297efb28a7e78a8",
+    "whole_cleanup_complete": true
+  },
   "closed_http_proposal": {
     "cleanup_complete": false,
     "native_serving_qualified": false,
@@ -1392,12 +1401,14 @@
     "worker_export_config_binding_migrated": false
   },
   "host_readout_scope": {
-    "cleanup_complete": false,
+    "cleanup_complete": true,
     "native_execution_authorized": false,
+    "native_result": "measurements/native-qualification/GPU-207-RESULT.json",
     "nonce": "e2011102000000a3",
+    "operation": 207,
     "path": "proposals/host-readout-scope/PROPOSAL.json",
     "record_sha256": "470b4c811095d70a515d87a18d69cbb31e13c045fc52336c780bc624627c3190",
-    "status": "CPU_HOST_READOUT_GATES_PASSED_COMBINED_PRODUCTION_RUN_PENDING",
+    "status": "BOUNDED_PRODUCTION_TOKEN_IDENTITY_QUALITY_RELEASE_AND_MEASUREMENT_PASS",
     "verification": "proposals/host-readout-scope/VERIFICATION.json",
     "verification_sha256": "8b8bd88047eef098289478133bca1d64b8b283a26f0888baf96f4369bc416141"
   },
@@ -1469,12 +1480,16 @@
     "status": "FIRST_ARM176_TOKEN_IDENTITY_PASS_HOST_READOUT_IMPORT_REFUSAL_RELEASED_PARKED"
   },
   "last_production_native_attempt": {
+    "independent_cpu_release_verified": true,
     "independent_gpu_release_verified": true,
-    "local_caller_completed_with_receipt": true,
-    "operation": 201,
-    "path": "measurements/native-qualification/GPU-201-RESULT.json",
-    "sha256": "af6ff5adb6f6da282572bbd3a075be0389c34588483a2dd3e24c369fddce6fae",
-    "status": "PRODUCTION_CANDIDATE_WARMUP_THINKING_BOUNDARY_REFUSAL_PARKED"
+    "model_starts": 2,
+    "natural_quality_passes": 352,
+    "operation": 207,
+    "path": "measurements/native-qualification/GPU-207-RESULT.json",
+    "responses": 352,
+    "retry_authorized": false,
+    "sha256": "0ff4ae312ddb2adfb8685452186fe87f7c7ad11cdb3f6732064badfe26c8ca10",
+    "status": "HOST_READOUT_PRODUCTION_CLEANUP_352_TOKEN_IDENTITY_QUALITY_AND_RELEASE_PASS_PARKED"
   },
   "location_direction": "Owner selected this local repository, corrected the handoff private-repository constraint, and explicitly authorized public source publication to https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving. Private run evidence remains local. Publication does not authorize native execution, deployment or selection.",
   "measurement_comparison": {
@@ -1491,10 +1506,12 @@
     "result": "measurements/gpu-run/CLEANUP-B-RESULT.json",
     "result_sha256": "15550df7fd1dae631489158100f4d4397f13a9126ade97dad5d1de65e94d8c04",
     "reverse_order_confirmation_run": false,
-    "sha256": "554f0c518356b96f389effac64e7ca21d52a8c0300b9fb9e1adbb3719e066692",
-    "status": "MATCHED_WORK_DESCRIPTIVE_PILOT",
+    "sha256": "8e0dff142ce9590df465f02f961e3822f77ba3859d4ac699150cc752e4a90a99",
+    "status": "ACTUAL_CLOSED_COMPARISON_PASSED_WITH_SCOPED_AUTHENTICATED_RECEIPT_CONTRACT",
     "tests": 13,
-    "timing_groups": 110
+    "timing_groups": 110,
+    "verification": "measurements/native-qualification/GPU-207-READOUT-VERIFICATION.json",
+    "verification_sha256": "2cfb088abebc6ec8117d1ca8377d29de42ab7bdf022312d3b842308f5ecd2889"
   },
   "measurement_preparation": {
     "path": "prepare_measurement.py",
@@ -1511,7 +1528,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Complete one freshly approved production campaign e2011102000000a3 for bounded native qualification and descriptive measurement. The complete retained CPU readback/resource/owner gate passed six chains and 27 expected refusals. Operation206 remains failed partial 176/352, independently released and parked at checkpoint 563. No additional instrumented run is planned; complete original host acceptance, conditional quality grading and final closeout remain required.",
+  "next_bounded_action": "Cleanup scope complete: implementation, bounded production qualification, native quality, independent release, descriptive measurement and retained evidence closeout. Keep the source PR in draft for owner review; no deployment or source promotion.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1986,9 +2003,11 @@
   "production_candidate_review": {
     "native_execution_authorized": false,
     "nonce": "e2011102000000a3",
+    "operation": 207,
     "path": "measurements/native-qualification/HOST-READOUT-PRODUCTION-REVIEW.json",
-    "sha256": "2b672b95b056cd63ad2eb92a400f2f212911c99b9769610c367ee3a6d56f2441",
-    "status": "COMBINED_PRODUCTION_QUALIFICATION_MEASUREMENT_REVIEWED_UNFUNDED",
+    "result": "measurements/native-qualification/GPU-207-RESULT.json",
+    "sha256": "1f80dc56f56d2947fdea262d4736bd008090832c86df302b4cfd142d52188a3b",
+    "status": "EXECUTED_ONCE_352_TOKEN_IDENTITY_QUALITY_RELEASE_PASS_PARKED",
     "whole_cleanup_complete": false
   },
   "production_default_change": {

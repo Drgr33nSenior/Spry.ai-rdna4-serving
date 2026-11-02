@@ -1,5 +1,23 @@
 # Native cleanup qualification
 
+The corrected cleanup passed bounded production qualification in operation 207:
+two starts, 352 exact B186 request/output vectors, all 352 native quality grades
+and long-answer coverage, original host acceptance and independent GPU/CPU
+release. The original caller completed in 4,009.68 seconds; its one conditional
+CPU grade completed in 35.42 seconds. No GPU or CPU retry ran.
+
+All 352 work records match the retained control 203, with all 186 groups retained.
+Observed throughput changes range from −0.16% to +0.06%; no causal speedup is
+established. Median sampled VRAM use is about 1.63 GB lower per card in both
+starts. The samples are external 10-second observations, not whole-device peaks.
+See [sign-off](CLEANUP-SIGNOFF.md), [measurement](GPU-207-MEASUREMENT.html),
+[result](GPU-207-RESULT.json) and [readout verification](GPU-207-READOUT-VERIFICATION.json).
+
+The offline comparator's missing receipt-contract import was corrected and
+replayed without native work. Eighteen focused tests and complete absent/hostile
+ambient-module comparisons pass with byte-identical reports. The final public
+suite passes 1,082 Python tests in 89 suites plus C++ sanitizer checks.
+
 Operation 206 completed the first 176 responses with exact B186 request and
 output token identity, then host observer-health validation failed on a missing
 `mtp_contract` import. The original caller returned its failure receipt and
@@ -14,14 +32,14 @@ reader/resource/owner chains and 27 expected refusals. The public suite passes
 packet/caller and 57 source-only native checks also pass. See the
 [gate summary](HOST-READOUT-CPU-GATE.json) and [testing procedure](TESTING.md).
 
-Packet `e2011102000000a3` is prepared, reproducible and unfunded for one combined
-production qualification and descriptive measurement campaign. No additional
-instrumented campaign is planned. Production omits those diagnostics and does
+Packet `e2011102000000a3` was approved and ran once as operation 207, completing
+its combined production qualification and descriptive measurement. No additional
+instrumented campaign ran. Production omits those diagnostics and does
 not establish second-start instrumented witness coverage. The original 206
 failure is not retroactively accepted. See the
 [production review](HOST-READOUT-PRODUCTION-REVIEW.json).
 
-The current cleanup remains unqualified. Reference operation 198 completed
+Earlier reference operation 198 completed
 352 responses whose request and output token vectors all match passing B186.
 Collection and independent GPU release passed. Its original local caller was
 interrupted, so complete operation replay and conditional CPU grading remain
