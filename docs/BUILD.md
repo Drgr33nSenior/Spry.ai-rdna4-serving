@@ -1,4 +1,18 @@
-# Build boundaries
+# Build and source-assembly guide
+
+Choose the path that matches your work:
+
+| Goal | Entry point | Required external inputs |
+| --- | --- | --- |
+| Assemble cleaned serving source for review | [Serving guide](../serving/README.md) and [caller projection](../serving/launcher/PROJECTION.md) | Authenticated sealed donor, selected proposal and configured assets |
+| Reproduce the active serving overlays | [Patch series](../serving/patches/README.md) | Exact effective base files from the lock |
+| Build the separate KV4 native library | The KV4 build contract below | Complete pinned Linux toolchain, runtime sources and independent build review |
+| Run local CPU checks | [Verification](VERIFICATION.md) | Existing configured Python and C++ compiler |
+
+A source review bundle, a native library and an accepted runtime/build proof
+are different outputs. Follow the selected path through its own checks. The
+runtime pins below describe the recorded FP8/KV4 composition; they are not a
+universal installation recipe for every later experiment.
 
 This repository does not install dependencies, pull an image or start a GPU.
 Use an isolated owned output directory and a separately reviewed execution plan.

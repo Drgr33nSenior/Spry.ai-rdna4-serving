@@ -1,4 +1,51 @@
-# Verification scope
+# Verification guide
+
+Run checks from the repository root with an existing configured interpreter.
+The completed cleanup used CPython 3.14. Use a C++17 compiler with sanitizers
+for the C++ CPU codec checks. No Python package installation or model
+weights are needed for the public CPU suite.
+
+```sh
+make test PYTHON=python3.14 CXX=clang++
+```
+
+## Choose a focused check
+
+| Target | What it exercises | What it does not establish |
+| --- | --- | --- |
+| `test-serving-cleanup` | Serving configuration, source assembly, receipts, quality policy and caller contracts | A completed native campaign |
+| `test-validation-preflight` | Actual public guard, package and collector entry points with declared substitutes | GPU allocation or model quality |
+| `test-cpu` | Retained source, integration and metadata contracts | Native GPU arithmetic |
+| `test-codec` | C++ CPU codec and numerical checks with ASan/UBSan | HIP device behavior or speed |
+| `test-host-owner` | Local process supervision and mocked platform observations | Current workstation ownership or release |
+| `test-benchmark` and `test-benchmark-readout` | Frozen schedules, inner results and measurement arithmetic | A matched physical result |
+| `test-fp8` | Recorded FP8 baseline identities and scope | Qualification of a different cache or model profile |
+
+Pass `PYTHON=python3.14` to a focused target, and set `CXX` when it compiles C++.
+Replace these names with the absolute paths to your configured tools if needed.
+The full `make test` target combines the public CPU checks. Products stay in
+`.test-build/`.
+
+## Before native work
+
+Follow the [serving test procedure](../serving/measurements/native-qualification/TESTING.md).
+It adds exact-packet checks, the declared native interpreter and complete
+retained artifact replay to the public fixture suite. Reuse authenticated
+unchanged results; rerun the affected checks when code, inputs or unresolved
+failures justify it. A documentation-only edit needs documentation and link
+validation, rather than another GPU campaign.
+
+For the completed result, see the
+[cleanup sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md).
+Its counts and native outcomes are a recorded snapshot, not a promise about
+future packets.
+
+## Retained verification notes
+
+The following sections preserve the earlier source-suite contracts and sprint
+outcomes. Counts such as the 112-case selection refer to that specific suite,
+not the complete current `make test` count. Declared substitutes, numerical
+tolerances and native limitations remain part of each record.
 
 `make test-cpu` also runs the separate metadata-reuse adapter suite described in
 [metadata reuse](METADATA-REUSE.md). Its declared CPU graph/tensor substitutes

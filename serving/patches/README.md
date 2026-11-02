@@ -42,6 +42,8 @@ python3 -I -B -S serving/tests/check_patch_series_packet.py \
 
 [VERIFICATION.json](VERIFICATION.json) records the exact proof. The previous
 runtime-only series is retained under `.test-build/serving-cleanup/patch-series/`.
-Phase 5a reproduction is separate from replacing the runner or moving adapter
-work before replay. Those Phase 5b changes still need implementation and native
-token-identity validation.
+This reproduction record covers Phase 5a. The later runner post-load hook and
+metadata preparation before replay are separate increments. They were included
+in the completed [cleanup validation](../measurements/native-qualification/CLEANUP-SIGNOFF.md).
+Their earlier preparation and failure records remain in the
+[implementation history](../HISTORY.md).

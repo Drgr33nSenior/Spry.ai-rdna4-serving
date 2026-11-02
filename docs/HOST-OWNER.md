@@ -1,5 +1,15 @@
 # Host-process benchmark ownership
 
+The owner holds the workstation lease, supervises the exact process tree and
+requires observed release before another arm or owner can proceed. This page
+retains the core contract and the earlier KV4 integration record.
+
+For the current cleaned-serving sequence, start with the
+[caller workflow](../serving/launcher/README.md). Its completed result is linked
+from the [sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md).
+The opening status below describes the first KV4 matched attempt; it is not the
+status of the later serving cleanup.
+
 Status: the first matched physical attempt stopped after its BF16-cache arm.
 The inner benchmark completed, but scoped resource and release checks refused;
 KV4 did not start. No matched speed comparison or verified release follows.

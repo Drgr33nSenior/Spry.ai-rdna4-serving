@@ -1,4 +1,49 @@
-# Fresh caller and manifest proposals
+# Prepare caller source for review
+
+This CPU-only step creates a fresh source review. It does not register or
+invoke a workload. Use the [caller workflow](README.md) for the later native
+boundary and the [serving guide](../README.md) for the current source layout.
+
+## Inputs and outputs
+
+| Input | Purpose |
+| --- | --- |
+| Authenticated sealed donor | Supplies the retained source, assets and templates |
+| Explicit reviewed proposal | Selects exact runtime and protected-helper bytes |
+| Run, menu and host configuration | Supplies the configured profile and bounds |
+| Fresh 16-character lowercase hexadecimal packet ID | Derives session and workload identities |
+| New canonical output path | Keeps the donor and previous evidence immutable |
+
+Inspect the available arguments first:
+
+```sh
+python3.14 -I -B -S serving/propose_packet.py --help
+python3.14 -I -B -S serving/prepare_gpu_run.py --help
+```
+
+`propose_packet.py` renders source, manifest and caller review artifacts.
+`prepare_gpu_run.py` assembles candidate and baseline author/caller trees,
+conditional grading templates and unfunded approval requests. Select a proposal
+explicitly; a default or an old sealed packet is not a selection of the final
+cleanup. Proposal pins are versioned and can refuse after later source changes.
+
+Read the generated source review and approval request for actual membership,
+identities and limits. Counts from older increments are historical. The source
+archive stays independent of a later approval boot binding; the retained CPU
+grading template also has its own reviewed boot requirement.
+
+Before execution, complete the [test gates](../measurements/native-qualification/TESTING.md),
+review the complete protected diff and retain the exact one-use approval.
+Unfunded review artifacts grant zero model starts. Preparation does not open a
+private key or contact the workstation.
+
+<details>
+<summary>Historical caller projection record</summary>
+
+The following is the earlier projection-stage description. Its member counts,
+missing-proof boundary and pending gates describe that source version.
+
+### Earlier caller and manifest proposal
 
 Run `serving/propose_packet.py` to prepare review artifacts for a fresh session:
 
@@ -38,3 +83,5 @@ authenticate all 80 members with the real transport. The real controller
 reproduces the configured spec and still refuses at the missing external runtime
 proof. The staged caller reads its actual host file with SSH and command effects
 mocked. These checks do not execute the caller or native workload.
+
+</details>

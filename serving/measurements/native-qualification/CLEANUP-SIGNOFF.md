@@ -36,4 +36,5 @@ See [machine-readable sign-off](CLEANUP-SIGNOFF.json),
 [native result](GPU-207-RESULT.json), [measurement](GPU-207-MEASUREMENT.html),
 [readout verification](GPU-207-READOUT-VERIFICATION.json) and
 [test procedure](TESTING.md). No cleanup step or native allowance remains.
-The source PR stays in draft; no deployment or source promotion is included.
+The source was later published for review in [PR #1](https://github.com/Drgr33nSenior/Spry.ai-rdna4-serving/pull/1).
+No deployment or source promotion is included.

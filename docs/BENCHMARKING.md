@@ -1,4 +1,11 @@
-# Matched native timing screen
+# Historical FP8/BF16-KV versus KV4 timing contract
+
+This page retains the separate 4K, eager ModelRunner comparison and its failed
+attempts. Its status and proposed envelopes below belong to that experiment.
+For the completed production-mode serving cleanup, use the
+[operation-207 sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md)
+and [current test procedure](../serving/measurements/native-qualification/TESTING.md).
+Use [current serving results](CURRENT-SERVING-RESULTS.md) for later experiments.
 
 Status: no complete matched result is available. The first attempt retained
 BF16-arm samples but failed collection/release acceptance. A later attempt
