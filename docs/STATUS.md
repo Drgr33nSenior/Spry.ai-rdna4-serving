@@ -1,4 +1,12 @@
-# Status and evidence
+# KV4 prototype status and evidence
+
+This page scopes the public KV4 prototype and its historical private FP8 smoke.
+For the completed cleaned serving path, use the
+[cleanup sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md).
+For an active experimental choice, use the
+[session selection](../provenance/CURRENT-SESSION-SELECTION.json) and
+[current serving results](CURRENT-SERVING-RESULTS.md). A pass in one path does
+not qualify the others.
 
 Status: `EXPERIMENTAL_SOURCE_WITH_BOUNDED_VERIFICATION`.
 
@@ -57,6 +65,9 @@ The source subset here is not that complete installation or a transferable
 accepted build proof.
 
 ## Retained limits
+
+These exclusions apply to the historical KV4 composition described here. Later
+FP8 or cleaned-serving results keep their own scope and source identities.
 
 Earlier failed CPU fixtures, resource admissions, loaded-config checks and
 compiler-path attempts remain in the private evidence. They are not relabelled

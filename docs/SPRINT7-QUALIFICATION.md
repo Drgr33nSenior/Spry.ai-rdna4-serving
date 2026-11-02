@@ -277,5 +277,5 @@ keep aligned ring-fold as a separately screened experimental option. The prior
 matched-capacity timing and 1.63 GiB/card startup allocation saving remain bounded
 observations. Full-output variation and numerical-state equivalence remain open
 under the existing owner disposition. Installed defaults and toolchain stay at
-the selected versions. See [follow-up scope](SERVING-SPRINTS.md#after-sprint-7);
+the selected versions. See [follow-up scope](SERVING-SPRINTS.md);
 no Sprint 8 or deployment is defined by this closeout.

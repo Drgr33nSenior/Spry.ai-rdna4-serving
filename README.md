@@ -1,130 +1,96 @@
 # Spry.ai RDNA4 Serving
 
-Experimental LLM serving on AMD RDNA4 GPUs, with ROCm/SGLang integration, FP8
-model support, four-bit KV caching and reproducible verification.
+Tools, source overlays and validation evidence for experimental language-model
+serving on AMD Radeon AI PRO R9700 GPUs. The project studies model execution,
+attention-cache storage and reproducible verification on two GPUs.
 
-Official Qwen3.8-27B-FP8 weights stay fixed. The native baseline uses BF16 KV;
-the KV4 prototype changes cache storage. FP8 weights and KV4 storage are separate
-precision choices; this is not an MXFP4 weight conversion.
+Start with the [documentation guide](docs/README.md) for a reading path. This
+checkout contains source and tests; model weights, complete runtime images,
+native binaries and raw experiment archives are supplied separately.
 
-## Status
+## What is in this project?
 
-The separate native FP8/BF16-KV baseline passed bounded C1/C2 compatibility at
-4096 tokens on both R9700s. Its graph-enabled profile, exact image/model/source
-identities and sanitised evidence are retained in [FP8 baseline](docs/FP8.md).
-This does not qualify the KV4 composition or establish which configuration is
-fastest. A later short-prompt HTTP comparison found no meaningful regression
-between the previous Torch/ROCm stack and the current Torch 2.14 / SDK 10.2 stack.
-That comparison had DFlash2 disabled. See [current serving results](docs/CURRENT-SERVING-RESULTS.md)
-for the exact scope. A separate DFlash2 + split K/V + aligned GDN benchmark
-measured 86.68 versus 24.50 output tokens/s, a 3.54× increase on one short workload.
+| Area | Purpose | Where to start |
+| --- | --- | --- |
+| Serving source | Configure and assemble reproducible serving packets, validate responses, and retain release evidence | [Serving guide](serving/README.md) |
+| FP8 experiments | Record bounded serving results and subsequent tuning work | [Current results](docs/CURRENT-SERVING-RESULTS.md) and [session selection](provenance/CURRENT-SESSION-SELECTION.json) |
+| KV4 prototype | Study four-bit attention-cache storage with a separate native codec and SGLang overlay | [Architecture](docs/ARCHITECTURE.md) and [KV4 status](docs/STATUS.md) |
 
-The selected [Sprint 22 profile](docs/SPRINT22-GDN-OUTPUT-M16.md) measured
-121.18–121.24 combined TP2 output tokens/s at C1 with 2047 input and 1024 forced
-output tokens and low thinking. Both matched serving orders passed all eight
-output/work pairs. Greedy and publisher-sampled quality each passed 8/8 final
-answers; lifecycle passed 52/52 normal answers, two cancellations, actual C2,
-slot accounting and release. Astra approved common M16 GDN output for the next
-experimental session, retaining the previous GEMM for rollback and aligned
-ring-fold unchanged. The initial observation failure and existing reasoning
-variations remain recorded. Installed runtime and production defaults are unchanged.
+These areas have separate evidence. FP8 and MXFP4 describe model-weight
+precision. BF16 and KV4 describe attention-cache storage. A run with FP8 weights
+can use BF16 KV; a KV4 experiment does not imply a model-weight conversion.
 
-The [64K SRE screen](docs/SPRINT33-LONG-CONTEXT64.md) completed 14 normal-stop responses; its literal and factual grading gates each scored 10/12 and failed. The two format failures and the bounded input/output scope remain in the record. Independent review approved the conservative closeout.
+## Completed serving cleanup
 
-The [Qwen3.8 experimental baseline](docs/QWEN38-FROZEN-BASELINE.md) remains the reference for [reopened tuning](docs/QWEN38-REOPENED-TUNING.md). The [first reopened prefix-reuse screen](docs/SPRINT35-LONG-PREFIX-REUSE.md) passed 10/10 strict SRE responses and observed 24,576 cached tokens on warm long-document requests. The owner has [parked Flash-Next and lower-bit checkpoint work](docs/QWEN-NEXT-WEIGHT-CANDIDATES.md) to wait for an official Qwen4 27B dense checkpoint; no release date or final configuration is assumed.
+The serving cleanup passed its bounded production-mode validation in operation
+207. Both starts completed, all 352 request and output token vectors matched
+the reference, all 352 natural-answer grades passed, and independent GPU/CPU
+release was verified. The corpus contains eight distinct prompt-message
+sequences repeated in 176 frozen cases per start.
 
-The [Sprint 36 prefill comparison](docs/SPRINT36-PREFILL-CHUNKS.md) retained 2048-token chunks after both orders completed 12 normal finals and passed 8/8 strict SRE responses. The 4096 configuration had higher observed request times and allocator peaks; generated work differed, so the timings remain descriptive.
+The comparison found about 1.63 GB lower median sampled VRAM use per card in
+both starts, with fixed pools. Throughput observations changed by at most 0.16%;
+no causal speedup is established. Memory was sampled every 10 seconds, so those
+values are not whole-device peaks.
 
-The private integration passed a real eager TP2 smoke on two Radeon AI PRO R9700
-GPUs: initial prefill, continuation, decode and a 13-token prefix-reuse hit.
-Both ranks produced finite logits and agreed on sampled tokens. KV, request and
-Mamba-state capacities returned to their initial values. The publication CPU
-suite checks the retained source contracts without loading Torch, SGLang or a
-native library.
+Read the [sign-off and its limits](serving/measurements/native-qualification/CLEANUP-SIGNOFF.md)
+or open the [measurement report](serving/measurements/native-qualification/GPU-207-MEASUREMENT.html).
+This result covers the tested packet. The active experimental profile is
+recorded separately in the session selection; no installed service is changed
+by cloning this repository.
 
-This is a source prototype, not an installable serving distribution. The retained
-SGLang files are a selected overlay, not the complete upstream package. Public
-Qwen KV4 admission remains closed. A fresh installation needs a complete, independently
-reviewed runtime/build identity; the historical private smoke does not authorise
-a launch or supply a reusable build proof. General quality, capacity and performance
-qualification remains pending. See [status and evidence](docs/STATUS.md).
+## Run the local checks
 
-## Layout
+Use an existing configured Python interpreter and C++17 compiler. The completed
+cleanup checks used CPython 3.14. The C++ checks enable AddressSanitizer and
+UndefinedBehaviorSanitizer. No Python package installation is needed for these
+CPU checks.
 
-- `prototype/`: maintained native codec, kernels, SGLang source overlay and v2
-  source-identity/build tools.
-- `patches/`: image-relative KV4 delta and shared FP8-runtime repairs.
-- `profiles/`: the qualified 4K FP8 baseline record and separate eager
-  baseline/KV4 comparison plans; none is a launch command.
-- `tests/`: current regressions and declared CPU substitutes. `tests/fixtures/`
-  contains historical source snapshots needed to verify compatibility, not a
-  second maintained implementation.
-- `provenance/`: source hashes, pinned revisions and a sanitised result summary.
-- `docs/`: precision, build, verification and benchmark boundaries.
-
-## CPU checks
-
-Use Python 3.11 or later and an existing C++17 compiler. No Python packages are
-needed for the CPU contract suite. Select your configured interpreter explicitly:
+From the repository root, for example:
 
 ```sh
-make test-cpu PYTHON=/path/to/python3
-make test-fp8 PYTHON=/path/to/python3
-make test-benchmark PYTHON=/path/to/python3
-make test-benchmark-readout PYTHON=/path/to/python3
-make test-host-owner PYTHON=/path/to/python3
-make test-platform-collector PYTHON=/path/to/python3
-make test-benchmark-bindings PYTHON=/path/to/python3
-make test-codec CXX=clang++
+make test PYTHON=python3.14 CXX=clang++
 ```
 
-The C++ target enables ASan/UBSan. These targets do not build HIP, load the native
-library, query a GPU or start a model. Test products stay in `.test-build/`.
-See [verification](docs/VERIFICATION.md) for fixture and historical-test scope.
+Set `PYTHON` and `CXX` to your installed tools. These checks do not load a model
+or start GPU work. Test products go in `.test-build/`. For focused targets and
+the difference between fixture checks and native evidence, see
+[verification](docs/VERIFICATION.md).
 
-`tools/model_smoke.py` retains the reviewed inner GPU-smoke entry. It requires
-an explicit execution flag and hash-bound inputs. It is not a standalone launch
-controller: an authorised outer supervisor must first verify device ownership,
-the complete runtime, model-file identity, resource limits and cleanup.
+## Find the right guide
 
-The [KV4 operator guide](docs/KV4-OPERATIONS.md) covers benchmark readiness,
-ownership, stop conditions and result collection. The current KV4 preparation
-is source-only: fresh physical packaging, loading-time instrumentation and
-explicit two-GPU handover remain required. The guide does not authorize a run
-or supply a physical launcher. Earlier shared FP8 attempts failed; later bounded
-HTTP comparisons are documented in [current serving results](docs/CURRENT-SERVING-RESULTS.md).
+| You want to… | Read |
+| --- | --- |
+| Understand the components and precision choices | [Architecture](docs/ARCHITECTURE.md) |
+| Work on the cleaned serving source | [Serving guide](serving/README.md) |
+| Understand runtime assembly and build requirements | [Build guide](docs/BUILD.md) |
+| Follow a reviewed validation campaign | [Caller workflow](serving/launcher/README.md) and [test procedure](serving/measurements/native-qualification/TESTING.md) |
+| Find an experiment or its limitations | [Documentation index](docs/README.md) |
 
-An [owner-run metadata collector](docs/OWNER-COLLECTION.md) is available for the
-missing platform observations. It is not run by the agent and does not start,
-reserve or authorize GPU work.
+## Repository map
 
-The [FP8 performance work order](docs/PERFORMANCE-PLAN.md) prioritizes the native
-cache comparison, active-work and decoded-value reuse, then full-model fusion,
-recurrent-state traffic and TP2 communication. Research gains are not local
-measurements or changes to the numerical contract.
+| Directory | Contents |
+| --- | --- |
+| `serving/` | Configuration, builder, patch series, runtime modules, evidence readers and cleanup results |
+| `prototype/` | Native KV4 codec, kernels, SGLang overlay and build-identity tools |
+| `common-runtime/`, `patches/` | Pinned shared repairs and the separate KV4 delta |
+| `profiles/` | Recorded baseline profiles and comparison plans |
+| `tests/` | Regression tests and declared CPU substitutes |
+| `provenance/` | Source hashes, pinned revisions, selections and result summaries |
+| `docs/`, `benchmarks/` | Guides, research records and benchmark definitions |
 
-## Runtime and precision
+The repository is an experimental source project. The public KV4 admission path
+remains closed, and a selected source overlay is not a complete SGLang
+installation. Native work requires a reviewed runtime, authenticated inputs,
+fresh ownership and the applicable one-use approval. See the
+[KV4 operator guide](docs/KV4-OPERATIONS.md) for that prototype's separate scope.
 
-The historical KV4 composition used SGLang 0.5.21 at
-`e00930c5489053f26d86b179cee0d087f846acbb`, ROCm SDK 10.1.0, Python 3.14.4,
-Torch 2.13.0+rocm10.1.0 and RCCL 2.30.7. These pins describe the tested private
-composition, not a claim that this checkout installs it. The later FP8 serving
-checks use Torch 2.14 / SDK 10.2; see the current results for complete versions.
-
-The Qwen proposal uses TP2, head dimension 256, 16 full-attention layers and 48
-GDN layers. Four full-attention layers retain BF16 storage; twelve use local
-packed G32 E2M1/UE8M0 KV4. Compressed Q/K rotation occurs after native MRoPE;
-V remains unrotated. BF16 input/output and FP32 computation are distinct from
-packed four-bit storage. Local cache bytes are not interchangeable with vLLM
-UltraQuant bytes. See [architecture](docs/ARCHITECTURE.md).
-
-## Publication scope and licences
-
-This repository contains source, focused tests, dependency pins and documentation.
-It excludes model weights, private keys, machine configuration, native binaries,
-runtime review receipts, caches and raw experiment archives. No service or
-deployment is started by cloning it.
+## Licences and publication scope
 
 Original project code uses the [MIT licence](LICENSE). Copied and modified
-SGLang/vLLM-derived files retain their Apache-2.0 notices and terms. The Qwen
-config fixture has its retained licence. See [third-party notices](THIRD-PARTY.md).
+SGLang/vLLM-derived files retain their Apache-2.0 notices and terms. See
+[third-party notices](THIRD-PARTY.md).
+
+Model weights, credentials, machine configuration, native binaries, caches and
+raw private archives are excluded from publication. Published source and result
+summaries do not transfer private build proofs or launch authority.
