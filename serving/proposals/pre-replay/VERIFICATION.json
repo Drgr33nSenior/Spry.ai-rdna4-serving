@@ -1,0 +1,443 @@
+{
+  "all_nine_protected_helpers_unchanged": true,
+  "complete_cleanup": false,
+  "documentation_audits": "Both READMEs passed with no technical-writing findings",
+  "launch_authorized": false,
+  "metadata_preparation": {
+    "batch_sizes_tested": [
+      1,
+      2
+    ],
+    "eager_values_and_simulated_graph_attention_inputs_match_control": true,
+    "instrumented_witness_format_changed": true,
+    "native_decode_frontend_bodies_changed": false,
+    "old_capture_preparation_record_refused": true,
+    "outside_forward_graph": true,
+    "overlap_off_and_width_eight_guards_preserved": true,
+    "policy": "outside-forward-graph-v1",
+    "scope": "Standard-library tensor and graph stand-ins; no native arithmetic or GPU replay claim"
+  },
+  "native_lifecycle_sources": {
+    "srt/distributed/parallel_state.py": "8c2cdbbe98ae59894f1ff682a038cb21581421d2f889aa36604cd51542395da8",
+    "srt/model_executor/runner/base_cuda_graph_runner.py": "3b514e2f4bbf39944c6344dcb11c874e24debd1ce79003bf7e2e0e643e07fe04",
+    "srt/model_executor/runner/decode_cuda_graph_runner.py": "1ec64d53550012a006d2fb7acbcabeefb6d3a3729864373d870314aed19f94cd"
+  },
+  "native_preflight_archive": {
+    "ceiling_bytes": 16777216,
+    "excluded_sources_opened": 0,
+    "excluded_unused_historical_sources": [
+      "serving/proposals/closed-http/D2.patch",
+      "serving/proposals/closed-http/RUNTIME.patch",
+      "serving/proposals/closed-http/SOURCE.patch",
+      "serving/proposals/common-helpers/D2.patch",
+      "serving/proposals/common-helpers/RUNTIME.patch",
+      "serving/proposals/common-helpers/SOURCE.patch",
+      "serving/proposals/configuration-mutations/D2.patch",
+      "serving/proposals/configuration-mutations/SOURCE.patch",
+      "serving/proposals/d1-controller-inventory/D1.patch",
+      "serving/proposals/d1-package-pruning/D1.patch",
+      "serving/proposals/d1-package-pruning/D2.patch",
+      "serving/proposals/d2-approval-boot/D2.patch",
+      "serving/proposals/d2-approval-boot/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/d2-artifact-binding/D2.patch",
+      "serving/proposals/d2-artifact-binding/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/d2-artifact-binding/SOURCE.patch",
+      "serving/proposals/d2-artifact-binding/review/benchmark_artifacts.py",
+      "serving/proposals/d2-artifact-binding/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-artifact-limits/D2.patch",
+      "serving/proposals/d2-artifact-limits/review/benchmark_artifacts.py",
+      "serving/proposals/d2-artifact-limits/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-cleaned-inventory/D2.patch",
+      "serving/proposals/d2-cleaned-inventory/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-config-binding/D2.patch",
+      "serving/proposals/d2-durable-limits/D2.patch",
+      "serving/proposals/d2-durable-limits/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/d2-durable-limits/review/benchmark_artifacts.py",
+      "serving/proposals/d2-durable-limits/review/benchmark_host_transport.py",
+      "serving/proposals/d2-durable-limits/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-host-binding/D2.patch",
+      "serving/proposals/d2-host-binding/SOURCE.patch",
+      "serving/proposals/d2-host-binding/review/benchmark_artifacts.py",
+      "serving/proposals/d2-host-binding/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-owner-timing/D2.patch",
+      "serving/proposals/d2-owner-timing/review/benchmark_owner_adapter.py",
+      "serving/proposals/d2-owner-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-session-timing/D2.patch",
+      "serving/proposals/d2-session-timing/review/benchmark_host_transport.py",
+      "serving/proposals/d2-session-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-spec-binding/D2.patch",
+      "serving/proposals/d2-spec-binding/FIXTURE-ADAPTER.patch",
+      "serving/proposals/d2-stop-policy/D2.patch",
+      "serving/proposals/d2-stop-policy/SOURCE.patch",
+      "serving/proposals/d2-stop-policy/review/benchmark_artifacts.py",
+      "serving/proposals/d2-stop-policy/review/benchmark_physical_controller.py",
+      "serving/proposals/d2-transport-binding/D2.patch",
+      "serving/proposals/d2-worker-timing/D2.patch",
+      "serving/proposals/d2-worker-timing/SOURCE.patch",
+      "serving/proposals/d2-worker-timing/review/benchmark_physical_controller.py",
+      "serving/proposals/evidence-capacity/D2.patch",
+      "serving/proposals/evidence-capacity/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/evidence-capacity/SOURCE.patch",
+      "serving/proposals/post-load/RUNNER.patch",
+      "serving/proposals/post-load/RUNTIME.patch",
+      "serving/proposals/post-load/SOURCE.patch",
+      "serving/proposals/production-imports/D2.patch",
+      "serving/proposals/production-imports/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/production-imports/SOURCE.patch",
+      "serving/proposals/production-imports/TEST-ADAPTER.patch",
+      "serving/proposals/production-imports/review/benchmark_artifacts.py",
+      "serving/proposals/production-imports/review/benchmark_host_transport.py",
+      "serving/proposals/production-imports/review/benchmark_physical_controller.py",
+      "serving/proposals/production-isolation/D2.patch",
+      "serving/proposals/production-isolation/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/production-isolation/SOURCE.patch",
+      "serving/proposals/production-startup/D2.patch",
+      "serving/proposals/production-startup/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/production-startup/HOST-TEST-ADAPTER.patch",
+      "serving/proposals/production-startup/SOURCE.patch",
+      "serving/proposals/production-startup/review/benchmark_artifacts.py",
+      "serving/proposals/production-startup/review/benchmark_host_transport.py",
+      "serving/proposals/production-startup/review/benchmark_physical_controller.py",
+      "serving/proposals/runtime-binding/D2.patch",
+      "serving/proposals/runtime-binding/RUNTIME.patch",
+      "serving/proposals/runtime-binding/SOURCE.patch",
+      "serving/proposals/source-fingerprints/D2.patch",
+      "serving/proposals/source-fingerprints/FIXTURE-ARTIFACT-BINDING.patch",
+      "serving/proposals/source-fingerprints/SOURCE.patch",
+      "serving/proposals/source-fingerprints/review/benchmark_artifacts.py",
+      "serving/proposals/source-fingerprints/review/benchmark_host_transport.py",
+      "serving/proposals/source-fingerprints/review/benchmark_physical_controller.py",
+      "serving/proposals/source-references/RUNTIME.patch",
+      "serving/proposals/source-references/SOURCE.patch",
+      "serving/proposals/startup-digests/D2.patch",
+      "serving/proposals/startup-digests/RUNTIME.patch"
+    ],
+    "gzip_bytes": 3543964,
+    "repository_files_deleted": 0,
+    "selected_tests_and_required_controls_retained": true,
+    "source_access_inventory_complete": true,
+    "tar_bytes": 16199680
+  },
+  "native_serving_qualified": false,
+  "native_source_preflight": {
+    "denied_events": [],
+    "gpu_devices_denied": true,
+    "gpu_work": false,
+    "model_starts": 0,
+    "native_imports_denied": true,
+    "native_quality_grading": false,
+    "network_denied": true,
+    "passed": true,
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "tests": 229
+  },
+  "new_model_starts": 0,
+  "no_measured_inference_speedup": true,
+  "owner_approved": false,
+  "owner_ceilings_changed": false,
+  "packet": {
+    "archive": {
+      "archive_members": 78,
+      "changed_bytes_refused": true,
+      "native_execution": false,
+      "owner_ceilings_changed": false,
+      "positive": true,
+      "rollback_refused": true
+    },
+    "capacity": {
+      "full-all-cap": {
+        "fixture": true,
+        "minimum_measured_margin": 2.315,
+        "native_decode": false
+      },
+      "full-composed-profile": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      },
+      "full-doubled": {
+        "fixture": true,
+        "minimum_measured_margin": 2.208,
+        "native_decode": false
+      },
+      "full-expected": {
+        "fixture": true,
+        "minimum_measured_margin": 2.914,
+        "native_decode": false
+      }
+    },
+    "fixture_scope": "Finite production CPU producer/reader fixtures plus strict instrumented witness unit checks; no native arithmetic or quality result",
+    "native_argv": {
+      "all_mount_resource_model_and_sampling_arguments_preserved": true,
+      "native_execution": false,
+      "only_expected_source_pins_changed": true
+    },
+    "packaged_metadata": {
+      "actual_packaged_adapter_and_reader": true,
+      "batch_sizes": [
+        1,
+        2
+      ],
+      "native_arithmetic": false,
+      "native_execution": false,
+      "old_witness_refused": true,
+      "preparation_recorded_in_forward_graph": false,
+      "source_only_tensor_standins": true
+    },
+    "passed": true,
+    "payload_delta": {
+      "archive_members": 78,
+      "changed": [
+        "MANIFEST-PROPOSAL.json",
+        "MANIFEST.json",
+        "review/BENCHMARK-SPEC2.json",
+        "review/HTTP-BINDING-control.json",
+        "review/HTTP-BINDING-mtp.json",
+        "review/RESOURCE-MANIFEST.json",
+        "review/serving_integration.py",
+        "review/verify_decode_adapter.py",
+        "review/worker_entry.py"
+      ],
+      "native_execution": false,
+      "protected_sources_kernels_heads_active_overlays_requests_and_settings_byte_identical": true
+    },
+    "post_load_archive_refusals": {
+      "changed_hook": true,
+      "native_execution": false,
+      "runner_rollback": true,
+      "self_consistent_manifest_pins": true
+    },
+    "tests": 16
+  },
+  "post_test_record_change": "cpu_verified false to true only; execution authority remains false",
+  "proofs": {
+    "FINAL-SOURCE-MATCH.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/FINAL-SOURCE-MATCH.json",
+      "sha256": "49b39a554fbffdd06e79d83aef4350eda8f68be58d2450a6a92fb59690fe614b"
+    },
+    "MATCHED-PARALLEL-SOURCE.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/MATCHED-PARALLEL-SOURCE.json",
+      "sha256": "2410093f57fbf373788422e45415a511dc2e3d6cc64a2c5f52108de00addff82"
+    },
+    "MATCHED-RUNNER-SOURCES.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/MATCHED-RUNNER-SOURCES.json",
+      "sha256": "2cc258b8ef41fdbda0f524cb550888612668b07612e545eb0737fcc1924f5358"
+    },
+    "PUBLIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/PUBLIC-CHECKS.json",
+      "sha256": "4625abaa9c56b1819d8c1d15eb6e25eec5ed6415e89e47c53c8946d71ddf0c80"
+    },
+    "STATIC-CHECKS.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/STATIC-CHECKS.json",
+      "sha256": "09cafd5336813d5383da03d17a44aead501e09edc81de99176134f23297bbf08"
+    },
+    "UNUSED-HISTORICAL-PATCHES.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/UNUSED-HISTORICAL-PATCHES.json",
+      "sha256": "64cd1e2a48e213f9c78a383a47069a07d4b81eb7dc24d1ea0f6587a293f09dc5"
+    },
+    "full-chain-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/full-chain-attempt-1.json",
+      "sha256": "da1ed3cbacd91f43b94789ce2252b63f7d41af11b5f9eab7ff8c97399151e2bd"
+    },
+    "full-chain-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/full-chain-attempt-1.log",
+      "sha256": "e9aa32fd519999caf6f52a69cc20d6c4f8e00d2373e72d54d71ab54275662810"
+    },
+    "native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/native-source-preflight-v1/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "d94d081981d4f7267e4bd89805383b3f8893ffa262ffc30717ec586d132e674a"
+    },
+    "native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/native-source-preflight-v2/NATIVE-CPU-PREFLIGHT.json",
+      "sha256": "a64b3b0e0241297c5ca4155caf1a8c4913ee050cbd91bb57ced25843728ce271"
+    },
+    "native-source-preflight-v2/SOURCE-INVENTORY.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/native-source-preflight-v2/SOURCE-INVENTORY.json",
+      "sha256": "284ad7230c7501d021c3c3b50757f71f188f6d2dd9065309991481b5aad02ab6"
+    },
+    "native-source-preflight-v2/native-cpu-source-preflight.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/native-source-preflight-v2/native-cpu-source-preflight.json",
+      "sha256": "11a0ad1fa12371569cd0581bfe76abcc40330ff6bea121358ec55fd16f335bca"
+    },
+    "packet-attempt-1.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/packet-attempt-1.json",
+      "sha256": "025dca63ae76f3ac1c462bf2512536070289d527c7b7887ec3a4428b573e93d6"
+    },
+    "packet-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/packet-attempt-1.log",
+      "sha256": "e144347d256fb293c7aeb3f212390d72be4539a64895f81468272cfd5ea59aee"
+    },
+    "preview-final.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/preview-final.log",
+      "sha256": "42058be619b0fa1442b759a8fa478df086996839d084d6fd0f785785b899e211"
+    },
+    "proposal-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/proposal-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "public-make-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/public-make-attempt-1.log",
+      "sha256": "8dc032e5ade925f00053e2a38dae2df18d2c334d955dd133348827c7ad4f65bc"
+    },
+    "serving-docs-audit.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/serving-docs-audit.log",
+      "sha256": "d5689e5392e98f676bad1b5a35aa3c30718e5cfd6aa63256b1f44f9fec2948bb"
+    },
+    "source-review-final/SOURCE-REVIEW.json": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/source-review-final/SOURCE-REVIEW.json",
+      "sha256": "dc222c3a466dd94b8e611a4b08b09b192d0becc903eaba80f6b80d676f172c60"
+    },
+    "unit-adapter-final-draft.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/unit-adapter-final-draft.log",
+      "sha256": "0070f3eea188810cc8dccfa23716bc423c65176a79cd0e854557097fdc65d6d1"
+    },
+    "unit-canonical-attempt-1.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/unit-canonical-attempt-1.log",
+      "sha256": "b59b4081131087a6f2ab55ff1c211bac213d539505c685c170c46631842dde26"
+    },
+    "unit-witness-attempt-2.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/unit-witness-attempt-2.log",
+      "sha256": "74c03fc16fde9a2dfeff03db0ec8f472a5a8dfed04e9e982a912b4b7f64faee3"
+    },
+    "worker-history-final.log": {
+      "path": ".test-build/serving-cleanup/pre-replay-v1/worker-history-final.log",
+      "sha256": "e5762c99a3fd8fa2c7934392a5673951faf1366262f14695639b38464bc7b5e3"
+    }
+  },
+  "protected_set_sha256": "f44d65288bae28e60ab780ecbe53bd3e8bf5e4ac31a336866ebfc3ea5a084309",
+  "protected_source_bytes_changed": 0,
+  "public_tests": {
+    "command": "make test PYTHON=/opt/homebrew/bin/python3.14",
+    "cpp_sanitizers": "passed via make test",
+    "passed": true,
+    "python_tests": 962,
+    "suites": 77
+  },
+  "published_proposal_sha256": "44e83085963458dc2fd240a133f835e7cc2afd63b5a15feed135400a5306e976",
+  "quality_for_new_source_graded": false,
+  "remaining": [
+    "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
+    "Startup tensor validation scans and item synchronization",
+    "Shared FP8 head and packed QKVZ/BA views after refactors",
+    "Exact source/protected-delta review and fresh one-use native serving/token-ID/quality qualification",
+    "Native startup memory equality and retained headroom proof",
+    "Broader configuration and instrumented full-menu capacity qualification"
+  ],
+  "retained_private_fixture_failures": [
+    "Missing native module label in the first private adapter fixture; corrected source descriptor",
+    "Missing authenticated adjacent helper in the first private readout fixture; staged the exact helper"
+  ],
+  "runtime_changes": {
+    "serving_integration.py": {
+      "baseline_sha256": "5e78f95f6dbdf45f6cc07022f306f48756cfed4b4cde81353b38e042540d6b51",
+      "proposed_sha256": "65dde293b1a860ed709cbd0eea2e1cb721b99d0bb369460777968bfb2063544e"
+    },
+    "verify_decode_adapter.py": {
+      "baseline_sha256": "0f721e09477ac873b7e37ec6ea5692404c15a07514bae835b93b3f66aa7d8eed",
+      "proposed_sha256": "475ff76862ae8e191a7fa60327e5947913a0b07ee327be115382db58352626fa"
+    },
+    "worker_entry.py": {
+      "baseline_sha256": "5ea61d216dcd91c0d7f3de8d9816d5e44643385776cd712124424eb2fee2e330",
+      "proposed_sha256": "6b4622b92c2f759b9346909fbb87f56b55eb3b22c7c9a6c0ec2fac918d8da1b0"
+    }
+  },
+  "schema": 1,
+  "source_review": {
+    "content_sha256": "b31cf4cb5cfeebb1c2a9675246b32263e58fd884db5bf45c373bfbac590d25ee",
+    "launch_authorized": false,
+    "packet_id": "e201110200000064",
+    "path": ".test-build/serving-cleanup/pre-replay-v1/source-review-final",
+    "proposed_package_members": 78
+  },
+  "sources": {
+    "analyze_model_benchmark.py": {
+      "file": "spry_evidence/closed_readout.py",
+      "sha256": "a5aa54f5b2620ee5b4c780445d4932de2a01e5065718b53893de4469c1f1fcc7"
+    },
+    "d3b_combined_model_runner.py": {
+      "file": "spry_serving/hook_runner.py",
+      "sha256": "034212ae8dae8d0eba591787bb53adadb7c331ba9f676ea517a4c8a834ab63da"
+    },
+    "graph_outer.py": {
+      "file": "spry_serving/closed_projection.py",
+      "sha256": "9902d9103a0696edeba14fcfed5ce5c9047252c4223a2814f49f69583e288d74"
+    },
+    "isolated_scheme.py": {
+      "file": "spry_serving/scheme.py",
+      "sha256": "132f395300373ca79a6e784b855ba01ac65d05c8ac4dcaf36950a163c594d0f6"
+    },
+    "model_benchmark.py": {
+      "file": "spry_serving/closed_benchmark.py",
+      "sha256": "6fc1918bda3b449ddee810417c3ea76fb1e0610ede2ab6c96bbf97334b9f7de1"
+    },
+    "mtp_contract.py": {
+      "file": "spry_serving/hook_contract.py",
+      "sha256": "47dc9bdc677295fc7851b2f92703b98f715e9410adcc58e82bca77ee6ccf38cb"
+    },
+    "ops.py": {
+      "file": "spry_serving/ops.py",
+      "sha256": "0021e160d90383697318bc85401e57462f8172016c0df0f553ba37e6f57d9b85"
+    },
+    "prefill_reference.py": {
+      "file": "spry_serving/prefill_reference.py",
+      "sha256": "cd5841650fc59da7f1537e82ffebf16fb07ca0db7d191cdfec59540575bbd887"
+    },
+    "request_receipts.py": {
+      "file": "spry_evidence/shared_receipts.py",
+      "sha256": "54419f977a5a344973b6f7679a40265848b353194a1c7992b1e2c2660a0a47ee"
+    },
+    "serving_client.py": {
+      "file": "spry_evidence/closed_client.py",
+      "sha256": "dd20fbf86851407d13ccbe78850faf7a5c0f7107e4921c98ccdf2b4821620c5f"
+    },
+    "serving_contract.py": {
+      "file": "spry_evidence/closed_contract.py",
+      "sha256": "4e1c75cc891d787f195b45f86a97fc23f2f02c55337fce560c999e6263f4cab9"
+    },
+    "serving_entry.py": {
+      "file": "spry_serving/closed_entry.py",
+      "sha256": "d05628c85bc38dbbf0948fe08368611d574fca16132522071bcfd6b2a952a5e3"
+    },
+    "serving_graph_observer.py": {
+      "file": "spry_evidence/closed_observer.py",
+      "sha256": "a34519a07e765a2bc2ea7c6d4db0e42cb418542315c4954093c3a7064e0db667"
+    },
+    "serving_integration.py": {
+      "file": "spry_evidence/pre_replay_integration.py",
+      "sha256": "65dde293b1a860ed709cbd0eea2e1cb721b99d0bb369460777968bfb2063544e"
+    },
+    "serving_reader.py": {
+      "file": "spry_evidence/closed_reader.py",
+      "sha256": "e6822360bcf9337e4cfe5d31bc1c7f3f3f3e56b40d5e4bf417e273e4293c4041"
+    },
+    "serving_runtime.py": {
+      "file": "spry_serving/closed_runtime.py",
+      "sha256": "4221a4f714d90bcd207619f7ea167178afb65ff20a6296abdebe2cf023eb033c"
+    },
+    "verify_decode_adapter.py": {
+      "file": "spry_serving/pre_replay_adapter.py",
+      "sha256": "475ff76862ae8e191a7fa60327e5947913a0b07ee327be115382db58352626fa"
+    },
+    "worker_entry.py": {
+      "file": "spry_serving/pre_replay_worker.py",
+      "sha256": "6b4622b92c2f759b9346909fbb87f56b55eb3b22c7c9a6c0ec2fac918d8da1b0"
+    }
+  },
+  "static_analysis": {
+    "ast_symtable_compile_modules": 233,
+    "native_runtime_imported": false,
+    "patches": {
+      "RUNTIME.patch": {
+        "files": 3,
+        "forward_and_reverse_exact": true
+      },
+      "SOURCE.patch": {
+        "files": 1,
+        "forward_and_reverse_exact": true
+      }
+    },
+    "protected_diff_empty": true
+  },
+  "status": "CPU_PRE_REPLAY_METADATA_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+  "tested_proposal_sha256": "075790bb60ccb9e2c4fc188731d712755d5a866d281eab6d1244d0587a5a90eb"
+}

@@ -5,9 +5,11 @@ This directory holds the observer safety and structural cleanup increments from
 cleanup source. These files are not a launch packet or a new serving selection.
 
 The latest runtime increment is the
-[runner post-load hook](proposals/post-load/README.md).
-The runner delegates target/draft installation to one authenticated module
-before graph capture. The candidate has 78 members under the existing
+[verify metadata preparation](proposals/pre-replay/README.md).
+The adapter prepares causal maps before forward-graph capture or replay;
+its startup witness and reader require the new preparation policy. It retains
+the decode frontends and the [runner post-load hook](proposals/post-load/README.md).
+The candidate has 78 members under the existing
 80-member ceiling. The [source reference proposal](proposals/source-references/README.md)
 reuses unchanged protected files and produces an identical package without
 adding review copies. The runtime builds on the
@@ -520,11 +522,9 @@ fresh one-use approval.
 
 Implementation still required:
 
-1. Prepare verify metadata before graph replay. Update the instrumented counters
-   and reader together so the evidence proves the new preparation path.
-2. Finish the remaining common helper consumers and inactive phase markers.
-3. Consolidate startup tensor scans and scalar synchronizations.
-4. Share the FP8 head and rebind QKVZ/BA shards as packed-buffer views. Preserve
+1. Finish the remaining common helper consumers and inactive phase markers.
+2. Consolidate startup tensor scans and scalar synchronizations.
+3. Share the FP8 head and rebind QKVZ/BA shards as packed-buffer views. Preserve
    P1 identity checks and keep recovered memory as headroom.
 
 Native qualification still requires live production mount/import isolation,

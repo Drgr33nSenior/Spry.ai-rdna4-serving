@@ -88,7 +88,12 @@
     "Three unchanged protected sources referenced by exact hash instead of copied into new proposal reviews; canonical path, role, size and protected-set checks retained",
     "Every assembled package member byte-identical to the verified post-load parent; actual archive and worker source-refusal checks pass",
     "Public regression suite: 945 Python tests across 76 suites plus C++ sanitizers",
-    "Target CPython 3.14.7 source preflight: 211 checks without GPU/model/grading work"
+    "Target CPython 3.14.7 source preflight: 211 checks without GPU/model/grading work",
+    "Verify metadata prepared before the forward graph on the pinned native lifecycle; source-only simulations match prior values at batch sizes one and two",
+    "Startup witness and reader require outside-forward-graph policy, complete capture and zero captured metadata builds; legacy witness refuses",
+    "Optional bounded target source-access inventory; unused historical patch copies excluded from test archive without deleting repository files or tests",
+    "Public regression suite: 962 Python tests across 77 suites plus C++ sanitizers",
+    "Target CPython 3.14.7 source preflight: 229 checks without GPU/model/grading work; complete consumed-packet suite: 16 checks"
   ],
   "configuration_increment": {
     "native_cpu_source_tests": 153,
@@ -129,7 +134,7 @@
     },
     "status": "MATCHED_W5_PILOT_COMPLETE_PARKED"
   },
-  "latest_verification": "proposals/source-references/VERIFICATION.json",
+  "latest_verification": "proposals/pre-replay/VERIFICATION.json",
   "measurement_preparation": {
     "baseline": "retained W5 stock attention",
     "candidate_gpu_execution_performed": true,
@@ -143,7 +148,7 @@
     "instrumentation": "production",
     "matched_rows": 352,
     "mismatched_rows": 0,
-    "next_stage": "Post-load runner, closed HTTP and startup proposals are CPU-verified. Replay metadata, startup scan/memory implementation and exact native qualification remain.",
+    "next_stage": "Runner and pre-replay metadata source are CPU-verified; startup scan/memory implementation, remaining helper consumers and exact native qualification remain.",
     "review_path": "../.test-build/serving-cleanup/measurement-preparation/measurement-review-7",
     "review_sha256": "3a38ef349791ee5ca4b74c68c6dff949a74472b96902a4ae92c795cbd1802ef7",
     "status": "MATCHED_WORK_DESCRIPTIVE_PILOT_COMPLETE",
@@ -159,6 +164,16 @@
     "packet_checks": 15,
     "public_tests": 939,
     "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "whole_cleanup_complete": false
+  },
+  "pre_replay_metadata_increment": {
+    "archive_members": 78,
+    "native_cpu_source_tests": 229,
+    "native_serving_pending": true,
+    "new_model_starts": 0,
+    "packet_checks": 16,
+    "public_tests": 962,
+    "status": "CPU_PRE_REPLAY_METADATA_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "whole_cleanup_complete": false
   },
   "protected_source_references_increment": {
@@ -182,7 +197,6 @@
     "visibility": "public"
   },
   "remaining": [
-    "Verify metadata preparation before replay, with new strict instrumented counter/readout semantics",
     "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
     "Startup tensor validation scans and item synchronization",
     "Shared FP8 head and packed QKVZ/BA views after refactors",
@@ -196,7 +210,6 @@
     "Native timing and full instrumented qualification for broader configurations"
   ],
   "remaining_local": [
-    "Verify metadata preparation before replay, with new strict instrumented counter/readout semantics",
     "Remaining common helper consumers and inactive phase-marker branches outside the closed HTTP controller/readout",
     "Startup tensor validation scans and item synchronization",
     "Shared FP8 head and packed QKVZ/BA views after refactors"

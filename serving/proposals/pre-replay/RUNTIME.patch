@@ -1,0 +1,229 @@
+--- a/review/verify_decode_adapter.py
++++ b/review/verify_decode_adapter.py
+@@ -4,8 +4,8 @@
+ one or two causal eight-token requests. All other geometries retain native attention.
+ The native split selector runs on each row as a singleton decode request, so a row's
+ result depends on its own KV length only, never on its block start or batch partner.
+-Reuse its metadata only within an explicitly initialized forward. Graph capture
+-records the preparation once; graph replay still recomputes its device values.
++Prepare the map outside the model graph before every replay. Captured attention
++reads those stable buffers and never re-reads the request-to-token table.
+ """
+ import dis
+ import hashlib
+@@ -17,6 +17,7 @@
+ from types import CodeType
+ 
+ CURRENT = None
++METADATA_PREPARATION_POLICY = 'outside-forward-graph-v1'
+ 
+ 
+ def need(value, message):
+@@ -112,11 +113,14 @@
+                 adapter.invalidate(backend)
+                 return original(backend, q, k, v, layer, forward_batch, *args, **kwargs)
+             adapter.host_calls += 1
++            if not adapter._ready(backend, forward_batch):
++                adapter.prepare(backend, forward_batch)
+             native = backend.extend_attention_fwd
+             had_own = 'extend_attention_fwd' in backend.__dict__
+ 
+             def attention(*values, **options):
+-                if not eligible(backend, forward_batch, values, options):
++                if (not eligible(backend, forward_batch, values, options)
++                        or id(backend) not in adapter.metadata_scopes):
+                     adapter.invalidate(backend)
+                     return native(*values, **options)
+                 adapter.eligible_host_calls += 1
+@@ -143,14 +147,19 @@
+         self.wrapper = wrapper
+         self.metadata_hooks = {}
+         for name, method in initializers.items():
+-            def initialize(backend, forward_batch, *args, _method=method, **kwargs):
+-                # Reset before delegation as well, including an initializer failure.
+-                adapter.invalidate(backend)
+-                result = _method(backend, forward_batch, *args, **kwargs)
+-                adapter.metadata_scopes[id(backend)] = dict(
+-                    backend=backend, batch=forward_batch, metadata=backend.forward_metadata,
+-                    prepared=None)
+-                return result
++            if name == 'init_forward_metadata_in_graph':
++                def initialize(backend, forward_batch, *args, _method=method, **kwargs):
++                    result = _method(backend, forward_batch, *args, **kwargs)
++                    if adapter._policy(backend, forward_batch) is not None:
++                        need(adapter._ready(backend, forward_batch),
++                             'verify metadata must be prepared before capture')
++                    return result
++            else:
++                def initialize(backend, forward_batch, *args, _method=method, **kwargs):
++                    adapter.invalidate(backend)
++                    result = _method(backend, forward_batch, *args, **kwargs)
++                    adapter.prepare(backend, forward_batch)
++                    return result
+             self.metadata_hooks[name] = (method, initialize, name in cls.__dict__)
+         for name, (_, hook, _) in self.metadata_hooks.items():
+             setattr(cls, name, hook)
+@@ -159,17 +168,52 @@
+     def invalidate(self, backend):
+         self.metadata_scopes.pop(id(backend), None)
+ 
+-    def decode(self, backend, batch, args, layer):
++    def _policy(self, backend, batch):
++        metadata = backend.forward_metadata
++        bs = batch.batch_size
++        if (not batch.forward_mode.is_target_verify() or type(bs) is not int or bs not in (1, 2)
++                or metadata is None or getattr(metadata, 'max_extend_len', None) != 8
++                or backend.page_size != 1 or backend.dcp_size != 1 or backend.use_mla
++                or backend.enable_deterministic or backend.static_kv_splits
++                or backend.split_tile_size is not None or backend.max_kv_splits != 16
++                or backend.device_core_count <= 0 or backend.num_head != 12 or backend.num_kv_head != 2
++                or backend.kv_index_translator.reads_are_translated
++                or not 8 <= backend.max_context_len <= 131072):
++            return None
++        ptr = metadata.kv_indptr
++        if ptr.numel() != bs + 1 or batch.req_pool_indices.numel() != bs:
++            return None
++        return (backend.device_core_count, backend.max_context_len, 8 * bs, ptr.device)
++
++    def _ready(self, backend, batch):
++        scope = self.metadata_scopes.get(id(backend))
++        policy = self._policy(backend, batch)
++        if (scope is None or policy is None or scope['backend'] is not backend
++                or scope['batch'] is not batch or scope['metadata'] is not backend.forward_metadata
++                or scope['policy'] != policy):
++            return False
++        ptr = backend.forward_metadata.kv_indptr
++        refs = (ptr, batch.req_pool_indices, backend.kv_index_translator)
++        return (all(a is b for a, b in zip(scope['references'], refs))
++                and scope['stream'] == self.torch.cuda.current_stream(ptr.device).cuda_stream)
++
++    def prepare(self, backend, batch):
++        """Prepare singleton causal maps before eager forward, capture or replay."""
++        self.invalidate(backend)
++        policy = self._policy(backend, batch)
++        if policy is None:
++            return False
+         torch = self.torch
+-        q, k, v, out, kb, vb, qo, ptr, indices, mask, causal, mi, width, ks, vs, scale = args
+-        bs = batch.batch_size
+-        rows = 8 * bs
++        need(not torch.cuda.is_current_stream_capturing(),
++             'verify metadata must be prepared outside the forward graph')
++        ptr = backend.forward_metadata.kv_indptr
++        bs, rows = batch.batch_size, 8 * batch.batch_size
+         key = (id(backend), rows)
+         if key not in self.buffers:
+             native_decode = importlib.import_module(self.manifest['sources']['decode_attention_fwd']['module'])
+             need(inspect.unwrap(backend.decode_attention_fwd) is native_decode.decode_attention_fwd,
+                  'adapter decode callable changed')
+-            device = q.device
++            device = ptr.device
+             empty = lambda shape, dtype: torch.empty(shape, device=device, dtype=dtype)
+             self.buffers[key] = dict(
+                 offsets=torch.arange(1, 9, device=device, dtype=torch.int32),
+@@ -178,43 +222,31 @@
+                 requests=empty(rows, batch.req_pool_indices.dtype), splits=empty(rows, torch.int32),
+                 partial=empty((rows, 12, 16, 256), torch.float32), lse=empty((rows, 12, 16), torch.float32))
+         b = self.buffers[key]
++        for j in range(bs):
++            torch.add(ptr[j+1]-ptr[j], b['offsets'], out=b['lengths'][8*j:8*j+8])
++        torch.cumsum(b['lengths'], dim=0, out=b['indptr'][1:])
++        for j in range(bs):
++            b['requests'][8*j:8*j+8].copy_(batch.req_pool_indices[j:j+1].expand(8))
++        backend.kv_index_translator.fill_packed_read_stream(
++            req_pool_indices=b['requests'], seq_lens=b['lengths'], indptr=b['indptr'],
++            total_tokens=rows*(backend.max_context_len+8), out=b['indices'])
++        for row in range(rows):
++            backend.get_num_kv_splits(b['splits'][row:row+1], b['lengths'][row:row+1])
++        self.metadata_build_host_calls += 1
++        self.metadata_scopes[id(backend)] = dict(backend=backend, batch=batch,
++            metadata=backend.forward_metadata, policy=policy,
++            references=(ptr, batch.req_pool_indices, backend.kv_index_translator),
++            stream=torch.cuda.current_stream(ptr.device).cuda_stream)
++        return True
++
++    def decode(self, backend, batch, args, layer):
++        q, k, v, out, kb, vb, qo, ptr, indices, mask, causal, mi, width, ks, vs, scale = args
++        rows = 8 * batch.batch_size
+         scope = self.metadata_scopes.get(id(backend))
+-        scoped = (scope is not None and scope['backend'] is backend and
+-                  scope['batch'] is batch and scope['metadata'] is backend.forward_metadata)
+-        if not scoped:
+-            # An unscoped call writes the same scratch buffers. Never let an
+-            # earlier scope subsequently treat those overwritten values as ready.
+-            self.invalidate(backend)
+-        references = (ptr, batch.req_pool_indices, backend.kv_index_translator)
+-        stream = torch.cuda.current_stream(q.device).cuda_stream
+-        policy = (backend.device_core_count, backend.max_context_len,
+-                  torch.cuda.is_current_stream_capturing(), rows)
+-        prepared = scope['prepared'] if scoped else None
+-        reusable = (prepared is not None and prepared[1] == stream and
+-                    prepared[2] == policy and
+-                    all(a is b for a, b in zip(prepared[0], references)))
+-        if not reusable:
+-            if scoped:
+-                scope['prepared'] = None
+-            # Request j owns rows [8j, 8j + 8); each block is exactly the batch-size-1 metadata.
+-            for j in range(bs):
+-                torch.add(ptr[j+1]-ptr[j], b['offsets'], out=b['lengths'][8*j:8*j+8])
+-            torch.cumsum(b['lengths'], dim=0, out=b['indptr'][1:])
+-            for j in range(bs):
+-                b['requests'][8*j:8*j+8].copy_(batch.req_pool_indices[j:j+1].expand(8))
+-            backend.kv_index_translator.fill_packed_read_stream(
+-                req_pool_indices=b['requests'], seq_lens=b['lengths'], indptr=b['indptr'],
+-                total_tokens=rows*(backend.max_context_len+8), out=b['indices'])
+-            # One singleton split selection per row: never a batch-wide schedule.
+-            for row in range(rows):
+-                backend.get_num_kv_splits(b['splits'][row:row+1], b['lengths'][row:row+1])
+-            self.metadata_build_host_calls += 1
+-            if torch.cuda.is_current_stream_capturing():
+-                self.metadata_capture_build_host_calls += 1
+-            if scoped:
+-                scope['prepared'] = (references, stream, policy)
+-        else:
+-            self.metadata_reuse_host_calls += 1
++        need(scope is not None and scope['references'][0] is ptr,
++             'verify forward metadata was not prepared')
++        b = self.buffers[(id(backend), rows)]
++        self.metadata_reuse_host_calls += 1
+         if getattr(backend, 'bf16_query_fp8_target_kv', False) is True:
+             backend._record_fp8_target_read(q, kb, vb, layer, 'verify_decode')
+             backend.decode_attention_fwd(q, kb, vb, out, b['indptr'], b['indices'],
+--- a/review/worker_entry.py
++++ b/review/worker_entry.py
+@@ -819,6 +819,7 @@
+         proof.update(schema=1,rank=worker['rank'],pid=worker['pid'],worker_identity_sha256=worker['identity_sha256'],enabled=enabled,block_size=contract.contract_for_arm(manifest['arm'])['speculative_dflash_block_size'],before_external_generations=True,extra_tensor_operations=0,extra_model_forwards=0,qualification=False)
+         proof.update(adapter_source=manifest['sources']['verify_decode_adapter'] if enabled else None,eligible_host_calls=adapter.eligible_host_calls if adapter else 0,capture_host_calls=adapter.capture_host_calls if adapter else 0,layers=sorted(adapter.layers) if adapter else [],buffers=len(adapter.buffers) if adapter else 0)
+         proof.update(metadata_build_host_calls=adapter.metadata_build_host_calls if adapter else 0,metadata_reuse_host_calls=adapter.metadata_reuse_host_calls if adapter else 0,metadata_capture_build_host_calls=adapter.metadata_capture_build_host_calls if adapter else 0)
++        proof['metadata_preparation_policy'] = adapter.METADATA_PREPARATION_POLICY if adapter else None
+         proof['indices_elements'] = sorted(int(v['indices'].numel()) for v in adapter.buffers.values()) if adapter else []
+         context = contract.precision_profile()['context_length']
+         _require(proof['indices_elements'] == [8 * (context + 8), 16 * (context + 8)], 'batch-size-1/2 split-KV indices geometry differs')
+--- a/review/serving_integration.py
++++ b/review/serving_integration.py
+@@ -767,7 +767,7 @@
+ def validate_full_enabled_record(record, binding, worker):
+     fields = {'mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256', 'schema', 'rank', 'pid', 'worker_identity_sha256', 'enabled', 'block_size', 'before_external_generations', 'extra_tensor_operations', 'extra_model_forwards', 'qualification', 'adapter_source', 'eligible_host_calls', 'capture_host_calls', 'layers', 'buffers'}
+     fields.update({'metadata_build_host_calls', 'metadata_reuse_host_calls', 'metadata_capture_build_host_calls'})
+-    fields.add('indices_elements')
++    fields.update({'indices_elements', 'metadata_preparation_policy'})
+     _need(type(record) is dict and set(record) == fields and (record['schema'] == 1), 'full-enabled witness schema')
+     for key in ('mode', 'arm', 'session_sha256', 'spec_sha256', 'source_manifest_sha256'):
+         _need(record[key] == binding[key], 'full-enabled witness source/session binding')
+@@ -785,9 +785,14 @@
+     if enabled:
+         # Batch sizes 1 and 2 each own one adapter buffer and one captured verify graph of 16 attention layers.
+         _need(type(record['indices_elements']) is list and record['buffers'] == len(record['indices_elements']) == 2 and binding.get('resolved_contract', {}).get('context_length') in (32768, 65536, 131040) and record['indices_elements'] == [8 * (binding['resolved_contract']['context_length'] + 8), 16 * (binding['resolved_contract']['context_length'] + 8)], 'batch-size-1/2 split-KV indices geometry differs')
+-        _need(record['metadata_capture_build_host_calls'] == 2 and record['capture_host_calls'] == 32 and (record['metadata_build_host_calls'] >= 2) and (record['metadata_reuse_host_calls'] >= 30) and (record['metadata_build_host_calls'] + record['metadata_reuse_host_calls'] == record['eligible_host_calls']), 'metadata not reused across captured attention layers')
++        _need(record['metadata_preparation_policy'] == 'outside-forward-graph-v1'
++              and record['metadata_capture_build_host_calls'] == 0 and record['capture_host_calls'] == 32
++              and record['metadata_build_host_calls'] >= 2
++              and record['metadata_reuse_host_calls'] == record['eligible_host_calls'],
++              'verify metadata was not prepared outside the forward graph')
+     else:
+-        _need(counts == [0, 0, 0], 'ordinary reference reported metadata reuse')
++        _need(counts == [0, 0, 0] and record['metadata_preparation_policy'] is None,
++              'ordinary reference reported metadata reuse')
+     return record
+ 
+ 

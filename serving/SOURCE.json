@@ -1422,7 +1422,7 @@
   "new_sources": [
     "legacy/review/observer_health.py"
   ],
-  "next_bounded_action": "Prepare verify metadata outside graph replay, then consolidate startup scans and recover shared-head/packed-view memory. Finish remaining common helper/phase-marker consumers. No native execution allowance remains.",
+  "next_bounded_action": "Consolidate startup scans and recover shared-head/packed-view memory, then finish remaining common helper/phase-marker consumers. Prepare exact native equality, quality, startup byte and memory qualification. No native execution allowance remains.",
   "observer_containment_verification": {
     "diff_whitespace": "PASS",
     "documentation_audit": "PASS_NO_FINDINGS",
@@ -1813,6 +1813,16 @@
     "status": "CPU_POST_LOAD_RUNNER_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
     "verification": "proposals/post-load/VERIFICATION.json",
     "verification_sha256": "b22843f002e193e42e8d339c1eeba8be7cf5f75906f935d43338ddde5b8c72e1"
+  },
+  "pre_replay_metadata_proposal": {
+    "cleanup_complete": false,
+    "native_serving_qualified": false,
+    "path": "proposals/pre-replay",
+    "record_sha256": "44e83085963458dc2fd240a133f835e7cc2afd63b5a15feed135400a5306e976",
+    "source_review_only": true,
+    "status": "CPU_PRE_REPLAY_METADATA_SOURCE_AND_PACKET_VERIFIED_NATIVE_SERVING_PENDING",
+    "verification": "proposals/pre-replay/VERIFICATION.json",
+    "verification_sha256": "46d2009f285d14810751a14b2c027ab30b3155b3ad9958b990f16806a050833e"
   },
   "prior_verification": {
     "diff_whitespace": "PASS",
