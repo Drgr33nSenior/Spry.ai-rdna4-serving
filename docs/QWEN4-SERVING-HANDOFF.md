@@ -1,13 +1,32 @@
 # Serving handoff for Qwen4
 
-Status, 6 November 2026: **complete, selected and parked**. The owner adopted
-operation232's tested three-member cap16 mtp arm, kept control as rollback and
-parked the optimisation programme until Qwen4 work is explicitly resumed.
+Status, 7 November 2026: **complete, selected and parked**. The owner selected
+operation234's mtp arm (physical kv4, start 2), adding S4 split-K down/out to the
+three-member cap16 profile. Operation232's selected profile is the immediate
+rollback. The programme stays parked until Qwen4 work is explicitly resumed.
 No further GPU run is queued. Start with
+[the current selection](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json),
 [the finalization record](../provenance/MXFP4-FINALIZATION-20261105.json),
 [current results](CURRENT-SERVING-RESULTS.md) and [AGENTS.md](../AGENTS.md).
 
-## Candidate and evidence
+## Current split-K scope
+
+S4 applies only to bound down/out weights at M8/M16, N5120 and K8704 or K3072,
+including rare eligible prefill calls. It uses fixed-order FP32 reduction, one
+BF16 conversion, 1.25 MiB scratch per card and one additional reducer launch per
+eligible GEMM. Keep the exact source/layout guards and startup numerical gates.
+Requalify all of these for a new model.
+
+The frozen verdict remains INCONCLUSIVE_PARK (+3.91% C1 verify-round rate,
+below 5%). Owner selection does not turn that result into a benchmark pass.
+Startup comparisons showed no value differences on the tested inputs; signed
+zeros are treated as equal. Sampled work differed and BetterBench has no task
+quality oracle. Runtime/compiler-proof hashes differ for an unresolved reason.
+Actual runtime hashes and all limitations are retained in the selection record.
+Pointer `2fda6127…` selects S4; `4e19fc56…` is preserved for rollback. Consumed
+nonce `d87ac31a2ee705e3` grants no relaunch. The installed runtime is unchanged.
+
+## Operation232 rollback and earlier evidence
 
 The confirmed bundle adds three changes to the existing MXFP4 baseline:
 
@@ -19,13 +38,13 @@ Both arms use cap16. Cap32, v6-QB, Down-M16 and BW-03 are excluded. The package
 retains the previously accepted baseline overlays; this bundle does not replace
 the complete serving stack.
 
-The final donor is operation232, nonce `2229e2386a020dfa`. Its logical `mtp`
+The rollback donor is operation232, nonce `2229e2386a020dfa`. Its logical `mtp`
 arm is physical `bf16`, start 1. Control is physical `kv4`, start 2. The archive
 pin is `171dac93…`, the candidate verification kernel is `ed26c67b…` and the
 compiler-pin file is `3cf410c0…`. Full identities and private evidence roots
-are in the finalization record. Control is the retained rollback. Private
-pointer `4e19fc56…` selects this exact arm; the old pointer `fe92916c…` is
-preserved. The public historical FP8 session-selection file is unchanged.
+are in the finalization record. Its control remains available through the
+preserved pointer `4e19fc56…`, which now supplies rollback for S4. The older
+pointer `fe92916c…` is also preserved. The historical FP8 selection is unchanged.
 
 The run independently passed the frozen comparator with a 3.810953% balanced
 request-latency score gain. All 60 natural-stop quality grades passed; all 30

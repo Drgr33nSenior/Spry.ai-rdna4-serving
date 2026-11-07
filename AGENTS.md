@@ -1,9 +1,12 @@
 # RDNA4 serving continuation and Qwen4 handoff
 
-Status: **complete — operation232's three-member cap16 candidate selected; programme parked for Qwen4**.
-The owner approved experimental selection of logical mtp (physical bf16,
-start 1), with the matched control retained as rollback. The sign-off attempt is
-consumed; it grants no retry, deployment or new GPU authority. Read
+Status: **complete — operation234's three-member cap16 + S4 candidate selected; programme parked for Qwen4**.
+On 7 November the owner requested private experimental adoption of operation234's
+logical mtp arm (physical kv4, start 2). Operation232's selected three-member
+cap16 arm is the immediate rollback. The frozen split-K verdict remains
+INCONCLUSIVE_PARK: the +3.91% C1 verify-round rate missed the unchanged 5% bar.
+Selection is an owner decision, not a reclassification of that result. Read
+[the split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json) and
 [the finalization record](provenance/MXFP4-FINALIZATION-20261105.json) before acting.
 This file is a task handoff; it does not replace the workstation guardrails or
 grant authority to rerun an old packet.
@@ -27,13 +30,16 @@ Registrar admission age was 104.99 s. The invocation is consumed; do not retry
 or change selection. See
 [the BetterBench repeat](docs/MXFP4-SELECTED-CAP16-BETTERBENCH.md).
 
-Separate experiment, 7 November: the owner requested one bounded split-K
-down/out test against the selected profile, followed by a matched BetterBench
-comparison if its correctness checks pass. The experimental package passes
-the unchanged transport checks. Final qualification and run binding remain
-separate gates; no GPU correctness or performance result is included here.
-Selection, rollback and the parked Qwen4 handoff remain unchanged. This request
-does not authorize retries of any consumed packet or adoption of the experiment.
+Separate experiment, 7 November: operation234 completed both 53-request starts
+and independently released at checkpoint 625. C1/C2 throughput changed
++8.37%/+12.56%, with different sampled work; these are not matched-token speedups.
+Startup checks found no value differences across 31,457,280 elements, treating
+signed zeros as equal, and 1,152 exact-oracle cells passed. BetterBench has no
+answer-quality oracle. S4 adds 1.25 MiB scratch per card and a reducer launch per
+eligible GEMM. Runtime compiler hashes differ from the native proof; the cause
+is unresolved. Preserve these limits and all cap3/LLVM_PATH and startup gates.
+The owner subsequently selected the candidate despite INCONCLUSIVE_PARK.
+No retry, deployment or additional GPU authority follows.
 
 ## Resume safely
 - Apply the [serving-validation skill](.agents/skills/aithreadripper-serving-validation/SKILL.md).
@@ -46,6 +52,12 @@ does not authorize retries of any consumed packet or adoption of the experiment.
 - Preserve uncommitted user work. Do not stage, commit, merge or push without a request.
 
 ## Current objective
+Current private pointer `2fda6127…` selects operation234 mtp with S4 only on
+M8/M16 down/out (including rare eligible prefill calls). Pointer `4e19fc56…`
+is preserved byte-for-byte for operation232 rollback. The programme remains
+parked, and the installed runtime and historical FP8 selection are unchanged.
+The remaining 6 November closeout and running accounts below are historical.
+
 Final closeout, 6 November: the owner explicitly selected operation232's
 tested three-member cap16 mtp arm and parked the optimisation programme until
 Qwen4 work is explicitly resumed. The private pointer is `4e19fc56…`; its

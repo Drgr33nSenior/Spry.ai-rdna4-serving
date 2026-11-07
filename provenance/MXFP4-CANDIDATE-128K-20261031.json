@@ -2,7 +2,7 @@
   "schema": 1,
   "date": "2026-10-31",
   "candidate": {
-    "description": "Private experimental MXFP4 serving candidate: operation232 three-member cap16 mtp arm, with the previously accepted baseline overlays retained.",
+    "description": "Private experimental MXFP4 serving candidate: operation234 three-member cap16 plus S4 down/out, with operation232 as rollback.",
     "base_from_phase1": "MXFP4-CANDIDATE-PHASE1-20261031.json",
     "changes_for_128k": [
       "verify-adapter index buffer sized rows*(context+8) (previously rows*context; latent overflow within 4 tokens of the limit)",
@@ -24,16 +24,34 @@
       "sha256": "b5d145e55f391de7e515cfe164b6011444fe1696188e2c0f900e338ce36c22f0",
       "stock_sha256": "f061599bb2c9243d50b565281c47de077ccc90135b9b1e5320a07425bedac112"
     },
-    "selected_operation": 232,
-    "selected_start": 1,
+    "selected_operation": 234,
+    "selected_start": 2,
     "selected_logical_arm": "mtp",
-    "selection": "Private experimental candidate selected by owner; control retained as rollback; programme parked for Qwen4. Public historical FP8 session selection unchanged.",
-    "selected_physical_arm": "bf16",
+    "selection": "Owner selects operation234 despite unchanged INCONCLUSIVE_PARK; operation232 selected arm is rollback; programme remains parked. No deployment or new GPU authority.",
+    "selected_physical_arm": "kv4",
     "three_member_cap16": [
       "verification prefetch",
       "F1 gated-norm/MXFP4 quantizer fusion",
       "gate/up wave-hint removal"
-    ]
+    ],
+    "splitk_downout": {
+      "arm": "mtp",
+      "parts": 4,
+      "shapes": [
+        [
+          5120,
+          8704
+        ],
+        [
+          5120,
+          3072
+        ]
+      ],
+      "tokens": [
+        8,
+        16
+      ]
+    }
   },
   "hardware": "2x Radeon AI PRO R9700 (gfx1201), TP2, 235 W caps (Phase 1 ran at 300 W)",
   "profile": {
@@ -179,7 +197,7 @@
   ],
   "deployed": false,
   "public_fp8_selection_changed": false,
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "c4_serving_ab": {
     "operation": 174,
     "date": "2026-11-01",
@@ -414,7 +432,7 @@
         "sha256": "fe92916ca06f43ec719d3a66345e4345908106212596d7044c03713b575c3394"
       },
       "current_pointer": {
-        "record": "CANDIDATE-POINTER.json",
+        "record": "CANDIDATE-POINTER-SUPERSEDED-THREE-MEMBER-CAP16-20261107.json",
         "sha256": "4e19fc560932fba9c24e258d1da4afa12d744fd8f22309af3aad1c824a648a55"
       }
     },
@@ -436,6 +454,26 @@
     "new_gpu_work": false,
     "deployment": false,
     "publication": false,
-    "handoff": "docs/QWEN4-SERVING-HANDOFF.md"
+    "handoff": "docs/QWEN4-SERVING-HANDOFF.md",
+    "historical": true,
+    "superseded_by": "splitk_s4_adoption"
+  },
+  "splitk_s4_adoption": {
+    "record": "provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json",
+    "sha256": "1925391554df4e1c582539512746f2dbbacb4d4b0683dee3b9a18a9dbd9d7fa8",
+    "operation": 234,
+    "selected_arm": {
+      "logical": "mtp",
+      "operation": 234,
+      "physical": "kv4",
+      "start": 2
+    },
+    "private_pointer_sha256": "2fda6127fccdc859de7b181b7f9376f7ef4d59eef74ed29fbb772830e46f95eb",
+    "rollback_operation": 232,
+    "original_frozen_verdict": "INCONCLUSIVE_PARK",
+    "owner_selection_separate_from_classifier": true,
+    "new_gpu_work": false,
+    "deployment": false,
+    "programme_parked": true
   }
 }

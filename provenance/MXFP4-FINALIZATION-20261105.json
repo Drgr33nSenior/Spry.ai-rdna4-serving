@@ -936,7 +936,7 @@
     "status": "ISOLATED_REEVALUATION_JUSTIFIED_NO_RUNTIME_UPDATE",
     "upstream": "ROCm/hrx-system"
   },
-  "last_completed_packet_nonce": "2229e2386a020dfa",
+  "last_completed_packet_nonce": "d87ac31a2ee705e3",
   "model_starts_completed_in_finalization": 8,
   "native_unit_followup": {
     "errors": 0,
@@ -953,7 +953,7 @@
     "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/three-member-native-units-followup-20261105-v1",
     "tests": 104
   },
-  "next_action": "PARKED. Resume Qwen4 work only at the owner's explicit request; preserve the tested profile, rollback, sealed evidence and numerical/release gates.",
+  "next_action": "PARKED. Operation234 mtp is the private experimental selection; operation232 mtp is rollback. No GPU work or deployment. Requalify new model/runtime/shapes and retain the unresolved compiler discrepancy before separately authorized Qwen4 work.",
   "operation225": {
     "baseline_samples": 0,
     "candidate_samples": 0,
@@ -2935,7 +2935,7 @@
     "suspended_sensor_result": "EBUSY on both cards"
   },
   "schema": 1,
-  "selected_final_candidate": "three-member cap16",
+  "selected_final_candidate": "three-member cap16 + S4 down/out (operation234; owner selection with frozen INCONCLUSIVE_PARK retained)",
   "selection_preparation": {
     "authority": false,
     "current_private_pointer_sha256": "fe92916ca06f43ec719d3a66345e4345908106212596d7044c03713b575c3394",
@@ -2998,7 +2998,7 @@
       "verified_utc": "2026-11-05T00:55:24.417750+00:00"
     }
   },
-  "stage": "COMPLETE_THREE_MEMBER_CAP16_SELECTED_PROGRAMME_PARKED",
+  "stage": "COMPLETE_SPLITK_S4_SELECTED_PROGRAMME_PARKED",
   "status": "COMPLETE_SELECTED_AND_PARKED",
   "three_member_authorization": {
     "approval_sha256": "323fe5924d3fef287e879be1baf91901afd569ae580547821abdbea746f34fc7",
@@ -3044,7 +3044,7 @@
     },
     "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/three-member-serving-registration-c759eeb5179094dd-v1"
   },
-  "updated_utc": "2026-11-06T19:48:21.177178+00:00",
+  "updated_utc": "2026-11-07T15:56:17.296513+00:00",
   "v6_qb_gpu_test": {
     "admission": {
       "checkpoint": 614,
@@ -3784,5 +3784,32 @@
       "native_workspace_prefix_is_redacted": true,
       "evidence_hashes_retained": true
     }
-  }
+  },
+  "original_finalization_selected_candidate": "three-member cap16",
+  "current_private_selection": {
+    "record": "provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json",
+    "sha256": "1925391554df4e1c582539512746f2dbbacb4d4b0683dee3b9a18a9dbd9d7fa8",
+    "operation": 234,
+    "selected_arm": {
+      "logical": "mtp",
+      "operation": 234,
+      "physical": "kv4",
+      "start": 2
+    },
+    "private_pointer_sha256": "2fda6127fccdc859de7b181b7f9376f7ef4d59eef74ed29fbb772830e46f95eb",
+    "rollback_operation": 232,
+    "original_frozen_verdict": "INCONCLUSIVE_PARK",
+    "owner_selection_separate_from_classifier": true,
+    "new_gpu_work": false,
+    "deployment": false,
+    "programme_parked": true
+  },
+  "last_completed_packet_nonce_at_finalization": "2229e2386a020dfa",
+  "owner_selection_exception": {
+    "scope": "Operation234 private experimental selection only; preserve the original finalization rule and frozen INCONCLUSIVE_PARK classification.",
+    "record": "provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json",
+    "sha256": "1925391554df4e1c582539512746f2dbbacb4d4b0683dee3b9a18a9dbd9d7fa8",
+    "threshold_changed": false
+  },
+  "subsequent_selection_scope": "Operation234 was a separately authorized post-finalization experiment. Original finalization run/start counters and operation232 quality evidence are unchanged; they are not split-K quality qualification."
 }

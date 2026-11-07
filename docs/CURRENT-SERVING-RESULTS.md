@@ -5,6 +5,28 @@ They do not turn this source prototype into an installable or qualified serving
 distribution. The runs used a complete separately pinned SGLang runtime.
 Machine configuration, model weights, native binaries and raw logs are excluded.
 
+## Split-K private selection, 2026-11-07
+
+The owner selected operation234's logical mtp arm (physical kv4, start 2): the
+three-member cap16 profile plus S4 down/out at M8/M16. Operation232's selected
+profile is the immediate rollback. The programme remains parked. This changes
+the private candidate pointer, not the installed runtime or launch authority.
+
+The frozen verdict remains **INCONCLUSIVE_PARK**. C1 verify-round rate rose
+3.91%, below the unchanged 5% bar. Observed C1 throughput was 96.29 to 104.34
+tokens/s (+8.37%), and C2 was 172.81 to 194.52 (+12.56%). One start per arm,
+baseline-first order and different sampled work prevent a matched-token or
+causal effect-size claim. No task-quality oracle ran.
+
+Startup checks found no value differences across 31,457,280 elements (signed
+zeros treated as equal), and all 1,152 exact-oracle cells passed. S4 adds
+1.25 MiB FP32 scratch per card and a reducer launch per eligible GEMM. Runtime
+compiler hashes differ from the native proof; debug paths are an unproven
+explanation. Both pre/post configured caps were 235 W. Release is authenticated
+at checkpoint 625, with zero allowance and no retry. The parent independently
+recomputed the headline rates and checked release and ledger accounting.
+See [the selection record](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json).
+
 ## BetterBench repeat accepted, 2026-11-07
 
 Operation233 completed two starts of the selected cap16 candidate. Independent
@@ -16,10 +38,8 @@ instrumentation, context and configured caps differ. See the
 [measurement record](MXFP4-SELECTED-CAP16-BETTERBENCH.md) for client overhead,
 variation and prefill findings. The selected candidate is unchanged.
 
-A separate, owner-requested split-K down/out comparison is under preparation.
-Its CPU prototype and transport acceptance establish no GPU correctness or
-performance result. It makes no selection or deployment change, and does not
-resume the parked Qwen4 programme.
+The later split-K comparison and owner selection are recorded above. The
+operation233 measurement and its historical selection state remain unchanged.
 
 ## Final three-member sign-off result, 2026-11-06
 

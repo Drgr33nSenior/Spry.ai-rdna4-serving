@@ -1,0 +1,371 @@
+{
+  "approval": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/OWNER-SPLITK-S4-PROMOTION-APPROVAL-20261107-v1.json",
+    "sha256": "2a3e316d36121fb4421feb67222491d6943f3276ab8afeba5499ebdf30d41ecb"
+  },
+  "candidate_members": [
+    "verification prefetch",
+    "F1 gated-norm/MXFP4 quantizer fusion",
+    "gate/up wave-hint removal",
+    "S4 split-K down/out at M8/M16"
+  ],
+  "current_private_pointer": {
+    "record": "CANDIDATE-POINTER.json",
+    "sha256": "2fda6127fccdc859de7b181b7f9376f7ef4d59eef74ed29fbb772830e46f95eb"
+  },
+  "deployment": false,
+  "evidence": {
+    "checkpoint625": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-625.json",
+      "sha256": "b350c37ce2df895673944d378810cc5a3c5b34e610613db4adfbcda125808564"
+    },
+    "parent_result_checks": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op234-parent-result-checks-20261107-v1/PARENT-RESULT-CHECKS.json",
+      "sha256": "336b1ee331fee2be0bdad38aa335877fd8f4c6cda05cc71dfe36a6d76b3983f1"
+    },
+    "postrun_summary": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-s4-betterbench-postrun-d87ac31a2ee705e3-v1/POSTRUN-SUMMARY.json",
+      "sha256": "a026a8283e50f215c6650056d4dc47780649850ae2b052b406c655de1f96d4fe"
+    },
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-s4-betterbench-readout-d87ac31a2ee705e3-v1/BETTERBENCH-READOUT.json",
+      "sha256": "cb0a821026cb2affe7928a5250b0b0adc8fc6f2484b9038db5b06df8d8dc9f20"
+    }
+  },
+  "frozen_classification": {
+    "gain": {
+      "c1": 0.0836538424720783,
+      "c2": 0.12564586250053789,
+      "prefill": [
+        0.011369862470451242,
+        0.0012561850291463728,
+        -0.005041283073882297
+      ],
+      "round_rate": 0.039096331970354115
+    },
+    "guards_passed": true,
+    "margin": {
+      "c2_floor": -0.05,
+      "go_c1_gain": 0.03,
+      "go_round_rate_gain": 0.05,
+      "park_round_rate_gain": 0.02,
+      "prefill_floor": -0.03
+    },
+    "round_rate_method": "c1_verify_counter",
+    "verdict": "INCONCLUSIVE_PARK"
+  },
+  "gpu_work": false,
+  "historical_acceptances_retained": true,
+  "limits_and_deviations": [
+    "Private experimental selection only. No installed-runtime change, deployment, publication or new GPU authority.",
+    "Frozen benchmark verdict remains INCONCLUSIVE_PARK: C1 verify-round rate +3.9096%, below the unchanged 5% worth-further-effort threshold. Owner selection is a separate judgement.",
+    "One baseline-first start per arm; sampled generated work and acceptance differ. The +8.37% C1 and +12.56% C2 observations are not matched-token causal speedups.",
+    "BetterBench has no answer-quality oracle. Operation232 quality results cover rollback, not a new quality qualification of split-K.",
+    "Startup comparisons show no observed value differences over 31,457,280 elements; signed zeros are treated as equal. Exact-oracle readout passes 1,152 cells; no universal bitwise or cross-shape claim.",
+    "Split-K adds 1,310,720 bytes (1.25 MiB) of preallocated FP32 scratch per card and an additional reducer launch per eligible GEMM. Allocator observations are not peak VRAM.",
+    "Executed compiler artifacts differ from the native compile proof on both ranks. Debug-source paths are a hypothesis only; retain the actual executed hashes and do not call proof/runtime binaries identical.",
+    "Scope is down/out logical N5120, K8704 or K3072, M8/M16, S4, including rare prefill calls at those row counts; other shapes keep the selected route.",
+    "Preserve cap16, prefetch/F1/gate-up wave0, BF16 target/draft KV, cap3/LLVM_PATH deviations and mandatory startup numerical gates.",
+    "Operation234 nonce is consumed; no retry. Programme remains parked until separately authorized Qwen4 work."
+  ],
+  "native_grading_repeated": false,
+  "observed_compiler_discrepancy": {
+    "diagnosis": "divergence starts at TTIR; runtime parts are smaller (gemm TTIR 23412 vs 25692 B; reducer 4699 vs 4993 B) and runtime metadata equals the proof; the proof embeds source locations /mnt/review/w4a4_component/baseline/kernels.py and /mnt/review/splitk-bundle/bundle_kernels.py, so path-dependent location strings are the likely cause; the runtime TTIR text is not retained, so this is not proven. Readout predicates were not changed.",
+    "native": {
+      "reduce-m16": "3025a7e72d7c6f263fd790522bed0a70c36a0489a35d5e3c50e2d18f498e344b",
+      "reduce-m8": "3025a7e72d7c6f263fd790522bed0a70c36a0489a35d5e3c50e2d18f498e344b",
+      "split4-down-m16": "2863babbde8259ded7e66a556359e94409112910b421e7020260d6014eac19bc",
+      "split4-down-m8": "2863babbde8259ded7e66a556359e94409112910b421e7020260d6014eac19bc",
+      "split4-out-m16": "94087a3d5d83e5f8c734c4a8ff0522ed931248830697979bc784ee4ec56f75bd",
+      "split4-out-m8": "94087a3d5d83e5f8c734c4a8ff0522ed931248830697979bc784ee4ec56f75bd"
+    },
+    "observed": {
+      "splitk-gemm-m16-k3072": "b97db7e2b026c4fafa44bd29d7d6c8af3047732306e159819f289d2b96e56cae",
+      "splitk-gemm-m16-k8704": "fbf80c1c4df39d901678a1b19e4e35cfdf6baaa872acdcf5ff240819dfe3d8f8",
+      "splitk-gemm-m8-k3072": "b97db7e2b026c4fafa44bd29d7d6c8af3047732306e159819f289d2b96e56cae",
+      "splitk-gemm-m8-k8704": "fbf80c1c4df39d901678a1b19e4e35cfdf6baaa872acdcf5ff240819dfe3d8f8",
+      "splitk-reduce-m16": "28943297d1a095730d9eef067132bdbb5aad78ffa49afd800b551e1db8929a2c",
+      "splitk-reduce-m8": "28943297d1a095730d9eef067132bdbb5aad78ffa49afd800b551e1db8929a2c"
+    },
+    "ranks_equal": true,
+    "status": "RETAINED_DISCREPANCY: executed split-K/reducer HSACO differ from the native compile-proof hashes on both ranks (all 6 keys)"
+  },
+  "package": {
+    "archive_sha256": "f3f5ba0d51992c73a5416fbe426b7532f0c6eb79cdb2961074ae9f024ec36df7",
+    "compiler_pins": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/BUNDLE-COMPILER-PINS.json",
+      "sha256": "757ba62f92950c9c57344c39960ad79289f849dc1df16a1f03128a7b5f1a48b2"
+    },
+    "executed_splitk_hsaco": {
+      "splitk-gemm-m16-k3072": "b97db7e2b026c4fafa44bd29d7d6c8af3047732306e159819f289d2b96e56cae",
+      "splitk-gemm-m16-k8704": "fbf80c1c4df39d901678a1b19e4e35cfdf6baaa872acdcf5ff240819dfe3d8f8",
+      "splitk-gemm-m8-k3072": "b97db7e2b026c4fafa44bd29d7d6c8af3047732306e159819f289d2b96e56cae",
+      "splitk-gemm-m8-k8704": "fbf80c1c4df39d901678a1b19e4e35cfdf6baaa872acdcf5ff240819dfe3d8f8",
+      "splitk-reduce-m16": "28943297d1a095730d9eef067132bdbb5aad78ffa49afd800b551e1db8929a2c",
+      "splitk-reduce-m8": "28943297d1a095730d9eef067132bdbb5aad78ffa49afd800b551e1db8929a2c"
+    },
+    "final_settings": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/FINAL-SETTINGS.json",
+      "sha256": "081f5be367edcbaaf0ec83fa737062c7c7d4b714c1f0184945d56915f9d49722"
+    },
+    "kernel": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-owner-preparation-v4/source/decode_attention_candidate.py",
+      "sha256": "ed26c67b69da358944999fdf9f769fafc4c2aef821335fbb777679b966e9e4e3"
+    },
+    "manifest_sha256": "8f354e08f7c83a16f3c40d8b4d61941e1e4ff13323200a6d11ebe85a36d1e942",
+    "members": 93,
+    "package_sha256": "765380d18233e543b2bfcc50d77605d55ba747a659409a65b42b4e10a4f0ac70",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2",
+    "seal": {
+      "manifest_sha256": "215fdf1a6801533338d0efbb1c2d17e88075814d4927be927d92d77b0e3a945d",
+      "package_relative": "preparation/author/package-v2",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final"
+    },
+    "selected_arm": {
+      "logical": "mtp",
+      "operation": 234,
+      "physical": "kv4",
+      "start": 2
+    },
+    "selected_http_binding": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/HTTP-BINDING-mtp.json",
+      "sha256": "02a3c7d1a33888d0b32e94ac7aca9e298b9a45d89e1d8e975574427134819a5f"
+    },
+    "session_sha256": "b8b4186059adf70b1997ac7070279d2125554cc23b1fa9f0fe1ce69ab5d6aa5d",
+    "source_manifest_sha256": "55f9e81a83ff79312798b5af48382ee06c23efddc954a26ed357504e22cc5a3b",
+    "splitk_sources": {
+      "bundle_contract.py": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/bundle_contract.py",
+        "sha256": "d785e3b851125619c4cc0cdf39286ea58309fd15aeb6cc9ed0a0d91452a57846"
+      },
+      "bundle_entry.py": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/bundle_entry.py",
+        "sha256": "604a904a270327af11c2916e67a9f093cef77c53c71a15c51c1a1c361721fa0c"
+      },
+      "bundle_kernels.py": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/bundle_kernels.py",
+        "sha256": "a08c1610b7a715717f6efacaacb1fadb5898915ea588e92443a47ad33301920c"
+      },
+      "bundle_runtime.py": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/bundle_runtime.py",
+        "sha256": "3a8ce3dfcc0ce7c16aa0afce87daec4f1628b6cca05dc56a0dfbf088d0beaee5"
+      }
+    },
+    "worker_source_manifest_sha256": "e54297354fa3493d3712ead08a98313ffe607e925713e4cdd34359f98b592a48"
+  },
+  "previous_private_pointer": {
+    "record": "CANDIDATE-POINTER-SUPERSEDED-THREE-MEMBER-CAP16-20261107.json",
+    "sha256": "4e19fc560932fba9c24e258d1da4afa12d744fd8f22309af3aad1c824a648a55"
+  },
+  "programme_parked": true,
+  "publication": false,
+  "publication_omissions": [
+    "Absolute workstation paths are private-workspace-relative. Model weights, binaries and raw runtime evidence are excluded."
+  ],
+  "rollback": {
+    "http_binding": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/final-three-member-signoff-serving-execution-2229e2386a020dfa/preparation/author/package-v2/review/HTTP-BINDING-mtp.json",
+      "sha256": "7df9053f9b4afa989e655457ab47a52a9e46ac7295d1b77652e600a1b1271bd9"
+    },
+    "kernel": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-owner-preparation-v4/source/decode_attention_candidate.py",
+      "sha256": "ed26c67b69da358944999fdf9f769fafc4c2aef821335fbb777679b966e9e4e3"
+    },
+    "launch_authorized": false,
+    "logical_arm": "mtp",
+    "operation": 232,
+    "package": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/final-three-member-signoff-serving-execution-2229e2386a020dfa/preparation/author/package-v2",
+    "physical_arm": "bf16",
+    "previous_candidate_pointer": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/CANDIDATE-POINTER-SUPERSEDED-THREE-MEMBER-CAP16-20261107.json",
+      "sha256": "4e19fc560932fba9c24e258d1da4afa12d744fd8f22309af3aad1c824a648a55"
+    },
+    "scope": "The entire previous operation232 three-member cap16 selection, unchanged. Its older control remains available through the preserved pointer.",
+    "start": 1
+  },
+  "schema": 1,
+  "selected_runtime": {
+    "canonical_server_cli": [
+      "--model-path",
+      "/mnt/models",
+      "--served-model-name",
+      "fp8-serving-screen",
+      "--revision",
+      "5233554c5fa56afda40150556b95573c2d7d29c0",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18088",
+      "--tokenizer-worker-num",
+      "1",
+      "--tp-size",
+      "2",
+      "--context-length",
+      "131040",
+      "--max-total-tokens",
+      "262144",
+      "--chunked-prefill-size",
+      "2048",
+      "--mem-fraction-static",
+      "0.92",
+      "--max-running-requests",
+      "2",
+      "--dtype",
+      "bfloat16",
+      "--kv-cache-dtype",
+      "bf16",
+      "--quantization",
+      "quark",
+      "--attention-backend",
+      "triton",
+      "--prefill-attention-backend",
+      "triton",
+      "--decode-attention-backend",
+      "triton",
+      "--mamba-radix-cache-strategy",
+      "no_buffer",
+      "--page-size",
+      "1",
+      "--disable-overlap-schedule",
+      "--disable-custom-all-reduce",
+      "--load-format",
+      "safetensors",
+      "--startup-weight-load-mode",
+      "serial",
+      "--cuda-graph-backend-decode",
+      "full",
+      "--cuda-graph-backend-prefill",
+      "disabled",
+      "--cuda-graph-bs-decode",
+      "1",
+      "2",
+      "--cuda-graph-max-bs-decode",
+      "2",
+      "--enable-fp32-lm-head",
+      "--random-seed",
+      "12345",
+      "--enable-metrics",
+      "--decode-log-interval",
+      "1",
+      "--speculative-algorithm",
+      "DFLASH",
+      "--speculative-draft-model-path",
+      "/mnt/draft-model",
+      "--speculative-draft-model-revision",
+      "015e795645c74b1a0eeef3b570031fb62e769bc5",
+      "--speculative-num-steps",
+      "1",
+      "--speculative-eagle-topk",
+      "1",
+      "--speculative-num-draft-tokens",
+      "8",
+      "--speculative-dflash-block-size",
+      "8",
+      "--speculative-draft-model-quantization",
+      "unquant",
+      "--speculative-draft-kv-cache-dtype",
+      "bf16",
+      "--max-mamba-cache-size",
+      "19",
+      "--mamba-max-states-per-path",
+      "3",
+      "--enable-linear-replayssm-spec",
+      "--model-loader-extra-config",
+      "{\"enable_multithread_load\":false}",
+      "--weight-loader-drop-cache-after-load"
+    ],
+    "dflash_width": 8,
+    "http_binding": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/splitk-bundle-relocation-betterbench-20261107-v1/final/preparation/author/package-v2/review/HTTP-BINDING-mtp.json",
+      "sha256": "02a3c7d1a33888d0b32e94ac7aca9e298b9a45d89e1d8e975574427134819a5f"
+    },
+    "instrumentation": "Production BetterBench, mandatory existing and split-K startup numerical probes, passive host sampler",
+    "logical_arm": "mtp",
+    "operation": 234,
+    "physical_arm": "kv4",
+    "power_cap_watts_per_card": 235,
+    "resolved_contract": {
+      "chunked_prefill_size": 2048,
+      "context_length": 131040,
+      "cuda_graph_backend_decode": "full",
+      "cuda_graph_backend_prefill": "disabled",
+      "cuda_graph_bs_decode": [
+        1,
+        2
+      ],
+      "cuda_graph_max_bs_decode": 2,
+      "enable_fp32_lm_head": true,
+      "enable_linear_replayssm": false,
+      "enable_linear_replayssm_spec": true,
+      "kv_cache_dtype": "bf16",
+      "max_mamba_cache_size": 19,
+      "max_running_requests": 2,
+      "max_total_tokens": 262144,
+      "mem_fraction_static": 0.92,
+      "model_config_sha256": "4a139d3e01df039e17b4c8b8362f7944674d76051a8cd96f213c6bc332d69f55",
+      "model_loader_extra_config": {
+        "enable_multithread_load": false
+      },
+      "prefix_cache": {
+        "disable_overlap_schedule": true,
+        "disable_radix_cache": false,
+        "enable_int8_mamba_checkpoint": false,
+        "mamba_max_states_per_path": 3,
+        "mamba_radix_cache_strategy": "no_buffer",
+        "page_size": 1,
+        "uses_mamba_radix_cache": true
+      },
+      "random_seed": 12345,
+      "speculative_draft_kv_cache_dtype": "bf16",
+      "tp_size": 2,
+      "weight_loader_disable_mmap": false,
+      "weight_loader_drop_cache_after_load": true,
+      "weight_loader_prefetch_checkpoints": false
+    },
+    "runtime_identity": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/final-three-member-signoff-preparation-20261106-v1/packet/RUNTIME-IDENTITY.json",
+      "sha256": "f5ca827099d4dbcdb717fae9e1714ef8206b135e48f1ebb9500aa86cffe359e8"
+    },
+    "sampled_request_profile": {
+      "enable_thinking": true,
+      "reasoning_effort": "low",
+      "seed": 1729,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.95
+    },
+    "scratch_bytes_per_card": 1310720,
+    "splitk_downout": {
+      "arm": "mtp",
+      "parts": 4,
+      "shapes": [
+        [
+          5120,
+          8704
+        ],
+        [
+          5120,
+          3072
+        ]
+      ],
+      "tokens": [
+        8,
+        16
+      ]
+    },
+    "start": 2,
+    "tested_deviations": [
+      "mamba_max_states_per_path=3 (cap3)",
+      "LLVM_PATH override shared by both arms"
+    ],
+    "worker_source_manifest_sha256": "e54297354fa3493d3712ead08a98313ffe607e925713e4cdd34359f98b592a48"
+  },
+  "selected_source_set_hash_basis": "SHA256 of canonical compact sorted role-to-SHA256 JSON plus newline; exact index pinned below.",
+  "selected_source_set_sha256": "a8165cd947594c51d3930d795274c0a1ef6afaa27eab58848de0e8f85e0e9cbd",
+  "source_index": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op234-splitk-s4-owner-promotion-20261107-v1/SELECTED-SOURCE-SHA256-INDEX.json",
+    "sha256": "b8b005f3d753b005416bf1378823567636493b354a230b80ad500e0ef299a76b"
+  },
+  "status": "SPLITK_S4_SELECTED_BY_OWNER_WITH_FROZEN_INCONCLUSIVE_RETAINED",
+  "utc": "2026-11-07T15:54:20.449506+00:00"
+}
