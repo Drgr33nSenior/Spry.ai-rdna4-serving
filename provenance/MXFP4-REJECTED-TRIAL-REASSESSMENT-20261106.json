@@ -1,0 +1,844 @@
+{
+  "audit_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/rejected-optimization-reassessment-20261106-v1",
+  "cpu_followup": {
+    "manifest_sha256": "456f29ef31e82745d6ed8b2d4a9eab64a89a2b6f73eb9fd6bfc2582fb78c5f45",
+    "native_proposal": {
+      "A6_adopted": false,
+      "approved": true,
+      "authorization": {
+        "manifest_sha256": "5e8a95222c57ba59850736cae3059f98f4e2910e54930b64a2a96a1770166828",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-authorization-20261106-v1"
+      },
+      "compiles": 5,
+      "decision": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-preparation-20261106-v1/PROPOSED-OWNER-DECISION.md",
+        "sha256": "544febc0a42520c49cceb9210a752ec15ee21ad52f40133ded4f529b30bdc962"
+      },
+      "execution": {
+        "compiles": 5,
+        "elapsed_seconds": 8.62489929201547,
+        "exit_code": 0,
+        "gpu_launches": 0,
+        "identity_gate_matched": true,
+        "manifest_sha256": "1e3e928f58ed61c4c07815f6c48254720b0abc955673c6bf07f19e6dc55eb9d9",
+        "model_starts": 0,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-execution-20261106-v1",
+        "status": "CPU_COMPILE_COMPLETE"
+      },
+      "execution_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-execution-20261106-v1",
+      "fresh_preflight": {
+        "manifest_sha256": "35789cec88db2d633852641a5c4a35fec89cd9e63c36bb6da43de0a5fd9c0804",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-preflight-approved-20261106-v1"
+      },
+      "gpu_authority": false,
+      "invoked": true,
+      "limits": {
+        "address_space_bytes": 8589934592,
+        "caller_seconds": 240,
+        "child_seconds": 225,
+        "cpu_seconds": 180,
+        "per_file_bytes": 33554432
+      },
+      "manifest_sha256": "0f604cdf93a37eb9e3b5038c37b282d163f729ea0be7e3a83b8eb1961a24e964",
+      "owner_answer_verbatim": "aproved",
+      "plan": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-preparation-20261106-v1/PLAN.json",
+        "sha256": "f78550656091a89ec54ca15fe049f4a0a84f529e8b5cd8c03574edeba2d32aee"
+      },
+      "preflight": "READ_ONLY_PASSED",
+      "preflight_max_age_seconds": 1800,
+      "readout": {
+        "G1_launch_metadata": {
+          "dynamic_shared_bytes": {
+            "baseline": 4096,
+            "candidate": 1024
+          },
+          "frozen_reader_output_complete_for_launch": false,
+          "grid": 129,
+          "num_warps": 4,
+          "other_required_fields": [
+            "constants",
+            "attributes",
+            "signature",
+            "exact layout version",
+            "exact strides"
+          ],
+          "source": "authenticated native stdout wrapper"
+        },
+        "K_iterations": 40,
+        "device_correctness_proven": false,
+        "independent_result_review": {
+          "blocking_findings": [],
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-V6-QB-NATIVE-CPU-RESULT-REVIEW-v1.md",
+          "sha256": "47d6b7e326c3f814a8e69933d49839f01818fb53e4e2f7645abc363bd1ecbef1",
+          "status": "ACCEPT"
+        },
+        "manifest_sha256": "7edb7e70339c9dcab1b4398f4e56625c99e319b8db1481b417a1d53599062b1a",
+        "resource_rule_A6_adopted": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-readout-20261106-v1",
+        "specialization_scope": {
+          "M": [
+            8,
+            16
+          ],
+          "distinct_code_objects_per_arm": 1,
+          "specializations": 2
+        },
+        "speed_measured": false,
+        "status": "CPU_STATIC_CHECKS_PASSED_NO_GPU_READY_STATE",
+        "wrapper_sha256": "cbb48226f5e88319206ed42d5ded61df95b6eb60c7aa288f85dce5c6e9b6be2f"
+      },
+      "remaining_invocations": 0,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-native-cpu-preparation-20261106-v1",
+      "selection_authority": false
+    },
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/rejected-trial-cpu-followup-20261106-v1",
+    "trial_reopened": false
+  },
+  "date": "2026-11-06",
+  "final_programme_disposition": {
+    "BW-03": "FUTURE_RESEARCH_ONLY",
+    "cap32": "DROPPED",
+    "finalization_record": "provenance/MXFP4-FINALIZATION-20261105.json",
+    "handoff": "docs/QWEN4-SERVING-HANDOFF.md",
+    "new_gpu_work": false,
+    "parked": true,
+    "resume_condition": "Qwen4 work explicitly resumed by the owner",
+    "rollback_logical_arm": "control",
+    "selected_candidate": "three-member cap16",
+    "selected_logical_arm": "mtp",
+    "selected_operation": 232,
+    "v6_qb": "PARKED_NO_DEVICE_CORRECTNESS_OR_SPEED_VERDICT"
+  },
+  "lead_ids_audited": 25,
+  "limitations": [
+    "Document and receipt-summary audit; historical benchmarks were not rerun.",
+    "No demonstrated link from recent harness fixes to an old numerical failure.",
+    "Conditional FP8 groups require source/shape requalification for current MXFP4 or Qwen4."
+  ],
+  "manifest_sha256": "5a29891c232cf17d957c4c7b36da0c841b82e2a683cf4b5cfb352afab67c24f4",
+  "members": 37,
+  "native_compiles": 5,
+  "new_gpu_allowance": 0,
+  "new_native_runs": 0,
+  "original_shortlist_report_sha256": "96f0ccc95d17938f0714b5f9e0f4f16703f7efcc70545fb24c1e713a88b7c784",
+  "programme_parked": false,
+  "report": "docs/MXFP4-REJECTED-TRIAL-REASSESSMENT-20261106.md",
+  "report_sha256": "05871ca6a858f7cabbc20fb11f9de5532aea15ab42e8aebe7b76f2e3cdca8c0d",
+  "schema": 1,
+  "selection_changed": false,
+  "shortlist_groups": [
+    {
+      "aliases": [
+        "L01",
+        "G2"
+      ],
+      "category": "POLICY_SENSITIVE_NOT_GPU_BENCHMARKED",
+      "changed_premise": "Compiler-used VGPR count is not the encoded allocation threshold; profile identifies GEMM exposure.",
+      "current_mxfp4_relevance": "direct",
+      "id": "R01",
+      "next_step": "CPU all-shape allocation/load-dependency audit; explicit prospective contract before measurement.",
+      "priority": 1,
+      "source_blocker_fix_established": false,
+      "title": "MXFP4 v6 weight prepacking"
+    },
+    {
+      "aliases": [
+        "L03",
+        "H2"
+      ],
+      "category": "SOURCE_BLOCKER_FIXED_NEW_IMPLEMENTATION",
+      "changed_premise": "Retained 5-Nov pinned upstream assessment confirms event API implementation; native-path changes differ from old legacy benchmark.",
+      "current_mxfp4_relevance": "conditional runtime",
+      "id": "R02",
+      "next_step": "Isolated source/event/RCCL/backend compatibility assessment; require exposed opportunity before any GPU request.",
+      "priority": 2,
+      "source_blocker_fix_established": true,
+      "title": "Updated HRX runtime"
+    },
+    {
+      "aliases": [
+        "historical Sprint36",
+        "FP8-M4096-STAGE1"
+      ],
+      "category": "CONFOUNDED_COMPARISON_UNUSED_COMPONENT_PASS",
+      "changed_premise": "Historical chunk comparison had unequal work and different GEMM route; existing independent M4096 component pass is unused.",
+      "current_mxfp4_relevance": "requires current prefill routing proof",
+      "id": "R03",
+      "next_step": "Inspect current prefill dispatch and shapes; design matched-work TTFT/memory comparison only if relevant.",
+      "priority": 3,
+      "source_blocker_fix_established": false,
+      "title": "M4096 prefill stage1 and larger chunks"
+    },
+    {
+      "aliases": [
+        "Sprint18 attention QKV",
+        "Sprint25 N64 gate/up",
+        "Sprint31 W2 gate/up"
+      ],
+      "category": "MARGINAL_SERVING_SIGNAL_COMPONENT_POSITIVE",
+      "changed_premise": "Cumulative-gain economics justify review of small positives, without invalidating original gates.",
+      "current_mxfp4_relevance": "historical FP8 only; source/shape requalification required",
+      "id": "R04",
+      "next_step": "CPU applicability review; preserve timing outliers and numerical/regression gates; no new run proposed now.",
+      "priority": 4,
+      "source_blocker_fix_established": false,
+      "title": "Small-positive historical FP8 projection options"
+    }
+  ],
+  "source_snapshots": 30,
+  "status": "V6_QB_OPERATION231_FAILED_RELEASE_RECONCILED_PARKED",
+  "trial_reopened": true,
+  "trial_reopened_scope": "R01 verify-only QKVZ+BA M8/M16 K5120 component/real-input test only; no other projection, serving selection or retry.",
+  "updated_report_sha256": "956c36b8fee0bf7def9584b3d613af9daae6cfa5e792ca330ea9a292a7bff6ff",
+  "v6_qb_gpu_test": {
+    "admission": {
+      "checkpoint": 614,
+      "manifest_sha256": "d93041e040ab8e30c02701c548f4ff2c580e95a742da2db6fb7b872cdfc2267c",
+      "next_index": 230,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-admission-abcf6687ab36a28e-20261106-v1",
+      "status": "ADMISSION_PREFLIGHT_PASSED"
+    },
+    "authorization": {
+      "A6_accepted_for_this_test_by_context": true,
+      "adoption": false,
+      "authorization_seal": "7cadad05c130410a400407c6d2d5b2e1b730171c640816c9affc218fe8209392",
+      "exact_packet_ready": true,
+      "general_A6_policy_changed": false,
+      "invocations": 1,
+      "owner_approval": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-authorization-abcf6687ab36a28e-20261106-v1/OWNER-APPROVAL.json",
+        "sha256": "24c8b1ad019129b70a00df4ab6b96165f8ae4e4639f281b1f08a6fb40e73083e"
+      },
+      "protected_helper_exception_approved": true,
+      "registered": false,
+      "retry": false,
+      "selection_change": false
+    },
+    "composed_packet": {
+      "envelope": {
+        "caller": 4845,
+        "owner_active": 3630,
+        "owner_total": 3930,
+        "stage_a_arm": 2490,
+        "stage_b_card": 280,
+        "stage_b_worker": 600
+      },
+      "independent_packet_review": {
+        "packet_byte_repairs_required": false,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-V6-QB-COMPOSED-GPU-PACKET-REVIEW-v1.md",
+        "sha256": "9d6b76b862635dba4dedcaf4ca85c73763ec7c41b66cb25df033eb3dd3543d75",
+        "verdict": "ACCEPT_WITH_FINDINGS"
+      },
+      "limits": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-composed-packet-20261106-v1/registration/LIMITS.json",
+        "sha256": "f3345d1ff911dec0cf727e025b1b53786555f83d67ec1104ffa9e3a1a934bafe"
+      },
+      "manifest_sha256": "b73012342c7cadf546157a9357716df454e62e58caaaf65f2cecf52463487eb8",
+      "members": 1793,
+      "nonce": "abcf6687ab36a28e",
+      "operator_context": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-composed-packet-20261106-v1/registration/OPERATOR-CONTEXT.json",
+        "sha256": "d8529e01609b96d1393e9125d699b37aadc8eb127b5c6415a405468fff7c039b"
+      },
+      "package": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-composed-packet-20261106-v1/packet/remote/PACKAGE.json",
+        "sha256": "4f098a1f07729996bf94a826519b24792cba926b66ac46142e31db1129a789c2",
+        "sources": 124
+      },
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-composed-packet-20261106-v1",
+      "tests": {
+        "composed_guarded": {
+          "receipts": [
+            "12-test-stage-a-gate",
+            "13-test-composed-owner",
+            "14-test-component-entry",
+            "15-test-stage-a-overlay",
+            "16-test-read-composed",
+            "18-test-retention-readout"
+          ],
+          "suites": 6,
+          "tests": 44
+        },
+        "d_suites_exact_copy": {
+          "exit_code": 0,
+          "root": "v6-qb-composed-d-suite-copy-20261106-v1",
+          "seal": "3b747702235b9d4801e95536aa42c42225b8cb7e0342a922980e9d13b8b2947a",
+          "tests": 73
+        },
+        "public43": {
+          "exit_code": 0,
+          "receipt": "11-public43"
+        }
+      }
+    },
+    "correctness_complete": false,
+    "cpu_repair": {
+      "affected_tests_passed": 35,
+      "independent_composed_review_pending": true,
+      "manifest_sha256": "5acdea52cb88c25848157570e4ca2c2e9e8c559db48994cce0218acbac5c11af",
+      "members": 67,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-preparation-review-repair-20261106-v1",
+      "unchanged_file_pins": 8,
+      "unchanged_input_seals": 10
+    },
+    "final_registration": {
+      "cpu_registrar_proof": {
+        "all_approvals_and_ledgers_synthetic": true,
+        "mutations_refused": 13,
+        "positive_cases": 1,
+        "real_checkpoint_writes": 0,
+        "status": "CPU_REGISTRAR_PROOF_PASSED",
+        "target_commands": 0
+      },
+      "manifest_sha256": "c74fa0266e17edc4b365347dc723ae61e6b96489af79c12118b19878bf558cd2",
+      "members": 170,
+      "owner_exception_answer_recorded": true,
+      "plan": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-final-registration-abcf6687ab36a28e-20261106-v1/PLAN.json",
+        "sha256": "9f86beeff950c824c4760cd886df4bfad1fe61e659dfbd0621b3d3a0d61aae6b"
+      },
+      "readiness": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-final-registration-abcf6687ab36a28e-20261106-v1/READINESS.json",
+        "sha256": "85a6c19cbb9043c1f908b67bf83ea74263d7dc697d8496f6ccf954324edd07db"
+      },
+      "remote_admission_passed": true,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-final-registration-abcf6687ab36a28e-20261106-v1"
+    },
+    "gpu_executed": true,
+    "independent_result_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OP230-V6QB-RESULT-REVIEW-v1.md",
+      "root_cause": "UNESTABLISHED; no raw memory measurements retained",
+      "sha256": "9421be480eaf83f8c6065994cad3470570bf592f7d04ad641bbcc2ab24cc7d6c",
+      "verdict": "ACCEPT_FAILED_RESULT_AND_RELEASE"
+    },
+    "model_starts": 1,
+    "native_environment_proof": {
+      "attempts": 1,
+      "device_nodes": false,
+      "gpu_launches": 0,
+      "in_process_SGLang_environment_changes_qualified": false,
+      "manifest_sha256": "92a9ddc87fc59c64639620daba40829f8ef69ab46b2d409a72cf1c841c6d46c8",
+      "model_starts": 0,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-composed-native-proof-20261106-v1",
+      "status": "R4_ENVIRONMENT_PROJECTION_PROOF_PASSED"
+    },
+    "operation": {
+      "campaign_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-composed-campaign-abcf6687ab36a28e",
+      "closed_checkpoint": {
+        "number": 616,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-616.json",
+        "sha256": "c79a1a3d810998041b09eba77a731970ba0d12802326c6072c42e5742121c64d"
+      },
+      "index": 230,
+      "opened_checkpoint": {
+        "number": 615,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-615.json",
+        "sha256": "3333590bfb9aebff6ca5f8aad9b4aff508d84d0eab4e895dadee7ce8e7eda00c"
+      },
+      "readout_status": "PARK_STAGE_A_REFUSED",
+      "registration": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-composed-campaign-abcf6687ab36a28e/REGISTRATION.json",
+        "sha256": "0d9bae03b26295c7e992eb96b75898b2d5cde91935d3e07377451e58bf4b5da0"
+      },
+      "release_verified": true,
+      "retry": false,
+      "stage": "closed and independently released",
+      "stage_B_started": false,
+      "status": "RELEASED_WORKLOAD_FAILED"
+    },
+    "owner_intent": {
+      "owner_message_verbatim": "OK, I'll authorise a GPU correctness and speed test run",
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-test-owner-intent-20261106-v1/OWNER-INTENT.json",
+      "sha256": "c6362bf2a7784faa92835c49fb07004a576cbf576424ee7dd1c485252d640fd9"
+    },
+    "parent_gates": [],
+    "postfailure_cpu_followup": {
+      "approved": true,
+      "completed": {
+        "canonical_adapter_changed": false,
+        "gpu_ready": false,
+        "independent_repair_review": "NOT_PERFORMED",
+        "interpreter": "Mac Python3.11.6",
+        "local_tests": 18,
+        "manifest_sha256": "ec44b094cd449bb62520eac7830a6b408f2d6eca1a0adb15ad85d59e05a5d7ed",
+        "members": 49,
+        "memory_predicate_unchanged": true,
+        "native_proof": false,
+        "result_sha256": "446ace09d0c129ec427905ef88d85576c190a07887f1d14ab85c7bae8e0cc98d",
+        "retention": "Exact executed CapturePipes; CPU fixtures only",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op230-memory-witness-cpu-repair-20261106-v1",
+        "source_sha256": "17b31edd682f7ea70504bbe8cb5cec1a3fcd0d6da37c49d2b6039a2fe9be5b3d"
+      },
+      "gpu_authority": false,
+      "intent_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op230-cpu-followup-owner-intent-20261106-v1",
+      "manifest_sha256": "34b1d2110085ea77958daaf047e3ae7ed7e85a13153ada7c84b2eded51956ddb",
+      "native_run_authority": false,
+      "owner_reply_verbatim": "approved",
+      "retry": false,
+      "scope": "Review-informed CPU-only allocation-snapshot retention repair; existing predicate preserved.",
+      "status": "CPU_MEMORY_WITNESS_REPAIR_TESTED_UNINTEGRATED",
+      "waiting_for_independent_review": false
+    },
+    "preparation": {
+      "independent_review": {
+        "R1": "fixed in fresh parent repair",
+        "R2_R3": "fixed with affected tests; composed review pending",
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-V6-QB-GPU-PREPARATION-REVIEW-v1.md",
+        "sha256": "a4b71af98bcca289666f6d08df7308e627c7cbc63f54087661a4b46c045f7c61",
+        "verdict": "ACCEPT_WITH_FINDINGS"
+      },
+      "interpreter": "Mac Python 3.11.6",
+      "local_tests": 65,
+      "manifest_sha256": "3981530e780c5c3ccf2cf12326772470277a1bf46dd2ebe67040cbdcf00aed85",
+      "members": 110,
+      "native_proof": "PENDING_ON_COMPOSED_BYTES",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-test-preparation-20261106-v1"
+    },
+    "protected_helper_exception": {
+      "clause": "I approve the exact protected-helper exception for packet abcf6687ab36a28e: benchmark_physical_controller.py 22ce9f95c9a319f221c1b75d00082b41afed7d3ec110bf4ea51e31af5f62488b (op227 c4f11dc80305cbb45f62f6a4f2ad672c3ee4ff4e0011ab520e5b54467b31984d; diff 84c4086c6e0466b2bdec057a0638c12d5f14b7f540c0088f41eb377115e8aae2), whose only change is line 33 SPEC_SHA256 = d21c22a7b56008ce8d3d22d60c49e21cfa54a4442e2ffb1827ad7525633f4e1a, the canonical regeneration for the composed stage-A spec; the other eight protected helpers stay byte-identical to op227.",
+      "files": [
+        "benchmark_physical_controller.py"
+      ],
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-composed-packet-20261106-v1/registration/PROTECTED-HELPER-EXCEPTION-PROPOSAL.json",
+      "sha256": "e0501ac3132e0c7d2801b2403bc1f8105dfb77d6f8acef2806e585d4da8ac433",
+      "status": "PROPOSED_PENDING_EXACT_OWNER_APPROVAL"
+    },
+    "registered": true,
+    "registered_invocations": 1,
+    "remaining_invocations": 0,
+    "retained_result": {
+      "caller_elapsed_seconds": 129.53174050000962,
+      "campaign": {
+        "manifest_sha256": "732a4a1f63bad25690bbafab035c5c24302741584eca1dbe27eb31a410e52abc",
+        "members": 311,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-composed-campaign-abcf6687ab36a28e"
+      },
+      "first_scheduler_error": "ValueError: steady padding equals +1,966,080 B per card",
+      "invocation": {
+        "manifest_sha256": "c70c5749a1628ca0490227ac0f25cb0ebb2db760d81a561442a77658e5d08bac",
+        "members": 7,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-invocation-abcf6687ab36a28e-20261106-v1"
+      },
+      "memory_guard_expected_delta_bytes": 1966080,
+      "memory_guard_observed_delta_bytes": null,
+      "native": {
+        "manifest_sha256": "d0ae0a7ff13d35e53d5da4f49fce10c182f9ac4c51aed7a5640906d00ba78eeb",
+        "members": 358,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/v6qb-composed-run-abcf6687ab36a28e",
+        "verified_utc": "2026-11-06T16:55:49.458414+00:00"
+      },
+      "owner_failure": "RuntimeError: stage-A child failed: exit 137, failure 'resource receipt: ValueError: final resource monitor incomplete'",
+      "physical_owner_seconds": 118.62453254201682,
+      "rank_0_memory_guard_outcome": "UNKNOWN",
+      "ranks_with_retained_memory_refusal": [
+        1
+      ],
+      "raw_failed_memory_deltas_retained": false,
+      "resource_monitor_complete": true,
+      "secondary_resource_refusal": "The final validator required child exit0; monitor completeness itself passed. Child exited137.",
+      "stage_A_cap_readback": false,
+      "stage_B_cap_reads_ran": false
+    },
+    "review_disclosures": {
+      "coverage": "Stage A sends zero benchmark requests, is not natural-stop quality validation and captures but does not replay the v6 serving graph. Component graph replays are stage B only.",
+      "environment": "Native proof covers child environment projections, not later SGLang in-process environment changes. A hash drift refuses after model load, consumes the invocation and forbids stage B.",
+      "stage_A_power": "No stage-A 235 W cap readback. It is untimed. The frozen packet reads power caps only in stage B, before card 0 and after card 1; do not claim stage-A power verification.",
+      "timing": "Repeated component weights may be cache-resident. This is no serving-speed or selection result."
+    },
+    "route": {
+      "composition": "Use the existing CanonicalLease for two child phases. Stage-A model/process resources release before stage B, with one owner close and independent release after both. The executable mixed route is not built yet.",
+      "planned_model_starts": 1,
+      "stage_A": "TP2 eager real-input qualification at 48 GDN layers for M8/M16 on both ranks, plus repack memory",
+      "stage_B": "zero-start component correctness, graph replay and alternating timing on cards 0 then 1"
+    },
+    "speed_result": null,
+    "status": "OPERATION230_FAILED_WITNESS_PACKET_PREPARED_INERT_REVIEW_PENDING",
+    "witness_preparation": {
+      "admission": {
+        "checkpoint": 616,
+        "manifest_sha256": "f29cfb2a5bfbafcd1344f6bbac7ce95629d6bce3ea6860e8034983083763183a",
+        "mode": "--remote",
+        "next_index": 231,
+        "result_sha256": "1c5215b35c8b2797df9449c5fe4b5facae58922a479e423837f33e873f00ce41",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-admission-93dc847c81eb3802-20261106-v1",
+        "status": "ADMISSION_PREFLIGHT_PASSED"
+      },
+      "aggregate_counter_update": {
+        "added_once": true,
+        "after": {
+          "gpu_runs_completed_in_finalization": 4,
+          "model_starts_completed_in_finalization": 6,
+          "registered_invocations_completed_in_finalization": 5
+        },
+        "before": {
+          "gpu_runs_completed_in_finalization": 3,
+          "model_starts_completed_in_finalization": 5,
+          "registered_invocations_completed_in_finalization": 4
+        },
+        "operation": 231,
+        "scope": "One failed GPU invocation and one observed TP2 serving-start attempt; not a passing benchmark. Historical counter scope otherwise unchanged."
+      },
+      "authorization": {
+        "actual_owner_answer_preserved_verbatim": true,
+        "approval_sha256": "03ee154c868b7622f8f10ec79900906e97988fb98ee01ded3123f6cbbc0ee0e0",
+        "manifest_sha256": "1b7472734679225e8a7c803a564ed16a5eb648ab6b240a1c5c99646b4e45127a",
+        "owner_message_file": "OWNER-MESSAGE.txt",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-authorization-93dc847c81eb3802-20261106-v1"
+      },
+      "checkpoint_writes": 3,
+      "correctness_complete": false,
+      "disclosure": "If stage A refuses for any reason, including the unchanged memory guard, this single invocation is consumed, stage B does not run, and there is no retry. The witness is diagnostic only; operation230 raw deltas remain unavailable.",
+      "disposition": "PARK_V6_QB_NO_CORRECTNESS_OR_SPEED_VERDICT",
+      "final_registration": {
+        "approval_written": false,
+        "checkpoint": {
+          "number": 616,
+          "sha256": "c79a1a3d810998041b09eba77a731970ba0d12802326c6072c42e5742121c64d"
+        },
+        "manifest_sha256": "dae9e08768576fc51f76f75fc3611ce1cc6d45edd8d112195131e1a1c258a090",
+        "mechanical_closure_passed": true,
+        "members": 6,
+        "next_free_index": 231,
+        "plan": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-final-registration-93dc847c81eb3802-20261106-v1/PLAN.json",
+          "sha256": "fccaf0c4a18126b3c38568985e4793ecd7b6727ea347eaf787d115133b10de7e"
+        },
+        "readiness": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-owner-preparation-93dc847c81eb3802-20261106-v1/READINESS.json",
+          "sha256": "473c0d984f0becca6141f1892fb8ec2d111512b7ea4968ca38aa402a3bbe7429"
+        },
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-final-registration-93dc847c81eb3802-20261106-v1"
+      },
+      "gpu_authority": false,
+      "gpu_decision": {
+        "clause": "I authorise one new finite v6-QB GPU correctness and timing invocation of packet 93dc847c81eb3802 (package 539388fd3b181ffe58c1f62cab2eb7e0828f8f9b9f2d351dca90253524ad0304, operator context 6978c326b682653ad797297da21e03b58d35b7da198d4bd51c38ed89ac5c6b0a): one CanonicalLease on cards 0 and 1 at the configured 235 W cap; stage A makes one TP2 probes-only start of the three-member cap16 bundle with v6-QB real-input shadows and the unchanged allocated-memory guard, preceded only by the bounded stderr memory witness; stage B runs the zero-start component on card 0 then card 1 only if stage A passes and is released; one owner close and independent release; maximum caller time 4845 seconds and owner time 3930 seconds; no retry, adoption or selection change. Stage A may refuse again at the unchanged memory guard; the witness is diagnostic only and is not a fix.",
+        "status": "PROPOSED_PENDING_EXACT_OWNER_DECISION"
+      },
+      "gpu_executed": true,
+      "independent_final_review": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-V6-QB-WITNESS-FINAL-DELTA-REVIEW-v1.md",
+        "procedural_items": {
+          "L1": "Explicit refusal-consumption disclosure in sealed OWNER-PRESENTATION and owner proposal",
+          "L2": "READINESS binds exactly this final independent review path and SHA"
+        },
+        "sha256": "601addd9245dc5a987b8075aa837d35fdfa1ce9aac79ea16f606fdaf5732aa28",
+        "verdict": "ACCEPT_NO_BLOCKERS"
+      },
+      "model_start_observation": "Authenticated retained stderr records one TP2 serving-start attempt: target and drafter weights and KV pools loaded on both ranks. This is not completed graph/eager qualification or a serving benchmark.",
+      "model_starts": 1,
+      "native_proof": {
+        "allocator_names_present_in_pinned_libc10": [
+          "PYTORCH_ALLOC_CONF",
+          "PYTORCH_CUDA_ALLOC_CONF",
+          "PYTORCH_HIP_ALLOC_CONF"
+        ],
+        "attempts": 1,
+        "compile_files": 126,
+        "device_nodes": false,
+        "frameworks_imported": false,
+        "manifest_sha256": "a40d3faf7689b47af08a711289d4967d6c372e63d3432d91de49cdeca2b0c404",
+        "members": 44,
+        "pipe_buf": 4096,
+        "python": "3.14.4",
+        "r4_compile_proof": "reused (92a9ddc8...)",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-witness-native-proof-20261106-v1",
+        "status": "WITNESS_NATIVE_CPU_PROOF_PASSED",
+        "tests": 28
+      },
+      "offline_decoder": {
+        "diagnostic_only": true,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op230-memory-witness-review-repair-20261106-v1/tools/decode_memory_witness.py",
+        "sha256": "33e94b9c567036cd9ddad2fc0e3d2b17b77370aab399a6b5cf03c0bf8ca140d5",
+        "verify_witness_root_before_use": true
+      },
+      "operation": {
+        "automatic_retry": false,
+        "caller_elapsed_seconds": 77.26740583300125,
+        "caller_exit": 1,
+        "campaign_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-composed-campaign-93dc847c81eb3802",
+        "closed_checkpoint": {
+          "number": 618,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-618.json",
+          "sha256": "ecaa548e0ed71f4a494453a09b7c7ca8234a1d0ed08925ae55f556e25097ceb3"
+        },
+        "correctness_result": null,
+        "independent_release_verified": true,
+        "index": 231,
+        "invocation_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-invocation-93dc847c81eb3802-20261106-v1",
+        "ledger_checkpoint618_still_unverified": true,
+        "ledger_current_release_verified": true,
+        "opened_checkpoint": {
+          "number": 617,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-617.json",
+          "sha256": "97a969bb9c864aef0e18cbe7fa3d74383e694cc6790cc7830a391fa83b3ee4eb"
+        },
+        "owner_transport_elapsed_seconds": 69.52515183400828,
+        "owner_transport_exit": 255,
+        "readout_status": "PARK_STAGE_A_REFUSED",
+        "receipt_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/v6qb-composed-run-93dc847c81eb3802",
+        "release_reconciliation_checkpoint": {
+          "number": 619,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-619.json",
+          "sha256": "26a83efa4c24f55f135b3b7aa023a24d9bdf77cff21f82acc12648fb80d7f0c0"
+        },
+        "remaining_gpu_allowance": 0,
+        "status": "FAILED_WORKLOAD_RELEASE_RECONCILED_PARKED",
+        "timing_result": null
+      },
+      "owner_preparation": {
+        "boot_id": "cf30344d-a1d7-4350-825b-e097c8e60f2b",
+        "finalizer_exit_code": 0,
+        "host_check_is_admission": false,
+        "host_metadata_check_passed": true,
+        "manifest_sha256": "902b54e3b0bed40734c4c54e9131be131a1a35cfb651867339976015aeb20c47",
+        "members": 23,
+        "presentation": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-owner-preparation-93dc847c81eb3802-20261106-v1/OWNER-PRESENTATION.md",
+        "result_sha256": "7139233c897698ed706b7d76e37fb2b2ac1c5b55e6961ccc7e74b9be50db5f10",
+        "retained_parent_checker_failure": "Pending scalar replacement shape; corrected checker passed, generated bytes unchanged",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-owner-preparation-93dc847c81eb3802-20261106-v1"
+      },
+      "packet": {
+        "boot_id": "cf30344d-a1d7-4350-825b-e097c8e60f2b",
+        "checks": {
+          "limits_changed": "static package +3,087 B; witness <=524,288 B inside the unchanged 12 MiB stage-A stderr cap",
+          "op227_frozen_pins_reproduced": true,
+          "op230_stage_a_reproduced_exactly": true,
+          "protected_helpers_changed": [
+            "benchmark_physical_controller.py line 33 SPEC_SHA256"
+          ],
+          "r4_compile_proof_reuse_sound": true,
+          "stale_op230_identities": 0,
+          "token_normalized_content_delta": [
+            "v6qb_serving.py"
+          ]
+        },
+        "limits_sha256": "c8c4f98a5864f37da9de41db2401fbdc03867c6d25f8a0e243484211d2e3e407",
+        "manifest_sha256": "475039308d36ec27a7067918b91e33a1feabc0078b29a8bb308842849b8fafb7",
+        "members": 1151,
+        "nonce": "93dc847c81eb3802",
+        "operator_context_sha256": "6978c326b682653ad797297da21e03b58d35b7da198d4bd51c38ed89ac5c6b0a",
+        "package": {
+          "sha256": "539388fd3b181ffe58c1f62cab2eb7e0828f8f9b9f2d351dca90253524ad0304",
+          "sources": 124,
+          "staged_bytes": 12639841
+        },
+        "registrar_entry_sha256": "5b6e8026a8b29e325e544d25873063cddad3feb5cc274e6357bc4e822e9e3b59",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-composed-packet-witness-20261106-v1",
+        "stage_a": {
+          "manifest_sha256": "e840bfee9bbe5ea25fe9cebd9dad271641f9b94a2c42b070aeb9484e71a41f79",
+          "resource_manifest_sha256": "7e4091e6f001ccd3e281d2f44eda99af05f96392a2473329dc7d565db58fe718",
+          "spec_sha256": "1cb8a06a8a961d448d4344c9e6472ba4e7403ea3c618b19afc55c1e43b92c7a5"
+        },
+        "tests": {
+          "public43": "passed",
+          "retained_tool_failures": [
+            "08-witness-delta",
+            "09-witness-delta"
+          ],
+          "suites": 7,
+          "tests": 69
+        }
+      },
+      "postrun_recovery": {
+        "caller_original_seconds": 77.26740583300125,
+        "deadlines_unchanged": true,
+        "diagnostic_parent": {
+          "manifest_sha256": "31a4446b68417ab3d1e64eeeba5979aa380d0a0b46a701d9f49c71d278a7fac0",
+          "members": 14,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-postrun-recovery-parent-93dc847c81eb3802-20261106-v1"
+        },
+        "four_steps_complete_once": true,
+        "independent_release_authenticated": true,
+        "manifest_sha256": "222aa738db0bfcdf250fe735344ae5a4ea182948646cae97891e5e9863ec9bc7",
+        "members": 314,
+        "original_workload_failure_preserved": true,
+        "owner_elapsed_seconds": 126.25040393602103,
+        "owner_evidence": true,
+        "recovery_wrapper_seconds": 6.702280083030928,
+        "review": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OP231-TRANSPORT-RECOVERY-REVIEW-v1.md",
+          "sha256": "20f350167ed7d471159e253e6adcbb4bd030c56e37922b9ab90f52e8fcbe0162"
+        },
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-postrun-retention-recovery-93dc847c81eb3802-20261106-v1"
+      },
+      "preparation_instruction_verbatim": "OK, let's have claude prepare up until you're ready to run on the GPU again.",
+      "protected_helper_exception": {
+        "clause": "I approve the exact protected-helper exception for packet 93dc847c81eb3802: benchmark_physical_controller.py 1b68bd401df842a3534f15aeb63b9d207898fe68a770ed103d399a83fa2601cb (op227 c4f11dc80305cbb45f62f6a4f2ad672c3ee4ff4e0011ab520e5b54467b31984d; diff b48500d7ea4f1551f8b5282c34e0e8532926b56905883d4403caeea9b20a8a35), whose only change is line 33 SPEC_SHA256 = 1cb8a06a8a961d448d4344c9e6472ba4e7403ea3c618b19afc55c1e43b92c7a5, the canonical regeneration for the composed stage-A spec; the other eight protected helpers stay byte-identical to op227.",
+        "status": "PROPOSED_PENDING_EXACT_OWNER_APPROVAL"
+      },
+      "read_only_status_observation": {
+        "not_authenticated_retained_evidence": true,
+        "owner_journal_absent": true,
+        "record_reports_release": true,
+        "record_reports_stage_a_exit": 137,
+        "record_reports_stage_b_started": false,
+        "record_reports_unresolved": false,
+        "same_boot": true,
+        "unsealed_owner_record_present": true
+      },
+      "reconciliation": {
+        "charges": {
+          "caller_original_seconds": 77.26740583300125,
+          "owner_seconds": 126.25040393602103,
+          "reconciliation_observation_seconds": 0.3206404579686932,
+          "recovery_wrapper_seconds": 6.702280083030928
+        },
+        "checkpoint": {
+          "number": 619,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-619.json",
+          "sha256": "26a83efa4c24f55f135b3b7aa023a24d9bdf77cff21f82acc12648fb80d7f0c0"
+        },
+        "fixed_preparation": {
+          "basis_changes": [
+            "observation_stdin_sha256"
+          ],
+          "fixed_emulation_passed": true,
+          "manifest_sha256": "072a381199b5c94c8542dd91078db17b57dc600615d119bcec5bd4498130891c",
+          "members": 23,
+          "observer_changed_lines": [
+            6,
+            21
+          ],
+          "old_emulation_expected_refusal": true,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-release-reconciliation-observer-fix-20261106-v1",
+          "tests": 5,
+          "writer_unchanged": true
+        },
+        "manifest_sha256": "65fca55d5aad757795a3cb9c1aaafb392d4f6a1741dd5ceab13fe810d46108e1",
+        "members": 2,
+        "next_free_index": 232,
+        "observation": {
+          "argv_elements": 27,
+          "gpu_work": false,
+          "manifest_sha256": "f73ad9774f37810873d48a33be5601aa412ffdb168dbd4fa7e72ebcec9c54bea",
+          "members": 3,
+          "read_only": true,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-release-absence-20261106-v1",
+          "unprivileged": true,
+          "work_seconds": 20
+        },
+        "original_checkpoint618_unchanged": true,
+        "original_failure_unchanged": true,
+        "parent": {
+          "manifest_sha256": "f4f5e9a2611c01a0743464f86ddfa3b7efd2a1c51bb95bc657c485854f0ebadd",
+          "members": 5,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-release-reconciliation-invocation-20261106-v1"
+        },
+        "remaining_gpu_allowance": 0,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-release-reconciliation-execution-20261106-v1",
+        "selection_changed": false
+      },
+      "reconciliation_preparation": {
+        "checkpoint_written": false,
+        "fact_mutations_refused": 20,
+        "independent_review": "PENDING",
+        "manifest_sha256": "0738eb5ef7a71885d77f9fbe80dd0f0d76538448dfa698d550580b22728c0b5e",
+        "members": 17,
+        "observation_mutations_refused": 14,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op231-release-reconciliation-preparation-20261106-v1",
+        "ssh_executed": false,
+        "tests": 5
+      },
+      "recovered_result_review": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OP231-RECOVERED-RESULT-RECONCILIATION-REVIEW-v1.md",
+        "sha256": "df05cfd1af49cd5672bf42d29d860ff5fb4fd1fb4b7b82baa23645a07a82d55c",
+        "verdict": "ACCEPT_WITH_CONDITIONS_CLOSED_MECHANICALLY"
+      },
+      "registered": true,
+      "registration_preparation": {
+        "admission_decision_proof": {
+          "admission": false,
+          "cases": 10,
+          "refused": 9,
+          "ssh_commands": 0
+        },
+        "checkpoint_observed": {
+          "next_free_index": 231,
+          "number": 616,
+          "sha256": "c79a1a3d810998041b09eba77a731970ba0d12802326c6072c42e5742121c64d"
+        },
+        "final_plan": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-final-registration-93dc847c81eb3802-20261106-v1/PLAN.json",
+          "sha256": "fccaf0c4a18126b3c38568985e4793ecd7b6727ea347eaf787d115133b10de7e"
+        },
+        "local_only_admission": "LOCAL_ONLY_NOT_ADMISSION",
+        "manifest_sha256": "15f8f4d7a0c2e119a2ae6aab97da3cf9c4eb6570087c3fe8592b87a4cbedac6f",
+        "members": 590,
+        "prefilled_plan_sha256": "9982954fbd78a52206826f68097ef2d8c9add6ccd981e19acdda002b90bf3fec",
+        "registrar_cpu_proof": {
+          "finalize_refusals": 3,
+          "mutations_refused": 30,
+          "positive_cases": 1,
+          "real_checkpoint_writes": 0,
+          "status": "CPU_REGISTRAR_PROOF_PASSED",
+          "target_commands": 0
+        },
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-registration-prep-93dc847c81eb3802-20261106-v1"
+      },
+      "remaining": [],
+      "remaining_invocations": 0,
+      "retained_failed_attempt": {
+        "campaign": {
+          "manifest_sha256": "932150f1a46af435049052f47cc23756eb7d7f0645a27725f6eb62c577ec87da",
+          "members": 14,
+          "qualification": false,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-composed-campaign-93dc847c81eb3802",
+          "verified_utc": "2026-11-06T19:03:36.704144+00:00"
+        },
+        "invocation": {
+          "manifest_sha256": "aa3b460985bae62e6a5ee413a986f1d9ccf17f4037421388495b40bd34cf9974",
+          "members": 19,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/v6-qb-gpu-invocation-93dc847c81eb3802-20261106-v1"
+        },
+        "native_partial": {
+          "manifest_sha256": "1f68676d9089ef154b5dd0adb5de88d092933a5d02ba9557a06cacff484faf4f",
+          "members": 45,
+          "qualification": false,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/v6qb-composed-run-93dc847c81eb3802",
+          "verified_utc": "2026-11-06T19:03:36.688675+00:00"
+        },
+        "no_local_results_tree": true,
+        "no_operator_result": true,
+        "transport_stderr": "Timeout, server 192.168.2.15 not responding.\n"
+      },
+      "retained_memory_diagnostic": {
+        "diagnostic_only": true,
+        "exact_layers": 6,
+        "expected_allocated_delta_bytes": 1966080,
+        "failed_layers": 42,
+        "observed_allocated_delta_bytes": 335872,
+        "rank0": "UNKNOWN; no witness",
+        "rank1_complete": true,
+        "reserved_delta_bytes": 274726912,
+        "why_counters_differ": "NOT_ESTABLISHED"
+      },
+      "speed_result": null,
+      "status": "OPERATION231_FAILED_WORKLOAD_RELEASE_RECONCILED_PARKED",
+      "witness_review": {
+        "fixes": [
+          "every witness frame and marker write starts with a newline",
+          "PYTORCH_HIP_ALLOC_CONF allowlisted"
+        ],
+        "independence": "Focused review by the implementation sub-agent, which also integrated the bytes; the final review must cover the fixes.",
+        "interpreter": "Mac Python 3.11.6",
+        "manifest_sha256": "dc9b34110d90c27979810a1b678a7fae6ab84f44ee8e671f34982d3043e74d76",
+        "members": 56,
+        "parent_candidate_sha256": "17b31edd682f7ea70504bbe8cb5cec1a3fcd0d6da37c49d2b6039a2fe9be5b3d",
+        "revised_serving_sha256": "8ebb6cf469bb2d59d288e1c1576ed2ca4f887902b754df9c8bd698ed449fa15f",
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/op230-memory-witness-review-repair-20261106-v1",
+        "tests": 25
+      }
+    }
+  },
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "b9cf2529f55f1eb26d35d046663cf9e25383d3b744a7e778d3f5150cdd265efe",
+      "absolute_machine_path_prefixes_removed": 70,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

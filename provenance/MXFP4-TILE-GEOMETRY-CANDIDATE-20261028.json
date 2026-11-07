@@ -1,0 +1,251 @@
+{
+  "candidate": {
+    "dflash_width": 8,
+    "draft_kv": "bf16",
+    "launch_policy": "BLOCK_SIZE_M=16 for M<=16; 128x128 tile with eight warps for M>=1024; 64x64 otherwise; BLOCK_SIZE_K and NUM_KSPLIT fixed so the K accumulation order is unchanged",
+    "package": {
+      "archive_sha256": "999988dbe7d79f35cce67973ab2f520693698fbb5ffe996fae05766e3b370f58",
+      "manifest_sha256": "2668a5fd1685a4a0626de5d848acd209cbac40dc757fcd0f7c02d3efebf8198a",
+      "members": 70,
+      "seal": {
+        "manifest_sha256": "c44b00c1e12756a0c0ac2ea4dd3686c895d8b38f23b77cb76efafa5cd6f955e7",
+        "members": 72,
+        "root": "author"
+      }
+    },
+    "private_component": "MXFP4 activation quantizer and AITER-derived FP4 GEMM with a row-count launch policy; not distributed with this repository",
+    "retired": "A8 per-token FP8 activation route with the unroll4 FP8 WMMA gate/up kernel (modules removed from the package)",
+    "target_kv": "bf16",
+    "tensor_parallel": 2,
+    "weights": "published AMD Quark AWQ MXFP4 Qwen3.8-27B checkpoint (dense)"
+  },
+  "charges": {
+    "caller_seconds": 2794.2,
+    "operations": "78-86",
+    "owner_seconds": 2722.1
+  },
+  "component_results": {
+    "D1_four_layout_tile16": {
+      "contexts_passed": "32/32 exact same-quantized parity",
+      "global_attempt": 79,
+      "median_time_reduction_percent": [
+        43,
+        51
+      ]
+    },
+    "D2_tile16_vs_unroll4": {
+      "global_attempt": 81,
+      "result": "unroll4 FP8 1.8-3.3 percent slower than the sixteen-row MXFP4 tile on the same worker; neither clears a 5 percent margin"
+    },
+    "P0_prefill_geometry": {
+      "arms_passed": "exact parity; 128x128 eight-warp arms",
+      "combined_time_reduction_percent_at_M2047_M2048": [
+        17.9,
+        19.6
+      ],
+      "global_attempt": 82
+    }
+  },
+  "date": "2026-10-28",
+  "deployed": false,
+  "evidence": {
+    "cleanup_base_seals": {
+      "author": {
+        "manifest_sha256": "c44b00c1e12756a0c0ac2ea4dd3686c895d8b38f23b77cb76efafa5cd6f955e7",
+        "members": 72,
+        "root": "author"
+      },
+      "native": {
+        "manifest_sha256": "734d2f599aab2fa206857fce291908e262345280ccd66822cae226e952299f03",
+        "members": 9,
+        "root": "native-v1"
+      }
+    },
+    "quality_gate_seals": {
+      "cpu_grading": {
+        "manifest_sha256": "680863b25a0d056f6e580e1dbc544133d41fe430195335e65948954b7838432b",
+        "members": 264,
+        "root": "mxfp4-quality-gate-cpu-binding-v1"
+      },
+      "operation": {
+        "manifest_sha256": "6802824f041dcd268ef65b140aa2ea61930ccda32d91550eeab29243e65234f2",
+        "members": 347,
+        "root": "mxfp4-quality-gate-run-7e02230aa28ec3e4"
+      },
+      "protected": {
+        "manifest_sha256": "45f8ccceecd8c6ad4378b860510c7409c186bfc8a59859cb3f09076441344736",
+        "members": 31,
+        "root": "fp8-benchmark-source.7e02230aa28ec3e4"
+      },
+      "workload": {
+        "manifest_sha256": "e6fd2bafe229a163f4365d0c87d5207c2f997040e08fbabb59c7c47053464329",
+        "members": 279,
+        "root": "fp8-kv-benchmark.7e02230aa28ec3e4"
+      }
+    },
+    "screen4_v2_seals": {
+      "cost-analysis-v1": {
+        "manifest_sha256": "40334fd885cf4e5062e56e64559efcd9d3a987526b2879a2ebd4eaf78ed6df68",
+        "members": 12,
+        "root": "cost-analysis-v1"
+      },
+      "packet-v3": {
+        "manifest_sha256": "bc4b46baff167f9a884d4512e4862270bdd947aea2a3c776c6feda1b86f7ee3d",
+        "members": 214,
+        "root": "packet-v3"
+      }
+    },
+    "screen5_v2_seals": {
+      "cost-analysis-v1": {
+        "manifest_sha256": "23c83dff33359a3e0b0d0895a995cd5f0c6e0a2548aa1a355bd7a94fe387b1cc",
+        "members": 12,
+        "root": "cost-analysis-v1"
+      },
+      "packet-v3": {
+        "manifest_sha256": "955001117d63f836144817e686b07603cfe9f515cd6dc3b5a207cf01782b49f0",
+        "members": 204,
+        "root": "packet-v3"
+      }
+    }
+  },
+  "next": {
+    "scope": "No campaign prepared. Candidates: full-model quality gate on the cleanup base for a direct per-module witness; UltraQuant KV integration remains deferred."
+  },
+  "owner_decisions": {
+    "precision_acceptance": {
+      "limitations": [
+        "The quality/repeat gate was not repeated on the cleanup base itself; acceptance relies on the byte-identical arithmetic sources and the token-exact serving screen.",
+        "The grading replay for operation 83 consumed a layout-corrected derived root (QUALITY-GATE-BINDING-DERIVATION-v3.json); GPU evidence bytes were unchanged.",
+        "No module-level scheme witness is retained by the cost-diagnostic screens."
+      ],
+      "value": true
+    },
+    "promotion": "A8-cleanup base promoted as the private candidate pointer (2026-10-28)",
+    "selection": "unchanged; the official FP8 target remains selected"
+  },
+  "precision_accepted": true,
+  "qualification": false,
+  "quality_gate": {
+    "binding_limitation": "the retained grading replay consumed a layout-corrected derived copy of the sealed run root (registration layout, package directory name, collection receipt name); GPU evidence bytes unchanged and re-verified against the owner-made seals",
+    "descriptive_rates": {
+      "C1_median_latency_s": {
+        "bf16": 16.38,
+        "kv4": 16.46
+      },
+      "C1_output_tokens_per_second": {
+        "bf16": 62.49,
+        "kv4": 62.2
+      },
+      "C2_aggregate_output_tokens_per_second": {
+        "bf16": 77.34,
+        "kv4": 77.15
+      },
+      "C2_median_latency_s": {
+        "bf16": 26.48,
+        "kv4": 26.55
+      },
+      "a8_unroll4_partial": {
+        "C1_median_latency_s": 28.55,
+        "C1_output_tok_s": 35.88,
+        "C2_aggregate_tok_s": 53.23,
+        "C2_median_latency_s": 38.47
+      },
+      "earlier_mxfp4_b64": {
+        "C1_median_latency_s": 25.34,
+        "C1_output_tok_s": 40.38,
+        "C2_aggregate_tok_s": 53.15,
+        "C2_median_latency_s": 38.52
+      },
+      "scope": "server-reported on the fixed menu (2,047-token prompts, 1,024 forced output tokens); descriptive, not a service benchmark, not a speed selection"
+    },
+    "forced_cap_ungraded": 30,
+    "full_wire_decodes": 104,
+    "graded_base": "candidate base v2 (same GEMM arithmetic and launch policy as the promoted cleanup base; byte-identical ops.py, kernels.py, isolated_scheme.py)",
+    "independent_release_verified": true,
+    "model_starts": 2,
+    "natural_grades": "74/74 QUALITY_PASS (37 per start)",
+    "operation": 83,
+    "repeat_agreement": "53/53 output token-id vectors identical between starts",
+    "requests": 106,
+    "state_only_cancellations": 2
+  },
+  "reference": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+  "reference_record_sha256": "c155ee3468c7917766cf58818e5092a344a9f05032b25bf7903be307dd0ed16c",
+  "schema_version": 1,
+  "selected": false,
+  "serving_screens": {
+    "screen1_tile16": {
+      "e2e_delta_percent": -7.5,
+      "operation": 81,
+      "token_exact": true,
+      "verify_cycle_kernel_ms_delta": -15
+    },
+    "screen2_prefill_128x128": {
+      "operation": 83,
+      "prefill_gemm_reduction_percent_per_rank": [
+        18.8,
+        18.8
+      ],
+      "prefill_kernel_sum_gate_failed_rank1": "cold traced request compiled new Triton specializations; collective waits counted as kernel time; reported as failed",
+      "token_exact_to_screen3": true
+    },
+    "screen3_a8_route_inactive": {
+      "gate_misspecified": "token-exact gate compared different arithmetic; reported as failed",
+      "operation": 82,
+      "token_divergence_from_a8_era_at_token": 16,
+      "unroll4_dispatches": 0
+    },
+    "screen4_v1_warm_trace": {
+      "operation": 84,
+      "result": "FAILED before any request: untraced warm-up request raised an unowned-collective trace error; release verified; allowance consumed"
+    },
+    "screen4_v2_warm_trace": {
+      "collective_ms_per_rank": [
+        81.3,
+        74.7
+      ],
+      "gates": {
+        "collective_kernel_time_within_2x_screen3_both_ranks": true,
+        "token_exact_to_baseline_all_four_requests": true,
+        "traced_prefill_kernel_sum_down_15pct_vs_screen3_both_ranks": true,
+        "traced_request_ttft_e2e_within_3pct_of_baseline_warm": true,
+        "zero_unroll4_dispatches": true
+      },
+      "operation": 85,
+      "prefill_kernel_sum_ms_per_rank": [
+        1282.5,
+        1283.0
+      ],
+      "screen3_prefill_kernel_sum_ms_per_rank": [
+        1522.0,
+        1525.6
+      ]
+    },
+    "screen5_v2_cleanup_base": {
+      "gates": {
+        "collective_kernel_time_within_2x_screen3_both_ranks": true,
+        "token_exact_to_baseline_all_four_requests": true,
+        "traced_prefill_kernel_sum_down_15pct_vs_screen3_both_ranks": true,
+        "traced_request_ttft_e2e_within_3pct_of_baseline_warm": true,
+        "zero_unroll4_dispatches": true
+      },
+      "operation": 86,
+      "prefill_kernel_sum_ms_per_rank": [
+        1284.4,
+        1285.0
+      ],
+      "scheme_witness": "indirect; no per-module record retained by the cost-diagnostic screen"
+    },
+    "workload": "four serial requests, 2,047-token prompts, 64 forced tokens, one model start; one request traced with rocprofiler-sdk markers"
+  },
+  "status": "MXFP4_TILE_GEOMETRY_CANDIDATE_QUALITY_GATE_PASSED_PRECISION_ACCEPTED_NOT_SELECTED",
+  "tracking": "docs/MXFP4-TILE-GEOMETRY-CANDIDATE.md",
+  "verification": {
+    "gpu_active": false,
+    "independent_release_verified": true,
+    "native_cpu_gates": "17 tests for the cleanup base, 27 tests per serving packet, 19 tests for the quality-gate packet; x86 Python 3.14.4",
+    "no_automatic_retry": true,
+    "protected_transport_diff_owner_approved": true,
+    "source_promoted_into_runtime": false
+  }
+}

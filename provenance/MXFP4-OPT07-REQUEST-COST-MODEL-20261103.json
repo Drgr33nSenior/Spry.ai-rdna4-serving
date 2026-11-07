@@ -1,0 +1,60 @@
+{
+  "all_21_leads_retained": true,
+  "all_three_cumulative_members_retained": true,
+  "checks": {
+    "docs_findings": 0,
+    "focused": 36,
+    "public_preflight_reused": 43,
+    "regression_probes": 5
+  },
+  "contract_sha256": "dcac968bbfade6d6ce2e7cf4f1d667893f6aaa7aef686718825d4ea6b88bee98",
+  "date": "2026-11-03",
+  "gpu_authority": false,
+  "gpu_launches": 0,
+  "limitations": [
+    "The bundle model is expected to remain inconclusive; only other leads may justify the diagnostic.",
+    "No authenticated live adapter or executable observer exists.",
+    "Opus reviewed v1; parent implemented and tested the bounded v2 corrections.",
+    "No new serving gain, energy claim or execution authority."
+  ],
+  "manifest_sha256": "a0c4122906e07af54edc70fbb163c8720c4ee404fec766a35542b38d72ee677c",
+  "members": 39,
+  "model_starts": 0,
+  "next_action": "CPU implementation of control-only observers and authenticated joins; implementation review and exact decision before any GPU work.",
+  "owner_packet_prepared": false,
+  "prior_preparation": {
+    "manifest_sha256": "199f69d4ba1ee38befae3afec8c1301bff15d49b485cedea2902a8d5fbc1923e",
+    "members": 32,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v1"
+  },
+  "public_report": {
+    "path": "docs/MXFP4-OPT07-REQUEST-COST-MODEL.md",
+    "sha256": "25634213c673130e9d54810a11e69d4cd3eef63c7ba691561f52db81ab7e822f"
+  },
+  "result": "INCONCLUSIVE_HOLD",
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-REQUEST-COST-MODEL-REVIEW-v1.md",
+    "reviewed_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v1",
+    "reviewed_seal_sha256": "199f69d4ba1ee38befae3afec8c1301bff15d49b485cedea2902a8d5fbc1923e",
+    "sha256": "5ab99d6a544b248ded768e53ecbff7ffeb3bfdece37af69f9ef6f081dd60f56a",
+    "verdict": "AGREE_CPU_ONLY"
+  },
+  "review_pending": false,
+  "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v2",
+  "schema": 1,
+  "selection_changed": false,
+  "signoff": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v2/SIGNOFF.json",
+    "sha256": "07c9be5174b841fdca7dba734e64f0859ee35c754f4b4b2e823648d437516104"
+  },
+  "status": "CPU_SIGNED_OFF_WITH_PARENT_CORRECTIONS",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "5d94151154f453d708ed189c38715434bac33341f133d0a8216b420b30e18b55",
+      "absolute_machine_path_prefixes_removed": 5,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "schema": 1,
   "date": "2026-10-31",
   "candidate": {
-    "description": "private MXFP4 serving candidate (Qwen3.8-27B Quark AWQ MXFP4, BF16 draft/KV, DFlash width 8, TP2) with the seven Phase 1 overlays plus C4 extend attention",
+    "description": "Private experimental MXFP4 serving candidate: operation232 three-member cap16 mtp arm, with the previously accepted baseline overlays retained.",
     "base_from_phase1": "MXFP4-CANDIDATE-PHASE1-20261031.json",
     "changes_for_128k": [
       "verify-adapter index buffer sized rows*(context+8) (previously rows*context; latent overflow within 4 tokens of the limit)",
@@ -24,10 +24,16 @@
       "sha256": "b5d145e55f391de7e515cfe164b6011444fe1696188e2c0f900e338ce36c22f0",
       "stock_sha256": "f061599bb2c9243d50b565281c47de077ccc90135b9b1e5320a07425bedac112"
     },
-    "selected_operation": 174,
-    "selected_start": 2,
+    "selected_operation": 232,
+    "selected_start": 1,
     "selected_logical_arm": "mtp",
-    "selection": "Private candidate adopted with owner-accepted A3 exception; public FP8 selection unchanged"
+    "selection": "Private experimental candidate selected by owner; control retained as rollback; programme parked for Qwen4. Public historical FP8 session selection unchanged.",
+    "selected_physical_arm": "bf16",
+    "three_member_cap16": [
+      "verification prefetch",
+      "F1 gated-norm/MXFP4 quantizer fusion",
+      "gate/up wave-hint removal"
+    ]
   },
   "hardware": "2x Radeon AI PRO R9700 (gfx1201), TP2, 235 W caps (Phase 1 ran at 300 W)",
   "profile": {
@@ -40,7 +46,13 @@
     "radix_cache": true,
     "static_use_gb_per_card": 28.82,
     "static_budget_gb_per_card": 31.47,
-    "feasibility_sha256": "474b6a58051653c5c58cec7d05b67a09d3cf0b2b1682d31d011f6617f770621f"
+    "feasibility_sha256": "474b6a58051653c5c58cec7d05b67a09d3cf0b2b1682d31d011f6617f770621f",
+    "mamba_max_states_per_path": 3,
+    "tested_deviations": [
+      "cap3 recurrent path bound",
+      "LLVM_PATH override; mandatory startup numerical probes"
+    ],
+    "historical_memory_figures_scope": "static_use_gb_per_card and static_budget_gb_per_card are earlier feasibility observations; operation232 supplies no new whole-device peak or general capacity claim."
   },
   "b1_long_document": {
     "operations": {
@@ -167,7 +179,7 @@
   ],
   "deployed": false,
   "public_fp8_selection_changed": false,
-  "updated": "2026-11-01",
+  "updated": "2026-11-06",
   "c4_serving_ab": {
     "operation": 174,
     "date": "2026-11-01",
@@ -323,5 +335,107 @@
       "Full output tokens differ on seven long-context pairs; no bitwise-equivalence claim.",
       "Bounded answer checks do not establish broad quality, cancellation coverage, or long-term reliability."
     ]
+  },
+  "previous_candidate_selection_c4": {
+    "description": "private MXFP4 serving candidate (Qwen3.8-27B Quark AWQ MXFP4, BF16 draft/KV, DFlash width 8, TP2) with the seven Phase 1 overlays plus C4 extend attention",
+    "base_from_phase1": "MXFP4-CANDIDATE-PHASE1-20261031.json",
+    "changes_for_128k": [
+      "verify-adapter index buffer sized rows*(context+8) (previously rows*context; latent overflow within 4 tokens of the limit)",
+      "commit-observation limit doubled (>=2x headroom)",
+      "benchmark spec bound to the 128K profile"
+    ],
+    "c4_overlay": {
+      "bitwise_exact": false,
+      "configuration": [
+        64,
+        64,
+        8,
+        1
+      ],
+      "file": "extend_attention_fwd_candidate.py",
+      "scope": "gfx1201 head-dimension-256 extend attention, guarded from stock (64,64,4,1); other shapes and architectures unchanged.",
+      "selected_logical_arm": "mtp",
+      "serving_operation": 174,
+      "sha256": "b5d145e55f391de7e515cfe164b6011444fe1696188e2c0f900e338ce36c22f0",
+      "stock_sha256": "f061599bb2c9243d50b565281c47de077ccc90135b9b1e5320a07425bedac112"
+    },
+    "selected_operation": 174,
+    "selected_start": 2,
+    "selected_logical_arm": "mtp",
+    "selection": "Private candidate adopted with owner-accepted A3 exception; public FP8 selection unchanged"
+  },
+  "programme_parked": true,
+  "three_member_cap16_adoption": {
+    "status": "OWNER_SELECTED_PRIVATE_EXPERIMENTAL_CANDIDATE_PROGRAMME_PARKED",
+    "date": "2026-11-06",
+    "operation": 232,
+    "selected_arm": {
+      "logical": "mtp",
+      "operation": 232,
+      "physical": "bf16",
+      "start": 1
+    },
+    "candidate_members": [
+      "verification prefetch",
+      "F1 gated-norm/MXFP4 quantizer fusion",
+      "gate/up wave-hint removal"
+    ],
+    "archive_sha256": "171dac93ee25eb725b88f6f5fdda29e4e99d4d199cde0a15e0e84291f315f191",
+    "manifest_sha256": "9352fdb039f55009b603e614ce2133d15690495d25e69d286615e71316d95b16",
+    "package_sha256": "94fdf5eb6da3eaf09d536273f11bd97333f87e610ba9c362882c1ddb40eb103d",
+    "source_manifest_sha256": "45d6ec3a779b67bf44bdc6546eeecd862e87f3ffcbd96ff7b381083e8023a36b",
+    "worker_source_manifest_sha256": "958af5246fae3fe740d7813b7301e313fb9f7b88dc5acc4f30d82d754906f16f",
+    "kernel_sha256": "ed26c67b69da358944999fdf9f769fafc4c2aef821335fbb777679b966e9e4e3",
+    "compiler_pins_sha256": "3cf410c072530972a68065b337d48448e89b3dbfcc97bb677efc6ad9b3fb4aa0",
+    "selected_http_binding_sha256": "7df9053f9b4afa989e655457ab47a52a9e46ac7295d1b77652e600a1b1271bd9",
+    "runtime_sha256": "f5ca827099d4dbcdb717fae9e1714ef8206b135e48f1ebb9500aa86cffe359e8",
+    "rollback": {
+      "logical": "control",
+      "physical": "kv4",
+      "start": 2,
+      "http_binding_sha256": "3ff4567740d874662b075cbc0ef7befcb8ac99bd263e5c388da70260991c049c",
+      "kernel_sha256": "34ca0066e2716e1ffad048ec7cbb3a25af13eeb61e99034a663fed6277bf691a"
+    },
+    "private_records": {
+      "approval": {
+        "record": "OWNER-THREE-MEMBER-CAP16-PROMOTION-APPROVAL-20261106-v1.json",
+        "sha256": "b1cc0c8d4fbea440a32e495b61f9360db5f95a4504079f57d7c2ea21fb4f0a5c"
+      },
+      "promotion": {
+        "record": "THREE-MEMBER-CAP16-PROMOTION-v1.json",
+        "sha256": "7cdaadc8aabd0e3089478dfb663baa6fc7364e4cfd3c82f310c3ab603e64892a"
+      },
+      "parking": {
+        "record": "OWNER-MXFP4-PROGRAMME-PARKED-20261106-v1.json",
+        "sha256": "2c369da8a57c2d7780ebab42d715f3e857854fb650f9e7a139533d9f5e90ff37"
+      },
+      "previous_pointer": {
+        "record": "CANDIDATE-POINTER-SUPERSEDED-C4-20261106.json",
+        "sha256": "fe92916ca06f43ec719d3a66345e4345908106212596d7044c03713b575c3394"
+      },
+      "current_pointer": {
+        "record": "CANDIDATE-POINTER.json",
+        "sha256": "4e19fc560932fba9c24e258d1da4afa12d744fd8f22309af3aad1c824a648a55"
+      }
+    },
+    "result_review_sha256": "dc14aa7b5a04f39aa913c73269ace0fa676e0c0b1f734e6a78d63125c06efbeb",
+    "frozen_readout": "CONFIRMED_KEEP_REVERSED_ORDER",
+    "balanced_request_latency_score_gain_pct": 3.8109531396920637,
+    "quality_grades_passed": 60,
+    "same_job_work_pairs_identical": 30,
+    "independent_release_checkpoint": 621,
+    "limits_and_deviations": [
+      "Experimental private candidate only; no deployment, publication, persistent server or additional GPU authority.",
+      "Measured profile only: 30 requests per arm, thinking enabled at low effort, greedy, TP2, C1/C2, configured235W, context131040, explicit BF16 target/draft KV, DFlash8.",
+      "Retain cap3 recurrent-path and LLVM_PATH deviations and mandatory startup numerical probes.",
+      "No universal F1 bitwise proof, broad quality, endurance, cross-shape guarantee or attribution to one member.",
+      "Historical numerical variation and previously accepted baseline exceptions remain historical evidence; they are not repaired by this result.",
+      "Consumed nonce2229e2386a020dfa cannot be relaunched. New model/runtime/shape work needs fresh qualification and authority."
+    ],
+    "remaining_gpu_allowance": 0,
+    "new_gpu_work": false,
+    "deployment": false,
+    "publication": false,
+    "handoff": "docs/QWEN4-SERVING-HANDOFF.md"
   }
 }

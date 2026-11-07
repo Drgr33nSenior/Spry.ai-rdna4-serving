@@ -1,0 +1,84 @@
+{
+  "adoption_authorized": false,
+  "baseline": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-20261104-v1/BASELINE.json",
+    "sha256": "98c7fab464030203cad7816a8147b158dca740593f3147240a9506ef5ce11899"
+  },
+  "checks": {
+    "focused_tests": {
+      "census": 9,
+      "decisions": 4,
+      "huffman": 3
+    },
+    "input_seals": 4,
+    "native_exit": 0,
+    "native_frameworks": false,
+    "native_gpu_work": false,
+    "public_preflight": 43,
+    "reproduced": {
+      "HUFFMAN-SIZING.json": "29a6ca36f2b5d0a298a39bd61490549528643563134b2cc2b5d9429f880e5b2d",
+      "PROFILE.json": "68af43ab2b22d821f82734c16e67b2967a8a915fbe9a39b63cc0534a08260786",
+      "RESULT.json": "5c753a07e3b5cbd739d73b42a086d569bb10819cf1d3d415171d456275f6764f"
+    },
+    "review_status": "APPROVED_CPU_ONLY",
+    "schema": 1,
+    "selection_unchanged": true
+  },
+  "date": "2026-11-04",
+  "evidence": {
+    "manifest_sha256": "870966d93a0b4018449c5681c20c26ab27b0d66e6e8719b7405c1dbc4e09beed",
+    "members": 40,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-20261104-v1",
+    "verified_utc": "2026-11-04T01:07:19.341021+00:00"
+  },
+  "general_compression_disproved": false,
+  "gpu_operations": 0,
+  "huffman": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-20261104-v1/HUFFMAN-SIZING.json",
+    "sha256": "29a6ca36f2b5d0a298a39bd61490549528643563134b2cc2b5d9429f880e5b2d"
+  },
+  "layout_decision": "Park three-magnitude escape and both Huffman layouts under their stated independent-tile cost model.",
+  "model_starts": 0,
+  "next_action": "Keep GEMM instruction/layout research as the decode priority; do not reopen v6 without a reviewed allocation contract. Preserve BW-02/03/04 and serving-bundle HOLD. No GPU packet.",
+  "profile": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-20261104-v1/PROFILE.json",
+    "sha256": "68af43ab2b22d821f82734c16e67b2967a8a915fbe9a39b63cc0534a08260786"
+  },
+  "public_report": "docs/MXFP4-JOINT-CENSUS-AND-PRIORITIES.md",
+  "public_report_additions": "Review additions: no-framing storage cost and prefill scope. Sealed source report unchanged.",
+  "public_report_original_sealed_sha256": "7b49e5fd73e53cd35aed5b8a4f18c784880a11c244f402aeb8e2d876e89bb82d",
+  "public_report_sha256": "7e22e490e69e3b9563441495e22fe7248d5a0bca103ab730f8ea63c5f77f4d93",
+  "result": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-20261104-v1/RESULT.json",
+    "sha256": "5c753a07e3b5cbd739d73b42a086d569bb10819cf1d3d415171d456275f6764f"
+  },
+  "review": {
+    "focused_tests_rerun": 16,
+    "model": "claude-opus-5-5",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-BANDWIDTH-JOINT-CENSUS-REVIEW-v1.md",
+    "provider": "claudeAgent",
+    "sha256": "0ce14423db2188e871effabb7ec328beb15097e5995dc8911dc0906c73282553",
+    "verdict": "APPROVED_CPU_ONLY_NO_BLOCKERS"
+  },
+  "schema": 1,
+  "selection_changed": false,
+  "serving_bundle_decision": "HOLD_UNCHANGED",
+  "signoff": {
+    "manifest_sha256": "c8f8283f3f752d3df9f05c00d2d798aab5b65c8d96f879fe80c827acef153ad3",
+    "members": 5,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-signoff-v1",
+    "verified_utc": "2026-11-04T01:15:52.964277+00:00"
+  },
+  "status": "CPU_SIGNED_OFF_NO_STORAGE_SURVIVOR",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "4b4e2ac03a5bb43114e28dde0fe4b2f209b8b36fa04a50bacf069bb8aad2cc73",
+      "absolute_machine_path_prefixes_removed": 7,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

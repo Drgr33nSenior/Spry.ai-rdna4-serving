@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-03",
+  "evidence": {
+    "manifest_sha256": "2ac626e70dc4bf7c1bd16c0673ed598ef063af962b212bc023a600ea5b4857d5",
+    "members": 310,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/mxfp4-followup-sprints-20261103-v1",
+    "verified_utc": "2026-11-03T16:29:16.587654+00:00"
+  },
+  "focused_tests": 29,
+  "fp8_comparison_deferred_by_owner": true,
+  "gpu_operations": 0,
+  "model_starts": 0,
+  "public_amendment": "Review signoff, register-allocation and load-wait caveats; sealed original unchanged.",
+  "public_preflight_observed_tests": 43,
+  "public_report_sha256": "bc4682ccdf0666527d35a9d95c266a5d1aa13fd262a0e2b0d6a618ccfa50f293",
+  "review_sha256": "daa05e3727bfe953dd2f5991d51bb72b7ad2054309c1c1be08cfb96c0319bb95",
+  "review_status": "AGREE_CPU_NO_SURVIVOR",
+  "schema": "mxfp4-followup-sprints-v1",
+  "signoff": {
+    "manifest_sha256": "9052baee085411ac728ee60d993ceea90b81dc3f77b39a9b09d04c012df05ac6",
+    "members": 4,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/mxfp4-followup-signoff-20261103-v1",
+    "verified_utc": "2026-11-03T16:44:09.664392+00:00"
+  },
+  "status": "NO_CANDIDATE_PASSES_FROZEN_RESOURCE_GATE",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "b7b037f44727c12c60ecc0ea454ee27eeae6eff099556c78ea0c04ca0a1f8b11",
+      "absolute_machine_path_prefixes_removed": 2,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

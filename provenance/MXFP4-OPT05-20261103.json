@@ -1,0 +1,99 @@
+{
+  "adoption_authorized": false,
+  "checks": {
+    "analysis_reproduction": "Byte-identical",
+    "docs_audit": "No findings",
+    "focused_tests": 15,
+    "git_diff_check": "passed",
+    "historical_analysis_reproduced": true,
+    "prior_seals": 8,
+    "public43": "Not rerun; no shared runtime or preflight source changed",
+    "selected_sources": 16
+  },
+  "coverage": {
+    "chosen_retained": 2920,
+    "cohort": "Historical sampled, teacher-forced; not current greedy C1/C2",
+    "complete_seven_row_cycles": 0,
+    "complete_top16_rows": 328,
+    "cycles": 1041,
+    "fallback_cycles": 406,
+    "refresh_cycles": 132,
+    "shortlist_cycles": 503,
+    "shortlist_positions": 3521
+  },
+  "cumulative": {
+    "classification": "CPU_DIAGNOSTIC_ONLY",
+    "eligible_for_combined_preparation": false
+  },
+  "date": "2026-11-03",
+  "disposition": "DEFER_PREVIOUS_REFRESH_SHORTLIST",
+  "evidence": {
+    "manifest_sha256": "48b72c7c2c3e750a2b84c0f6613b60dda49a6f8aa9f64a4b34614e3bf8b8ef26",
+    "members": 49,
+    "private_root": "optimization-continuation-v1/opt-05-draft-head-cpu-v1",
+    "report": "RESULT.md",
+    "result": "RESULT.json",
+    "result_sha256": "71634c8af7b610534b8741c017b3e9cf5b3d9d248755667a53f6814513d97f59"
+  },
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "illustrative_cost_model": {
+    "break_even_committed_tokens_ratio_under_same_assumptions": 0.986421141460068,
+    "head_time_ratio_if_linear_and_no_fallback": 0.2404639175257732,
+    "kernel_sum_fraction_removed_if_linear_and_free_refresh": 0.013578858539932025,
+    "scope": "Illustration only: assumes serialized kernel sum, linear head cost, no copy/launch penalty and no fallback. Not speedup, wall time or an upper bound on all possible shortlist savings.",
+    "shortlist_to_full_rows_ratio": 0.13195876288659794
+  },
+  "model_starts": 0,
+  "native_operations": 0,
+  "next_sprint_after_review": "OPT-06",
+  "power_changed": false,
+  "review": {
+    "effort": "medium",
+    "model": "claude-opus-5-5",
+    "report": "Private optimization-continuation-v1/OPUS-OPT05-REVIEW-v1.md",
+    "sha256": "c9ad95c33f74ca68b62ec1840419b7f0e1f4b46e4407bd441e5f60edceaaeace",
+    "status": "AGREE"
+  },
+  "review_corrections": {
+    "break_even_committed_token_ratio": 0.9925015333107333,
+    "carried_head_logits_pin": "Not re-audited in OPT05",
+    "contributing_refresh_periods": 74,
+    "contributing_refresh_periods_by_case": {
+      "coding-running-totals": 2,
+      "coding-unique-last": 6,
+      "heldout16k-audit": 32,
+      "quality16k-audit-threshold": 34
+    },
+    "declared_window_enforcement": "Unverified",
+    "fallback_scope": "Until this request next reaches its scheduled refresh.",
+    "head_only_kernel_sum_fraction_removed_with_observed_mix": 0.007498466689266704,
+    "historical_inputs": "Stored result inputs excluded from equality comparison; authenticated separately.",
+    "model_test_limitations": [
+      "Tautological illustrative assertions",
+      "Foreign-lease check confounded by inflight check",
+      "Unused rejected block state retained"
+    ],
+    "note": "SIGNOFF.md records all findings; original seal untouched.",
+    "scope": "Illustration combining historical schedule with separate op183 head/kernel medians; free refresh copies, linear head cost, serialized kernel sums. Not selected-workload speed or acceptance. Period counts are clusters, not independent samples.",
+    "shortlist_cycles": 503,
+    "total_cycles": 1041
+  },
+  "runtime_changed": false,
+  "schema": 1,
+  "selection_changed": false,
+  "signoff": {
+    "manifest_sha256": "bfa633efeaa73f3a37b7c9f671e325a96426d5c54b5468ea72d6717c0c6514da",
+    "members": 7,
+    "private_root": "optimization-continuation-v1/opt-05-signoff-v1"
+  },
+  "status": "CPU_DEFERRED_SIGNED_OFF",
+  "trace": {
+    "draft_head_inferred_median_us": 1092.409,
+    "draft_share_ratio_of_medians_pct": 1.787783207836317,
+    "kernel_sum_median_us": 61104.109000000026,
+    "scope": "Eight instrumented C1 rank/windows. Head role is ordering/source inference, not an explicit role/shape witness. No critical-path saving or 235 W baseline.",
+    "selector_median_us": 4.719,
+    "target_head_inferred_median_us": 1107.4285
+  }
+}

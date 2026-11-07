@@ -1,0 +1,140 @@
+{
+  "adoption_authorized": false,
+  "automatic_retry": false,
+  "balanced_gain_pct": 0.7730346708282099,
+  "balanced_latency_reduction_pct": 0.7671046856466135,
+  "balanced_speed_ratio": 1.007730346708282,
+  "cases": [
+    {
+      "baseline_seconds": 77.02773775199603,
+      "candidate_seconds": 77.55504421899968,
+      "case": "long-c1-cold",
+      "latency_reduction_pct": -0.6845669915705016,
+      "noise_band_seconds": 1.5405547550399206,
+      "output_token_delta_pct": [
+        0
+      ],
+      "regression": false,
+      "resolved_improvement": false,
+      "stable": true
+    },
+    {
+      "baseline_seconds": 9.024058543000137,
+      "candidate_seconds": 8.763211295001383,
+      "case": "long-c1-warm",
+      "latency_reduction_pct": 2.8905757509861276,
+      "noise_band_seconds": 0.18048117086000276,
+      "output_token_delta_pct": [
+        0
+      ],
+      "regression": false,
+      "resolved_improvement": true,
+      "stable": true
+    },
+    {
+      "baseline_seconds": 56.94736457399631,
+      "candidate_seconds": 57.06575893250192,
+      "case": "long-c2-cold",
+      "latency_reduction_pct": -0.20790138295473173,
+      "noise_band_seconds": 1.1389472914799261,
+      "output_token_delta_pct": [
+        0,
+        0
+      ],
+      "regression": false,
+      "resolved_improvement": false,
+      "stable": true
+    },
+    {
+      "baseline_seconds": 8.319395797501784,
+      "candidate_seconds": 8.089407957999356,
+      "case": "long-c2-warm",
+      "latency_reduction_pct": 2.764477674826946,
+      "noise_band_seconds": 0.1663879159500357,
+      "output_token_delta_pct": [
+        0,
+        0
+      ],
+      "regression": false,
+      "resolved_improvement": true,
+      "stable": true
+    },
+    {
+      "baseline_seconds": 12.88766989600117,
+      "candidate_seconds": 12.902980592996755,
+      "case": "short-c1-cold",
+      "latency_reduction_pct": -0.11880112634119336,
+      "noise_band_seconds": 0.25775339792002344,
+      "output_token_delta_pct": [
+        0
+      ],
+      "regression": false,
+      "resolved_improvement": false,
+      "stable": true
+    },
+    {
+      "baseline_seconds": 13.984480144998088,
+      "candidate_seconds": 13.999530125500314,
+      "case": "short-c2-cold",
+      "latency_reduction_pct": -0.10761916314500548,
+      "noise_band_seconds": 0.27968960289996175,
+      "output_token_delta_pct": [
+        0,
+        0
+      ],
+      "regression": false,
+      "resolved_improvement": false,
+      "stable": true
+    }
+  ],
+  "date": "2026-11-03",
+  "deployed": false,
+  "evidence": {
+    "closing_checkpoint": 577,
+    "closing_checkpoint_sha256": "929b8906133763ddb697a02f66d58a0abe9880f55ab04cb4dcfe86c5b1048731",
+    "execution_manifest_sha256": "bf644f88e8c79edc49bbda393a7cda63288d4de98d5225152c7b994c7d960382",
+    "operation_manifest_sha256": "6d60d8e60cec5b0e01088f0ca5265b3ec69261381d2a6873c1585bc1dee92403",
+    "quality_sha256": "83e941b4dbbc6f392b95b634571815e8ec2a89468420fce07345d5c7b7a34d11",
+    "result_sha256": "fddaaf5ac364f90b9c5f7b1e14cdfd7adcc97c93d4c066aaf59a0bc53497d45a",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-serving-execution-v1",
+    "workspace": "Private AIThreadripper evidence workspace"
+  },
+  "fixed_settings": {
+    "draft_kv": "bf16",
+    "extend_attention": "selected C4",
+    "mamba_max_states_per_path": 3,
+    "observed_power_cap_watts": 300,
+    "reasoning_effort": "low",
+    "target_kv": "bf16",
+    "target_weights": "MXFP4",
+    "tensor_parallel": 2,
+    "thinking_enabled": true
+  },
+  "independent_release": true,
+  "limitations": [
+    "One control-first A/B operation, three samples per case; no reversed serving order.",
+    "The requested graph-use records are absent on the executed production path; no complete kernel-routing or adoption claim.",
+    "Historical 235 W serving figures are not matched to this 300 W experiment."
+  ],
+  "minimum_gain_pct": 3,
+  "operation": 212,
+  "packet": "a9a8806c1ec864ac",
+  "parent_disposition": "MEASURED_BELOW_THRESHOLD_ROUTE_PROOF_INCOMPLETE_PARKED",
+  "performance_verdict": "REVERT",
+  "quality": {
+    "completion_counts_match_all_30_pairs": true,
+    "passed": 60,
+    "total": 60
+  },
+  "remaining_gpu_allowance": 0,
+  "required_route_witnesses_verified": false,
+  "route_witness_gap": {
+    "adoption_eligible": false,
+    "cause": "worker_entry._precision_weights emits FULL-ENABLED records only through the instrumentation-gated allocator startup hook; production mode skips that hook. serving_integration.read_http_artifacts returns through _production_readback, which accepts only readiness/binding/manifest observations and never calls validate_full_enabled_record.",
+    "instrumentation": "production"
+  },
+  "runner_status": "VERIFY_SERVING_MEASURED_PARKED",
+  "schema": 1,
+  "scope": "Two sequential TP2 serving starts; native control then verification-prefetch candidate; balanced C1/C2 natural completions.",
+  "selected": false
+}

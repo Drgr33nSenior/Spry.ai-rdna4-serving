@@ -1,0 +1,76 @@
+{
+  "adoption_authorized": false,
+  "all_21_leads_retained": true,
+  "all_three_cumulative_members_retained": true,
+  "checks": {
+    "counts": {
+      "capture": 19,
+      "owner": 16,
+      "readout": 10,
+      "runtime_binding": 6
+    },
+    "framework_imports": false,
+    "gpu_launches": 0,
+    "local_focused_tests": 51,
+    "native_focused_tests": 51,
+    "native_owner_package_executed": false,
+    "native_python": "3.14.4",
+    "new_source_pins_observed": 4,
+    "prior_source_pins_checked": 9,
+    "public_preflight_tests": 43,
+    "source_files_inspected": 13,
+    "targeted_mutations_failed": 2
+  },
+  "date": "2026-11-03",
+  "followup": {
+    "manifest_sha256": "bfba8d6a5a845870a2cf7eb3dc3e80a84d7defebc96a64fd69b988ddba0cb42a",
+    "record": "provenance/MXFP4-OPT07-SHARED-OWNER-WIRING-20261103.json",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-wiring-v1"
+  },
+  "gpu_authority": false,
+  "gpu_ready": false,
+  "historical_remaining": [
+    "Authenticate source descriptors for scheduler decorators and bind installed dependency pins into manifest",
+    "Use authenticated_worker_scope before Scheduler construction; wait_worker_close after HTTP validation and before server teardown",
+    "Publish HTTP start receipt from the existing validated summary; retain close pins in the parent result",
+    "Create two dedicated 32 MiB tmpfs mounts with fixed paths before profiler construction; source-bind their argv",
+    "Bind both real worker/device identities and record the effective nonsecret environment allowlist",
+    "Observe the selected GDN branch and all 48 norm geometries on both ranks without candidate attachment or extra tensor reads",
+    "Wire shared_owner.collect/read_start into the existing streamed frame transport and failure-aware owner closeout",
+    "Prove the generated package, member limits, header size, per-start and session accounting under native Python",
+    "Use one consolidated final owner-packet review before an exact GPU approval request"
+  ],
+  "manifest_sha256": "473b3249e093bfa493ad89253b568e272e9408ba87b659cd86b607b5699ae69f",
+  "members": 139,
+  "native_operations": "file-only source inspections and CPU sandbox unit tests; zero model starts or GPU launches",
+  "owner_packet_prepared": false,
+  "power_changed": false,
+  "public_followup_note": "Added a link to the generated wiring stage and clarified the parent-barrier trust root and deferred live layer hooks; original sealed report unchanged.",
+  "public_report": "docs/MXFP4-OPT07-SHARED-OWNER-INTEGRATION.md",
+  "public_report_sha256": "8bc748ef8e10f3c56f8ffc119b062c76e75d083396ee7a313d188d4e29cd8be8",
+  "remaining": [
+    "Consolidated review of the newly sealed generated package. Physical qualification and exact GPU approval remain absent."
+  ],
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-SHARED-OWNER-INTEGRATION-REVIEW-v1.md",
+    "sha256": "2c12ce6b58165801b4fc9121fe78b4c357c75497fd48dadfaca5acadaea3911f",
+    "verdict": "CPU_STAGE_ACCEPTED_FIVE_WIRING_OBLIGATIONS"
+  },
+  "review_model": "claude-opus-5-5",
+  "review_pending": false,
+  "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-integration-v1",
+  "schema": 1,
+  "sealed_public_report_sha256": "b7fe9edb4dcec5196034fb95539e773e19701c2cee6f65c6a90a1dd616246c5f",
+  "selection_changed": false,
+  "serving_spend": "HOLD",
+  "status": "CPU_STAGE_ACCEPTED_FOLLOWUP_WIRING_PREPARED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "3d3601c55ac1a948fcdab6b0039dccb2c1f0848d6f850f4537d033a875ed1edf",
+      "absolute_machine_path_prefixes_removed": 3,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

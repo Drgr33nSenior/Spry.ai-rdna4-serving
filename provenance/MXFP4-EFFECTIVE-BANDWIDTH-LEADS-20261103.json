@@ -1,0 +1,197 @@
+{
+  "evidence": {
+    "manifest_sha256": "4eda50d87fb30d623b3e0afca5a9f2ef206bff15bcde0a7098d355184291f31d",
+    "members": 6,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-leads-20261103-v1",
+    "verified_utc": "2026-11-03T23:38:23.774559+00:00"
+  },
+  "first_gate": "Authenticate actual target/dispatch; representative H(C), H(C|S), layer-conditioned entropy and scale-range census with held-out tiles and complete storage accounting.",
+  "gemm_wave_hint_20261104": {
+    "evidence": {
+      "manifest_sha256": "b55a889df258df6cc28702e512332c85eeb88c13175ded6d5bc01922811d0093",
+      "members": 70,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-cpu-20261104-v1",
+      "verified_utc": "2026-11-04T01:34:52.351235+00:00"
+    },
+    "followup": {
+      "path": "provenance/MXFP4-GEMM-WAVE-HINT-APPROVED-CPU-20261104.json",
+      "sha256": "b56c66877c2b260d783ae917846916e70ef2001e09fafc7ad9505cc3da7aa14d"
+    },
+    "gpu_ready": false,
+    "owner_decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1/GEMM-WAVE-HINT-CPU-OWNER-DECISION-v1.md",
+      "sha256": "e06f047fdaa4279a53a9e86596a035d61462a4a1e781e96501cab4320ee2dfc5"
+    },
+    "performance_measured": false,
+    "provenance": {
+      "path": "provenance/MXFP4-GEMM-WAVE-HINT-20261104.json",
+      "sha256": "da891ae8b93b1009b19d573a18e2dba21cf8244631711eb2e7559580c74f8c57"
+    },
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-HINT-REVIEW-v1.md",
+      "sha256": "70baf54a1b6d746c0887f46d9f1725b063f300e44fb19f8174bdc8344a24438f"
+    },
+    "signoff": {
+      "manifest_sha256": "94fe043b6005bfa175624333095287c14bfb0efb3711c69d2fde402b5e519ddc",
+      "members": 19,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1",
+      "verified_utc": "2026-11-04T01:48:10.187625+00:00"
+    },
+    "status": "ORIGINAL_REJECTED_APPROVED_FOLLOWUP_CPU_PASSED_PARKED"
+  },
+  "gpu_authority": false,
+  "implementation_scope": "CPU census, storage sizing and authenticated trace analysis only; no GPU decoder or serving integration.",
+  "implementation_started": true,
+  "joint_census_20261104": {
+    "conditional_entropy_available": true,
+    "evidence": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-20261104-v1/FINAL-ARTIFACTS.sha256",
+      "sha256": "870966d93a0b4018449c5681c20c26ab27b0d66e6e8719b7405c1dbc4e09beed"
+    },
+    "full_checkpoint_payload_rehashed": false,
+    "gpu_work": false,
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-BANDWIDTH-JOINT-CENSUS-REVIEW-v1.md",
+      "sha256": "0ce14423db2188e871effabb7ec328beb15097e5995dc8911dc0906c73282553"
+    },
+    "signoff": {
+      "manifest_sha256": "c8f8283f3f752d3df9f05c00d2d798aab5b65c8d96f879fe80c827acef153ad3",
+      "members": 5,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-joint-census-signoff-v1",
+      "verified_utc": "2026-11-04T01:15:52.964277+00:00"
+    },
+    "sprint_signoff": true
+  },
+  "leads": [
+    {
+      "extends": [
+        "G3",
+        "MX-03"
+      ],
+      "id": "BW-01",
+      "remaining": "Broader conditional storage needs a stronger representation/access-cost mechanism. Sparse sample, unverified TP mapping and activation scales remain limitations.",
+      "status": "JOINT_CENSUS_COMPLETE_PALETTE_AND_TWO_HUFFMAN_LAYOUTS_REJECTED",
+      "title": "Scale-conditioned lossless storage"
+    },
+    {
+      "extends": [
+        "L09",
+        "MX-04"
+      ],
+      "id": "BW-02",
+      "status": "PENDING_PRODUCTION_EQUIVALENCE_PROOF",
+      "title": "Integer execution of existing W4A4 operands"
+    },
+    {
+      "id": "BW-03",
+      "related": [
+        "D1",
+        "OPT-05"
+      ],
+      "status": "PENDING_PRODUCTION_ROUNDING_AND_COST_MODEL",
+      "title": "Certified output-head screening and shared-row shifts"
+    },
+    {
+      "extends": [],
+      "id": "BW-04",
+      "status": "PENDING_GFX1201_EXACT_READ_AND_COMPRESSION_PROOF",
+      "title": "Compression-capable graphics images for weights"
+    }
+  ],
+  "measurement_scope": "Bounded checkpoint sample and analysis of already-retained op217 traces; no new performance run.",
+  "measurements_new": true,
+  "next_action": "Park after the approved single CPU invocation. Gate/up compiler candidate retained; no GPU authority. Keep all original and BW lead dispositions and serving-bundle HOLD.",
+  "novelty_claim": false,
+  "prior_lead_ids_preserved": 21,
+  "public_report": "docs/MXFP4-EFFECTIVE-BANDWIDTH-LEADS.md",
+  "public_report_before_input_audit_sha256": "13d7913b9e8437bf502b219cc981bf92d2af32c5cc2bc1c122ffb96fa370dd7b",
+  "public_report_before_joint_census_sha256": "558324cabe3ba0dacbaef0f92e6a5e6c5ea811baa83464bd81024d11fae385af",
+  "public_report_before_wave_followup_sha256": "431c3870da2cf6da96242fbf85da80739cd4d5b6e104ec93608cb41d0170ca73",
+  "public_report_before_wave_hint_sha256": "051a4d2d791a6513e5ffc340d442600fb538287e9c846b2570c65d856668b6ce",
+  "public_report_sha256": "7c14a54794e3a33f6b55cb8097063e8eb80603065b20452f8f8091c5a1f8b97f",
+  "raw_retrievals": {
+    "EXA-ADJACENT.json": "d4af81b94f6c92ecbc86d2304a71394d13c952ec5f6501940e205d9011509886",
+    "EXA-FETCH.json": "473ab3d46eb441de01f40f43f81950fe0c22fca86d3c759203561fa7498bf7e0",
+    "EXA-SEARCH.json": "1c6a78ae9f1a6fdf3e9bfbafeef80980db4db003b85476283062208668c46b4a"
+  },
+  "report": "docs/MXFP4-EFFECTIVE-BANDWIDTH-LEADS.md",
+  "retained_input_audit_20261104": {
+    "analysis": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-census-input-audit-20261104-v1/analyze.py",
+      "sha256": "26461437c99fd4f6e99ff847ba850d329c9590433099fe903d640a7da52d19e9"
+    },
+    "checkpoint_read": false,
+    "conditional_entropy_available": false,
+    "gpu_work": false,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-census-input-audit-20261104-v1/README.md",
+      "sha256": "35079bb2475ffac7e17d08eb09cbde1fad4bb1b87808fa5a769efbe9b8a49d12"
+    },
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-census-input-audit-20261104-v1/RESULT.json",
+      "sha256": "a2c8c90978e38822938187285e3e579a15be0159f01175c82a8de22e31cb2bfe"
+    },
+    "seal": {
+      "manifest_sha256": "019d99eb9b9216226fba5ec8153513371565c06b5ad65f1476d3001c53c09bbc",
+      "members": 4,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bandwidth-census-input-audit-20261104-v1",
+      "verified_utc": "2026-11-04T00:11:23.113498+00:00"
+    },
+    "sprint_signoff": false
+  },
+  "schema": 1,
+  "source": "Owner supplied research brief during operation 216",
+  "source_reading_scope": "Exa extracted content windows and search results; not a full-paper proof audit or reproduction.",
+  "sources": [
+    {
+      "applicability": "Field-distribution prior art; no checkpoint-specific evidence.",
+      "id": "low_precision",
+      "url": "https://arxiv.org/html/2508.19263"
+    },
+    {
+      "applicability": "Fused decompression/computation; NVIDIA results, not gfx1201 MXFP4 evidence.",
+      "id": "zipserv",
+      "url": "https://arxiv.org/html/2603.17435"
+    },
+    {
+      "applicability": "Reduction-tree-dependent floating-point equivalence; production semantics still need mapping.",
+      "id": "integer_scale",
+      "url": "https://borowiecki.dev/pdf/2610.29445"
+    },
+    {
+      "applicability": "Tested but unproved error model; different model/GH200 and concurrency regressions.",
+      "id": "certified_head",
+      "url": "https://sammausberg.com/research/papers/the_work_a_verifier_needs.pdf"
+    },
+    {
+      "applicability": "Real invariance followed by lossy quantization, not a production bit-equivalence proof.",
+      "id": "softmax_shift",
+      "url": "https://arxiv.org/html/2609.31291"
+    },
+    {
+      "applicability": "Older architecture/render-target scope; no proof for gfx1201 HIP buffers.",
+      "id": "dcc",
+      "url": "https://gpuopen.com/learn/dcc-overview/"
+    },
+    {
+      "applicability": "Adjacent BF16/Hopper palette and raw-row prior art.",
+      "id": "unweight",
+      "url": "https://research.cloudflare.com/nikulin2026/?cf_page=unweight-tensor-compression%2F"
+    }
+  ],
+  "status": "JOINT_CENSUS_CPU_SIGNED_OFF_THREE_LAYOUTS_REJECTED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "c6cbac784b5fc4f5b34d855d67c8ebe6aabcf07a933c443fb02f23414cb597e0",
+      "absolute_machine_path_prefixes_removed": 14,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

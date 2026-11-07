@@ -1,0 +1,277 @@
+{
+  "candidate": {
+    "dflash_width": 8,
+    "draft_kv": "bf16",
+    "norm_overlay": {
+      "arms": [
+        "control",
+        "mtp"
+      ],
+      "candidate_sha256": "f1855c99386c39802b07dd1848b0d9197994f67181cd1265dbf85b02da513b42",
+      "role": "dense_layernorm",
+      "semantics": "BF16 in/out, FP32 statistics, residual rounded to BF16 before statistics and returned, (1+w) after normalization, one program per row, num_warps 8 for width 5120 else 4, fp fusion disabled",
+      "stock_sha256": "cb87d85a89fdd06c5ab2f362e9f06b11dc32a6b5519440805bde038172e4c82b",
+      "target": "sglang/srt/layers/layernorm.py",
+      "variant": "gemma-rmsnorm-triton-fp32-native-order-v1"
+    },
+    "package": {
+      "archive_sha256": "aaf6821aa9368283763c71afcb953e4bc02d197361486ac3fda72646f66ddf25",
+      "manifest_sha256": "73f85306d8a9f0696646b2703e3d9bbe9fbf5b869491bfad4aab98ebaa4c7389",
+      "members": 71,
+      "package_sha256": "5b34f88fe47b8fad429e99c3d37f8ba023135a6a3d162f90f730ba330ab5b3d8",
+      "roles_per_arm": 137,
+      "seal": {
+        "manifest_sha256": "02ca6e0efa86dbac13455a15c4ee14b8b1e70a025f00b799b70a25d0cb95cbf9",
+        "members": 81,
+        "root": "author"
+      }
+    },
+    "private_component": "fused Gemma RMSNorm Triton kernel and the MXFP4 component; not distributed with this repository",
+    "supersedes_package": {
+      "archive_sha256": "999988dbe7d79f35cce67973ab2f520693698fbb5ffe996fae05766e3b370f58",
+      "manifest_sha256": "2668a5fd1685a4a0626de5d848acd209cbac40dc757fcd0f7c02d3efebf8198a"
+    },
+    "target_kv": "bf16",
+    "tensor_parallel": 2,
+    "weights": "published AMD Quark AWQ MXFP4 Qwen3.8-27B checkpoint (dense)"
+  },
+  "charges": {
+    "caller_seconds": 4411.6,
+    "operations": "78-91",
+    "owner_seconds": 4299.1
+  },
+  "component_result": {
+    "cards": 2,
+    "cases": 96,
+    "contexts": 48,
+    "global_attempt": 87,
+    "max_output_ulp": 1,
+    "output_mismatches": "2 of 1,721,344",
+    "owner_disposition": "route (a): proceed to serving with the kernel as measured; miss recorded as a limitation",
+    "residual_bitwise_equal": true,
+    "seals": {
+      "campaign": {
+        "manifest_sha256": "d7a2f018703f7531cbf424ce1c1a1640e9ed4ea48433425633fd444c13b25cb7",
+        "members": 9,
+        "root": "p3-norm-campaign-8ef7447464ac4d32"
+      },
+      "run": {
+        "manifest_sha256": "d107171486caf0da822b643fcddb10fc6f0656146daa419f59018b287edb114c",
+        "members": 286,
+        "root": "p3-norm-run-8ef7447464ac4d32"
+      }
+    },
+    "spills": 0,
+    "timing_gate": "43 of 48 contexts met max(T) <= min(N)/3 (M<=16) or /2 (M2047); misses: four head_plain M16 contexts at 1.75-1.80x and one hidden_residual M2047 context with one noisy batch",
+    "variance_bound": 9.53674e-07,
+    "variance_relative_max": 3.03657e-07
+  },
+  "date": "2026-10-28",
+  "deployed": false,
+  "extends": "provenance/MXFP4-TILE-GEOMETRY-CANDIDATE-20261028.json",
+  "next": "prefill path work in flight; not part of this record",
+  "owner_decisions": [
+    "approved P3 numerical contract (2026-10-28)",
+    "route (a) after the component timing-gate miss",
+    "approved Screen 6 and its transport/owner diffs",
+    "approved the quality gate and its diffs",
+    "accepted precision for the fused-norm base",
+    "promoted the fused-norm package as the candidate package base"
+  ],
+  "precision_accepted": true,
+  "qualification": false,
+  "quality_gate": {
+    "acceptance_length": {
+      "forced_cap": {
+        "operation_83": {
+          "c1": 3.2100313479623823,
+          "c2": 2.409411764705882
+        },
+        "p3": {
+          "c1": 5.988304093567251,
+          "c2": 1.965451055662188
+        }
+      },
+      "natural_answers_mean": {
+        "n": 37,
+        "operation_83": 5.265,
+        "p3": 5.04
+      }
+    },
+    "charges": {
+      "caller_seconds": 1244.4,
+      "cpu_grading_seconds": 27.0,
+      "owner_seconds": 1243
+    },
+    "decoded_rows": 104,
+    "descriptive": {
+      "bf16": {
+        "C1_median_latency_s": 8.73,
+        "C1_output_tok_s": 117.29,
+        "C2_aggregate_tok_s": 69.13,
+        "C2_median_latency_s": 29.64
+      },
+      "kv4": {
+        "C1_median_latency_s": 8.78,
+        "C1_output_tok_s": 116.61,
+        "C2_aggregate_tok_s": 69.05,
+        "C2_median_latency_s": 29.66
+      }
+    },
+    "descriptive_note": "Server-reported on the fixed menu; the C1/C2 timing groups force 1,024 tokens past the natural stop and their rates track draft acceptance on degenerate continuation (C1 5.99 vs 3.21, C2 1.97 vs 2.41 accepted tokens per cycle), not kernel speed; descriptive only.",
+    "global_attempt": 91,
+    "independent_release_verified": true,
+    "model_starts": 2,
+    "natural_rows": 74,
+    "per_arm": {
+      "bf16/QUALITY_PASS": 37,
+      "bf16/UNGRADED_CAP_WORK": 15,
+      "kv4/QUALITY_PASS": 37,
+      "kv4/UNGRADED_CAP_WORK": 15
+    },
+    "quality_pass": true,
+    "repeat_agreement": "53 of 53 cases identical between the two starts (content, reasoning, finish reason, token count)",
+    "requests": 106,
+    "seals": {
+      "cpu_grading": {
+        "manifest_sha256": "32b956e17aaa63ce079ee6d7327c6ed4df087fb6125da2fe5be412dcf6fa813f",
+        "members": 264,
+        "root": "mxfp4-quality-gate-p3-cpu-binding-v1"
+      },
+      "operation": {
+        "manifest_sha256": "49abbfcb555114ee4d962ba121968da4b11772a9c61022dbfda19d157a464cfe",
+        "members": 341,
+        "root": "mxfp4-quality-gate-p3-run-5096c3a5f3478a2a"
+      },
+      "protected": {
+        "manifest_sha256": "7c4adba05cfe5cddd5bfd1fcc6bdf09ba28c999e775088a82294857b1a04755d",
+        "members": 31,
+        "root": "fp8-benchmark-source.5096c3a5f3478a2a"
+      },
+      "workload": {
+        "manifest_sha256": "9f4e21b4a9a31d7db7993a94e435930c9327f177e7a4a5197c6c0074dbc32ed4",
+        "members": 270,
+        "root": "fp8-kv-benchmark.5096c3a5f3478a2a"
+      }
+    },
+    "state_only_cancellations": 2,
+    "ungraded_cap_work_rows": 30
+  },
+  "reference": "docs/MXFP4-P3-FUSED-NORM-CANDIDATE.md",
+  "schema_version": 1,
+  "selected": false,
+  "serving_screen": {
+    "baseline": "sealed Screen 5 v2 (operation 86), same boot and request plan",
+    "baseline_e2e_s": [
+      3.077,
+      1.853,
+      1.83,
+      1.834
+    ],
+    "charges": {
+      "caller_seconds": 176,
+      "owner_seconds": 168
+    },
+    "forced_output_tokens": 64,
+    "gates": {
+      "four_requests_completed_64_tokens": true,
+      "fused_norm_kernel_dispatched_both_ranks": true,
+      "prefill_kernel_sum_within_3pct_of_screen5_both_ranks": true,
+      "traced_request_e2e_not_worse_than_screen5_warm_plus_3pct": true,
+      "verify_cycle_gpu_span_down_2ms_all_cycles_both_ranks": true,
+      "verify_cycle_kernel_count_down_600_all_cycles_both_ranks": true,
+      "zero_unroll4_dispatches": true
+    },
+    "global_attempt": 90,
+    "per_rank": {
+      "0": {
+        "prefill:0": {
+          "gpu_span_ms": 1235.2,
+          "kernel_count": 1968,
+          "kernel_sum_ms": 1223.26
+        },
+        "verify-cycle:1": {
+          "gpu_span_ms": 46.41,
+          "kernel_count": 1741,
+          "kernel_sum_ms": 39.47
+        },
+        "verify-cycle:2": {
+          "gpu_span_ms": 45.92,
+          "kernel_count": 1741,
+          "kernel_sum_ms": 39.3
+        },
+        "verify-cycle:3": {
+          "gpu_span_ms": 45.99,
+          "kernel_count": 1741,
+          "kernel_sum_ms": 39.42
+        }
+      },
+      "1": {
+        "prefill:0": {
+          "gpu_span_ms": 1234.43,
+          "kernel_count": 1968,
+          "kernel_sum_ms": 1222.31
+        },
+        "verify-cycle:1": {
+          "gpu_span_ms": 46.34,
+          "kernel_count": 1741,
+          "kernel_sum_ms": 39.35
+        },
+        "verify-cycle:2": {
+          "gpu_span_ms": 45.93,
+          "kernel_count": 1741,
+          "kernel_sum_ms": 39.27
+        },
+        "verify-cycle:3": {
+          "gpu_span_ms": 45.94,
+          "kernel_count": 1741,
+          "kernel_sum_ms": 39.27
+        }
+      }
+    },
+    "requests": 4,
+    "requests_e2e_s": [
+      3.108,
+      1.821,
+      1.807,
+      1.808
+    ],
+    "seals": {
+      "cost-analysis-v1": {
+        "manifest_sha256": "c536cd6a27ed07fa325eb27c9a545c1c228dacdbcc4c044fc0234f1032462b46",
+        "members": 12,
+        "root": "cost-analysis-v1"
+      },
+      "native-v1": {
+        "manifest_sha256": "f9bcd7455d81f52fb39f7ed3362043b5dd765e22ce12ae024a1b5efce099ed9b",
+        "members": 9,
+        "root": "native-v1"
+      },
+      "packet-v2/author": {
+        "manifest_sha256": "34161a920760843388d1ecbc776a2b297c3ecbfe44eca5ea1fe20c9528bcee6a",
+        "members": 73,
+        "root": "author"
+      },
+      "packet-v3": {
+        "manifest_sha256": "f3a771470d4eb434edc86fdf0176685de43e989eff8043cd61ec12db1dff5004",
+        "members": 205,
+        "root": "packet-v3"
+      },
+      "packet-v3/owner": {
+        "manifest_sha256": "45b41f49594a65d1db85b81edaef6401946c44f527dd922e0e1816e4e61ddf2c",
+        "members": 20,
+        "root": "owner"
+      }
+    },
+    "token_divergence_index": [
+      19,
+      19,
+      19,
+      19
+    ],
+    "traced_request": 1
+  },
+  "status": "candidate base promoted; precision accepted by owner; not selected; not deployed",
+  "tracking": "global GPU attempts 87, 90, 91 (component, serving screen, quality gate)",
+  "verification": "every operation under a one-use allowance; no automatic retry; failures retained; all roots sealed"
+}

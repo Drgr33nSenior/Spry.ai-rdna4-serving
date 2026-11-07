@@ -1,0 +1,761 @@
+{
+  "acceptance_investigation": {
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/acceptance-divergence-cpu-20261104-v1",
+    "seal_sha256": "7c9f3e7db3cf90d5c2c5c041ad2e58b84bcbdaac73688a87d33d9cc9926cef0f"
+  },
+  "acceptance_mechanism_change_established": false,
+  "adoption_authorized": false,
+  "automatic_retry": false,
+  "cpu_compiler_repair": {
+    "acceptance_gate_weakened": false,
+    "binder_evidence": {
+      "manifest_sha256": "83313cf956a28d9f72593cd78a8262df6c1c14e944e41afb34d2f40ebab84a72",
+      "members": 103,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/compiler-binder-investigation-v1"
+    },
+    "binder_input_differences": 0,
+    "changed_debug_only_binaries": 5,
+    "compiler_pins_sha256": "7fd566e8853ebf88496fe7a6c07c22b1f2b3a803a12f2a59ce01c20fec048a13",
+    "cpu_binder_cases": 4,
+    "evidence": {
+      "manifest_sha256": "daaca1ca62ad1971804daf74071ffd0715049ecc50e0998b345a86d6df0db991",
+      "members": 85,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/compiler-cold-proof-v1"
+    },
+    "focused_tests": 41,
+    "fresh_native_binaries": 10,
+    "gpu_launches": 0,
+    "independent_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-FOUR-MEMBER-COMPILER-CACHE-REVIEW-v1.md",
+      "sha256": "c4168aff2da28af787b5f37b552062d1aad68c30eb1eb1b75ccf7a20c49087b8",
+      "verdict": "ACCEPTED"
+    },
+    "live_operation222_record_observed": false,
+    "machine_code_and_resources_identical": true,
+    "model_starts": 0,
+    "new_cache_tests": 6,
+    "physical_qualification": false,
+    "public_preflight": 43,
+    "remaining_gpu_allowance": 0,
+    "retained_artifacts": 50,
+    "review_pending": false,
+    "root_cause": "Historical calibration and serving-context compiles shared a cache key that omits source filename; cached debug-path artifacts invalidated expected full hashes.",
+    "serving_gain_established": false,
+    "status": "CPU_REVIEW_ACCEPTED"
+  },
+  "cpu_tests": {
+    "focused_lifecycle": 102,
+    "native": 47,
+    "public_preflight": 43,
+    "real_admission_regression": 1
+  },
+  "current_operation": 224,
+  "date": "2026-11-04",
+  "decision": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/FOUR-MEMBER-SERVING-OWNER-DECISION-v1.md",
+    "sha256": "7dc06144a89b88bc376ce18843fa6b2ded092f52e52b208e122f3bef9df70f5f"
+  },
+  "diagnostic_gpu_ready": false,
+  "diagnostic_tests": 35,
+  "excluded": [
+    "down-m16",
+    "BW-03"
+  ],
+  "execution_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-5a66cd00a218b2cb",
+  "fresh_packet": {
+    "adoption_authorized": false,
+    "authority": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v4/TASK-AUTHORIZATION.json",
+      "sha256": "14b10fa0aeb5cd4827a734b009ed3fc8d29391c1fee74b2e20d97c6395ff6565"
+    },
+    "automatic_retry": false,
+    "decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/FOUR-MEMBER-SERVING-OWNER-DECISION-v4.md",
+      "sha256": "41a13e5c1214bbfc36694ea5247f62d2ed5f68914a178349e5b5aea506153092"
+    },
+    "exact_package_and_caller_rebuild": true,
+    "execution_seal": {
+      "manifest_sha256": "2d5172f55f980d9217ef2926f509b466054be8e841d75975fbdaea51dff97ae8",
+      "members": 552,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+      "verified_utc": "2026-11-04T21:29:13.205469+00:00"
+    },
+    "export_repair": {
+      "implemented_by": "Claude Opus 5.5 xhigh",
+      "manifest_sha256": "e2d5c5779cfc225c49c6f08bc29575ad8517cef6bc2b2d67c31e8f1547f11f7d",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/export-repair-v1"
+    },
+    "gpu_started": true,
+    "independent_release": true,
+    "local_tests": 70,
+    "model_starts_authorised": 2,
+    "model_starts_observed": 2,
+    "native_and_mac_export_budget_reports_equal": true,
+    "native_launch_completed": true,
+    "native_launch_started": true,
+    "native_tests": 69,
+    "no_additional_invocation_allowance": true,
+    "nonce": "a4777122b5277d13",
+    "operation": 224,
+    "outer_packet": {
+      "manifest_sha256": "4fddf95ed939b5ae708d574a997a0a74c7b35fc27f49941515a2286b80fa480f",
+      "members": 366,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/packet-v4",
+      "verified_utc": "2026-11-04T20:47:45.390514+00:00"
+    },
+    "owner_answer": "Approved",
+    "parent_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/PARENT-FOUR-MEMBER-EXPORT-REPAIR-REVIEW-v1.md",
+      "sha256": "7994768ee136f24f4b8f5ef553a1acb581a9a82881a5c50bf0470c47229857b0"
+    },
+    "performance_verdict": "INCONCLUSIVE",
+    "plan": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v4/PLAN.json",
+      "sha256": "a89946562be077940eb7c8965aa889bdf302492f9300ba73d18f9573d52d868f"
+    },
+    "proposed_invocations": 1,
+    "proposed_model_starts": 2,
+    "proposed_power_watts": 235,
+    "public_preflight": 43,
+    "readout_seal": {
+      "manifest_sha256": "caee4e50ab7c4d1cd192a964ac43fd7587c4c8ae6a30adc54fc0879d802d8953",
+      "members": 9,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1",
+      "verified_utc": "2026-11-04T21:29:13.225240+00:00"
+    },
+    "registered": true,
+    "registrar_cpu_proof": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/REGISTRAR-CPU-PROOF-v5.json",
+      "sha256": "23e87b4fdeb80af6178629b50d194976fe84b54b2af4cc93ddc4339bddfd1785"
+    },
+    "registrar_mutations_refused": 6,
+    "remaining_gpu_allowance": 0,
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13/RESULT.json",
+      "sha256": "5ef4dad48e3a586b9d3f82a048f854002f25f0a5bbd2234bbd374be77ec9b381"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "status": "MEASURED_INCONCLUSIVE_RELEASED_PARKED"
+  },
+  "members": [
+    "verify_prefetch",
+    "verify_cap32",
+    "gatednorm_quant",
+    "gate_up_wave"
+  ],
+  "next_action": "PARK. Retain the four research members; serving result inconclusive. No retry, adoption or new GPU work is authorised.",
+  "operation": 221,
+  "operation221": {
+    "adopted": false,
+    "auxiliary_requests": 0,
+    "baseline_samples": 0,
+    "caller_seconds": 129.0617275419936,
+    "candidate_samples": 0,
+    "cgroup_memory_events": {
+      "high": 0,
+      "low": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0,
+      "sock_throttled": 0
+    },
+    "cgroup_memory_limit_bytes": 40802189312,
+    "cgroup_peak_bytes": 15914680320,
+    "closing_checkpoint": 597,
+    "configured_power_watts": 235,
+    "failure": "F1 selected real/captured geometry refused",
+    "grading_performed": false,
+    "independent_release": true,
+    "native_launch_seconds": 123.15407670900458,
+    "operation": 221,
+    "phase": "control graph warmup before capture completion",
+    "production_qualified": false,
+    "repair": "Use eligibility AND the actual native symmetric-memory-enabled predicate, with native allocator object identity. Active symmetric allocation still refuses. Add bounded tensor-metadata diagnostics to future refusals.",
+    "retry_authorized_for_operation221": false,
+    "root_cause": "F1 consumed the native symmetric-allocation eligibility predicate as an allocator-enabled predicate. Native is_allocation_symmetric is true whenever DP attention is disabled; the previous F1 guard therefore always refuses that context.",
+    "run_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/hyperloom-serving-run-5a66cd00a218b2cb",
+    "run_seal_sha256": "f4d4ecca8c1c617c159ca368568080329d1cbe0b50b1d2b6ce00e25bdc6ffd4f",
+    "schema": 1,
+    "scored_requests": 0,
+    "selected": false,
+    "serving_gain_established": false,
+    "specific_other_eligibility_conditions_observed": false,
+    "starts_attempted": 1,
+    "starts_ready": 0,
+    "status": "FAILED_PARKED"
+  },
+  "operation223": {
+    "adopted": false,
+    "automatic_retry": false,
+    "bundle_limit_bytes": 66060288,
+    "caller_seconds": 780.2462525420124,
+    "candidate_started": false,
+    "closing_checkpoint": 601,
+    "empty_and_six_byte_bundles_refuse_on_cpu": true,
+    "encoded_limit_bytes": 67117086,
+    "failure": "encoded bundle overflow",
+    "failure_phase": "control evidence export",
+    "grading_performed": false,
+    "independent_release": true,
+    "native_launch_seconds": 774.3777174580027,
+    "next_action": "Claude Opus 5.5 xhigh: bounded CPU export-accounting repair and producer-to-reader roundtrip tests; no GPU retry.",
+    "nonce": "ac6c108f39cbae77",
+    "operation": 223,
+    "protected_seal_sha256": "3bcf87d11b4e7fc04f6b05ad79c38f850d7c4e25cd5ec0add535a4b5e863af34",
+    "remaining_gpu_allowance": 0,
+    "root_cause": "HTTP member allowance sum raises encoded_limit above the unchanged inner bundle_limit; the chained export check always refuses.",
+    "run_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/hyperloom-serving-run-ac6c108f39cbae77",
+    "run_seal_sha256": "8866aa45c00d2adf54b662bb4977d35b0498880d674a61fdbb613233e7d36fb3",
+    "schema": 1,
+    "selection_changed": false,
+    "starts_attempted": 1,
+    "status": "FAILED_PARKED",
+    "stream_limit_bytes": 68157440,
+    "validated_baseline_samples": 0,
+    "validated_candidate_samples": 0,
+    "workload_seal_sha256": "3e62149716b8841749224d98a06fabe3f5bd8d0634210e4ae2f7793d3e82a100"
+  },
+  "operation223_packet": {
+    "adoption_authorized": false,
+    "authority": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v3/TASK-AUTHORIZATION.json",
+      "sha256": "c53f146b582c8093df992c496adfcbbd7bb9b182cd05c2fcff7c77252d2e182d"
+    },
+    "automatic_retry": false,
+    "closing_checkpoint": 601,
+    "decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/FOUR-MEMBER-SERVING-OWNER-DECISION-v3.md",
+      "sha256": "0472f40b62a7c9a85ca7794cc7d2d43de2fadf1bf3facae20d79079cf1024394"
+    },
+    "exact_package_and_caller_rebuild": true,
+    "expected_observed_refusal_capture": true,
+    "gpu_started": false,
+    "independent_release": true,
+    "local_tests": 60,
+    "model_starts_authorised": 2,
+    "native_launch_started": true,
+    "native_scheduler_logging_tested": false,
+    "native_tests": 59,
+    "no_additional_invocation_allowance": true,
+    "nonce": "ac6c108f39cbae77",
+    "operation": 223,
+    "outer_packet": {
+      "manifest_sha256": "0d7429e371b0886eaac128a9411a9b636a575fdded5628bdd7f152b91d38bf16",
+      "members": 386,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/packet-v3",
+      "verified_utc": "2026-11-04T19:40:14.407810+00:00"
+    },
+    "owner_answer": "Approved",
+    "physical_result_pending": false,
+    "plan": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v3/PLAN.json",
+      "sha256": "68db29d70e7cda8d0dbc3f5abb3b9b631d6d2dc390739baa8284b1bb8bac4f3f"
+    },
+    "proposed_invocations": 1,
+    "proposed_model_starts": 2,
+    "proposed_power_watts": 235,
+    "public_preflight": 43,
+    "registered": true,
+    "registrar_cpu_proof": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/REGISTRAR-CPU-PROOF-v4.json",
+      "sha256": "c6c3336e4a61cac86f4828d5fe6f711d7c87b1d0d8f45bb2a932d31e48bb464f"
+    },
+    "registrar_mutations_refused": 6,
+    "remaining_gpu_allowance": 0,
+    "selection_changed": false,
+    "status": "FAILED_PARKED"
+  },
+  "operation224": {
+    "adoption_authorized": false,
+    "automatic_retry": false,
+    "bounded_serving_checks_passed": true,
+    "cases": [
+      {
+        "baseline_median_seconds": 82.46660700000939,
+        "baseline_output_tokens": [
+          [
+            737
+          ],
+          [
+            737
+          ],
+          [
+            737
+          ]
+        ],
+        "baseline_range_ms": 168.48834996926598,
+        "candidate_median_seconds": 82.95463500500773,
+        "candidate_output_tokens": [
+          [
+            721
+          ],
+          [
+            721
+          ],
+          [
+            721
+          ]
+        ],
+        "candidate_range_ms": 619.5970270200633,
+        "case": "long-c1-cold",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 82466.60700000939,
+          "baseline_range_ms": 168.48834996926598,
+          "candidate_median_ms": 82954.63500500773,
+          "candidate_range_ms": 619.5970270200633,
+          "noise_band_ms": 1649.3321400001878,
+          "regression": false,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.9941169290303202,
+          "stable": true
+        },
+        "noise_band_ms": 1649.3321400001878,
+        "observed_latency_reduction_pct": -0.5917886314860565,
+        "output_token_delta_pct": [
+          2.1709633649932156
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 9.606685102015035,
+        "baseline_output_tokens": [
+          [
+            737
+          ],
+          [
+            737
+          ],
+          [
+            737
+          ]
+        ],
+        "baseline_range_ms": 74.49160501710139,
+        "candidate_median_seconds": 9.390548418014077,
+        "candidate_output_tokens": [
+          [
+            721
+          ],
+          [
+            721
+          ],
+          [
+            721
+          ]
+        ],
+        "candidate_range_ms": 32.49298399896361,
+        "case": "long-c1-warm",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 9606.685102015035,
+          "baseline_range_ms": 74.49160501710139,
+          "candidate_median_ms": 9390.548418014077,
+          "candidate_range_ms": 32.49298399896361,
+          "noise_band_ms": 192.1337020403007,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.0230164069636591,
+          "stable": true
+        },
+        "noise_band_ms": 192.1337020403007,
+        "observed_latency_reduction_pct": 2.249857070422989,
+        "output_token_delta_pct": [
+          2.1709633649932156
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 60.9147059389943,
+        "baseline_output_tokens": [
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ]
+        ],
+        "baseline_range_ms": 127.61348200729117,
+        "candidate_median_seconds": 61.669848110483144,
+        "candidate_output_tokens": [
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ]
+        ],
+        "candidate_range_ms": 73.22408699837979,
+        "case": "long-c2-cold",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 61860.42699197424,
+          "baseline_range_ms": 128.05860201478936,
+          "candidate_median_ms": 63358.48294699099,
+          "candidate_range_ms": 75.33492799848318,
+          "noise_band_ms": 1237.2085398394847,
+          "regression": true,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.9763558739834395,
+          "stable": true
+        },
+        "noise_band_ms": 1218.294118779886,
+        "observed_latency_reduction_pct": -1.2396713730262743,
+        "output_token_delta_pct": [
+          24.129353233830845,
+          4.646840148698884
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 8.841669998480938,
+        "baseline_output_tokens": [
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ]
+        ],
+        "baseline_range_ms": 27.14393151109107,
+        "candidate_median_seconds": 9.32444687600946,
+        "candidate_output_tokens": [
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ]
+        ],
+        "candidate_range_ms": 13.856582518201321,
+        "case": "long-c2-warm",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 9791.028830979485,
+          "baseline_range_ms": 29.86437000799924,
+          "candidate_median_ms": 11008.625901013147,
+          "candidate_range_ms": 17.259872023714706,
+          "noise_band_ms": 195.8205766195897,
+          "regression": true,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.8893960898497237,
+          "stable": true
+        },
+        "noise_band_ms": 176.83339996961877,
+        "observed_latency_reduction_pct": -5.460245379113515,
+        "output_token_delta_pct": [
+          24.129353233830845,
+          4.646840148698884
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 13.712616378004896,
+        "baseline_output_tokens": [
+          [
+            2300
+          ],
+          [
+            2300
+          ],
+          [
+            2300
+          ]
+        ],
+        "baseline_range_ms": 26.792192045832053,
+        "candidate_median_seconds": 12.674710766994394,
+        "candidate_output_tokens": [
+          [
+            2244
+          ],
+          [
+            2244
+          ],
+          [
+            2244
+          ]
+        ],
+        "candidate_range_ms": 24.620917974971235,
+        "case": "short-c1-cold",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 13712.616378004896,
+          "baseline_range_ms": 26.792192045832053,
+          "candidate_median_ms": 12674.710766994394,
+          "candidate_range_ms": 24.620917974971235,
+          "noise_band_ms": 274.2523275600979,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.0818879128755554,
+          "stable": true
+        },
+        "noise_band_ms": 274.2523275600979,
+        "observed_latency_reduction_pct": 7.568983062016576,
+        "output_token_delta_pct": [
+          2.4347826086956523
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 14.82788157199684,
+        "baseline_output_tokens": [
+          [
+            2300,
+            2300
+          ],
+          [
+            2300,
+            2300
+          ],
+          [
+            2300,
+            2300
+          ]
+        ],
+        "baseline_range_ms": 40.09083299024496,
+        "candidate_median_seconds": 13.84327068598941,
+        "candidate_output_tokens": [
+          [
+            2244,
+            2244
+          ],
+          [
+            2244,
+            2244
+          ],
+          [
+            2244,
+            2244
+          ]
+        ],
+        "candidate_range_ms": 11.336021503666416,
+        "case": "short-c2-cold",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 14828.489701991202,
+          "baseline_range_ms": 39.9416169966571,
+          "candidate_median_ms": 13844.073503976688,
+          "candidate_range_ms": 11.396318004699424,
+          "noise_band_ms": 296.56979403982405,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.071107409082431,
+          "stable": true
+        },
+        "noise_band_ms": 296.5576314399368,
+        "observed_latency_reduction_pct": 6.640266724728338,
+        "output_token_delta_pct": [
+          2.4347826086956523,
+          2.4347826086956523
+        ],
+        "samples_per_arm": 3
+      }
+    ],
+    "closing_checkpoint": {
+      "number": 603,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-603.json",
+      "sha256": "825a4ace7762e9f0fb23b987ae692b5c7f7b7cef35e0761a445bd5b6abddd0d2"
+    },
+    "comparison_reasons": [
+      "long-c1-cold:unequal_generated_work",
+      "long-c1-warm:unequal_generated_work",
+      "long-c2-cold:unequal_generated_work",
+      "long-c2-cold:group_wall_ms:regression",
+      "long-c2-warm:unequal_generated_work",
+      "long-c2-warm:e2e_ms:regression",
+      "long-c2-warm:group_wall_ms:regression",
+      "short-c1-cold:unequal_generated_work",
+      "short-c2-cold:unequal_generated_work",
+      "balanced_gain_not_resolved"
+    ],
+    "execution_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+    "execution_seal": {
+      "manifest_sha256": "2d5172f55f980d9217ef2926f509b466054be8e841d75975fbdaea51dff97ae8",
+      "members": 552,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+      "verified_utc": "2026-11-04T21:29:13.205469+00:00"
+    },
+    "generated_work_gate_passed": false,
+    "generated_work_limit_pct": 2,
+    "independent_release": true,
+    "independent_result_review": "Not performed for operation224; parent authenticated readout only.",
+    "minimum_gain_pct": 3,
+    "model_starts": 2,
+    "operation": 224,
+    "packet_nonce": "a4777122b5277d13",
+    "performance_verdict": "INCONCLUSIVE",
+    "power_cap_watts": 235,
+    "production_qualified": false,
+    "quality_rows_passed": 60,
+    "quality_rows_total": 60,
+    "raw_balanced_score_gain_pct": 1.6601013770570994,
+    "raw_balanced_speedup_score": 1.016601013770571,
+    "readout_seal": {
+      "manifest_sha256": "caee4e50ab7c4d1cd192a964ac43fd7587c4c8ae6a30adc54fc0879d802d8953",
+      "members": 9,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1",
+      "verified_utc": "2026-11-04T21:29:13.225240+00:00"
+    },
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1/REPORT.md",
+      "sha256": "648a5e2f139e757b2c7f1040ade7b8c9223df97c50c33377ce0986365d83532f"
+    },
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13/RESULT.json",
+      "sha256": "5ef4dad48e3a586b9d3f82a048f854002f25f0a5bbd2234bbd374be77ec9b381"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "status": "MEASURED_INCONCLUSIVE_RELEASED_PARKED"
+  },
+  "packet": {
+    "manifest_sha256": "d8a8ae6a49eb0719d006a9ee15fdf5c1bf702fced38ae64aca79de59f6620165",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/packet-v1"
+  },
+  "packet_nonce": "5a66cd00a218b2cb",
+  "power_cap_watts": 235,
+  "production_qualified": false,
+  "public_report": "docs/MXFP4-FOUR-MEMBER-SERVING-VALIDATION.md",
+  "public_report_sha256": "0508fca31ee62b77fc8dffd72c0c7843430d66345fda6d35f144984fc6ef9c08",
+  "requests_allowed": 66,
+  "retry": {
+    "authorised": true,
+    "automatic_retry": false,
+    "closing_checkpoint": 599,
+    "gpu_started": true,
+    "independent_release": true,
+    "independent_review_sha256": "bcdeba751d6995b250b896e99f27bf9d112a3bf43743c5c827bbad8336f79911",
+    "nonce": "37a950031a7b7ff7",
+    "operation": 222,
+    "outcome": {
+      "adopted": false,
+      "auxiliary_requests": 0,
+      "baseline_samples": 0,
+      "caller_seconds": 134.84543708298588,
+      "candidate_samples": 0,
+      "cgroup_memory_events": {
+        "high": 0,
+        "low": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_group_kill": 0,
+        "oom_kill": 0,
+        "sock_throttled": 0
+      },
+      "closing_checkpoint": 599,
+      "f1_all_layer_capture_qualified": false,
+      "f1_eligibility_advanced": true,
+      "failure": "bundle compiler drift: gate-up-m16-wave1",
+      "grading_performed": false,
+      "independent_release": true,
+      "native_launch_seconds": 127.24320233400795,
+      "operation": 222,
+      "phase": "control graph warmup",
+      "remaining_gpu_allowance": 0,
+      "root_cause": "Unresolved: the live compiler record differs from the CPU-derived pin; exact observed compiler parts were not retained.",
+      "run_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/hyperloom-serving-run-37a950031a7b7ff7",
+      "run_seal_sha256": "8b535759832028eaca7d31da17525af4e09940ba71fb0029102d54f12a13ad13",
+      "schema": 1,
+      "scored_requests": 0,
+      "selected": false,
+      "serving_gain_established": false,
+      "starts_attempted": 1,
+      "starts_ready": 0,
+      "status": "FAILED_PARKED"
+    },
+    "outer_seal": "da4f13aef61e583ec7817b241795b93d6fa63b821c9d2529488c16ae78b623f3",
+    "owner_answer": "I can authorise the retry now.",
+    "plan_sha256": "8cb0e90a7655a28fd5e8997706d9cefada11305d3a94fc24bc2cb65592c6d512",
+    "remaining_gpu_allowance": 0,
+    "status": "FAILED_PARKED"
+  },
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-FOUR-MEMBER-SERVING-PACKET-REVIEW-v1.md",
+    "sha256": "045c91b522533864d7c837787e6222d1897802258e0d466a9cf90abfacb6ee9f",
+    "verdict": "AGREE"
+  },
+  "schema": 1,
+  "selection_changed": false,
+  "serving_gain_established": false,
+  "source_integrity_incident": {
+    "handoff": {
+      "manifest_sha256": "7c9f3e7db3cf90d5c2c5c041ad2e58b84bcbdaac73688a87d33d9cc9926cef0f",
+      "members": 1281,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/acceptance-divergence-cpu-20261104-v1"
+    },
+    "incident": {
+      "authority": false,
+      "content_exact": true,
+      "copy_policy": "copy2 preserves observed post-incident metadata; no source timestamps changed",
+      "late_members": [
+        {
+          "mtime_ns": 1793838970955135594,
+          "path": "checks/EXPORT-BUDGET-REPORT.json",
+          "sha256": "9b5d849823b5a5582cf5be1c58bffc6b3dc2e040cec5e35d07dcb077a8ea22aa"
+        }
+      ],
+      "members": 366,
+      "nonce_reuse_authorized": false,
+      "observed_utc": "2026-11-05T00:55:22.630421+00:00",
+      "original_manifest_sha256": "4fddf95ed939b5ae708d574a997a0a74c7b35fc27f49941515a2286b80fa480f",
+      "original_modified_by_recovery": false,
+      "original_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/packet-v4",
+      "original_seal_status": "FAIL_TIMESTAMP_ONLY",
+      "schema": 1
+    },
+    "new_gpu_authority": false,
+    "original_still_failed": true,
+    "qualification": false,
+    "recovered": {
+      "manifest_sha256": "024efa0110a5c0dc253ba5f36db40510a48081ff70d15e74be4a5dabea4d9729",
+      "members": 367,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/packet-v4-source-recovery-20261105-v1",
+      "verified_utc": "2026-11-05T00:55:24.417750+00:00"
+    }
+  },
+  "starts_allowed": 2,
+  "status": "OP224_MEASURED_INCONCLUSIVE_RELEASED_PARKED",
+  "wrapper_metadata_cases": 4,
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "0373c26abdb085af4e198a7c64a49c40a7fdd5971fb3b3b8afba3db4a4462f68",
+      "absolute_machine_path_prefixes_removed": 35,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

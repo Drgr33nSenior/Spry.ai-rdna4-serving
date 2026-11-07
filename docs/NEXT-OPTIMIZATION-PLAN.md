@@ -1,5 +1,22 @@
 # Further serving optimization plan
 
+The [MXFP4 sprint plan proposed on 3 November](MXFP4-OPTIMIZATION-SPRINT-PLAN.md)
+maps all twelve retained backlog items and the nine deep-search entries into
+shared evidence work, bounded component screens and conditional serving bundles.
+It is awaiting owner review; it grants no implementation or GPU execution authority
+and preserves the historical results and current selection below.
+
+Current MXFP4 queue, 2026-11-03: the next CPU work is a reversible weight/scale
+layout audit, followed by selected ring-fold accept/commit traffic. The
+[CPU lead screen](../provenance/MXFP4-CPU-LEAD-SCREEN-20261103.json) deprioritized
+the two prefill metadata copies: their long API wait drains queued target work,
+and the observed post-target tail is small. The scale-prefetch GEMM candidate
+reproduced the baseline compiler artifacts but raised VGPRs from 109 to 121
+and barrier pairs from four to six, so it stopped before GPU testing. Preserve
+both findings; no new performance gain, runtime selection or GPU allowance
+resulted. Operation 212 remains parked with its documented route-witness gap.
+The sprint history below remains evidence for earlier profiles.
+
 Progress: [Sprint 8 attribution](SPRINT8-COST-ATTRIBUTION.md) and
 [Sprint 9.1 classification](SPRINT9-TARGET-GRAPH.md) are complete. The native
 classification passed all eight final-answer gates and independent release.
@@ -409,4 +426,4 @@ The [UltraQuant assessment](QWEN-NEXT-FEASIBILITY.md#ultraquant-assessment) foun
 
 The owner parked Flash-Next checkpoint and engine work and will wait for Qwen4 dense 27B. No model release date or final architecture is assumed. The selected Qwen3.8 27B experimental baseline remains frozen.
 
-The owner then reopened [Qwen3.8 tuning](QWEN38-REOPENED-TUNING.md) against that reference. [Sprint 35](SPRINT35-LONG-PREFIX-REUSE.md) passed its first bounded long-document GPU prefix-reuse screen. [Sprint 36](SPRINT36-PREFILL-CHUNKS.md) completed both orders and retained 2048-token prefill chunks. M4096 stage-1 tuning remains an unselected lead. Sprint 37 next audits optional FP8 target KV under the original matched-test scope and budgets. Each later candidate has a separate scope and review; Flash-Next, lower-bit weights and alternate engines remain parked. Reliability and endurance still follow tuning.
+The owner then reopened [Qwen3.8 tuning](QWEN38-REOPENED-TUNING.md) against that reference. [Sprint 35](SPRINT35-LONG-PREFIX-REUSE.md) passed its first bounded long-document GPU prefix-reuse screen. [Sprint 36](SPRINT36-PREFILL-CHUNKS.md) completed both orders and retained 2048-token prefill chunks. M4096 stage-1 tuning remains an unselected lead. [Sprint 37](SPRINT37-FP8-KV-FEASIBILITY.md) completed the FP8 target-KV source audit and retained BF16. The matched campaign needs separate compatibility and owner-schedule work; no GPU test ran. [Sprint 38](SPRINT38-ADAPTIVE-SPECULATION.md) found a descriptive probability/acceptance association in sealed sampled traces, with AUC 0.9768; fixed DFlash8 remains selected and no adaptive policy was tested. [Sprint 39](SPRINT39-C2-THROUGHPUT.md) completed its C1/C2 screen: about 173 versus 120 combined tok/s, with longer C2 latency, unequal generated work and 8/8 natural-answer checks. [Sprint 40](SPRINT40-KV-CAPACITY.md) passed 10/10 typed answers with roughly 60K inputs and measured cumulative allocator peaks through request release. BF16 KV fits the bounded 64K C1 workload; UltraQuant integration stays deferred. These are bounded, instrumented observations and no runtime default changed. Sprint 41 starts with conditional BF16-weight memory feasibility. Flash-Next, lower-bit weights and alternate engines remain parked. Reliability and endurance still follow tuning.

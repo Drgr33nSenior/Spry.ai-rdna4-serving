@@ -1,0 +1,113 @@
+{
+  "authorization": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1/AUTHORIZATION.json",
+    "sha256": "e3df104722f21fdae396d1466ccb232ac6688bda25b29c90491a759f16abde30"
+  },
+  "automatic_retry": false,
+  "checks": {
+    "artifact_count": 30,
+    "cases": [
+      "down-m16",
+      "gate_up-m16",
+      "gate_up-m8"
+    ],
+    "child_reaped": true,
+    "contract_sha256": "7e1615867d23ce13ef540ca8e08c7b055b7e4e6e75f52cc473d0b2a5cbf46ca6",
+    "focused_tests": 20,
+    "gpu_operations": 0,
+    "model_starts": 0,
+    "native_compiler_and_comparator_runtime": "Python 3.14.4; focused unit suite ran locally on Python 3.11.",
+    "native_exit_code": 0,
+    "native_invocations": 1,
+    "native_invocations_before_seal": 0,
+    "original_gate_unchanged": true,
+    "owned_group_absent": true,
+    "prepared_gate_covers": [
+      "baseline five-part pins",
+      "negative-control five-part pins",
+      "exact IR except one hint attribute",
+      "whole-function and loop operands including waits",
+      "ELF target and flags",
+      "descriptor masks and function-size prefetch",
+      "resource non-regression and no padding",
+      "finite driver and stop without retry",
+      "offline replay"
+    ],
+    "public_preflight": 43,
+    "readout_reproduced": true,
+    "remaining_invocations": 0,
+    "result_sha256": "059e287916f14f54bcdc1123fd1d540417eccc8c167bf656fb2db469fb24b234",
+    "review_status": "APPROVED_CPU_ONLY",
+    "schema": 1
+  },
+  "contract": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1/CONTRACT.md",
+    "sha256": "7e1615867d23ce13ef540ca8e08c7b055b7e4e6e75f52cc473d0b2a5cbf46ca6"
+  },
+  "date": "2026-11-04",
+  "deployment_changed": false,
+  "evidence": {
+    "manifest_sha256": "279298a5385720cfcd4701d4160784f4b450762eadad2cf080a936e68468155d",
+    "members": 98,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1",
+    "verified_utc": "2026-11-04T07:34:24.352203+00:00"
+  },
+  "gpu_operations": 0,
+  "gpu_ready": false,
+  "model_starts": 0,
+  "native_invocations": 1,
+  "next_action": "Park. Future gate/up-only component preparation and exact GPU approval remain separate.",
+  "performance_measured": false,
+  "prepared": {
+    "manifest_sha256": "04463a735eb9604233ee0c9b2fc9e8d97d46be1f23ff3a552b27a6ea9df8ac41",
+    "members": 26,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1/prepared",
+    "verified_utc": "2026-11-04T07:31:39.252662+00:00"
+  },
+  "public_report": "docs/MXFP4-GEMM-WAVE-HINT-CPU-RESULTS.md",
+  "public_report_sha256": "2a16e329e5178d1a9de2d1f8ad06c05e2abe41e1273bf5cbcfc6125bf7c83465",
+  "readout": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1/read_result.py",
+    "sha256": "7a16ebc0992a23a3c15dfef985f8f192a6cdbabd525196759591c4939c259428"
+  },
+  "receipt": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1/native/target-compile.json",
+    "sha256": "7122d9fb670c055b6f235681ddf3b8ea200e4d79a7c259beade5efb7e0bc9916"
+  },
+  "remaining_invocations": 0,
+  "result": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-approved-cpu-20261104-v1/RESULT.json",
+    "sha256": "059e287916f14f54bcdc1123fd1d540417eccc8c167bf656fb2db469fb24b234"
+  },
+  "review": {
+    "focused_tests_rerun": 20,
+    "model": "claude-opus-5-5",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-HINT-THREE-CASE-REVIEW-v1.md",
+    "provider": "claudeAgent",
+    "sha256": "c5450b04a30d012559ca66042179236da7e117e4a86527d0b8c92d6ce9642478",
+    "verdict": "APPROVED_CPU_ONLY_NO_BLOCKERS"
+  },
+  "review_amendments": "Instruction multisets do not prove numerical correctness; shared schedule with differing grid/trip count; offline replay uses same gate; HSACO/assembly correspondence not disassembled.",
+  "schema": 1,
+  "selection_changed": false,
+  "serving_bundle_decision": "HOLD_UNCHANGED",
+  "signoff": {
+    "manifest_sha256": "c81d8f8dfba776f4fe923685fd146b0cfe58783475674ee6253043ee1190f2f6",
+    "members": 12,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-three-case-signoff-20261104-v1",
+    "verified_utc": "2026-11-04T07:45:19.351899+00:00"
+  },
+  "status": "CPU_THREE_CASES_PASS_REVIEWED_PARKED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "b56c66877c2b260d783ae917846916e70ef2001e09fafc7ad9505cc3da7aa14d",
+      "absolute_machine_path_prefixes_removed": 9,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

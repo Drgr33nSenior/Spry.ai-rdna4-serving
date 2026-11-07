@@ -1,0 +1,2594 @@
+{
+  "acceptance_investigation": {
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/acceptance-divergence-cpu-20261104-v1",
+    "seal_sha256": "7c9f3e7db3cf90d5c2c5c041ad2e58b84bcbdaac73688a87d33d9cc9926cef0f"
+  },
+  "additional_bandwidth": [
+    {
+      "id": "BW-01",
+      "next_gate": "Stronger representation and held-out complete-layout/decode-cost screen.",
+      "related": [
+        "G3"
+      ],
+      "status": "PALETTE_AND_TWO_HUFFMAN_LAYOUTS_PARKED"
+    },
+    {
+      "id": "BW-02",
+      "next_gate": "Preserve real/decoded/production equivalence distinction.",
+      "related": [
+        "L09"
+      ],
+      "status": "BLOCKED_PRODUCTION_NUMERICAL_EQUIVALENCE"
+    },
+    {
+      "id": "BW-03",
+      "next_gate": "Representative target-head/input margins, gfx1201 rounding contract, consumer/lowering and whole-call cost. No fifth bundle member.",
+      "related": [
+        "D1"
+      ],
+      "status": "CPU_INTERVAL_PROTOTYPE_HOLD_REVIEW_ACCEPTED"
+    },
+    {
+      "id": "BW-04",
+      "next_gate": "Six named source/writer prerequisites remain open, including a bounded move trigger and CPU-fallback detection. No hardware packet is ready.",
+      "previous_status": "CPU_FEASIBILITY_OPEN",
+      "related": [],
+      "status": "CPU_SOURCE_REVIEW_ACCEPTED_FOLLOWUP_TESTED_HARDWARE_HOLD"
+    }
+  ],
+  "additional_count": 4,
+  "bw03_interval_cpu": {
+    "checkpoint_read": false,
+    "cumulative_member_count": 4,
+    "date": "2026-11-04",
+    "evidence": {
+      "manifest_sha256": "460281a4585215564eb638fa7385a188d191b992f1b7bbff5745f49d6c74dd40",
+      "members": 30,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw03-certified-head-cpu-20261104-v1",
+      "verified_utc": "2026-11-04T15:05:05.222787+00:00"
+    },
+    "gpu_operations": 0,
+    "gpu_ready": false,
+    "implemented": [
+      "INT4 screening row encoder and original-bound residual validation",
+      "Exact-rational quantization intervals",
+      "Strict TP2 winner certificate for a declared interval model",
+      "Whole-call fallback simulation and conditional cost gate",
+      "FP32 shared-row-shift counterexample"
+    ],
+    "independent_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-BW03-CERTIFIED-HEAD-CPU-REVIEW-v1.md",
+      "reviewer": "Opus 5.5",
+      "sha256": "3b3d6c07b1ab1c67da338b994bab9474780e27ea56f490b6948394deba6d116e",
+      "verdict": "HOLD_NO_FIFTH_MEMBER"
+    },
+    "input_seals_verified": 2,
+    "model_starts": 0,
+    "new_cumulative_candidate": false,
+    "next_action": "Keep BW-03 research-only with no fifth member; finish four-member serving qualification.",
+    "public_report": "docs/MXFP4-CERTIFIED-HEAD-CPU-SCREEN.md",
+    "public_report_delta": "Unsealed Opus signoff addendum; sealed PUBLIC-REPORT unchanged.",
+    "public_report_sha256": "e431b698496ac023fdff6cd686b3eebed0040a4abd6dc3b4a1fdd529b12fedfb",
+    "remaining": [
+      "Representative selected head/activation margin coverage",
+      "Authenticated gfx1201 FP8 accumulation/scaling error model",
+      "Concrete GPU lowering and total-cost evidence",
+      "Qualification of argmax-only consumer eligibility"
+    ],
+    "research": {
+      "novelty_claim": false,
+      "primary_sources": [
+        {
+          "role": "Production-kernel rounding, certificate and whole-call fallback obligations; BF16/GH200 performance is not transferable to selected FP8/gfx1201.",
+          "url": "https://sammausberg.com/research/papers/the_work_a_verifier_needs.pdf"
+        },
+        {
+          "role": "Shared-row shifts before lossy quantization; real softmax invariance does not establish production FP32 argmax parity.",
+          "url": "https://arxiv.org/html/2609.31291"
+        },
+        {
+          "role": "Exact MIPS indexing versus blocked matrix multiplication; pruning needs an empirical total-cost case.",
+          "url": "https://arxiv.org/abs/1706.01449"
+        }
+      ],
+      "proposed_combination": "INT4 screening of already-FP8 head values with exact rational residual reference and explicit unknown production-rounding guard. CPU model only.",
+      "search_workstreams": 2,
+      "sources_reviewed": 13,
+      "unique_search_urls": [
+        "https://sammausberg.com/resume/Samuel_Mausberg_Resume_2026-10-16.pdf",
+        "https://sammausberg.com/",
+        "https://sammausberg.com/research/papers/verified-progress",
+        "https://sammausberg.com/research/papers/the_work_a_verifier_needs.pdf",
+        "https://github.com/SamMausberg/statecut/blob/main/docs/REFERENCE.md",
+        "https://dl.acm.org/doi/10.1145/3404835.3462997",
+        "https://arxiv.org/html/1810.12406v1",
+        "https://arxiv.org/pdf/1706.01449v3.pdf",
+        "https://ojs.aaai.org/index.php/AAAI/article/download/25613/25385",
+        "https://arxiv.org/abs/2608.27460",
+        "https://www.emc2-ai.org/assets/docs/neurips-19/emc2-neurips19-paper-9.pdf",
+        "http://proceedings.mlr.press/v51/guo16a.pdf",
+        "https://ar5iv.labs.arxiv.org/html/1810.12406"
+      ]
+    },
+    "review_pending": false,
+    "schema": 1,
+    "selection_changed": false,
+    "serving": "HOLD",
+    "source_scope": "Selected TP2 target head, already FP8/G128 with FP32 logits for M8/M16; source-bound CPU metadata only",
+    "status": "CPU_PROTOTYPE_HOLD_REVIEW_ACCEPTED",
+    "tests": 25
+  },
+  "bw04_allocation_route": {
+    "adoption_authorized": false,
+    "compression_observed": false,
+    "evidence": {
+      "manifest_sha256": "1cc29cfae7b5dbfb5b75f3af1f249caf43b2b63f8fcaf94c2981a5f8b7823a24",
+      "members": 87,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2",
+      "verified_utc": "2026-11-04T22:48:32.729505+00:00"
+    },
+    "focused_tests": 20,
+    "gpu_operations": 0,
+    "gpu_ready": false,
+    "inventory_guard_scope": "nine direct guard-function calls before audit hook installation",
+    "model_starts": 0,
+    "native_file_pins_match": 6,
+    "native_inventory_reused": true,
+    "native_invocations_in_followup": 0,
+    "native_read_only_guard_checks": 9,
+    "next_action": "Hold BW-04 until bounded writer trigger, CPU-fallback detection, installed mapping chain and compression measurement are authenticated. Prepare the reduced control-only diagnostic on CPU; candidate/control acceptance divergence is a separate paired question. No GPU authority.",
+    "next_preparation": {
+      "kind": "design only; B envelope is an unapproved placeholder",
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/DIAGNOSTIC-PREPARATION.md",
+      "sha256": "4dabf0c798c34cc1ef7806d1ddb76e0e028c4e660deafe47d6bbe4edd159e80a"
+    },
+    "open_preconditions": [
+      {
+        "id": "R1-original-bo",
+        "requirement": "Authenticate same-device exporter/importer identity; reference reuse is conditional."
+      },
+      {
+        "id": "R1-create-metadata-export",
+        "requirement": "Trace the exact installed flag mask, creation, tiling and export path end to end."
+      },
+      {
+        "id": "R1-move-trigger",
+        "requirement": "Identify a bounded GTT-to-VRAM validation trigger; changing preference alone is insufficient."
+      },
+      {
+        "id": "R1-sdma-writer",
+        "requirement": "Authenticate installed callback dispatch, compression fields, completion and active compression."
+      },
+      {
+        "id": "R1-cpu-fallback",
+        "requirement": "Detect and reject CPU-copy fallback; migration success alone is insufficient."
+      },
+      {
+        "id": "R1-mapping",
+        "requirement": "Trace KFD ioctl, VM update and ASIC PTE dispatch in the exact installed stack."
+      }
+    ],
+    "previous_stage": {
+      "evidence": {
+        "manifest_sha256": "f3a034011ac29cc0f015cf05ff96f823943a9b35a722b8354a1b85b48a793938",
+        "members": 53,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v1",
+        "verified_utc": "2026-11-04T22:24:52.976877+00:00"
+      },
+      "focused_tests": 16,
+      "status": "SOURCE_ROUTE_IDENTIFIED_REVIEW_PENDING_PHYSICAL_GATES_OPEN"
+    },
+    "public_preflight_tests": 43,
+    "public_report": "docs/MXFP4-BW04-ALLOCATION-ROUTE.md",
+    "public_report_postseal_correction": {
+      "evidence": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/acceptance-divergence-cpu-20261104-v1",
+      "reason": "Correct unsupported acceptance-efficiency attribution; old sealed report preserved."
+    },
+    "public_report_sha256": "48523e966c478e9198c700f146dbd0dc62025b696d58b22a5ebafb46a38d02c6",
+    "retained_work_census": {
+      "acceptance_mechanism_change_established": false,
+      "control_only_diagnostic_explains_candidate_divergence": false,
+      "interpretation_correction": "Verify-round/output differences are confounded by different reasoning token streams.",
+      "normalisation_performed": false,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/WORK-RESULT.json",
+      "serving_verdict": "INCONCLUSIVE_UNCHANGED",
+      "sha256": "56615745c252114a1f56890dd72dd9e86673553bbed11be7ad029dc7affa1ce2"
+    },
+    "review": {
+      "parent_followup": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/REVIEW-RESOLUTIONS.md",
+      "parent_followup_independently_reviewed": false,
+      "parent_followup_sha256": "0688d5a26296fc299411e4d5a6b165b4a63977eb85213585678d191100730325",
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-BW04-ALLOCATION-ROUTE-REVIEW-v1.md",
+      "reviewed_stage": "immutable v1",
+      "sha256": "7a21e45d25f79253a53bc91d007b996269812089de63d77305b2286cf8c1140f",
+      "verdict": "ACCEPT_CPU_SOURCE_WITH_R1_CONDITION"
+    },
+    "route_status": "HOLD_SOURCE_CHAIN_AND_WRITER_PROOF",
+    "runtime_loaded_paths_proven": false,
+    "schema": 2,
+    "selection_changed": false,
+    "source_chain_complete": false,
+    "source_route": "rank-local GEM-DCC -> opaque FD -> HIP external mapped buffer",
+    "source_snapshots": 21,
+    "status": "CPU_SOURCE_REVIEW_ACCEPTED_FOLLOWUP_TESTED_HARDWARE_HOLD"
+  },
+  "closed_reopen_conditions": {
+    "c4_accumulator_fold": "Distinct source/routing repair must remove the resolved zero-prefix regression and pass all original hard gates before reconsideration; unchanged source remains excluded."
+  },
+  "closed_screens": [
+    "N32",
+    "EXP2/reorder",
+    "two-query",
+    "scalar bitdecode",
+    "scale-prefetch/layout",
+    "weight-layout variants including v6 under original contract",
+    "original wave-hint equality contract",
+    "C4 accumulator: zero-prefix regression",
+    "screened LZ4/Snappy/zlib/palette/Huffman formats"
+  ],
+  "coverage": [
+    {
+      "id": "L01",
+      "next_gate": "New prospective allocation contract and all-shape proof before reopening.",
+      "prior_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "sprint": "OPT-02",
+      "status": "PARKED_V6_CONTRACT_FAILED",
+      "title": "Original: MXFP4 prepacking/lookup"
+    },
+    {
+      "id": "L02",
+      "next_gate": "Measured removable traffic plus flush/generation protocol.",
+      "prior_status": "DEFER_STRUCTURAL_STATE_PROTOCOL",
+      "sprint": "OPT-04",
+      "status": "DEFERRED_STATE_PROTOCOL",
+      "title": "Original: recurrent commit fusion"
+    },
+    {
+      "id": "L03",
+      "next_gate": "Reuse op217; identify exposed submission cost.",
+      "prior_status": "BUILD_SOURCE_PRESENT_DYNAMIC_EXPOSURE_UNKNOWN",
+      "retained_trace_analysis": "CPU reader passed; authenticated clock mapping/full graph membership and exposed-delay proof remain absent.",
+      "sprint": "OPT-01",
+      "status": "DIAGNOSTIC_RETAINED_EXPOSURE_UNRESOLVED",
+      "title": "Original: host scheduler/submission"
+    },
+    {
+      "id": "L04",
+      "next_gate": "Under-load placement and exposed collective dependency proof.",
+      "prior_status": "TRANSPORT_AND_OWNER_PLACEMENT_NEED_PROFILE",
+      "sprint": "OPT-01",
+      "status": "DEFERRED_CAUSAL_TRANSPORT_EVIDENCE",
+      "title": "Original: TP2 communication/NUMA"
+    },
+    {
+      "id": "L05",
+      "next_gate": "No unchanged retry.",
+      "prior_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "sprint": "OPT-03",
+      "status": "REJECTED_RESOURCE_GATE",
+      "title": "Original: C4 int32 indices"
+    },
+    {
+      "id": "L06",
+      "next_gate": "No unchanged retry.",
+      "prior_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "sprint": "OPT-03",
+      "status": "REJECTED_RESOURCE_GATE",
+      "title": "Original: C4 index-ahead"
+    },
+    {
+      "id": "L07",
+      "next_gate": "Explicit lane/address mapping before compilation.",
+      "prior_status": "DEFERRED_MAPPING_PROOF",
+      "sprint": "OPT-03",
+      "status": "DEFERRED_MAPPING_PROOF",
+      "title": "Original: C4 address/layout work"
+    },
+    {
+      "id": "L08",
+      "next_gate": "Composed attention passed op214; production and serving qualification remain.",
+      "prior_status": "CORRECT_NOT_USEFUL_RETAIN_FOR_CUMULATIVE",
+      "sprint": "OPT-03",
+      "status": "COMPONENT_PASSED_CUMULATIVE_HELD",
+      "title": "Original: verification split/partition strategy"
+    },
+    {
+      "id": "L09",
+      "next_gate": "Resolve floating-point accumulation and exceptional-value contract.",
+      "prior_status": "CPU_PROOF_BLOCKED",
+      "sprint": "OPT-02",
+      "status": "BLOCKED_PRODUCTION_NUMERICAL_EQUIVALENCE",
+      "title": "Original: integer MXFP4 reduction proof"
+    },
+    {
+      "id": "L10",
+      "next_gate": "Close selected-wrapper provenance and qualify real activations, routes and serving. No GPU authority.",
+      "prior_status": "CPU_SCREEN_NO_CANDIDATE",
+      "sprint": "OPT-02",
+      "status": "COMPONENT_USEFUL_RESULT_REVIEWED",
+      "title": "Original: other RDNA4 GEMM scheduling"
+    },
+    {
+      "id": "L11",
+      "next_gate": "Reopen only for exposed request cost.",
+      "prior_status": "DEPRIORITIZED_NO_STANDALONE_GPU",
+      "sprint": "OPT-01",
+      "status": "DEPRIORITIZED",
+      "title": "Original: H1 prefill metadata copies"
+    },
+    {
+      "id": "L12",
+      "next_gate": "Separate shortlist from compact-cache qualification.",
+      "prior_status": "CPU_SCREEN_DEFER_SELECTED_DATA_AND_GRAPH_INTEGRATION",
+      "sprint": "OPT-05",
+      "status": "DEFERRED_COVERAGE_AND_CACHE_LIFECYCLE",
+      "title": "Original: compact draft cache/TP greedy graph sampler"
+    },
+    {
+      "id": "H2",
+      "next_gate": "No backport or queue tuning without exposure evidence.",
+      "prior_status": "NO_BACKPORT_QUEUE_HYPOTHESIS_CONDITIONAL",
+      "retained_trace_analysis": "CPU reader passed; authenticated clock mapping/full graph membership and exposed-delay proof remain absent.",
+      "sprint": "OPT-01",
+      "status": "DIAGNOSTIC_RETAINED_NO_CANDIDATE",
+      "title": "Exa: graph dispatch and queue count"
+    },
+    {
+      "id": "H3",
+      "next_gate": "No idle census repetition.",
+      "prior_status": "IDLE_HOST_CLEAR_NO_AFFINITY_CHANGE",
+      "sprint": "OPT-01",
+      "status": "DEFERRED_UNDER_LOAD_PLACEMENT",
+      "title": "Exa: CPU placement/cgroups/helper affinity"
+    },
+    {
+      "id": "D1",
+      "next_gate": "Better selected workload coverage/acceptance evidence.",
+      "prior_status": "CPU_SCREEN_DEFER_SELECTED_DATA_AND_GRAPH_INTEGRATION",
+      "sprint": "OPT-05",
+      "status": "DEFERRED_SHORTLIST_ECONOMICS",
+      "title": "Exa: draft vocabulary pruning"
+    },
+    {
+      "id": "M1",
+      "next_gate": "One justified boundary before complete-round work.",
+      "prior_status": "CPU_AUDIT_DEFER_EXPOSED_BOUNDARY_AND_LIFECYCLE_PROOF",
+      "retained_trace_analysis": "CPU reader passed; authenticated clock mapping/full graph membership and exposed-delay proof remain absent.",
+      "sprint": "OPT-06",
+      "status": "DEFERRED_EXPOSED_BOUNDARY_AND_LIFECYCLE",
+      "title": "Exa/MI350: GPU-resident speculative round"
+    },
+    {
+      "id": "F1",
+      "next_gate": "Real T16 engagement/representative activations/TP2 and lifecycle; collective branch separate.",
+      "prior_status": "CPU_COMPILER_SURVIVOR_COMPONENT_PREPARATION_REQUIRED",
+      "sprint": "OPT-04",
+      "status": "COMPONENT_RETAINED_POSITIVE_SERVING_UNQUALIFIED",
+      "title": "Exa/MI350: local/collective fusion"
+    },
+    {
+      "id": "G2",
+      "next_gate": "Same work as L01; wave-hint contract is not a v6 waiver.",
+      "prior_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "sprint": "OPT-02",
+      "status": "PARKED_V6_CONTRACT_FAILED",
+      "title": "Exa/MI350: reversible packing"
+    },
+    {
+      "id": "R1",
+      "next_gate": "Same work as L02.",
+      "prior_status": "DEFER_STRUCTURAL_STATE_PROTOCOL",
+      "sprint": "OPT-04",
+      "status": "DEFERRED_STATE_PROTOCOL",
+      "title": "Exa: deferred state materialization"
+    },
+    {
+      "id": "G3",
+      "next_gate": "Census rejects these palette/Huffman layouts; stronger representation needed.",
+      "prior_status": "CPU_SCREEN_CODEC_PARKED",
+      "sprint": "OPT-02",
+      "status": "PARKED_SCREENED_CODECS",
+      "title": "Exa: lossless tile entropy coding"
+    },
+    {
+      "id": "H4",
+      "next_gate": "Measure relevant cache-tree cost before rewrite.",
+      "prior_status": "CPU_AUDIT_DEFER_NATIVE_EVENT_STREAM_AND_HOST_COST",
+      "sprint": "OPT-06",
+      "status": "DEFERRED_NATIVE_EVENTS_AND_CPU_COST",
+      "title": "Exa: native cache tree/session retention"
+    }
+  ],
+  "cpu_compiler_repair": {
+    "acceptance_gate_weakened": false,
+    "binder_evidence": {
+      "manifest_sha256": "83313cf956a28d9f72593cd78a8262df6c1c14e944e41afb34d2f40ebab84a72",
+      "members": 103,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/compiler-binder-investigation-v1"
+    },
+    "binder_input_differences": 0,
+    "changed_debug_only_binaries": 5,
+    "compiler_pins_sha256": "7fd566e8853ebf88496fe7a6c07c22b1f2b3a803a12f2a59ce01c20fec048a13",
+    "cpu_binder_cases": 4,
+    "evidence": {
+      "manifest_sha256": "daaca1ca62ad1971804daf74071ffd0715049ecc50e0998b345a86d6df0db991",
+      "members": 85,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/compiler-cold-proof-v1"
+    },
+    "focused_tests": 41,
+    "fresh_native_binaries": 10,
+    "gpu_launches": 0,
+    "independent_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-FOUR-MEMBER-COMPILER-CACHE-REVIEW-v1.md",
+      "sha256": "c4168aff2da28af787b5f37b552062d1aad68c30eb1eb1b75ccf7a20c49087b8",
+      "verdict": "ACCEPTED"
+    },
+    "live_operation222_record_observed": false,
+    "machine_code_and_resources_identical": true,
+    "model_starts": 0,
+    "new_cache_tests": 6,
+    "physical_qualification": false,
+    "public_preflight": 43,
+    "remaining_gpu_allowance": 0,
+    "retained_artifacts": 50,
+    "review_pending": false,
+    "root_cause": "Historical calibration and serving-context compiles shared a cache key that omits source filename; cached debug-path artifacts invalidated expected full hashes.",
+    "serving_gain_established": false,
+    "status": "CPU_REVIEW_ACCEPTED"
+  },
+  "cpu_review_resolutions_complete": true,
+  "cumulative_member_conditions": {
+    "gemm_gateup_wave_hint": {
+      "down_m16_excluded": true,
+      "independent_result_review_pending": false,
+      "production_qualified": false,
+      "serving_measured": true,
+      "status": "COMPONENT_REVIEWED_BOUNDED_SERVING_CHECKS_PASS_PERFORMANCE_INCONCLUSIVE"
+    }
+  },
+  "cumulative_members": [
+    "verification_prefetch",
+    "verification_split_cap32",
+    "gated_norm_mxfp4",
+    "gemm_gateup_wave_hint"
+  ],
+  "current_operation": 224,
+  "current_packet": {
+    "gpu_authority": false,
+    "manifest_sha256": "c1134a8873ee787fcde2856f8633805de1f6c01bdb69d86898835fdedf944c0f",
+    "packet": "a7e4f7b62d016a9b",
+    "registration": false,
+    "review_pending": true,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v2"
+  },
+  "date": "2026-11-04",
+  "execution_218": {
+    "allowance_consumed": true,
+    "baseline_samples": 0,
+    "caller_elapsed_seconds": 0.5604750000056811,
+    "campaign_seal": {
+      "manifest_sha256": "aa0374376bfad7bb87d6975028ce476ec207f79ece314559c24ee9bbb6f9c2c3",
+      "members": 20,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-50a9ba49e2f267b2",
+      "verified_utc": "2026-11-04T13:03:38.238548+00:00"
+    },
+    "candidate_samples": 0,
+    "closed_checkpoint": {
+      "number": 591,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-591.json",
+      "sha256": "735878bab24eebb6906d395bd15cd96cfa1434ee811ddb3f90fa8b3f0c0ef0cc"
+    },
+    "gpu_launches": 0,
+    "index": 218,
+    "model_starts": 0,
+    "operation_seal": {
+      "manifest_sha256": "ee8250af4ba9777e2a41684b3351330910589d5e22804b2bb6e472a333c75bcc",
+      "members": 14,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/gemm-wave-run-50a9ba49e2f267b2",
+      "verified_utc": "2026-11-04T13:02:12.029361+00:00"
+    },
+    "owner_execution": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-50a9ba49e2f267b2/OWNER-EXECUTION.json",
+      "sha256": "ee04935894c9d82b59a067098e8c41e182a4a50c505c8c3b8e5f44147fbc5d67"
+    },
+    "owner_started": false,
+    "packet": "50a9ba49e2f267b2",
+    "performance_measured": false,
+    "reason": "AssertionError in upload_groups: host_gate/ source subtree is excluded",
+    "release_disposition": "CARRIED_PRIOR_RELEASE_NO_OWNER_STARTED",
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-50a9ba49e2f267b2/RESULT.md",
+      "sha256": "f2cd05fd14f3a1a4d22e4e8fe1c99c65be77cf6ba0bfdc8ade05e32e0c0f19bf"
+    },
+    "retry": false,
+    "selection_changed": false,
+    "source_uploads": 0,
+    "status": "FAILED_PRE_OWNER_PARKED"
+  },
+  "execution_219": {
+    "allowance_consumed": true,
+    "baseline_samples": 0,
+    "caller_elapsed_seconds": 24.509052957990207,
+    "campaign_seal": {
+      "manifest_sha256": "34d444974c8b8448b5ad1271296c296c9e8fda09114ca9fdcd2b21009e90de4c",
+      "members": 189,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27",
+      "verified_utc": "2026-11-04T13:19:34.608055+00:00"
+    },
+    "candidate_samples": 0,
+    "closed_checkpoint": {
+      "number": 593,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-593.json",
+      "sha256": "8945ea9179b39c3c0a2226e796c3fc85064809aa7286bf97b11ea7b027be00d1"
+    },
+    "framework_initialized": false,
+    "gemm_gpu_launches": 0,
+    "import_diagnosis": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27/IMPORT-FAILURE-DIAGNOSIS.json",
+      "sha256": "520125b9685d18564db2f98ac1f5e075d6a6a1ad782a984dff09d3da6959ab37"
+    },
+    "independent_release": true,
+    "index": 219,
+    "model_starts": 0,
+    "operation_seal": {
+      "manifest_sha256": "1e1373893f0cd23bde0da55eefa4a99c8b20cfe2e3d274aacf0101ca70fa5cfd",
+      "members": 229,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/gemm-wave-run-0b6981eac62bea27",
+      "verified_utc": "2026-11-04T13:17:29.806775+00:00"
+    },
+    "owner_elapsed_seconds": 17.895973375008907,
+    "owner_execution": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27/OWNER-EXECUTION.json",
+      "sha256": "97f0e229ea47dee48b91de2a63389db3abda7b14d905e1ecd4dd9b4518ff760f"
+    },
+    "owner_started": true,
+    "packet": "0b6981eac62bea27",
+    "performance_measured": false,
+    "preparation": {
+      "manifest_sha256": "16c6a429670b5fd6d13dd2fdbe2bc0a45813d2443a6b3e7c4d3ff4a9d9833d44",
+      "members": 315,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v4",
+      "verified_utc": "2026-11-04T13:15:12.557806+00:00"
+    },
+    "reason": "ModuleNotFoundError: No module named 'asset_gate'",
+    "remaining_gpu_allowance": 0,
+    "remote_upload_verified": true,
+    "repair_audit": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v4/REPAIR-AUDIT.json",
+      "sha256": "1ef3c994c8e9e1f0ff3bd3168cbb057dae65d0257974feeffa72f450ab3eb355"
+    },
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27/RESULT.md",
+      "sha256": "63dfdf6c709d16e7e9016957c914f30907202bda9eac8ed83e57b97a896ef7c8"
+    },
+    "retry": false,
+    "schema": 1,
+    "selection_changed": false,
+    "source_uploads": 3,
+    "status": "FAILED_ENTRY_IMPORT_RELEASED_PARKED"
+  },
+  "execution_220": {
+    "allowance_consumed": true,
+    "caller_elapsed_seconds": 58.47972966701491,
+    "campaign_seal": {
+      "manifest_sha256": "2474cddf8d9edc05a48bea768a210dfeeec5485333de0def5994f00650a6de15",
+      "members": 255,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5",
+      "verified_utc": "2026-11-04T13:49:35.737695+00:00"
+    },
+    "cards": [
+      {
+        "card": 0,
+        "cleanup": {
+          "allocated_after": 0,
+          "allocated_before": 0,
+          "workspace_cleared": true
+        },
+        "independent_oracle_cases": 12,
+        "numerical_cases": 21,
+        "peak": {
+          "allocated": 291349504,
+          "reserved": 356515840
+        },
+        "quantizer_cases": 9
+      },
+      {
+        "card": 1,
+        "cleanup": {
+          "allocated_after": 0,
+          "allocated_before": 0,
+          "workspace_cleared": true
+        },
+        "independent_oracle_cases": 12,
+        "numerical_cases": 21,
+        "peak": {
+          "allocated": 291349504,
+          "reserved": 356515840
+        },
+        "quantizer_cases": 9
+      }
+    ],
+    "chart": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/LATENCY.html",
+      "sha256": "41bae0c6584b25bf45675cdb794e6c52d6976925344334103f41219df506d4b5"
+    },
+    "closed_checkpoint": {
+      "number": 595,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-595.json",
+      "sha256": "b6687cc76b22419c38e8995df753000f1439a36186633b4fe963dacdeb87b555"
+    },
+    "component_complete": true,
+    "correctness_rows": 42,
+    "down_m16_role_note": "Diagnostic gain, not a null control. Excluded by candidate contract; no evidence that down is unaffected.",
+    "independent_release": true,
+    "independent_result_review_pending": false,
+    "independent_review": {
+      "component_verdict": "CONFIRMED",
+      "effort": "high",
+      "model": "claude-opus-5-5",
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM220-AND-PRODUCTION-ROUTE-REVIEW-v1.md",
+      "route_verdict": "CONFIRMED_WITH_QUALIFICATIONS",
+      "sha256": "e72475037f41475428e0594fd259cee0ae1d146b5f9ef6e7ba200264ebb3e5b0"
+    },
+    "index": 220,
+    "model_starts": 0,
+    "native_entry_proof": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6/entry-proof/RESULT.json",
+      "sha256": "44709d81bf90c06e63b0436c8dbc9b1571ff9c34efa427a6c284fba71c388cc0"
+    },
+    "numerical_coverage_note": "Per card across 3 cases: 12 independent-oracle rows, including 9 quantizer rows; 9 additional baseline-byte-only rows include 3 finite scale-zero rows.",
+    "operation_seal": {
+      "manifest_sha256": "90b8d862ba2220f47e716a0019387aca4495abcf30ffd547458bc7c288874d18",
+      "members": 294,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/gemm-wave-run-4a0e02f8eacabdd5",
+      "verified_utc": "2026-11-04T13:45:38.000691+00:00"
+    },
+    "owner_elapsed_seconds": 47.0962271669996,
+    "owner_execution": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/OWNER-EXECUTION.json",
+      "sha256": "eea573dc5bfc573f92555a8447703b9149c87ea755c3601dcddc15b64afe089a"
+    },
+    "owner_started": true,
+    "packet": "4a0e02f8eacabdd5",
+    "preparation": {
+      "manifest_sha256": "f0a987c6e3d1d42aa4d71afc285aaba68c61cfeb929ec07e21ff1a3ca6980499",
+      "members": 330,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6",
+      "verified_utc": "2026-11-04T13:42:23.516399+00:00"
+    },
+    "readout": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/read_result.py",
+      "sha256": "9f2c54e784ecdbc5c6434912002dc939c9e7f37831707d4dbd47537399db0481"
+    },
+    "remaining_gpu_allowance": 0,
+    "repair_audit": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6/REPAIR-AUDIT.json",
+      "sha256": "a4e706ce5d63aa03d8c593e17cb18c6cf8a2959bc1e22b226464c4d7695d159e"
+    },
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/RESULT.md",
+      "sha256": "f7222ccfd9850296348de6c1f458457b46b6be366fe47439dc866b27b9ea0100"
+    },
+    "retry": false,
+    "schema": 1,
+    "scored_samples": 72,
+    "selection_changed": false,
+    "serving_measured": false,
+    "status": "COMPONENT_USEFUL_RELEASED_PARKED",
+    "timing_rows": [
+      {
+        "baseline_median_ms": 0.11969999969005585,
+        "baseline_range_ms": 0.000720001757144928,
+        "candidate_median_ms": 0.09744049981236458,
+        "candidate_range_ms": 0.0010010004043579102,
+        "card": 0,
+        "case": "down-m16",
+        "median_gap_ms": 0.02225949987769127,
+        "passes_frozen_screen": true,
+        "role": "negative_control",
+        "saving_pct": 18.59607346309834
+      },
+      {
+        "baseline_median_ms": 0.1805804967880249,
+        "baseline_range_ms": 0.0025999993085861206,
+        "candidate_median_ms": 0.14045999944210052,
+        "candidate_range_ms": 0.0008399933576583862,
+        "card": 0,
+        "case": "gate_up-m16",
+        "median_gap_ms": 0.04012049734592438,
+        "passes_frozen_screen": true,
+        "role": "mechanism_candidate",
+        "saving_pct": 22.217514105645623
+      },
+      {
+        "baseline_median_ms": 0.17746099829673767,
+        "baseline_range_ms": 0.0016800016164779663,
+        "candidate_median_ms": 0.13780049979686737,
+        "candidate_range_ms": 0.0006799995899200439,
+        "card": 0,
+        "case": "gate_up-m8",
+        "median_gap_ms": 0.0396604984998703,
+        "passes_frozen_screen": true,
+        "role": "mechanism_candidate",
+        "saving_pct": 22.34885348359916
+      },
+      {
+        "baseline_median_ms": 0.1207209974527359,
+        "baseline_range_ms": 0.0013210028409957886,
+        "candidate_median_ms": 0.09850000217556953,
+        "candidate_range_ms": 0.0008400008082389832,
+        "card": 1,
+        "case": "down-m16",
+        "median_gap_ms": 0.022220995277166367,
+        "passes_frozen_screen": true,
+        "role": "negative_control",
+        "saving_pct": 18.406901654259627
+      },
+      {
+        "baseline_median_ms": 0.18198049813508987,
+        "baseline_range_ms": 0.002321004867553711,
+        "candidate_median_ms": 0.14138049632310867,
+        "candidate_range_ms": 0.0013599991798400879,
+        "card": 1,
+        "case": "gate_up-m16",
+        "median_gap_ms": 0.0406000018119812,
+        "passes_frozen_screen": true,
+        "role": "mechanism_candidate",
+        "saving_pct": 22.31008389802436
+      },
+      {
+        "baseline_median_ms": 0.1803000047802925,
+        "baseline_range_ms": 0.00048001110553741455,
+        "candidate_median_ms": 0.1398399993777275,
+        "candidate_range_ms": 0.0009209960699081421,
+        "card": 1,
+        "case": "gate_up-m8",
+        "median_gap_ms": 0.040460005402565,
+        "passes_frozen_screen": true,
+        "role": "mechanism_candidate",
+        "saving_pct": 22.440379550665124
+      }
+    ],
+    "usefulness": "USEFUL"
+  },
+  "final_packet_review_required": false,
+  "finalization": {
+    "candidate_direction": "selected baseline versus prefetch + gated-norm/MXFP4 fusion + gate/up wave0, all at private verification cap16",
+    "record": "provenance/MXFP4-FINALIZATION-20261105.json",
+    "status": "IN_PROGRESS"
+  },
+  "four_member_serving_validation": {
+    "adoption_authorized": false,
+    "automatic_retry": false,
+    "bounded_serving_checks_passed": true,
+    "cases": [
+      {
+        "baseline_median_seconds": 82.46660700000939,
+        "baseline_output_tokens": [
+          [
+            737
+          ],
+          [
+            737
+          ],
+          [
+            737
+          ]
+        ],
+        "baseline_range_ms": 168.48834996926598,
+        "candidate_median_seconds": 82.95463500500773,
+        "candidate_output_tokens": [
+          [
+            721
+          ],
+          [
+            721
+          ],
+          [
+            721
+          ]
+        ],
+        "candidate_range_ms": 619.5970270200633,
+        "case": "long-c1-cold",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 82466.60700000939,
+          "baseline_range_ms": 168.48834996926598,
+          "candidate_median_ms": 82954.63500500773,
+          "candidate_range_ms": 619.5970270200633,
+          "noise_band_ms": 1649.3321400001878,
+          "regression": false,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.9941169290303202,
+          "stable": true
+        },
+        "noise_band_ms": 1649.3321400001878,
+        "observed_latency_reduction_pct": -0.5917886314860565,
+        "output_token_delta_pct": [
+          2.1709633649932156
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 9.606685102015035,
+        "baseline_output_tokens": [
+          [
+            737
+          ],
+          [
+            737
+          ],
+          [
+            737
+          ]
+        ],
+        "baseline_range_ms": 74.49160501710139,
+        "candidate_median_seconds": 9.390548418014077,
+        "candidate_output_tokens": [
+          [
+            721
+          ],
+          [
+            721
+          ],
+          [
+            721
+          ]
+        ],
+        "candidate_range_ms": 32.49298399896361,
+        "case": "long-c1-warm",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 9606.685102015035,
+          "baseline_range_ms": 74.49160501710139,
+          "candidate_median_ms": 9390.548418014077,
+          "candidate_range_ms": 32.49298399896361,
+          "noise_band_ms": 192.1337020403007,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.0230164069636591,
+          "stable": true
+        },
+        "noise_band_ms": 192.1337020403007,
+        "observed_latency_reduction_pct": 2.249857070422989,
+        "output_token_delta_pct": [
+          2.1709633649932156
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 60.9147059389943,
+        "baseline_output_tokens": [
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ]
+        ],
+        "baseline_range_ms": 127.61348200729117,
+        "candidate_median_seconds": 61.669848110483144,
+        "candidate_output_tokens": [
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ]
+        ],
+        "candidate_range_ms": 73.22408699837979,
+        "case": "long-c2-cold",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 61860.42699197424,
+          "baseline_range_ms": 128.05860201478936,
+          "candidate_median_ms": 63358.48294699099,
+          "candidate_range_ms": 75.33492799848318,
+          "noise_band_ms": 1237.2085398394847,
+          "regression": true,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.9763558739834395,
+          "stable": true
+        },
+        "noise_band_ms": 1218.294118779886,
+        "observed_latency_reduction_pct": -1.2396713730262743,
+        "output_token_delta_pct": [
+          24.129353233830845,
+          4.646840148698884
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 8.841669998480938,
+        "baseline_output_tokens": [
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ]
+        ],
+        "baseline_range_ms": 27.14393151109107,
+        "candidate_median_seconds": 9.32444687600946,
+        "candidate_output_tokens": [
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ]
+        ],
+        "candidate_range_ms": 13.856582518201321,
+        "case": "long-c2-warm",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 9791.028830979485,
+          "baseline_range_ms": 29.86437000799924,
+          "candidate_median_ms": 11008.625901013147,
+          "candidate_range_ms": 17.259872023714706,
+          "noise_band_ms": 195.8205766195897,
+          "regression": true,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.8893960898497237,
+          "stable": true
+        },
+        "noise_band_ms": 176.83339996961877,
+        "observed_latency_reduction_pct": -5.460245379113515,
+        "output_token_delta_pct": [
+          24.129353233830845,
+          4.646840148698884
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 13.712616378004896,
+        "baseline_output_tokens": [
+          [
+            2300
+          ],
+          [
+            2300
+          ],
+          [
+            2300
+          ]
+        ],
+        "baseline_range_ms": 26.792192045832053,
+        "candidate_median_seconds": 12.674710766994394,
+        "candidate_output_tokens": [
+          [
+            2244
+          ],
+          [
+            2244
+          ],
+          [
+            2244
+          ]
+        ],
+        "candidate_range_ms": 24.620917974971235,
+        "case": "short-c1-cold",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 13712.616378004896,
+          "baseline_range_ms": 26.792192045832053,
+          "candidate_median_ms": 12674.710766994394,
+          "candidate_range_ms": 24.620917974971235,
+          "noise_band_ms": 274.2523275600979,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.0818879128755554,
+          "stable": true
+        },
+        "noise_band_ms": 274.2523275600979,
+        "observed_latency_reduction_pct": 7.568983062016576,
+        "output_token_delta_pct": [
+          2.4347826086956523
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 14.82788157199684,
+        "baseline_output_tokens": [
+          [
+            2300,
+            2300
+          ],
+          [
+            2300,
+            2300
+          ],
+          [
+            2300,
+            2300
+          ]
+        ],
+        "baseline_range_ms": 40.09083299024496,
+        "candidate_median_seconds": 13.84327068598941,
+        "candidate_output_tokens": [
+          [
+            2244,
+            2244
+          ],
+          [
+            2244,
+            2244
+          ],
+          [
+            2244,
+            2244
+          ]
+        ],
+        "candidate_range_ms": 11.336021503666416,
+        "case": "short-c2-cold",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 14828.489701991202,
+          "baseline_range_ms": 39.9416169966571,
+          "candidate_median_ms": 13844.073503976688,
+          "candidate_range_ms": 11.396318004699424,
+          "noise_band_ms": 296.56979403982405,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.071107409082431,
+          "stable": true
+        },
+        "noise_band_ms": 296.5576314399368,
+        "observed_latency_reduction_pct": 6.640266724728338,
+        "output_token_delta_pct": [
+          2.4347826086956523,
+          2.4347826086956523
+        ],
+        "samples_per_arm": 3
+      }
+    ],
+    "closing_checkpoint": {
+      "number": 603,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-603.json",
+      "sha256": "825a4ace7762e9f0fb23b987ae692b5c7f7b7cef35e0761a445bd5b6abddd0d2"
+    },
+    "comparison_reasons": [
+      "long-c1-cold:unequal_generated_work",
+      "long-c1-warm:unequal_generated_work",
+      "long-c2-cold:unequal_generated_work",
+      "long-c2-cold:group_wall_ms:regression",
+      "long-c2-warm:unequal_generated_work",
+      "long-c2-warm:e2e_ms:regression",
+      "long-c2-warm:group_wall_ms:regression",
+      "short-c1-cold:unequal_generated_work",
+      "short-c2-cold:unequal_generated_work",
+      "balanced_gain_not_resolved"
+    ],
+    "execution_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+    "execution_seal": {
+      "manifest_sha256": "2d5172f55f980d9217ef2926f509b466054be8e841d75975fbdaea51dff97ae8",
+      "members": 552,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+      "verified_utc": "2026-11-04T21:29:13.205469+00:00"
+    },
+    "generated_work_gate_passed": false,
+    "generated_work_limit_pct": 2,
+    "independent_release": true,
+    "independent_result_review": "Not performed for operation224; parent authenticated readout only.",
+    "members": [
+      "verify_prefetch",
+      "verify_cap32",
+      "gatednorm_quant",
+      "gate_up_wave"
+    ],
+    "minimum_gain_pct": 3,
+    "model_starts": 2,
+    "operation": 224,
+    "packet_nonce": "a4777122b5277d13",
+    "performance_verdict": "INCONCLUSIVE",
+    "power_cap_watts": 235,
+    "production_qualified": false,
+    "quality_rows_passed": 60,
+    "quality_rows_total": 60,
+    "raw_balanced_score_gain_pct": 1.6601013770570994,
+    "raw_balanced_speedup_score": 1.016601013770571,
+    "readout_seal": {
+      "manifest_sha256": "caee4e50ab7c4d1cd192a964ac43fd7587c4c8ae6a30adc54fc0879d802d8953",
+      "members": 9,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1",
+      "verified_utc": "2026-11-04T21:29:13.225240+00:00"
+    },
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1/REPORT.md",
+      "sha256": "648a5e2f139e757b2c7f1040ade7b8c9223df97c50c33377ce0986365d83532f"
+    },
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13/RESULT.json",
+      "sha256": "5ef4dad48e3a586b9d3f82a048f854002f25f0a5bbd2234bbd374be77ec9b381"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "status": "MEASURED_INCONCLUSIVE_RELEASED_PARKED"
+  },
+  "four_member_serving_validation_history": {
+    "adoption_authorized": false,
+    "automatic_retry": false,
+    "baseline_samples": 0,
+    "candidate_samples": 0,
+    "closing_checkpoint": 599,
+    "independent_release": true,
+    "members": [
+      "verify_prefetch",
+      "verify_cap32",
+      "gatednorm_quant",
+      "gate_up_wave"
+    ],
+    "next_gate": "CPU-only actual-serving-binder/compiler reconciliation",
+    "operation": 221,
+    "outer_seal": "d8a8ae6a49eb0719d006a9ee15fdf5c1bf702fced38ae64aca79de59f6620165",
+    "packet_nonce": "5a66cd00a218b2cb",
+    "power_cap_watts": 235,
+    "remaining_gpu_allowance": 0,
+    "report": "docs/MXFP4-FOUR-MEMBER-SERVING-VALIDATION.md",
+    "retry_nonce": "37a950031a7b7ff7",
+    "retry_operation": 222,
+    "selection_changed": false,
+    "starts": 2,
+    "status": "OP222_FAILED_PARKED_CPU_COMPILER_HOLD"
+  },
+  "fresh_packet": {
+    "adoption_authorized": false,
+    "authority": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v4/TASK-AUTHORIZATION.json",
+      "sha256": "14b10fa0aeb5cd4827a734b009ed3fc8d29391c1fee74b2e20d97c6395ff6565"
+    },
+    "automatic_retry": false,
+    "decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/FOUR-MEMBER-SERVING-OWNER-DECISION-v4.md",
+      "sha256": "41a13e5c1214bbfc36694ea5247f62d2ed5f68914a178349e5b5aea506153092"
+    },
+    "exact_package_and_caller_rebuild": true,
+    "execution_seal": {
+      "manifest_sha256": "2d5172f55f980d9217ef2926f509b466054be8e841d75975fbdaea51dff97ae8",
+      "members": 552,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+      "verified_utc": "2026-11-04T21:29:13.205469+00:00"
+    },
+    "export_repair": {
+      "implemented_by": "Claude Opus 5.5 xhigh",
+      "manifest_sha256": "e2d5c5779cfc225c49c6f08bc29575ad8517cef6bc2b2d67c31e8f1547f11f7d",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/export-repair-v1"
+    },
+    "gpu_started": true,
+    "independent_release": true,
+    "local_tests": 70,
+    "model_starts_authorised": 2,
+    "model_starts_observed": 2,
+    "native_and_mac_export_budget_reports_equal": true,
+    "native_launch_completed": true,
+    "native_launch_started": true,
+    "native_tests": 69,
+    "no_additional_invocation_allowance": true,
+    "nonce": "a4777122b5277d13",
+    "operation": 224,
+    "outer_packet": {
+      "manifest_sha256": "4fddf95ed939b5ae708d574a997a0a74c7b35fc27f49941515a2286b80fa480f",
+      "members": 366,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/packet-v4",
+      "verified_utc": "2026-11-04T20:47:45.390514+00:00"
+    },
+    "owner_answer": "Approved",
+    "parent_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/PARENT-FOUR-MEMBER-EXPORT-REPAIR-REVIEW-v1.md",
+      "sha256": "7994768ee136f24f4b8f5ef553a1acb581a9a82881a5c50bf0470c47229857b0"
+    },
+    "performance_verdict": "INCONCLUSIVE",
+    "plan": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v4/PLAN.json",
+      "sha256": "a89946562be077940eb7c8965aa889bdf302492f9300ba73d18f9573d52d868f"
+    },
+    "proposed_invocations": 1,
+    "proposed_model_starts": 2,
+    "proposed_power_watts": 235,
+    "public_preflight": 43,
+    "readout_seal": {
+      "manifest_sha256": "caee4e50ab7c4d1cd192a964ac43fd7587c4c8ae6a30adc54fc0879d802d8953",
+      "members": 9,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1",
+      "verified_utc": "2026-11-04T21:29:13.225240+00:00"
+    },
+    "registered": true,
+    "registrar_cpu_proof": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/REGISTRAR-CPU-PROOF-v5.json",
+      "sha256": "23e87b4fdeb80af6178629b50d194976fe84b54b2af4cc93ddc4339bddfd1785"
+    },
+    "registrar_mutations_refused": 6,
+    "remaining_gpu_allowance": 0,
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13/RESULT.json",
+      "sha256": "5ef4dad48e3a586b9d3f82a048f854002f25f0a5bbd2234bbd374be77ec9b381"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "status": "MEASURED_INCONCLUSIVE_RELEASED_PARKED"
+  },
+  "full_shard_census": {
+    "asset_transfers": 1,
+    "authenticated_asset_bytes": 142049280,
+    "authenticated_original_hashes": 8,
+    "census_checkpoint_reads": false,
+    "certificate_sha256": "ce579ea83ad4f6d6881bf7f5bc9125f803cdfdf0233ccf7e9250bee0bb2794a0",
+    "checked_element_family_pairs": 423,
+    "checkpoint_restoration_header_bytes": 219640,
+    "checkpoint_restoration_payload_bytes": 142049280,
+    "elapsed_seconds": 1.7867222499917261,
+    "failure_case": {
+      "card": 0,
+      "case": "down-m16",
+      "checked": 103,
+      "column": 6,
+      "detail": {
+        "absolute_integer_bound": 21437448,
+        "production_equivalence_proven": false,
+        "reason": "absolute integer bound exceeds 2**24",
+        "signed_zero_proven": false,
+        "status": "INCONCLUSIVE",
+        "unit_exponent": -15
+      },
+      "family": "rounding",
+      "row": 6,
+      "total": 81920
+    },
+    "fully_covered_case_rows": 0,
+    "gpu_operations": 0,
+    "independent_review_of_new_preparation": false,
+    "local_python": "3.11",
+    "manifest_sha256": "67b1787c2c47cc9e2ca336b274e0526a76e5a99dc554536a34ab9e98b0ea7a00",
+    "members": 69,
+    "native_file_invocations": 2,
+    "native_file_python": "3.14.4",
+    "native_source_owner_loader_validation": false,
+    "next_action": "PARK; require a prospective proof/corpus decision before reopening; do not weaken tolerance or omit down-M16 correctness",
+    "oracle_limit": 16777216,
+    "qualification": false,
+    "receipt_sha256": "bffb4b4ab9f81553828b19fccdc95265db984371226c665264daa50a935ed0a6",
+    "retry": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-full-shard-census-20261104-v1",
+    "status": "INCONCLUSIVE_PARKED",
+    "verified_utc": "2026-11-04T10:51:51.143664+00:00"
+  },
+  "gemm_is_cumulative_member": true,
+  "gpu_authority": false,
+  "gpu_ready": false,
+  "host_gate": {
+    "focused_tests": 27,
+    "full_component_built": false,
+    "gpu_operations": 0,
+    "host_combinations": 28672,
+    "manifest_sha256": "e5b552d43243ce464e11cf5113fa80e5774a3731f1f0d68d35706d275b60c460",
+    "members": 67,
+    "native_invocations": 0,
+    "public_preflight": 43,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-component-host-gate-20261104-v2"
+  },
+  "independent_candidate_count_claimed": false,
+  "independent_result_review_pending": false,
+  "integration": {
+    "actual_weight_asset_supply_available": true,
+    "additional_default_tmp_checks": 5,
+    "additional_packet_tests": {
+      "caller": 3,
+      "loader_readout": 12,
+      "materialized_owner": 3
+    },
+    "checks": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-sol-batch-20261104-v1/CHECKS.json",
+    "checks_sha256": "52e5f1d6554f39417338d515ec8865c677a039510196b66f7a051873403969a3",
+    "component_tests": 68,
+    "cpu_review": {
+      "parent_followups_independently_reviewed": false,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-ORACLE-DELTA-REVIEW-v1.md",
+      "reviewed_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-sol-oracle-delta-20261104-v1",
+      "reviewed_seal": "8d65d1000decd42a007fd94d92f20111e873e7fcdd31f3e4c8f58ccdc9cd67da",
+      "sha256": "fb3013b9fc02e7c7044d9f0868779dc57e48cb5a4adeee7cd366fd6f7effca15",
+      "verdict": "ACCEPT_FOR_CPU_PREPARATION"
+    },
+    "execution_218": {
+      "allowance_consumed": true,
+      "baseline_samples": 0,
+      "caller_elapsed_seconds": 0.5604750000056811,
+      "campaign_seal": {
+        "manifest_sha256": "aa0374376bfad7bb87d6975028ce476ec207f79ece314559c24ee9bbb6f9c2c3",
+        "members": 20,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-50a9ba49e2f267b2",
+        "verified_utc": "2026-11-04T13:03:38.238548+00:00"
+      },
+      "candidate_samples": 0,
+      "closed_checkpoint": {
+        "number": 591,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-591.json",
+        "sha256": "735878bab24eebb6906d395bd15cd96cfa1434ee811ddb3f90fa8b3f0c0ef0cc"
+      },
+      "gpu_launches": 0,
+      "index": 218,
+      "model_starts": 0,
+      "operation_seal": {
+        "manifest_sha256": "ee8250af4ba9777e2a41684b3351330910589d5e22804b2bb6e472a333c75bcc",
+        "members": 14,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/gemm-wave-run-50a9ba49e2f267b2",
+        "verified_utc": "2026-11-04T13:02:12.029361+00:00"
+      },
+      "owner_execution": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-50a9ba49e2f267b2/OWNER-EXECUTION.json",
+        "sha256": "ee04935894c9d82b59a067098e8c41e182a4a50c505c8c3b8e5f44147fbc5d67"
+      },
+      "owner_started": false,
+      "packet": "50a9ba49e2f267b2",
+      "performance_measured": false,
+      "reason": "AssertionError in upload_groups: host_gate/ source subtree is excluded",
+      "release_disposition": "CARRIED_PRIOR_RELEASE_NO_OWNER_STARTED",
+      "remaining_gpu_allowance": 0,
+      "report": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-50a9ba49e2f267b2/RESULT.md",
+        "sha256": "f2cd05fd14f3a1a4d22e4e8fe1c99c65be77cf6ba0bfdc8ade05e32e0c0f19bf"
+      },
+      "retry": false,
+      "selection_changed": false,
+      "source_uploads": 0,
+      "status": "FAILED_PRE_OWNER_PARKED"
+    },
+    "execution_219": {
+      "allowance_consumed": true,
+      "baseline_samples": 0,
+      "caller_elapsed_seconds": 24.509052957990207,
+      "campaign_seal": {
+        "manifest_sha256": "34d444974c8b8448b5ad1271296c296c9e8fda09114ca9fdcd2b21009e90de4c",
+        "members": 189,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27",
+        "verified_utc": "2026-11-04T13:19:34.608055+00:00"
+      },
+      "candidate_samples": 0,
+      "closed_checkpoint": {
+        "number": 593,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-593.json",
+        "sha256": "8945ea9179b39c3c0a2226e796c3fc85064809aa7286bf97b11ea7b027be00d1"
+      },
+      "framework_initialized": false,
+      "gemm_gpu_launches": 0,
+      "import_diagnosis": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27/IMPORT-FAILURE-DIAGNOSIS.json",
+        "sha256": "520125b9685d18564db2f98ac1f5e075d6a6a1ad782a984dff09d3da6959ab37"
+      },
+      "independent_release": true,
+      "index": 219,
+      "model_starts": 0,
+      "operation_seal": {
+        "manifest_sha256": "1e1373893f0cd23bde0da55eefa4a99c8b20cfe2e3d274aacf0101ca70fa5cfd",
+        "members": 229,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/gemm-wave-run-0b6981eac62bea27",
+        "verified_utc": "2026-11-04T13:17:29.806775+00:00"
+      },
+      "owner_elapsed_seconds": 17.895973375008907,
+      "owner_execution": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27/OWNER-EXECUTION.json",
+        "sha256": "97f0e229ea47dee48b91de2a63389db3abda7b14d905e1ecd4dd9b4518ff760f"
+      },
+      "owner_started": true,
+      "packet": "0b6981eac62bea27",
+      "performance_measured": false,
+      "preparation": {
+        "manifest_sha256": "16c6a429670b5fd6d13dd2fdbe2bc0a45813d2443a6b3e7c4d3ff4a9d9833d44",
+        "members": 315,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v4",
+        "verified_utc": "2026-11-04T13:15:12.557806+00:00"
+      },
+      "reason": "ModuleNotFoundError: No module named 'asset_gate'",
+      "remaining_gpu_allowance": 0,
+      "remote_upload_verified": true,
+      "repair_audit": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v4/REPAIR-AUDIT.json",
+        "sha256": "1ef3c994c8e9e1f0ff3bd3168cbb057dae65d0257974feeffa72f450ab3eb355"
+      },
+      "report": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-0b6981eac62bea27/RESULT.md",
+        "sha256": "63dfdf6c709d16e7e9016957c914f30907202bda9eac8ed83e57b97a896ef7c8"
+      },
+      "retry": false,
+      "schema": 1,
+      "selection_changed": false,
+      "source_uploads": 3,
+      "status": "FAILED_ENTRY_IMPORT_RELEASED_PARKED"
+    },
+    "execution_220": {
+      "allowance_consumed": true,
+      "caller_elapsed_seconds": 58.47972966701491,
+      "campaign_seal": {
+        "manifest_sha256": "2474cddf8d9edc05a48bea768a210dfeeec5485333de0def5994f00650a6de15",
+        "members": 255,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5",
+        "verified_utc": "2026-11-04T13:49:35.737695+00:00"
+      },
+      "cards": [
+        {
+          "card": 0,
+          "cleanup": {
+            "allocated_after": 0,
+            "allocated_before": 0,
+            "workspace_cleared": true
+          },
+          "independent_oracle_cases": 12,
+          "numerical_cases": 21,
+          "peak": {
+            "allocated": 291349504,
+            "reserved": 356515840
+          },
+          "quantizer_cases": 9
+        },
+        {
+          "card": 1,
+          "cleanup": {
+            "allocated_after": 0,
+            "allocated_before": 0,
+            "workspace_cleared": true
+          },
+          "independent_oracle_cases": 12,
+          "numerical_cases": 21,
+          "peak": {
+            "allocated": 291349504,
+            "reserved": 356515840
+          },
+          "quantizer_cases": 9
+        }
+      ],
+      "chart": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/LATENCY.html",
+        "sha256": "41bae0c6584b25bf45675cdb794e6c52d6976925344334103f41219df506d4b5"
+      },
+      "closed_checkpoint": {
+        "number": 595,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-595.json",
+        "sha256": "b6687cc76b22419c38e8995df753000f1439a36186633b4fe963dacdeb87b555"
+      },
+      "component_complete": true,
+      "correctness_rows": 42,
+      "independent_release": true,
+      "independent_result_review_pending": true,
+      "index": 220,
+      "model_starts": 0,
+      "native_entry_proof": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6/entry-proof/RESULT.json",
+        "sha256": "44709d81bf90c06e63b0436c8dbc9b1571ff9c34efa427a6c284fba71c388cc0"
+      },
+      "operation_seal": {
+        "manifest_sha256": "90b8d862ba2220f47e716a0019387aca4495abcf30ffd547458bc7c288874d18",
+        "members": 294,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/gemm-wave-run-4a0e02f8eacabdd5",
+        "verified_utc": "2026-11-04T13:45:38.000691+00:00"
+      },
+      "owner_elapsed_seconds": 47.0962271669996,
+      "owner_execution": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/OWNER-EXECUTION.json",
+        "sha256": "eea573dc5bfc573f92555a8447703b9149c87ea755c3601dcddc15b64afe089a"
+      },
+      "owner_started": true,
+      "packet": "4a0e02f8eacabdd5",
+      "preparation": {
+        "manifest_sha256": "f0a987c6e3d1d42aa4d71afc285aaba68c61cfeb929ec07e21ff1a3ca6980499",
+        "members": 330,
+        "qualification": false,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6",
+        "verified_utc": "2026-11-04T13:42:23.516399+00:00"
+      },
+      "readout": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/read_result.py",
+        "sha256": "9f2c54e784ecdbc5c6434912002dc939c9e7f37831707d4dbd47537399db0481"
+      },
+      "remaining_gpu_allowance": 0,
+      "repair_audit": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6/REPAIR-AUDIT.json",
+        "sha256": "a4e706ce5d63aa03d8c593e17cb18c6cf8a2959bc1e22b226464c4d7695d159e"
+      },
+      "report": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-campaign-4a0e02f8eacabdd5/RESULT.md",
+        "sha256": "f7222ccfd9850296348de6c1f458457b46b6be366fe47439dc866b27b9ea0100"
+      },
+      "retry": false,
+      "schema": 1,
+      "scored_samples": 72,
+      "selection_changed": false,
+      "serving_measured": false,
+      "status": "COMPONENT_USEFUL_RELEASED_PARKED",
+      "timing_rows": [
+        {
+          "baseline_median_ms": 0.11969999969005585,
+          "baseline_range_ms": 0.000720001757144928,
+          "candidate_median_ms": 0.09744049981236458,
+          "candidate_range_ms": 0.0010010004043579102,
+          "card": 0,
+          "case": "down-m16",
+          "median_gap_ms": 0.02225949987769127,
+          "passes_frozen_screen": true,
+          "role": "negative_control",
+          "saving_pct": 18.59607346309834
+        },
+        {
+          "baseline_median_ms": 0.1805804967880249,
+          "baseline_range_ms": 0.0025999993085861206,
+          "candidate_median_ms": 0.14045999944210052,
+          "candidate_range_ms": 0.0008399933576583862,
+          "card": 0,
+          "case": "gate_up-m16",
+          "median_gap_ms": 0.04012049734592438,
+          "passes_frozen_screen": true,
+          "role": "mechanism_candidate",
+          "saving_pct": 22.217514105645623
+        },
+        {
+          "baseline_median_ms": 0.17746099829673767,
+          "baseline_range_ms": 0.0016800016164779663,
+          "candidate_median_ms": 0.13780049979686737,
+          "candidate_range_ms": 0.0006799995899200439,
+          "card": 0,
+          "case": "gate_up-m8",
+          "median_gap_ms": 0.0396604984998703,
+          "passes_frozen_screen": true,
+          "role": "mechanism_candidate",
+          "saving_pct": 22.34885348359916
+        },
+        {
+          "baseline_median_ms": 0.1207209974527359,
+          "baseline_range_ms": 0.0013210028409957886,
+          "candidate_median_ms": 0.09850000217556953,
+          "candidate_range_ms": 0.0008400008082389832,
+          "card": 1,
+          "case": "down-m16",
+          "median_gap_ms": 0.022220995277166367,
+          "passes_frozen_screen": true,
+          "role": "negative_control",
+          "saving_pct": 18.406901654259627
+        },
+        {
+          "baseline_median_ms": 0.18198049813508987,
+          "baseline_range_ms": 0.002321004867553711,
+          "candidate_median_ms": 0.14138049632310867,
+          "candidate_range_ms": 0.0013599991798400879,
+          "card": 1,
+          "case": "gate_up-m16",
+          "median_gap_ms": 0.0406000018119812,
+          "passes_frozen_screen": true,
+          "role": "mechanism_candidate",
+          "saving_pct": 22.31008389802436
+        },
+        {
+          "baseline_median_ms": 0.1803000047802925,
+          "baseline_range_ms": 0.00048001110553741455,
+          "candidate_median_ms": 0.1398399993777275,
+          "candidate_range_ms": 0.0009209960699081421,
+          "card": 1,
+          "case": "gate_up-m8",
+          "median_gap_ms": 0.040460005402565,
+          "passes_frozen_screen": true,
+          "role": "mechanism_candidate",
+          "saving_pct": 22.440379550665124
+        }
+      ],
+      "usefulness": "USEFUL"
+    },
+    "final_packet_review_required": false,
+    "full_live_owner_materialized": true,
+    "full_loader_artifacts_reproduced": 30,
+    "full_loader_proof_passed": true,
+    "full_shard_oracle_certificate_available": true,
+    "full_shard_oracle_result": "CERTIFIED",
+    "generated_owner_tests": 12,
+    "gpu_operations": 0,
+    "host_gate_tests": 27,
+    "inconclusive_census_action": "RETAIN_AND_PARK_NO_RETRY_OR_CORPUS_CHANGE",
+    "local_suite_checks": 193,
+    "modeled_native_receipts_in_disposable_tests_only": true,
+    "native_component_tests_passed": 68,
+    "native_invocations": 14,
+    "native_owner_failure": "Three test errors caused by omitted compiler fixture directory",
+    "native_owner_repair": "Fresh source68 and owner12 pass after archive and LLVM environment repairs; prior failures retained.",
+    "native_owner_status": "PASS_CORRECTED_FRESH_INVOCATION",
+    "native_owner_tests_passed": 12,
+    "native_validation_v3": {
+      "compiler_artifacts": 30,
+      "compiler_proof_reused": true,
+      "current_disposition": "EXECUTION_FAILED_BEFORE_OWNER_UPLOAD_GROUPS",
+      "decision": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/GEMM-WAVE-COMPONENT-OWNER-DECISION-v1.md",
+        "sha256": "1268ce28ecaa6b6e1a5003122e6a3a3bc80b1f0034e02ba2e41ab3a53926c962"
+      },
+      "gpu_launches": 0,
+      "independent_delta_review": false,
+      "invocations": 2,
+      "manifest_sha256": "52221582fde3648b2a947d074eb2a16053eace768f398be9f11a20e94df2da51",
+      "members": 327,
+      "model_starts": 0,
+      "original_review": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-FINAL-PACKET-REVIEW-v1.md",
+        "sha256": "e1a6b9780decc8461c5ff59869f90025c4115fffc90c7843885489fdbd6ef66d"
+      },
+      "owner_tests": 12,
+      "packet": "50a9ba49e2f267b2",
+      "parent_delta_assessment": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v3/PARENT-DELTA-ASSESSMENT.md",
+        "sha256": "d58c67779a095f6333eaf60376eb91a28793b742b32cc4d6f401e83137a59c43"
+      },
+      "qualification": false,
+      "registration": false,
+      "result_sha256": "2e57cd51bdb41d51a0f7a3e8823b66ccb974f4f3406dd22ee56cacc9ac05b31c",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v3",
+      "source_tests": 68,
+      "status": "CPU_REPAIR_VALIDATED_AWAITING_EXACT_GPU_DECISION",
+      "verified_utc": "2026-11-04T12:51:19.510747+00:00"
+    },
+    "native_validation_v4": {
+      "compiler_proof_reused": true,
+      "current_disposition": "ENTRY_IMPORT_FAILED_RELEASED_PARKED",
+      "invocations": 2,
+      "manifest_sha256": "16c6a429670b5fd6d13dd2fdbe2bc0a45813d2443a6b3e7c4d3ff4a9d9833d44",
+      "members": 315,
+      "owner_tests": 12,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v4",
+      "source_tests": 68
+    },
+    "native_validation_v6": {
+      "compiler_artifacts_reused": 30,
+      "entry_proof_cases": 2,
+      "invocations": 3,
+      "manifest_sha256": "f0a987c6e3d1d42aa4d71afc285aaba68c61cfeb929ec07e21ff1a3ca6980499",
+      "members": 330,
+      "owner_tests": 12,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6",
+      "source_tests": 68
+    },
+    "oracle_delta_snapshot": {
+      "manifest_sha256": "8d65d1000decd42a007fd94d92f20111e873e7fcdd31f3e4c8f58ccdc9cd67da",
+      "members": 171,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-sol-oracle-delta-20261104-v1"
+    },
+    "oracle_followup_snapshot": {
+      "manifest_sha256": "336d4dd469e3242548cf5d48450d72f6587d7671d44dd2c78e802dda10964916",
+      "members": 199,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-sol-oracle-delta-20261104-v2"
+    },
+    "owner_builder_tests": 27,
+    "public_tests": 43,
+    "real_component_in_generated_owner_tests": true,
+    "required_asset_bytes": 142049280,
+    "retained_sample_oracle_certificates": 640,
+    "review_pending": false,
+    "review_snapshot": {
+      "manifest_sha256": "c5d6fd4fe80ea250c34b3287f233c13bc40a33bb3d365646b220387c25115f47",
+      "members": 141,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-sol-cpu-review-20261104-v1"
+    },
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-sol-batch-20261104-v1",
+    "trace_tests": 16
+  },
+  "native_validation": {
+    "invocations": 2,
+    "manifest_sha256": "7a6916ca529920fd57679fda3cfb4a74e9e85f41490fa0de4299d5bdb0964213",
+    "result_sha256": "cc70df265062041b3a47bcef0ea409ba14048a374c13bde818d054385ba572b6",
+    "retry": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v1",
+    "status": "SOURCE_PASS_OWNER_FAILED_PARKED"
+  },
+  "native_validation_v2": {
+    "compiler_artifacts": 30,
+    "current_disposition": "BLOCKED_SUPERSEDED_UNINVOKED",
+    "gpu_launches": 0,
+    "invocations": 3,
+    "loader_elapsed_seconds": 8.657912916998612,
+    "manifest_sha256": "c1134a8873ee787fcde2856f8633805de1f6c01bdb69d86898835fdedf944c0f",
+    "members": 363,
+    "model_starts": 0,
+    "owner_tests": 12,
+    "registration": false,
+    "result_sha256": "c73d264e8543032946374dfd8aa62df44b51ad3c1310d282b320c118fa01bfe9",
+    "review_pending": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v2",
+    "source_tests": 68,
+    "status": "CPU_COMPLETE_PACKET_REVIEW_PENDING"
+  },
+  "native_validation_v3": {
+    "compiler_artifacts": 30,
+    "compiler_proof_reused": true,
+    "current_disposition": "EXECUTION_FAILED_BEFORE_OWNER_UPLOAD_GROUPS",
+    "decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/GEMM-WAVE-COMPONENT-OWNER-DECISION-v1.md",
+      "sha256": "1268ce28ecaa6b6e1a5003122e6a3a3bc80b1f0034e02ba2e41ab3a53926c962"
+    },
+    "gpu_launches": 0,
+    "independent_delta_review": false,
+    "invocations": 2,
+    "manifest_sha256": "52221582fde3648b2a947d074eb2a16053eace768f398be9f11a20e94df2da51",
+    "members": 327,
+    "model_starts": 0,
+    "original_review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-FINAL-PACKET-REVIEW-v1.md",
+      "sha256": "e1a6b9780decc8461c5ff59869f90025c4115fffc90c7843885489fdbd6ef66d"
+    },
+    "owner_tests": 12,
+    "packet": "50a9ba49e2f267b2",
+    "parent_delta_assessment": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v3/PARENT-DELTA-ASSESSMENT.md",
+      "sha256": "d58c67779a095f6333eaf60376eb91a28793b742b32cc4d6f401e83137a59c43"
+    },
+    "qualification": false,
+    "registration": false,
+    "result_sha256": "2e57cd51bdb41d51a0f7a3e8823b66ccb974f4f3406dd22ee56cacc9ac05b31c",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v3",
+    "source_tests": 68,
+    "status": "CPU_REPAIR_VALIDATED_AWAITING_EXACT_GPU_DECISION",
+    "verified_utc": "2026-11-04T12:51:19.510747+00:00"
+  },
+  "native_validation_v4": {
+    "compiler_proof_reused": true,
+    "current_disposition": "ENTRY_IMPORT_FAILED_RELEASED_PARKED",
+    "invocations": 2,
+    "manifest_sha256": "16c6a429670b5fd6d13dd2fdbe2bc0a45813d2443a6b3e7c4d3ff4a9d9833d44",
+    "members": 315,
+    "owner_tests": 12,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v4",
+    "source_tests": 68
+  },
+  "native_validation_v5": {
+    "invocations": 2,
+    "manifest_sha256": "b0093c736a3d511b5fda46ba62ce5d41d5ef9766ddf1481cef0eb6fcd2f4c9d0",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v5",
+    "status": "SOURCE_PASS_OWNER_FIXTURE_FAILED_PARKED"
+  },
+  "native_validation_v6": {
+    "compiler_artifacts_reused": 30,
+    "entry_proof_cases": 2,
+    "invocations": 3,
+    "manifest_sha256": "f0a987c6e3d1d42aa4d71afc285aaba68c61cfeb929ec07e21ff1a3ca6980499",
+    "members": 330,
+    "owner_tests": 12,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v6",
+    "source_tests": 68
+  },
+  "next_action": "Complete an opt-in three-member cap16 benchmark packet without changing the legacy default or protected helpers.",
+  "operation220_and_route_review": {
+    "component_verdict": "CONFIRMED",
+    "effort": "high",
+    "model": "claude-opus-5-5",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM220-AND-PRODUCTION-ROUTE-REVIEW-v1.md",
+    "route_verdict": "CONFIRMED_WITH_QUALIFICATIONS",
+    "sha256": "e72475037f41475428e0594fd259cee0ae1d146b5f9ef6e7ba200264ebb3e5b0"
+  },
+  "operation223": {
+    "adopted": false,
+    "automatic_retry": false,
+    "bundle_limit_bytes": 66060288,
+    "caller_seconds": 780.2462525420124,
+    "candidate_started": false,
+    "closing_checkpoint": 601,
+    "empty_and_six_byte_bundles_refuse_on_cpu": true,
+    "encoded_limit_bytes": 67117086,
+    "failure": "encoded bundle overflow",
+    "failure_phase": "control evidence export",
+    "grading_performed": false,
+    "independent_release": true,
+    "native_launch_seconds": 774.3777174580027,
+    "next_action": "Claude Opus 5.5 xhigh: bounded CPU export-accounting repair and producer-to-reader roundtrip tests; no GPU retry.",
+    "nonce": "ac6c108f39cbae77",
+    "operation": 223,
+    "protected_seal_sha256": "3bcf87d11b4e7fc04f6b05ad79c38f850d7c4e25cd5ec0add535a4b5e863af34",
+    "remaining_gpu_allowance": 0,
+    "root_cause": "HTTP member allowance sum raises encoded_limit above the unchanged inner bundle_limit; the chained export check always refuses.",
+    "run_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/hyperloom-serving-run-ac6c108f39cbae77",
+    "run_seal_sha256": "8866aa45c00d2adf54b662bb4977d35b0498880d674a61fdbb613233e7d36fb3",
+    "schema": 1,
+    "selection_changed": false,
+    "starts_attempted": 1,
+    "status": "FAILED_PARKED",
+    "stream_limit_bytes": 68157440,
+    "validated_baseline_samples": 0,
+    "validated_candidate_samples": 0,
+    "workload_seal_sha256": "3e62149716b8841749224d98a06fabe3f5bd8d0634210e4ae2f7793d3e82a100"
+  },
+  "operation223_packet": {
+    "adoption_authorized": false,
+    "authority": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v3/TASK-AUTHORIZATION.json",
+      "sha256": "c53f146b582c8093df992c496adfcbbd7bb9b182cd05c2fcff7c77252d2e182d"
+    },
+    "automatic_retry": false,
+    "closing_checkpoint": 601,
+    "decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/FOUR-MEMBER-SERVING-OWNER-DECISION-v3.md",
+      "sha256": "0472f40b62a7c9a85ca7794cc7d2d43de2fadf1bf3facae20d79079cf1024394"
+    },
+    "exact_package_and_caller_rebuild": true,
+    "expected_observed_refusal_capture": true,
+    "gpu_started": false,
+    "independent_release": true,
+    "local_tests": 60,
+    "model_starts_authorised": 2,
+    "native_launch_started": true,
+    "native_scheduler_logging_tested": false,
+    "native_tests": 59,
+    "no_additional_invocation_allowance": true,
+    "nonce": "ac6c108f39cbae77",
+    "operation": 223,
+    "outer_packet": {
+      "manifest_sha256": "0d7429e371b0886eaac128a9411a9b636a575fdded5628bdd7f152b91d38bf16",
+      "members": 386,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/packet-v3",
+      "verified_utc": "2026-11-04T19:40:14.407810+00:00"
+    },
+    "owner_answer": "Approved",
+    "physical_result_pending": false,
+    "plan": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/registration-v3/PLAN.json",
+      "sha256": "68db29d70e7cda8d0dbc3f5abb3b9b631d6d2dc390739baa8284b1bb8bac4f3f"
+    },
+    "proposed_invocations": 1,
+    "proposed_model_starts": 2,
+    "proposed_power_watts": 235,
+    "public_preflight": 43,
+    "registered": true,
+    "registrar_cpu_proof": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/REGISTRAR-CPU-PROOF-v4.json",
+      "sha256": "c6c3336e4a61cac86f4828d5fe6f711d7c87b1d0d8f45bb2a932d31e48bb464f"
+    },
+    "registrar_mutations_refused": 6,
+    "remaining_gpu_allowance": 0,
+    "selection_changed": false,
+    "status": "FAILED_PARKED"
+  },
+  "operation224": {
+    "adoption_authorized": false,
+    "automatic_retry": false,
+    "bounded_serving_checks_passed": true,
+    "cases": [
+      {
+        "baseline_median_seconds": 82.46660700000939,
+        "baseline_output_tokens": [
+          [
+            737
+          ],
+          [
+            737
+          ],
+          [
+            737
+          ]
+        ],
+        "baseline_range_ms": 168.48834996926598,
+        "candidate_median_seconds": 82.95463500500773,
+        "candidate_output_tokens": [
+          [
+            721
+          ],
+          [
+            721
+          ],
+          [
+            721
+          ]
+        ],
+        "candidate_range_ms": 619.5970270200633,
+        "case": "long-c1-cold",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 82466.60700000939,
+          "baseline_range_ms": 168.48834996926598,
+          "candidate_median_ms": 82954.63500500773,
+          "candidate_range_ms": 619.5970270200633,
+          "noise_band_ms": 1649.3321400001878,
+          "regression": false,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.9941169290303202,
+          "stable": true
+        },
+        "noise_band_ms": 1649.3321400001878,
+        "observed_latency_reduction_pct": -0.5917886314860565,
+        "output_token_delta_pct": [
+          2.1709633649932156
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 9.606685102015035,
+        "baseline_output_tokens": [
+          [
+            737
+          ],
+          [
+            737
+          ],
+          [
+            737
+          ]
+        ],
+        "baseline_range_ms": 74.49160501710139,
+        "candidate_median_seconds": 9.390548418014077,
+        "candidate_output_tokens": [
+          [
+            721
+          ],
+          [
+            721
+          ],
+          [
+            721
+          ]
+        ],
+        "candidate_range_ms": 32.49298399896361,
+        "case": "long-c1-warm",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 9606.685102015035,
+          "baseline_range_ms": 74.49160501710139,
+          "candidate_median_ms": 9390.548418014077,
+          "candidate_range_ms": 32.49298399896361,
+          "noise_band_ms": 192.1337020403007,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.0230164069636591,
+          "stable": true
+        },
+        "noise_band_ms": 192.1337020403007,
+        "observed_latency_reduction_pct": 2.249857070422989,
+        "output_token_delta_pct": [
+          2.1709633649932156
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 60.9147059389943,
+        "baseline_output_tokens": [
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ]
+        ],
+        "baseline_range_ms": 127.61348200729117,
+        "candidate_median_seconds": 61.669848110483144,
+        "candidate_output_tokens": [
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ]
+        ],
+        "candidate_range_ms": 73.22408699837979,
+        "case": "long-c2-cold",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 61860.42699197424,
+          "baseline_range_ms": 128.05860201478936,
+          "candidate_median_ms": 63358.48294699099,
+          "candidate_range_ms": 75.33492799848318,
+          "noise_band_ms": 1237.2085398394847,
+          "regression": true,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.9763558739834395,
+          "stable": true
+        },
+        "noise_band_ms": 1218.294118779886,
+        "observed_latency_reduction_pct": -1.2396713730262743,
+        "output_token_delta_pct": [
+          24.129353233830845,
+          4.646840148698884
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 8.841669998480938,
+        "baseline_output_tokens": [
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ],
+          [
+            804,
+            538
+          ]
+        ],
+        "baseline_range_ms": 27.14393151109107,
+        "candidate_median_seconds": 9.32444687600946,
+        "candidate_output_tokens": [
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ],
+          [
+            998,
+            563
+          ]
+        ],
+        "candidate_range_ms": 13.856582518201321,
+        "case": "long-c2-warm",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 9791.028830979485,
+          "baseline_range_ms": 29.86437000799924,
+          "candidate_median_ms": 11008.625901013147,
+          "candidate_range_ms": 17.259872023714706,
+          "noise_band_ms": 195.8205766195897,
+          "regression": true,
+          "resolved_improvement": false,
+          "speedup_ratio": 0.8893960898497237,
+          "stable": true
+        },
+        "noise_band_ms": 176.83339996961877,
+        "observed_latency_reduction_pct": -5.460245379113515,
+        "output_token_delta_pct": [
+          24.129353233830845,
+          4.646840148698884
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 13.712616378004896,
+        "baseline_output_tokens": [
+          [
+            2300
+          ],
+          [
+            2300
+          ],
+          [
+            2300
+          ]
+        ],
+        "baseline_range_ms": 26.792192045832053,
+        "candidate_median_seconds": 12.674710766994394,
+        "candidate_output_tokens": [
+          [
+            2244
+          ],
+          [
+            2244
+          ],
+          [
+            2244
+          ]
+        ],
+        "candidate_range_ms": 24.620917974971235,
+        "case": "short-c1-cold",
+        "concurrency": 1,
+        "group_wall": {
+          "baseline_median_ms": 13712.616378004896,
+          "baseline_range_ms": 26.792192045832053,
+          "candidate_median_ms": 12674.710766994394,
+          "candidate_range_ms": 24.620917974971235,
+          "noise_band_ms": 274.2523275600979,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.0818879128755554,
+          "stable": true
+        },
+        "noise_band_ms": 274.2523275600979,
+        "observed_latency_reduction_pct": 7.568983062016576,
+        "output_token_delta_pct": [
+          2.4347826086956523
+        ],
+        "samples_per_arm": 3
+      },
+      {
+        "baseline_median_seconds": 14.82788157199684,
+        "baseline_output_tokens": [
+          [
+            2300,
+            2300
+          ],
+          [
+            2300,
+            2300
+          ],
+          [
+            2300,
+            2300
+          ]
+        ],
+        "baseline_range_ms": 40.09083299024496,
+        "candidate_median_seconds": 13.84327068598941,
+        "candidate_output_tokens": [
+          [
+            2244,
+            2244
+          ],
+          [
+            2244,
+            2244
+          ],
+          [
+            2244,
+            2244
+          ]
+        ],
+        "candidate_range_ms": 11.336021503666416,
+        "case": "short-c2-cold",
+        "concurrency": 2,
+        "group_wall": {
+          "baseline_median_ms": 14828.489701991202,
+          "baseline_range_ms": 39.9416169966571,
+          "candidate_median_ms": 13844.073503976688,
+          "candidate_range_ms": 11.396318004699424,
+          "noise_band_ms": 296.56979403982405,
+          "regression": false,
+          "resolved_improvement": true,
+          "speedup_ratio": 1.071107409082431,
+          "stable": true
+        },
+        "noise_band_ms": 296.5576314399368,
+        "observed_latency_reduction_pct": 6.640266724728338,
+        "output_token_delta_pct": [
+          2.4347826086956523,
+          2.4347826086956523
+        ],
+        "samples_per_arm": 3
+      }
+    ],
+    "closing_checkpoint": {
+      "number": 603,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-603.json",
+      "sha256": "825a4ace7762e9f0fb23b987ae692b5c7f7b7cef35e0761a445bd5b6abddd0d2"
+    },
+    "comparison_reasons": [
+      "long-c1-cold:unequal_generated_work",
+      "long-c1-warm:unequal_generated_work",
+      "long-c2-cold:unequal_generated_work",
+      "long-c2-cold:group_wall_ms:regression",
+      "long-c2-warm:unequal_generated_work",
+      "long-c2-warm:e2e_ms:regression",
+      "long-c2-warm:group_wall_ms:regression",
+      "short-c1-cold:unequal_generated_work",
+      "short-c2-cold:unequal_generated_work",
+      "balanced_gain_not_resolved"
+    ],
+    "execution_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+    "execution_seal": {
+      "manifest_sha256": "2d5172f55f980d9217ef2926f509b466054be8e841d75975fbdaea51dff97ae8",
+      "members": 552,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13",
+      "verified_utc": "2026-11-04T21:29:13.205469+00:00"
+    },
+    "generated_work_gate_passed": false,
+    "generated_work_limit_pct": 2,
+    "independent_release": true,
+    "independent_result_review": "Not performed for operation224; parent authenticated readout only.",
+    "minimum_gain_pct": 3,
+    "model_starts": 2,
+    "operation": 224,
+    "packet_nonce": "a4777122b5277d13",
+    "performance_verdict": "INCONCLUSIVE",
+    "power_cap_watts": 235,
+    "production_qualified": false,
+    "quality_rows_passed": 60,
+    "quality_rows_total": 60,
+    "raw_balanced_score_gain_pct": 1.6601013770570994,
+    "raw_balanced_speedup_score": 1.016601013770571,
+    "readout_seal": {
+      "manifest_sha256": "caee4e50ab7c4d1cd192a964ac43fd7587c4c8ae6a30adc54fc0879d802d8953",
+      "members": 9,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1",
+      "verified_utc": "2026-11-04T21:29:13.225240+00:00"
+    },
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/operation224-readout-v1/REPORT.md",
+      "sha256": "648a5e2f139e757b2c7f1040ade7b8c9223df97c50c33377ce0986365d83532f"
+    },
+    "result": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/four-member-serving-qualification-20261104-v1/execution-a4777122b5277d13/RESULT.json",
+      "sha256": "5ef4dad48e3a586b9d3f82a048f854002f25f0a5bbd2234bbd374be77ec9b381"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "status": "MEASURED_INCONCLUSIVE_RELEASED_PARKED"
+  },
+  "original_count": 21,
+  "original_ids": [
+    "L01",
+    "L02",
+    "L03",
+    "L04",
+    "L05",
+    "L06",
+    "L07",
+    "L08",
+    "L09",
+    "L10",
+    "L11",
+    "L12",
+    "H2",
+    "H3",
+    "D1",
+    "M1",
+    "F1",
+    "G2",
+    "R1",
+    "G3",
+    "H4"
+  ],
+  "original_register": {
+    "path": "provenance/MXFP4-OPTIMIZATION-SPRINT-PLAN-20261103.json",
+    "sha256": "71cec2bc7ba9e2ed4bccf00df72a497ea4c05c927ea371277012bf2ad479b9e9"
+  },
+  "owner_archive_repair": {
+    "checks_sha256": "3aa99553932e029732b09da36db3da3e298aa6fa62b590452e2a6b3bcbdfbb70",
+    "manifest_sha256": "a97f5cf22c06237404da6172684a99e4dec43f2b0a79b722238a8f1c59b97459",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-owner-archive-repair-20261104-v1",
+    "status": "CPU_VALIDATED_NATIVE_NOT_RUN"
+  },
+  "owner_decision": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/GEMM-WAVE-COMPONENT-OWNER-DECISION-v1.md",
+    "sha256": "1268ce28ecaa6b6e1a5003122e6a3a3bc80b1f0034e02ba2e41ab3a53926c962"
+  },
+  "packet_review": {
+    "blocking_finding_closed_by": "Fresh CPU environment proof and native source/owner validation",
+    "independent_delta_review": false,
+    "original": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-FINAL-PACKET-REVIEW-v1.md",
+      "sha256": "e1a6b9780decc8461c5ff59869f90025c4115fffc90c7843885489fdbd6ef66d"
+    },
+    "parent_delta_assessment": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-native-validation-20261104-v3/PARENT-DELTA-ASSESSMENT.md",
+      "sha256": "d58c67779a095f6333eaf60376eb91a28793b742b32cc4d6f401e83137a59c43"
+    },
+    "verdict": "BLOCKED_PREDECESSOR"
+  },
+  "production_route_cpu": {
+    "f1_live_engagement_measured": false,
+    "f1_selected_contract_branch": "Triton fold with FP32 state",
+    "f1_shape_stride_source_proof": true,
+    "gemm_changed_geometries": [
+      [
+        8,
+        17408,
+        5120
+      ],
+      [
+        16,
+        17408,
+        5120
+      ]
+    ],
+    "gemm_dimensions_checked": 14336,
+    "gpu_operations": 0,
+    "independent_review_pending": false,
+    "input_seals_verified": 6,
+    "manifest_sha256": "1e900f2b259c635c6f90a9a55e25d050168a1cbb7fd82312555286e76664013d",
+    "members": 42,
+    "model_geometry_fixture_conditions_remain": true,
+    "model_starts": 0,
+    "ordinary_decode_unchanged": true,
+    "parent_delta": {
+      "independently_reviewed": false,
+      "manifest_sha256": "8cf3e7e4ca5f0f47af108f8d2a0a6513540468dcc22834a03541583a60ad6633",
+      "members": 14,
+      "parent_validated_R1_R3": true,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/production-route-signoff-20261104-v1",
+      "tests": 4
+    },
+    "production_overlay_installed": false,
+    "remaining_source_gap": "R2: pin selected RadixLinearAttention and inspect output pass-through before owner integration",
+    "review": {
+      "component_verdict": "CONFIRMED",
+      "effort": "high",
+      "model": "claude-opus-5-5",
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM220-AND-PRODUCTION-ROUTE-REVIEW-v1.md",
+      "route_verdict": "CONFIRMED_WITH_QUALIFICATIONS",
+      "sha256": "e72475037f41475428e0594fd259cee0ae1d146b5f9ef6e7ba200264ebb3e5b0"
+    },
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/production-route-cpu-20261104-v1",
+    "status": "CPU_ACCEPTED_WITH_QUALIFICATIONS",
+    "tests": 16
+  },
+  "public_report": "docs/MXFP4-REMAINING-GATES.md",
+  "public_report_sha256": "3198b4a7696711559ae826abca8ab0f97e78872cbb19e67193fd4ca24d51b3b2",
+  "reduced_diagnostic_cpu": {
+    "annotation_clock_bound_scope": "user_annotation (RecordFunction) only; unit-rate (offset-only); excludes ROCm runtime API events",
+    "checks_sha256": "6e3e319386b7bb103e7ff7ec91dc24e344cb20c6651f96b372f94bf614c92ae3",
+    "clock_source_audit": {
+      "error_bound_established": false,
+      "independently_reviewed": false,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/CLOCK-SOURCE-AUDIT.json",
+      "profiling_wheel_metadata_matches": true,
+      "sha256": "4f28ade50d82660dd1bf7f40e0cac0837924aa91f1aff7891a6586f95555c05b",
+      "source_files_byte_matched": 9
+    },
+    "conditional_host_clock_checks": 12,
+    "decode_windows": 12,
+    "evidence": {
+      "manifest_sha256": "ef16aa2d4444be24ecc0103d98735411ae66ab15ffb3eb76294071e47e45884a",
+      "members": 70,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2",
+      "verified_utc": "2026-11-04T23:30:17.967061+00:00"
+    },
+    "focused_tests": 50,
+    "full_graph_membership_proven": false,
+    "gpu_operations": 0,
+    "gpu_ready": false,
+    "installed_clock_conversion_authenticated": false,
+    "journal_geometry_joined_rows": 24,
+    "model_starts": 0,
+    "new_native_workstation_commands": 0,
+    "next_action": "Continue CPU source binding and calibration-aware diagnostic design. Refuse the proposed timing capture until clock conversion/error evidence, annotation producer and full graph membership are authenticated. No GPU authority.",
+    "next_contract": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/NEXT-DIAGNOSTIC-CONTRACT.md",
+      "sha256": "ece3a8c43c7f021c2b48178a95049d6096531384add780e4b4512f7a943297c9"
+    },
+    "preserved_contracts": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/inputs/PRESERVED-GATES.json",
+      "sha256": "dfa2875833e9cbd823556f313589bb89659ea9a7f8492a51a37d58a35a003664"
+    },
+    "preserved_gate_roles": [
+      "capacity",
+      "numerical",
+      "quality",
+      "release",
+      "retention",
+      "work"
+    ],
+    "public_report": "docs/MXFP4-REDUCED-DIAGNOSTIC-PREPARATION.md",
+    "public_report_sha256": "b1d698e7f17d4f8b40557a4e97fd3811ce718f5688c9d8da3b9fdaff981823d2",
+    "recorded_graph_calls_joined": 48,
+    "review": {
+      "parent_followup_independently_reviewed": false,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-REDUCED-DIAGNOSTIC-CPU-REVIEW-v1.md",
+      "resolution_path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/REVIEW-RESOLUTIONS.md",
+      "resolution_sha256": "848d6f803a6974e1df12c5d569809e21cd386bde59c7acdceb5f25e83c1f2d84",
+      "reviewed_stage": "immutable v1",
+      "reviewed_tests": 41,
+      "sha256": "db6f9947758939e3f3ef80ff0ba5a818252aa74f3fbdc70a6912518f9bcc381c",
+      "verdict": "CPU_SIGNOFF_APPROVED"
+    },
+    "review_pending": false,
+    "reviewed_evidence": {
+      "manifest_sha256": "c30dbd587f5862210dcdd785af1f97ef66daca496fcd341efed168a2e69aa95b",
+      "members": 28,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v1",
+      "verified_utc": "2026-11-04T23:04:59.688995+00:00"
+    },
+    "schema": 2,
+    "selection_changed": false,
+    "serving": "HOLD",
+    "serving_gain_established": false,
+    "source_gate_status": {
+      "annotation_producer": "OPEN_RELEASE_REFERENCE_HASH_MISMATCH",
+      "clock_error_bound": "OPEN",
+      "clock_source": "NINE_SOURCE_BLOBS_MATCH_BUILD_INVENTORY_CALIBRATION_PARAMETERS_UNRETAINED",
+      "effective_runtime_routes": "OPEN",
+      "full_graph_membership": "OPEN"
+    },
+    "status": "CPU_REVIEW_ACCEPTED_FOLLOWUP_VERIFIED_SOURCE_GATES_HOLD",
+    "unknown_calibration_action": "REFUSE_PROPOSED_TIMING_CAPTURE_BEFORE_REGISTRATION"
+  },
+  "remaining_lead_cpu_continuation": {
+    "additional_ids": 4,
+    "adoption_authorized": false,
+    "diagnostic_spec": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v2/FINAL-DIAGNOSTIC-SPEC.md",
+      "sha256": "a060b91143a7b1f102488540f6c391a4ad8bd78580203955e0a72dbe1b98c971"
+    },
+    "evidence": {
+      "manifest_sha256": "a40c98672cf9e6d5a9bb9a4ba7a913f33fa4a43a87007a417f61f86ecb73fd28",
+      "members": 43,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v2",
+      "verified_utc": "2026-11-04T21:57:38.385318+00:00"
+    },
+    "gpu_operations": 0,
+    "gpu_ready": false,
+    "groups": 18,
+    "independent_delta_review": false,
+    "local_layout_tests": 20,
+    "local_reconciliation_tests": 8,
+    "model_starts": 0,
+    "new_candidate_measured": false,
+    "next_action": "Prepare the smallest source-bound diagnostic packet, starting with allocation/write/mapping route feasibility. Existing numerical and cost proof gates remain; no GPU execution or deployment change is authorised.",
+    "original_ids": 21,
+    "parent_review_resolutions": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v2/REVIEW-RESOLUTIONS.json",
+      "sha256": "d4792c9cca2876b7d1eeaf18caa6d4dfe33b9ade4df6f80125d6fc61c55eb61b"
+    },
+    "public_report": "docs/MXFP4-REMAINING-LEAD-CONTINUATION.md",
+    "public_report_sha256": "7ed4d98e3f70e22b0e70def45f0ce158b6a8c2555d3e2f76f6f508149f40d7a3",
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-REMAINING-LEADS-CPU-REVIEW-v1.md",
+      "sha256": "ba1c0803a7217868ef5f0341e3498ba109fa699bc0dcd6d605e246caf913021e"
+    },
+    "review_verdict": "ACCEPT_CPU_ONLY",
+    "reviewed_v1_evidence": {
+      "manifest_sha256": "6f9a57a5f68ca07a359ab707c818ecc609b75c1fe7dcfcb7e98d608c2221dc50",
+      "members": 32,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v1",
+      "verified_utc": "2026-11-04T21:44:43.267822+00:00"
+    },
+    "schema": 1,
+    "selection_changed": false,
+    "status": "CPU_SIGNED_OFF_V1_PARENT_DELTA_VERIFIED"
+  },
+  "retained_op224_work_census": {
+    "acceptance_mechanism_change_established": false,
+    "control_only_diagnostic_explains_candidate_divergence": false,
+    "interpretation_correction": "Verify-round/output differences are confounded by different reasoning token streams.",
+    "normalisation_performed": false,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/WORK-RESULT.json",
+    "serving_verdict": "INCONCLUSIVE_UNCHANGED",
+    "sha256": "56615745c252114a1f56890dd72dd9e86673553bbed11be7ad029dc7affa1ce2"
+  },
+  "review": {
+    "focused_tests_rerun": 22,
+    "parent_delta_focused_tests": 27,
+    "parent_delta_reviewed_by_opus": false,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-HOST-GATE-REVIEW-v1.md",
+    "reviewed_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-component-host-gate-20261104-v1",
+    "sha256": "034362612c8c12bd69f0c8639590d1ccebf2b160be28073a1be159b05b84c90a",
+    "verdict": "NO_BLOCKERS_CPU_ONLY"
+  },
+  "review_pending": true,
+  "schema": 1,
+  "selection_changed": false,
+  "separate_decisions": [
+    "SWMMAC numerical contract",
+    "FP8 replacement deferred by owner",
+    "FP8 KV/requantization/sparse attention",
+    "adaptive/trained/tree drafting",
+    "renewed autonomous Hyperloom campaign",
+    "endurance"
+  ],
+  "serving": "HOLD",
+  "serving_gain_established": false,
+  "sprint_plan_public_pointer": {
+    "path": "docs/MXFP4-OPTIMIZATION-SPRINT-PLAN.md",
+    "sha256": "1d3e6d79ad6cd917177932a3c417569b0a92c3a4cb95d4b4690ad8fcc6dbfdb3"
+  },
+  "status": "OP224_MEASURED_INCONCLUSIVE_RELEASED_PARKED",
+  "tight_bound_census": {
+    "certificate_bytes": 10648,
+    "certificate_sha256": "eb7fe36fb0b7c94bbdb65d39bf3ced4d2249835c2ea618dfcd1246d4621cd3c8",
+    "child_reaped": true,
+    "corpus_changed": false,
+    "coverage": {
+      "case_rows_fully_certified": 24,
+      "case_rows_reported": 24,
+      "element_checks": 3997696
+    },
+    "elapsed_seconds": 127.2677207919769,
+    "exit_code": 0,
+    "gpu_operations": 0,
+    "largest_certifying_bound": 16468976,
+    "largest_coarse_bound": 26747108,
+    "manifest_sha256": "5bba86f502bccf328a9e5502e7d6e3595e58fdd1d1267d7f6790b12f8b09a351",
+    "members": 24,
+    "model_starts": 0,
+    "native_source_owner_loader_validation": false,
+    "owned_group_absent": true,
+    "owner_certificate_predicates_passed": true,
+    "performance_measured": false,
+    "receipt_sha256": "ecc4f4321b80d461d0d7e6ba0b1b45a3f27e3b09767bc457e3b03f538e2611a2",
+    "refinement_counts": {
+      "logical_elements": 647,
+      "logical_elements_certified": 647
+    },
+    "retry": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-tight-oracle-census-20261104-v1",
+    "schema": 1,
+    "seconds": 600,
+    "source_pins": {
+      "ASSET-PINS.json": "fd354815f263b7b25959a38083567997607f4a777851735b21da7ad2fe56d774",
+      "corpus.py": "448714c13e662343f5aca9ec1be689139476b221e547925457ef5ced9f820872",
+      "input_adapter.py": "38a5c92665dc727bbec8848e7304c59fcb6a2b347682ea2a211d4bccab60c0cd",
+      "oracle_census.py": "4a16e1a79a0cb60b7949a44e88afc793105612b64805f5e7754fd545405b3db9",
+      "oracle_domain.py": "9121c5758844b1033d91e8f23beba5605eda0e10706f4a0a03af4b70fd72d54a",
+      "reference.py": "cc55ebeb607053d0f170b32b6291ae2e77784c5f3aab81f1aa5843d2e8c9c053"
+    },
+    "status": "CERTIFIED",
+    "tolerance_changed": false,
+    "unresolved": []
+  },
+  "tight_bound_preparation": {
+    "added_math_tests": 9,
+    "coarse_bound": 21437448,
+    "component_tests": 68,
+    "corpus_changed": false,
+    "full_census_run": true,
+    "gpu_operations": 0,
+    "limit": 16777216,
+    "manifest_sha256": "02ffb405a8a5c9f9e0e982cc1c075c9d6f69f507eefa4edff5c375108f3e2930",
+    "members": 51,
+    "model_starts": 0,
+    "paired_absolute_bound": 8105242,
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-TIGHT-BOUND-REVIEW-v1.md",
+      "sha256": "fd41f0d7f052ecd55436305f680afaaf9329c8de0ce26a474a9322dfc518421a",
+      "verdict": "AGREE"
+    },
+    "review_pending": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-tight-oracle-20261104-v1",
+    "tolerance_changed": false
+  },
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "93b9e9751405dcd268d09feaeec9f009af58f32b126235bb35367e3f5ec1fb35",
+      "absolute_machine_path_prefixes_removed": 140,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

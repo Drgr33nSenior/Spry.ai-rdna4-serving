@@ -1,0 +1,102 @@
+{
+  "adoption_authorized": false,
+  "analysis": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-raw-replay-repair-v1/ANALYSIS.json",
+    "sha256": "eb79ac540bd04c838ac09d9e48a7f294ffc538f181089cd128a73a3e153157ed"
+  },
+  "campaign_seal": {
+    "manifest_sha256": "e5f6df1f567341b52b74b68aed4ba59ac4418625191ec5eb3b32d9515304074e",
+    "members": 25,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-5676a7c021f595ab",
+    "verified_utc": "2026-11-04T00:50:33.449086+00:00"
+  },
+  "checks": {
+    "analysis_reproduced": true,
+    "native_cpu_answers_passed": 60,
+    "public_preflight": 43,
+    "raw_replay_focused": 10,
+    "readout_native_exit": 0,
+    "source_and_package_local": 122,
+    "source_and_package_native": 122
+  },
+  "closing_checkpoint": {
+    "number": 589,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-589.json",
+    "sha256": "c5883da64250b8f5f6caf27cf6eabfb39b07b0f4bba1827a3ecfbc8800120c08"
+  },
+  "configured_power_watts_per_card": [
+    235,
+    235
+  ],
+  "cpu_recovery_seal": {
+    "manifest_sha256": "5ffb9eff4ead7be25a0f8bf3efb1e4ccfc92b54c5add445d8d0d5764ebe0c15a",
+    "members": 419,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-raw-replay-repair-v1",
+    "verified_utc": "2026-11-04T00:50:33.362601+00:00"
+  },
+  "cross_start": "NOT_COMPARABLE",
+  "cross_start_cause": "C2 admission and batch-slot order differs. All per-request observed histories and HTTP work fields match. Frozen gate unchanged.",
+  "date": "2026-11-04",
+  "diagnostic_success": false,
+  "http_requests_completed": 60,
+  "independent_release": true,
+  "index": 217,
+  "invocations": 1,
+  "model_starts": 2,
+  "next_action": "PARK GPU work; use retained traces and prepare the held-out joint code/scale census. No adoption.",
+  "observer_batches_per_rank_per_start": 3779,
+  "original_failure": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-5676a7c021f595ab/OUTCOME.json",
+    "sha256": "75325fef2b96629f8636a5e628972d3737ff95d33ac34aa8e0ce065171b89f0f"
+  },
+  "owner_seal_sha256": "896d5f77984d628575bfb19fe73c5f6bbf0999b6c8e6ffe853c19d1392aa6943",
+  "packet": "5676a7c021f595ab",
+  "performance_verdict": null,
+  "profile_exports": 14,
+  "profiled_starts": 1,
+  "public_report": "docs/MXFP4-OPT07-SHARED-DIAGNOSTIC-217.md",
+  "public_report_sha256": "51f2990f25425cabcb4d692a00ff649fe28f4b624245cd50aa3be4967ae9ad50",
+  "quality": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-raw-replay-repair-v1/QUALITY-RESULT.json",
+    "sha256": "1933e1c126d80f9220b21e11ded1c0d71f40e363c5706bc4f44db3111b896a8c"
+  },
+  "quality_pass": true,
+  "readout": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-raw-replay-repair-v1/SHARED-READOUT.json",
+    "sha256": "a78ab38780a3c2d1ce37b2fadb7d95cdeae96b46ac137f0ffb05f332b18a8f06"
+  },
+  "reconciled_outcome": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-5676a7c021f595ab/OUTCOME-RECONCILED.json",
+    "sha256": "5521e62229f08bb823a7d4481b14a453dc9c0eb9e4aeef37133c864acd5f22f5"
+  },
+  "remaining_gpu_allowance": 0,
+  "report": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-raw-replay-repair-v1/RESULT.md",
+    "sha256": "a54f825ef97e9fc9945c356a7265dd92729e982600cc9b0795f456bb0c20dcf7"
+  },
+  "retry_authorized": false,
+  "reviews": [
+    {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-OUTPUT-ARRAY-REPAIR-REVIEW-v1.md",
+      "sha256": "07e318ce954d5e62d43c32d594e22cf8590843096a3291380a05cb9346ce9304"
+    },
+    {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-RAW-REPLAY-REPAIR-REVIEW-v1.md",
+      "sha256": "054bc6d678de43f74f37cd5eae6c4123f4e81d60dfcff4d37a695be5a2c2e05d"
+    }
+  ],
+  "schema": 1,
+  "selection_changed": false,
+  "status": "CAPTURE_AND_QUALITY_COMPLETE_WORK_NOT_COMPARABLE_PARKED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "b3cad379288e6791b71c7a2c72251c911d55edd83a964b298138cb184954ead0",
+      "absolute_machine_path_prefixes_removed": 11,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

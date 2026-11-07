@@ -1,0 +1,118 @@
+{
+  "checks": {
+    "cpu_only": true,
+    "documentation_audit": {
+      "exit_code": 0,
+      "findings": 0,
+      "stdout": "DOC-AUDIT.stdout"
+    },
+    "economics_reproduced": true,
+    "economics_suite": {
+      "passed": true,
+      "stderr": "TEST-ECONOMICS-v1.stderr",
+      "tests": 5
+    },
+    "framework_imports": false,
+    "git_diff_check": true,
+    "gpu_launches": 0,
+    "historical_failures": [
+      "TEST-COMBINED-v1.stderr: six fixture errors; missing out_cache_loc; corrected fixture only"
+    ],
+    "input_seals_verified": 8,
+    "inspection_correction": "Do not put the integer cap in the tensor buffer dictionary; preserve inherited snapshot tensor arithmetic.",
+    "model_starts": 0,
+    "native_execution": false,
+    "owner_packet_prepared": false,
+    "public_preflight": {
+      "passed": true,
+      "stderr": "PUBLIC43.stderr",
+      "suites": [
+        7,
+        12,
+        6,
+        4,
+        14
+      ],
+      "tests": 43
+    },
+    "python": "3.11.6 (main, Dec  1 2023, 11:20:46) [Clang 15.0.0 (clang-1500.0.40.1)]",
+    "review_status": "PENDING_OPUS_5_5",
+    "schema": 1,
+    "source_suite": {
+      "passed": true,
+      "stderr": "TEST-COMBINED-v4.stderr",
+      "tests": 15
+    },
+    "syntax_compiled": [
+      "combined_serving_surfaces.py",
+      "derived/f1_host_route.py",
+      "derived/head_model.py",
+      "derived/mxfp4_scheme.py",
+      "derived/verify_decode_adapter.py",
+      "economics.py",
+      "prepare.py",
+      "source/adapter.py",
+      "source/backend.py",
+      "source/candidate_head_model.py",
+      "source/candidate_scheme.py",
+      "source/gdn_backend.py",
+      "source/gdn_fused_proj.py",
+      "source/gdn_verify.py",
+      "source/head_model.py",
+      "source/host_route.py",
+      "source/latency.py",
+      "source/model_runner.py",
+      "source/scheme.py",
+      "test_combined.py",
+      "test_economics.py"
+    ]
+  },
+  "conditions": [
+    "Identify and assert selected recurrent branch and output allocation before F1 attachment",
+    "Both-rank split-helper object identity witness",
+    "Private BF16 mtp split values up to32; control and FP8-target up to16",
+    "Production admission and fallback counters are future work, not current host-route features"
+  ],
+  "economics_sha256": "7f5cf0d0b96a3387f79587273f7838dc2085cdd271c905c7f492e871d5b6bcc1",
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "model_starts": 0,
+  "owner_packet_prepared": false,
+  "public_report": {
+    "path": "docs/MXFP4-OPT07-COMBINED-SERVING-PREPARATION.md",
+    "sha256": "ca9533665096ae8e1b3b06d083faf4190c9857913325c9fa39d3b10a6d239e10"
+  },
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-COMBINED-SERVING-REVIEW-v1.md",
+    "sha256": "f40c15d5d8844501eda9422430c5ae9c8e978019c57aa9f8d557ae74e351c057",
+    "verdict": "AGREE_CPU_ONLY"
+  },
+  "review_pending": false,
+  "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-combined-serving-preparation-v1",
+  "schema": 1,
+  "seal": {
+    "manifest_sha256": "47e87a834b50c1f23db5bc55f2ad0bf4bec19f314c8b8aad6cb063c268b38a92",
+    "members": 64,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-combined-serving-preparation-v1",
+    "verified_utc": "2026-11-03T19:32:14.406877+00:00"
+  },
+  "signoff": {
+    "manifest_sha256": "b60bea0413815a076e794a3c75230174a1e187a0a86c75f7cf35e3f01936a156",
+    "members": 4,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-combined-serving-signoff-v1",
+    "verified_utc": "2026-11-03T19:41:54.074746+00:00"
+  },
+  "source_derivation_sha256": "cfc4dc50404965cb1f45e0a9c1cd0f7d99ddb7acc8c81c91e81af165b80cb6f3",
+  "status": "CPU_SIGNED_OFF_SERVING_HELD",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "15b5197a15712c448b965f3a4d93c2b4edd145dfa9bb1d65ea73da0a315f9001",
+      "absolute_machine_path_prefixes_removed": 4,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

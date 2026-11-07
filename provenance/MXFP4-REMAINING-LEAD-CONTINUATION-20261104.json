@@ -1,0 +1,55 @@
+{
+  "additional_ids": 4,
+  "adoption_authorized": false,
+  "diagnostic_spec": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v2/FINAL-DIAGNOSTIC-SPEC.md",
+    "sha256": "a060b91143a7b1f102488540f6c391a4ad8bd78580203955e0a72dbe1b98c971"
+  },
+  "evidence": {
+    "manifest_sha256": "a40c98672cf9e6d5a9bb9a4ba7a913f33fa4a43a87007a417f61f86ecb73fd28",
+    "members": 43,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v2",
+    "verified_utc": "2026-11-04T21:57:38.385318+00:00"
+  },
+  "gpu_operations": 0,
+  "gpu_ready": false,
+  "groups": 18,
+  "independent_delta_review": false,
+  "local_layout_tests": 20,
+  "local_reconciliation_tests": 8,
+  "model_starts": 0,
+  "new_candidate_measured": false,
+  "next_action": "Prepare the smallest source-bound diagnostic packet, starting with allocation/write/mapping route feasibility. Existing numerical and cost proof gates remain; no GPU execution or deployment change is authorised.",
+  "original_ids": 21,
+  "parent_review_resolutions": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v2/REVIEW-RESOLUTIONS.json",
+    "sha256": "d4792c9cca2876b7d1eeaf18caa6d4dfe33b9ade4df6f80125d6fc61c55eb61b"
+  },
+  "public_report": "docs/MXFP4-REMAINING-LEAD-CONTINUATION.md",
+  "public_report_sha256": "7ed4d98e3f70e22b0e70def45f0ce158b6a8c2555d3e2f76f6f508149f40d7a3",
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-REMAINING-LEADS-CPU-REVIEW-v1.md",
+    "sha256": "ba1c0803a7217868ef5f0341e3498ba109fa699bc0dcd6d605e246caf913021e"
+  },
+  "review_verdict": "ACCEPT_CPU_ONLY",
+  "reviewed_v1_evidence": {
+    "manifest_sha256": "6f9a57a5f68ca07a359ab707c818ecc609b75c1fe7dcfcb7e98d608c2221dc50",
+    "members": 32,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/remaining-leads-cpu-20261104-v1",
+    "verified_utc": "2026-11-04T21:44:43.267822+00:00"
+  },
+  "schema": 1,
+  "selection_changed": false,
+  "status": "CPU_SIGNED_OFF_V1_PARENT_DELTA_VERIFIED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "976764ac8d1502414cae8eef7e86fe6e2bcb870584bf886f75049007ac57408a",
+      "absolute_machine_path_prefixes_removed": 5,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

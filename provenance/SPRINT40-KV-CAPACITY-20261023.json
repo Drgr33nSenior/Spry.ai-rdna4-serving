@@ -1,0 +1,1037 @@
+{
+  "across_start_pairs": [
+    {
+      "case": "warmup",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "cold-a",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "warm-a",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "branch-a-warm",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "isolated-b-cold",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    },
+    {
+      "case": "branch-b-warm",
+      "first_difference": null,
+      "output_ids_equal": true,
+      "verifier_cycles_equal": true
+    }
+  ],
+  "codec_assessment": {
+    "current_quantized_gpu_trials": 0,
+    "decision": "DEFER_FOR_TESTED_CAPACITY; BF16 screen fits and codec integration cost is unneeded for this bounded objective",
+    "graph_preserving_codec_port_prepared": false,
+    "memory_saving_measured": false,
+    "payload_projection": {
+      "16416": {
+        "bf16_target_payload_bytes_per_rank": 537919488,
+        "mixed_kv4_target_payload_bytes_per_rank": 241643520,
+        "nominal_tokens": 16416,
+        "saving_fraction": 0.55078125,
+        "target_saving_bytes_per_rank": 296275968
+      },
+      "32768": {
+        "bf16_target_payload_bytes_per_rank": 1073741824,
+        "mixed_kv4_target_payload_bytes_per_rank": 482344960,
+        "nominal_tokens": 32768,
+        "saving_fraction": 0.55078125,
+        "target_saving_bytes_per_rank": 591396864
+      },
+      "65536": {
+        "bf16_target_payload_bytes_per_rank": 2147483648,
+        "mixed_kv4_target_payload_bytes_per_rank": 964689920,
+        "nominal_tokens": 65536,
+        "saving_fraction": 0.55078125,
+        "target_saving_bytes_per_rank": 1182793728
+      },
+      "65568": {
+        "bf16_target_payload_bytes_per_rank": 2148532224,
+        "mixed_kv4_target_payload_bytes_per_rank": 965160960,
+        "nominal_tokens": 65568,
+        "saving_fraction": 0.55078125,
+        "target_saving_bytes_per_rank": 1183371264
+      }
+    },
+    "private_qwen_adapter": "eager extend/decode; rejects speculative metadata and graph capture/replay; host metadata copies",
+    "projection_excludes": "reserved/padding rows, other scale metadata, rotations/workspace, draft KV, recurrent state, weights and allocator costs",
+    "retained_score_workspace_bytes": 268435456,
+    "source_backend_sha256": "5d0ff085842cf872f35ec23f788c01e89e41b28915bd7190153bd340b469a486",
+    "source_contract_sha256": "00376eff68440a1be5c75dcb64d537debdb75ccf8734d80c91c13bb135b453a9",
+    "sources_match_retained_runtime_inventory": true,
+    "speedup_measured": false
+  },
+  "date": "2026-10-23",
+  "evidence": {
+    "archive_sha256": "330c0ab4bb98f378f4316ae043afff5d9e01f0cf992aea048792c70f1c33823d",
+    "result_sha256": {
+      "AUTHENTICATED.json": "83a466b8452811df7104177495cab00426baa48cdef701d3e2a5f5ab04e143ea",
+      "FINALS.json": "8f3ff3d01b834d3d587bebfbedc0d799784ace91f43dfb9e8bdf3b58842f3cf3",
+      "QUALITY-RESULTS.json": "59bc0f5dc20b020ab7340113676afce639cc6d36320178a1a3ea9fce9b3c1017",
+      "RESULT-SUMMARY.json": "806172eb94bdcdb8194e6ebd6893e5d8428ac9e90ec474659129ef7159aab2ca"
+    },
+    "seals": {
+      "author": {
+        "manifest_sha256": "e7e23e58a188244eb23c40acbb4ee9a86edb69309d0a561c6cf893d3462a102f",
+        "members": 348,
+        "root": "fp8-sprint40-serving.w0mi75ra"
+      },
+      "native": {
+        "manifest_sha256": "4a9a08c88f43c93df8745114e68f212951149f0286c232e2ce4815d9f36095f2",
+        "members": 239,
+        "root": "fp8-sprint40-run._1q_le6w"
+      },
+      "reader": {
+        "manifest_sha256": "c8c9715d696adaf9c917ae8581bef07680cf7b63d16c19f64f3d39ea7e175087",
+        "members": 147,
+        "root": "fp8-sprint40-reader.a0mjhfpz"
+      },
+      "tokenizer": {
+        "manifest_sha256": "346d2529c8f896dacb3dbbdcf6923d50af9fb175adaeeac5c3641c4cfeb5c74e",
+        "members": 59,
+        "root": "fp8-sprint40-tokenizer.8uhgko17"
+      }
+    },
+    "source_audit_sha256": "04060bcea238e1273c608a5c3e3b0ff961b6d06993434cc4e301c76441f0b0cf"
+  },
+  "memory_scope": {
+    "description": "cumulative Torch allocator counters through successful native request-row release, including startup and previous requests",
+    "driver_free_scope": "point observations after release",
+    "explicit_device_sync": false,
+    "extra_model_forwards": 0,
+    "extra_tensor_operations": 0,
+    "peak_reset": false,
+    "query_overhead_measured": false,
+    "request_rank_records": 24,
+    "whole_device_peak_measured": false
+  },
+  "next": {
+    "reliability": "Deferred until tuning is exhausted",
+    "scope": "Conditional BF16-weight memory feasibility; no campaign prepared",
+    "sprint": 41
+  },
+  "prior_32k_memory_observation": {
+    "chunk_tokens": 2048,
+    "maximum_observed_peak_allocated_bytes": 21554863616,
+    "maximum_observed_peak_reserved_bytes": 21913141248,
+    "record": "provenance/SPRINT36-PREFILL-CHUNKS-20261023.json",
+    "scope": "cumulative allocator peaks at successful prefill host return; not final-request or whole-device peak"
+  },
+  "prior_sprint33": {
+    "failed_gate_preserved": true,
+    "new_screen_changes": "Explicit JSON types/canonical codes; S35 facts/oracles; different evidence layout",
+    "original_strict_passes": 10,
+    "original_total": 12,
+    "record": "provenance/SPRINT33-LONG-CONTEXT64-20261023.json",
+    "regraded": false
+  },
+  "profile": {
+    "dflash_width": 8,
+    "draft_kv": "bf16",
+    "draft_weights": "bf16",
+    "explicit_draft_kv_override": "--speculative-draft-kv-cache-dtype bf16",
+    "gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+    "greedy": true,
+    "head_arithmetic": "fp32",
+    "metadata_reuse": true,
+    "physical_slots_per_rank": 20,
+    "prefill_chunk": 2048,
+    "reasoning_effort": "low",
+    "recurrent_profile": "aligned_ring_fold",
+    "recurrent_state": "fp32",
+    "target_kv": "bf16",
+    "target_weights": "official FP8",
+    "thinking": true,
+    "usable_slots_per_rank": 19
+  },
+  "protocol": {
+    "actual_long_outputs": [
+      516,
+      525
+    ],
+    "campaigns": 1,
+    "concurrency": 1,
+    "context_tokens": 65536,
+    "evidence_layout": "facts before archive filler; question after filler",
+    "full_output_allowance_exercised": false,
+    "internal_reserve": 32,
+    "long_input_tokens": [
+      59993,
+      59980
+    ],
+    "long_sre_requests": 10,
+    "output_cap": 4096,
+    "requests": 12,
+    "requests_per_start": 6,
+    "shared_prefix_tokens": 59892,
+    "starts": 2,
+    "task_families": [
+      "incident",
+      "runbook"
+    ],
+    "token_pool": 65568,
+    "two_full_concurrent_contexts_demonstrated": false,
+    "unique_sre_cases": 2,
+    "warmups": 2
+  },
+  "qualification": false,
+  "quality": {
+    "final_token_counts": [
+      {
+        "arm": "control",
+        "case": "warmup",
+        "final_answer_token_count": 6,
+        "output_tokens": 33,
+        "reasoning_token_count": 25
+      },
+      {
+        "arm": "control",
+        "case": "cold-a",
+        "final_answer_token_count": 121,
+        "output_tokens": 516,
+        "reasoning_token_count": 393
+      },
+      {
+        "arm": "control",
+        "case": "warm-a",
+        "final_answer_token_count": 121,
+        "output_tokens": 516,
+        "reasoning_token_count": 393
+      },
+      {
+        "arm": "control",
+        "case": "branch-a-warm",
+        "final_answer_token_count": 89,
+        "output_tokens": 525,
+        "reasoning_token_count": 434
+      },
+      {
+        "arm": "control",
+        "case": "isolated-b-cold",
+        "final_answer_token_count": 89,
+        "output_tokens": 525,
+        "reasoning_token_count": 434
+      },
+      {
+        "arm": "control",
+        "case": "branch-b-warm",
+        "final_answer_token_count": 89,
+        "output_tokens": 525,
+        "reasoning_token_count": 434
+      },
+      {
+        "arm": "mtp",
+        "case": "warmup",
+        "final_answer_token_count": 6,
+        "output_tokens": 33,
+        "reasoning_token_count": 25
+      },
+      {
+        "arm": "mtp",
+        "case": "cold-a",
+        "final_answer_token_count": 121,
+        "output_tokens": 516,
+        "reasoning_token_count": 393
+      },
+      {
+        "arm": "mtp",
+        "case": "warm-a",
+        "final_answer_token_count": 121,
+        "output_tokens": 516,
+        "reasoning_token_count": 393
+      },
+      {
+        "arm": "mtp",
+        "case": "branch-a-warm",
+        "final_answer_token_count": 89,
+        "output_tokens": 525,
+        "reasoning_token_count": 434
+      },
+      {
+        "arm": "mtp",
+        "case": "isolated-b-cold",
+        "final_answer_token_count": 89,
+        "output_tokens": 525,
+        "reasoning_token_count": 434
+      },
+      {
+        "arm": "mtp",
+        "case": "branch-b-warm",
+        "final_answer_token_count": 89,
+        "output_tokens": 525,
+        "reasoning_token_count": 434
+      }
+    ],
+    "general_quality_qualified": false,
+    "natural_stops": 12,
+    "sre_requests": 10,
+    "strict_literal_sre_passes": 10,
+    "strict_sre_passes": 10,
+    "unique_cases": 2,
+    "wire_decodes": 12
+  },
+  "reference": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+  "reference_record_sha256": "c155ee3468c7917766cf58818e5092a344a9f05032b25bf7903be307dd0ed16c",
+  "schema_version": 1,
+  "sprint": 40,
+  "starts": [
+    {
+      "memory": [
+        {
+          "driver_free_completion_snapshot_range_bytes": [
+            9428795392,
+            9514778624
+          ],
+          "maximum_recorded_cumulative_peak_allocated_bytes": 22981155840,
+          "maximum_recorded_cumulative_peak_reserved_bytes": 23337107456,
+          "observations": [
+            {
+              "case": "warmup",
+              "counters": {
+                "allocated_bytes": 22560123392,
+                "driver_free_bytes": 9514778624,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22896343040,
+                "reported_peak_reserved_bytes": 23265804288,
+                "reserved_bytes": 23265804288
+              },
+              "input_ids_sha256": "19797d580e749d57a42752c07673f016de5b27d6302c1a933805c39bd3fe0ca6",
+              "input_tokens": 2040,
+              "native_rid_sha256": "534a8fbf124785d6d3d453682a501078cd541beed08b86d490ce291b694b368a",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 0
+            },
+            {
+              "case": "cold-a",
+              "counters": {
+                "allocated_bytes": 22603238400,
+                "driver_free_bytes": 9430892544,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "ef462796b317758695b657ce25b20dda4b90cecc586d3c1235399045c6faf497",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 1
+            },
+            {
+              "case": "warm-a",
+              "counters": {
+                "allocated_bytes": 22603027968,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "3badff10783ccabda95b30dbbf0db9f89c14cadc3f59f8c8c4597648ce44dffc",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 2
+            },
+            {
+              "case": "branch-a-warm",
+              "counters": {
+                "allocated_bytes": 22603028480,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "d0754381ebc01b5633abcc9c50fea915654880d8a78fb8d7741a3ba65b234906",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 3
+            },
+            {
+              "case": "isolated-b-cold",
+              "counters": {
+                "allocated_bytes": 22603008512,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "382e7b5e13647ec322e0a6654beeca8df104f1c2314ae7cd57e013eadc0e29db",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 4
+            },
+            {
+              "case": "branch-b-warm",
+              "counters": {
+                "allocated_bytes": 22603012608,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "371c35a8fb9d529d1790526a9ecb3fe990bcc72e4f4e09ee8e782cebb205783c",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 5
+            }
+          ],
+          "rank": 0
+        },
+        {
+          "driver_free_completion_snapshot_range_bytes": [
+            9619636224,
+            9705619456
+          ],
+          "maximum_recorded_cumulative_peak_allocated_bytes": 22981155840,
+          "maximum_recorded_cumulative_peak_reserved_bytes": 23337107456,
+          "observations": [
+            {
+              "case": "warmup",
+              "counters": {
+                "allocated_bytes": 22560123392,
+                "driver_free_bytes": 9705619456,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22896343040,
+                "reported_peak_reserved_bytes": 23265804288,
+                "reserved_bytes": 23265804288
+              },
+              "input_ids_sha256": "19797d580e749d57a42752c07673f016de5b27d6302c1a933805c39bd3fe0ca6",
+              "input_tokens": 2040,
+              "native_rid_sha256": "534a8fbf124785d6d3d453682a501078cd541beed08b86d490ce291b694b368a",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 0
+            },
+            {
+              "case": "cold-a",
+              "counters": {
+                "allocated_bytes": 22603238400,
+                "driver_free_bytes": 9621733376,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "ef462796b317758695b657ce25b20dda4b90cecc586d3c1235399045c6faf497",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 1
+            },
+            {
+              "case": "warm-a",
+              "counters": {
+                "allocated_bytes": 22603027968,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "3badff10783ccabda95b30dbbf0db9f89c14cadc3f59f8c8c4597648ce44dffc",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 2
+            },
+            {
+              "case": "branch-a-warm",
+              "counters": {
+                "allocated_bytes": 22603028480,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "d0754381ebc01b5633abcc9c50fea915654880d8a78fb8d7741a3ba65b234906",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 3
+            },
+            {
+              "case": "isolated-b-cold",
+              "counters": {
+                "allocated_bytes": 22603008512,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "382e7b5e13647ec322e0a6654beeca8df104f1c2314ae7cd57e013eadc0e29db",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 4
+            },
+            {
+              "case": "branch-b-warm",
+              "counters": {
+                "allocated_bytes": 22603012608,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "371c35a8fb9d529d1790526a9ecb3fe990bcc72e4f4e09ee8e782cebb205783c",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 5
+            }
+          ],
+          "rank": 1
+        }
+      ],
+      "position": 1,
+      "repeat_comparisons": [
+        {
+          "cold": "cold-a",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "warm-a"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-b-warm"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-a-warm"
+        }
+      ],
+      "samples": [
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "warmup",
+          "client_elapsed_seconds": 0.9823758659767918,
+          "input_tokens": 2040,
+          "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+          "output_tokens": 33,
+          "verifier_cycles": 6
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "cold-a",
+          "client_elapsed_seconds": 35.21592219703598,
+          "input_tokens": 59993,
+          "output_ids_sha256": "ed402952fedba866d313819de79cf5c76251b9e36c2ccc9af989406950cae30a",
+          "output_tokens": 516,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.9899821645858683,
+          "cached_tokens": 59392,
+          "case": "warm-a",
+          "client_elapsed_seconds": 5.236989155004267,
+          "input_tokens": 59993,
+          "output_ids_sha256": "ed402952fedba866d313819de79cf5c76251b9e36c2ccc9af989406950cae30a",
+          "output_tokens": 516,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.9901967322440813,
+          "cached_tokens": 59392,
+          "case": "branch-a-warm",
+          "client_elapsed_seconds": 5.135783428966533,
+          "input_tokens": 59980,
+          "output_ids_sha256": "d1166d8f565d9fa81f6619083c86e9b0a3940670d67d6a70ab023085ad5bd88d",
+          "output_tokens": 525,
+          "verifier_cycles": 78
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "isolated-b-cold",
+          "client_elapsed_seconds": 34.79236735694576,
+          "input_tokens": 59980,
+          "output_ids_sha256": "d1166d8f565d9fa81f6619083c86e9b0a3940670d67d6a70ab023085ad5bd88d",
+          "output_tokens": 525,
+          "verifier_cycles": 78
+        },
+        {
+          "cached_fraction": 0.9901967322440813,
+          "cached_tokens": 59392,
+          "case": "branch-b-warm",
+          "client_elapsed_seconds": 5.089730321953539,
+          "input_tokens": 59980,
+          "output_ids_sha256": "d1166d8f565d9fa81f6619083c86e9b0a3940670d67d6a70ab023085ad5bd88d",
+          "output_tokens": 525,
+          "verifier_cycles": 78
+        }
+      ],
+      "startup_memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22433668608,
+            "driver_free_bytes": 10462691328,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22458679296,
+            "reported_peak_reserved_bytes": 22743613440,
+            "reserved_bytes": 22741516288
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22433668608,
+            "driver_free_bytes": 10462691328,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22458679296,
+            "reported_peak_reserved_bytes": 22743613440,
+            "reserved_bytes": 22741516288
+          },
+          "usable_state_slots": 19
+        }
+      ]
+    },
+    {
+      "memory": [
+        {
+          "driver_free_completion_snapshot_range_bytes": [
+            9428795392,
+            9514778624
+          ],
+          "maximum_recorded_cumulative_peak_allocated_bytes": 22981155840,
+          "maximum_recorded_cumulative_peak_reserved_bytes": 23337107456,
+          "observations": [
+            {
+              "case": "warmup",
+              "counters": {
+                "allocated_bytes": 22560123392,
+                "driver_free_bytes": 9514778624,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22896343040,
+                "reported_peak_reserved_bytes": 23265804288,
+                "reserved_bytes": 23265804288
+              },
+              "input_ids_sha256": "19797d580e749d57a42752c07673f016de5b27d6302c1a933805c39bd3fe0ca6",
+              "input_tokens": 2040,
+              "native_rid_sha256": "f124a81df5c81a4e38d104ecbe8d81af5c31ed8b7bd75d4a8eb08d4db7a0e5b7",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 0
+            },
+            {
+              "case": "cold-a",
+              "counters": {
+                "allocated_bytes": 22603238400,
+                "driver_free_bytes": 9430892544,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "9fbb80b106c56c5b7fb38160ac7101e0e14380e6b048e24338ec5ba633cbea9e",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 1
+            },
+            {
+              "case": "warm-a",
+              "counters": {
+                "allocated_bytes": 22603027968,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "00deeade6ecd61d3407422540ba085766808191928b9209e9b0ed0d7f446c789",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 2
+            },
+            {
+              "case": "branch-a-warm",
+              "counters": {
+                "allocated_bytes": 22603028480,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "0b620106de1f5614a45e2c705b662df899a787aaaac1e62a40534aa5c3a2c5c6",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 3
+            },
+            {
+              "case": "isolated-b-cold",
+              "counters": {
+                "allocated_bytes": 22603008512,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "435c11162f2f509faf91aed39e68f2653e4095f1b73d709bc6920e63a2ad2c94",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 4
+            },
+            {
+              "case": "branch-b-warm",
+              "counters": {
+                "allocated_bytes": 22603012608,
+                "driver_free_bytes": 9428795392,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "25e73ed223e07921666d6b0543d898df939084d983834eb94098ae4b53511456",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 5
+            }
+          ],
+          "rank": 0
+        },
+        {
+          "driver_free_completion_snapshot_range_bytes": [
+            9619636224,
+            9705619456
+          ],
+          "maximum_recorded_cumulative_peak_allocated_bytes": 22981155840,
+          "maximum_recorded_cumulative_peak_reserved_bytes": 23337107456,
+          "observations": [
+            {
+              "case": "warmup",
+              "counters": {
+                "allocated_bytes": 22560123392,
+                "driver_free_bytes": 9705619456,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22896343040,
+                "reported_peak_reserved_bytes": 23265804288,
+                "reserved_bytes": 23265804288
+              },
+              "input_ids_sha256": "19797d580e749d57a42752c07673f016de5b27d6302c1a933805c39bd3fe0ca6",
+              "input_tokens": 2040,
+              "native_rid_sha256": "f124a81df5c81a4e38d104ecbe8d81af5c31ed8b7bd75d4a8eb08d4db7a0e5b7",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 0
+            },
+            {
+              "case": "cold-a",
+              "counters": {
+                "allocated_bytes": 22603238400,
+                "driver_free_bytes": 9621733376,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "9fbb80b106c56c5b7fb38160ac7101e0e14380e6b048e24338ec5ba633cbea9e",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 1
+            },
+            {
+              "case": "warm-a",
+              "counters": {
+                "allocated_bytes": 22603027968,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "e2b1cf4451becd67345358d89c82c88fb68d2c5ce9c5141baedb49b3fa0276ee",
+              "input_tokens": 59993,
+              "native_rid_sha256": "00deeade6ecd61d3407422540ba085766808191928b9209e9b0ed0d7f446c789",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 2
+            },
+            {
+              "case": "branch-a-warm",
+              "counters": {
+                "allocated_bytes": 22603028480,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "0b620106de1f5614a45e2c705b662df899a787aaaac1e62a40534aa5c3a2c5c6",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 3
+            },
+            {
+              "case": "isolated-b-cold",
+              "counters": {
+                "allocated_bytes": 22603008512,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "435c11162f2f509faf91aed39e68f2653e4095f1b73d709bc6920e63a2ad2c94",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 4
+            },
+            {
+              "case": "branch-b-warm",
+              "counters": {
+                "allocated_bytes": 22603012608,
+                "driver_free_bytes": 9619636224,
+                "driver_total_bytes": 34208743424,
+                "reported_peak_allocated_bytes": 22981155840,
+                "reported_peak_reserved_bytes": 23337107456,
+                "reserved_bytes": 23337107456
+              },
+              "input_ids_sha256": "66edfeb3149d46a4c4914afeb987c3b9385eef7f518cef82504ad1831e8b2b53",
+              "input_tokens": 59980,
+              "native_rid_sha256": "25e73ed223e07921666d6b0543d898df939084d983834eb94098ae4b53511456",
+              "native_source_sha256": "cdbbac7dca001f3f3d61f7cea6df83e3f6ecf933634cad83e2b40a9cd6a596ab",
+              "scope": "cumulative PyTorch allocator counters through successful native request-row release, including startup; no peak reset; driver free is a point observation, not a whole-device peak",
+              "sequence": 5
+            }
+          ],
+          "rank": 1
+        }
+      ],
+      "position": 2,
+      "repeat_comparisons": [
+        {
+          "cold": "cold-a",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "warm-a"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-b-warm"
+        },
+        {
+          "cold": "isolated-b-cold",
+          "matched_speedup_claim_supported": false,
+          "output_ids_equal": true,
+          "timing_scope": "descriptive single requests; no benchmark or speedup claim",
+          "verifier_cycles_equal": true,
+          "warm": "branch-a-warm"
+        }
+      ],
+      "samples": [
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "warmup",
+          "client_elapsed_seconds": 0.9893800920108333,
+          "input_tokens": 2040,
+          "output_ids_sha256": "dd0a9caaf39810e5dfc29e1c27d6131d82b0b1c2ad12b9cc1f99e7c4f2e2cd69",
+          "output_tokens": 33,
+          "verifier_cycles": 6
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "cold-a",
+          "client_elapsed_seconds": 35.405693169974256,
+          "input_tokens": 59993,
+          "output_ids_sha256": "ed402952fedba866d313819de79cf5c76251b9e36c2ccc9af989406950cae30a",
+          "output_tokens": 516,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.9899821645858683,
+          "cached_tokens": 59392,
+          "case": "warm-a",
+          "client_elapsed_seconds": 5.257564689964056,
+          "input_tokens": 59993,
+          "output_ids_sha256": "ed402952fedba866d313819de79cf5c76251b9e36c2ccc9af989406950cae30a",
+          "output_tokens": 516,
+          "verifier_cycles": 79
+        },
+        {
+          "cached_fraction": 0.9901967322440813,
+          "cached_tokens": 59392,
+          "case": "branch-a-warm",
+          "client_elapsed_seconds": 5.165687959990464,
+          "input_tokens": 59980,
+          "output_ids_sha256": "d1166d8f565d9fa81f6619083c86e9b0a3940670d67d6a70ab023085ad5bd88d",
+          "output_tokens": 525,
+          "verifier_cycles": 78
+        },
+        {
+          "cached_fraction": 0.0,
+          "cached_tokens": 0,
+          "case": "isolated-b-cold",
+          "client_elapsed_seconds": 34.87081567698624,
+          "input_tokens": 59980,
+          "output_ids_sha256": "d1166d8f565d9fa81f6619083c86e9b0a3940670d67d6a70ab023085ad5bd88d",
+          "output_tokens": 525,
+          "verifier_cycles": 78
+        },
+        {
+          "cached_fraction": 0.9901967322440813,
+          "cached_tokens": 59392,
+          "case": "branch-b-warm",
+          "client_elapsed_seconds": 5.099765568040311,
+          "input_tokens": 59980,
+          "output_ids_sha256": "d1166d8f565d9fa81f6619083c86e9b0a3940670d67d6a70ab023085ad5bd88d",
+          "output_tokens": 525,
+          "verifier_cycles": 78
+        }
+      ],
+      "startup_memory": [
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 0,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22433668608,
+            "driver_free_bytes": 10462691328,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22458679296,
+            "reported_peak_reserved_bytes": 22743613440,
+            "reserved_bytes": 22741516288
+          },
+          "usable_state_slots": 19
+        },
+        {
+          "allocator_scope": "startup after native graph setup; allocator peaks since last native reset; not process-lifetime or whole-device peak VRAM",
+          "branch_attribution": "Inferred from live b dtype and authenticated target_verify constants; not device constexpr capture.",
+          "configuration": "ring_fold",
+          "convolution_intermediate_bytes_from_native_constructor_geometry": 14745600,
+          "physical_state_slots_including_padding": 20,
+          "rank": 1,
+          "ring_bytes": 64389120,
+          "snapshot_bytes_from_native_constructor_geometry": 0,
+          "ssm_state_bytes": 1509949440,
+          "startup_allocator": {
+            "allocated_bytes": 22433668608,
+            "driver_free_bytes": 10462691328,
+            "driver_total_bytes": 34208743424,
+            "reported_peak_allocated_bytes": 22458679296,
+            "reported_peak_reserved_bytes": 22743613440,
+            "reserved_bytes": 22741516288
+          },
+          "usable_state_slots": 19
+        }
+      ]
+    }
+  ],
+  "status": "BOUNDED_BF16_64K_SCREEN_PASSED_ULTRAQUANT_DEFERRED",
+  "timing_scope": "descriptive instrumented individual HTTP intervals including prefill and generation; no throughput benchmark or causal speedup claim",
+  "tracking": "docs/SPRINT40-KV-CAPACITY.md",
+  "verification": {
+    "astra_prelaunch_and_readout_reviewed": true,
+    "gpu_active": false,
+    "independent_release_verified": true,
+    "native_elapsed_seconds": 440.0379335421603,
+    "no_automatic_retry": true,
+    "numerical_mismatch_resolved": false,
+    "numerical_sources_unchanged": true,
+    "reader_checks": 29,
+    "runtime_defaults_changed": false,
+    "source_package_checks": 61,
+    "source_promoted": false,
+    "tokenizer_fixture_checks": 6
+  }
+}
