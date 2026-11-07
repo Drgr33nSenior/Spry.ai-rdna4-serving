@@ -437,7 +437,7 @@ Source, runtime, weight, HTTP and independent release checks passed.
 The earlier variant was not reproduced. This finite screen does not identify
 its cause or complete the M2047 exact-output gate. The owner subsequently
 selected current-session use; see the
-[current selection](../provenance/CURRENT-SESSION-SELECTION.json).
+[FP8 session selection](../provenance/CURRENT-SESSION-SELECTION.json), now historical.
 The stack and installed runtime remain unchanged. See the
 [repeatability record](../provenance/BASELINE-REPEATABILITY-20261021.json) for
 all samples, speculative histograms and per-rank graph deltas.

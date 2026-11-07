@@ -13,7 +13,8 @@ native binaries and raw experiment archives are supplied separately.
 | Area | Purpose | Where to start |
 | --- | --- | --- |
 | Serving source | Configure and assemble reproducible serving packets, validate responses, and retain release evidence | [Serving guide](serving/README.md) |
-| FP8 experiments | Record bounded serving results and subsequent tuning work | [Current results](docs/CURRENT-SERVING-RESULTS.md) and [session selection](provenance/CURRENT-SESSION-SELECTION.json) |
+| Selected serving candidate | The private MXFP4 selection, its rollback and the parked programme | [Split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json), [Qwen4 handoff](docs/QWEN4-SERVING-HANDOFF.md) and [current results](docs/CURRENT-SERVING-RESULTS.md) |
+| Serving experiments | Bounded FP8 and MXFP4 results and their history | [Current results](docs/CURRENT-SERVING-RESULTS.md); the [historical FP8 session selection](provenance/CURRENT-SESSION-SELECTION.json) is retained unchanged |
 | KV4 prototype | Study four-bit attention-cache storage with a separate native codec and SGLang overlay | [Architecture](docs/ARCHITECTURE.md) and [KV4 status](docs/STATUS.md) |
 
 These areas have separate evidence. FP8 and MXFP4 describe model-weight
@@ -35,9 +36,11 @@ values are not whole-device peaks.
 
 Read the [sign-off and its limits](serving/measurements/native-qualification/CLEANUP-SIGNOFF.md)
 or open the [measurement report](serving/measurements/native-qualification/GPU-207-MEASUREMENT.html).
-This result covers the tested packet. The active experimental profile is
-recorded separately in the session selection; no installed service is changed
-by cloning this repository.
+This result covers the tested packet. The selected experimental candidate is
+recorded separately in the [split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json):
+operation234's logical `mtp` arm (physical `kv4`, start 2), with operation232's
+selected arm as rollback. That is a private experimental selection, not an
+installed service. No installed service is changed by cloning this repository.
 
 ## Run the local checks
 

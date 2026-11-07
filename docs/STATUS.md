@@ -3,10 +3,12 @@
 This page scopes the public KV4 prototype and its historical private FP8 smoke.
 For the completed cleaned serving path, use the
 [cleanup sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md).
-For an active experimental choice, use the
-[session selection](../provenance/CURRENT-SESSION-SELECTION.json) and
-[current serving results](CURRENT-SERVING-RESULTS.md). A pass in one path does
-not qualify the others.
+For the selected experimental serving candidate, use the
+[split-K selection](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json),
+[Qwen4 handoff](QWEN4-SERVING-HANDOFF.md) and
+[current serving results](CURRENT-SERVING-RESULTS.md). The
+[FP8 session selection](../provenance/CURRENT-SESSION-SELECTION.json) is a
+retained historical record. A pass in one path does not qualify the others.
 
 Status: `EXPERIMENTAL_SOURCE_WITH_BOUNDED_VERIFICATION`.
 

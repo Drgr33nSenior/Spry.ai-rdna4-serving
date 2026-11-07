@@ -13,7 +13,7 @@ results apply to different source, precision and request profiles.
 | Run local checks | [Verification](VERIFICATION.md) | [Cleanup test procedure](../serving/measurements/native-qualification/TESTING.md) |
 | Assemble or build source | [Build guide](BUILD.md) | [Patch series](../serving/patches/README.md) |
 | Review the completed cleanup | [Sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md) | [Measurement report](../serving/measurements/native-qualification/GPU-207-MEASUREMENT.html) |
-| Find the selected experiment | [Session selection](../provenance/CURRENT-SESSION-SELECTION.json) | [Current results](CURRENT-SERVING-RESULTS.md) and [sprint index](SERVING-SPRINTS.md) |
+| Find the selected candidate | [Split-K selection](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json) | [Qwen4 handoff](QWEN4-SERVING-HANDOFF.md), [finalization record](../provenance/MXFP4-FINALIZATION-20261105.json), [current results](CURRENT-SERVING-RESULTS.md) and [sprint index](SERVING-SPRINTS.md) |
 | Understand the KV4 prototype | [KV4 status](STATUS.md) | [Cache path](CACHE-PATH.md), [operator guide](KV4-OPERATIONS.md) and [historical benchmark contract](BENCHMARKING.md) |
 
 ## Terms you will meet
@@ -32,8 +32,20 @@ results apply to different source, precision and request profiles.
 
 ## Which record answers which question?
 
-- **Current experimental choice:** use the session selection and its referenced
-  profile. The newest sprint filename does not choose a runtime.
+- **Current experimental choice:** use the
+  [split-K selection](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json). It names operation234's
+  `mtp` arm (physical `kv4`, start 2) and operation232's selected arm as
+  rollback. The [finalization record](../provenance/MXFP4-FINALIZATION-20261105.json) holds the operation232
+  selection and the parking decision. The [Qwen4 handoff](QWEN4-SERVING-HANDOFF.md)
+  describes how to resume. This is a private experimental selection; it is not
+  an installed service. The
+  [FP8 session selection](../provenance/CURRENT-SESSION-SELECTION.json) is
+  historical and retained unchanged. The newest sprint filename does not choose a
+  runtime.
+- **Quality scope:** operation207 and operation232 natural-answer grades cover
+  the cleanup packet and the rollback arm. BetterBench (operations 233 and 234)
+  has no answer-quality oracle, so no result here qualifies the browser or
+  coding-agent workflow.
 - **Completed cleanup:** use the serving sign-off and its exact source and run
   bindings. It covers eight distinct prompt-message sequences repeated across
   the frozen menu.

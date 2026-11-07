@@ -5,12 +5,17 @@ description: Resume AIThreadripper RDNA4 serving validation using the selected t
 
 # AIThreadripper serving validation
 
-Resolve the project root as `../../..` from this skill. Read
-[current selection](../../../provenance/CURRENT-SESSION-SELECTION.json),
-[Sprint 7](../../../docs/SPRINT7-QUALIFICATION.md) and the relevant section of
-[current results](../../../docs/CURRENT-SERVING-RESULTS.md) before choosing work.
-Use these maintained records for current settings; do not infer selection from
-the newest scratchpad directory. Resolve the private evidence workspace from
+Resolve the project root as `../../..` from this skill. Read the
+[current selection](../../../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json),
+[finalization record](../../../provenance/MXFP4-FINALIZATION-20261105.json),
+[Qwen4 handoff](../../../docs/QWEN4-SERVING-HANDOFF.md) and the relevant section
+of [current results](../../../docs/CURRENT-SERVING-RESULTS.md) before choosing
+work. The selection record names the selected arm and its rollback; the private
+pointer it pins is the selection authority. The
+[FP8 session selection](../../../provenance/CURRENT-SESSION-SELECTION.json)
+and [Sprint 7](../../../docs/SPRINT7-QUALIFICATION.md) are historical inputs.
+Do not infer selection from the newest scratchpad directory. Private selection
+is not an installed service or launch authority. Resolve the private evidence workspace from
 the session handoff. For its existing launch/readout procedure, read
 [evidence workflow](references/evidence-workflow.md).
 Before native work on changed validation code, use its
