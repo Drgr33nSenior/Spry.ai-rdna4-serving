@@ -43,10 +43,13 @@ No retry, deployment or additional GPU authority follows.
 
 ## Resume safely
 - Apply the [serving-validation skill](.agents/skills/aithreadripper-serving-validation/SKILL.md).
-- Read [the current private MXFP4 candidate](provenance/MXFP4-CANDIDATE-128K-20261031.json),
-  [the historical FP8 session selection](provenance/CURRENT-SESSION-SELECTION.json),
-  [current results](docs/CURRENT-SERVING-RESULTS.md), and
-  [remaining gates](docs/MXFP4-REMAINING-GATES.md).
+- Read [the split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json) (current selection and rollback),
+  [the finalization record](provenance/MXFP4-FINALIZATION-20261105.json) (operation232 selection and parking),
+  [the Qwen4 handoff](docs/QWEN4-SERVING-HANDOFF.md) and
+  [current results](docs/CURRENT-SERVING-RESULTS.md). The
+  [MXFP4 128K candidate](provenance/MXFP4-CANDIDATE-128K-20261031.json),
+  [FP8 session selection](provenance/CURRENT-SESSION-SELECTION.json) and
+  [remaining gates](docs/MXFP4-REMAINING-GATES.md) are historical records.
 - Use [private evidence workflow](.agents/skills/aithreadripper-serving-validation/references/evidence-workflow.md).
   Keep sealed roots immutable and use bytecode-disabled imports.
 - Preserve uncommitted user work. Do not stage, commit, merge or push without a request.
