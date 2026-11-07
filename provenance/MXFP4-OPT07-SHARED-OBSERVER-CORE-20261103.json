@@ -1,0 +1,73 @@
+{
+  "all_21_leads_retained": true,
+  "all_three_cumulative_members_retained": true,
+  "capture_integration_followup": {
+    "manifest_sha256": "3b8780cb868c0880d694c9aba625946b912df87a442d75b0b5e56338412052b2",
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-SHARED-CAPTURE-INTEGRATION-REVIEW-v1.md",
+      "sha256": "273c1586be2e2e57e9094354a9a62001506f2bc1a89a2c564fd2fa6fcda2bf10"
+    },
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-capture-integration-v2",
+    "status": "CPU_REVIEWED_WITH_PARENT_CORRECTIONS"
+  },
+  "checks": {
+    "docs_findings": 0,
+    "focused": 35,
+    "mutation_probes": 2,
+    "public_preflight": 43,
+    "public_preflight_log_complete": false,
+    "source_input_seals": 3
+  },
+  "corrections": {
+    "findings": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ],
+    "manifest_sha256": "54ba472bfb4969f03013172deeae20adaa5a27e8eaf76aa3430a86218e26af57",
+    "review_scope": "parent corrections tested; new capture/readout review pending",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-capture-integration-v1"
+  },
+  "date": "2026-11-03",
+  "gpu_authority": false,
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "limitations": [
+    "The sealed v1 core and its original evidence remain unchanged; the linked roots retain parent corrections.",
+    "No serving entrypoint imports the core; source-image, branch inventory and owner lifecycle remain unqualified.",
+    "The capture/readout CPU review is complete; its bounded parent corrections are tested in v2."
+  ],
+  "manifest_sha256": "0b1272259706459aaf8504e6663de722683c5aa7f2f8d2d1599ac042c8f0a355",
+  "members": 42,
+  "model_starts": 0,
+  "next_action": "Complete source-bound runtime inventory, owner receipt publication, collector and failure-aware release integration under declared native Python; full owner-packet review before exact GPU approval.",
+  "owner_packet_prepared": false,
+  "public_report": {
+    "differs_from_sealed_v1": true,
+    "path": "docs/MXFP4-OPT07-SHARED-OBSERVER-CORE.md",
+    "reason": "Reviewed status, corrected budget and link to capture integration; original public copy retained in new root/before.",
+    "sha256": "7348b806e622ce689b9c4e512caa45c71542dd408c02051bdabd90de73a9c04c"
+  },
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-SHARED-OBSERVER-CORE-REVIEW-v1.md",
+    "sha256": "dfcba67cd7e518fdd7521750c3161feab36fe0e270f67659b03d37e3108aebc5"
+  },
+  "review_pending": false,
+  "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-diagnostic-observers-v1",
+  "schema": 1,
+  "selection_changed": false,
+  "serving_spend": "HOLD",
+  "status": "CPU_CORE_REVIEWED_PARENT_CORRECTIONS_RETAINED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "02b6c00a3de2c092f4ac6d591eb3d5fba4e6ea12f3127434b5704654954ddffc",
+      "absolute_machine_path_prefixes_removed": 5,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

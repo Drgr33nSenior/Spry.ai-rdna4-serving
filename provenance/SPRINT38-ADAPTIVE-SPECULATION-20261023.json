@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "sprint": 38,
+  "status": "FIRST_GATE_COMPLETE_SAMPLED_FEATURE_ASSOCIATION_POLICY_UNIMPLEMENTED",
+  "decision": "RETAIN_FIXED_DFLASH8_SHORTLIST_ADAPTIVE_RESEARCH",
+  "selected_source_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "selected_profile": "aligned_ring_fold",
+  "selected_target_kv": "BF16",
+  "selected_draft_kv": "BF16",
+  "selected_width": 8,
+  "selected_prefill_chunk_tokens": 2048,
+  "new_gpu_work": false,
+  "model_starts": 0,
+  "runtime_changed": false,
+  "policy_implemented": false,
+  "policy_tested": false,
+  "qualification": false,
+  "numerical_mismatch_resolved": false,
+  "historical_data_profile": {
+    "thinking": true,
+    "reasoning_effort": "low",
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 20,
+    "context_tokens": 16384,
+    "scope": "Four Sprint 26 tasks; not the selected greedy profile or later 32K SRE screen",
+    "observer_scope": "Synchronous copies at every acceptance; timing was perturbed."
+  },
+  "authentication": {
+    "all_event_records": 4164,
+    "all_rank_start_comparisons_equal": true,
+    "corroborating_event_records": 3123,
+    "duplicate_event_keys": 0,
+    "invalid_joins": 0,
+    "missing_events": 0,
+    "positive_support_counts": {
+      "16": 7287
+    },
+    "probability_row_mass_max_absolute_error": 2.067489128787514e-07
+  },
+  "primary_cohort": {
+    "cycles": 1041,
+    "logical_arm": "control",
+    "proposal_rows": 7287,
+    "rank": 0,
+    "unique_task_requests": 4
+  },
+  "all_cycles": {
+    "auc_entropy_direction": "Lower entropy predicts acceptance; reported AUC uses negative entropy.",
+    "descriptive_auc_accepted_positive": {
+      "entropy_normalized_log16": 0.9731642672751023,
+      "q_selected": 0.9768121236769455,
+      "row_maximum": 0.9730153751770678,
+      "top1_minus_top2": 0.9723522538885998
+    },
+    "label_counts": {
+      "accepted": 6335,
+      "first_rejection": 229,
+      "unlabeled": 723
+    },
+    "proposal_rows": 7287,
+    "q_bins": [
+      {
+        "accepted": 30,
+        "accepted_fraction": 0.38961038961038963,
+        "first_rejection": 47,
+        "labeled": 77,
+        "lower_inclusive": 0,
+        "upper": 0.25,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 36,
+        "accepted_fraction": 0.45,
+        "first_rejection": 44,
+        "labeled": 80,
+        "lower_inclusive": 0.25,
+        "upper": 0.5,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 83,
+        "accepted_fraction": 0.6384615384615384,
+        "first_rejection": 47,
+        "labeled": 130,
+        "lower_inclusive": 0.5,
+        "upper": 0.75,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 60,
+        "accepted_fraction": 0.6382978723404256,
+        "first_rejection": 34,
+        "labeled": 94,
+        "lower_inclusive": 0.75,
+        "upper": 0.9,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 221,
+        "accepted_fraction": 0.8308270676691729,
+        "first_rejection": 45,
+        "labeled": 266,
+        "lower_inclusive": 0.9,
+        "upper": 0.99,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 5905,
+        "accepted_fraction": 0.9979719452425215,
+        "first_rejection": 12,
+        "labeled": 5917,
+        "lower_inclusive": 0.99,
+        "upper": 1.0,
+        "upper_inclusive": true
+      }
+    ],
+    "q_by_label": {
+      "accepted": {
+        "count": 6335,
+        "maximum": 1.0,
+        "mean": 0.9846033842147761,
+        "median": 0.9999997615814209,
+        "minimum": 0.015779903158545494
+      },
+      "first_rejection": {
+        "count": 229,
+        "maximum": 0.99953293800354,
+        "mean": 0.580126320452149,
+        "median": 0.6227090954780579,
+        "minimum": 3.0533392418874428e-06
+      },
+      "unlabeled": {
+        "count": 723,
+        "maximum": 1.0,
+        "mean": 0.809202498433832,
+        "median": 0.9743601083755493,
+        "minimum": 0.001779611804522574
+      }
+    }
+  },
+  "nonterminal_cycles": {
+    "auc_entropy_direction": "Lower entropy predicts acceptance; reported AUC uses negative entropy.",
+    "descriptive_auc_accepted_positive": {
+      "entropy_normalized_log16": 0.9731875179136921,
+      "q_selected": 0.9768752105185713,
+      "row_maximum": 0.9730431623219353,
+      "top1_minus_top2": 0.9723653186736859
+    },
+    "label_counts": {
+      "accepted": 6317,
+      "first_rejection": 227,
+      "unlabeled": 715
+    },
+    "proposal_rows": 7259,
+    "q_bins": [
+      {
+        "accepted": 30,
+        "accepted_fraction": 0.38961038961038963,
+        "first_rejection": 47,
+        "labeled": 77,
+        "lower_inclusive": 0,
+        "upper": 0.25,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 36,
+        "accepted_fraction": 0.45,
+        "first_rejection": 44,
+        "labeled": 80,
+        "lower_inclusive": 0.25,
+        "upper": 0.5,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 83,
+        "accepted_fraction": 0.6384615384615384,
+        "first_rejection": 47,
+        "labeled": 130,
+        "lower_inclusive": 0.5,
+        "upper": 0.75,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 60,
+        "accepted_fraction": 0.6451612903225806,
+        "first_rejection": 33,
+        "labeled": 93,
+        "lower_inclusive": 0.75,
+        "upper": 0.9,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 220,
+        "accepted_fraction": 0.8333333333333334,
+        "first_rejection": 44,
+        "labeled": 264,
+        "lower_inclusive": 0.9,
+        "upper": 0.99,
+        "upper_inclusive": false
+      },
+      {
+        "accepted": 5888,
+        "accepted_fraction": 0.9979661016949153,
+        "first_rejection": 12,
+        "labeled": 5900,
+        "lower_inclusive": 0.99,
+        "upper": 1.0,
+        "upper_inclusive": true
+      }
+    ],
+    "q_by_label": {
+      "accepted": {
+        "count": 6317,
+        "maximum": 1.0,
+        "mean": 0.9845692143044706,
+        "median": 0.9999997615814209,
+        "minimum": 0.015779903158545494
+      },
+      "first_rejection": {
+        "count": 227,
+        "maximum": 0.99953293800354,
+        "mean": 0.5773712861595702,
+        "median": 0.618328869342804,
+        "minimum": 3.0533392418874428e-06
+      },
+      "unlabeled": {
+        "count": 715,
+        "maximum": 1.0,
+        "mean": 0.8126221099173181,
+        "median": 0.9756138920783997,
+        "minimum": 0.001779611804522574
+      }
+    }
+  },
+  "cases": [
+    {
+      "case": "coding-running-totals",
+      "cycles": 62,
+      "input_tokens": 226,
+      "output_tokens": 333,
+      "acceptance_count_histogram": {
+        "0": 6,
+        "1": 6,
+        "2": 10,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 1,
+        "7": 27
+      },
+      "labels": {
+        "accepted": 271,
+        "first_rejection": 35,
+        "unlabeled": 128
+      },
+      "q_selected_auc": 0.9264101212440696,
+      "nonterminal_q_selected_auc": 0.9245670995670996
+    },
+    {
+      "case": "coding-unique-last",
+      "cycles": 188,
+      "input_tokens": 246,
+      "output_tokens": 1101,
+      "acceptance_count_histogram": {
+        "0": 14,
+        "1": 18,
+        "2": 15,
+        "3": 14,
+        "4": 13,
+        "5": 10,
+        "6": 7,
+        "7": 97
+      },
+      "labels": {
+        "accepted": 913,
+        "first_rejection": 91,
+        "unlabeled": 312
+      },
+      "q_selected_auc": 0.9289505675047843,
+      "nonterminal_q_selected_auc": 0.9294383394383394
+    },
+    {
+      "case": "heldout16k-audit",
+      "cycles": 450,
+      "input_tokens": 8176,
+      "output_tokens": 3352,
+      "acceptance_count_histogram": {
+        "0": 6,
+        "1": 11,
+        "2": 9,
+        "3": 9,
+        "4": 10,
+        "5": 10,
+        "6": 9,
+        "7": 386
+      },
+      "labels": {
+        "accepted": 2902,
+        "first_rejection": 64,
+        "unlabeled": 184
+      },
+      "q_selected_auc": 0.987691678152998,
+      "nonterminal_q_selected_auc": 0.9877158894645941
+    },
+    {
+      "case": "quality16k-audit-threshold",
+      "cycles": 341,
+      "input_tokens": 8176,
+      "output_tokens": 2590,
+      "acceptance_count_histogram": {
+        "0": 4,
+        "1": 4,
+        "2": 3,
+        "3": 4,
+        "4": 12,
+        "5": 7,
+        "6": 5,
+        "7": 302
+      },
+      "labels": {
+        "accepted": 2249,
+        "first_rejection": 39,
+        "unlabeled": 99
+      },
+      "q_selected_auc": 0.9889295527356888,
+      "nonterminal_q_selected_auc": 0.988960947743023
+    }
+  ],
+  "terminal": {
+    "cycles": 4,
+    "scope": "Terminal cycle acceptance labels remain native outcomes; exclude all terminal cycles from utility interpretation.",
+    "truncated_native_spans": 4
+  },
+  "terminal_label_counts": {
+    "accepted": 18,
+    "first_rejection": 2,
+    "unlabeled": 8
+  },
+  "feature_scope": "Exact complete post-scatter sampled conditional q distribution. Omitted entries are zero mass, not recovered candidate IDs. Top-K16 denominator comes from authenticated draft configuration.",
+  "contract_commit_length": {
+    "derivation": "accepted_drafts + 1",
+    "independently_captured_tensor": false,
+    "source_sha256": "99a44f45747a2cfc69423193cf8d2745c9a4ac320e3c200e37fe46395208f91f"
+  },
+  "runtime_prerequisites": {
+    "native_adaptive_flag_supports": [
+      "EAGLE",
+      "EAGLE3"
+    ],
+    "native_adaptive_flag_supports_dflash": false,
+    "captured_graph_width_fixed": true,
+    "selected_split_attention_width": 8,
+    "selected_ring_fold_width": 8,
+    "greedy_q_is_one_hot": true,
+    "five_historical_native_source_identities_unchanged": true,
+    "source_guard_cases_executed": 6,
+    "historical_graph_width_guard_cases_reused": 10,
+    "native_source_pins": {
+      "kernels/ops/speculative/dflash.py": "21f11619531f493bbe9f71d465912ca707f2d722991832e446ff65aecb40528c",
+      "srt/model_executor/runner/decode_cuda_graph_runner.py": "1ec64d53550012a006d2fb7acbcabeefb6d3a3729864373d870314aed19f94cd",
+      "srt/models/dflash.py": "10cba6aeac6986537114a7cc26df296d308e45c849c18f690d451bf63a9c4871",
+      "srt/speculative/adaptive_spec_params.py": "7dd3c58b38be53d24c991c2ad02cd4607dc2fa0683d91f65df7a4442f2c57121",
+      "srt/speculative/dflash_worker_v2.py": "99a44f45747a2cfc69423193cf8d2745c9a4ac320e3c200e37fe46395208f91f",
+      "srt/speculative/frozen_kv_mtp_cuda_graph_runner.py": "b8dfb7ca74882eb82d793c8beb7d8e001639c2fbc86ea2b5279c0ed80593f408"
+    }
+  },
+  "input_seals": [
+    {
+      "root": "fp8-sprint26-trace-warmup.s158oq3j",
+      "manifest_sha256": "2455464b0492233c65bed322e84be2e02cb6f3f3bd3a9d5b9d6d8b671a65dd1d",
+      "members": 409
+    },
+    {
+      "root": "fp8-sprint26-trace-run.rnk4158u",
+      "manifest_sha256": "3c41617b0a8f8df148717037d30777402eb0e463bb1934993fdfe6d60cbb1fef",
+      "members": 218
+    },
+    {
+      "root": "fp8-sprint26-trace-warmup-reader.u8xaz271",
+      "manifest_sha256": "9420c8bd40898efff391a0f530b6b7909cd1d6b0175ab4d6ef456c45f5fe65fc",
+      "members": 142
+    },
+    {
+      "root": "fp8-sprint26-trace-analysis.hKN1zsek",
+      "manifest_sha256": "38a521a5eb0b3a3062def9f4af2f6c25820923e132eee7008572cbc4b3619c79",
+      "members": 26
+    }
+  ],
+  "analysis": {
+    "predeclared_plan_sha256": "8427063ba4314bcdfea154dfff5f8c80c12a53351e5465776ae52dec92662649",
+    "authenticated_trace_sha256": "6342ed3c865ed146c604fa29b7333b16b8f14931fdb1f0c5a2ac19b900fcb648",
+    "result_sha256": "9ed3ce5de175e11a3488851ab939b987d8754e95c4a82e54fdc7616b7e08ac53",
+    "analyzer_sha256": "8504c521b9c4dea7453b8ef01303176f6ab5f5d8d9f49cf100be9c26e9880dee",
+    "tests_sha256": "d71fb7e77eb15b7b4dbd0581b75ff677d2ea846aae0b0d420ceb6dc9a16b03ce",
+    "focused_tests_passed": 12,
+    "review": {
+      "reviewer": "/root/astra_replay_serving_verify",
+      "status": "APPROVED_BOUNDED_OFFLINE_RESULT",
+      "result_sha256": "9ed3ce5de175e11a3488851ab939b987d8754e95c4a82e54fdc7616b7e08ac53",
+      "verified": [
+        "exactqhashing",
+        "candidateanchoralignment",
+        "acceptedprefixandfirstrejectionlabels",
+        "censoring",
+        "repeatdeduplication",
+        "derivedcommitscope",
+        "12testsandfinalanalysisreceipts"
+      ],
+      "independently_recomputed_auc": 0.9768121236769455,
+      "independently_recomputed_nonterminal_auc": 0.9768752105185713,
+      "runtime_or_launch_advancement_approved": false,
+      "limitations": "Descriptive sampled-feature association across four correlated tasks; not greedy confidence, calibration, held-out policy quality, adaptive-width savings or numerical resolution."
+    }
+  },
+  "limitations": [
+    "Four sequential task requests; neighboring proposals/cycles are correlated. Repeated ranks/starts are corroboration only.",
+    "No greedy pre-one-hot lattice scores; sampled q is temperature1 conditional candidate probability, not full-vocabulary confidence.",
+    "Features arise after fixed-width drafting; no same-cycle draft-compute savings or native-width4 prediction.",
+    "Source observations were synchronous and timing-perturbing; no performance or sampling-distribution claim.",
+    "Acceptance labels after first rejection are censored; terminal cycles are separately reported.",
+    "No policy thresholds fitted, no held-out policy evaluation, no causal or general-quality conclusion.",
+    "AUC measures ranking, not classification accuracy or task correctness.",
+    "The named held-out ledger task was not held out from this descriptive analysis."
+  ],
+  "next_work": [
+    "Freeze and assess features on new task families before policy fitting.",
+    "Establish greedy pre-one-hot observation if targeting greedy usage.",
+    "Review separate width-specific graph, buffer, split-attention, ring-fold, commit, rollback and cache-ownership support.",
+    "Measure actual cost before claiming adaptive compute savings."
+  ],
+  "next_independent_sprint": 39,
+  "tracking": "docs/SPRINT38-ADAPTIVE-SPECULATION.md"
+}

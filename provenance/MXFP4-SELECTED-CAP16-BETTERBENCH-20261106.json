@@ -1,0 +1,648 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "status": "OPERATION_233_ACCEPTED_COMPLETE_RELEASED_MEASUREMENT_CLOSED",
+  "scope": "Separately authorised BetterBench v0.6.1 repeat on the selected operation-232 three-member cap16 candidate. Descriptive throughput measurement only; not a kernel-selection experiment, quality test or reopening of the parked optimisation programme.",
+  "owner_intent": {
+    "owner_message_verbatim": "OK, let's run betterbench again to see what the difference is.",
+    "private_root": "selected-cap16-betterbench-owner-intent-20261106-v1",
+    "seal": "85e073372c4ed92bb4a696b251776102fffc6db8016099d0a72b8fa6539aed85",
+    "file_sha256": "822e2c967d4529776b41e851f67887f7d4be173e24a2e95ad2d3f2407dc48778",
+    "invocations": 1,
+    "maximum_model_starts": 2,
+    "automatic_retry": false,
+    "selection_change": false,
+    "deployment": false,
+    "publication": false
+  },
+  "gpu_work_completed": true,
+  "model_starts_completed": 2,
+  "registration": true,
+  "selection_changed": false,
+  "selected_candidate": {
+    "private_pointer_sha256": "4e19fc560932fba9c24e258d1da4afa12d744fd8f22309af3aad1c824a648a55",
+    "operation": 232,
+    "logical_arm": "mtp",
+    "members": [
+      "verify_prefetch",
+      "gatednorm_quant",
+      "gate_up_wave"
+    ],
+    "verification_cap": 16,
+    "instrumentation": "production",
+    "server_context_tokens": 131040,
+    "configured_power_cap_watts_per_card": 235,
+    "package": {
+      "archive_sha256": "171dac93ee25eb725b88f6f5fdda29e4e99d4d199cde0a15e0e84291f315f191",
+      "manifest_sha256": "9352fdb039f55009b603e614ce2133d15690495d25e69d286615e71316d95b16",
+      "package_sha256": "94fdf5eb6da3eaf09d536273f11bd97333f87e610ba9c362882c1ddb40eb103d"
+    }
+  },
+  "planned_measurement": {
+    "invocations": 1,
+    "starts": 2,
+    "logical_arm_both_starts": "mtp",
+    "physical_order": [
+      "bf16",
+      "kv4"
+    ],
+    "profile": "qwen38-selected-thinking-low-native-terminal-v2",
+    "upstream": "GGZ14/BetterBench v0.6.1 f72bb9011a830fd98e82ab89d01e549efa76e9c5",
+    "client_corpus_profile_identical_to_w2": true,
+    "requests_per_start": 53,
+    "request_menu": "8 categories x (1 warm-up + 3 measured); nominal prefill 2000/8000/16000 x (1 warm-up + 2 measured); 6 C1; 6 C2",
+    "sampling": {
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "top_k": 20,
+      "seed": 1729,
+      "prefill_temperature": 0.0
+    },
+    "request_profile": {
+      "enable_thinking": true,
+      "reasoning_effort": "low",
+      "return_spec_tokens_details": true
+    },
+    "output_cap_tokens": 4096,
+    "prefill_output_cap_tokens": 16,
+    "client_seconds_per_start": 1740,
+    "owner_seconds": 6360,
+    "caller_seconds": 7160
+  },
+  "historical_reference": {
+    "w2_candidate": {
+      "operations": [
+        158,
+        159,
+        160,
+        161
+      ],
+      "clean_starts": 8,
+      "c1_combined_tp2_output_tok_s_mean": 94.88,
+      "c2_combined_tp2_output_tok_s_mean": 175.28,
+      "c1_per_start_range": [
+        92.21,
+        98.52
+      ],
+      "c2_per_start_range": [
+        158.03,
+        188.27
+      ],
+      "instrumentation": "on",
+      "server_context_tokens": 32768,
+      "configured_power_cap_watts_per_card": 300,
+      "runtime": "31 October full-stack candidate before the prefetch, F1 and wave-hint members"
+    },
+    "excluded": {
+      "operations": [
+        162,
+        163
+      ],
+      "reason": "temperature variants 0.6 and 0.3"
+    },
+    "fp8_lanes": "operations 154, 155 and the 25 October baseline remain separate historical references (see MXFP4-CANDIDATE-PHASE1-20261031.json)"
+  },
+  "preparation": {
+    "private_root": "selected-cap16-betterbench-preparation-20261106-v1",
+    "seal": "ea2b6bcf6134aae50c23cecd1abf689ea96920f0f88d54f95e6bc42afab46bc5",
+    "members": 886,
+    "discovery_sha256": "f69c086bd6a2e7ae51d6c64b0b239eea12b1c426a104e8ddb18cb1fe4f4d26b4",
+    "result_sha256": "a5b101499c49b6cb39a0e781c5fb54cc67e4536ca7880f7a50e5930b3b3dd37f",
+    "transform_tool_sha256": "eb029ca6e175420a424434747248f2ebad6b1a68d5eb6e0888205ca12fcfa6e0",
+    "focused_tests": {
+      "passed": 15,
+      "failed": 0,
+      "file_sha256": "b68cf16bf16632dad00c62a9fcecd2b7646eb5a9e7960f9dcb19e7a8a552b562"
+    },
+    "test_only_build": {
+      "registrable": false,
+      "consumed_nonce": "2229e2386a020dfa",
+      "manifest_sha256": "8f8a597073704169fc44f1ab306baf03aa24d87064a42e53b7cc8ccd9b0151f6",
+      "changed_files": [
+        "BENCHMARK-SPEC2.json",
+        "HTTP-BINDING-control.json",
+        "HTTP-BINDING-mtp.json",
+        "RESOURCE-MANIFEST.json",
+        "benchmark_physical_controller.py",
+        "j01_probe.py",
+        "mtp_contract.py",
+        "serving_integration.py",
+        "serving_runtime.py"
+      ],
+      "protected_changes": [
+        "benchmark_physical_controller.py"
+      ]
+    }
+  },
+  "findings": [
+    "The selected bundle's startup witness runs only on the production worker handshake, so this repeat must run in production mode, unlike the instrumented W2 runs.",
+    "The selected package carries the W2 BetterBench helper but disables it; restoring it needs edits to five sources, one of them the protected controller.",
+    "Production mode has no per-request native observer, so W2's C2 global counter joins are unavailable and are reported as unavailable.",
+    "The canonical serving registrar rebuilds packets at admission, requires natural-stop grading and an A/B latency report; it cannot carry this packet unchanged. The proposed carrier is the campaign pattern used by operations 154-163."
+  ],
+  "disclosed_risks": [
+    "Sampled decoding has no GPU evidence on the selected bundle: operation 232's menu and startup probes are greedy.",
+    "The native CPU proof reproduced the embedded NumPy receipt on 7 November. The actual serving launch still checks it before loading weights.",
+    "BetterBench has no answer-quality oracle; operation 232's 60/60 greedy grades remain separate evidence.",
+    "Production mode cannot prove per-request sampled-selector coverage on both ranks; native request and C2 joins remain unavailable.",
+    "Both starts reuse port 18088 sequentially; this assumption is untested.",
+    "Readout evaluate() was not tested end to end on a BetterBench-shaped operation root; the native fixture reused rebased physical-bf16 worker evidence for both starts.",
+    "The client bounds prompt plus output plus reserve to 32768 tokens; server context is 131040.",
+    "On failure, independent result review must authenticate protected closeout and observer/scope-absence release evidence even if finish labels release VERIFIED."
+  ],
+  "interpretation_rule": [
+    "Report each start separately, then their mean and relative difference; two starts establish observed repeatability, not a resolved effect size.",
+    "Compare with W2 descriptively only. Runtime, instrumentation, power cap, server context and sampled generated work all differ; no causal attribution to the three members and no pooling with operation 232's greedy score.",
+    "A start counts only with 53/53 complete journal records, verified independent release and 235 W configured-cap readbacks on both cards before and after the caller. Otherwise the run is incomplete; partial data is retained and there is no retry."
+  ],
+  "comparison_fields": [
+    "c1_combined_tp2_output_tok_s",
+    "c2_combined_tp2_output_tok_s",
+    "c1_c2_group_wall_seconds",
+    "prefill_pp_tok_s_2k_8k_16k",
+    "prefill_ttft_ms_2k_8k_16k",
+    "per_category_output_tok_s_and_ttft",
+    "completion_tokens_and_finish_reasons",
+    "length_capped_responses",
+    "spec_verify_ct_proposed_correct",
+    "accepted_tokens_per_verify",
+    "cache_evidence",
+    "native_launch_seconds"
+  ],
+  "next_action": "Measurement closed and reviewed. No further GPU work, retry, adoption, selection change or programme resumption. Reusable harness refactoring is a separate future task.",
+  "final_preparation": {
+    "private_root": "selected-cap16-betterbench-final-preparation-20261106-v1",
+    "seal": "2457576e14b3e646e52661a28cd2e330846858bbcf0ea635209930745ffd8e78",
+    "members": 5069,
+    "nonce": "a5f29c1716b5347c",
+    "next_index": 233,
+    "checkpoint": 621,
+    "package": {
+      "archive_sha256": "51fd2d82dfbdb9f2619b6baf928bf3fe83d3693a5892ea75a81c932771e87a7e",
+      "manifest_sha256": "86b3610bf25ade3be389808ab84fd111b649c020a1678a83deaf02b34c9ac2d1",
+      "package_sha256": "631849d5c5bb8d2016910338c586b24ebd653b768da59c9ad332d297cd02d057"
+    },
+    "sub_root_seals": {
+      "reference/preparation": "bdeab2a4168c97f79130544822b39ab12f64aa9c9c5d8ed043d155fdb7054b85",
+      "packet/preparation/author": "4e7e61fe854c5abd5bc86e63b15a7ef6277456529fd5593ac31a0f3c42164dd7",
+      "packet/preflight": "6e194300e187de848b96a74ac3f61b027cdde5962e4a689d4edd53ce4dc5ee57",
+      "packet": "1d80c02d6472ad6604812c6d530842f30879144d95409aba1b978040d361e996",
+      "proofs/native": "bb78a7868c1dfd83d604f9617be52ad2e65bc8d602366c7bc759cdcc819f3d88"
+    },
+    "prefilled_plan_sha256": "1a45960bfbfe625647ee837f97dd4e4d69d6f0f2578754abd34ec7ae12e5c1a0",
+    "protected_helper_exception": {
+      "file": "benchmark_physical_controller.py",
+      "function": "_http_wire_reference",
+      "literal": "SPEC_SHA256",
+      "before": "c4f11dc80305cbb45f62f6a4f2ad672c3ee4ff4e0011ab520e5b54467b31984d",
+      "after": "ceef93e595bebf9628db85b37b51cb8bca706c56056ebb2736aaec0ce31797ad",
+      "other_protected_helpers_unchanged": 8
+    },
+    "carrier": "operations 154-163 campaign/coordinator pattern (canonical verify_serving_run.py not used or changed)",
+    "tests": {
+      "stage1_suite_on_fresh_build": "15/15",
+      "final_packet": "6/6",
+      "registrar_through_pre_ledger_seam": "6/6",
+      "runner_guard": "5/5",
+      "public43": "43/43",
+      "admission_preflight_local_only": "passed (not admission)"
+    },
+    "native_proof": {
+      "attempt1": "FAILED in the proof harness: its runner guard refused CPython 3.14 os.posix_spawn at the first child spawn; retained, not retried",
+      "attempt2": {
+        "status": "PASSED",
+        "private_root": "selected-cap16-betterbench-native-proof-2-20261106-v1",
+        "seal": "be07813cf2aac78c70a947547f7beacb595b90473a66eaf0ad73815180fed159",
+        "members": 10,
+        "recipe_sha256": "5b36ab8c01e9ce33d04a2a8fb0f227fdd71ab57c312bcea7f586d7169b2fd3ef",
+        "receipt_stdout_sha256": "5c64923264fa7b5353b4e52f2b68b75afa0c9fee2d1530672273120a5421a3e8",
+        "elapsed_seconds": 8.445,
+        "python": "3.14.4",
+        "compiled_files": 80,
+        "payload_files": 101,
+        "tests": 1,
+        "requests": 53,
+        "dependency_namespace_sha256": "8025366683aaccd688a37d0fe86981c52c9c1796e0c595bea39eed7e1332cf10",
+        "scope": "Device-free proof: real dependency probe and 53-request client against isolated mock server; both-start readout uses labelled identity rebasing of retained worker evidence. No GPU, model, quality or performance result."
+      }
+    },
+    "blockers": []
+  },
+  "last_updated": "2026-11-07",
+  "independent_review": {
+    "file": "OPUS-SELECTED-CAP16-BETTERBENCH-PACKET-REVIEW-v1.md",
+    "sha256": "58dc385545c3125b9e9c38affde73fa8176f2e774f2b1f42ec46958efda13bfc",
+    "verdict": "ACCEPT_NO_BLOCKERS",
+    "authority": false
+  },
+  "final_registration": {
+    "private_root": "selected-cap16-betterbench-registration-a5f29c1716b5347c-v1",
+    "seal": "f4881d24b24ffc9d197c3b4b31416ac46eafacb1deeac963054e6bb3ef42332c",
+    "plan_sha256": "e2e33fcadaaeedeb840179ddbe09992e967775e0fea773d83a2d9fc0e05fd1c2",
+    "members": 3,
+    "changed_fields": [
+      "independent_review",
+      "native_proof",
+      "preparation_root",
+      "readiness"
+    ],
+    "status": "SEALED_FINAL_PLAN_ROOT_ONLY_ACTUAL_REGISTRATION_SEPARATE",
+    "scope": "This root contains the final PLAN. The actual executed registration is the campaign REGISTRATION.json at checkpoint 622."
+  },
+  "readiness": {
+    "private_root": "selected-cap16-betterbench-readiness-a5f29c1716b5347c-20261107-v1",
+    "seal": "90de274020c5988bceadb1accb502f43e56620d9d8236ffbc1adef30f2ba59a7",
+    "file_sha256": "2add8918ab4e72bf69315c5329f70d4eca1ad26efe47c39937a5df62af1bb1bc",
+    "members": 7,
+    "authority": false
+  },
+  "owner_authorization": {
+    "private_root": "selected-cap16-betterbench-authorization-a5f29c1716b5347c-v1",
+    "seal": "6167b4905a23ecfc6e2915f23cca22b1220a8491b42d873ec3bf52a13c4705ab",
+    "approval_sha256": "05a6ecf6308202a17eac3ad324b075d2eb1c8839503072aa22b781d98ed06338",
+    "owner_answer_verbatim": "approved",
+    "plan_sha256": "e2e33fcadaaeedeb840179ddbe09992e967775e0fea773d83a2d9fc0e05fd1c2"
+  },
+  "admission": {
+    "private_root": "selected-cap16-betterbench-admission-a5f29c1716b5347c-v1",
+    "seal": "63201248df48d00f999f241adc3feb6ed5152cb8c6340d11854072d79b8fc1c3",
+    "result_sha256": "bd38a8acd0d7de100e6930db584d430061d1674813805015a93536666cf2c816",
+    "status": "ADMISSION_PREFLIGHT_PASSED",
+    "failed": [],
+    "mode": "--remote",
+    "boot_id": "cf30344d-a1d7-4350-825b-e097c8e60f2b",
+    "checkpoint": 621,
+    "next_index": 233,
+    "age_seconds_at_parent_entry": 104.892786,
+    "age_seconds_at_registrar": 104.992865
+  },
+  "execution": {
+    "operation": 233,
+    "checkpoint": 623,
+    "checkpoint_sha256": "7f64b5fed21f0bf0a99c43ee5b7a3a903e5dfa741a8f286c450ef122c067cce2",
+    "status": "SELECTED_CAP16_BETTERBENCH_COMPLETE_RELEASED_PARKED",
+    "invocation_consumed": true,
+    "retry": false,
+    "completed_result": true,
+    "independent_release_verified": true,
+    "pre_cap_watts_per_card": 235,
+    "post_cap_watts_per_card": 235,
+    "model_starts_observed": 2,
+    "result_review": "ACCEPTED_NO_BLOCKERS"
+  },
+  "measured_result": {
+    "status": "ACCEPTED_DESCRIPTIVE_MEASUREMENT",
+    "starts": [
+      {
+        "accepted_tokens_per_verify": 4.185155986034463,
+        "c1_tok_s": 99.5130019986414,
+        "c2_tok_s": 177.9187113558769,
+        "completion_tokens": 37155,
+        "finish_reasons": {
+          "length": 11,
+          "stop": 42
+        },
+        "nonprefill_length_caps": [
+          {
+            "category": "prose",
+            "completion_tokens": 4096,
+            "ordinal": 21,
+            "prompt_id": "prose-story-long",
+            "truncated_in_reasoning": false
+          },
+          {
+            "category": "reasoning",
+            "completion_tokens": 4096,
+            "ordinal": 24,
+            "prompt_id": "reason-plan-medium",
+            "truncated_in_reasoning": false
+          }
+        ],
+        "physical_arm": "bf16",
+        "prefill": [
+          {
+            "batched_runs": 2,
+            "cached_tokens": [],
+            "pp_tps": [
+              3538.56450527996,
+              3579.2923469544253
+            ],
+            "prompt_tokens": [
+              1508,
+              1535
+            ],
+            "target_depth": 2000,
+            "tokens_per_update": [
+              4.0,
+              3.2
+            ],
+            "ttft_ms": [
+              426.16151203401387,
+              428.8557209656574
+            ]
+          },
+          {
+            "batched_runs": 2,
+            "cached_tokens": [],
+            "pp_tps": [
+              3510.9423407312156,
+              3498.862652921113
+            ],
+            "prompt_tokens": [
+              6050,
+              5973
+            ],
+            "target_depth": 8000,
+            "tokens_per_update": [
+              3.2,
+              4.0
+            ],
+            "ttft_ms": [
+              1723.1840949971229,
+              1707.1261699893512
+            ]
+          },
+          {
+            "batched_runs": 2,
+            "cached_tokens": [],
+            "pp_tps": [
+              3297.3704506273525,
+              3294.112031786848
+            ],
+            "prompt_tokens": [
+              11828,
+              11844
+            ],
+            "target_depth": 16000,
+            "tokens_per_update": [
+              2.6666666666666665,
+              2.2857142857142856
+            ],
+            "ttft_ms": [
+              3587.100745004136,
+              3595.5061290296726
+            ]
+          }
+        ],
+        "prefill_length_caps": 9,
+        "requests": 53,
+        "speculation": {
+          "response_count": 53,
+          "spec_num_correct_drafts": 28281,
+          "spec_num_proposed_drafts": 62153,
+          "spec_verify_ct": 8879
+        },
+        "start": 1
+      },
+      {
+        "accepted_tokens_per_verify": 4.132012413463833,
+        "c1_tok_s": 98.50405535220004,
+        "c2_tok_s": 179.97562125131017,
+        "completion_tokens": 34628,
+        "finish_reasons": {
+          "length": 9,
+          "stop": 44
+        },
+        "nonprefill_length_caps": [],
+        "physical_arm": "kv4",
+        "prefill": [
+          {
+            "batched_runs": 2,
+            "cached_tokens": [],
+            "pp_tps": [
+              3557.4475373655946,
+              3539.550207201345
+            ],
+            "prompt_tokens": [
+              1580,
+              1515
+            ],
+            "target_depth": 2000,
+            "tokens_per_update": [
+              3.2,
+              4.0
+            ],
+            "ttft_ms": [
+              444.1386649850756,
+              428.020486026071
+            ]
+          },
+          {
+            "batched_runs": 2,
+            "cached_tokens": [],
+            "pp_tps": [
+              3504.4395421759054,
+              3492.1701165883774
+            ],
+            "prompt_tokens": [
+              5999,
+              5961
+            ],
+            "target_depth": 8000,
+            "tokens_per_update": [
+              2.6666666666666665,
+              4.0
+            ],
+            "ttft_ms": [
+              1711.8286470067687,
+              1706.9615170476027
+            ]
+          },
+          {
+            "batched_runs": 2,
+            "cached_tokens": [],
+            "pp_tps": [
+              3289.3504612569986,
+              3291.801492878621
+            ],
+            "prompt_tokens": [
+              11713,
+              11829
+            ],
+            "target_depth": 16000,
+            "tokens_per_update": [
+              2.6666666666666665,
+              3.2
+            ],
+            "ttft_ms": [
+              3560.885389975738,
+              3593.4730650042184
+            ]
+          }
+        ],
+        "prefill_length_caps": 9,
+        "requests": 53,
+        "speculation": {
+          "response_count": 53,
+          "spec_num_correct_drafts": 26240,
+          "spec_num_proposed_drafts": 58646,
+          "spec_verify_ct": 8378
+        },
+        "start": 2
+      }
+    ],
+    "comparison": {
+      "c1_mean": 99.00852867542072,
+      "c1_per_start": [
+        99.5130019986414,
+        98.50405535220004
+      ],
+      "c2_mean": 178.94716630359352,
+      "c2_per_start": [
+        177.9187113558769,
+        179.97562125131017
+      ],
+      "descriptive_delta_vs_w2_mean": {
+        "c1": 0.04349500884101376,
+        "c2": 0.02091292654942678
+      },
+      "differences": [
+        "runtime: selected stack + prefetch/F1/wave-hint at cap16 vs 31 October candidate",
+        "worker path: production vs instrumented",
+        "configured cap: 235 W vs 300 W",
+        "server context: 131040 vs 32768",
+        "sampled generated work differs per request"
+      ],
+      "interpretation": {
+        "answer_quality_oracle": false,
+        "c2_global_counter_join": "UNAVAILABLE (production mode)",
+        "historical_comparison": "descriptive only; runtime, instrumentation, power cap, context and generated work differ",
+        "improvement_claim": false,
+        "native_request_joins": "UNAVAILABLE (production mode has no per-request native observer)",
+        "pooling_with_op232_score": false,
+        "same_work_gate": "NOT APPLICABLE: sampled token streams differ by design",
+        "sampled_decoding": "first sampled use of the selected bundle; op232 menu and probes were greedy"
+      },
+      "start_relative_difference": {
+        "c1": 0.010190502373275184,
+        "c2": 0.011494509457297693
+      },
+      "w2_reference": {
+        "c1_mean": 94.88165045023766,
+        "c1_range": [
+          92.2143028637206,
+          98.52135605533395
+        ],
+        "c2_mean": 175.28151681692896,
+        "c2_range": [
+          158.02851076661992,
+          188.2671901631611
+        ],
+        "clean_starts": 8,
+        "configured_power_cap_watts": 300,
+        "instrumentation": "on",
+        "operations": [
+          158,
+          159,
+          160,
+          161
+        ],
+        "runtime": "31 October full-stack candidate (before prefetch, F1 and wave-hint members)",
+        "server_context": 32768
+      }
+    },
+    "readout_sha256": "f7c4ee15c218668ccb1c24888b813cd96e192dfadb113788c57bca3f2c3e3a41",
+    "finish_sha256": "bc5d7ffaae5801f2dfe23049ab42b001800fd14563c450a6b1d8cc7b325dbe68",
+    "task_quality_oracle": false,
+    "sampled_selector_route_qualified": false,
+    "review_corrections": {
+      "c1_overhead_diagnostic": {
+        "delta_pct": 3.555182500911469,
+        "method": "Replace measured time outside individual request walls with the review-rounded W2 mean of 0.592 seconds per six-request C1 group; diagnostic only, not a replacement frozen score or causal serving-speed estimate.",
+        "new_rates": [
+          98.70725650844923,
+          97.80247605879173
+        ]
+      },
+      "c1_client_overhead_ms_per_request": {
+        "current_approx": 43,
+        "w2_range": [
+          97,
+          102
+        ]
+      },
+      "c2_overhead_decomposed": false,
+      "prefill": [
+        {
+          "approx_actual_prompt_tokens": 1500,
+          "delta_pct": -4.369047963666528,
+          "new": 3553.713649200331,
+          "nominal_depth": 2000,
+          "old": 3716.070554071399
+        },
+        {
+          "approx_actual_prompt_tokens": 6000,
+          "delta_pct": -3.8005248494937027,
+          "new": 3501.603663104153,
+          "nominal_depth": 8000,
+          "old": 3639.9405065628616
+        },
+        {
+          "approx_actual_prompt_tokens": 11800,
+          "delta_pct": -1.2204337738817794,
+          "new": 3293.158609137455,
+          "nominal_depth": 16000,
+          "old": 3333.845991587999
+        }
+      ],
+      "historical_spread": {
+        "w2_c1_range": [
+          92.2143028637206,
+          98.52135605533395
+        ],
+        "w2_c2_range": [
+          158.02851076661992,
+          188.2671901631611
+        ],
+        "new_starts": 2,
+        "w2_starts": 8,
+        "effect_size_resolved": false
+      },
+      "cache_salts": "Unique within a start; repeat across starts, which use fresh server processes.",
+      "fault_scan": "amdgpu/KFD/DRM only; no MCE or OOM-killer scan. Cgroup oom, oom_kill and max events were zero on both starts.",
+      "prefill_caching": "Unknown: all cached-token fields null."
+    }
+  },
+  "result_roots": {
+    "native": {
+      "seal": "1a9f69e3aaa44c9489c8a91ba59f18f70b8a783e22130e10e2fb8a235244e171",
+      "members": 533
+    },
+    "readout": {
+      "private_root": "selected-cap16-betterbench-readout-a5f29c1716b5347c-v1",
+      "seal": "3bb54401e8eea291def651b2c74c0291b074389e670c3070dface02eaaae21de"
+    },
+    "finish": {
+      "seal": "49904a550ffc03306396a800150e226c5883ae8246c9c4202b16296cd076fb48"
+    },
+    "invocation": {
+      "seal": "0cf5b260c43c5a77fd57a5c5839ab1110f02117280cd4ea87a3076abebc90560"
+    },
+    "campaign": {
+      "seal": "562effb71f7771280458bcdcf2fe8808adaa7c70f16f5a43ecd58239e1dab8aa"
+    },
+    "parent": {
+      "seal": "7ffccf85889aab957bcec82f652e73c6d443323e6c7ea334de5dedbf6c9af576"
+    },
+    "postrun": {
+      "private_root": "selected-cap16-betterbench-postrun-a5f29c1716b5347c-v1",
+      "seal": "4332e75c8ac80399dfd6fe2593edfed2d993a5e6755985483d6d64c36d972788"
+    }
+  },
+  "result_review": {
+    "file": "OPUS-OP233-SELECTED-CAP16-BETTERBENCH-RESULT-REVIEW-v1.md",
+    "sha256": "60545a8998b6a08a998b5b89310097d6f1bcde5f7000a78b883c850dba751fe4",
+    "verdict": "ACCEPT_NO_BLOCKERS",
+    "measurement_closed": true,
+    "authority": false,
+    "work_summary_sha256": "e56017d7c41e6ae52c234637707f408632356a0a4e07a69b8f033aa3e9de899f",
+    "verified_op233_roots": 17,
+    "verified_w2_roots": 8
+  },
+  "actual_registration": {
+    "private_root": "selected-cap16-betterbench-campaign-a5f29c1716b5347c",
+    "file": "REGISTRATION.json",
+    "sha256": "546c03c22b914f7ad11138bbc6eb52625da24ec85228fb86593416b145447852",
+    "checkpoint": 622
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "sprint": "OPT-02",
+  "status": "CPU_EXIT_COMPLETE_NO_GPU_CANDIDATE",
+  "signed_off": true,
+  "gpu_launches": 0,
+  "model_starts": 0,
+  "selection_changed": false,
+  "measured_performance_gain": null,
+  "gpu_ready_candidates": [],
+  "evidence": {
+    "private_root": "optimization-continuation-v1/opt-02-mxfp4-representation-v1",
+    "manifest_sha256": "862090a251045bfd0b2fc9beb7cf9a23909a0f0e2fa314a7e64a47bac1a3c10a",
+    "members": 75,
+    "report": "RESULT.md",
+    "result": "RESULT.json",
+    "lead_dispositions": "LEAD-DISPOSITIONS.json"
+  },
+  "checks": {
+    "focused_tests": 14,
+    "public_preflight_tests": 43,
+    "input_seals_verified": 6,
+    "native_file_only_audits": 2,
+    "native_device_free_compile_operations": 1,
+    "baseline_artifacts_reproduced": 5,
+    "result_reproduced": true,
+    "docs_audit": "No findings",
+    "git_diff_check": "passed"
+  },
+  "findings": {
+    "scale_transpose": {
+      "status": "REJECT_BEFORE_GPU",
+      "shape": "down-m16",
+      "baseline_vgpr": 109,
+      "candidate_vgpr": 110,
+      "baseline_barrier_pairs": 4,
+      "candidate_barrier_pairs": 6,
+      "dynamic_lds_both_bytes": 4096,
+      "spills_both": 0,
+      "reason": "Lane shuffles replaced by LDS stores/load; communication removal and register gate both fail."
+    },
+    "lossless_coding": {
+      "status": "PARK_CPU_CODEC_ONLY",
+      "sampled_tiles": 93,
+      "raw_bytes": 385152,
+      "coded_bytes_including_overhead": 357792,
+      "saving_fraction": 0.07103688933200403,
+      "roundtrip_exact": true,
+      "whole_model_hash_freshly_verified": false,
+      "whole_model_ratio_measured": false,
+      "gpu_decode_cost_measured": false
+    },
+    "integer_reduction": "Whole-K/WMMA equivalence unresolved; synthetic serial/group rounding difference survives BF16 output.",
+    "scheduling": "No additional candidate; prior N32, scalar bitdecode and scale-prefetch failures remain closed."
+  },
+  "review": {
+    "model": "claude-opus-5-5",
+    "effort": "medium",
+    "status": "AGREE",
+    "sha256": "452d73dea4f790d4220dbd8e2d203855ffd823e2fad29b7327d8ebc4a8e2b433",
+    "report": "Private optimization-continuation-v1/OPUS-OPT02-REVIEW-v1.md"
+  },
+  "limitations": [
+    "CPU compiler output is not GPU correctness or timing evidence.",
+    "Deterministic checkpoint samples do not reconstruct the TP loader or survey the whole model.",
+    "The arithmetic witness is not a selected WMMA simulation or observed serving failure.",
+    "G2 explicit layout, G3 decoder cost and integer equivalence remain deferred research."
+  ],
+  "next": "OPT-03 attention CPU screens",
+  "signoff": {
+    "private_root": "optimization-continuation-v1/opt-02-signoff-v1",
+    "manifest_sha256": "29c6b61463eca7c0677d66eb670015e9830c47a2018a3e085dcdeedb1a4db042",
+    "members": 4
+  },
+  "errata": [
+    "Public report incorporates F1-F4; original sealed report unchanged.",
+    "Scale saving is 54.3% of gross savings (58.9% of net); tile bit widths are 1/2/3 for 1/84/8 tiles.",
+    "Header digest matched between reads; sample digests recorded without a historical comparison.",
+    "Arithmetic activation scale and incoming accumulator are synthetic."
+  ]
+}

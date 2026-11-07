@@ -1,0 +1,133 @@
+{
+  "deployed": false,
+  "endurance": "NOT RUN;existing deferral unchanged",
+  "evidence": {
+    "cpu_release_review": {
+      "path": "scratchpad/fp8-blockers-reopened-20261025-v1/astra-kv-diagnostic-938f-review-v1/RELEASE-REVIEW.json",
+      "sha256": "a5514ee15f6120638b3107f9cbfb2b3aeb05d2411cfc1eecddfa3717fc2cee22"
+    },
+    "diagnostic_owner_decision": {
+      "path": "scratchpad/fp8-blockers-reopened-20261025-v1/kv-retained-quality-89ee-approved-v1/OWNER-DECISION.json",
+      "sha256": "d6b646f82ac266739c2fcdfd93d177d9534e26f98890642999f231dc67b1e433"
+    },
+    "disposition": {
+      "path": "scratchpad/fp8-blockers-reopened-20261025-v1/KV-SERVING-89EE-DIAGNOSTIC-DISPOSITION.json",
+      "sha256": "73fae817b8fafed3c150298884bbd88136fee996a63de7fbfa9aedeee9c385d3"
+    },
+    "gpu_release_review": {
+      "path": "scratchpad/fp8-remaining-optimizations.w3m3xpg7/reviews/KV-SERVING-89EE-FAILED-AND-RELEASE.json",
+      "sha256": "4aaaac676a711bd566dcb1854f1afb7e06002c54858722899293440f04849d38"
+    },
+    "metrics": {
+      "path": "scratchpad/fp8-blockers-reopened-20261025-v1/KV-SERVING-89EE-DIAGNOSTIC-RESULT.json",
+      "sha256": "19a45bba8afbf1bda11661d460a61a68aedcb1c574faac0069e0151fbb2ec8b2"
+    },
+    "quality_continuation_handoff": {
+      "path": "scratchpad/fp8-blockers-reopened-20261025-v1/kv-retained-quality-938f-closeout-v1/FINAL-HANDOFF.json",
+      "sha256": "5ce2b8d2b3b86ba10c004b82ea1dbfe1ba17f6f4ad073d52b211add7617b8653"
+    },
+    "quality_review": {
+      "path": "scratchpad/fp8-blockers-reopened-20261025-v1/astra-kv-diagnostic-938f-review-v1/RESULT-REVIEW.json",
+      "sha256": "d066f5c93d20041b8860d37ac21e6c21939b93efc20b5923d5859b2d00ac1754"
+    }
+  },
+  "failures_preserved": [
+    "Serving final controller report exceeded8MiB; original native workload seal/report/live joins absent.",
+    "CPU parent final validation failed KeyError reviewed_cpu_host after native decode/grading completed; local retained validation recovered diagnostic result only."
+  ],
+  "labels": {
+    "component-tested": "See earlier component records; this record adds no component claim.",
+    "deployed": false,
+    "hardware-validated": "Retained native response decoding and independent release reviewed; not full-model qualification.",
+    "serving-tested": "Both menus ran; final serving operation failed. Diagnostic evidence only.",
+    "source-validated": "Prospective report and CPU finalization fixes only; not installed."
+  },
+  "median_rate_change_percent": {
+    "C1": -5.40597872949612,
+    "C2": -17.768607478039723
+  },
+  "metric_scope": "One instrumented BF16-then-FP8 order, prefill+HTTP completion across both GPUs; all12timed output paths and verifier work differ; no matched-kernel, TTFT,ITL or queueing claim",
+  "original_cpu_operation_complete": false,
+  "original_serving_operation_accepted": false,
+  "original_serving_outer_seal": {
+    "limitation": "Local outer retention, not the missing original native workload seal.",
+    "members": 327,
+    "path": "scratchpad/fp8-kv-serving-native.89ee82686d779c1f",
+    "sha256": "863fb0e11ae0af944febe26f40fd254f062f8173b2f711f74b90d88eaaa74ce6"
+  },
+  "private_evidence_workspace": "ArchLinuxThreadripperAI",
+  "qualification": false,
+  "quality": {
+    "distinct_expected_answer_strings_per_arm": 9,
+    "distinct_input_id_hashes_per_arm": 16,
+    "forced_output_ungraded": 30,
+    "full_wire_decodes": 104,
+    "natural_passes_by_arm": {
+      "bf16": 37,
+      "fp8": 37
+    },
+    "natural_response_checks": 74,
+    "scope": "Retained diagnostic response checks; repeated cases, not general model accuracy",
+    "state_only_cancellations": 2,
+    "wire_matches": 104
+  },
+  "rates": {
+    "bf16": {
+      "C1": {
+        "maximum": 120.12602367443169,
+        "median_individual_latency_seconds": 8.525659552018624,
+        "median_rate": 119.97949305113328,
+        "minimum": 119.39702102175765,
+        "rates": [
+          119.39702102175765,
+          119.97949305113328,
+          120.12602367443169
+        ]
+      },
+      "C2": {
+        "maximum": 173.49171501729597,
+        "median_individual_latency_seconds": 11.840214274998289,
+        "median_rate": 172.45110049196512,
+        "minimum": 171.66907328559648,
+        "rates": [
+          171.66907328559648,
+          173.49171501729597,
+          172.45110049196512
+        ]
+      }
+    },
+    "fp8": {
+      "C1": {
+        "maximum": 113.65244963507082,
+        "median_individual_latency_seconds": 9.017786742071621,
+        "median_rate": 113.49342717703173,
+        "minimum": 113.35117985660881,
+        "rates": [
+          113.65244963507082,
+          113.49342717703173,
+          113.35117985660881
+        ]
+      },
+      "C2": {
+        "maximum": 148.10078146013558,
+        "median_individual_latency_seconds": 14.441464076982811,
+        "median_rate": 141.80894135398802,
+        "minimum": 141.384898447897,
+        "rates": [
+          141.80894135398802,
+          141.384898447897,
+          148.10078146013558
+        ]
+      }
+    }
+  },
+  "schema": 1,
+  "selected": false,
+  "selection_decision": "Retain selected BF16 target/draft KV. FP8 target KV has diagnostic task passes and startup payload savings; no speed benefit observed and no formal successful serving operation reconstructed.",
+  "startup_target_cache_saving_bytes_per_card": [
+    537411584,
+    537411584
+  ],
+  "status": "DIAGNOSTIC_TASK_CHECKS_PASS_NO_OBSERVED_SPEED_BENEFIT_UNSELECTED",
+  "whole_device_or_peak_saving_established": false
+}

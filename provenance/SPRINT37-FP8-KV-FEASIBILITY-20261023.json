@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "sprint": 37,
+  "status": "FEASIBILITY_COMPLETE_MATCHED_CAMPAIGN_BLOCKED",
+  "decision": "RETAIN_BF16_TARGET_AND_DRAFT_KV",
+  "scope": "Source-only feasibility; no device qualification",
+  "reference_record": "provenance/QWEN38-FROZEN-BASELINE-20261023.json",
+  "reference_record_sha256": "c155ee3468c7917766cf58818e5092a344a9f05032b25bf7903be307dd0ed16c",
+  "selected_gemm_sha256": "b101e71751ce995b23b327dd3ee87662eb0efd3ef7dc2d35387d1acc58d8e069",
+  "selected_chunk_tokens": 2048,
+  "selected_recurrent_profile": "aligned_ring_fold",
+  "selected_target_weights": "FP8",
+  "selected_target_kv": "BF16",
+  "selected_draft_weights": "BF16",
+  "selected_draft_kv": "BF16",
+  "thinking": true,
+  "reasoning_effort": "low",
+  "original_direction_sha256": "664b3fb6ab639ab3067e45e385b466f5a4eaef1583460279b9f82b149128c4da",
+  "budget": {
+    "preparation_seconds": 1200,
+    "preparation_seal_reserve_seconds": 300,
+    "physical_campaign_seconds": 5080,
+    "owner_seconds": 4570,
+    "expanded": false,
+    "physical_seconds_used": 0
+  },
+  "audit": {
+    "verified_predecessor_roots": 4,
+    "source_files_checked": 18,
+    "receipt_read_installed_files": 7,
+    "native_imports": false,
+    "device_access": false,
+    "native_sources": [
+      {
+        "relative_path": "kernels/ops/attention/decode_attention.py",
+        "sha256": "34ca0066e2716e1ffad048ec7cbb3a25af13eeb61e99034a663fed6277bf691a",
+        "bytes": 74521
+      },
+      {
+        "relative_path": "kernels/ops/attention/extend_attention.py",
+        "sha256": "f061599bb2c9243d50b565281c47de077ccc90135b9b1e5320a07425bedac112",
+        "bytes": 72702
+      },
+      {
+        "relative_path": "srt/layers/quantization/fp8.py",
+        "sha256": "89d769cd5c3702c65f9d7839115e032833ec6c0d26b024e76ae5075219bc8a15",
+        "bytes": 141171
+      },
+      {
+        "relative_path": "srt/layers/radix_attention.py",
+        "sha256": "df6e94b67b61feb4f8e3a7b1fdb0c0444cc56e4bf9d90a622e028bddff31619e",
+        "bytes": 24849
+      },
+      {
+        "relative_path": "srt/layers/attention/triton_backend.py",
+        "sha256": "9924224f0dd4150fe1fc9ef7de6a556c49857608792479379179a973436762c1",
+        "bytes": 104650
+      },
+      {
+        "relative_path": "srt/layers/quantization/kv_cache.py",
+        "sha256": "4180c5559d5bf6005a6fb5459e31aa7700b9827a9f92d043aa21951def716df7",
+        "bytes": 3361
+      },
+      {
+        "relative_path": "srt/utils/__init__.py",
+        "sha256": "d4c887ce6d68fb14d2f870c50dabc621da1c67a85823e8c8cf704392865963c8",
+        "bytes": 171
+      }
+    ]
+  },
+  "findings": {
+    "native_fp8_scale_arithmetic_exists": true,
+    "current_split_adapter_bf16_unit_scales_only": true,
+    "generic_fp8_cache_path_reduces_query_precision": true,
+    "bf16_query_workaround_architecture": "gfx1250",
+    "hardware_target": "gfx1201",
+    "guard_only_adapter_change_satisfies_original_contract": false,
+    "per_tensor_kv_scale_loader_exists": true,
+    "absent_scales_native_fallback": 1.0,
+    "actual_loaded_fp8_scales_observed": false,
+    "clipping_and_range_observed": false,
+    "calibration_requirement_established": false,
+    "new_backend_port_necessity_established": false,
+    "generic_fp8_prefill_unsupported_established": false,
+    "gfx1201_native_execution_tested": false
+  },
+  "campaign_contract": {
+    "required_fresh_starts": 4,
+    "current_owner_max_starts": 2,
+    "current_owner_two_start_envelope_seconds": 4425,
+    "hypothetical_four_start_same_envelopes_seconds": 8445,
+    "two_separate_owner_envelopes_seconds": 8850,
+    "original_owner_ceiling_seconds": 4570,
+    "scope_change_needed": true,
+    "protected_helpers_changed": false
+  },
+  "workload_gap": {
+    "original_context_tokens": 16384,
+    "original_natural_stop_output_cap": 1024,
+    "old_thinking_ledger_output_tokens": [
+      2891,
+      3977
+    ],
+    "sprint36_long_input_tokens": [
+      25991,
+      25978
+    ],
+    "sprint36_output_cap": 4096,
+    "new_frozen_thinking_corpus_required": true,
+    "ttft": "UNMEASURED",
+    "decode_only_rate": "UNMEASURED"
+  },
+  "proposed_followup": {
+    "status": "PROPOSAL_ONLY_NOT_EXECUTED",
+    "scope": "BF16-query FP8-target-cache compatibility before full serving",
+    "preparation_ceiling_seconds": 3600,
+    "component_total_ceiling_seconds": 1200,
+    "includes_component_admission_and_release_and_seal": true,
+    "full_serving_campaign_budget_resolved": false,
+    "full_serving_schedule_and_budget_review_required": true
+  },
+  "next_independent_tuning_item": 38,
+  "gpu_active": false,
+  "launch_prepared": false,
+  "model_starts": 0,
+  "runtime_defaults_changed": false,
+  "selected_numerical_source_changed": false,
+  "numerical_mismatch_resolved": false,
+  "qualification": false,
+  "tracking": "docs/SPRINT37-FP8-KV-FEASIBILITY.md"
+}

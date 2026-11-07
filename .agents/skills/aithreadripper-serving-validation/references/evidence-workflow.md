@@ -127,6 +127,11 @@ The HTTP receipt's response SHA256 hashes the raw response bytes. The serving
 contract's `raw_response_sha256` hashes canonical response JSON **plus a newline**.
 Check both definitions correctly; confusing them caused a reader-only refusal.
 
+Allocator peaks recorded after native request-row release remain cumulative,
+including startup and preceding requests, unless an authenticated reset defines
+another window. Preserve that window in the report. Driver-free snapshots are
+point observations; neither establishes whole-device peak VRAM.
+
 The published tokenizer maps closing `</think>` to ID248069 in the retained
 checkpoint. Verify marker identities from pinned assets rather than assuming
 they apply to another model. Require one closing marker for final-answer grading,
@@ -146,6 +151,11 @@ each request's verifier count with singleton and batch-two group counts.
 Native `origin_input_ids` can be `array('q')`. When joining a request to its
 frozen input, validate bounded integer IDs and hash a canonical list together
 with the separate cache salt. A list-only fixture missed this native type.
+When requests have frozen cache salts, filter observers by that namespace before
+inspecting text IDs. Internal server warmups can have opaque or multimodal origins. Delegate
+unrelated requests unchanged; require eligible input hashes and order, then join
+their native RIDs to the wire responses. [Sprint 40](../../../../docs/SPRINT40-KV-CAPACITY.md)
+validated this boundary through the actual startup hook and retained records.
 
 Test failure paths through their final retained output. If validation can throw
 after deferred tensors have become host values, retain a bounded numerical
@@ -196,3 +206,34 @@ Sprint 9.1 authentication; all original file hashes matched, but the folder's
 membership seal failed. Preserve such a folder and make a fresh, documented
 recovery snapshot. Do not delete the extra file, reset timestamps or silently
 relabel the old seal as valid. A recovery never authorizes nonce reuse.
+
+## Finalization regressions
+
+For the CPU final-quality path, test the actual embedded `REMOTE_RECIPE` loader
+through `host_cpu.import_result`, using inert inputs at its existing seams.
+Register a dynamically loaded module in `sys.modules` under its executed
+`__name__` before code accesses that registry entry. The Q3 v2 recipe omitted
+registration for `reviewed_cpu_host`: operation `938f6a4084d4636b` completed all
+104 native decodes and 74 natural grades, then failed parent finalization with
+that missing key. Earlier native source tests did not cover this boundary.
+The exact loader regression and inactive correction are retained under
+`scratchpad/fp8-blockers-reopened-20261025-v1/kv-retained-quality-938f-closeout-v1`.
+Do not reuse the old recipe solely because its decoder files match a passed
+source inventory.
+
+A late parent failure remains a failed operation. A separate local continuation
+can authenticate retained native outputs through the unchanged decoder, final
+grader, supervision and resource predicates, with independently verified release.
+Label that continuation separately; do not fabricate native owner completion.
+The reviewed 938f continuation did not repeat native work or repair the original
+failed serving comparison.
+
+For composed serving menus, test publication of the entire final controller
+report with retained responses and the admitted response-size envelope. The
+89ee report duplicated full responses and exceeded its unchanged 8 MiB limit
+after both menus completed. A bounded reference report must preserve raw
+artifacts, run the original validators before summarizing, and bind the complete
+validated wire by canonical hash. Its retained reader must recompute and compare
+that reference. The prospective correction and native regression checks are in
+`scratchpad/fp8-blockers-reopened-20261025-v1/kv-serving-report-bound-diagnosis-v1`;
+they do not reconstruct 89ee's missing original report or workload seal.

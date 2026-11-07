@@ -1,0 +1,82 @@
+{
+  "adoption": false,
+  "date": "2026-11-03",
+  "evidence": {
+    "gemm-scale-prefetch-compile-v1": {
+      "manifest_sha256": "234d585ea644e6ad704dc1d3e694287464d6522b37e287d0926559097b4a0a19",
+      "members": 36,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-scale-prefetch-compile-v1",
+      "verified_utc": "2026-11-03T08:09:01.247180+00:00"
+    },
+    "gemm-scale-prefetch-compile-v2": {
+      "manifest_sha256": "b44253c536c120c676d72e0f3e77630a28fad3f5b10091e8676a6640e78954d9",
+      "members": 48,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-scale-prefetch-compile-v2",
+      "verified_utc": "2026-11-03T08:09:01.321831+00:00"
+    },
+    "host-copy-and-gemm-triage-v1": {
+      "manifest_sha256": "0ed7f1878f675ffe61d12c06abff5e02d938d93f422e2d77c0cae77c444dbc1c",
+      "members": 16,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/host-copy-and-gemm-triage-v1",
+      "verified_utc": "2026-11-03T08:10:12.475433+00:00"
+    }
+  },
+  "gemm_scale_prefetch": {
+    "baseline_all_five_artifacts_reproduced": true,
+    "baseline_barrier_pairs": 4,
+    "baseline_dynamic_lds_bytes": 4096,
+    "baseline_vgpr": 109,
+    "candidate_barrier_pairs": 6,
+    "candidate_dynamic_lds_bytes": 4096,
+    "candidate_vgpr": 121,
+    "numerical_gpu_validation": false,
+    "performance_measured": false,
+    "spills": 0,
+    "status": "RESOURCE_GATE_FAILED"
+  },
+  "gpu_launches": 0,
+  "host_copy": {
+    "observed_post_target_tail_us": [
+      171.133,
+      202.851,
+      213.877,
+      290.523,
+      407.654,
+      212.792
+    ],
+    "samples": 6,
+    "saving_measured": false,
+    "source_attribution": "shape/order/correlation inference; no Python stacks",
+    "status": "DEPRIORITIZED"
+  },
+  "model_starts": 0,
+  "native_cpu_attempts": 2,
+  "native_cpu_seconds": 16.570298874998116,
+  "next": [
+    "Reversible MXFP4 packing/layout audit with unchanged numerical contract",
+    "Selected ring-fold accept/commit traffic audit"
+  ],
+  "remaining_gpu_allowance": 0,
+  "schema": 1,
+  "selected_runtime_changed": false,
+  "status": "CPU_LEAD_TRIAGE_COMPLETE_NO_GPU_CANDIDATE",
+  "tests": {
+    "guard_regression": 2,
+    "public_preflight": 43,
+    "source_v1": 6,
+    "source_v2": 6,
+    "trace": 9
+  },
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "eb13dea33fc439460bcb879d213f5c73a7dbf871c52c6e8171265adf3c7cd9a3",
+      "absolute_machine_path_prefixes_removed": 3,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

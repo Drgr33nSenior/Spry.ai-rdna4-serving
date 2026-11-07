@@ -1,0 +1,116 @@
+{
+  "adoption_authorized": false,
+  "checks": {
+    "addendum_focused_tests": 10,
+    "addendum_review": "Parent correction after Opus review; no claim of a second independent review.",
+    "gpu_operations": 0,
+    "model_starts": 0,
+    "native_invocations_addendum": 0,
+    "native_invocations_original": 1,
+    "opus_focused_tests_rerun": 15,
+    "original_focused_tests": 15,
+    "original_gate": "REJECTED_UNCHANGED",
+    "proposal_accepted": false,
+    "public_preflight": 43,
+    "public_preflight_rerun_for_addendum": false,
+    "reproduction": {
+      "sha256": "218b859e25592bc06ee1128ec6487aeccaacd562c9f6c33718e0fe8ae0103988",
+      "structural_check_byte_equal": true
+    },
+    "schema": 1,
+    "test_fixture_failure_retained": "TEST-v1.stderr: bytearray passed to existing bytes-only parser; fixture corrected in v2."
+  },
+  "compiled_candidates": [
+    "down-m16"
+  ],
+  "contract": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1/CPU-CONTRACT-v2.md",
+    "sha256": "7e1615867d23ce13ef540ca8e08c7b055b7e4e6e75f52cc473d0b2a5cbf46ca6"
+  },
+  "date": "2026-11-04",
+  "evidence": {
+    "manifest_sha256": "b55a889df258df6cc28702e512332c85eeb88c13175ded6d5bc01922811d0093",
+    "members": 70,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-cpu-20261104-v1",
+    "verified_utc": "2026-11-04T01:34:52.351235+00:00"
+  },
+  "followup": {
+    "path": "provenance/MXFP4-GEMM-WAVE-HINT-APPROVED-CPU-20261104.json",
+    "sha256": "b56c66877c2b260d783ae917846916e70ef2001e09fafc7ad9505cc3da7aa14d"
+  },
+  "gpu_authority": false,
+  "gpu_operations": 0,
+  "model_starts": 0,
+  "next_action": "The accepted follow-up completed once and is parked. No further native or GPU authority.",
+  "next_cpu_scope": [
+    "down-m16 negative control",
+    "gate_up-m16",
+    "gate_up-m8"
+  ],
+  "original_gate": "REJECTED_UNCHANGED",
+  "owner_decision": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1/GEMM-WAVE-HINT-CPU-OWNER-DECISION-v1.md",
+    "sha256": "e06f047fdaa4279a53a9e86596a035d61462a4a1e781e96501cab4320ee2dfc5"
+  },
+  "performance_measured": false,
+  "physical_numerical_equivalence_measured": false,
+  "power_changed": false,
+  "preserved": [
+    "original 21 leads",
+    "BW-01 through BW-04",
+    "three cumulative members",
+    "v6 failed register gate",
+    "codec/integer/SWMMAC dispositions"
+  ],
+  "proposal_accepted": true,
+  "public_report": "docs/MXFP4-GEMM-WAVE-HINT-SCREEN.md",
+  "public_report_amendment": "Links the separately approved, passed three-case CPU execution; original sealed report unchanged.",
+  "public_report_before_followup_sha256": "834097fa1f07834036b01b9948dad41f2b0f261f1cbce4e325967713732a14f2",
+  "public_report_sha256": "69b91ccc6f60bce8df1935e2c2e6c7e657a0aebedd98483b57c2fb0077d099d4",
+  "reader": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1/structural_check.py",
+    "sha256": "aed05102473355f92d480d70be6197dafd7d1954fb03f782788d0201d09fdf60"
+  },
+  "remaining_cases_compiled": false,
+  "result": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-cpu-20261104-v1/RESULT.json",
+    "sha256": "b0e4a3c8a4db81310a1480f4551f9078285b6b38ef968f913139e429172db1ab"
+  },
+  "review": {
+    "model": "claude-opus-5-5",
+    "parent_amendments": "Narrowed to three cases, whole-function checks, ELF function extent and target, padding check, exact allowed differences. No second Opus review claimed.",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-GEMM-WAVE-HINT-REVIEW-v1.md",
+    "provider": "claudeAgent",
+    "sha256": "70baf54a1b6d746c0887f46d9f1725b063f300e44fb19f8174bdc8344a24438f",
+    "verdict": "ORIGINAL_CPU_ACCEPTED_PROPOSAL_REVISE"
+  },
+  "schema": 1,
+  "selection_changed": false,
+  "serving_bundle_decision": "HOLD_UNCHANGED",
+  "signoff": {
+    "manifest_sha256": "94fe043b6005bfa175624333095287c14bfb0efb3711c69d2fde402b5e519ddc",
+    "members": 19,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1",
+    "verified_utc": "2026-11-04T01:48:10.187625+00:00"
+  },
+  "status": "ORIGINAL_GATE_REJECTED_FOLLOWUP_APPROVED_AND_CPU_PASSED",
+  "structural_addendum": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1/STRUCTURAL-CHECK.json",
+    "sha256": "218b859e25592bc06ee1128ec6487aeccaacd562c9f6c33718e0fe8ae0103988"
+  },
+  "tests": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/gemm-wave-hint-signoff-20261104-v1/test_structural_check.py",
+    "sha256": "dd22aab16516dcdc6135f93e9851d12f2a91d01852feefcf36b52fbafcd1e307"
+  },
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "da891ae8b93b1009b19d573a18e2dba21cf8244631711eb2e7559580c74f8c57",
+      "absolute_machine_path_prefixes_removed": 10,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

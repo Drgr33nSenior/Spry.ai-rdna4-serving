@@ -1,0 +1,99 @@
+{
+  "checkpoint_read": false,
+  "cumulative_member_count": 4,
+  "date": "2026-11-04",
+  "evidence": {
+    "manifest_sha256": "460281a4585215564eb638fa7385a188d191b992f1b7bbff5745f49d6c74dd40",
+    "members": 30,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw03-certified-head-cpu-20261104-v1",
+    "verified_utc": "2026-11-04T15:05:05.222787+00:00"
+  },
+  "gpu_operations": 0,
+  "gpu_ready": false,
+  "implemented": [
+    "INT4 screening row encoder and original-bound residual validation",
+    "Exact-rational quantization intervals",
+    "Strict TP2 winner certificate for a declared interval model",
+    "Whole-call fallback simulation and conditional cost gate",
+    "FP32 shared-row-shift counterexample"
+  ],
+  "independent_review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-BW03-CERTIFIED-HEAD-CPU-REVIEW-v1.md",
+    "reviewer": "Opus 5.5",
+    "sha256": "3b3d6c07b1ab1c67da338b994bab9474780e27ea56f490b6948394deba6d116e",
+    "verdict": "HOLD_NO_FIFTH_MEMBER"
+  },
+  "input_seals_verified": 2,
+  "model_starts": 0,
+  "new_cumulative_candidate": false,
+  "next_action": "Owner retained BW-03 as a future research option on 2026-11-05. Complete current three-member cap16 profiling/finalization; a future BW-03 study first needs representative margins/certificate coverage, production rounding, consumer eligibility and total-cost evidence.",
+  "owner_disposition": {
+    "authority": "No new experiment authorised.",
+    "current_bundle_member": false,
+    "current_bundle_member_count": 3,
+    "date": "2026-11-05",
+    "record": "provenance/MXFP4-FINALIZATION-20261105.json",
+    "status": "RETAINED_FUTURE_RESEARCH_OPTION"
+  },
+  "public_report": "docs/MXFP4-CERTIFIED-HEAD-CPU-SCREEN.md",
+  "public_report_delta": "Unsealed Opus signoff and owner-disposition addenda; sealed PUBLIC-REPORT unchanged.",
+  "public_report_sha256": "606a3a642240ae6258dce2fd05182881d360fafabe53ccdae3f1ef4e4cd0172a",
+  "remaining": [
+    "Representative selected head/activation margin coverage",
+    "Authenticated gfx1201 FP8 accumulation/scaling error model",
+    "Concrete GPU lowering and total-cost evidence",
+    "Qualification of argmax-only consumer eligibility"
+  ],
+  "research": {
+    "novelty_claim": false,
+    "primary_sources": [
+      {
+        "role": "Production-kernel rounding, certificate and whole-call fallback obligations; BF16/GH200 performance is not transferable to selected FP8/gfx1201.",
+        "url": "https://sammausberg.com/research/papers/the_work_a_verifier_needs.pdf"
+      },
+      {
+        "role": "Shared-row shifts before lossy quantization; real softmax invariance does not establish production FP32 argmax parity.",
+        "url": "https://arxiv.org/html/2609.31291"
+      },
+      {
+        "role": "Exact MIPS indexing versus blocked matrix multiplication; pruning needs an empirical total-cost case.",
+        "url": "https://arxiv.org/abs/1706.01449"
+      }
+    ],
+    "proposed_combination": "INT4 screening of already-FP8 head values with exact rational residual reference and explicit unknown production-rounding guard. CPU model only.",
+    "search_workstreams": 2,
+    "sources_reviewed": 13,
+    "unique_search_urls": [
+      "https://sammausberg.com/resume/Samuel_Mausberg_Resume_2026-10-16.pdf",
+      "https://sammausberg.com/",
+      "https://sammausberg.com/research/papers/verified-progress",
+      "https://sammausberg.com/research/papers/the_work_a_verifier_needs.pdf",
+      "https://github.com/SamMausberg/statecut/blob/main/docs/REFERENCE.md",
+      "https://dl.acm.org/doi/10.1145/3404835.3462997",
+      "https://arxiv.org/html/1810.12406v1",
+      "https://arxiv.org/pdf/1706.01449v3.pdf",
+      "https://ojs.aaai.org/index.php/AAAI/article/download/25613/25385",
+      "https://arxiv.org/abs/2608.27460",
+      "https://www.emc2-ai.org/assets/docs/neurips-19/emc2-neurips19-paper-9.pdf",
+      "http://proceedings.mlr.press/v51/guo16a.pdf",
+      "https://ar5iv.labs.arxiv.org/html/1810.12406"
+    ]
+  },
+  "review_pending": false,
+  "schema": 1,
+  "selection_changed": false,
+  "serving": "HOLD",
+  "source_scope": "Selected TP2 target head, already FP8/G128 with FP32 logits for M8/M16; source-bound CPU metadata only",
+  "status": "CPU_PROTOTYPE_HOLD_REVIEW_ACCEPTED",
+  "tests": 25,
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "f1bae9aa1277123536b24c94640b924727d26b08f38947c88f3b6db7daa85cc6",
+      "absolute_machine_path_prefixes_removed": 2,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

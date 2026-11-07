@@ -1,0 +1,94 @@
+{
+  "adoption_authorized": false,
+  "all_21_leads_retained": true,
+  "all_three_cumulative_members_retained": true,
+  "checks": {
+    "archive_members": 89,
+    "byte_identical_frozen_rebuild": true,
+    "checks": [
+      {
+        "bytes": 2523,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-wiring-v1/native/local-final-111.json",
+        "sha256": "62a68bd93cd356c4c38919ed1e83099e7c4211ebbe3a12b768ee7f8358a50183"
+      },
+      {
+        "bytes": 836,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-wiring-v1/native/public-preflight-postrelease.json",
+        "sha256": "384d90da4de21c84ed23c45391f4e34d19e381a032bbcdb75becd0475881cfb6"
+      },
+      {
+        "bytes": 1522,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-wiring-v1/native/native-final-111.json",
+        "sha256": "c137c7599d9d33dba034590dff7d3ce9ec5d16dba0ca76599cae74893aba4215"
+      },
+      {
+        "bytes": 1522,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-wiring-v1/native/native-postrelease-116.json",
+        "sha256": "03e4443ef82827dc3e5f318951ee35acadf6b879da9cd1196c1fc3f79c7db11b"
+      }
+    ],
+    "framework_imports": false,
+    "gpu_launches": 0,
+    "local_final_tests": 111,
+    "local_offline_tests": 5,
+    "model_starts": 0,
+    "native_final_tests": 116,
+    "native_owner_package_executed": false,
+    "native_python": "3.14.4",
+    "package_pins": {
+      "archive_sha256": "18ea4f9d789aebe17029b0e41b4136b0036e635d7c03c765b7414e247600f99c",
+      "manifest_sha256": "2633a7377d900ec4200e290347c95bf1919e289f703c1a554172e814febf77d2",
+      "package_sha256": "1493205d5e0b5872bb46888adad1430f22443b03f90f278cae2d9211a4219713",
+      "session_sha256": "fa011fecfd6f3c4ceb3cd2bdec3ddadb3e5e6b0449be7d97ada793bd3191cddd",
+      "source_manifest_sha256": "a03adafebfc023c66a3231d54047405fb4e839f9735cbf55cc04dcc258783193"
+    },
+    "public_preflight_tests": 43,
+    "source_payload_files": 105,
+    "status": "CPU_COMPLETE_REVIEW_PENDING"
+  },
+  "date": "2026-11-03",
+  "gpu_authority": false,
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "historical_public_report_sha256": "f65caddd5bb469b0170d68a2c323f5005f26ffc0cb235a5b1eaaa757a69dac94",
+  "manifest_sha256": "bfba8d6a5a845870a2cf7eb3dc3e80a84d7defebc96a64fd69b988ddba0cb42a",
+  "members": 1270,
+  "model_starts": 0,
+  "next_action": "Await exact approval of the linked shared diagnostic decision. No registration or GPU invocation before approval; choose next free index after independent release.",
+  "packet": "734f92ab26d9fc01",
+  "power_changed": false,
+  "public_report": "docs/MXFP4-OPT07-SHARED-OWNER-WIRING.md",
+  "public_report_sha256": "0004e08ce2115d28d38e9e54b13850260a856bce42c7b4b1cf97d428984c99f3",
+  "public_report_update_20261104": {
+    "change": "Historical snapshot banner only; prior evidence and verdict unchanged.",
+    "current_operation": "MXFP4-OPT07-SHARED-DIAGNOSTIC-217-20261104.json",
+    "previous_document_sha256": "7b0875fd95215253cdf316de602dfe30b262361f87952a87a9dcefd8fe8090ee"
+  },
+  "repair": {
+    "manifest_sha256": "4bd1ef349e1fdce1d5a4dfab2ab2e2a5f6fab4ff8fc874038f96f375f675f284",
+    "record": "provenance/MXFP4-OPT07-SHARED-OWNER-GATE-REPAIR-20261103.json",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-gate-repair-v1"
+  },
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-SHARED-OWNER-PACKET-REVIEW-v1.md",
+    "scope": "Consolidated review found one blocker; parent delta check resolves it. No second full review.",
+    "sha256": "ddd929ee0b849df8181b4bcf680291496983b15d823f51512d2be617585b15b0"
+  },
+  "review_model": "claude-opus-5-5",
+  "review_pending": false,
+  "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-wiring-v1",
+  "schema": 1,
+  "sealed_public_report_sha256": "39f54294ba4563ce4d8e26c558600b25e1af4ca0540310809935701d76482ee1",
+  "selection_changed": false,
+  "serving_spend": "HOLD",
+  "status": "CONSOLIDATED_REVIEW_BLOCKER_REPAIRED_IN_FRESH_PACKET",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "3e2b9d458b4f0559a3a5b8e8426fae868c7ff3a8e01dc7923c46eb6497fd5d3b",
+      "absolute_machine_path_prefixes_removed": 7,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

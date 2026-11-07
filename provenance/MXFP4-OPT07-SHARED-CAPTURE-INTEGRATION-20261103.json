@@ -1,0 +1,92 @@
+{
+  "all_21_leads_retained": true,
+  "all_three_cumulative_members_retained": true,
+  "checks": {
+    "diff_check_exit": 0,
+    "docs_findings": 0,
+    "expected_failure_tests": 4,
+    "focused": 69,
+    "historical_trace_censuses_reproduced": 8,
+    "input_seals": 6,
+    "metadata_planning_scenarios": 2,
+    "mutation_probes": 2,
+    "public_preflight_covers_new_integration": false,
+    "public_preflight_reused": 43,
+    "suites": [
+      26,
+      15,
+      18,
+      10
+    ]
+  },
+  "date": "2026-11-03",
+  "gpu_authority": false,
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "limitations": [
+    "Opus reviewed sealed v1; the parent applied and tested bounded corrections in v2 without a new delegate.",
+    "CPU fixtures do not establish live profiler, installed source-image or owner lifecycle behavior.",
+    "Actual start-bound HTTP and two-digest close receipts still require authenticated owner publication.",
+    "No serving entrypoint imports the observers; runtime/environment and all-layer branch inventory remain.",
+    "Metadata fit and observer overhead are unmeasured; bundle cost model stays INCONCLUSIVE_HOLD."
+  ],
+  "manifest_sha256": "3b8780cb868c0880d694c9aba625946b912df87a442d75b0b5e56338412052b2",
+  "members": 62,
+  "model_starts": 0,
+  "native_operations": 0,
+  "next_action": "Review new owner-facing callback/receipt/runtime-binding stage, then complete generated serving package, passive inventory, streaming collection and failure-aware closeout before exact GPU decision.",
+  "owner_integration_followup": {
+    "manifest_sha256": "473b3249e093bfa493ad89253b568e272e9408ba87b659cd86b607b5699ae69f",
+    "public_report": "docs/MXFP4-OPT07-SHARED-OWNER-INTEGRATION.md",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-integration-v1",
+    "status": "CPU_TESTED_REVIEW_PENDING"
+  },
+  "owner_packet_prepared": false,
+  "parent_corrections": {
+    "findings": [
+      "M1",
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "NIT"
+    ],
+    "independent_rereview_requested": false,
+    "record": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-capture-integration-v2/REVIEW-DISPOSITION.json"
+  },
+  "power_changed": false,
+  "prior_core_review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-SHARED-OBSERVER-CORE-REVIEW-v1.md",
+    "scope": "sealed v1 core; six parent corrections in current root",
+    "sha256": "dfcba67cd7e518fdd7521750c3161feab36fe0e270f67659b03d37e3108aebc5"
+  },
+  "prior_preparation": {
+    "manifest_sha256": "54ba472bfb4969f03013172deeae20adaa5a27e8eaf76aa3430a86218e26af57",
+    "members": 58,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-capture-integration-v1"
+  },
+  "public_report": {
+    "path": "docs/MXFP4-OPT07-SHARED-CAPTURE-INTEGRATION.md",
+    "sha256": "b0cd016eec73f3b02eafbb47b33293fc39bc0a3f08a1daaecdecf2b51cf2a05b"
+  },
+  "review": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-SHARED-CAPTURE-INTEGRATION-REVIEW-v1.md",
+    "sha256": "273c1586be2e2e57e9094354a9a62001506f2bc1a89a2c564fd2fa6fcda2bf10"
+  },
+  "review_pending": false,
+  "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-capture-integration-v2",
+  "schema": 1,
+  "selection_changed": false,
+  "serving_spend": "HOLD",
+  "status": "CPU_REVIEWED_WITH_PARENT_CORRECTIONS",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "11fb24050fd3a83798d8af72f889c242a3bea21f57681dbc714273e3b071aebc",
+      "absolute_machine_path_prefixes_removed": 6,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

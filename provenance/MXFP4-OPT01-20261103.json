@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "sprint": "OPT-01",
+  "status": "CPU_EXIT_COMPLETE_NO_RUNTIME_CHANGE",
+  "signed_off": true,
+  "gpu_launches": 0,
+  "model_starts": 0,
+  "runtime_changes": [],
+  "selection_changed": false,
+  "measured_performance_gain": null,
+  "evidence": {
+    "private_root": "optimization-continuation-v1/opt-01-host-runtime-audit-v1",
+    "manifest_sha256": "9698d3c3177ea2a7fa90062baf0b1e3bdd381b901a6a0ebb01457b86173651cc",
+    "members": 104,
+    "report": "AUDIT.md",
+    "result": "RESULT.json",
+    "lead_dispositions": "LEAD-DISPOSITIONS.json",
+    "diagnostic_design": "SHARED-DIAGNOSTIC.json"
+  },
+  "checks": {
+    "native_file_only_inspections": 5,
+    "source_files_authenticated": 34,
+    "selected_local_sources_authenticated": 17,
+    "local_graph_source_tests": 5,
+    "input_seals_verified": 4,
+    "framework_or_device_execution": false
+  },
+  "findings": {
+    "flat_graph_dispatch": "Present in recorded SDK build source; workload activation unmeasured; no backport proposed.",
+    "queue_count": "Source maximum defaults to 4; actual count unmeasured.",
+    "host_snapshot": "24 physical cores, 48 logical CPUs, four L3 groups, one NUMA node; idle SSH session shows no quota/throttling.",
+    "affinity": "Automatic NUMA excludes HIP; manual rank policy off; helper inheritance requires separate evidence.",
+    "overlap": "Current no_buffer validation requires disabled overlap; a cache-strategy change needs lifecycle qualification.",
+    "draft_sampler": "Selected DFlash2 selector with FP8 head and top-16 score/id exchange; generic greedy sampler is a different route.",
+    "compact_draft_cache": "Implementation present, opt-in worker flag absent/default None; native sliding window is not activation."
+  },
+  "diagnostic": {
+    "status": "DESIGN_ONLY_NOT_EXECUTABLE",
+    "proposed_model_starts": 2,
+    "approved": false,
+    "instrumentation_implemented": false,
+    "owner_packet_prepared": false
+  },
+  "review": {
+    "model": "claude-opus-5-5",
+    "effort": "medium",
+    "status": "AGREE",
+    "sha256": "081639a687852aac4a709a4a3b496519035eca86177f77672ac6d741d5c4290e",
+    "report": "Private optimization-continuation-v1/OPUS-OPT01-REVIEW-v1.md"
+  },
+  "limitations": [
+    "Idle snapshot is not the serving owner or under-load scheduling evidence.",
+    "No measured collective critical path, actual queue count or graph fast-path activation.",
+    "CPU capture tests use inert callbacks; physical startup witness remains required.",
+    "No standalone runtime/affinity candidate is ready for GPU testing."
+  ],
+  "next": "OPT-02 CPU screens; shared diagnostic remains design-only.",
+  "signoff": {
+    "private_root": "optimization-continuation-v1/opt-01-signoff-v1",
+    "manifest_sha256": "9d41307ac6e0eb9d2a638a4faa4d5c6828e34712b17bbc73926e506510e44448",
+    "members": 5
+  },
+  "errata": [
+    "Use corrected lead descriptions and diagnostic design from signoff; sealed original unchanged.",
+    "PCIe-IPC is off through its own default-false environment gate, independently of disable-custom-all-reduce."
+  ]
+}

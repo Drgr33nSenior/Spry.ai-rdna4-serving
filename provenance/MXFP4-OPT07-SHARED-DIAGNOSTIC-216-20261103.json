@@ -1,0 +1,60 @@
+{
+  "adoption_authorized": false,
+  "analysis": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839/ANALYSIS.json",
+    "sha256": "2bb65522d7979e7cf41a385d5b35ea4f3ab89b769fac3eded4083a4d514b943e"
+  },
+  "caller_seconds": 762.952267582994,
+  "campaign_seal": {
+    "manifest_sha256": "8ba33a6ebe8189a27465a614d38e38a5327c80ed340a08c1fff7a3fcfc766acc",
+    "members": 18,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839",
+    "verified_utc": "2026-11-03T23:38:23.758351+00:00"
+  },
+  "closing_checkpoint": {
+    "number": 585,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-585.json",
+    "sha256": "1cd105a95bdf7c6de7ab4541ff61d688b62096c3ba59404804af162334d8dcf2"
+  },
+  "configured_power_watts_per_card": [
+    235,
+    235
+  ],
+  "date": "2026-11-03",
+  "grading_performed": false,
+  "http_requests_completed": 30,
+  "independent_release": true,
+  "index": 216,
+  "invocations": 1,
+  "model_starts": 1,
+  "native_launch_seconds": 753.1331595410011,
+  "next_action": "PARK. Reproduce the begin-phase observer failure on CPU before any new packet. No retry.",
+  "outcome": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839/OUTCOME.json",
+    "sha256": "1bdd7ec80ea15769530b26ec2a540d1c39d667a4e13bf9e4b3c3ab9bf9b71a89"
+  },
+  "owner_seal_sha256": "80c3b3aeeb6693c2bedaa2e45ef3decdfdef58dccf08083d4bf7fcd1a3af053f",
+  "packet": "4e9164b0d31a4839",
+  "performance_verdict": null,
+  "profiled_starts": 0,
+  "quality_verdict": null,
+  "remaining_gpu_allowance": 0,
+  "report": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839/RESULT.md",
+    "sha256": "1aeede8e25301a74205a0c2da7e44f3393cbf50784f1e494f1ca6b61233b9994"
+  },
+  "retry_authorized": false,
+  "schema": 1,
+  "selection_changed": false,
+  "status": "FAILED_RELEASED_PARKED",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "893b44ca566e75c9e46cc92ebd5fac7ec3338bda77a519817e247502b799c151",
+      "absolute_machine_path_prefixes_removed": 5,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

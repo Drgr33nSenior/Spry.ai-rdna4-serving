@@ -43,22 +43,40 @@
     {
       "sprint": 37,
       "name": "FP8 target KV feasibility",
-      "status": "FEASIBILITY_QUEUED"
+      "status": "FEASIBILITY_COMPLETE_MATCHED_CAMPAIGN_BLOCKED",
+      "result": "provenance/SPRINT37-FP8-KV-FEASIBILITY-20261023.json",
+      "physical_campaign_prepared": false
     },
     {
       "sprint": 38,
       "name": "Adaptive speculation",
-      "status": "PREREQUISITE_AUDIT_QUEUED"
+      "status": "FIRST_GATE_COMPLETE_SAMPLED_FEATURE_ASSOCIATION_POLICY_UNIMPLEMENTED",
+      "result": "provenance/SPRINT38-ADAPTIVE-SPECULATION-20261023.json",
+      "selected_width": 8,
+      "policy_implemented": false,
+      "policy_tested": false,
+      "new_gpu_work": false
     },
     {
       "sprint": 39,
       "name": "C2 throughput and scheduling",
-      "status": "DESIGN_QUEUED"
+      "status": "BOUNDED_C1_C2_SCREEN_COMPLETE",
+      "instrumented_rates_only": true,
+      "natural_quality_passes": 8,
+      "natural_quality_requests": 8,
+      "result": "provenance/SPRINT39-C2-THROUGHPUT-20261023.json",
+      "runtime_defaults_changed": false
     },
     {
       "sprint": 40,
       "name": "UltraQuant KV feasibility",
-      "status": "CONDITIONAL_FEASIBILITY"
+      "status": "BOUNDED_BF16_64K_SCREEN_PASSED_ULTRAQUANT_DEFERRED",
+      "result": "provenance/SPRINT40-KV-CAPACITY-20261023.json",
+      "optional_context_tokens": 65536,
+      "strict_sre_passes": 10,
+      "sre_requests": 10,
+      "ultraquant_codec_port_prepared": false,
+      "runtime_defaults_changed": false
     },
     {
       "sprint": 41,
@@ -123,5 +141,6 @@
   "resource_limits_changed": false,
   "runtime_defaults_changed": false,
   "tracking": "docs/QWEN38-REOPENED-TUNING.md",
-  "next_sprint": 37
+  "next_sprint": 41,
+  "next_scope": "Conditional BF16-weight memory feasibility; no launch or reservation prepared"
 }

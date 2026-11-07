@@ -1,0 +1,2949 @@
+{
+  "active_sprint": "OPT-07-DIAGNOSTIC-PARKED",
+  "adoption_authorized": false,
+  "bandwidth_followup": {
+    "first_gate": "Authenticate actual target/dispatch; representative H(C), H(C|S), layer-conditioned entropy and scale-range census with held-out tiles and complete storage accounting.",
+    "gpu_authority": false,
+    "implementation_started": false,
+    "leads": [
+      {
+        "extends": [
+          "G3",
+          "MX-03"
+        ],
+        "id": "BW-01",
+        "status": "PENDING_REPRESENTATIVE_CENSUS",
+        "title": "Scale-conditioned lossless storage"
+      },
+      {
+        "extends": [
+          "L09",
+          "MX-04"
+        ],
+        "id": "BW-02",
+        "status": "PENDING_PRODUCTION_EQUIVALENCE_PROOF",
+        "title": "Integer execution of existing W4A4 operands"
+      },
+      {
+        "id": "BW-03",
+        "related": [
+          "D1",
+          "OPT-05"
+        ],
+        "status": "PENDING_PRODUCTION_ROUNDING_AND_COST_MODEL",
+        "title": "Certified output-head screening and shared-row shifts"
+      },
+      {
+        "extends": [],
+        "id": "BW-04",
+        "status": "PENDING_GFX1201_EXACT_READ_AND_COMPRESSION_PROOF",
+        "title": "Compression-capable graphics images for weights"
+      }
+    ],
+    "original_coverage_unchanged": true,
+    "public_report": "docs/MXFP4-EFFECTIVE-BANDWIDTH-LEADS.md",
+    "record": {
+      "path": "provenance/MXFP4-EFFECTIVE-BANDWIDTH-LEADS-20261103.json",
+      "sha256": "38673f22909f5e05d2c7bedd4f607227423c2fe655c1fa6dce6092ee504e084f"
+    }
+  },
+  "baseline": {
+    "comparison_runtime": "Fresh operation212 control source and cap3 MAMBA policy in both arms, with the owner-restored235W caps on both cards. Do not change power. Historical operation212 used300W and supplies no matched timing baseline. Bind cap3 as an experimental deviation; no adoption.",
+    "excluded": "Verification prefetch is not selected. Historical measurements cannot replace fresh paired controls. The existing selected FP8 head overlays must be audited rather than assuming the stock dense head executes.",
+    "name": "B0",
+    "source": "Adopted C4 MXFP4 source composition from CANDIDATE-POINTER.json; preserve all head, projection, norm and recurrent overlays.",
+    "workload": "Six balanced cases, three observations per case, 30 requests per start including warmups; fixed request bodies, thinking enabled at low effort, BF16 target/draft KV, DFlash8, TP2, context131040, pool262144, running requests2, chunks2048."
+  },
+  "budget": {
+    "candidate_selection": "Retain smaller measured benefits and unresolved positive signals in the cumulative register; reconcile all prior sprint/experiment dispositions. Reserve the serving pilot for a compatible final bundle after OPT00-06. A missed standalone timing threshold alone does not exclude a member; no extra invocation/time allowance.",
+    "first_wave_upper_cap": {
+      "AB": 2,
+      "C": 4,
+      "P": 1,
+      "model_starts": 6,
+      "note": "8h57m reserved if every optional packet is used; across separate approved batches. Not the old four-hour allowance.",
+      "total_reserve_seconds": 32220
+    },
+    "lifecycle": "Separately cost and freeze the minimum affected cache/cancel/state menu before adoption. Not hidden inside the 30-request timing menu or included in the first-wave cap.",
+    "meaning": "Proposed planning ceilings, not measured durations or authority. Prior four-hour campaign is expired. No new aggregate workstation budget is granted.",
+    "suggested_first_batch": {
+      "AB": 1,
+      "C": 2,
+      "P": 0,
+      "model_starts": 2,
+      "note": "Only after CPU screening; 3h24m40s reserved. A diagnostic batch may substitute P for AB if evidence remains missing; it produces no serving gain verdict.",
+      "total_reserve_seconds": 12280
+    },
+    "units": {
+      "AB": {
+        "caller_seconds": 7160,
+        "description": "Matched serving pair",
+        "grading_seconds": 320,
+        "http_seconds_per_start": 2040,
+        "model_starts": 2,
+        "owner_seconds": 6360,
+        "planning_reserve_seconds": 7660,
+        "worker_seconds_per_start": 2280
+      },
+      "C": {
+        "caller_seconds": 2190,
+        "card_seconds": 280,
+        "description": "Model-free component, two cards sequentially",
+        "extra_reserve_reason": "Planning overhead for registration/closeout, not extra execution time",
+        "extra_reserve_seconds": 120,
+        "model_starts": 0,
+        "observed_peak_veto_gib_per_card": 6,
+        "owner_seconds": 1500,
+        "planning_reserve_seconds": 2310,
+        "worker_seconds": 600
+      },
+      "P": {
+        "basis": "Conservative serving-envelope planning placeholder; exact profiler recipe, retention and deadlines must be derived before approval.",
+        "description": "One shared diagnostic profile",
+        "model_starts": 2,
+        "planning_reserve_seconds": 7660
+      }
+    }
+  },
+  "combined_serving_preparation": {
+    "record": "provenance/MXFP4-OPT07-COMBINED-SERVING-20261103.json",
+    "review_pending": false,
+    "seal": "47e87a834b50c1f23db5bc55f2ad0bf4bec19f314c8b8aad6cb063c268b38a92",
+    "signoff": {
+      "manifest_sha256": "b60bea0413815a076e794a3c75230174a1e187a0a86c75f7cf35e3f01936a156",
+      "members": 4,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-combined-serving-signoff-v1",
+      "verified_utc": "2026-11-03T19:41:54.074746+00:00"
+    },
+    "status": "CPU_SIGNED_OFF_SERVING_HELD"
+  },
+  "completed_sprints": [
+    "OPT-00",
+    "OPT-01",
+    "OPT-02",
+    "OPT-03",
+    "OPT-04",
+    "OPT-05",
+    "OPT-06"
+  ],
+  "coverage": [
+    {
+      "disposition": "G2",
+      "id": "L01",
+      "latest_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "next_evidence": "Prove a new packed-weight lane ownership map and eliminate the B LDS conversion; no stride or allocation reroll.",
+      "sprint": "OPT-02",
+      "title": "Original: MXFP4 prepacking/lookup"
+    },
+    {
+      "disposition": "R1",
+      "id": "L02",
+      "latest_status": "DEFER_STRUCTURAL_STATE_PROTOCOL",
+      "next_evidence": "Dense consumers and ring overwrite require a new flush/generation protocol; retain interfaces for OPT06. Rational lifecycle model is not a serving implementation.",
+      "sprint": "OPT-04",
+      "title": "Original: recurrent commit fusion"
+    },
+    {
+      "disposition": "H2/M1",
+      "id": "L03",
+      "latest_status": "BUILD_SOURCE_PRESENT_DYNAMIC_EXPOSURE_UNKNOWN",
+      "next_evidence": "Measure request-correlated submission gaps and effective graph/queue settings only in the shared diagnostic; no backport candidate.",
+      "sprint": "OPT-01",
+      "title": "Original: host scheduler/submission"
+    },
+    {
+      "disposition": "H3/F1",
+      "id": "L04",
+      "latest_status": "TRANSPORT_AND_OWNER_PLACEMENT_NEED_PROFILE",
+      "next_evidence": "Observe both serving ranks and helpers under load, actual owner ancestors, collective route/size and exposed dependencies; no repeat idle census needed.",
+      "sprint": "OPT-01",
+      "title": "Original: TP2 communication/NUMA"
+    },
+    {
+      "disposition": "OPT-03 int32 candidate rejected by unchanged compiler resource gate.",
+      "id": "L05",
+      "latest_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "next_evidence": "No host cast/producer change; preserve C4 and do not prepare this variant for GPU.",
+      "sprint": "OPT-03",
+      "title": "Original: C4 int32 indices"
+    },
+    {
+      "disposition": "OPT-03 index-ahead candidate rejected by unchanged compiler resource gate.",
+      "id": "L06",
+      "latest_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "next_evidence": "No composition because both independent resource gates failed.",
+      "sprint": "OPT-03",
+      "title": "Original: C4 index-ahead"
+    },
+    {
+      "disposition": "Deferred pending a proved lane/address mapping; not disproved.",
+      "id": "L07",
+      "latest_status": "DEFERRED_MAPPING_PROOF",
+      "next_evidence": "Prove which exposed V-address reload disappears, with exact lane ownership and communication cost, before compiling.",
+      "sprint": "OPT-03",
+      "title": "Original: C4 address/layout work"
+    },
+    {
+      "disposition": "Operation213 cap32 remains correct and standalone NOT_USEFUL. Retain for final cumulative evaluation with unresolved primary signal and positive nonprimary timing evidence.",
+      "id": "L08",
+      "latest_status": "CORRECT_NOT_USEFUL_RETAIN_FOR_CUMULATIVE",
+      "next_evidence": "Compile and validate prefetch+cap32 composition; original op213 verdict unchanged.",
+      "sprint": "OPT-03",
+      "title": "Original: verification split/partition strategy"
+    },
+    {
+      "disposition": "CPU research",
+      "id": "L09",
+      "latest_status": "CPU_PROOF_BLOCKED",
+      "next_evidence": "Prove selected hardware reduction, whole-K association, signed zero and exceptional-scale behavior before integer compilation.",
+      "sprint": "OPT-02",
+      "title": "Original: integer MXFP4 reduction proof"
+    },
+    {
+      "disposition": "new mechanism required",
+      "id": "L10",
+      "latest_status": "CPU_SCREEN_NO_CANDIDATE",
+      "next_evidence": "Need explicit-layout/register-lifetime evidence or GEMM-specific wait attribution; C4 ATT cannot stand in for GEMM.",
+      "sprint": "OPT-02",
+      "title": "Original: other RDNA4 GEMM scheduling"
+    },
+    {
+      "disposition": "deprioritized; no standalone GPU slot",
+      "id": "L11",
+      "latest_status": "DEPRIORITIZED_NO_STANDALONE_GPU",
+      "next_evidence": "Reopen only with evidence of exposed whole-request cost; preserve pinned-source attribution limits.",
+      "sprint": "OPT-01",
+      "title": "Original: H1 prefill metadata copies"
+    },
+    {
+      "disposition": "DFlash2 selector/top-16 exchange active; compact worker-cache policy remains opt-in; see OPT-01 audit.",
+      "id": "L12",
+      "latest_status": "CPU_SCREEN_DEFER_SELECTED_DATA_AND_GRAPH_INTEGRATION",
+      "next_evidence": "Fresh selected greedy C1/C2 ordered candidate/round data; graph-safe per-request shortlist, tie/probability and physical cost proofs. Compact-cache lifecycle continues in OPT06.",
+      "sprint": "OPT-05",
+      "title": "Original: compact draft cache/TP greedy graph sampler"
+    },
+    {
+      "disposition": "specific host extension",
+      "id": "H2",
+      "latest_status": "NO_BACKPORT_QUEUE_HYPOTHESIS_CONDITIONAL",
+      "next_evidence": "Measure request-correlated submission gaps and effective graph/queue settings only in the shared diagnostic; no backport candidate.",
+      "sprint": "OPT-01",
+      "title": "Exa: graph dispatch and queue count"
+    },
+    {
+      "disposition": "specific host extension",
+      "id": "H3",
+      "latest_status": "IDLE_HOST_CLEAR_NO_AFFINITY_CHANGE",
+      "next_evidence": "Observe both serving ranks and helpers under load, actual owner ancestors, collective route/size and exposed dependencies; no repeat idle census needed.",
+      "sprint": "OPT-01",
+      "title": "Exa: CPU placement/cgroups/helper affinity"
+    },
+    {
+      "disposition": "new",
+      "id": "D1",
+      "latest_status": "CPU_SCREEN_DEFER_SELECTED_DATA_AND_GRAPH_INTEGRATION",
+      "next_evidence": "Fresh selected greedy C1/C2 ordered candidate/round data; graph-safe per-request shortlist, tie/probability and physical cost proofs. Compact-cache lifecycle continues in OPT06.",
+      "sprint": "OPT-05",
+      "title": "Exa: draft vocabulary pruning"
+    },
+    {
+      "disposition": "structural extension",
+      "id": "M1",
+      "latest_status": "CPU_AUDIT_DEFER_EXPOSED_BOUNDARY_AND_LIFECYCLE_PROOF",
+      "next_evidence": "Bounded selected C1/C2 host/graph/state timing, then one justified boundary; physical TP2/cancel/reuse and numerical qualification before serving.",
+      "sprint": "OPT-06",
+      "title": "Exa/MI350: GPU-resident speculative round"
+    },
+    {
+      "disposition": "remaining boundaries only",
+      "id": "F1",
+      "latest_status": "CPU_COMPILER_SURVIVOR_COMPONENT_PREPARATION_REQUIRED",
+      "next_evidence": "Host integration and actual norm/quantizer launch identities, bitwise packed/scales device oracle, finite owner harness and timing.",
+      "sprint": "OPT-04",
+      "title": "Exa/MI350: local/collective fusion"
+    },
+    {
+      "disposition": "same work as L01",
+      "id": "G2",
+      "latest_status": "CPU_SCREEN_VARIANT_REJECTED",
+      "next_evidence": "Same-size explicit-layout proof and one compile under unchanged resource gates.",
+      "sprint": "OPT-02",
+      "title": "Exa/MI350: reversible packing"
+    },
+    {
+      "disposition": "same work as L02",
+      "id": "R1",
+      "latest_status": "DEFER_STRUCTURAL_STATE_PROTOCOL",
+      "next_evidence": "Dense consumers and ring overwrite require a new flush/generation protocol; retain interfaces for OPT06. Rational lifecycle model is not a serving implementation.",
+      "sprint": "OPT-04",
+      "title": "Exa: deferred state materialization"
+    },
+    {
+      "disposition": "new; CPU screen first",
+      "id": "G3",
+      "latest_status": "CPU_SCREEN_CODEC_PARKED",
+      "next_evidence": "Bound GPU decode/register/synchronization cost; establish broader authenticated sampling before a GPU codec.",
+      "sprint": "OPT-02",
+      "title": "Exa: lossless tile entropy coding"
+    },
+    {
+      "disposition": "new; CPU replay first",
+      "id": "H4",
+      "latest_status": "CPU_AUDIT_DEFER_NATIVE_EVENT_STREAM_AND_HOST_COST",
+      "next_evidence": "Retain bounded namespace/node/generation/lock/eviction/allocator events and attributed host time before a native-tree implementation.",
+      "sprint": "OPT-06",
+      "title": "Exa: native cache tree/session retention"
+    }
+  ],
+  "cumulative_bundle": {
+    "adoption_authorized": false,
+    "after_sprint_dispositions": [
+      "OPT-00",
+      "OPT-01",
+      "OPT-02",
+      "OPT-03",
+      "OPT-04",
+      "OPT-05",
+      "OPT-06"
+    ],
+    "all_compatible_validated_changes_considered": true,
+    "arbitrary_member_limit": null,
+    "attention_composition_cpu_compiled": true,
+    "attention_composition_four_arm_cpu_compiled": true,
+    "attention_composition_four_arm_seal": "f56b8d318288aca075d663cae58b0b6df3a987cea000837f05d57a7c05b09692",
+    "attention_composition_gpu_qualified": true,
+    "attention_composition_qualification_scope": "Bounded component only; not serving or production qualification",
+    "attention_composition_seal": "116927b6a3e7457753d5baed6e19b53af141a3f6bfc2097eb7b8d7096b02d1ac",
+    "budget_extension": false,
+    "canonical_register": "cumulative_candidate_register in this file",
+    "combined_effect_measured_against_fresh_control": true,
+    "combined_effect_measurement_against_fresh_control_required": true,
+    "combined_effect_measurement_scope": "Operation 214 contemporaneous component B/C at 235 W; no serving measurement",
+    "combined_serving_effect_measured": false,
+    "component_execution": {
+      "adoption": false,
+      "closing_checkpoint": {
+        "number": 581,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-581.json",
+        "sha256": "d76e50fea7ec98114e4e14c750bf70c8796847b6363349e13e38c267f3fcac44"
+      },
+      "comparison": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-composed-campaign-8cbb9eb079596044/COMPARISON.json",
+        "sha256": "0e967e3b732590f524f9a409ef1c07d9bc960b6a7f74fb8004d3d3d3526253c8"
+      },
+      "configured_power_watts_per_card": [
+        235,
+        235
+      ],
+      "cumulative_disposition": "USEFUL",
+      "independent_release": true,
+      "index": 214,
+      "owner_seal_sha256": "41e4aca4e30a2ff58f970117dbd46459857f86b9bc46aed190dc5516e086c454",
+      "packet": "8cbb9eb079596044",
+      "remaining_gpu_allowance": 0,
+      "selection_changed": false,
+      "status": "COMPLETE_CORRECT_USEFUL_PARKED"
+    },
+    "control_power_watts_per_card": 235,
+    "efficiency_metrics_reported_separately": true,
+    "f1_component_execution": {
+      "adoption": false,
+      "caller_seconds": 43.16768958300236,
+      "campaign_seal": {
+        "manifest_sha256": "5938e7f13b8138a199be546aba2ff17e761ef5d8cb630a135a0fee787a064eed",
+        "members": 279,
+        "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef"
+      },
+      "candidate_disposition": "NOT_USEFUL",
+      "closing_checkpoint": {
+        "number": 583,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-583.json",
+        "sha256": "ac431374a231a7cf7f72f0c20801f16da32b55e7df92b8c69401c61fe32579a8"
+      },
+      "comparison": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/COMPARISON.json",
+        "sha256": "3f51c286a972523d989adcae4739caa03de836d1f1e6108652aefe484fb4750f"
+      },
+      "compiler_artifacts": 80,
+      "component_seconds": 9.659770532991388,
+      "configured_power_watts_per_card": [
+        235,
+        235
+      ],
+      "correctness_cases": 52,
+      "cumulative_disposition": "RETAINED_POSITIVE",
+      "eligible_for_serving_bundle": false,
+      "graph_cases": 4,
+      "independent_release": true,
+      "index": 215,
+      "owner_execution": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/OWNER-EXECUTION.json",
+        "sha256": "12d97558fe8f9413b5ec74d6307a3b39f207ff6994ab497fe688810630065e11"
+      },
+      "owner_seal_sha256": "0c44e489506ebf72354f732d8ba464af3bb0d2d345b01588df3c0b964822d541",
+      "packet": "8d036f2e2bf95cef",
+      "remaining_gpu_allowance": 0,
+      "report": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/RESULT.md",
+        "sha256": "ca61426974d87adf317d391560e1acb77e87a21cdf3efdf4eada6398b86e41e0"
+      },
+      "selection_changed": false,
+      "serving_gain_established": false,
+      "serving_tested": false,
+      "status": "COMPLETE_CORRECT_RETAINED_POSITIVE_PARKED",
+      "timing_layer_checks": 192,
+      "timing_rows": [
+        {
+          "baseline_median_ms": 0.2722415030002594,
+          "baseline_range_ms": 0.0006000101566314697,
+          "candidate_median_ms": 0.18584050238132477,
+          "candidate_range_ms": 0.0008799880743026733,
+          "card": 0,
+          "case": "t8-boundary",
+          "median_gap_ms": 0.08640100061893463,
+          "noise_bound_ms": 0.0008799880743026733,
+          "resolved_gain": true,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              0.2722820043563843,
+              0.2717610001564026,
+              0.27188101410865784,
+              0.27236101031303406,
+              0.2722409963607788,
+              0.27224200963974
+            ],
+            "C": [
+              0.18552100658416748,
+              0.18640099465847015,
+              0.18639999628067017,
+              0.1858000010251999,
+              0.18588100373744965,
+              0.1857610046863556
+            ]
+          },
+          "saving": 0.31736895244386126,
+          "saving_percent": 31.736895244386126,
+          "standalone_pass": true
+        },
+        {
+          "baseline_median_ms": 2.0098694562911987,
+          "baseline_range_ms": 0.027279973030090332,
+          "candidate_median_ms": 1.9149695038795471,
+          "candidate_range_ms": 0.025279998779296875,
+          "card": 0,
+          "case": "t8-inclusive",
+          "median_gap_ms": 0.09489995241165161,
+          "noise_bound_ms": 0.027279973030090332,
+          "resolved_gain": true,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              1.9898899793624878,
+              2.0166900157928467,
+              2.002929925918579,
+              2.017169952392578,
+              2.01016902923584,
+              2.0095698833465576
+            ],
+            "C": [
+              1.8972890377044678,
+              1.908808946609497,
+              1.9119290113449097,
+              1.9225690364837646,
+              1.9180099964141846,
+              1.9222489595413208
+            ]
+          },
+          "saving": 0.04721697327883672,
+          "saving_percent": 4.721697327883672,
+          "standalone_pass": false
+        },
+        {
+          "baseline_median_ms": 0.2905214875936508,
+          "baseline_range_ms": 0.176160991191864,
+          "candidate_median_ms": 0.19332049787044525,
+          "candidate_range_ms": 0.0020409971475601196,
+          "card": 0,
+          "case": "t16-boundary",
+          "median_gap_ms": 0.09720098972320557,
+          "noise_bound_ms": 0.176160991191864,
+          "resolved_gain": false,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              0.2886810004711151,
+              0.28912100195884705,
+              0.4648419916629791,
+              0.2904819846153259,
+              0.2905609905719757,
+              0.2908009886741638
+            ],
+            "C": [
+              0.19247999787330627,
+              0.19220000505447388,
+              0.19312100112438202,
+              0.19408099353313446,
+              0.194241002202034,
+              0.19351999461650848
+            ]
+          },
+          "saving": 0.33457418426536323,
+          "saving_percent": 33.45741842653632,
+          "standalone_pass": false
+        },
+        {
+          "baseline_median_ms": 2.0073294639587402,
+          "baseline_range_ms": 0.26440000534057617,
+          "candidate_median_ms": 1.922509491443634,
+          "candidate_range_ms": 0.08815991878509521,
+          "card": 0,
+          "case": "t16-inclusive",
+          "median_gap_ms": 0.0848199725151062,
+          "noise_bound_ms": 0.26440000534057617,
+          "resolved_gain": false,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              2.269089937210083,
+              2.004689931869507,
+              2.0064499378204346,
+              2.005850076675415,
+              2.008208990097046,
+              2.0277299880981445
+            ],
+            "C": [
+              2.0014889240264893,
+              1.914368987083435,
+              1.920328974723816,
+              1.913329005241394,
+              1.9246900081634521,
+              1.9316890239715576
+            ]
+          },
+          "saving": 0.04225513252210682,
+          "saving_percent": 4.225513252210682,
+          "standalone_pass": false
+        },
+        {
+          "baseline_median_ms": 0.2746410071849823,
+          "baseline_range_ms": 0.000599980354309082,
+          "candidate_median_ms": 0.1855204999446869,
+          "candidate_range_ms": 0.0005199909210205078,
+          "card": 1,
+          "case": "t8-boundary",
+          "median_gap_ms": 0.08912050724029541,
+          "noise_bound_ms": 0.000599980354309082,
+          "resolved_gain": true,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              0.27500098943710327,
+              0.2744010090827942,
+              0.27452099323272705,
+              0.2746410071849823,
+              0.274960994720459,
+              0.2746410071849823
+            ],
+            "C": [
+              0.1854410022497177,
+              0.18584099411964417,
+              0.18596099317073822,
+              0.1854410022497177,
+              0.1854410022497177,
+              0.18559999763965607
+            ]
+          },
+          "saving": 0.32449818092994753,
+          "saving_percent": 32.449818092994754,
+          "standalone_pass": true
+        },
+        {
+          "baseline_median_ms": 2.05594801902771,
+          "baseline_range_ms": 0.048439979553222656,
+          "candidate_median_ms": 1.9623069763183594,
+          "candidate_range_ms": 0.0637199878692627,
+          "card": 1,
+          "case": "t8-inclusive",
+          "median_gap_ms": 0.09364104270935059,
+          "noise_bound_ms": 0.0637199878692627,
+          "resolved_gain": true,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              2.052248001098633,
+              2.082007884979248,
+              2.059648036956787,
+              2.0372469425201416,
+              2.0335679054260254,
+              2.0672481060028076
+            ],
+            "C": [
+              1.9748469591140747,
+              2.0064079761505127,
+              1.9524869918823242,
+              1.949847936630249,
+              1.94268798828125,
+              1.9721269607543945
+            ]
+          },
+          "saving": 0.04554640576644292,
+          "saving_percent": 4.554640576644292,
+          "standalone_pass": false
+        },
+        {
+          "baseline_median_ms": 0.28982099890708923,
+          "baseline_range_ms": 0.0009199976921081543,
+          "candidate_median_ms": 0.19308100640773773,
+          "candidate_range_ms": 0.0007999986410140991,
+          "card": 1,
+          "case": "t16-boundary",
+          "median_gap_ms": 0.0967399924993515,
+          "noise_bound_ms": 0.0009199976921081543,
+          "resolved_gain": true,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              0.290241003036499,
+              0.28932100534439087,
+              0.2898010015487671,
+              0.2898409962654114,
+              0.2897610068321228,
+              0.2898409962654114
+            ],
+            "C": [
+              0.19284099340438843,
+              0.19324100017547607,
+              0.19356100261211395,
+              0.19308100640773773,
+              0.19308100640773773,
+              0.19276100397109985
+            ]
+          },
+          "saving": 0.333792212655938,
+          "saving_percent": 33.3792212655938,
+          "standalone_pass": true
+        },
+        {
+          "baseline_median_ms": 2.052447557449341,
+          "baseline_range_ms": 0.2702009677886963,
+          "candidate_median_ms": 1.9524280428886414,
+          "candidate_range_ms": 0.05584001541137695,
+          "card": 1,
+          "case": "t16-inclusive",
+          "median_gap_ms": 0.10001951456069946,
+          "noise_bound_ms": 0.2702009677886963,
+          "resolved_gain": false,
+          "resolved_regression": false,
+          "samples": {
+            "B": [
+              2.2760889530181885,
+              2.012446880340576,
+              2.005887985229492,
+              2.054727077484131,
+              2.050168037414551,
+              2.0944480895996094
+            ],
+            "C": [
+              1.9747669696807861,
+              1.9245679378509521,
+              1.9189269542694092,
+              1.955888032913208,
+              1.9489680528640747,
+              1.9632469415664673
+            ]
+          },
+          "saving": 0.04873182469275743,
+          "saving_percent": 4.873182469275743,
+          "standalone_pass": false
+        }
+      ]
+    },
+    "four_arm_packet_seal": "d100726811ce7d0bc87e1883a11f719d6254cf2c6d1fa9fe9d1f030111c16cd3",
+    "gpu_invocation_authorized": false,
+    "historical_dispositions_reconciled": true,
+    "historical_dispositions_reconciliation_required": true,
+    "historical_dispositions_record": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt-07-cumulative-preparation-v1/RECONCILIATION-v2.json",
+    "keep_original_verdicts": true,
+    "no_percentage_addition": true,
+    "owner_requested": true,
+    "prefetch_only_fallback_open": false,
+    "request_record": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/cumulative-gains-plan-amendment-v1/OWNER-PLAN-AMENDMENT.json",
+    "request_record_sha256": "3a000dc59459899bb9af8279c41373965a355e629efb916f9fd5cc7d5cef4cd5",
+    "review": "One consolidated Opus5.5 review of the composed contract before final packet signoff; this planning amendment is not that signoff.",
+    "serving_spending_status": "HOLD_FOR_EVIDENCE",
+    "standalone_usefulness_pass_required": false
+  },
+  "cumulative_candidate_register": [
+    {
+      "benefit_scope": "Nonprimary long-case median gaps exceed observed ranges; primary positive signal remains inside observed range. No serving gain established.",
+      "classification": "MODEST_COMPONENT_SIGNAL_RETAINED",
+      "component_evidence": {
+        "operation": 213,
+        "power_watts_per_card": 235,
+        "rows": [
+          {
+            "baseline_max_ms": 22.72764778137207,
+            "baseline_median_ms": 22.65526580810547,
+            "baseline_min_ms": 21.423757553100586,
+            "baseline_range_ms": 1.3038902282714844,
+            "candidate_max_ms": 22.33296775817871,
+            "candidate_median_ms": 22.068443298339844,
+            "candidate_min_ms": 20.43202781677246,
+            "candidate_range_ms": 1.90093994140625,
+            "card": 0,
+            "case": "p119990-rows8-sequential",
+            "median_gap_ms": 0.586822509765625,
+            "median_saving": 0.02590225666457091,
+            "noise_bound_ms": 1.90093994140625,
+            "passes": false,
+            "primary": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                21.423757553100586,
+                22.3427677154541,
+                22.714675903320312,
+                22.72764778137207,
+                22.596315383911133,
+                22.714216232299805
+              ],
+              "C": [
+                20.540637969970703,
+                20.43202781677246,
+                22.109088897705078,
+                22.33296775817871,
+                22.02779769897461,
+                22.16988754272461
+              ]
+            },
+            "saving_percent": 2.590225666457091
+          },
+          {
+            "baseline_max_ms": 22.682315826416016,
+            "baseline_median_ms": 22.638652801513672,
+            "baseline_min_ms": 22.514097213745117,
+            "baseline_range_ms": 0.16821861267089844,
+            "candidate_max_ms": 22.125228881835938,
+            "candidate_median_ms": 22.089552879333496,
+            "candidate_min_ms": 21.980287551879883,
+            "candidate_range_ms": 0.1449413299560547,
+            "card": 0,
+            "case": "p119990-rows8-even-odd",
+            "median_gap_ms": 0.5490999221801758,
+            "median_saving": 0.024254973429490567,
+            "noise_bound_ms": 0.16821861267089844,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                22.557308197021484,
+                22.682315826416016,
+                22.61878776550293,
+                22.658517837524414,
+                22.514097213745117,
+                22.680238723754883
+              ],
+              "C": [
+                22.083057403564453,
+                22.09604835510254,
+                21.980287551879883,
+                22.12427520751953,
+                22.056737899780273,
+                22.125228881835938
+              ]
+            },
+            "saving_percent": 2.4254973429490567
+          },
+          {
+            "baseline_max_ms": 22.18425750732422,
+            "baseline_median_ms": 22.02849292755127,
+            "baseline_min_ms": 21.869857788085938,
+            "baseline_range_ms": 0.31439971923828125,
+            "candidate_max_ms": 21.458728790283203,
+            "candidate_median_ms": 21.336698532104492,
+            "candidate_min_ms": 21.265228271484375,
+            "candidate_range_ms": 0.19350051879882812,
+            "card": 0,
+            "case": "p59993-59980-rows16",
+            "median_gap_ms": 0.6917943954467773,
+            "median_saving": 0.03140452675187522,
+            "noise_bound_ms": 0.31439971923828125,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                22.18425750732422,
+                22.01835823059082,
+                21.869857788085938,
+                22.06149673461914,
+                21.88576889038086,
+                22.03862762451172
+              ],
+              "C": [
+                21.265228271484375,
+                21.458728790283203,
+                21.294048309326172,
+                21.395240783691406,
+                21.297088623046875,
+                21.37630844116211
+              ]
+            },
+            "saving_percent": 3.1404526751875217
+          },
+          {
+            "baseline_max_ms": 0.7460790276527405,
+            "baseline_median_ms": 0.7371094822883606,
+            "baseline_min_ms": 0.7308800220489502,
+            "baseline_range_ms": 0.015199005603790283,
+            "candidate_max_ms": 0.7526500225067139,
+            "candidate_median_ms": 0.7360250055789948,
+            "candidate_min_ms": 0.7339500188827515,
+            "candidate_range_ms": 0.018700003623962402,
+            "card": 0,
+            "case": "p724-rows8",
+            "median_gap_ms": 0.0010844767093658447,
+            "median_saving": 0.0014712559469444164,
+            "noise_bound_ms": 0.018700003623962402,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                0.7460790276527405,
+                0.7429890036582947,
+                0.7335100173950195,
+                0.7346289753913879,
+                0.7395899891853333,
+                0.7308800220489502
+              ],
+              "C": [
+                0.7526500225067139,
+                0.7351700067520142,
+                0.7350689768791199,
+                0.7339500188827515,
+                0.7368800044059753,
+                0.7393389940261841
+              ]
+            },
+            "saving_percent": 0.14712559469444164
+          },
+          {
+            "baseline_max_ms": 22.655147552490234,
+            "baseline_median_ms": 22.59677791595459,
+            "baseline_min_ms": 21.509639739990234,
+            "baseline_range_ms": 1.1455078125,
+            "candidate_max_ms": 22.272659301757812,
+            "candidate_median_ms": 22.10972023010254,
+            "candidate_min_ms": 20.61161231994629,
+            "candidate_range_ms": 1.6610469818115234,
+            "card": 1,
+            "case": "p119990-rows8-sequential",
+            "median_gap_ms": 0.4870576858520508,
+            "median_saving": 0.021554298035923125,
+            "noise_bound_ms": 1.6610469818115234,
+            "passes": false,
+            "primary": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                21.793859481811523,
+                21.509639739990234,
+                22.630599975585938,
+                22.611167907714844,
+                22.655147552490234,
+                22.582387924194336
+              ],
+              "C": [
+                20.871551513671875,
+                20.61161231994629,
+                22.17806053161621,
+                22.272659301757812,
+                22.10123062133789,
+                22.118209838867188
+              ]
+            },
+            "saving_percent": 2.1554298035923125
+          },
+          {
+            "baseline_max_ms": 22.73082733154297,
+            "baseline_median_ms": 22.636579513549805,
+            "baseline_min_ms": 22.438879013061523,
+            "baseline_range_ms": 0.2919483184814453,
+            "candidate_max_ms": 22.200620651245117,
+            "candidate_median_ms": 22.104939460754395,
+            "candidate_min_ms": 22.005319595336914,
+            "candidate_range_ms": 0.19530105590820312,
+            "card": 1,
+            "case": "p119990-rows8-even-odd",
+            "median_gap_ms": 0.5316400527954102,
+            "median_saving": 0.023485882771166033,
+            "noise_bound_ms": 0.2919483184814453,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                22.636119842529297,
+                22.73082733154297,
+                22.67613983154297,
+                22.438879013061523,
+                22.550207138061523,
+                22.637039184570312
+              ],
+              "C": [
+                22.054819107055664,
+                22.155059814453125,
+                22.005319595336914,
+                22.200620651245117,
+                22.03536033630371,
+                22.197649002075195
+              ]
+            },
+            "saving_percent": 2.3485882771166033
+          },
+          {
+            "baseline_max_ms": 22.142452239990234,
+            "baseline_median_ms": 22.049654960632324,
+            "baseline_min_ms": 21.841899871826172,
+            "baseline_range_ms": 0.3005523681640625,
+            "candidate_max_ms": 21.51721954345703,
+            "candidate_median_ms": 21.38194179534912,
+            "candidate_min_ms": 21.229772567749023,
+            "candidate_range_ms": 0.2874469757080078,
+            "card": 1,
+            "case": "p59993-59980-rows16",
+            "median_gap_ms": 0.6677131652832031,
+            "median_saving": 0.03028225006129781,
+            "noise_bound_ms": 0.3005523681640625,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                22.049530029296875,
+                22.06052017211914,
+                21.841899871826172,
+                22.049779891967773,
+                21.908220291137695,
+                22.142452239990234
+              ],
+              "C": [
+                21.313152313232422,
+                21.4220027923584,
+                21.36842155456543,
+                21.395462036132812,
+                21.229772567749023,
+                21.51721954345703
+              ]
+            },
+            "saving_percent": 3.028225006129781
+          },
+          {
+            "baseline_max_ms": 0.7699390053749084,
+            "baseline_median_ms": 0.7449129819869995,
+            "baseline_min_ms": 0.7392690181732178,
+            "baseline_range_ms": 0.030669987201690674,
+            "candidate_max_ms": 0.7550089955329895,
+            "candidate_median_ms": 0.7491230070590973,
+            "candidate_min_ms": 0.7458789944648743,
+            "candidate_range_ms": 0.009130001068115234,
+            "card": 1,
+            "case": "p724-rows8",
+            "median_gap_ms": -0.004210025072097778,
+            "median_saving": -0.005651700499121226,
+            "noise_bound_ms": 0.030669987201690674,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                0.7523689866065979,
+                0.7699390053749084,
+                0.7468379735946655,
+                0.7429879903793335,
+                0.7426990270614624,
+                0.7392690181732178
+              ],
+              "C": [
+                0.7550089955329895,
+                0.7503780126571655,
+                0.7515990138053894,
+                0.7458789944648743,
+                0.747868001461029,
+                0.747668981552124
+              ]
+            },
+            "saving_percent": -0.5651700499121226
+          }
+        ],
+        "verdict": "NOT_USEFUL"
+      },
+      "composed_component_gates_passed": true,
+      "composition_evidence": {
+        "adoption": false,
+        "closing_checkpoint": {
+          "number": 581,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-581.json",
+          "sha256": "d76e50fea7ec98114e4e14c750bf70c8796847b6363349e13e38c267f3fcac44"
+        },
+        "comparison": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-composed-campaign-8cbb9eb079596044/COMPARISON.json",
+          "sha256": "0e967e3b732590f524f9a409ef1c07d9bc960b6a7f74fb8004d3d3d3526253c8"
+        },
+        "configured_power_watts_per_card": [
+          235,
+          235
+        ],
+        "cumulative_disposition": "USEFUL",
+        "independent_release": true,
+        "index": 214,
+        "owner_seal_sha256": "41e4aca4e30a2ff58f970117dbd46459857f86b9bc46aed190dc5516e086c454",
+        "packet": "8cbb9eb079596044",
+        "remaining_gpu_allowance": 0,
+        "selection_changed": false,
+        "status": "COMPLETE_CORRECT_USEFUL_PARKED"
+      },
+      "correctness_and_resource_gates_passed": true,
+      "eligible_for_combined_preparation": true,
+      "evidence": "provenance/MXFP4-OPT03-20261103.json",
+      "id": "verification_split_cap32",
+      "incremental_cap32_primary_percent": [
+        1.8565879874006264,
+        1.9010612708454722
+      ],
+      "incremental_cap32_primary_resolved": false,
+      "interaction_risk": "Prefetch and cap32 share verification attention; do not substitute either standalone binary pin for a compiled composition.",
+      "no_resolved_regression": true,
+      "operation": 213,
+      "original_verdict": "NOT_USEFUL",
+      "planned_membership": "Retain in measured USEFUL composition; extra cap32 benefit under prefetch remains positive but unresolved.",
+      "required_before_acceptance": [
+        "Production dispatch and both-stage cap/buffer witnesses",
+        "Fresh balanced serving control and unchanged serving/lifecycle gates"
+      ],
+      "serving_qualified": false
+    },
+    {
+      "benefit_scope": "Some warm-case observations favor candidate, but required production route evidence is absent; no completed serving gain claim.",
+      "classification": "POSITIVE_OBSERVATIONS_WITH_ROUTE_GAP",
+      "component_evidence": {
+        "operation": 211,
+        "power_watts_per_card": 300,
+        "rows": [
+          {
+            "baseline_max_ms": 21.275728225708008,
+            "baseline_median_ms": 20.756495475769043,
+            "baseline_min_ms": 19.89156150817871,
+            "baseline_range_ms": 1.3841667175292969,
+            "baseline_samples_ms": [
+              20.754045486450195,
+              20.20112419128418,
+              19.89156150817871,
+              21.275728225708008,
+              20.75894546508789,
+              21.147228240966797
+            ],
+            "candidate_max_ms": 18.769027709960938,
+            "candidate_median_ms": 18.20113468170166,
+            "candidate_min_ms": 17.870803833007812,
+            "candidate_range_ms": 0.898223876953125,
+            "candidate_samples_ms": [
+              17.870803833007812,
+              17.885032653808594,
+              18.06244468688965,
+              18.769027709960938,
+              18.339824676513672,
+              18.653106689453125
+            ],
+            "card": 0,
+            "case": "p119990-rows8-sequential",
+            "median_saved_ms": 2.555360794067383,
+            "median_saving": 0.1231113796185146,
+            "median_saving_pct": 12.31113796185146,
+            "passes": true,
+            "primary": true,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 21.18060874938965,
+            "baseline_median_ms": 21.137348175048828,
+            "baseline_min_ms": 20.70474624633789,
+            "baseline_range_ms": 0.4758625030517578,
+            "baseline_samples_ms": [
+              21.129568099975586,
+              21.14512825012207,
+              20.70474624633789,
+              21.175947189331055,
+              20.742727279663086,
+              21.18060874938965
+            ],
+            "candidate_max_ms": 18.656795501708984,
+            "candidate_median_ms": 18.4949312210083,
+            "candidate_min_ms": 18.171133041381836,
+            "candidate_range_ms": 0.48566246032714844,
+            "candidate_samples_ms": [
+              18.390886306762695,
+              18.656795501708984,
+              18.171133041381836,
+              18.598976135253906,
+              18.32926368713379,
+              18.62690544128418
+            ],
+            "card": 0,
+            "case": "p119990-rows8-even-odd",
+            "median_saved_ms": 2.6424169540405273,
+            "median_saving": 0.12501175323211622,
+            "median_saving_pct": 12.501175323211623,
+            "passes": true,
+            "primary": false,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 20.536256790161133,
+            "baseline_median_ms": 20.4265193939209,
+            "baseline_min_ms": 20.033302307128906,
+            "baseline_range_ms": 0.5029544830322266,
+            "baseline_samples_ms": [
+              20.413883209228516,
+              20.514495849609375,
+              20.033302307128906,
+              20.536256790161133,
+              20.06348419189453,
+              20.43915557861328
+            ],
+            "candidate_max_ms": 18.136184692382812,
+            "candidate_median_ms": 17.89374828338623,
+            "candidate_min_ms": 17.727991104125977,
+            "candidate_range_ms": 0.40819358825683594,
+            "candidate_samples_ms": [
+              17.766122817993164,
+              18.00591468811035,
+              17.78158187866211,
+              18.136184692382812,
+              17.727991104125977,
+              18.074804306030273
+            ],
+            "card": 0,
+            "case": "p59993-59980-rows16",
+            "median_saved_ms": 2.532771110534668,
+            "median_saving": 0.12399425774360961,
+            "median_saving_pct": 12.399425774360962,
+            "passes": true,
+            "primary": false,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 0.6571829915046692,
+            "baseline_median_ms": 0.6507280170917511,
+            "baseline_min_ms": 0.6467030048370361,
+            "baseline_range_ms": 0.010479986667633057,
+            "baseline_samples_ms": [
+              0.6467030048370361,
+              0.651943027973175,
+              0.6571829915046692,
+              0.6484130024909973,
+              0.6495130062103271,
+              0.656233012676239
+            ],
+            "candidate_max_ms": 0.65904301404953,
+            "candidate_median_ms": 0.6526580154895782,
+            "candidate_min_ms": 0.6488530039787292,
+            "candidate_range_ms": 0.010190010070800781,
+            "candidate_samples_ms": [
+              0.6528630256652832,
+              0.6522830128669739,
+              0.65904301404953,
+              0.6524530053138733,
+              0.6488530039787292,
+              0.6529830098152161
+            ],
+            "card": 0,
+            "case": "p724-rows8",
+            "median_saved_ms": -0.0019299983978271484,
+            "median_saving": -0.002965906411180441,
+            "median_saving_pct": -0.2965906411180441,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 22.142040252685547,
+            "baseline_median_ms": 20.871506690979004,
+            "baseline_min_ms": 20.276214599609375,
+            "baseline_range_ms": 1.8658256530761719,
+            "baseline_samples_ms": [
+              22.142040252685547,
+              21.410879135131836,
+              20.960527420043945,
+              20.556535720825195,
+              20.276214599609375,
+              20.782485961914062
+            ],
+            "candidate_max_ms": 19.189619064331055,
+            "candidate_median_ms": 18.190847396850586,
+            "candidate_min_ms": 17.636503219604492,
+            "candidate_range_ms": 1.5531158447265625,
+            "candidate_samples_ms": [
+              19.189619064331055,
+              19.041990280151367,
+              18.188247680664062,
+              18.19344711303711,
+              17.636503219604492,
+              17.70974349975586
+            ],
+            "card": 1,
+            "case": "p119990-rows8-sequential",
+            "median_saved_ms": 2.680659294128418,
+            "median_saving": 0.12843630954956609,
+            "median_saving_pct": 12.843630954956609,
+            "passes": true,
+            "primary": true,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 21.236248016357422,
+            "baseline_median_ms": 21.114221572875977,
+            "baseline_min_ms": 20.759735107421875,
+            "baseline_range_ms": 0.4765129089355469,
+            "baseline_samples_ms": [
+              21.17723846435547,
+              21.236248016357422,
+              20.759735107421875,
+              21.144107818603516,
+              20.81231689453125,
+              21.084335327148438
+            ],
+            "candidate_max_ms": 18.677047729492188,
+            "candidate_median_ms": 18.550697326660156,
+            "candidate_min_ms": 18.208528518676758,
+            "candidate_range_ms": 0.4685192108154297,
+            "candidate_samples_ms": [
+              18.44443702697754,
+              18.677047729492188,
+              18.208528518676758,
+              18.656957626342773,
+              18.290157318115234,
+              18.661277770996094
+            ],
+            "card": 1,
+            "case": "p119990-rows8-even-odd",
+            "median_saved_ms": 2.5635242462158203,
+            "median_saving": 0.12141220728255542,
+            "median_saving_pct": 12.141220728255542,
+            "passes": true,
+            "primary": false,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 20.531564712524414,
+            "baseline_median_ms": 20.391879081726074,
+            "baseline_min_ms": 20.067304611206055,
+            "baseline_range_ms": 0.4642601013183594,
+            "baseline_samples_ms": [
+              20.531564712524414,
+              20.512523651123047,
+              20.188583374023438,
+              20.38576316833496,
+              20.067304611206055,
+              20.397994995117188
+            ],
+            "candidate_max_ms": 18.247337341308594,
+            "candidate_median_ms": 17.96397590637207,
+            "candidate_min_ms": 17.800323486328125,
+            "candidate_range_ms": 0.44701385498046875,
+            "candidate_samples_ms": [
+              17.809783935546875,
+              18.247337341308594,
+              17.800323486328125,
+              18.112728118896484,
+              17.815223693847656,
+              18.16879653930664
+            ],
+            "card": 1,
+            "case": "p59993-59980-rows16",
+            "median_saved_ms": 2.427903175354004,
+            "median_saving": 0.11906225834429052,
+            "median_saving_pct": 11.906225834429051,
+            "passes": true,
+            "primary": false,
+            "resolved_regression": false
+          },
+          {
+            "baseline_max_ms": 0.661761999130249,
+            "baseline_median_ms": 0.6514475047588348,
+            "baseline_min_ms": 0.6474720239639282,
+            "baseline_range_ms": 0.0142899751663208,
+            "baseline_samples_ms": [
+              0.661761999130249,
+              0.6474720239639282,
+              0.655601978302002,
+              0.6498219966888428,
+              0.6506620049476624,
+              0.6522330045700073
+            ],
+            "candidate_max_ms": 0.659712016582489,
+            "candidate_median_ms": 0.6513974964618683,
+            "candidate_min_ms": 0.6483020186424255,
+            "candidate_range_ms": 0.011409997940063477,
+            "candidate_samples_ms": [
+              0.659712016582489,
+              0.6483020186424255,
+              0.6492519974708557,
+              0.6511619687080383,
+              0.6516330242156982,
+              0.652351975440979
+            ],
+            "card": 1,
+            "case": "p724-rows8",
+            "median_saved_ms": 5.0008296966552734e-05,
+            "median_saving": 7.676489141683618e-05,
+            "median_saving_pct": 0.007676489141683618,
+            "passes": false,
+            "primary": false,
+            "resolved_regression": false
+          }
+        ],
+        "verdict": "USEFUL"
+      },
+      "composed_component_gates_passed": true,
+      "composition_evidence": {
+        "adoption": false,
+        "closing_checkpoint": {
+          "number": 581,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-581.json",
+          "sha256": "d76e50fea7ec98114e4e14c750bf70c8796847b6363349e13e38c267f3fcac44"
+        },
+        "comparison": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-composed-campaign-8cbb9eb079596044/COMPARISON.json",
+          "sha256": "0e967e3b732590f524f9a409ef1c07d9bc960b6a7f74fb8004d3d3d3526253c8"
+        },
+        "configured_power_watts_per_card": [
+          235,
+          235
+        ],
+        "cumulative_disposition": "USEFUL",
+        "independent_release": true,
+        "index": 214,
+        "owner_seal_sha256": "41e4aca4e30a2ff58f970117dbd46459857f86b9bc46aed190dc5516e086c454",
+        "packet": "8cbb9eb079596044",
+        "remaining_gpu_allowance": 0,
+        "selection_changed": false,
+        "status": "COMPLETE_CORRECT_USEFUL_PARKED"
+      },
+      "eligible_for_combined_preparation": true,
+      "evidence": "provenance/MXFP4-VERIFY-PREFETCH-SERVING-20261103.json",
+      "id": "verification_prefetch",
+      "operation": 212,
+      "original_verdict": "MEASURED_BELOW_THRESHOLD_ROUTE_PROOF_INCOMPLETE_PARKED",
+      "planned_membership": "Measured in USEFUL prefetch+cap32 component at 235 W; production-route and serving gates remain.",
+      "preparation_condition": "Component composition passed; new serving preparation remains held by route/work/economic gates.",
+      "required_before_acceptance": [
+        "Repaired OPT00 production witnesses physically emitted and read in new test",
+        "Fresh235W serving baseline; historical300W timing is not a control"
+      ],
+      "serving_qualified": false
+    },
+    {
+      "benefit_scope": "Measured byte reduction on bounded sampled tiles with exact CPU recovery; GPU decode cost, executable candidate and serving benefit are absent.",
+      "classification": "CPU_STORAGE_EFFICIENCY_ONLY",
+      "eligible_for_combined_preparation": false,
+      "evidence": "provenance/MXFP4-OPT02-20261103.json",
+      "id": "lossless_tile_codec",
+      "original_verdict": "PARK_CPU_CODEC_ONLY",
+      "planned_membership": "Deferred: no runnable GPU codec or cost proof.",
+      "required_before_acceptance": [
+        "A justified runnable implementation and physical cost/quality evidence; no automatic GPU codec work from this amendment"
+      ],
+      "serving_qualified": false
+    },
+    {
+      "benefit_scope": "48-layer synthetic component: T8 inclusive saving 4.72%/4.55% resolved; T16 4.23%/4.87% unresolved. No serving or energy gain established.",
+      "classification": "COMPONENT_CORRECT_RETAINED_POSITIVE_SERVING_UNQUALIFIED",
+      "component_execution": {
+        "adoption": false,
+        "caller_seconds": 43.16768958300236,
+        "campaign_seal": {
+          "manifest_sha256": "5938e7f13b8138a199be546aba2ff17e761ef5d8cb630a135a0fee787a064eed",
+          "members": 279,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef"
+        },
+        "candidate_disposition": "NOT_USEFUL",
+        "closing_checkpoint": {
+          "number": 583,
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-583.json",
+          "sha256": "ac431374a231a7cf7f72f0c20801f16da32b55e7df92b8c69401c61fe32579a8"
+        },
+        "comparison": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/COMPARISON.json",
+          "sha256": "3f51c286a972523d989adcae4739caa03de836d1f1e6108652aefe484fb4750f"
+        },
+        "compiler_artifacts": 80,
+        "component_seconds": 9.659770532991388,
+        "configured_power_watts_per_card": [
+          235,
+          235
+        ],
+        "correctness_cases": 52,
+        "cumulative_disposition": "RETAINED_POSITIVE",
+        "eligible_for_serving_bundle": false,
+        "graph_cases": 4,
+        "independent_release": true,
+        "index": 215,
+        "owner_execution": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/OWNER-EXECUTION.json",
+          "sha256": "12d97558fe8f9413b5ec74d6307a3b39f207ff6994ab497fe688810630065e11"
+        },
+        "owner_seal_sha256": "0c44e489506ebf72354f732d8ba464af3bb0d2d345b01588df3c0b964822d541",
+        "packet": "8d036f2e2bf95cef",
+        "remaining_gpu_allowance": 0,
+        "report": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/RESULT.md",
+          "sha256": "ca61426974d87adf317d391560e1acb77e87a21cdf3efdf4eada6398b86e41e0"
+        },
+        "selection_changed": false,
+        "serving_gain_established": false,
+        "serving_tested": false,
+        "status": "COMPLETE_CORRECT_RETAINED_POSITIVE_PARKED",
+        "timing_layer_checks": 192,
+        "timing_rows": [
+          {
+            "baseline_median_ms": 0.2722415030002594,
+            "baseline_range_ms": 0.0006000101566314697,
+            "candidate_median_ms": 0.18584050238132477,
+            "candidate_range_ms": 0.0008799880743026733,
+            "card": 0,
+            "case": "t8-boundary",
+            "median_gap_ms": 0.08640100061893463,
+            "noise_bound_ms": 0.0008799880743026733,
+            "resolved_gain": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                0.2722820043563843,
+                0.2717610001564026,
+                0.27188101410865784,
+                0.27236101031303406,
+                0.2722409963607788,
+                0.27224200963974
+              ],
+              "C": [
+                0.18552100658416748,
+                0.18640099465847015,
+                0.18639999628067017,
+                0.1858000010251999,
+                0.18588100373744965,
+                0.1857610046863556
+              ]
+            },
+            "saving": 0.31736895244386126,
+            "saving_percent": 31.736895244386126,
+            "standalone_pass": true
+          },
+          {
+            "baseline_median_ms": 2.0098694562911987,
+            "baseline_range_ms": 0.027279973030090332,
+            "candidate_median_ms": 1.9149695038795471,
+            "candidate_range_ms": 0.025279998779296875,
+            "card": 0,
+            "case": "t8-inclusive",
+            "median_gap_ms": 0.09489995241165161,
+            "noise_bound_ms": 0.027279973030090332,
+            "resolved_gain": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                1.9898899793624878,
+                2.0166900157928467,
+                2.002929925918579,
+                2.017169952392578,
+                2.01016902923584,
+                2.0095698833465576
+              ],
+              "C": [
+                1.8972890377044678,
+                1.908808946609497,
+                1.9119290113449097,
+                1.9225690364837646,
+                1.9180099964141846,
+                1.9222489595413208
+              ]
+            },
+            "saving": 0.04721697327883672,
+            "saving_percent": 4.721697327883672,
+            "standalone_pass": false
+          },
+          {
+            "baseline_median_ms": 0.2905214875936508,
+            "baseline_range_ms": 0.176160991191864,
+            "candidate_median_ms": 0.19332049787044525,
+            "candidate_range_ms": 0.0020409971475601196,
+            "card": 0,
+            "case": "t16-boundary",
+            "median_gap_ms": 0.09720098972320557,
+            "noise_bound_ms": 0.176160991191864,
+            "resolved_gain": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                0.2886810004711151,
+                0.28912100195884705,
+                0.4648419916629791,
+                0.2904819846153259,
+                0.2905609905719757,
+                0.2908009886741638
+              ],
+              "C": [
+                0.19247999787330627,
+                0.19220000505447388,
+                0.19312100112438202,
+                0.19408099353313446,
+                0.194241002202034,
+                0.19351999461650848
+              ]
+            },
+            "saving": 0.33457418426536323,
+            "saving_percent": 33.45741842653632,
+            "standalone_pass": false
+          },
+          {
+            "baseline_median_ms": 2.0073294639587402,
+            "baseline_range_ms": 0.26440000534057617,
+            "candidate_median_ms": 1.922509491443634,
+            "candidate_range_ms": 0.08815991878509521,
+            "card": 0,
+            "case": "t16-inclusive",
+            "median_gap_ms": 0.0848199725151062,
+            "noise_bound_ms": 0.26440000534057617,
+            "resolved_gain": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                2.269089937210083,
+                2.004689931869507,
+                2.0064499378204346,
+                2.005850076675415,
+                2.008208990097046,
+                2.0277299880981445
+              ],
+              "C": [
+                2.0014889240264893,
+                1.914368987083435,
+                1.920328974723816,
+                1.913329005241394,
+                1.9246900081634521,
+                1.9316890239715576
+              ]
+            },
+            "saving": 0.04225513252210682,
+            "saving_percent": 4.225513252210682,
+            "standalone_pass": false
+          },
+          {
+            "baseline_median_ms": 0.2746410071849823,
+            "baseline_range_ms": 0.000599980354309082,
+            "candidate_median_ms": 0.1855204999446869,
+            "candidate_range_ms": 0.0005199909210205078,
+            "card": 1,
+            "case": "t8-boundary",
+            "median_gap_ms": 0.08912050724029541,
+            "noise_bound_ms": 0.000599980354309082,
+            "resolved_gain": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                0.27500098943710327,
+                0.2744010090827942,
+                0.27452099323272705,
+                0.2746410071849823,
+                0.274960994720459,
+                0.2746410071849823
+              ],
+              "C": [
+                0.1854410022497177,
+                0.18584099411964417,
+                0.18596099317073822,
+                0.1854410022497177,
+                0.1854410022497177,
+                0.18559999763965607
+              ]
+            },
+            "saving": 0.32449818092994753,
+            "saving_percent": 32.449818092994754,
+            "standalone_pass": true
+          },
+          {
+            "baseline_median_ms": 2.05594801902771,
+            "baseline_range_ms": 0.048439979553222656,
+            "candidate_median_ms": 1.9623069763183594,
+            "candidate_range_ms": 0.0637199878692627,
+            "card": 1,
+            "case": "t8-inclusive",
+            "median_gap_ms": 0.09364104270935059,
+            "noise_bound_ms": 0.0637199878692627,
+            "resolved_gain": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                2.052248001098633,
+                2.082007884979248,
+                2.059648036956787,
+                2.0372469425201416,
+                2.0335679054260254,
+                2.0672481060028076
+              ],
+              "C": [
+                1.9748469591140747,
+                2.0064079761505127,
+                1.9524869918823242,
+                1.949847936630249,
+                1.94268798828125,
+                1.9721269607543945
+              ]
+            },
+            "saving": 0.04554640576644292,
+            "saving_percent": 4.554640576644292,
+            "standalone_pass": false
+          },
+          {
+            "baseline_median_ms": 0.28982099890708923,
+            "baseline_range_ms": 0.0009199976921081543,
+            "candidate_median_ms": 0.19308100640773773,
+            "candidate_range_ms": 0.0007999986410140991,
+            "card": 1,
+            "case": "t16-boundary",
+            "median_gap_ms": 0.0967399924993515,
+            "noise_bound_ms": 0.0009199976921081543,
+            "resolved_gain": true,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                0.290241003036499,
+                0.28932100534439087,
+                0.2898010015487671,
+                0.2898409962654114,
+                0.2897610068321228,
+                0.2898409962654114
+              ],
+              "C": [
+                0.19284099340438843,
+                0.19324100017547607,
+                0.19356100261211395,
+                0.19308100640773773,
+                0.19308100640773773,
+                0.19276100397109985
+              ]
+            },
+            "saving": 0.333792212655938,
+            "saving_percent": 33.3792212655938,
+            "standalone_pass": true
+          },
+          {
+            "baseline_median_ms": 2.052447557449341,
+            "baseline_range_ms": 0.2702009677886963,
+            "candidate_median_ms": 1.9524280428886414,
+            "candidate_range_ms": 0.05584001541137695,
+            "card": 1,
+            "case": "t16-inclusive",
+            "median_gap_ms": 0.10001951456069946,
+            "noise_bound_ms": 0.2702009677886963,
+            "resolved_gain": false,
+            "resolved_regression": false,
+            "samples": {
+              "B": [
+                2.2760889530181885,
+                2.012446880340576,
+                2.005887985229492,
+                2.054727077484131,
+                2.050168037414551,
+                2.0944480895996094
+              ],
+              "C": [
+                1.9747669696807861,
+                1.9245679378509521,
+                1.9189269542694092,
+                1.955888032913208,
+                1.9489680528640747,
+                1.9632469415664673
+              ]
+            },
+            "saving": 0.04873182469275743,
+            "saving_percent": 4.873182469275743,
+            "standalone_pass": false
+          }
+        ]
+      },
+      "component_preparation": {
+        "approval_consumed": true,
+        "decision": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/PHASE2-NORM-QUANT-OWNER-DECISION-v1.md",
+          "sha256": "68cc51a28a31e500fc5b1b2ecaf54a28da7a56ebd1f2312323c8aaf816aa5792"
+        },
+        "execution_record": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/COMPARISON.json",
+          "sha256": "3f51c286a972523d989adcae4739caa03de836d1f1e6108652aefe484fb4750f"
+        },
+        "gpu_execution_authorized": false,
+        "historical_cpu_record_unchanged": true,
+        "last_invocation": 215,
+        "measured_gain": false,
+        "outer_seal": {
+          "manifest_sha256": "f7b921c91a51f0cd0c7d028ab128a1a64500141d0bfaab7107924e3fb177c908",
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-component-preparation-v1/packet-v3"
+        },
+        "packet": "8d036f2e2bf95cef",
+        "record": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-component-signoff-v1/COMPONENT-STATUS.json",
+          "sha256": "fcb97aae66fe3ca294832473e56e4c0ef93521503a09198fb890545a974ac967"
+        },
+        "registration": true,
+        "remaining_gpu_allowance": 0,
+        "review": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-F1-COMPONENT-REVIEW-v1.md",
+          "sha256": "2357b95411d55af958e163cfc16d8176e4579013558dc1d56ea882ee5baa3548"
+        },
+        "review_pending": false,
+        "serving_qualified": false,
+        "signoff": {
+          "manifest_sha256": "c46ef50264f2ed5a27e3b0a49172f6e44284c21806129d84548b4ef2c42bdeb8",
+          "members": 20,
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-component-signoff-v1"
+        },
+        "status": "APPROVAL_CONSUMED_COMPONENT_COMPLETE_RETAINED_POSITIVE"
+      },
+      "component_qualified": true,
+      "eligibility_scope": "Eligible for CPU composition preparation; no serving execution or adoption authority.",
+      "eligible_for_combined_preparation": true,
+      "eligible_for_serving_bundle": false,
+      "evidence": "provenance/MXFP4-OPT04-20261103.json",
+      "host_preparation": {
+        "checks": {
+          "gpu_launches": 0,
+          "independent_review_of_delta": false,
+          "kernel_bytes_unchanged": true,
+          "live_count_unmeasured": true,
+          "local_tests": 20,
+          "model_starts": 0,
+          "native_call_surface_api_verified": true,
+          "native_seconds": 9.286451624997426,
+          "native_source_exact": true,
+          "native_tests": 20,
+          "owner_packet_ready": false,
+          "public_preflight": 43,
+          "remaining_gpu_allowance": 0,
+          "reviewed_donor": true,
+          "status": "CPU_HOST_REVIEW_CONDITIONS_RESOLVED"
+        },
+        "component_contract": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v2/COMPONENT-PREPARATION-CONTRACT.md",
+          "sha256": "dfb42049083d278e478480b69c23efddf2e76aacc53796d7dd18b5cacbfdffc3"
+        },
+        "device_count_resolution": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v2/COUNT-RESOLUTION.json",
+          "sha256": "f3b162d5b59b77cbb08088995215008fd0e64e837b0f97c29f8d2f072939363f"
+        },
+        "gpu_ready": false,
+        "historical_device_api_counts": [
+          32,
+          32
+        ],
+        "live_recheck_required": true,
+        "measured_gain": false,
+        "parent_resolution": {
+          "independent_delta_review": false,
+          "manifest_sha256": "bbf8dc473b2fb5846ceead5cdea935960e7562fdb80c2345dfe19709acca72f4",
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v2"
+        },
+        "remaining_gates": [
+          "Exact numerical corpus and executable component harness",
+          "Actual loader/source-guard proof",
+          "Final owner packet and review",
+          "Fresh exact GPU approval",
+          "Real-Tensor identities and byte-exact device output",
+          "Capture/release and production lifecycle qualification"
+        ],
+        "review": {
+          "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-F1-HOST-REVIEW-v1.md",
+          "sha256": "3d9af3ed357003cb64010b96f1e0b9ffacf8b52b8afa661d27f7b9138402d6c3"
+        },
+        "reviewed_host": {
+          "manifest_sha256": "eee69e3f2f25ff63429848960f08eef377e0342d038b3a807652ad0a4a004628",
+          "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v1"
+        },
+        "status": "CPU_HOST_BASELINE_PASS_COMPONENT_PENDING"
+      },
+      "id": "gated_norm_mxfp4",
+      "original_verdict": "CPU_COMPILER_SURVIVOR_SIGNED_OFF",
+      "planned_membership": "Conditional third member after representative-activation and production/lifecycle qualification.",
+      "required_before_acceptance": [
+        "Representative model activations and per-layer engagement on 48 GDN layers and both ranks",
+        "Real 2D input shape/stride, hook/Dynamo/identity and attach-before-capture guards",
+        "Native projection/TP2 reduction, C2/cancel/recurrent and graph-buffer lifetime",
+        "235 W request-wide route/control-work/economics and exact serving packet approval"
+      ],
+      "review": "Opus5.5 prelaunch review passed; operation 215 hard component gates passed. Standalone NOT_USEFUL, cumulative RETAINED_POSITIVE.",
+      "serving_qualified": false
+    },
+    {
+      "benefit_scope": "Long-prefix component saving retained; zero-prefix regression blocks unchanged source.",
+      "classification": "MEASURED_GAIN_BLOCKED_BY_RESOLVED_REGRESSION",
+      "eligible_for_combined_preparation": false,
+      "id": "c4_accumulator_fold",
+      "operation": 190,
+      "original_verdict": "NOT_USEFUL",
+      "required_before_acceptance": [
+        "A distinct source or routing repair with a supported mechanism, CPU proof and fresh full-case validation. No ad hoc guard or original-gate waiver."
+      ],
+      "rows": [
+        {
+          "baseline_median_ms": 192.18660736083984,
+          "baseline_range_ms": 0.761077880859375,
+          "candidate_median_ms": 181.89252471923828,
+          "candidate_range_ms": 0.454315185546875,
+          "card": 0,
+          "case": "p16384-q2048",
+          "median_saving": 0.05356295520776799,
+          "passes": false,
+          "primary": true,
+          "resolved_regression": false
+        },
+        {
+          "baseline_median_ms": 11.260358810424805,
+          "baseline_range_ms": 0.21460914611816406,
+          "candidate_median_ms": 11.849180221557617,
+          "candidate_range_ms": 0.20409107208251953,
+          "card": 0,
+          "case": "p0-q2048",
+          "median_saving": -0.052291531828247306,
+          "passes": false,
+          "primary": false,
+          "resolved_regression": true
+        },
+        {
+          "baseline_median_ms": 193.04721069335938,
+          "baseline_range_ms": 0.9225006103515625,
+          "candidate_median_ms": 182.82313537597656,
+          "candidate_range_ms": 0.4633941650390625,
+          "card": 1,
+          "case": "p16384-q2048",
+          "median_saving": 0.052961528325954244,
+          "passes": false,
+          "primary": true,
+          "resolved_regression": false
+        },
+        {
+          "baseline_median_ms": 11.389004230499268,
+          "baseline_range_ms": 0.0833892822265625,
+          "candidate_median_ms": 11.8928861618042,
+          "candidate_range_ms": 0.2405405044555664,
+          "card": 1,
+          "case": "p0-q2048",
+          "median_saving": -0.04424284345733742,
+          "passes": false,
+          "primary": false,
+          "resolved_regression": true
+        }
+      ],
+      "serving_qualified": false
+    }
+  ],
+  "date": "2026-11-03",
+  "deferred": [
+    {
+      "disposition": "Separate scope decision for adaptive width, tree drafting or trained drafter; preserve width8 here.",
+      "id": "adaptive-drafting"
+    },
+    {
+      "disposition": "Requantization, sparse target attention, FP8 KV and new model architectures remain outside fixed-precision/capacity work.",
+      "id": "precision-or-architecture"
+    },
+    {
+      "disposition": "Reuse adapter evidence where useful; no renewed optimizer campaign or runner port in this plan.",
+      "id": "hyperloom-autonomy"
+    },
+    {
+      "disposition": "Owner-deferred endurance remains deferred; affected bounded lifecycle gates are still mandatory before adoption.",
+      "id": "endurance"
+    },
+    {
+      "disposition": "Preserve N32, EXP2 reorder, two-query, bitdecode, accumulator and scale-prefetch verdicts. Reconcile all prior positive observations for the cumulative register without relabelling failures. Prefetch needs the repaired route witness in any new composed test; operation212 is not retried or retrospectively qualified.",
+      "id": "failed-and-parked"
+    }
+  ],
+  "execution_authorized": false,
+  "f1_component_execution": {
+    "adoption": false,
+    "caller_seconds": 43.16768958300236,
+    "campaign_seal": {
+      "manifest_sha256": "5938e7f13b8138a199be546aba2ff17e761ef5d8cb630a135a0fee787a064eed",
+      "members": 279,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef"
+    },
+    "candidate_disposition": "NOT_USEFUL",
+    "closing_checkpoint": {
+      "number": 583,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-583.json",
+      "sha256": "ac431374a231a7cf7f72f0c20801f16da32b55e7df92b8c69401c61fe32579a8"
+    },
+    "comparison": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/COMPARISON.json",
+      "sha256": "3f51c286a972523d989adcae4739caa03de836d1f1e6108652aefe484fb4750f"
+    },
+    "compiler_artifacts": 80,
+    "component_seconds": 9.659770532991388,
+    "configured_power_watts_per_card": [
+      235,
+      235
+    ],
+    "correctness_cases": 52,
+    "cumulative_disposition": "RETAINED_POSITIVE",
+    "eligible_for_serving_bundle": false,
+    "graph_cases": 4,
+    "independent_release": true,
+    "index": 215,
+    "owner_execution": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/OWNER-EXECUTION.json",
+      "sha256": "12d97558fe8f9413b5ec74d6307a3b39f207ff6994ab497fe688810630065e11"
+    },
+    "owner_seal_sha256": "0c44e489506ebf72354f732d8ba464af3bb0d2d345b01588df3c0b964822d541",
+    "packet": "8d036f2e2bf95cef",
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/RESULT.md",
+      "sha256": "ca61426974d87adf317d391560e1acb77e87a21cdf3efdf4eada6398b86e41e0"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "serving_tested": false,
+    "status": "COMPLETE_CORRECT_RETAINED_POSITIVE_PARKED",
+    "timing_layer_checks": 192,
+    "timing_rows": [
+      {
+        "baseline_median_ms": 0.2722415030002594,
+        "baseline_range_ms": 0.0006000101566314697,
+        "candidate_median_ms": 0.18584050238132477,
+        "candidate_range_ms": 0.0008799880743026733,
+        "card": 0,
+        "case": "t8-boundary",
+        "median_gap_ms": 0.08640100061893463,
+        "noise_bound_ms": 0.0008799880743026733,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.2722820043563843,
+            0.2717610001564026,
+            0.27188101410865784,
+            0.27236101031303406,
+            0.2722409963607788,
+            0.27224200963974
+          ],
+          "C": [
+            0.18552100658416748,
+            0.18640099465847015,
+            0.18639999628067017,
+            0.1858000010251999,
+            0.18588100373744965,
+            0.1857610046863556
+          ]
+        },
+        "saving": 0.31736895244386126,
+        "saving_percent": 31.736895244386126,
+        "standalone_pass": true
+      },
+      {
+        "baseline_median_ms": 2.0098694562911987,
+        "baseline_range_ms": 0.027279973030090332,
+        "candidate_median_ms": 1.9149695038795471,
+        "candidate_range_ms": 0.025279998779296875,
+        "card": 0,
+        "case": "t8-inclusive",
+        "median_gap_ms": 0.09489995241165161,
+        "noise_bound_ms": 0.027279973030090332,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            1.9898899793624878,
+            2.0166900157928467,
+            2.002929925918579,
+            2.017169952392578,
+            2.01016902923584,
+            2.0095698833465576
+          ],
+          "C": [
+            1.8972890377044678,
+            1.908808946609497,
+            1.9119290113449097,
+            1.9225690364837646,
+            1.9180099964141846,
+            1.9222489595413208
+          ]
+        },
+        "saving": 0.04721697327883672,
+        "saving_percent": 4.721697327883672,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 0.2905214875936508,
+        "baseline_range_ms": 0.176160991191864,
+        "candidate_median_ms": 0.19332049787044525,
+        "candidate_range_ms": 0.0020409971475601196,
+        "card": 0,
+        "case": "t16-boundary",
+        "median_gap_ms": 0.09720098972320557,
+        "noise_bound_ms": 0.176160991191864,
+        "resolved_gain": false,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.2886810004711151,
+            0.28912100195884705,
+            0.4648419916629791,
+            0.2904819846153259,
+            0.2905609905719757,
+            0.2908009886741638
+          ],
+          "C": [
+            0.19247999787330627,
+            0.19220000505447388,
+            0.19312100112438202,
+            0.19408099353313446,
+            0.194241002202034,
+            0.19351999461650848
+          ]
+        },
+        "saving": 0.33457418426536323,
+        "saving_percent": 33.45741842653632,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 2.0073294639587402,
+        "baseline_range_ms": 0.26440000534057617,
+        "candidate_median_ms": 1.922509491443634,
+        "candidate_range_ms": 0.08815991878509521,
+        "card": 0,
+        "case": "t16-inclusive",
+        "median_gap_ms": 0.0848199725151062,
+        "noise_bound_ms": 0.26440000534057617,
+        "resolved_gain": false,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            2.269089937210083,
+            2.004689931869507,
+            2.0064499378204346,
+            2.005850076675415,
+            2.008208990097046,
+            2.0277299880981445
+          ],
+          "C": [
+            2.0014889240264893,
+            1.914368987083435,
+            1.920328974723816,
+            1.913329005241394,
+            1.9246900081634521,
+            1.9316890239715576
+          ]
+        },
+        "saving": 0.04225513252210682,
+        "saving_percent": 4.225513252210682,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 0.2746410071849823,
+        "baseline_range_ms": 0.000599980354309082,
+        "candidate_median_ms": 0.1855204999446869,
+        "candidate_range_ms": 0.0005199909210205078,
+        "card": 1,
+        "case": "t8-boundary",
+        "median_gap_ms": 0.08912050724029541,
+        "noise_bound_ms": 0.000599980354309082,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.27500098943710327,
+            0.2744010090827942,
+            0.27452099323272705,
+            0.2746410071849823,
+            0.274960994720459,
+            0.2746410071849823
+          ],
+          "C": [
+            0.1854410022497177,
+            0.18584099411964417,
+            0.18596099317073822,
+            0.1854410022497177,
+            0.1854410022497177,
+            0.18559999763965607
+          ]
+        },
+        "saving": 0.32449818092994753,
+        "saving_percent": 32.449818092994754,
+        "standalone_pass": true
+      },
+      {
+        "baseline_median_ms": 2.05594801902771,
+        "baseline_range_ms": 0.048439979553222656,
+        "candidate_median_ms": 1.9623069763183594,
+        "candidate_range_ms": 0.0637199878692627,
+        "card": 1,
+        "case": "t8-inclusive",
+        "median_gap_ms": 0.09364104270935059,
+        "noise_bound_ms": 0.0637199878692627,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            2.052248001098633,
+            2.082007884979248,
+            2.059648036956787,
+            2.0372469425201416,
+            2.0335679054260254,
+            2.0672481060028076
+          ],
+          "C": [
+            1.9748469591140747,
+            2.0064079761505127,
+            1.9524869918823242,
+            1.949847936630249,
+            1.94268798828125,
+            1.9721269607543945
+          ]
+        },
+        "saving": 0.04554640576644292,
+        "saving_percent": 4.554640576644292,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 0.28982099890708923,
+        "baseline_range_ms": 0.0009199976921081543,
+        "candidate_median_ms": 0.19308100640773773,
+        "candidate_range_ms": 0.0007999986410140991,
+        "card": 1,
+        "case": "t16-boundary",
+        "median_gap_ms": 0.0967399924993515,
+        "noise_bound_ms": 0.0009199976921081543,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.290241003036499,
+            0.28932100534439087,
+            0.2898010015487671,
+            0.2898409962654114,
+            0.2897610068321228,
+            0.2898409962654114
+          ],
+          "C": [
+            0.19284099340438843,
+            0.19324100017547607,
+            0.19356100261211395,
+            0.19308100640773773,
+            0.19308100640773773,
+            0.19276100397109985
+          ]
+        },
+        "saving": 0.333792212655938,
+        "saving_percent": 33.3792212655938,
+        "standalone_pass": true
+      },
+      {
+        "baseline_median_ms": 2.052447557449341,
+        "baseline_range_ms": 0.2702009677886963,
+        "candidate_median_ms": 1.9524280428886414,
+        "candidate_range_ms": 0.05584001541137695,
+        "card": 1,
+        "case": "t16-inclusive",
+        "median_gap_ms": 0.10001951456069946,
+        "noise_bound_ms": 0.2702009677886963,
+        "resolved_gain": false,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            2.2760889530181885,
+            2.012446880340576,
+            2.005887985229492,
+            2.054727077484131,
+            2.050168037414551,
+            2.0944480895996094
+          ],
+          "C": [
+            1.9747669696807861,
+            1.9245679378509521,
+            1.9189269542694092,
+            1.955888032913208,
+            1.9489680528640747,
+            1.9632469415664673
+          ]
+        },
+        "saving": 0.04873182469275743,
+        "saving_percent": 4.873182469275743,
+        "standalone_pass": false
+      }
+    ]
+  },
+  "f1_component_preparation": {
+    "approval_consumed": true,
+    "decision": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/PHASE2-NORM-QUANT-OWNER-DECISION-v1.md",
+      "sha256": "68cc51a28a31e500fc5b1b2ecaf54a28da7a56ebd1f2312323c8aaf816aa5792"
+    },
+    "execution_record": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/COMPARISON.json",
+      "sha256": "3f51c286a972523d989adcae4739caa03de836d1f1e6108652aefe484fb4750f"
+    },
+    "gpu_execution_authorized": false,
+    "historical_cpu_record_unchanged": true,
+    "last_invocation": 215,
+    "measured_gain": false,
+    "outer_seal": {
+      "manifest_sha256": "f7b921c91a51f0cd0c7d028ab128a1a64500141d0bfaab7107924e3fb177c908",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-component-preparation-v1/packet-v3"
+    },
+    "packet": "8d036f2e2bf95cef",
+    "record": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-component-signoff-v1/COMPONENT-STATUS.json",
+      "sha256": "fcb97aae66fe3ca294832473e56e4c0ef93521503a09198fb890545a974ac967"
+    },
+    "registration": true,
+    "remaining_gpu_allowance": 0,
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-F1-COMPONENT-REVIEW-v1.md",
+      "sha256": "2357b95411d55af958e163cfc16d8176e4579013558dc1d56ea882ee5baa3548"
+    },
+    "review_pending": false,
+    "serving_qualified": false,
+    "signoff": {
+      "manifest_sha256": "c46ef50264f2ed5a27e3b0a49172f6e44284c21806129d84548b4ef2c42bdeb8",
+      "members": 20,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-component-signoff-v1"
+    },
+    "status": "APPROVAL_CONSUMED_COMPONENT_COMPLETE_RETAINED_POSITIVE"
+  },
+  "f1_host_preparation": {
+    "checks": {
+      "gpu_launches": 0,
+      "independent_review_of_delta": false,
+      "kernel_bytes_unchanged": true,
+      "live_count_unmeasured": true,
+      "local_tests": 20,
+      "model_starts": 0,
+      "native_call_surface_api_verified": true,
+      "native_seconds": 9.286451624997426,
+      "native_source_exact": true,
+      "native_tests": 20,
+      "owner_packet_ready": false,
+      "public_preflight": 43,
+      "remaining_gpu_allowance": 0,
+      "reviewed_donor": true,
+      "status": "CPU_HOST_REVIEW_CONDITIONS_RESOLVED"
+    },
+    "component_contract": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v2/COMPONENT-PREPARATION-CONTRACT.md",
+      "sha256": "dfb42049083d278e478480b69c23efddf2e76aacc53796d7dd18b5cacbfdffc3"
+    },
+    "device_count_resolution": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v2/COUNT-RESOLUTION.json",
+      "sha256": "f3b162d5b59b77cbb08088995215008fd0e64e837b0f97c29f8d2f072939363f"
+    },
+    "gpu_ready": false,
+    "historical_device_api_counts": [
+      32,
+      32
+    ],
+    "live_recheck_required": true,
+    "measured_gain": false,
+    "parent_resolution": {
+      "independent_delta_review": false,
+      "manifest_sha256": "bbf8dc473b2fb5846ceead5cdea935960e7562fdb80c2345dfe19709acca72f4",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v2"
+    },
+    "remaining_gates": [
+      "Exact numerical corpus and executable component harness",
+      "Actual loader/source-guard proof",
+      "Final owner packet and review",
+      "Fresh exact GPU approval",
+      "Real-Tensor identities and byte-exact device output",
+      "Capture/release and production lifecycle qualification"
+    ],
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-F1-HOST-REVIEW-v1.md",
+      "sha256": "3d9af3ed357003cb64010b96f1e0b9ffacf8b52b8afa661d27f7b9138402d6c3"
+    },
+    "reviewed_host": {
+      "manifest_sha256": "eee69e3f2f25ff63429848960f08eef377e0342d038b3a807652ad0a4a004628",
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-f1-host-preparation-v1"
+    },
+    "status": "CPU_HOST_BASELINE_PASS_COMPONENT_PENDING"
+  },
+  "gpu_execution_authorized": false,
+  "implementation_authorized": true,
+  "last_gpu_operation": {
+    "adoption_authorized": false,
+    "analysis": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839/ANALYSIS.json",
+      "sha256": "2bb65522d7979e7cf41a385d5b35ea4f3ab89b769fac3eded4083a4d514b943e"
+    },
+    "caller_seconds": 762.952267582994,
+    "campaign_seal": {
+      "manifest_sha256": "8ba33a6ebe8189a27465a614d38e38a5327c80ed340a08c1fff7a3fcfc766acc",
+      "members": 18,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839",
+      "verified_utc": "2026-11-03T23:38:23.758351+00:00"
+    },
+    "closing_checkpoint": {
+      "number": 585,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-585.json",
+      "sha256": "1cd105a95bdf7c6de7ab4541ff61d688b62096c3ba59404804af162334d8dcf2"
+    },
+    "configured_power_watts_per_card": [
+      235,
+      235
+    ],
+    "date": "2026-11-03",
+    "grading_performed": false,
+    "http_requests_completed": 30,
+    "independent_release": true,
+    "index": 216,
+    "invocations": 1,
+    "model_starts": 1,
+    "native_launch_seconds": 753.1331595410011,
+    "next_action": "PARK. Reproduce the begin-phase observer failure on CPU before any new packet. No retry.",
+    "outcome": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839/OUTCOME.json",
+      "sha256": "1bdd7ec80ea15769530b26ec2a540d1c39d667a4e13bf9e4b3c3ab9bf9b71a89"
+    },
+    "owner_seal_sha256": "80c3b3aeeb6693c2bedaa2e45ef3decdfdef58dccf08083d4bf7fcd1a3af053f",
+    "packet": "4e9164b0d31a4839",
+    "performance_verdict": null,
+    "profiled_starts": 0,
+    "quality_verdict": null,
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/shared-diagnostic-campaign-4e9164b0d31a4839/RESULT.md",
+      "sha256": "1aeede8e25301a74205a0c2da7e44f3393cbf50784f1e494f1ca6b61233b9994"
+    },
+    "retry_authorized": false,
+    "schema": 1,
+    "selection_changed": false,
+    "status": "FAILED_RELEASED_PARKED"
+  },
+  "latest_audit": "provenance/MXFP4-OPT07-20261103.json",
+  "mxfp4_followup_cpu_signoff": {
+    "gpu_ready": false,
+    "precision": "RETAIN_MXFP4_FP8_COMPARISON_DEFERRED",
+    "provenance": "provenance/MXFP4-FOLLOWUP-SPRINTS-20261103.json",
+    "sha256": "b7b037f44727c12c60ecc0ea454ee27eeae6eff099556c78ea0c04ca0a1f8b11",
+    "status": "CPU_NO_SURVIVOR",
+    "subleads": [
+      "G2.layout",
+      "G3.scales",
+      "G3.bitplanes",
+      "G3.entropy",
+      "L01.operand_lookup",
+      "L09.arithmetic",
+      "G3.lz4_snappy",
+      "L01.SWMMAC"
+    ],
+    "top_level_leads_unchanged": true
+  },
+  "next_action": "No GPU allowance. CPU reproduction of operation216 observer failure; add BW-00 target/entropy/scale census before new codec or integer-kernel work. Keep serving optimization spend on HOLD.",
+  "next_cpu_sprint": "OPT-07-PRODUCTION-AND-SERVING-QUALIFICATION-PREPARATION",
+  "next_prepared_component": null,
+  "objective": "Balanced C1/C2 natural-completion latency with no per-case regressions; fixed selected model, precision, TP2 and capacity.",
+  "opt06_audit": {
+    "evidence": "provenance/MXFP4-OPT06-20261103.json",
+    "manifest_sha256": "f36f4436c890f292561929cc14299d91efb58c69f264cbbe8f4392b86fe38e22",
+    "new_gpu_ready_members": 0,
+    "review_pending": false,
+    "review_sha256": "a490bb07067d7b177f8915452b32749b0fd623cc125d69d652285ddecaedb4b0",
+    "signoff_sha256": "924ffd83849f71c349fbd906af7e35a213edb257029094739e4da0fc04deed34"
+  },
+  "opt07_preparation": {
+    "component_execution": {
+      "adoption": false,
+      "closing_checkpoint": {
+        "number": 581,
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-581.json",
+        "sha256": "d76e50fea7ec98114e4e14c750bf70c8796847b6363349e13e38c267f3fcac44"
+      },
+      "comparison": {
+        "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/verify-composed-campaign-8cbb9eb079596044/COMPARISON.json",
+        "sha256": "0e967e3b732590f524f9a409ef1c07d9bc960b6a7f74fb8004d3d3d3526253c8"
+      },
+      "configured_power_watts_per_card": [
+        235,
+        235
+      ],
+      "cumulative_disposition": "USEFUL",
+      "independent_release": true,
+      "index": 214,
+      "owner_seal_sha256": "41e4aca4e30a2ff58f970117dbd46459857f86b9bc46aed190dc5516e086c454",
+      "packet": "8cbb9eb079596044",
+      "remaining_gpu_allowance": 0,
+      "selection_changed": false,
+      "status": "COMPLETE_CORRECT_USEFUL_PARKED"
+    },
+    "gpu_ready": false,
+    "gpu_ready_scope": "No unconsumed invocation; completed component evidence is separate from serving readiness.",
+    "manifest_sha256": "2095d12423893e9ca42b1d1c26f79ab5282f947596b48e1d100b1629ed17c0f1",
+    "native_compile_sha256": "116927b6a3e7457753d5baed6e19b53af141a3f6bfc2097eb7b8d7096b02d1ac",
+    "review_pending": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt-07-cumulative-preparation-v1"
+  },
+  "previous_gpu_operation_before_shared_diagnostic": {
+    "adoption": false,
+    "caller_seconds": 43.16768958300236,
+    "campaign_seal": {
+      "manifest_sha256": "5938e7f13b8138a199be546aba2ff17e761ef5d8cb630a135a0fee787a064eed",
+      "members": 279,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef"
+    },
+    "candidate_disposition": "NOT_USEFUL",
+    "closing_checkpoint": {
+      "number": 583,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-583.json",
+      "sha256": "ac431374a231a7cf7f72f0c20801f16da32b55e7df92b8c69401c61fe32579a8"
+    },
+    "comparison": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/COMPARISON.json",
+      "sha256": "3f51c286a972523d989adcae4739caa03de836d1f1e6108652aefe484fb4750f"
+    },
+    "compiler_artifacts": 80,
+    "component_seconds": 9.659770532991388,
+    "configured_power_watts_per_card": [
+      235,
+      235
+    ],
+    "correctness_cases": 52,
+    "cumulative_disposition": "RETAINED_POSITIVE",
+    "eligible_for_serving_bundle": false,
+    "graph_cases": 4,
+    "independent_release": true,
+    "index": 215,
+    "owner_execution": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/OWNER-EXECUTION.json",
+      "sha256": "12d97558fe8f9413b5ec74d6307a3b39f207ff6994ab497fe688810630065e11"
+    },
+    "owner_seal_sha256": "0c44e489506ebf72354f732d8ba464af3bb0d2d345b01588df3c0b964822d541",
+    "packet": "8d036f2e2bf95cef",
+    "remaining_gpu_allowance": 0,
+    "report": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/norm-quant-campaign-8d036f2e2bf95cef/RESULT.md",
+      "sha256": "ca61426974d87adf317d391560e1acb77e87a21cdf3efdf4eada6398b86e41e0"
+    },
+    "selection_changed": false,
+    "serving_gain_established": false,
+    "serving_tested": false,
+    "status": "COMPLETE_CORRECT_RETAINED_POSITIVE_PARKED",
+    "timing_layer_checks": 192,
+    "timing_rows": [
+      {
+        "baseline_median_ms": 0.2722415030002594,
+        "baseline_range_ms": 0.0006000101566314697,
+        "candidate_median_ms": 0.18584050238132477,
+        "candidate_range_ms": 0.0008799880743026733,
+        "card": 0,
+        "case": "t8-boundary",
+        "median_gap_ms": 0.08640100061893463,
+        "noise_bound_ms": 0.0008799880743026733,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.2722820043563843,
+            0.2717610001564026,
+            0.27188101410865784,
+            0.27236101031303406,
+            0.2722409963607788,
+            0.27224200963974
+          ],
+          "C": [
+            0.18552100658416748,
+            0.18640099465847015,
+            0.18639999628067017,
+            0.1858000010251999,
+            0.18588100373744965,
+            0.1857610046863556
+          ]
+        },
+        "saving": 0.31736895244386126,
+        "saving_percent": 31.736895244386126,
+        "standalone_pass": true
+      },
+      {
+        "baseline_median_ms": 2.0098694562911987,
+        "baseline_range_ms": 0.027279973030090332,
+        "candidate_median_ms": 1.9149695038795471,
+        "candidate_range_ms": 0.025279998779296875,
+        "card": 0,
+        "case": "t8-inclusive",
+        "median_gap_ms": 0.09489995241165161,
+        "noise_bound_ms": 0.027279973030090332,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            1.9898899793624878,
+            2.0166900157928467,
+            2.002929925918579,
+            2.017169952392578,
+            2.01016902923584,
+            2.0095698833465576
+          ],
+          "C": [
+            1.8972890377044678,
+            1.908808946609497,
+            1.9119290113449097,
+            1.9225690364837646,
+            1.9180099964141846,
+            1.9222489595413208
+          ]
+        },
+        "saving": 0.04721697327883672,
+        "saving_percent": 4.721697327883672,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 0.2905214875936508,
+        "baseline_range_ms": 0.176160991191864,
+        "candidate_median_ms": 0.19332049787044525,
+        "candidate_range_ms": 0.0020409971475601196,
+        "card": 0,
+        "case": "t16-boundary",
+        "median_gap_ms": 0.09720098972320557,
+        "noise_bound_ms": 0.176160991191864,
+        "resolved_gain": false,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.2886810004711151,
+            0.28912100195884705,
+            0.4648419916629791,
+            0.2904819846153259,
+            0.2905609905719757,
+            0.2908009886741638
+          ],
+          "C": [
+            0.19247999787330627,
+            0.19220000505447388,
+            0.19312100112438202,
+            0.19408099353313446,
+            0.194241002202034,
+            0.19351999461650848
+          ]
+        },
+        "saving": 0.33457418426536323,
+        "saving_percent": 33.45741842653632,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 2.0073294639587402,
+        "baseline_range_ms": 0.26440000534057617,
+        "candidate_median_ms": 1.922509491443634,
+        "candidate_range_ms": 0.08815991878509521,
+        "card": 0,
+        "case": "t16-inclusive",
+        "median_gap_ms": 0.0848199725151062,
+        "noise_bound_ms": 0.26440000534057617,
+        "resolved_gain": false,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            2.269089937210083,
+            2.004689931869507,
+            2.0064499378204346,
+            2.005850076675415,
+            2.008208990097046,
+            2.0277299880981445
+          ],
+          "C": [
+            2.0014889240264893,
+            1.914368987083435,
+            1.920328974723816,
+            1.913329005241394,
+            1.9246900081634521,
+            1.9316890239715576
+          ]
+        },
+        "saving": 0.04225513252210682,
+        "saving_percent": 4.225513252210682,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 0.2746410071849823,
+        "baseline_range_ms": 0.000599980354309082,
+        "candidate_median_ms": 0.1855204999446869,
+        "candidate_range_ms": 0.0005199909210205078,
+        "card": 1,
+        "case": "t8-boundary",
+        "median_gap_ms": 0.08912050724029541,
+        "noise_bound_ms": 0.000599980354309082,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.27500098943710327,
+            0.2744010090827942,
+            0.27452099323272705,
+            0.2746410071849823,
+            0.274960994720459,
+            0.2746410071849823
+          ],
+          "C": [
+            0.1854410022497177,
+            0.18584099411964417,
+            0.18596099317073822,
+            0.1854410022497177,
+            0.1854410022497177,
+            0.18559999763965607
+          ]
+        },
+        "saving": 0.32449818092994753,
+        "saving_percent": 32.449818092994754,
+        "standalone_pass": true
+      },
+      {
+        "baseline_median_ms": 2.05594801902771,
+        "baseline_range_ms": 0.048439979553222656,
+        "candidate_median_ms": 1.9623069763183594,
+        "candidate_range_ms": 0.0637199878692627,
+        "card": 1,
+        "case": "t8-inclusive",
+        "median_gap_ms": 0.09364104270935059,
+        "noise_bound_ms": 0.0637199878692627,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            2.052248001098633,
+            2.082007884979248,
+            2.059648036956787,
+            2.0372469425201416,
+            2.0335679054260254,
+            2.0672481060028076
+          ],
+          "C": [
+            1.9748469591140747,
+            2.0064079761505127,
+            1.9524869918823242,
+            1.949847936630249,
+            1.94268798828125,
+            1.9721269607543945
+          ]
+        },
+        "saving": 0.04554640576644292,
+        "saving_percent": 4.554640576644292,
+        "standalone_pass": false
+      },
+      {
+        "baseline_median_ms": 0.28982099890708923,
+        "baseline_range_ms": 0.0009199976921081543,
+        "candidate_median_ms": 0.19308100640773773,
+        "candidate_range_ms": 0.0007999986410140991,
+        "card": 1,
+        "case": "t16-boundary",
+        "median_gap_ms": 0.0967399924993515,
+        "noise_bound_ms": 0.0009199976921081543,
+        "resolved_gain": true,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            0.290241003036499,
+            0.28932100534439087,
+            0.2898010015487671,
+            0.2898409962654114,
+            0.2897610068321228,
+            0.2898409962654114
+          ],
+          "C": [
+            0.19284099340438843,
+            0.19324100017547607,
+            0.19356100261211395,
+            0.19308100640773773,
+            0.19308100640773773,
+            0.19276100397109985
+          ]
+        },
+        "saving": 0.333792212655938,
+        "saving_percent": 33.3792212655938,
+        "standalone_pass": true
+      },
+      {
+        "baseline_median_ms": 2.052447557449341,
+        "baseline_range_ms": 0.2702009677886963,
+        "candidate_median_ms": 1.9524280428886414,
+        "candidate_range_ms": 0.05584001541137695,
+        "card": 1,
+        "case": "t16-inclusive",
+        "median_gap_ms": 0.10001951456069946,
+        "noise_bound_ms": 0.2702009677886963,
+        "resolved_gain": false,
+        "resolved_regression": false,
+        "samples": {
+          "B": [
+            2.2760889530181885,
+            2.012446880340576,
+            2.005887985229492,
+            2.054727077484131,
+            2.050168037414551,
+            2.0944480895996094
+          ],
+          "C": [
+            1.9747669696807861,
+            1.9245679378509521,
+            1.9189269542694092,
+            1.955888032913208,
+            1.9489680528640747,
+            1.9632469415664673
+          ]
+        },
+        "saving": 0.04873182469275743,
+        "saving_percent": 4.873182469275743,
+        "standalone_pass": false
+      }
+    ]
+  },
+  "references": {
+    "prior_queue": "Private optimization-continuation-v1/host-copy-and-gemm-triage-v1/QUEUE.json",
+    "research_manifest_sha256": "3e3aaa91a25be280349b77f1340b85108bacfecf365fce2cbfca38f26cacfee4",
+    "research_root": "Private optimization-continuation-v1/research/exa-deep-20261103-v1",
+    "serving_result": "provenance/MXFP4-VERIFY-PREFETCH-SERVING-20261103.json",
+    "validation_skill": ".agents/skills/aithreadripper-serving-validation/SKILL.md"
+  },
+  "request_cost_model": {
+    "all_21_leads_retained": true,
+    "all_three_cumulative_members_retained": true,
+    "checks": {
+      "docs_findings": 0,
+      "focused": 36,
+      "public_preflight_reused": 43,
+      "regression_probes": 5
+    },
+    "contract_sha256": "dcac968bbfade6d6ce2e7cf4f1d667893f6aaa7aef686718825d4ea6b88bee98",
+    "date": "2026-11-03",
+    "gpu_authority": false,
+    "gpu_launches": 0,
+    "limitations": [
+      "The bundle model is expected to remain inconclusive; only other leads may justify the diagnostic.",
+      "No authenticated live adapter or executable observer exists.",
+      "Opus reviewed v1; parent implemented and tested the bounded v2 corrections.",
+      "No new serving gain, energy claim or execution authority."
+    ],
+    "manifest_sha256": "a0c4122906e07af54edc70fbb163c8720c4ee404fec766a35542b38d72ee677c",
+    "members": 39,
+    "model_starts": 0,
+    "next_action": "CPU implementation of control-only observers and authenticated joins; implementation review and exact decision before any GPU work.",
+    "owner_packet_prepared": false,
+    "prior_preparation": {
+      "manifest_sha256": "199f69d4ba1ee38befae3afec8c1301bff15d49b485cedea2902a8d5fbc1923e",
+      "members": 32,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v1"
+    },
+    "public_report": {
+      "path": "docs/MXFP4-OPT07-REQUEST-COST-MODEL.md",
+      "sha256": "25634213c673130e9d54810a11e69d4cd3eef63c7ba691561f52db81ab7e822f"
+    },
+    "result": "INCONCLUSIVE_HOLD",
+    "review": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-OPT07-REQUEST-COST-MODEL-REVIEW-v1.md",
+      "reviewed_root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v1",
+      "reviewed_seal_sha256": "199f69d4ba1ee38befae3afec8c1301bff15d49b485cedea2902a8d5fbc1923e",
+      "sha256": "5ab99d6a544b248ded768e53ecbff7ffeb3bfdece37af69f9ef6f081dd60f56a",
+      "verdict": "AGREE_CPU_ONLY"
+    },
+    "review_pending": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v2",
+    "schema": 1,
+    "selection_changed": false,
+    "signoff": {
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-request-cost-model-v2/SIGNOFF.json",
+      "sha256": "07c9be5174b841fdca7dba734e64f0859ee35c754f4b4b2e823648d437516104"
+    },
+    "status": "CPU_SIGNED_OFF_WITH_PARENT_CORRECTIONS"
+  },
+  "schema": 1,
+  "shared_diagnostic_execution": {
+    "path": "provenance/MXFP4-OPT07-SHARED-DIAGNOSTIC-216-20261103.json",
+    "sha256": "893b44ca566e75c9e46cc92ebd5fac7ec3338bda77a519817e247502b799c151"
+  },
+  "shared_owner_integration": {
+    "checks": {
+      "local": 51,
+      "native": 51,
+      "public_preflight": 43
+    },
+    "gpu_authority": false,
+    "gpu_ready": false,
+    "manifest_sha256": "473b3249e093bfa493ad89253b568e272e9408ba87b659cd86b607b5699ae69f",
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt07-shared-owner-integration-v1",
+    "status": "CPU_TESTED_REVIEW_PENDING"
+  },
+  "sprints": [
+    {
+      "depends_on": [],
+      "exit": "One candidate matrix with present/missing/cost/gap fields; authenticated reusable receipts; no launch until production-mode witness mutations fail closed.",
+      "gpu_route": "None. A shared profile is only proposed by OPT-01 if a named decision remains blocked.",
+      "id": "OPT-00",
+      "scope": [
+        "Every lead gets source/dispatch/critical-path status",
+        "Repair and test production route-witness producer-to-reader path",
+        "Freeze B0 manifest, per-family numerical/resource contracts and request menu",
+        "Bound candidate build, import, cleanup and retention failure paths"
+      ],
+      "title": "Shared baseline, evidence and test readiness"
+    },
+    {
+      "depends_on": [
+        "OPT-00"
+      ],
+      "exit": "One bounded host/config hypothesis or explicit no-op disposition for each; one shared instrumentation specification if retained evidence is insufficient.",
+      "gpu_route": "At most one shared profile proposal; a surviving runtime bundle uses a serving slot, not a model-free kernel proxy.",
+      "id": "OPT-01",
+      "scope": [
+        "HIP flat graph dispatch and GPU_MAX_HW_QUEUES",
+        "CPU/cgroup/CCD/NUMA and ROCr helper placement",
+        "Scheduler overlap, P2P/collective transport and exposure",
+        "H1 metadata-copy and existing draft sampler/cache dispatch audits"
+      ],
+      "title": "Host, runtime and TP2 critical path"
+    },
+    {
+      "depends_on": [
+        "OPT-00"
+      ],
+      "exit": "Byte-exact representation proof, baseline compile reproduction, per-shape resource gates and benefit mechanism. Reject unchanged failures and unsupported arithmetic.",
+      "gpu_route": "Rank passing candidates for the shared component budget; no exhaustive tile sweep. Entropy and integer branches default to CPU-only.",
+      "id": "OPT-02",
+      "scope": [
+        "G2 reversible weight/scale packing",
+        "G3 entropy and bounded tile-code feasibility",
+        "Integer group reduction numerical proof",
+        "A distinct RDNA4 load/layout/scheduling mechanism"
+      ],
+      "title": "MXFP4 representation and GEMM"
+    },
+    {
+      "depends_on": [
+        "OPT-00"
+      ],
+      "exit": "Guarded dispatch and boundary cases pass; runtime count/split semantics and both stages audited; candidate meets the relevant frozen compiler and numerical contract.",
+      "gpu_route": "Separate extend and verification component families. Compile B/I/P/I+P only when independently justified; no multi-arm GPU harness assumed.",
+      "id": "OPT-03",
+      "scope": [
+        "C4 int32 indices including once-per-batch conversion",
+        "C4 index-ahead and dependency scheduling",
+        "Address rematerialization, V layout and explicit head layout",
+        "Verification split/partition strategy"
+      ],
+      "title": "Prefill and verification attention"
+    },
+    {
+      "depends_on": [
+        "OPT-00"
+      ],
+      "exit": "A proven removable pass; exact or established tolerance contract; acceptance, rollback, flush, cache publication and C2/cancellation lifecycle model passes.",
+      "gpu_route": "One minimal surviving state/fusion candidate enters component screening; collective fusion additionally depends on OPT-01 transport proof.",
+      "id": "OPT-04",
+      "scope": [
+        "R1 selected ring-fold commit-to-next-read traffic and DeltaLog mechanism",
+        "F1 remaining conv/recurrence/gated-norm/quant boundaries",
+        "All-reduce epilogue fusion as a separately gated subcase"
+      ],
+      "title": "Recurrent state and local fusions"
+    },
+    {
+      "depends_on": [
+        "OPT-00"
+      ],
+      "exit": "Full target vocabulary/verification preserved; shortlist lifecycle and token mapping tested; measured or explicitly missing head-cost and acceptance evidence stated.",
+      "gpu_route": "A head component is necessary but insufficient; frozen target-output and acceptance checks must precede serving timing. Runtime choice uses serving budget.",
+      "id": "OPT-05",
+      "provenance": "provenance/MXFP4-OPT05-20261103.json",
+      "report": "docs/MXFP4-OPT05-DRAFT-HEAD-SCREEN.md",
+      "scope": [
+        "D1 shortlist feasibility against selected FP8 head overlays",
+        "Existing compact-cache and TP greedy graph route checks",
+        "Coverage, TP token mapping/ties, gather overhead and acceptance tradeoff"
+      ],
+      "status": "CPU_DEFERRED_SIGNED_OFF",
+      "title": "Draft vocabulary and head work"
+    },
+    {
+      "dependency_meaning": "Requires interface/evidence dispositions, not that previous candidates win.",
+      "depends_on": [
+        "OPT-00",
+        "OPT-01",
+        "OPT-04",
+        "OPT-05"
+      ],
+      "evidence": "provenance/MXFP4-OPT06-20261103.json",
+      "exit": "One separately costed design per branch. Cache branch preserves cap-3 and workload. Graph branch proves TP2 ordering, finite exit and C2/cancel/state behavior. No wholesale megakernel port by default.",
+      "gpu_ready": false,
+      "gpu_route": "Separate structural qualification proposals after CPU feasibility; full round cannot be qualified by a model-free component. Outside the first-wave packet cap unless explicitly substituted.",
+      "id": "OPT-06",
+      "scope": [
+        "H4 tree-core CPU replay and session retention",
+        "M1 bounded GPU-resident draft/verify/accept/commit graph region"
+      ],
+      "status": "CPU_AUDIT_DEFERRED_SIGNED_OFF",
+      "title": "Cache core and complete speculative round"
+    },
+    {
+      "cpu_signoff_seal": "233145d1cbfe437b6066a5088229a0ac425cd516d3aaac222bbaeb5b933417df",
+      "dependency_meaning": "Every preceding sprint has a disposition; deferred/rejected branches need not be forced to completion or included.",
+      "depends_on": [
+        "OPT-00",
+        "OPT-01",
+        "OPT-02",
+        "OPT-03",
+        "OPT-04",
+        "OPT-05",
+        "OPT-06"
+      ],
+      "exit": "All inherited gates, six-case no-regression, balanced gain, route witnesses, release and affected lifecycle evidence pass; otherwise retain PARK/REJECT/INCONCLUSIVE.",
+      "gpu_route": "One two-start pilot; one separately approved reversed pair conditional on pilot success. Additional ablation or lifecycle operation needs its own explicit budget and exact packet.",
+      "id": "OPT-07",
+      "physical_complete": false,
+      "record": "provenance/MXFP4-OPT07-20261103.json",
+      "scope": [
+        "Reconcile all earlier experiment and sprint dispositions; retain smaller performance/efficiency benefits with measured scope and uncertainty",
+        "Freeze all compatible validated members that fit the finite packet; no arbitrary two-change limit",
+        "Recheck composed source/dispatch/resources/oracles and named interactions; existing safety and numerical gates remain",
+        "Fresh235W B0 versus B0+bundle; reversed order only if the pilot passes, targeted ablation only for an evidenced unresolved interaction",
+        "Affected lifecycle and quality qualification, then separate owner adoption decision"
+      ],
+      "status": "CPU_SIGNED_OFF_COMPONENT_PACKET_REVIEW_PENDING",
+      "title": "Cumulative gains integration and serving confirmation"
+    }
+  ],
+  "status": "OPT07_DIAGNOSTIC_FAILED_RELEASED_SERVING_HELD",
+  "test_rules": {
+    "causality": "Sharing evidence/harnesses is not sharing historical timing controls. Bundle effects are bundle effects; individual serving contributions require ablation.",
+    "component": "Both cards sequentially; inherited numerical and per-family compiler/resource gates; current screening default >=10% primary median saving with gap above larger range and regression veto. Exact formulas stay source-bound.",
+    "cumulative_eligibility": "Original standalone verdicts and frozen gates remain unchanged. A new owner-requested cumulative experiment may include members that missed only performance usefulness/noise thresholds. State uncertainty; preserve numerical, compiler/resource, no-regression, lifecycle and route requirements. Never count overlapping gains twice.",
+    "efficiency": "Record the actual metric and its baseline/uncertainty. Storage, allocation, instruction or traffic savings do not establish energy or serving-latency savings. A CPU-only design is not a runnable bundle member.",
+    "failures": "No automatic retry or owner-budget expansion; consumed operations remain consumed. Retain primary failure and cleanup evidence.",
+    "identity": "Real production producer/reader witnesses for both 8-row and 16-row paths, including candidate absence in control; absent evidence fails closed.",
+    "native": "Mac stdlib only; framework compilation/tests in the declared device-free native CPU sandbox. Reproduce baseline artifacts before candidate resource claims.",
+    "power": "Fresh paired controls at matching235W, re-authenticated when preparing the packet; no power mutation. Earlier300W timings are historical only.",
+    "review": "Owner requested Opus 5.5 before sprint signoff. Use one consolidated bounded review of the frozen sprint evidence; Fable is not required.",
+    "serving": "Frozen comparator: 3 observations/case, 2% noise floor, <=10% spread, <=2% completion-token delta, >=3% balanced speed-ratio gain and no case regression. All answers and warm-cache bounds pass. No relaxed gate for bundles."
+  },
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "71cec2bc7ba9e2ed4bccf00df72a497ea4c05c927ea371277012bf2ad479b9e9",
+      "absolute_machine_path_prefixes_removed": 65,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "annotation_clock_bound_scope": "user_annotation (RecordFunction) only; unit-rate (offset-only); excludes ROCm runtime API events",
+  "checks_sha256": "6e3e319386b7bb103e7ff7ec91dc24e344cb20c6651f96b372f94bf614c92ae3",
+  "clock_source_audit": {
+    "error_bound_established": false,
+    "independently_reviewed": false,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/CLOCK-SOURCE-AUDIT.json",
+    "profiling_wheel_metadata_matches": true,
+    "sha256": "4f28ade50d82660dd1bf7f40e0cac0837924aa91f1aff7891a6586f95555c05b",
+    "source_files_byte_matched": 9
+  },
+  "conditional_host_clock_checks": 12,
+  "decode_windows": 12,
+  "evidence": {
+    "manifest_sha256": "ef16aa2d4444be24ecc0103d98735411ae66ab15ffb3eb76294071e47e45884a",
+    "members": 70,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2",
+    "verified_utc": "2026-11-04T23:30:17.967061+00:00"
+  },
+  "focused_tests": 50,
+  "full_graph_membership_proven": false,
+  "gpu_operations": 0,
+  "gpu_ready": false,
+  "installed_clock_conversion_authenticated": false,
+  "journal_geometry_joined_rows": 24,
+  "model_starts": 0,
+  "new_native_workstation_commands": 0,
+  "next_action": "Continue CPU source binding and calibration-aware diagnostic design. Refuse the proposed timing capture until clock conversion/error evidence, annotation producer and full graph membership are authenticated. No GPU authority.",
+  "next_contract": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/NEXT-DIAGNOSTIC-CONTRACT.md",
+    "sha256": "ece3a8c43c7f021c2b48178a95049d6096531384add780e4b4512f7a943297c9"
+  },
+  "preserved_contracts": {
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/inputs/PRESERVED-GATES.json",
+    "sha256": "dfa2875833e9cbd823556f313589bb89659ea9a7f8492a51a37d58a35a003664"
+  },
+  "preserved_gate_roles": [
+    "capacity",
+    "numerical",
+    "quality",
+    "release",
+    "retention",
+    "work"
+  ],
+  "public_report": "docs/MXFP4-REDUCED-DIAGNOSTIC-PREPARATION.md",
+  "public_report_sha256": "b1d698e7f17d4f8b40557a4e97fd3811ce718f5688c9d8da3b9fdaff981823d2",
+  "recorded_graph_calls_joined": 48,
+  "review": {
+    "parent_followup_independently_reviewed": false,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-REDUCED-DIAGNOSTIC-CPU-REVIEW-v1.md",
+    "resolution_path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v2/REVIEW-RESOLUTIONS.md",
+    "resolution_sha256": "848d6f803a6974e1df12c5d569809e21cd386bde59c7acdceb5f25e83c1f2d84",
+    "reviewed_stage": "immutable v1",
+    "reviewed_tests": 41,
+    "sha256": "db6f9947758939e3f3ef80ff0ba5a818252aa74f3fbdc70a6912518f9bcc381c",
+    "verdict": "CPU_SIGNOFF_APPROVED"
+  },
+  "review_pending": false,
+  "reviewed_evidence": {
+    "manifest_sha256": "c30dbd587f5862210dcdd785af1f97ef66daca496fcd341efed168a2e69aa95b",
+    "members": 28,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/reduced-diagnostic-cpu-20261104-v1",
+    "verified_utc": "2026-11-04T23:04:59.688995+00:00"
+  },
+  "schema": 2,
+  "selection_changed": false,
+  "serving": "HOLD",
+  "serving_gain_established": false,
+  "source_gate_status": {
+    "annotation_producer": "OPEN_RELEASE_REFERENCE_HASH_MISMATCH",
+    "clock_error_bound": "OPEN",
+    "clock_source": "NINE_SOURCE_BLOBS_MATCH_BUILD_INVENTORY_CALIBRATION_PARAMETERS_UNRETAINED",
+    "effective_runtime_routes": "OPEN",
+    "full_graph_membership": "OPEN"
+  },
+  "status": "CPU_REVIEW_ACCEPTED_FOLLOWUP_VERIFIED_SOURCE_GATES_HOLD",
+  "unknown_calibration_action": "REFUSE_PROPOSED_TIMING_CAPTURE_BEFORE_REGISTRATION",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "049e68450cb583d9d4112c542e2a858f1c21c580c5192234c12fab4c1af9aaa7",
+      "absolute_machine_path_prefixes_removed": 7,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

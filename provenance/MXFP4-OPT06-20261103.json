@@ -1,0 +1,105 @@
+{
+  "adoption_authorized": false,
+  "cache": {
+    "aa_only": true,
+    "cache_host_self_time_available": false,
+    "cap3_cached_outcomes_match": true,
+    "native_node_event_stream_available": false,
+    "operation": 204
+  },
+  "checks": {
+    "analysis_reproduction": "Byte-identical",
+    "conditional_replays": 20,
+    "docs_audit": "No findings",
+    "focused_tests": 16,
+    "git_diff_check": "passed",
+    "input_seals": 11,
+    "physical_cached_outcomes": 60,
+    "public43": "Not rerun; no shared runtime/preflight source change",
+    "retained_dependency_sources": 3,
+    "selected_role_sources": 12,
+    "source_copies": 15
+  },
+  "cumulative": {
+    "classification": "STRUCTURAL_DEFERRED_DIAGNOSTIC_CONTRACT_ONLY",
+    "eligible_for_combined_preparation": false
+  },
+  "date": "2026-11-03",
+  "disposition": "DEFER_STRUCTURAL_CACHE_AND_GRAPH_IMPLEMENTATIONS",
+  "evidence": {
+    "manifest_sha256": "f36f4436c890f292561929cc14299d91efb58c69f264cbbe8f4392b86fe38e22",
+    "members": 46,
+    "private_root": "optimization-continuation-v1/opt-06-cache-and-graph-cpu-v1",
+    "report": "RESULT.md",
+    "result": "RESULT.json",
+    "result_sha256": "7ab6c0ccc3f80d453f5080aa89a3a196858c31c11f74698326b6d4d7e2e9e47c"
+  },
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "model_starts": 0,
+  "native_operations": 0,
+  "next_action_after_review": "Reconcile all prior candidates and prepare the smallest justified cumulative test sequence; no new GPU allowance.",
+  "power_changed": false,
+  "review": {
+    "effort": "medium",
+    "model": "claude-opus-5-5",
+    "report": "Private optimization-continuation-v1/OPUS-OPT06-REVIEW-v1.md",
+    "sha256": "a490bb07067d7b177f8915452b32749b0fd623cc125d69d652285ddecaedb4b0",
+    "status": "AGREE"
+  },
+  "review_corrections": {
+    "N1": {
+      "line": 1393,
+      "meaning": "B0-pinned retained default is all; effective native setting unobserved. Capture rank0 warning/default override witness in future diagnostic.",
+      "sha256": "2085881c2aa46abd90fc43af6b8f4672a0e3377f18eb2393d165a7a5d9e98a6d",
+      "source": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/opt-04-recurrent-and-fusion-cpu-v1/source/environ.py"
+    },
+    "N2": "Reviewer independently observed all20 intervening eager-kernel launch APIs complete at least5.9ms before draft end in every window on the same stream. This is reviewer evidence, not a sealed analyzer field.",
+    "N3": "Reviewer observed roughly3.5us rank1 gaps and12-21us rank0 gaps, with negative same-stream gaps down to about-81us. Origin unresolved; no cost or speedup inference.",
+    "N4": "FULL KV retention is source inspection, not exercised cascade behavior; trim test stubs _cascade_evict.",
+    "N5": "Device-only match validator selection is supplied by the test; route evidence must establish HiCache off.",
+    "N6": "Greedy mapping assumes all-greedy sampling and draft graph execution. State commit and publication are conditional. Static line order is not dynamic/control-flow proof.",
+    "N7": {
+      "mandatory_before_M1": [
+        "Decide cancellation of in-flight rounds: finish under quarantine, mask, or abort; current model permits publication/append after cancel.",
+        "Track drain by each consuming stream/event; caller Boolean is not evidence.",
+        "Bind configured TP collective and sequence; include output IDs, next prefix and commit span, not only count/bonus.",
+        "Model terminal-output trimming separately from commit span.",
+        "Add generation verification at the published-length reader.",
+        "Bind capacity and page-boundary limits.",
+        "Derive and pin bonus vocabulary bound instead of unexplained hard-coded248320.",
+        "Model C2 batch masks, shrink and mixed termination."
+      ],
+      "model_is_not_implementation": true
+    },
+    "N8": "Re-pin cache_tree_core, cache_mamba_component and batch_result_processor from selected image before H4 implementation or native-event replay.",
+    "N9": "Origin=pin=copy is tested. selected.sha256 and B0 membership were manually cross-checked by reviewer; future analyzer must assert them explicitly."
+  },
+  "runtime_changed": false,
+  "schema": 1,
+  "selection_changed": false,
+  "signoff": {
+    "manifest_sha256": "924ffd83849f71c349fbd906af7e35a213edb257029094739e4da0fc04deed34",
+    "members": 7,
+    "private_root": "optimization-continuation-v1/opt-06-signoff-v1"
+  },
+  "status": "CPU_AUDIT_DEFERRED_SIGNED_OFF",
+  "trace": {
+    "between_graph_span_us": 204.841796875,
+    "recorded_kernel_union_in_span_us": 116.633056640625,
+    "sampled_windows": 8,
+    "scope": "Historical instrumented C1 rank/windows; no fresh235W baseline, cross-rank clock join, speedup or whole-device idle claim. Medians independently computed.",
+    "span_not_covered_by_recorded_kernels_us": 88.332275390625,
+    "target_api_before_draft_end_all_windows": true,
+    "target_api_completion_lead_us": 5358.607666015625
+  },
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "94b51c035d2ed47de31338ea6461b37462d8c4aea37a96b181fc3e61b3a91dda",
+      "absolute_machine_path_prefixes_removed": 1,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

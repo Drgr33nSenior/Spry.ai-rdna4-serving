@@ -1,0 +1,53 @@
+{
+  "adoption_authorized": false,
+  "checks": {
+    "calibration_artifacts_reproduced": 5,
+    "device_free_compile_operations": 1,
+    "docs_audit": "No findings",
+    "file_only_native_operations": 1,
+    "focused_tests": 19,
+    "git_diff_check": "passed",
+    "ir_proof": true,
+    "prior_seals": 8,
+    "public_preflight": 43,
+    "selected_sources": 39
+  },
+  "compiler_survivors": [
+    "gated_norm_mxfp4"
+  ],
+  "cumulative": {
+    "classification": "CPU_ONLY_UNMEASURED",
+    "eligible_for_combined_preparation": false,
+    "required": "Host/owner integration and physical numerical, resource, timing and lifecycle evidence"
+  },
+  "date": "2026-11-03",
+  "evidence": {
+    "manifest_sha256": "1b9d7c7d7b43c591ab988b7422110b11f068b3147a82c880f5605e744af39eda",
+    "members": 132,
+    "private_root": "optimization-continuation-v1/opt-04-recurrent-and-fusion-cpu-v1",
+    "report": "RESULT.md",
+    "result": "RESULT.json"
+  },
+  "gpu_launches": 0,
+  "gpu_ready": false,
+  "model_starts": 0,
+  "power_changed": false,
+  "review": {
+    "effort": "medium",
+    "model": "claude-opus-5-5",
+    "report": "Private optimization-continuation-v1/OPUS-OPT04-REVIEW-v1.md",
+    "sha256": "fd10215cbe2bf262d4b07be01f2a6b33b1aefaa619923913601f02d20f6cabf6",
+    "status": "AGREE"
+  },
+  "same_binary_per_arm_for_rows8_and_16": true,
+  "schema": 1,
+  "selection_changed": false,
+  "signoff": {
+    "additional_tests": 4,
+    "contract_addendum": "CONTRACT-ADDENDUM.md",
+    "manifest_sha256": "0e2d29f487d3a769a42b0bf0246eb54dfa183eff11b00614d85f05b994034ff0",
+    "members": 11,
+    "private_root": "optimization-continuation-v1/opt-04-signoff-v1"
+  },
+  "status": "CPU_COMPILER_SURVIVOR_SIGNED_OFF"
+}

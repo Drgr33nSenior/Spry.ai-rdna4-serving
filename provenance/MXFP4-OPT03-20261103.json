@@ -1,0 +1,381 @@
+{
+  "checks": {
+    "docs_audit": "No findings",
+    "focused_tests": 16,
+    "git_diff_check": "passed",
+    "input_pins": 58,
+    "input_seals_verified": 11,
+    "native_device_free_compile_operations": 4,
+    "native_file_only_audits": 1,
+    "native_host_wrapper_cases": 4,
+    "public_preflight_tests": 43,
+    "result_reproduced": true
+  },
+  "compiler_survivors": [
+    "verification_split_cap32"
+  ],
+  "component_preparation": {
+    "actual_loader_compile_seconds": 8.801419916999293,
+    "adoption_authorized": false,
+    "all_layer_references": 16,
+    "assembly_file_lookup_refusal_retained": true,
+    "caller_tests": 3,
+    "compiler_artifacts_reproduced": 80,
+    "conditions": [
+      "Short-case regression veto is final for this packet; no threshold changes after measurement.",
+      "Any case with16bitwise-equal layers requires investigation before acceptance; retain raw verdict, keep acceptance inconclusive if writes cannot be established.",
+      "Registrar must verify and record outer/nested seals, review/resolution, exact decision and approval."
+    ],
+    "final_decision": {
+      "approval_received": true,
+      "filename": "PHASE2-VERIFY-SPLIT32-OWNER-DECISION-v1.md",
+      "sha256": "a25e33fc6ea39c0f4b5e17caf5f59b9c1f73e6d00e24629fe2af71c669c6e339"
+    },
+    "fresh_nan_buffers_per_case_arm": true,
+    "gpu_work": false,
+    "gpu_work_note": "Preparation itself remains CPU-only; the separately approved invocation is recorded in gpu_result.",
+    "local_and_native_source_tests": 31,
+    "manifest_sha256": "a9da476cfe3638682706896d3738c0e7b4d244be46ae0cc751077a90a3ee46c7",
+    "mean_error_factor": 1.02,
+    "members": 163,
+    "native_owner_tests": 10,
+    "packet": "19dcf771af7b2f68",
+    "packet_changed_after_review": false,
+    "private_root": "optimization-continuation-v1/verify-split-component-preparation-v1/packet-v2",
+    "registered": true,
+    "review": {
+      "blocking_findings": 0,
+      "effort": "medium",
+      "independent_rerun": {
+        "caller_tests": 3,
+        "owner_tests": 10,
+        "source_tests": 31
+      },
+      "model": "claude-opus-5-5",
+      "sha256": "c328d5da8e53f46c068fd8bf63e4c9281d1aa23bff966391c81a67971f7db9cf",
+      "verdict": "AGREE"
+    },
+    "review_closeout": {
+      "manifest_sha256": "eef14799839f87655415625c538f4b33440da8bc52e89a6648dc4e66ca21170b",
+      "members": 8,
+      "private_root": "optimization-continuation-v1/verify-split32-owner-review-closeout-v1"
+    },
+    "stale_boot_cpu_refusal_retained": true,
+    "status": "EXECUTED_ONCE_RELEASED_NOT_USEFUL",
+    "timing_includes_split_helper_and_both_stages": true
+  },
+  "cumulative_evaluation": {
+    "composed_validation_required": true,
+    "gpu_invocation_authorized": false,
+    "original_evidence_unchanged": true,
+    "original_operation": 213,
+    "original_verdict": "NOT_USEFUL",
+    "owner_requested": true,
+    "policy": "provenance/MXFP4-OPTIMIZATION-SPRINT-PLAN-20261103.json#cumulative_bundle",
+    "primary_signal": "positive_but_unresolved_by_observed_range",
+    "serving_qualified": false,
+    "standalone_promoted": false,
+    "status": "RETAIN_FOR_POST_SPRINT_BUNDLE_PREPARATION"
+  },
+  "date": "2026-11-03",
+  "errata": [
+    "Core count32 and cap16 split metadata were observed on both cards; cap32 device results remain unmeasured.",
+    "Apply the unchanged numerical tolerance to every layer's own FP32 reference; finite-only coverage is insufficient.",
+    "Logical active partial traffic is distinct from capacity and measured HBM traffic.",
+    "Use fresh buffers per case/arm and one explicit cap; do not mutate backend.max_kv_splits.",
+    "The original sealed result remains unchanged; the signoff contains corrections.",
+    "Operation213 now measures cap32 device values and timing; the original sealed CPU reports remain unchanged."
+  ],
+  "evidence": {
+    "contract": "SPLIT32-CONTRACT.md",
+    "lead_dispositions": "LEAD-DISPOSITIONS.json",
+    "manifest_sha256": "f5da71da960528525b5e2c15888c675a759098c05279d1c664f712d49a92b363",
+    "members": 234,
+    "private_root": "optimization-continuation-v1/opt-03-attention-cpu-v1",
+    "report": "RESULT.md",
+    "result": "RESULT.json"
+  },
+  "findings": {
+    "c4_address_layout": "Deferred pending a new proved lane/address mapping.",
+    "c4_index32": {
+      "baseline_private_bytes": 380,
+      "baseline_vgpr_spills": 102,
+      "candidate_private_bytes": 404,
+      "candidate_vgpr_spills": 109,
+      "status": "REJECT_BEFORE_GPU"
+    },
+    "c4_prefetch": {
+      "baseline_private_bytes": 380,
+      "baseline_vgpr_spills": 102,
+      "candidate_private_bytes": 560,
+      "candidate_vgpr_spills": 142,
+      "status": "REJECT_BEFORE_GPU"
+    },
+    "verification_split32": {
+      "both_stage_resource_gates_passed": true,
+      "candidate_stage2_hsaco_sha256": "17b4cbf6a1bfde242fed416043c5ae1575f9b22aab28569272db25805d5d224e",
+      "cap32_splits_both_cards": 32,
+      "core_count_both_cards": 32,
+      "gpu_numerical_gate_run": true,
+      "physical_helper_values_measured": true,
+      "prior_cap16_core_count_observed_both_cards": 32,
+      "prior_cap16_split_and_empty_values_authenticated": true,
+      "source_unchanged": true,
+      "stage1_artifacts_unchanged": true,
+      "stage1_hsaco_sha256": "617bee9affff4921b8005c7d5f39587f3ab1197c58a2c11788391240251c88ed",
+      "status": "GPU_CORRECT_NOT_USEFUL_PARKED",
+      "timing_measured": true
+    }
+  },
+  "gpu_execution_performed": true,
+  "gpu_launch_count_note": "One completed native component invocation; target/RNG/helper/reference kernels are not reported as a single launch count.",
+  "gpu_launches": null,
+  "gpu_operations": 1,
+  "gpu_ready_candidates": [],
+  "gpu_result": {
+    "adoption": false,
+    "caller_seconds": 44.072282249995624,
+    "cleanup_allocated_bytes_per_card": [
+      0,
+      0
+    ],
+    "closing_checkpoint": {
+      "number": 579,
+      "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/CHECKPOINT-579.json",
+      "sha256": "f99f1f19ae1c09057fff39df7477f70fed90b79fd756d28d549f6a841b817cae"
+    },
+    "comparison_sha256": "cb362b30b836e853bfae336f31ff5f08cc77d4225d3b7d2183b1df8deee51a76",
+    "component_seconds": 11.898706898995442,
+    "correctness_passed": true,
+    "independent_release": true,
+    "index": 213,
+    "layer_reference_checks": 128,
+    "model_starts": 0,
+    "native_manifest_sha256": "dbe9cb870bf0c32bfa793e0813d69c17ae6de5c11d2863c32cca482d797bcf4a",
+    "no_resolved_regression": true,
+    "packet": "19dcf771af7b2f68",
+    "peak_allocated_bytes_per_card": [
+      4441490432,
+      4441490432
+    ],
+    "peak_reserved_bytes_per_card": [
+      4550819840,
+      4550819840
+    ],
+    "power_cap_owner_confirmation": {
+      "before_caller_start": true,
+      "caller_started_utc": "2026-11-03T12:14:52.386138+00:00",
+      "note_sha256": "826a628d7e6bf7254f049fdf332ae602cda6e297755c4836eb41afd676c85a88"
+    },
+    "power_cap_watts_per_card": [
+      235,
+      235
+    ],
+    "primary_useful_threshold_percent": 10,
+    "private_campaign": "optimization-continuation-v1/verify-split32-campaign-19dcf771af7b2f68",
+    "remaining_gpu_allowance": 0,
+    "report_sha256": "8a69f1f22105229a51e43e9444ec805e1012230c6cb39d56a5f48e77197e2ef6",
+    "retry": false,
+    "review_all_equal_triggered": false,
+    "review_conditions_satisfied": true,
+    "rows": [
+      {
+        "baseline_max_ms": 22.72764778137207,
+        "baseline_median_ms": 22.65526580810547,
+        "baseline_min_ms": 21.423757553100586,
+        "baseline_range_ms": 1.3038902282714844,
+        "candidate_max_ms": 22.33296775817871,
+        "candidate_median_ms": 22.068443298339844,
+        "candidate_min_ms": 20.43202781677246,
+        "candidate_range_ms": 1.90093994140625,
+        "card": 0,
+        "case": "p119990-rows8-sequential",
+        "median_gap_ms": 0.586822509765625,
+        "median_saving": 0.02590225666457091,
+        "noise_bound_ms": 1.90093994140625,
+        "passes": false,
+        "primary": true,
+        "resolved_regression": false,
+        "saving_percent": 2.590225666457091
+      },
+      {
+        "baseline_max_ms": 22.682315826416016,
+        "baseline_median_ms": 22.638652801513672,
+        "baseline_min_ms": 22.514097213745117,
+        "baseline_range_ms": 0.16821861267089844,
+        "candidate_max_ms": 22.125228881835938,
+        "candidate_median_ms": 22.089552879333496,
+        "candidate_min_ms": 21.980287551879883,
+        "candidate_range_ms": 0.1449413299560547,
+        "card": 0,
+        "case": "p119990-rows8-even-odd",
+        "median_gap_ms": 0.5490999221801758,
+        "median_saving": 0.024254973429490567,
+        "noise_bound_ms": 0.16821861267089844,
+        "passes": false,
+        "primary": false,
+        "resolved_regression": false,
+        "saving_percent": 2.4254973429490567
+      },
+      {
+        "baseline_max_ms": 22.18425750732422,
+        "baseline_median_ms": 22.02849292755127,
+        "baseline_min_ms": 21.869857788085938,
+        "baseline_range_ms": 0.31439971923828125,
+        "candidate_max_ms": 21.458728790283203,
+        "candidate_median_ms": 21.336698532104492,
+        "candidate_min_ms": 21.265228271484375,
+        "candidate_range_ms": 0.19350051879882812,
+        "card": 0,
+        "case": "p59993-59980-rows16",
+        "median_gap_ms": 0.6917943954467773,
+        "median_saving": 0.03140452675187522,
+        "noise_bound_ms": 0.31439971923828125,
+        "passes": false,
+        "primary": false,
+        "resolved_regression": false,
+        "saving_percent": 3.1404526751875217
+      },
+      {
+        "baseline_max_ms": 0.7460790276527405,
+        "baseline_median_ms": 0.7371094822883606,
+        "baseline_min_ms": 0.7308800220489502,
+        "baseline_range_ms": 0.015199005603790283,
+        "candidate_max_ms": 0.7526500225067139,
+        "candidate_median_ms": 0.7360250055789948,
+        "candidate_min_ms": 0.7339500188827515,
+        "candidate_range_ms": 0.018700003623962402,
+        "card": 0,
+        "case": "p724-rows8",
+        "median_gap_ms": 0.0010844767093658447,
+        "median_saving": 0.0014712559469444164,
+        "noise_bound_ms": 0.018700003623962402,
+        "passes": false,
+        "primary": false,
+        "resolved_regression": false,
+        "saving_percent": 0.14712559469444164
+      },
+      {
+        "baseline_max_ms": 22.655147552490234,
+        "baseline_median_ms": 22.59677791595459,
+        "baseline_min_ms": 21.509639739990234,
+        "baseline_range_ms": 1.1455078125,
+        "candidate_max_ms": 22.272659301757812,
+        "candidate_median_ms": 22.10972023010254,
+        "candidate_min_ms": 20.61161231994629,
+        "candidate_range_ms": 1.6610469818115234,
+        "card": 1,
+        "case": "p119990-rows8-sequential",
+        "median_gap_ms": 0.4870576858520508,
+        "median_saving": 0.021554298035923125,
+        "noise_bound_ms": 1.6610469818115234,
+        "passes": false,
+        "primary": true,
+        "resolved_regression": false,
+        "saving_percent": 2.1554298035923125
+      },
+      {
+        "baseline_max_ms": 22.73082733154297,
+        "baseline_median_ms": 22.636579513549805,
+        "baseline_min_ms": 22.438879013061523,
+        "baseline_range_ms": 0.2919483184814453,
+        "candidate_max_ms": 22.200620651245117,
+        "candidate_median_ms": 22.104939460754395,
+        "candidate_min_ms": 22.005319595336914,
+        "candidate_range_ms": 0.19530105590820312,
+        "card": 1,
+        "case": "p119990-rows8-even-odd",
+        "median_gap_ms": 0.5316400527954102,
+        "median_saving": 0.023485882771166033,
+        "noise_bound_ms": 0.2919483184814453,
+        "passes": false,
+        "primary": false,
+        "resolved_regression": false,
+        "saving_percent": 2.3485882771166033
+      },
+      {
+        "baseline_max_ms": 22.142452239990234,
+        "baseline_median_ms": 22.049654960632324,
+        "baseline_min_ms": 21.841899871826172,
+        "baseline_range_ms": 0.3005523681640625,
+        "candidate_max_ms": 21.51721954345703,
+        "candidate_median_ms": 21.38194179534912,
+        "candidate_min_ms": 21.229772567749023,
+        "candidate_range_ms": 0.2874469757080078,
+        "card": 1,
+        "case": "p59993-59980-rows16",
+        "median_gap_ms": 0.6677131652832031,
+        "median_saving": 0.03028225006129781,
+        "noise_bound_ms": 0.3005523681640625,
+        "passes": false,
+        "primary": false,
+        "resolved_regression": false,
+        "saving_percent": 3.028225006129781
+      },
+      {
+        "baseline_max_ms": 0.7699390053749084,
+        "baseline_median_ms": 0.7449129819869995,
+        "baseline_min_ms": 0.7392690181732178,
+        "baseline_range_ms": 0.030669987201690674,
+        "candidate_max_ms": 0.7550089955329895,
+        "candidate_median_ms": 0.7491230070590973,
+        "candidate_min_ms": 0.7458789944648743,
+        "candidate_range_ms": 0.009130001068115234,
+        "card": 1,
+        "case": "p724-rows8",
+        "median_gap_ms": -0.004210025072097778,
+        "median_saving": -0.005651700499121226,
+        "noise_bound_ms": 0.030669987201690674,
+        "passes": false,
+        "primary": false,
+        "resolved_regression": false,
+        "saving_percent": -0.5651700499121226
+      }
+    ],
+    "selection_changed": false,
+    "serving_tested": false,
+    "status": "COMPLETE_CORRECT_NOT_USEFUL_PARKED",
+    "timing_samples": 96
+  },
+  "limitations": [
+    "Seeded synthetic BF16 inputs represent one TP2 rank shard on each card sequentially; no model or HTTP serving run.",
+    "The primary median gaps miss both the fixed10% saving threshold and the observed-range gate.",
+    "Long nonprimary differences do not replace the primary gate; the short case has no resolved regression.",
+    "Post-component read-only power caps were235W/card; no clock stability or sampled power behavior is established.",
+    "The selected serving adapter remains max16; no runtime installation, adoption or selection change occurred."
+  ],
+  "measured_performance_gain": null,
+  "model_starts": 0,
+  "next": "OPT04-06 CPU screening remains next. Retain cap32 for the final owner-requested cumulative bundle; standalone operation213 remains parked and no retry/adoption follows.",
+  "performance_note": "Observed medians are retained in gpu_result; no gain passed the frozen primary usefulness gate and no serving gain is established.",
+  "remaining_gpu_allowance": 0,
+  "review": {
+    "effort": "medium",
+    "model": "claude-opus-5-5",
+    "report": "Private optimization-continuation-v1/OPUS-OPT03-REVIEW-v1.md",
+    "sha256": "cc77d909aa7397c09e9a09479a6d731331e60cbf71cc862892cd21f6f88d412c",
+    "status": "AGREE"
+  },
+  "schema": 1,
+  "selection_changed": false,
+  "signed_off": true,
+  "signoff": {
+    "additional_tests": 2,
+    "contract_addendum": "COMPONENT-CONTRACT-ADDENDUM.md",
+    "manifest_sha256": "34ddfb4096b4641a87ffceb2e5e5dff3e251b2f38db760bdb75b3256527bae3c",
+    "members": 13,
+    "prior_gpu_campaign_manifest_sha256": "9abb0e815ea26b3fd7a0dcc0a77054f22b709899ce24768e24b5ce26a6213e51",
+    "private_root": "optimization-continuation-v1/opt-03-signoff-v1"
+  },
+  "sprint": "OPT-03",
+  "status": "CPU_SIGNOFF_AND_GPU_COMPONENT_COMPLETE_NOT_USEFUL",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "28c296322020aaa2cae17ec36db20a97bcd9756f1aee4c91a549821b4321e524",
+      "absolute_machine_path_prefixes_removed": 1,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

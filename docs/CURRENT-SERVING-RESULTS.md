@@ -5,6 +5,223 @@ They do not turn this source prototype into an installable or qualified serving
 distribution. The runs used a complete separately pinned SGLang runtime.
 Machine configuration, model weights, native binaries and raw logs are excluded.
 
+## BetterBench repeat accepted, 2026-11-07
+
+Operation233 completed two starts of the selected cap16 candidate. Independent
+review accepts the retained measurement and release at checkpoint 623. Mean
+combined TP2 rates were 99.01 tokens/s at C1 and 178.95 tokens/s at C2, with
+configured cap readbacks of 235 W per card before and after. BetterBench has no
+answer-quality oracle. The older W2 comparison is descriptive: runtime,
+instrumentation, context and configured caps differ. See the
+[measurement record](MXFP4-SELECTED-CAP16-BETTERBENCH.md) for client overhead,
+variation and prefill findings. The selected candidate is unchanged.
+
+A separate, owner-requested split-K down/out comparison is under preparation.
+Its CPU prototype and transport acceptance establish no GPU correctness or
+performance result. It makes no selection or deployment change, and does not
+resume the parked Qwen4 programme.
+
+## Final three-member sign-off result, 2026-11-06
+
+Final selection: the owner adopted operation232's logical mtp candidate
+(physical bf16, start 1), retained control as rollback and parked the
+optimisation programme for Qwen4. This is private experimental selection of
+the tested profile, with its cap3/LLVM_PATH deviations and startup numerical
+probes retained. No deployment or additional GPU work occurred. The private
+pointer is `4e19fc56…`; the old pointer `fe92916c…` is preserved. Approval,
+promotion and parking pins are in the finalization record. The public
+historical FP8 selection remains unchanged.
+
+Operation232 completed and independently released at checkpoint 621
+(`d22b84a7…`). The frozen readout is **CONFIRMED_KEEP_REVERSED_ORDER / KEEP**:
+3.810953% case-balanced request-latency score gain, all 60 natural-stop quality
+grades passing, all 30 paired token streams and speculative counters matching,
+and control reproduction against op224. There are no comparator vetoes. Both
+pre/post configured cap readbacks were 235 W. Independent result review
+accepts the result with no blockers (`dc14aa7b…`). The owner subsequently
+approved the final experimental selection and parking described above; the
+GPU invocation itself made no selection change and no retry is authorized.
+The execution status
+`FOUR_MEMBER_SERVING_MEASURED_PARKED` and `four_member_contract` are legacy
+schema labels: this run has three active members at cap16, with no active cap32.
+
+The score is distinct from aggregate throughput. Measured group-wall time
+falls 2.1236%; combined TP2 output throughput is 57.1629 tokens/s for control
+and 58.4032 tokens/s for the candidate. Group wall supplies comparator vetoes
+only. This run passes independently; no pooling with op226/op227. Readout
+`d8802e8e…`, execution `10b53b84…` and post-run evidence `4784fd97…` are sealed.
+The earlier running and preparation accounts below are historical.
+
+Operation232 is registered at checkpoint 620 (`970e1e6c…`) and its caller is
+running. Exact owner approval of PLAN `7b661096…` is preserved in authorization
+root `73205f0f…`; fresh remote admission passed and both pre-run configured cap
+readbacks were 235 W. No completed quality, performance or release result exists
+yet. The invocation is consumed; no retry, adoption or selection change is
+authorized. The preparation account below is historical.
+
+No new serving result exists yet. A fresh unprofiled quality and benchmark A/B
+is prepared on CPU only. It compares the selected baseline with the confirmed
+three-member cap16 bundle, candidate first. The rule is op227's, with unchanged
+gates and no pooling. The packet changes only nonce, path and digest bytes. The
+reader has one repaired literal for the current controller closure. Independent
+CPU review `3fd67474…` accepts the packet with no blockers. Final PLAN
+`7b661096…` is sealed in registration root `be6c2864…`; readiness `f0f857fa…`
+binds the exact review. Exact owner binding to that PLAN and helper clause,
+then fresh admission, remain before GPU execution. Nothing is registered or
+invoked, and the ledger remains at checkpoint 619 / next index 232. The
+op226 and op227 results stand unchanged.
+
+## v6-QB follow-up, 2026-11-06
+
+Operation231 is closed as **FAILED_WORKLOAD_RELEASE_RECONCILED_PARKED**.
+Independent review accepts the recovered failure and release; the exact
+observation fix and mechanical conditions pass. Checkpoint 619 (`26a83efa…`)
+authenticates release, leaves 618 unchanged and keeps GPU allowance 0. The owner
+is idle. The v6-QB trial is parked with no correctness, speed or serving verdict.
+The allocator-counter mismatch and SSH stall cause remain unproven. No retry,
+adoption or selection change occurred; the confirmed cap16 bundle is unchanged.
+Final selection and programme parking remain pending.
+
+Reviewed post-run recovery now authenticates owner evidence and independent
+release in root `222aa738…`, with no repeated workload. The original failed
+caller and checkpoint618 stay unchanged. TP1's complete retained witness shows
+the exact memory-accounting check refused; TP0 left no witness. No correctness
+or speed verdict exists. The separate CPU reconciliation is prepared and awaits
+independent review before updating the unresolved ledger. No GPU retry is
+authorized. The transport account below is historical.
+
+Operation231's caller failed after the physical-owner SSH stopped responding
+(exit255). No local correctness or timing result exists. The pinned close
+recorded release UNVERIFIED at checkpoint618. A later unprivileged status read
+found the same boot, no owner journal and an unsealed record claiming stage-A
+failure and cleanup, with stageB skipped. Those observations require retention
+authentication before release can be accepted. The attempt is consumed; no
+caller, owner or GPU retry is permitted. CPU recovery assessment is next.
+
+Independent final delta review `601addd9…` accepts witness packet
+`93dc847c81eb3802` with no blockers. Readiness `473c0d98…` binds that exact
+review. Final PLAN `fccaf0c4…` and the three campaign scripts pass the reviewed
+mechanical closure checks; the final registration root is sealed `dae9e087…`.
+The new exact owner decision and fresh remote admission remain open. If stage A
+refuses for any reason, the single invocation is consumed, stage B does not run
+and there is no retry. No new GPU work, model start or registration occurred.
+
+Latest preparation, 6 November: a new witness packet, `93dc847c81eb3802`, is
+prepared and inert. Nothing ran on the GPU, no model started and nothing was
+registered.
+
+- **Witness review.** A focused review of the CPU witness repair added a
+  leading newline to every frame, so another writer's unterminated output cannot
+  hide a frame. It also added `PYTORCH_HIP_ALLOC_CONF` to the recorded
+  variables. The revised serving source is `8ebb6cf4…`, in root `dc9b3411…`.
+- **Packet.** The re-composed packet `47503930…` (package `539388fd…`) changes
+  only that source. Every other difference is a regenerated build token.
+- **Tests.** 69 local tests pass, and so do public43 and an exact reproduction
+  of op230's stage-A package.
+- **Native proof.** One device-free run on Python 3.14.4 passed 28 tests
+  (root `a40d3faf…`).
+- **Registration.** The CPU registrar proof (`15f8f4d7…`) refuses 30 mutations,
+  including every consumed op230 pin.
+
+The final review is accepted; a new owner GPU decision and fresh admission are
+still required. The allocated-memory guard is unchanged. **Stage A may refuse
+again;** the witness then records the observed deltas and the failing check,
+but does not fix the cause.
+
+Operation230 finished **RELEASED_WORKLOAD_FAILED / PARK_STAGE_A_REFUSED**.
+TP1 refused stage A's exact steady-padding allocation check during repacking,
+before real-input probes or component timing. Stage B never started. The
+failed raw allocation deltas were not published, so the cause remains open;
+this establishes no capacity failure, numerical mismatch or speed result.
+Retained output and independent release are authenticated at checkpoint616.
+The single invocation is consumed; no retry or selection change exists.
+Independent review accepts the failed result and release. TP0's check outcome
+is unknown. The +1,966,080 B message gives the expected delta, not a measured
+one. The resource monitor reported complete; its validator refused the nonzero
+child exit. The approved CPU-only follow-up adds a bounded stderr witness
+before the unchanged memory guard; 18 tests pass through the executed capture
+code. The candidate is unintegrated and has no independent repair review or
+native proof. It cannot recover the old measurements. Earlier preparation
+states below remain historical, and the op226/op227 results are unchanged.
+
+The single approved five-compile CPU invocation and frozen readout passed.
+Independent result review accepts the facts with no blockers. M8/M16 are two
+specializations with one binary per arm; device correctness and performance
+remain untested. The CPU allowance is consumed and the selected profile is
+unchanged. The owner subsequently authorized one finite GPU correctness and
+speed test; this accepts the narrow A6 recommendation for this test only.
+The composed packet and native environment-projection proof now pass independent
+review with findings. The parent filled the final plan and readiness and passed
+the CPU registrar proof: one positive case and 13 refused mutations. The exact
+protected-helper clause answer and fresh admission remain required. No GPU or
+model start has run under this authorization. Stage A is untimed, lacks a power-cap
+readback and captures without replaying the v6 serving graph. Stage B brackets
+its component timing with cap reads; its weights may be cache-resident. Neither
+phase establishes a serving-speed or selection result.
+The [reassessment](MXFP4-REJECTED-TRIAL-REASSESSMENT-20261106.md)
+records the proposed narrow register rule and remaining packer, launcher,
+memory and GPU gates. This optional follow-up does not block final selection
+and parking of the confirmed three-member cap16 bundle.
+
+## MXFP4 matched profiling, 2026-11-06
+
+Operation229 completed both matched profiling starts at the configured 235 W
+cap. All 60 natural-stop grades pass, and the readout returns SAME_REQUEST_WORK
+and MATCHED_PROFILE_CAPTURES_COMPLETE. Independent release passes at
+checkpoint614. The retained captures cover all seven windows on both ranks of
+both starts. This is diagnostic evidence, not a new serving-speed verdict.
+
+The original offline analysis remains STAGE2_INCOMPLETE. Independent review
+confirmed a reader-symbol mismatch: DRAFT's memset was dispatched as
+fillBufferUnAligned. A separately labelled CPU successor applies the reviewed
+one-line mapping and two-line retained start-clock repair. Its output matches
+the required `88b6e713…` hash exactly; all nine source seals still verify. All 96
+replays match their inventories, and all 24 decode windows have bounded clock
+chains. Four prefill chains and 22/40 resource windows remain unresolved.
+Inventory matching does not prove broader physical completeness.
+
+The diagnostic is sufficient for finalization under the review's stated limits.
+GEMM's 66–70% short / about 45% long shares refer to VERIFY; whole-GPU-round
+shares are 52–57% / 38–39%. Profiling inflates host rounds by 2.9–5.9% long and
+4.9–9.9% short, so unprofiled dispatch-gap cost is unknown. Clock/GEMM causation,
+physical GB/s and hardware stalls remain unproved. The owner requested
+[a historical reopening shortlist](MXFP4-REJECTED-TRIAL-REASSESSMENT-20261106.md)
+for review before further optimisation. No trial, selection or retry changed.
+See the
+[finalization record](../provenance/MXFP4-FINALIZATION-20261105.json).
+
+## MXFP4 finalization attempt, 2026-11-05
+
+Operation227 passed the reversed-order three-member cap16 confirmation at the
+configured 235 W cap: the
+balanced score improved by **3.7394%**, all 30 same-job token streams and
+speculative counters matched, and all 60 natural-stop quality grades passed.
+The control reproduced the retained reference. Independent release passed at
+checkpoint610. Independent result review accepts CONFIRMED_KEEP_REVERSED_ORDER
+and reproduces the score from raw native receipts. Operation226's control-first A/B separately
+passed at 3.2652%, accepted by independent review, with release at checkpoint608.
+Neither order relies on a pooled result. Selection is unchanged. The separate
+matched diagnostic is now complete within its reviewed limits above. See the
+[baseline/candidate results](MXFP4-THREE-MEMBER-SERVING-VALIDATION.md).
+
+The balanced objective scores request latency. Group-wall time supplies noise
+and regression vetoes, not score weight. Aggregate measured group-wall time fell
+about 2.26%; that is a different metric from the 3.7394% balanced score gain.
+
+The bounded passive sampler retained 149 rows. Both cards' whole-run GPU-busy
+medians are 100%, while sysfs memory-busy medians are 16% and 15%. These
+activity observations are not physical bandwidth or attribution to instruction,
+memory or power stalls. The full profiling step remains open.
+
+Operation225 registered the approved three-member cap16 A/B but stopped at its
+first pre-launch hostname identity check. No upload, model start, GPU kernel,
+quality grade or timing sample ran. Its frozen result class is INCOMPLETE.
+Separate source and remote-absence evidence reconciles the unstarted native
+owner at checkpoint606; the original failure and checkpoint605 remain retained.
+The allowance is consumed, no retry ran, and the selected profile is unchanged.
+Final qualification and the resource diagnostic remain open. See the
+[finalization record](../provenance/MXFP4-FINALIZATION-20261105.json).
+
 ## FP8 thinking checks, 2026-10-21
 
 The published Qwen3.8-27B-FP8 checkpoint passed the fixed J01 ledger task in two
@@ -802,6 +1019,136 @@ The owner reopened the [remaining Qwen3.8 work](QWEN38-REOPENED-TUNING.md). [Spr
 
 The [both-order screen](SPRINT36-PREFILL-CHUNKS.md) completed four fresh starts, 12 normal decoded finals and 8/8 strict SRE answers across two repeated task families. Retain 2048-token chunks. The 4096 configuration reduced long-request chunk counts from 13 to 7, but observed request times were higher in both orders and cumulative peak allocator counters increased by 359.125 MiB allocated and 472 MiB reserved per rank. Current allocated memory at the final prefill return differed by only 0.0913 MiB. All long cross-configuration pairs had unequal generated work; HTTP timings include instrumentation and possible compilation and do not isolate prefill. The initial postrun guard failure and its ungraded responses remain sealed separately; the corrected consumer passed real-evidence regression and native validation. The selected kernels, BF16 caches, precision, capacity and installed defaults remain unchanged.
 
+## FP8 target-KV feasibility, Sprint 37
+
+The [source audit](SPRINT37-FP8-KV-FEASIBILITY.md) found native FP8 scale handling, but the generic FP8 cache path changes query arithmetic and the selected split adapter requires BF16 cache tensors. The protected two-start owner cannot represent the original four-start campaign within its declared budget. Retain BF16; no GPU test, performance result or runtime change occurred. Compatibility work, a fitting thinking corpus and a schedule decision remain separate prerequisites.
+
+## Adaptive-speculation prerequisites, Sprint 38
+
+The [offline analysis](SPRINT38-ADAPTIVE-SPECULATION.md) reused 1,041 distinct sampled verification cycles across four Sprint 26 tasks. It joined exact proposal probabilities to 6,335 accepted drafts and 229 first rejections, leaving 723 later positions unlabeled. Selected-token probability ranked the observed labels with AUC 0.9768; this is neither answer accuracy nor a speedup. Repeated starts and ranks corroborated the data without increasing the independent sample. Fixed DFlash8 remains selected. Greedy confidence, policy generalization and variable-width graph/state support remain separate work. No new GPU run occurred.
+
+## Sequential and concurrent pairs, Sprint 39
+
+The [C2 screen](SPRINT39-C2-THROUGHPUT.md) completed two fresh starts with reversed group order: 38 authenticated responses, including 24 measured fixed-output requests and 8/8 passing natural-answer checks across two repeated cases. C1 aggregates were 120.18 and 119.95 combined TP2 tok/s; C2 aggregates were 172.98 and 172.75. Median individual latency increased from 8.50–8.52 s to 11.76–11.87 s. Actual batch-two execution was verified on both ranks.
+
+These are instrumented HTTP rates for 2047 input and 1024 forced output tokens per measured request. Every C1/C2 timing comparison had unequal output IDs and verifier work, so no matched-work or intrinsic kernel speedup is claimed. Startup Torch allocation was 19.565 GiB per card, with 19.854 GiB reserved; this is not whole-device peak memory. All selected numerical sources and runtime defaults remain unchanged. The initial offline acceptance-join refusal was corrected against the same sealed native run; independent release passed and no GPU retry occurred.
+
+## BF16 64K capacity, Sprint 40
+
+The [64K capacity screen](SPRINT40-KV-CAPACITY.md) completed twelve decoded natural responses, with 10/10 strict typed long-document checks across two repeated cases. Inputs were 59,993/59,980 tokens; actual long outputs were 516/525 tokens. All six cross-start output-ID and verifier-count pairs matched. Warm requests reused 59,392 prompt tokens and took 5.09–5.26 s, compared with 34.79–35.41 s for isolated cold requests. Timings are descriptive HTTP intervals.
+
+Maximum recorded cumulative Torch peaks were 21.403 GiB allocated and 21.734 GiB reserved per card, including startup. Completion-time driver-free snapshots ranged from 8.781 to 9.039 GiB; whole-device peak memory was not measured. BF16 target/draft KV fits this bounded C1 workload. Defer UltraQuant's graph/speculative codec port: the retained mixed layout projects 1.102 GiB/card of target-payload savings at nominal 64K before workspace and other costs. Defaults and numerical sources remain unchanged; Sprint 33 failures and the unresolved numerical findings remain recorded.
+
 ## Remaining FP8 programme final checkpoint, 25 October 2026
 
 The [programme closeout](REMAINING-FP8-OPTIMIZATIONS.md) retains the b101/2K/fixed-eight baseline; no new runtime optimisation passed all selection gates. Final bounded QA passed 14 native answer checks and two isolated code graders. The [completed BetterBench checkpoint](../benchmarks/results/20261025-final-baseline/final-summary.html) passed 106 requests across two fresh starts, source/native/owner checks and independent release. Mixed-workload C1 rates were 81.4–87.3 output tok/s and C2 aggregate rates 133.1–134.9 across both GPUs, including prefill/HTTP completion and instrumentation. Work differs from the earlier fixed-output tests, so no matched regression or gain is claimed. The two earlier failed benchmark attempts remain recorded. Endurance and production qualification remain NOT RUN; no service was deployed.
+
+
+## MXFP4 verification-prefetch serving A/B, 3 November 2026
+
+Operation 212 completed two sequential starts and passed all 60 natural-answer
+grades with independent release. The frozen comparator returned **REVERT**:
+the balanced speed ratio improved by 0.773%, below the required 3%. This is
+equivalent to a 0.767% geometric-mean latency reduction. All completion-token
+counts matched across corresponding requests, and no case regressed beyond
+its predeclared noise band.
+
+| Case | Baseline median (s) | Candidate median (s) | Less latency |
+| --- | ---: | ---: | ---: |
+| Long C1 cold | 77.028 | 77.555 | −0.68% |
+| Long C1 warm | 9.024 | 8.763 | 2.89% |
+| Long C2 cold | 56.947 | 57.066 | −0.21% |
+| Long C2 warm | 8.319 | 8.089 | 2.76% |
+| Short C1 cold | 12.888 | 12.903 | −0.12% |
+| Short C2 cold | 13.984 | 14.000 | −0.11% |
+
+Each case has three samples. C2 reports the median of concurrent pairs' mean
+request latency. Only the warm cases improved beyond the frozen 2% noise floor.
+Both arms used MXFP4 weights, BF16 caches, selected C4 extend attention, the
+explicit cap-3 cache experiment and observed 300 W caps. Older 235 W serving
+measurements are not a matched baseline.
+
+**The promised graph-route proof is incomplete.** Production mode skipped the
+startup writer and reader that would establish candidate calls in both 8-row
+and 16-row graphs and zero calls in control. The retained source, HTTP, quality
+and release evidence remains valid, but the complete routing claim is unverified.
+This corrects the preparation review's assertion that this witness gate would
+run in the timed packet. The runner's original result is preserved; the parent
+marks the experiment ineligible for adoption.
+
+The [provenance record](../provenance/MXFP4-VERIFY-PREFETCH-SERVING-20261103.json)
+binds the sealed measurements and gap diagnosis. The operation is parked with
+zero GPU allowance. No retry, adoption, selected-source change or deployment
+occurred.
+
+## Four-member qualification attempts, 4 November 2026
+
+Operations 221 and 222 at 235 W both stopped in control graph warmup, before
+HTTP qualification or scored requests. The allocator-predicate repair in 222
+advanced beyond221, then the strict gate/up M16 compiler-record check refused.
+Both runs were retained and independently released; no serving improvement or
+quality verdict exists, and no adoption or selection changed. Both timing
+sample counts are zero. See the [failure and CPU hold](MXFP4-FOUR-MEMBER-SERVING-VALIDATION.md).
+
+CPU follow-up to operation 222 reproduced compiler-cache reuse across component
+and serving source paths. The repaired proof and real CPU-tensor binder retain
+fresh serving-context artifacts; all ten binaries preserve machine code and
+resources, while five full hashes change only in debug sections. Forty-one
+focused tests and public43 pass. Opus review is pending; no new GPU run, serving
+gain or adoption is implied. See [the current four-member validation](MXFP4-FOUR-MEMBER-SERVING-VALIDATION.md).
+
+Opus 5.5 subsequently accepted the CPU cache repair. Fresh packet
+ac6c108f39cbae77 is sealed and awaits exact owner approval. Its preparation
+passes 60 local checks, 59 native CPU tests, public43, exact inert package/caller
+reproduction and six registrar refusal mutations. No registration or GPU
+execution occurred, and no serving gain is established. The new decision (`FOUR-MEMBER-SERVING-OWNER-DECISION-v3.md`, private evidence) binds the proposed one-invocation scope.
+
+## Operation 223 export refusal and CPU repair
+
+Operation 223 served control requests, then refused export with encoded bundle
+overflow. The candidate never started, no validated A/B timings or grades were
+recovered, and independent release passed at checkpoint 601. Opus 5.5 at xhigh
+fixed the derived bound and added a build-time guard. Fresh packet
+a4777122b5277d13 passes 70 local checks, 69 native CPU tests, public43 and exact
+owner/caller/registrar checks. It has no GPU approval or registration. See the
+[current validation](MXFP4-FOUR-MEMBER-SERVING-VALIDATION.md).
+
+## Operation 224: completed four-member serving A/B
+
+Operation 224 completed approved packet a4777122b5277d13: two sequential
+TP2 starts at configured 235 W per card, control then candidate. The result is
+INCONCLUSIVE and parked. The raw balanced speedup score is 1.016601
+(baseline 1.000000; +1.66%), below the frozen 3% gate. All six cases exceed the
+2% generated-work limit, and long C2 triggers no-regression vetoes. No causal
+serving gain or energy saving is established.
+
+| Case | Baseline (s) | Four-member bundle (s) | Latency change |
+| --- | ---: | ---: | ---: |
+| Long C1 cold | 82.467 | 82.955 | +0.59% |
+| Long C1 warm | 9.607 | 9.391 | -2.25% |
+| Long C2 cold | 60.915 | 61.670 | +1.24% |
+| Long C2 warm | 8.842 | 9.324 | +5.46% |
+| Short C1 | 13.713 | 12.675 | -7.57% |
+| Short C2 | 14.828 | 13.843 | -6.64% |
+
+Each case has three scored samples per arm. C2 is the median of concurrent
+pairs' mean request latency; positive change means slower. Long C1 produced
+737 versus 721 tokens; long C2 pairs produced 804/538 versus 998/563; short
+requests produced 2300 versus 2244. Final-segment token counts match within
+each case, while reasoning lengths differ. These raw times cannot isolate
+the kernel effect.
+
+Both ranks passed representative F1/GEMM exactness probes across all 48/64
+layers at 8 and 16 rows, and the startup capture witnesses passed. Candidate
+verification used cap32; ordinary decode stayed cap16. All 60 natural-stop
+answers passed grading and long-answer coverage. These are bounded serving
+checks, not whole-model bitwise equivalence or production qualification.
+
+The native launch took 1499.01 s; the finite invocation took 1582.07 s.
+Export and readback succeeded. Source/HTTP replay, native seals and independent
+release authenticate. Checkpoint 603 records no active owner or reservation
+and zero remaining GPU allowance. No retry, adoption, selection change or
+Hyperloom campaign followed.
+
+The sealed readout (`REPORT.md`, private evidence) includes exact values, pins, token counts and the reproduced comparator.
+The four members remain research candidates. Further serving spend stays HOLD.

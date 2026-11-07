@@ -1,0 +1,105 @@
+{
+  "adoption_authorized": false,
+  "compression_observed": false,
+  "evidence": {
+    "manifest_sha256": "1cc29cfae7b5dbfb5b75f3af1f249caf43b2b63f8fcaf94c2981a5f8b7823a24",
+    "members": 87,
+    "qualification": false,
+    "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2",
+    "verified_utc": "2026-11-04T22:48:32.729505+00:00"
+  },
+  "focused_tests": 20,
+  "gpu_operations": 0,
+  "gpu_ready": false,
+  "inventory_guard_scope": "nine direct guard-function calls before audit hook installation",
+  "model_starts": 0,
+  "native_file_pins_match": 6,
+  "native_inventory_reused": true,
+  "native_invocations_in_followup": 0,
+  "native_read_only_guard_checks": 9,
+  "next_action": "Hold BW-04 until bounded writer trigger, CPU-fallback detection, installed mapping chain and compression measurement are authenticated. Prepare the reduced control-only diagnostic on CPU; candidate/control acceptance divergence is a separate paired question. No GPU authority.",
+  "next_preparation": {
+    "kind": "design only; B envelope is an unapproved placeholder",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/DIAGNOSTIC-PREPARATION.md",
+    "sha256": "4dabf0c798c34cc1ef7806d1ddb76e0e028c4e660deafe47d6bbe4edd159e80a"
+  },
+  "open_preconditions": [
+    {
+      "id": "R1-original-bo",
+      "requirement": "Authenticate same-device exporter/importer identity; reference reuse is conditional."
+    },
+    {
+      "id": "R1-create-metadata-export",
+      "requirement": "Trace the exact installed flag mask, creation, tiling and export path end to end."
+    },
+    {
+      "id": "R1-move-trigger",
+      "requirement": "Identify a bounded GTT-to-VRAM validation trigger; changing preference alone is insufficient."
+    },
+    {
+      "id": "R1-sdma-writer",
+      "requirement": "Authenticate installed callback dispatch, compression fields, completion and active compression."
+    },
+    {
+      "id": "R1-cpu-fallback",
+      "requirement": "Detect and reject CPU-copy fallback; migration success alone is insufficient."
+    },
+    {
+      "id": "R1-mapping",
+      "requirement": "Trace KFD ioctl, VM update and ASIC PTE dispatch in the exact installed stack."
+    }
+  ],
+  "previous_stage": {
+    "evidence": {
+      "manifest_sha256": "f3a034011ac29cc0f015cf05ff96f823943a9b35a722b8354a1b85b48a793938",
+      "members": 53,
+      "qualification": false,
+      "root": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v1",
+      "verified_utc": "2026-11-04T22:24:52.976877+00:00"
+    },
+    "focused_tests": 16,
+    "status": "SOURCE_ROUTE_IDENTIFIED_REVIEW_PENDING_PHYSICAL_GATES_OPEN"
+  },
+  "public_preflight_tests": 43,
+  "public_report": "docs/MXFP4-BW04-ALLOCATION-ROUTE.md",
+  "public_report_postseal_correction": {
+    "evidence": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/acceptance-divergence-cpu-20261104-v1",
+    "reason": "Correct unsupported acceptance-efficiency attribution; old sealed report preserved."
+  },
+  "public_report_sha256": "48523e966c478e9198c700f146dbd0dc62025b696d58b22a5ebafb46a38d02c6",
+  "retained_work_census": {
+    "acceptance_mechanism_change_established": false,
+    "control_only_diagnostic_explains_candidate_divergence": false,
+    "interpretation_correction": "Verify-round/output differences are confounded by different reasoning token streams.",
+    "normalisation_performed": false,
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/WORK-RESULT.json",
+    "serving_verdict": "INCONCLUSIVE_UNCHANGED",
+    "sha256": "56615745c252114a1f56890dd72dd9e86673553bbed11be7ad029dc7affa1ce2"
+  },
+  "review": {
+    "parent_followup": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/bw04-allocation-route-20261104-v2/REVIEW-RESOLUTIONS.md",
+    "parent_followup_independently_reviewed": false,
+    "parent_followup_sha256": "0688d5a26296fc299411e4d5a6b165b4a63977eb85213585678d191100730325",
+    "path": "scratchpad/mxfp4-ultraquant-feasibility-20261026-v1/fp8-fastpath-research-v2/hyperloom-sglang-implementation-20261102-v1/optimization-continuation-v1/OPUS-BW04-ALLOCATION-ROUTE-REVIEW-v1.md",
+    "reviewed_stage": "immutable v1",
+    "sha256": "7a21e45d25f79253a53bc91d007b996269812089de63d77305b2286cf8c1140f",
+    "verdict": "ACCEPT_CPU_SOURCE_WITH_R1_CONDITION"
+  },
+  "route_status": "HOLD_SOURCE_CHAIN_AND_WRITER_PROOF",
+  "runtime_loaded_paths_proven": false,
+  "schema": 2,
+  "selection_changed": false,
+  "source_chain_complete": false,
+  "source_route": "rank-local GEM-DCC -> opaque FD -> HIP external mapped buffer",
+  "source_snapshots": 21,
+  "status": "CPU_SOURCE_REVIEW_ACCEPTED_FOLLOWUP_TESTED_HARDWARE_HOLD",
+  "publication_omissions": {
+    "publication_update": {
+      "raw_record_sha256": "7f43b21d83a16e6488865a484111dd63052aa80f2219b9278e7b2e02691d6bfc",
+      "absolute_machine_path_prefixes_removed": 7,
+      "private_evidence_paths_relative_to": "private AIThreadripper evidence workspace; not included in this repository",
+      "native_workspace_prefix_is_redacted": true,
+      "evidence_hashes_retained": true
+    }
+  }
+}

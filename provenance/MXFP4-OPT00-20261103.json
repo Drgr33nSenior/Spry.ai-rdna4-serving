@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "sprint": "OPT-00",
+  "status": "CPU_EXIT_COMPLETE",
+  "signed_off": true,
+  "gpu_launches": 0,
+  "model_starts": 0,
+  "adoption": false,
+  "selection_changed": false,
+  "evidence": {
+    "private_root": "optimization-continuation-v1/opt-00-baseline-and-route-witness-v1",
+    "manifest_sha256": "73c0452adfbfc321f483dc6745199d1e5f7ec3b820333590568276d997267f46",
+    "members": 321,
+    "baseline": "B0.json",
+    "lead_matrix": "LEAD-MATRIX.json",
+    "contracts": "CONTRACTS.json",
+    "verification": "VERIFICATION.json",
+    "source_delta": "SOURCE-DELTA.json"
+  },
+  "coverage": {
+    "references": 21,
+    "shared_work_groups": 16,
+    "includes_original_and_exa": true,
+    "new_gpu_ready_candidates": 0
+  },
+  "checks": {
+    "local_tests": 14,
+    "native_tests": 14,
+    "native_compiled_modules": 70,
+    "native_python": "3.14.4",
+    "public_preflight_checks": 43,
+    "repair_removal_mutations_refused": 2,
+    "framework_or_device_work": false
+  },
+  "repair": {
+    "scope": "Verification-prefetch serving experiment builder; separate source-authenticated startup handshake and production reader/readiness checks.",
+    "captured_rows": [
+      8,
+      16
+    ],
+    "ranks": [
+      0,
+      1
+    ],
+    "candidate_calls_in_control": 0,
+    "records": 2,
+    "max_record_bytes": 16384,
+    "full_instrumentation_enabled": false,
+    "kernel_arithmetic_changed": false,
+    "owner_limits_expanded": false,
+    "old_operation_212_requalified": false
+  },
+  "review": {
+    "provider": "claudeAgent",
+    "model": "claude-opus-5-5",
+    "effort": "medium",
+    "status": "AGREE",
+    "report": "Private optimization-continuation-v1/OPUS-OPT00-REVIEW-v1.md",
+    "sha256": "4808af787376cbec07d1ef2c85551c91e9dc38aeb5676dd44e46e5737843784f"
+  },
+  "limitations": [
+    "No new timing baseline or measured performance gain.",
+    "B0 comparison proposes explicit cap-3 and observed 300 W conditions; selected historical pointer remains unchanged.",
+    "Native validation used the inherited audit-guarded standard-library source workflow, not framework or GPU execution.",
+    "One reader fixture substitutes unchanged identity/HTTP validators; changed production code executes.",
+    "Physical startup behavior and per-graph route counts remain unmeasured after the repair.",
+    "Further source families require their own route and numerical contracts.",
+    "Trace pinned graph capture order/counts on CPU before a future GPU packet.",
+    "Readiness import resolves from authenticated read-only review mount; its actual resolution is not independently exercised."
+  ],
+  "next": "OPT-01 host/runtime and capture-path CPU audit. Future GPU work requires exact packet authority.",
+  "signoff": {
+    "private_root": "optimization-continuation-v1/opt-00-signoff-v1",
+    "manifest_sha256": "c85d276406fdd35f4369973a909be641fe8224e59fa0813e8c68ac44f3bce8d1",
+    "members": 3
+  }
+}

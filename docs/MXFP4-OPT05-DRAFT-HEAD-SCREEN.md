@@ -1,0 +1,21 @@
+# OPT-05: draft-head and shortlist screen
+
+Opus 5.5 signed off deferring the tested draft-vocabulary shortlist after the CPU screen. **No new performance gain or GPU-ready candidate is established.** The broader shortlist lead remains tracked, and the selected runtime is unchanged.
+
+The draft head already uses FP8. Each card projects 7 draft rows for C1 or 14 for C2 through its vocabulary shard, then exchanges only top-16 scores and IDs. The selector scores transitions between those candidates; it is not a simple greedy argmax. A full-vocabulary communication saving is therefore already present.
+
+In eight historical C1 profile windows, source order and graph correlation identify the likely draft projection at a median 1.092 ms, against 61.104 ms of summed kernels. The target projection is a separate 1.107 ms. These are instrumented samples, not clean request timing or a new 235 W baseline. The draft role is inferred from source and ordering; an explicit role/shape witness remains needed.
+
+We froze one policy before examining candidate values: retain whole 128-row vocabulary blocks from the previous full-head refresh, refresh every eight rounds, and use the full head until the next scheduled refresh if either rank has no valid block. Whole blocks preserve the selected FP8 scale mapping. The target keeps its full vocabulary and verifier.
+
+The historical sampled cohort contains four requests and 1041 rounds. Of these, 503 could use the shortlist, 132 were scheduled refreshes and 406 used the conservative empty-rank fallback. On the shortlisted positions, the policy retained 82.93% of baseline chosen tokens, but only 9.32% of complete top-16 candidate sets. No shortlisted round retained all seven candidate sets. These are coverage counts on baseline history, **not acceptance rates or quality failures**. They cover 74 contributing refresh periods in four correlated requests, conditional on both ranks being non-empty; two tasks supply 3171 of the 3521 rows. The older sampled workload also differs from the current greedy C1/C2 objective.
+
+An optimistic head-only model with no fallback gives about 1.36% of sampled kernel time removed before refresh-copy costs, fallbacks and C2 overhead. Under those assumptions, losing more than about 1.36% of committed tokens per round would erase the benefit. Accounting for the observed fallback mix reduces that optimistic illustration to about 0.75%, with a break-even committed-token ratio of 99.25%. Both illustrations combine historical schedule/profile data and assume free refresh copies and linear head cost; neither is a measured gain or selected-workload prediction. Candidate coverage cannot stand in for acceptance. The tested policy has insufficient evidence to justify a GPU packet. Other shortlist designs remain possible.
+
+The CPU model tests token mapping, scale-row addressing from the selected kernel source, request ownership, fixed map buffers, cancellation/reuse, TP top-k and padding, causal refresh, probability recomputation and the acceptance-versus-cost condition. All 15 tests pass. Eight input seals and 16 source copies authenticate, and the historical analysis reproduces. No GPU, native operation or model start was used.
+
+The existing compact draft-cache option remains for OPT-06. The draft model already declares a 2048-token attention window; the option changes the worker's index view and does not itself shrink the physical KV pool. Its actual benefit and lifecycle still need evidence.
+
+A future shared diagnostic can collect ordered candidate IDs and round costs on the selected greedy C1/C2 workload. It must avoid synchronous copies in timed loops and retain the actual probabilities after any pruning. The implementation also needs separate request buffers for C2 and explicit tie behavior. None of that is authorized for GPU execution by this screen.
+
+All 21 leads remain in the register. The [OPT-04 fusion](MXFP4-OPT04-RECURRENT-FUSION-SCREEN.md) remains a CPU compiler survivor; cap32 retains its modest measured signals and original NOT_USEFUL verdict for the [cumulative plan](MXFP4-OPTIMIZATION-SPRINT-PLAN.md). The [OPT-05 provenance](../provenance/MXFP4-OPT05-20261103.json) records evidence and review status.
