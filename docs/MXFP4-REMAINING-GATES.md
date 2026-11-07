@@ -1,7 +1,12 @@
 # Remaining MXFP4 optimisation gates
 
-Final status, 6 November: **complete and parked for Qwen4**. The owner selected
-operation232's tested three-member cap16 mtp arm and kept control as rollback.
+Current status, 7 November: **complete and parked for Qwen4**. The owner selected
+operation234's three-member cap16 + S4 mtp arm, with operation232's selected
+profile as immediate rollback. The frozen result remains INCONCLUSIVE_PARK;
+the 5% primary threshold was not changed. The owner selection is recorded
+[separately](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json). Preserve the
+extra 1.25 MiB scratch per card, startup numerical gates, unproven broad quality
+and unresolved runtime/compiler-proof hash difference as documented limits.
 The existing promotion workflow preserves the old pointer and records the
 actual answer, promotion and parking. No new GPU work, runtime installation,
 deployment or publication occurred. There are no remaining gates for this
