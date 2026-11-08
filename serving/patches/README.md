@@ -1,5 +1,8 @@
 # Reproduce the active W5 overlays
 
+For SGLang `main`, the workstation AI-stack pipeline applies the separate
+[`sglang-main`](sglang-main/README.md) series instead.
+
 The [lock](../upstream/sglang-0.5.21.lock) binds all 11 active runtime and graph/GEMM
 overlays to their input, patch and output hashes. These are the retained image's
 effective base files. Its runner and KV configurator already contain retained
