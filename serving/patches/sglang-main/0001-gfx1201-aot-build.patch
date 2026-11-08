@@ -1,0 +1,49 @@
+--- a/python/sglang/kernels/aot/setup_rocm.py
++++ b/python/sglang/kernels/aot/setup_rocm.py
+@@ -63,20 +63,13 @@
+ libraries = ["hiprtc", "amdhip64", "c10", "torch", "torch_python"]
+ extra_link_args = ["-Wl,-rpath,$ORIGIN/../../torch/lib", f"-L/usr/lib/{arch}-linux-gnu"]
+ 
+-default_target = "gfx942"
+-amdgpu_target = os.environ.get("AMDGPU_TARGET", default_target)
++amdgpu_target = os.environ.get("AMDGPU_TARGET")
++if not amdgpu_target:
++    raise RuntimeError("CPU build requires an explicit non-empty AMDGPU_TARGET")
+ 
+-if torch.cuda.is_available():
+-    try:
+-        amdgpu_target = torch.cuda.get_device_properties(0).gcnArchName.split(":")[0]
+-    except Exception as e:
+-        print(f"Warning: Failed to detect GPU properties: {e}")
+-else:
+-    print(f"Warning: torch.cuda not available. Using default target: {amdgpu_target}")
+-
+-if amdgpu_target not in ["gfx942", "gfx950", "gfx1250"]:
++if amdgpu_target not in ["gfx942", "gfx950", "gfx1201", "gfx1250"]:
+     print(
+-        f"Warning: Unsupported GPU architecture detected '{amdgpu_target}'. Expected 'gfx942', 'gfx950', or 'gfx1250'."
++        f"Warning: Unsupported GPU architecture detected '{amdgpu_target}'. Expected 'gfx942', 'gfx950', 'gfx1201', or 'gfx1250'."
+     )
+     sys.exit(1)
+ 
+@@ -91,6 +84,11 @@
+ #   and pins occupancy to 1 block/CU. Keep it small (40KB) for better occupancy.
+ topk_dynamic_smem_bytes = 48 * 1024 if amdgpu_target == "gfx942" else 40 * 1024
+ 
++# Private source-compatible Radeon build port; preserve current TopK budget.
++# Bind host and device template instantiations to the same RDNA4 wave size.
++wavefront_flags = ["-DSGLANG_WAVEFRONT_SIZE=32"] if amdgpu_target == "gfx1201" else []
++cxx_flags += wavefront_flags
++
+ hipcc_flags = [
+     "-DNDEBUG",
+     f"-DOPERATOR_NAMESPACE={operator_namespace}",
+@@ -103,7 +101,7 @@
+     "-DENABLE_FP8",
+     fp8_macro,
+     f"-DSGL_TOPK_DYNAMIC_SMEM_BYTES={topk_dynamic_smem_bytes}",
+-]
++] + wavefront_flags
+ 
+ ext_modules = [
+     CUDAExtension(
