@@ -8,6 +8,7 @@ name order with `git apply` (no fuzz) and stops if any patch fails.
 | Patch | Purpose | Last applied cleanly to |
 | --- | --- | --- |
 | `0001-gfx1201-aot-build.patch` | Allow gfx1201 in the AOT kernel build, require an explicit `AMDGPU_TARGET`, and build with wave32 (`SGLANG_WAVEFRONT_SIZE=32`). Ported unchanged from the 0.5.21 common-runtime overlay. | `fcb3274646e43c16d70fd83806ebb3a5134d5e81` |
+| `0002-rocm-aot-cxx20.patch` | Compile the ROCm AOT kernels as C++20. Torch 2.14+ headers stop with `#error` below C++20; upstream's CUDA build already uses C++20, but `setup_rocm.py` still passes `-std=c++17`. | `fcb3274646e43c16d70fd83806ebb3a5134d5e81` |
 
 The `sglang-0.5.21/` series targets the retained 0.5.21 image's effective
 files and is kept as history. Port a change from it only after checking that
