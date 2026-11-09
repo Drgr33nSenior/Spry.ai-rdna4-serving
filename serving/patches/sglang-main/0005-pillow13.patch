@@ -1,0 +1,16 @@
+--- a/python/pyproject_other.toml
++++ b/python/pyproject_other.toml
+@@ -47,8 +47,11 @@ runtime_base = [
+   "orjson",
+   "packaging",
+   "partial_json_parser",
+-  # The Rust image pipeline (dynamo-multimodal) reproduces Pillow 12.x bicubic.
+-  "pillow<13",
++  # Pillow 13.0.0 fixes CVE-2026-112393, -112398, -112403, -112900 and -96639.
++  # Upstream caps <13 because its Rust image pipeline (used by the inkling and
++  # deepseek_v41 processors) reproduces Pillow 12 bicubic; Qwen VL preprocessing
++  # does not use it and is bit-identical under Pillow 12.3 and 13.0.
++  "pillow>=13.0.0,<14",
+   "prometheus-client>=0.20.0",
+   "psutil",
+   "py-spy",
