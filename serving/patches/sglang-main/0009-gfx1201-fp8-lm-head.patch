@@ -1,0 +1,248 @@
+diff --git a/python/sglang/srt/layers/gfx1201_fp8_lm_head.py b/python/sglang/srt/layers/gfx1201_fp8_lm_head.py
+new file mode 100644
+index 0000000..92a2201
+--- /dev/null
++++ b/python/sglang/srt/layers/gfx1201_fp8_lm_head.py
+@@ -0,0 +1,158 @@
++# SPDX-License-Identifier: Apache-2.0
++"""Block-128 FP8 copy of a dense BF16 LM head for DFLASH rows on gfx1201.
++
++With SGLANG_GFX1201_FP8_LM_HEAD=1 (HIP without AITER), the target model's
++pre-capture hook quantizes each dense, unquantized ParallelLMHead once:
++FP32 amax / 448 per 128x128 block (2^-20 for an all-zero block), values
++rounded to E4M3FN after clamping to +-448. The BF16 weight stays in place for
++every other call. Row counts that DFLASH uses then read the FP8 copy, half
++the bytes of the BF16 head:
++
++- target verify (LogitsProcessor), 8 or 16 rows, FP32 or BF16 output as the
++  processor requests;
++- draft candidate projection (models/dflash.py), 7 or 14 rows, output in the
++  head weight's dtype.
++
++The draft borrows the target's head module, so both use one FP8 copy. The
++activation quantizer and GEMM are upstream's per-token-group 8-bit quantizer
++and block FP8 matmul, launched with the op234 runtime's small-row tile.
++"""
++
++import logging
++
++import torch
++import triton
++
++from sglang.srt.utils import get_bool_env_var, is_hip
++
++logger = logging.getLogger(__name__)
++
++ENABLED = (
++    is_hip()
++    and not get_bool_env_var("SGLANG_USE_AITER")
++    and get_bool_env_var("SGLANG_GFX1201_FP8_LM_HEAD")
++)
++ROWS = (7, 8, 14, 16)
++_BLOCK = 128
++_FP8_MAX = 448.0
++_GEMM_CONFIG = {
++    "BLOCK_SIZE_M": 16,
++    "BLOCK_SIZE_N": 128,
++    "BLOCK_SIZE_K": 128,
++    "GROUP_SIZE_M": 32,
++    "needs_masking": False,
++    "num_warps": 4,
++    "num_stages": 1,
++}
++_ATTR = "_gfx1201_fp8_head"
++_routed: set = set()
++
++
++def _quantize_weight(weight: torch.Tensor):
++    """Block-128 E4M3FN weight and FP32 (N/128, K/128) scales, one band at a time."""
++    n, k = weight.shape
++    b8 = torch.empty((n, k), dtype=torch.float8_e4m3fn, device=weight.device)
++    scales = torch.empty((n // _BLOCK, k // _BLOCK), dtype=torch.float32, device=weight.device)
++    for row in range(0, n, _BLOCK):
++        band = weight[row : row + _BLOCK].to(torch.float32).reshape(_BLOCK, k // _BLOCK, _BLOCK)
++        amax = band.abs().amax(dim=(0, 2))
++        # FP64 intermediates round the scale and its reciprocal once each.
++        scale = (amax.to(torch.float64) / _FP8_MAX).to(torch.float32)
++        scale = torch.where(amax == 0, 2.0**-20, scale)
++        inverse = scale.to(torch.float64).reciprocal().to(torch.float32)
++        scaled = (band * inverse[None, :, None]).clamp_(-_FP8_MAX, _FP8_MAX)
++        b8[row : row + _BLOCK].copy_(scaled.reshape(_BLOCK, k).to(torch.float8_e4m3fn))
++        scales[row // _BLOCK].copy_(scale)
++    return b8, scales
++
++
++def _eligible_head(module) -> bool:
++    from sglang.srt.layers.vocab_parallel_embedding import (
++        ParallelLMHead,
++        UnquantizedEmbeddingMethod,
++    )
++
++    weight = getattr(module, "weight", None)
++    return (
++        isinstance(module, ParallelLMHead)
++        and isinstance(getattr(module, "quant_method", None), UnquantizedEmbeddingMethod)
++        and not hasattr(module, "set_lora")
++        and getattr(module, "bias", None) is None
++        and isinstance(weight, torch.Tensor)
++        and weight.dim() == 2
++        and weight.dtype == torch.bfloat16
++        and weight.is_cuda
++        and weight.is_contiguous()
++        and weight.shape[0] % _BLOCK == 0
++        and weight.shape[1] % _BLOCK == 0
++    )
++
++
++def prepare_model(model: torch.nn.Module) -> int:
++    """Attach the FP8 copy to every eligible head in `model`; idempotent."""
++    if not ENABLED or torch.cuda.is_current_stream_capturing():
++        return 0
++    prepared = 0
++    for module in model.modules():
++        if getattr(module, _ATTR, None) is not None:
++            prepared += 1
++            continue
++        if not _eligible_head(module):
++            continue
++        with torch.no_grad():
++            b8, scales = _quantize_weight(module.weight.data)
++        setattr(module, _ATTR, (module.weight, module.weight.data_ptr(), b8, scales))
++        prepared += 1
++        logger.info(
++            "FP8 LM head (gfx1201) prepared: %s, %.0f MiB FP8 + scales",
++            tuple(module.weight.shape),
++            (b8.numel() + 4 * scales.numel()) / 2**20,
++        )
++    return prepared
++
++
++def project(hidden: torch.Tensor, lm_head, out_dtype: torch.dtype, num_rows=None):
++    """FP8 logits [M, N] for eligible DFLASH rows, or None to use the BF16 path.
++
++    num_rows restricts the head to its first rows (the draft's org vocabulary);
++    only the whole head is supported, so a smaller value returns None.
++    """
++    state = getattr(lm_head, _ATTR, None)
++    if state is None:
++        return None
++    weight, pointer, b8, scales = state
++    n, k = b8.shape
++    if (
++        lm_head.weight is not weight
++        or weight.data_ptr() != pointer
++        or (num_rows is not None and num_rows != n)
++        or hidden.dim() != 2
++        or hidden.shape[0] not in ROWS
++        or hidden.shape[1] != k
++        or hidden.dtype != torch.bfloat16
++        or not hidden.is_contiguous()
++        or out_dtype not in (torch.float32, torch.bfloat16)
++    ):
++        return None
++    from sglang.kernels.ops.gemm.fp8_kernel import _w8a8_block_fp8_matmul
++    from sglang.kernels.ops.quantization.fp8_kernel import _per_token_group_quant_8bit
++
++    m = hidden.shape[0]
++    if (m, out_dtype) not in _routed:
++        _routed.add((m, out_dtype))
++        logger.info("FP8 LM head (gfx1201) route: %d rows, %s output", m, out_dtype)
++    x_q = torch.empty((m, k), dtype=torch.float8_e4m3fn, device=hidden.device)
++    x_s = torch.empty((m, k // _BLOCK), dtype=torch.float32, device=hidden.device)
++    out = torch.empty((m, n), dtype=out_dtype, device=hidden.device)
++    _per_token_group_quant_8bit[(m * (k // _BLOCK),)](
++        hidden, x_q, x_s, _BLOCK, _BLOCK, 1e-10, -_FP8_MAX, _FP8_MAX,
++        BLOCK=_BLOCK, num_warps=1, num_stages=1,
++    )
++    _w8a8_block_fp8_matmul[(triton.cdiv(m, _GEMM_CONFIG["BLOCK_SIZE_M"]) * triton.cdiv(n, _BLOCK),)](
++        x_q, b8, out, x_s, scales, m, n, k, _BLOCK, _BLOCK,
++        x_q.stride(0), x_q.stride(1), b8.stride(1), b8.stride(0),
++        out.stride(0), out.stride(1), x_s.stride(0), x_s.stride(1),
++        scales.stride(1), scales.stride(0),
++        **_GEMM_CONFIG,
++    )
++    return out
+diff --git a/python/sglang/srt/layers/logits_processor.py b/python/sglang/srt/layers/logits_processor.py
+index fb87acc..802a686 100644
+--- a/python/sglang/srt/layers/logits_processor.py
++++ b/python/sglang/srt/layers/logits_processor.py
+@@ -37,7 +37,7 @@ from sglang.kernels.ops.sampling.softcap_row_argmax import softcap_row_argmax
+ from sglang.srt.beam_search.logits_capture import BeamLogitsCapture
+ from sglang.srt.distributed.device_communicators import triton_symm_mem_ag
+ from sglang.srt.environ import envs
+-from sglang.srt.layers import layernorm_sp
++from sglang.srt.layers import gfx1201_fp8_lm_head, layernorm_sp
+ from sglang.srt.layers.aux_hidden_states import AuxHiddenStates, pack_aux_hidden_states
+ from sglang.srt.layers.dp_attention import (
+     DpPaddingMode,
+@@ -1373,6 +1373,19 @@ class LogitsProcessor(nn.Module):
+         *,
+         out: Optional[torch.Tensor] = None,
+     ) -> torch.Tensor:
++        if gfx1201_fp8_lm_head.ENABLED and embedding_bias is None:
++            # gfx1201: the head's block FP8 copy on DFLASH verify rows.
++            logits = gfx1201_fp8_lm_head.project(
++                hidden_states,
++                lm_head,
++                (
++                    torch.float32
++                    if self.use_fp32_lm_head or self.use_fp32_lm_head_output
++                    else hidden_states.dtype
++                ),
++            )
++            if logits is not None:
++                return logits
+         quant_method = getattr(lm_head, "quant_method", None)
+         if hasattr(lm_head, "set_lora") and hasattr(lm_head, "apply_lora"):
+             # This is a LoRA-wrapped module, use its forward method
+diff --git a/python/sglang/srt/models/dflash.py b/python/sglang/srt/models/dflash.py
+index 49199be..1ce0248 100644
+--- a/python/sglang/srt/models/dflash.py
++++ b/python/sglang/srt/models/dflash.py
+@@ -18,6 +18,7 @@ from sglang.srt.configs.draft_parallel import DraftParallelSpec, DraftTPExecutio
+ from sglang.srt.configs.laguna import normalize_gating
+ from sglang.srt.distributed.communication_op import tensor_model_parallel_all_gather
+ from sglang.srt.hf_transformers import get_rope_config
++from sglang.srt.layers import gfx1201_fp8_lm_head
+ from sglang.srt.layers.activation import SiluAndMul
+ from sglang.srt.layers.layer_boundary import AttentionInputs, get_attn_tp_context
+ from sglang.srt.layers.layernorm import GemmaRMSNorm, RMSNorm
+@@ -103,6 +104,13 @@ def _project_candidate_logits(
+     if not use_quant_head:
+         weight = lm_head.weight
+         hidden = hidden.to(weight.dtype)
++        if gfx1201_fp8_lm_head.ENABLED:
++            # gfx1201: the target head's block FP8 copy on draft rows.
++            logits = gfx1201_fp8_lm_head.project(
++                hidden, lm_head, weight.dtype, num_rows=num_org
++            )
++            if logits is not None:
++                return logits
+         # Tuned bf16 dispatch (kernel chosen by GEMM shape); bf16 CUDA only.
+         backend = get_bf16_gemm_backend()
+         if (
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index e452402..444d238 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -1952,6 +1952,9 @@ class Qwen3_5ForCausalLM(nn.Module):
+         return self.embed_tokens
+ 
+     def prepare_before_cuda_graph_capture(self, model_runner) -> None:
++        from sglang.srt.layers import gfx1201_fp8_lm_head
++
++        gfx1201_fp8_lm_head.prepare_model(self)
+         if _gfx1201_packed_gdn_in_proj:
+             layers = [m for m in self.modules() if isinstance(m, Qwen3_5GatedDeltaNet)]
+             packed = sum(int(m.finalize_gfx1201_mxfp4_in_proj()) for m in layers)
+@@ -2506,6 +2509,10 @@ class Qwen3_5ForConditionalGeneration(Qwen3VLForConditionalGeneration):
+         return self.model.get_hidden_dim(module_name, layer_idx)
+ 
+     def prepare_before_cuda_graph_capture(self, model_runner) -> None:
++        from sglang.srt.layers import gfx1201_fp8_lm_head
++
++        # The head lives on this wrapper, outside the language model.
++        gfx1201_fp8_lm_head.prepare_model(self)
+         prepare = getattr(self.model, "prepare_before_cuda_graph_capture", None)
+         if prepare is not None:
+             prepare(model_runner)

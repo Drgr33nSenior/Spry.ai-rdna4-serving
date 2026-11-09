@@ -1,0 +1,129 @@
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index 442b3f6..e452402 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -166,6 +166,12 @@ _QWEN3_5_MOE_TEXT_MODEL_TYPES = ("qwen3_5_moe_text", "qwen4_exp_text")
+ _QWEN3_5_ROCM_PACKED_MODEL_TYPES = ("qwen3_5_text", "qwen3_5_moe_text")
+ _is_xpu = is_xpu()
+ _use_aiter = get_bool_env_var("SGLANG_USE_AITER") and _is_hip
++# gfx1201 without AITER: one MXFP4 quantize + GEMM for the GDN QKVZ and BA
++# input projections on DFLASH verify rows (op234 operation 164).
++_gfx1201_packed_gdn_in_proj = (
++    _is_hip and not _use_aiter and get_bool_env_var("SGLANG_GFX1201_PACKED_GDN_IN_PROJ")
++)
++_GFX1201_PACKED_ROWS = (8, 16)
+ if _use_aiter:
+     from aiter.tuned_gemm import tgemm
+ 
+@@ -415,6 +421,8 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         self._fused_in_proj_scale: Optional[torch.Tensor] = None
+         self._fused_in_proj_sources = None
+         self._derived_weight_cache_error = None
++        # (packed weight, packed weight scales, qkvz rows) when packed for gfx1201 MXFP4.
++        self._gfx1201_in_proj = None
+         self._fused_input_proj_cpu_enabled = LazyValue(
+             lambda: (
+                 _is_cpu
+@@ -737,6 +745,47 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         ba.weight.data = fused[self._fused_in_proj_qkvz_width :]
+         self._fused_in_proj_weight = fused
+ 
++    def finalize_gfx1201_mxfp4_in_proj(self) -> bool:
++        """Pack the loaded MXFP4 QKVZ and BA shards into one weight/scale pair.
++
++        The original parameters become views of the packed rows, so no weight
++        is duplicated and the separate projections still work for other row
++        counts. Each output column keeps its own K loop over the same per-row
++        quantized activations, so packed outputs equal the separate ones.
++        """
++        if not _gfx1201_packed_gdn_in_proj or self._gfx1201_in_proj is not None:
++            return self._gfx1201_in_proj is not None
++        if get_lora().enable_lora or get_lora().lora_paths:
++            return False
++        from sglang.srt.layers.quantization.quark.schemes import quark_w4a4_mxfp4
++
++        qkvz, ba = self.in_proj_qkvz, self.in_proj_ba
++        if not (
++            quark_w4a4_mxfp4._use_gfx1201_mxfp4
++            and all(
++                type(getattr(proj, "scheme", None)) is quark_w4a4_mxfp4.QuarkW4A4MXFP4
++                and proj.bias is None
++                and not getattr(proj, "use_aiter_asm_fp4_gemm", False)
++                and not getattr(proj, "dequantized_bf16", False)
++                and proj.weight.dtype == torch.uint8
++                and getattr(proj, "weight_scale", None) is not None
++                and proj.weight_scale.dtype == torch.uint8
++                and proj.weight.is_contiguous()
++                and proj.weight_scale.is_contiguous()
++                for proj in (qkvz, ba)
++            )
++            and qkvz.weight.shape[1] == ba.weight.shape[1]
++            and qkvz.weight_scale.shape[1] == ba.weight_scale.shape[1]
++        ):
++            return False
++        rows = qkvz.weight.shape[0]
++        weight = torch.cat([qkvz.weight.data, ba.weight.data], dim=0).contiguous()
++        scale = torch.cat([qkvz.weight_scale.data, ba.weight_scale.data], dim=0).contiguous()
++        qkvz.weight.data, ba.weight.data = weight[:rows], weight[rows:]
++        qkvz.weight_scale.data, ba.weight_scale.data = scale[:rows], scale[rows:]
++        self._gfx1201_in_proj = (weight, scale, rows)
++        return True
++
+     def _finalize_fused_fp8_in_proj(self) -> bool:
+         """Pack loaded Quark per-channel FP8 projections without requantizing."""
+         from aiter.ops.shuffle import shuffle_weight
+@@ -818,6 +867,27 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         )
+ 
+     def _forward_input_proj(self, hidden_states: torch.Tensor):
++        if (
++            self._gfx1201_in_proj is not None
++            and isinstance(hidden_states, torch.Tensor)
++            and hidden_states.dim() == 2
++            and hidden_states.dtype == torch.bfloat16
++            and hidden_states.shape[0] in _GFX1201_PACKED_ROWS
++        ):
++            from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4 import (
++                dynamic_mxfp4_quant,
++                gemm_afp4wfp4,
++            )
++
++            weight, scale, rows = self._gfx1201_in_proj
++            x_q, x_s = dynamic_mxfp4_quant(hidden_states)
++            out = torch.empty(
++                (hidden_states.shape[0], weight.shape[0]),
++                dtype=torch.bfloat16,
++                device=hidden_states.device,
++            )
++            gemm_afp4wfp4(x_q, weight, x_s, scale, torch.bfloat16, out)
++            return out[:, :rows], out[:, rows:]
+         if _use_aiter and self._fused_in_proj_weight is not None:
+             # Unquantized BF16 projections consume the bf16 side of the fused
+             # AR+RMSNorm tuple; one aiter GEMM replaces the two separate
+@@ -1882,6 +1952,14 @@ class Qwen3_5ForCausalLM(nn.Module):
+         return self.embed_tokens
+ 
+     def prepare_before_cuda_graph_capture(self, model_runner) -> None:
++        if _gfx1201_packed_gdn_in_proj:
++            layers = [m for m in self.modules() if isinstance(m, Qwen3_5GatedDeltaNet)]
++            packed = sum(int(m.finalize_gfx1201_mxfp4_in_proj()) for m in layers)
++            logger.info(
++                "Packed MXFP4 GDN input projection (gfx1201) enabled for %d of %d layers",
++                packed,
++                len(layers),
++            )
+         if _use_aiter and self.config.model_type in _QWEN3_5_ROCM_PACKED_MODEL_TYPES:
+             packed = 0
+             mxfp4 = 0
+@@ -2427,6 +2505,11 @@ class Qwen3_5ForConditionalGeneration(Qwen3VLForConditionalGeneration):
+     def get_hidden_dim(self, module_name: str, layer_idx: int):
+         return self.model.get_hidden_dim(module_name, layer_idx)
+ 
++    def prepare_before_cuda_graph_capture(self, model_runner) -> None:
++        prepare = getattr(self.model, "prepare_before_cuda_graph_capture", None)
++        if prepare is not None:
++            prepare(model_runner)
++
+     def should_apply_lora(self, module_name: str) -> bool:
+         return module_name.startswith("model.layers.")
+ 
