@@ -1,5 +1,18 @@
 # Serving handoff for Qwen4
 
+Status, 9 November 2026: the 2026-11 workstation reinstall wiped the op234
+runtime: SGLang 0.5.21 `e00930c5`, Torch 2.14 / ROCm SDK 10.2, the 93-file
+private package, the bwrap owner sandbox, the `/home/developer` trees and base
+image `1d3ebef7`. The owner keeps the private package off-repo; the base image
+and built trees are lost. Neither op234 nor the op232 rollback can be rebuilt
+from this repository as documented. Statements below that the installed runtime
+is unchanged, that operation232 is the immediate rollback, or that the runtime
+must not be updated are historical. Current serving work targets SGLang `main`
+with the [`sglang-main` patch series](../serving/patches/sglang-main/README.md)
+and the workstation
+[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json),
+which is unqualified.
+
 Status, 7 November 2026: **complete, selected and parked**. The owner selected
 operation234's mtp arm (physical kv4, start 2), adding S4 split-K down/out to the
 three-member cap16 profile. Operation232's selected profile is the immediate

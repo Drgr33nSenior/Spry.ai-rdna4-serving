@@ -40,7 +40,7 @@ native ownership or GPU release.
 | Source | Responsibility |
 | --- | --- |
 | [Serving source](../serving/README.md) | Configuration, assembly, runtime hooks, receipt validation and final-answer grading |
-| [Patch series](../serving/patches/README.md) | Reproduce active overlays from their exact effective base files |
+| [Patch series](../serving/patches/README.md) | The current [`sglang-main` series](../serving/patches/sglang-main/README.md) and the historical 0.5.21 overlays |
 | [KV4 prototype](../prototype/) | Separate codec, attention kernels and selected SGLang source overlay |
 | [Provenance](../provenance/) | Recorded identities, selections and bounded result summaries |
 

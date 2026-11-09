@@ -5,13 +5,20 @@ profiling campaign. The upstream event fix justifies re-evaluation. This is a
 source assessment, not approval to replace the active HIP runtime or run a new
 GPU experiment.
 
+Status, 9 November 2026: the HIP runtime and pins this assessment refers to
+belonged to the SGLang 0.5.21 runtime that the 2026-11 workstation reinstall
+wiped; they are historical. Current pins, including TheRock ROCm 10.3.0.dev20261108
+(HIP 7.18), are in the workstation
+[`stack.lock`](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/stack.lock).
+
 Our earlier source build used HRX v0.1.0, commit
 `d01d1c18b154189fd073777329052d23f6071f14`. Operation124 used the documented
 `legacy-amdgpu` path. It passed exact model-free graph checks but showed no
 GPU-side dispatch advantage on gfx1201. Host submission was cheaper, which
 helps serving only when host work is exposed. The retained cleanup record says
 the workstation build was archived and removed. This assessment did not check
-the live host again. The current SGLang packet pins the TheRock HIP runtime.
+the live host again. The SGLang packet of that time pinned the TheRock HIP
+runtime.
 
 The upstream snapshot examined is
 `3c54fcbe3c71609d3c02f2b13daa3d7533fa525a`. This was a targeted review of the old

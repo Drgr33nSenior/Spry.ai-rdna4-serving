@@ -1,9 +1,12 @@
-# Reproduce the active W5 overlays
+# Reproduce the historical 0.5.21 W5 overlays
 
-For SGLang `main`, the workstation AI-stack pipeline applies the separate
-[`sglang-main`](sglang-main/README.md) series instead.
+Status, 9 November 2026: this series is historical. The workstation AI-stack
+pipeline now applies the separate [`sglang-main`](sglang-main/README.md) series
+to SGLang `main`. The `--upstream-root` input below is the retained 0.5.21
+image's effective base. The 2026-11 workstation reinstall lost that image, so
+this reproduction cannot be rerun from this repository alone.
 
-The [lock](../upstream/sglang-0.5.21.lock) binds all 11 active runtime and graph/GEMM
+The [lock](../upstream/sglang-0.5.21.lock) binds all 11 retained 0.5.21 runtime and graph/GEMM
 overlays to their input, patch and output hashes. These are the retained image's
 effective base files. Its runner and KV configurator already contain retained
 changes; an unmodified SGLang release is not a substitute for those exact bytes.
@@ -44,8 +47,8 @@ python3 -I -B -S serving/tests/check_patch_series_packet.py \
 ```
 
 [VERIFICATION.json](VERIFICATION.json) records the exact proof. The previous
-runtime-only series is retained under `.test-build/serving-cleanup/patch-series/`.
-This reproduction record covers Phase 5a. The later runner post-load hook and
+runtime-only series was kept in a local build directory that is not in this
+repository. This reproduction record covers Phase 5a. The later runner post-load hook and
 metadata preparation before replay are separate increments. They were included
 in the completed [cleanup validation](../measurements/native-qualification/CLEANUP-SIGNOFF.md).
 Their earlier preparation and failure records remain in the

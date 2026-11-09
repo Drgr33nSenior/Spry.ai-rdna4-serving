@@ -1,5 +1,9 @@
 # Further serving optimization plan
 
+Superseded, 9 November 2026: [remaining gates](MXFP4-REMAINING-GATES.md)
+records the MXFP4 programme as complete and parked. The plan and queues below
+are historical.
+
 The [MXFP4 sprint plan proposed on 3 November](MXFP4-OPTIMIZATION-SPRINT-PLAN.md)
 maps all twelve retained backlog items and the nine deep-search entries into
 shared evidence work, bounded component screens and conditional serving bundles.

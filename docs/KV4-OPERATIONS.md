@@ -4,10 +4,11 @@ This guide covers the matched ModelRunner benchmark. It does not authorize a run
 Status as of 2026-10-15: `LOCAL_MATCHED_SOURCE_PREPARED_NATIVE_GATES_PENDING`.
 The KV4 preparation is source-only. Public KV4 admission remains closed.
 
-The benchmark controller modules and the `HOST-OWNER.md` and
-`OWNER-COLLECTION.md` procedures cited below are not included in this
+The benchmark controller modules cited below are not included in this
 documentation-only publication. Obtain reviewed, hash-bound copies with the
-physical handoff. Missing procedures or executable inputs block a run.
+physical handoff. The [host ownership](HOST-OWNER.md) and
+[owner collection](OWNER-COLLECTION.md) procedures are in `docs/`. Missing
+procedures or executable inputs block a run.
 
 Both arms use official **FP8 model weights**. The first arm uses BF16 KV storage;
 the second uses the mixed KV4 implementation. There is no accepted FP4-weight
@@ -122,7 +123,9 @@ only the exact wrapper in the new handoff. The protected observer supplies
 current admission and independent release evidence.
 
 Use the shared canonical lease at
-`/home/developer/model-serving.izR2m1O9/diagnostic.lock`. An unresolved
+`/home/developer/model-serving.izR2m1O9/diagnostic.lock`. That path is
+historical: it was in the `/home/developer` trees that the 2026-11 workstation
+reinstall wiped. An unresolved
 `diagnostic.lock.unresolved.json` blocks admission. Do not create a second KV4
 lock, delete an unresolved record, stop another workload, or infer ownership from
 idle GPUs or historical release.

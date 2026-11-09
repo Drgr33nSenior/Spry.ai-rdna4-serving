@@ -1,6 +1,18 @@
 # RDNA4 serving continuation and Qwen4 handoff
 
-Status: **complete — operation234's three-member cap16 + S4 candidate selected; programme parked for Qwen4**.
+Status, 9 November 2026: serving now targets SGLang upstream `main` at
+`fcb3274646e43c16d70fd83806ebb3a5134d5e81` with the
+[`sglang-main` patch series](serving/patches/sglang-main/README.md). Flags and
+environment are in the workstation
+[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json)
+and its [research notes](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/RESEARCH-20261108.md);
+the profile is unqualified. The 2026-11 workstation reinstall wiped the op234
+runtime (SGLang 0.5.21 `e00930c5`, Torch 2.14 / ROCm SDK 10.2, the private
+package, owner sandbox and base image). Op234 and the op232 rollback cannot be
+rebuilt from this repository as documented. The 7 November status below and
+every statement that the installed runtime is unchanged are historical.
+
+Status, 7 November 2026: **complete — operation234's three-member cap16 + S4 candidate selected; programme parked for Qwen4**.
 On 7 November the owner requested private experimental adoption of operation234's
 logical mtp arm (physical kv4, start 2). Operation232's selected three-member
 cap16 arm is the immediate rollback. The frozen split-K verdict remains
@@ -43,7 +55,10 @@ No retry, deployment or additional GPU authority follows.
 
 ## Resume safely
 - Apply the [serving-validation skill](.agents/skills/aithreadripper-serving-validation/SKILL.md).
-- Read [the split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json) (current selection and rollback),
+- For current serving work, read the
+  [`sglang-main` series](serving/patches/sglang-main/README.md) and the
+  workstation serving profile linked above. The records below are historical.
+- Read [the split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json) (historical selection and rollback),
   [the finalization record](provenance/MXFP4-FINALIZATION-20261105.json) (operation232 selection and parking),
   [the Qwen4 handoff](docs/QWEN4-SERVING-HANDOFF.md) and
   [current results](docs/CURRENT-SERVING-RESULTS.md). The
@@ -55,6 +70,9 @@ No retry, deployment or additional GPU authority follows.
 - Preserve uncommitted user work. Do not stage, commit, merge or push without a request.
 
 ## Current objective
+Status, 9 November 2026: this objective is historical. The runtime it describes
+was wiped; see the status note at the top of this file.
+
 Current private pointer `2fda6127…` selects operation234 mtp with S4 only on
 M8/M16 down/out (including rare eligible prefill calls). Pointer `4e19fc56…`
 is preserved byte-for-byte for operation232 rollback. The programme remains
@@ -754,8 +772,10 @@ and lead ID, but do not schedule further cap32 work without a new owner request.
 - The [HRX upstream reassessment](docs/HRX-UPSTREAM-REASSESSMENT-20261105.md)
   confirms our event-recording blocker is fixed in upstream source. An isolated
   runtime re-evaluation is worth considering after profiling; RCCL compatibility
-  and gfx1201 benefit remain unqualified. Preserve the current HIP pins and do
-  not automatically launch another campaign or substitute HRX.
+  and gfx1201 benefit remain unqualified. The HIP pins it assumed belonged to
+  the wiped SGLang 0.5.21 runtime and are historical; current pins are in the
+  workstation [`stack.lock`](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/stack.lock).
+  Do not automatically launch another campaign or substitute HRX.
 
 ## Preserve experiment meaning
 Keep the explicit thinking-enabled low-effort request profile, frozen tokenizer,

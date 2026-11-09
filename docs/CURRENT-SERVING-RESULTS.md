@@ -5,6 +5,13 @@ They do not turn this source prototype into an installable or qualified serving
 distribution. The runs used a complete separately pinned SGLang runtime.
 Machine configuration, model weights, native binaries and raw logs are excluded.
 
+Status, 9 November 2026: these results come from earlier runtimes. The 2026-11
+workstation reinstall wiped the last of them, op234's SGLang 0.5.21 runtime;
+neither op234 nor the operation232 rollback can be rebuilt from this repository
+as documented. No result here applies to the current SGLang `main` image built
+with the [`sglang-main` patch series](../serving/patches/sglang-main/README.md),
+which is unqualified.
+
 ## Split-K private selection, 2026-11-07
 
 The owner selected operation234's logical mtp arm (physical kv4, start 2): the
@@ -1041,7 +1048,7 @@ The [both-order screen](SPRINT36-PREFILL-CHUNKS.md) completed four fresh starts,
 
 ## FP8 target-KV feasibility, Sprint 37
 
-The [source audit](SPRINT37-FP8-KV-FEASIBILITY.md) found native FP8 scale handling, but the generic FP8 cache path changes query arithmetic and the selected split adapter requires BF16 cache tensors. The protected two-start owner cannot represent the original four-start campaign within its declared budget. Retain BF16; no GPU test, performance result or runtime change occurred. Compatibility work, a fitting thinking corpus and a schedule decision remain separate prerequisites.
+The [source audit](SPRINT37-FP8-KV-FEASIBILITY.md) found native FP8 scale handling, but the generic FP8 cache path changes query arithmetic and the selected split adapter requires BF16 cache tensors. The protected two-start owner cannot represent the original four-start campaign within its declared budget. Retain BF16; no GPU test, performance result or runtime change occurred. Compatibility work, a fitting thinking corpus and a schedule decision remain separate prerequisites. Later result, 26 October: the [FP8 target-KV diagnostic](FP8-TARGET-KV-DIAGNOSTIC-20261026.md) ran FP8 target KV on GPU with FP8 weights. Both arms passed the retained answer checks, but FP8 target KV ran slower and was not selected. FP8 draft KV has never been tested.
 
 ## Adaptive-speculation prerequisites, Sprint 38
 
