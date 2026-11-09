@@ -1,0 +1,133 @@
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
+index 70df74c..74f7ec3 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
+@@ -19,6 +19,12 @@ from the op234 runtime are available, each off unless its variable is 1:
+   and GDN/attention output (5120x3072) shards, FP32 partials reduced in a
+   fixed order ((p0 + p1) + p2) + p3. Deterministic, no atomics; not bitwise
+   equal to the single partition (op234 S4).
++- SGLANG_GFX1201_SPLITK_WIDE: the same split-K for the remaining under-filled
++  verify shards: four partitions for the packed GDN input projection
++  (8240x5120) and attention QKV (7168x5120), two for gate/up (17408x5120).
++  A graph-captured, DRAM-fed sweep (2026-11-09) measured 80.0 to 66.8,
++  64.4 to 58.1 and 138.0 to 132.7 us per call at M8, with outputs bitwise
++  equal to the single partition on random data (not guaranteed in general).
+ """
+ 
+ import logging
+@@ -40,14 +46,19 @@ def _enabled(name: str) -> bool:
+ 
+ GATE_UP_WAVE0 = _enabled("SGLANG_GFX1201_GATE_UP_WAVE0")
+ SPLITK_DOWNOUT = _enabled("SGLANG_GFX1201_SPLITK_DOWNOUT")
++SPLITK_WIDE = _enabled("SGLANG_GFX1201_SPLITK_WIDE")
+ _VERIFY_ROWS = (8, 16)
+ _GATE_UP_SHAPE = (17408, 5120)
+-_SPLITK_SHAPES = ((5120, 8704), (5120, 3072))
+-_SPLITK_PARTS = 4
++# (N, K) -> K partitions; every partition covers whole BLOCK_SIZE_K=128 blocks.
++_SPLITK_DOWNOUT_PARTS = {(5120, 8704): 4, (5120, 3072): 4}
++_SPLITK_WIDE_PARTS = {(8240, 5120): 4, (7168, 5120): 4, (17408, 5120): 2}
+ _SPLITK_REDUCE_BLOCK = 1024
+ # One FP32 partial buffer per device, sized for the largest split launch
+-# (4 x 16 x 5120 = 1.25 MiB). GEMMs on a stream run in order, so every layer
+-# shares it; it is allocated outside graph capture and reused by every replay.
++# (2 x 16 x 17408 floats = 2.1 MiB). GEMMs on a stream run in order, so every
++# layer shares it; it is allocated outside graph capture and reused by every replay.
++_SPLITK_SCRATCH_FLOATS = max(parts * max(_VERIFY_ROWS) * n
++                             for table in (_SPLITK_DOWNOUT_PARTS, _SPLITK_WIDE_PARTS)
++                             for (n, _), parts in table.items())
+ _splitk_scratch: dict = {}
+ 
+ _GEMM_CONFIG = {
+@@ -102,28 +113,28 @@ def dynamic_mxfp4_quant(x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+ 
+ 
+ @triton.jit
+-def _splitk_reduce_kernel(p_ptr, c_ptr, MN, BLOCK: tl.constexpr):
+-    # Contiguous FP32 partials (4, M, N), MN = M * N. Fixed order, one rounding.
++def _splitk_reduce_kernel(p_ptr, c_ptr, MN, PARTS: tl.constexpr, BLOCK: tl.constexpr):
++    # Contiguous FP32 partials (PARTS, M, N), MN = M * N. Fixed order
++    # ((p0 + p1) + p2) + ..., one rounding.
+     offs = tl.program_id(axis=0) * BLOCK + tl.arange(0, BLOCK)
+     mask = offs < MN
+     acc = tl.load(p_ptr + offs, mask=mask, other=0.0)
+-    acc = acc + tl.load(p_ptr + MN + offs, mask=mask, other=0.0)
+-    acc = acc + tl.load(p_ptr + 2 * MN + offs, mask=mask, other=0.0)
+-    acc = acc + tl.load(p_ptr + 3 * MN + offs, mask=mask, other=0.0)
++    for i in tl.static_range(1, PARTS):
++        acc = acc + tl.load(p_ptr + i * MN + offs, mask=mask, other=0.0)
+     tl.store(c_ptr + offs, acc.to(c_ptr.type.element_ty), mask=mask)
+ 
+ 
+-def _splitk_partials(device: torch.device, m: int, n: int):
+-    """The shared FP32 partial buffer viewed as (4, M, N), or None during a
++def _splitk_partials(device: torch.device, m: int, n: int, parts: int):
++    """The shared FP32 partial buffer viewed as (parts, M, N), or None during a
+     graph capture that has not seen it allocated (the caller then launches
+     the single partition, so capture never allocates from the graph pool)."""
+     scratch = _splitk_scratch.get(device.index)
+     if scratch is None:
+         if torch.cuda.is_current_stream_capturing():
+             return None
+-        scratch = torch.empty(_SPLITK_PARTS * 16 * 5120, dtype=torch.float32, device=device)
++        scratch = torch.empty(_SPLITK_SCRATCH_FLOATS, dtype=torch.float32, device=device)
+         _splitk_scratch[device.index] = scratch
+-    return scratch[: _SPLITK_PARTS * m * n].view(_SPLITK_PARTS, m, n)
++    return scratch[: parts * m * n].view(parts, m, n)
+ 
+ 
+ def _launch(x, w, x_scales, w_scales, c, m, n, packed_k, config, grid, c_strides):
+@@ -139,10 +150,21 @@ def _launch(x, w, x_scales, w_scales, c, m, n, packed_k, config, grid, c_strides
+     )
+ 
+ 
+-def gemm_afp4wfp4(x, w, x_scales, w_scales, dtype, y, *, gate_up_wave0=None, splitk_downout=None):
++def _splitk_parts(n: int, k: int, splitk_downout, splitk_wide) -> int:
++    """K partitions for a verify-row GEMM of this shard shape (1 = no split)."""
++    if (n, k) in _SPLITK_DOWNOUT_PARTS and (SPLITK_DOWNOUT if splitk_downout is None else splitk_downout):
++        return _SPLITK_DOWNOUT_PARTS[(n, k)]
++    if (n, k) in _SPLITK_WIDE_PARTS and (SPLITK_WIDE if splitk_wide is None else splitk_wide):
++        return _SPLITK_WIDE_PARTS[(n, k)]
++    return 1
++
++
++def gemm_afp4wfp4(x, w, x_scales, w_scales, dtype, y, *, gate_up_wave0=None, splitk_downout=None,
++                  splitk_wide=None):
+     """y[M, N] = dequant(x) @ dequant(w).T for packed FP4 x (M, K/2) and w (N, K/2).
+ 
+-    gate_up_wave0 / splitk_downout override the environment defaults (tests).
++    gate_up_wave0 / splitk_downout / splitk_wide override the environment
++    defaults (tests).
+     """
+     m, packed_k = x.shape
+     n, w_packed_k = w.shape
+@@ -157,19 +179,21 @@ def gemm_afp4wfp4(x, w, x_scales, w_scales, dtype, y, *, gate_up_wave0=None, spl
+     if verify_rows and (n, k) == _GATE_UP_SHAPE and (GATE_UP_WAVE0 if gate_up_wave0 is None else gate_up_wave0):
+         config["waves_per_eu"] = 0
+     grid = (triton.cdiv(m, block_m) * triton.cdiv(n, block_n),)
+-    if verify_rows and (n, k) in _SPLITK_SHAPES and (SPLITK_DOWNOUT if splitk_downout is None else splitk_downout):
+-        # Each partition covers K/4 columns (2176 down, 768 out): whole
+-        # BLOCK_SIZE_K=128 blocks, so every partition is EVEN_K.
+-        partials = _splitk_partials(y.device, m, n)
++    parts = _splitk_parts(n, k, splitk_downout, splitk_wide) if verify_rows else 1
++    if parts > 1:
++        # Each partition covers K/parts columns (2176 down, 768 out, 1280 or
++        # 2560 for K=5120): whole BLOCK_SIZE_K=128 blocks, so every partition is EVEN_K.
++        partials = _splitk_partials(y.device, m, n, parts)
+         if partials is not None:
+             if (m, n, k) not in _splitk_routed:
+                 _splitk_routed.add((m, n, k))
+-                logger.info("Split-K MXFP4 verify GEMM (gfx1201) route: %d rows, N=%d K=%d", m, n, k)
+-            split = dict(config, NUM_KSPLIT=_SPLITK_PARTS, SPLITK_BLOCK_SIZE=k // _SPLITK_PARTS)
+-            _launch(x, w, x_scales, w_scales, partials, m, n, packed_k, split, (grid[0] * _SPLITK_PARTS,),
++                logger.info("Split-K MXFP4 verify GEMM (gfx1201) route: %d rows, N=%d K=%d, %d partitions",
++                            m, n, k, parts)
++            split = dict(config, NUM_KSPLIT=parts, SPLITK_BLOCK_SIZE=k // parts)
++            _launch(x, w, x_scales, w_scales, partials, m, n, packed_k, split, (grid[0] * parts,),
+                     (partials.stride(0), partials.stride(1), partials.stride(2)))
+             _splitk_reduce_kernel[(triton.cdiv(m * n, _SPLITK_REDUCE_BLOCK),)](
+-                partials, y, m * n, BLOCK=_SPLITK_REDUCE_BLOCK, num_warps=4)
++                partials, y, m * n, PARTS=parts, BLOCK=_SPLITK_REDUCE_BLOCK, num_warps=4)
+             return y
+     _launch(x, w, x_scales, w_scales, y, m, n, packed_k, config, grid, (0, y.stride(0), y.stride(1)))
+     return y
