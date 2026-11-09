@@ -1,0 +1,532 @@
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index d65f7c8..4189bc7 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1640,6 +1640,9 @@ class Envs:
+     # reductions up to the byte limit (decode/verify sizes); larger ones use RCCL.
+     SGLANG_GFX1201_PCIE_CUSTOM_AR = EnvBool(False)
+     SGLANG_GFX1201_PCIE_CUSTOM_AR_MAX_BYTES = EnvInt(512 * 1024)
++    # gfx1201 MXFP4 prefill rows (1024-2048) on the P1 FP8 route: lossless FP8
++    # weight expansion, FP8/G128 activations (P1-NUMERICAL-CONTRACT-v1).
++    SGLANG_GFX1201_P1_PREFILL = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_fp8_kernels.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_fp8_kernels.py
+new file mode 100644
+index 0000000..5156456
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_fp8_kernels.py
+@@ -0,0 +1,221 @@
++# Copyright 2024 SGLang Team
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++# ==============================================================================
++
++# Private P1 preparation: copied GEMM and quantizer bodies are unchanged.
++# GEMM-tail.py carries no file header; SGLang attribution is retained above.
++# Expansion below is new private code; no hardware qualification is implied.
++import triton
++import triton.language as tl
++
++@triton.jit
++def _w8a8_block_fp8_matmul(
++    # Pointers to inputs and output
++    A,
++    B,
++    C,
++    As,
++    Bs,
++    # Shape for matmul
++    M,
++    N,
++    K,
++    # Block size for block-wise quantization
++    group_n,
++    group_k,
++    # Stride for inputs and output
++    stride_am,
++    stride_ak,
++    stride_bk,
++    stride_bn,
++    stride_cm,
++    stride_cn,
++    stride_As_m,
++    stride_As_k,
++    stride_Bs_k,
++    stride_Bs_n,
++    # Meta-parameters
++    BLOCK_SIZE_M: tl.constexpr,
++    BLOCK_SIZE_N: tl.constexpr,
++    BLOCK_SIZE_K: tl.constexpr,
++    GROUP_SIZE_M: tl.constexpr,
++    needs_masking: tl.constexpr,
++):
++    """Triton-accelerated function used to perform linear operations (dot
++    product) on input tensors `A` and `B` with block-wise quantization, and store the result in output
++    tensor `C`.
++    """
++
++    pid = tl.program_id(axis=0)
++    num_pid_m = tl.cdiv(M, BLOCK_SIZE_M)
++    num_pid_n = tl.cdiv(N, BLOCK_SIZE_N)
++    num_pid_in_group = GROUP_SIZE_M * num_pid_n
++    group_id = pid // num_pid_in_group
++    first_pid_m = group_id * GROUP_SIZE_M
++    group_size_m = min(num_pid_m - first_pid_m, GROUP_SIZE_M)
++    pid_m = first_pid_m + (pid % group_size_m)
++    pid_n = (pid % num_pid_in_group) // group_size_m
++
++    offs_am = (pid_m * BLOCK_SIZE_M + tl.arange(0, BLOCK_SIZE_M)) % M
++    offs_bn = (pid_n * BLOCK_SIZE_N + tl.arange(0, BLOCK_SIZE_N)) % N
++    offs_k = tl.arange(0, BLOCK_SIZE_K)
++    a_ptrs = A + (offs_am[:, None] * stride_am + offs_k[None, :] * stride_ak)
++    b_ptrs = B + (offs_k[:, None] * stride_bk + offs_bn[None, :] * stride_bn)
++
++    As_ptrs = As + offs_am * stride_As_m
++    offs_bsn = offs_bn // group_n
++    Bs_ptrs = Bs + offs_bsn * stride_Bs_n
++    n_tiles_k_per_group_k = group_k // BLOCK_SIZE_K
++
++    accumulator = tl.zeros((BLOCK_SIZE_M, BLOCK_SIZE_N), dtype=tl.float32)
++    for k in range(0, tl.cdiv(K, BLOCK_SIZE_K)):
++        if needs_masking:
++            a = tl.load(a_ptrs, mask=offs_k[None, :] < K - k * BLOCK_SIZE_K, other=0.0)
++            b = tl.load(b_ptrs, mask=offs_k[:, None] < K - k * BLOCK_SIZE_K, other=0.0)
++        else:
++            a = tl.load(a_ptrs)
++            b = tl.load(b_ptrs)
++
++        a_s = tl.load(As_ptrs)
++        b_s = tl.load(Bs_ptrs)
++
++        scale_step_k = tl.where((k + 1) % n_tiles_k_per_group_k == 0, 1, 0)
++        accumulator += tl.dot(a, b) * a_s[:, None] * b_s[None, :]
++        a_ptrs += BLOCK_SIZE_K * stride_ak
++        b_ptrs += BLOCK_SIZE_K * stride_bk
++        As_ptrs += scale_step_k * stride_As_k
++        Bs_ptrs += scale_step_k * stride_Bs_k
++
++    if C.dtype.element_ty == tl.bfloat16:
++        c = accumulator.to(tl.bfloat16)
++    elif C.dtype.element_ty == tl.float16:
++        c = accumulator.to(tl.float16)
++    else:
++        c = accumulator.to(tl.float32)
++
++    offs_cm = pid_m * BLOCK_SIZE_M + tl.arange(0, BLOCK_SIZE_M)
++    offs_cn = pid_n * BLOCK_SIZE_N + tl.arange(0, BLOCK_SIZE_N)
++    c_ptrs = C + stride_cm * offs_cm[:, None] + stride_cn * offs_cn[None, :]
++    c_mask = (offs_cm[:, None] < M) & (offs_cn[None, :] < N)
++    tl.store(c_ptrs, c, mask=c_mask)
++
++
++@triton.jit
++def _per_token_group_quant_8bit(
++    # Pointers to inputs and output
++    y_ptr,
++    y_q_ptr,
++    y_s_ptr,
++    # Stride of input
++    y_stride,
++    # Columns of input
++    N,
++    # Avoid to divide zero
++    eps,
++    # Information for float8
++    bit8_min,
++    bit8_max,
++    # Meta-parameters
++    BLOCK: tl.constexpr,
++):
++    """A Triton-accelerated function to perform per-token-group quantization on a
++    tensor.
++
++    This function converts the tensor values into float8 values.
++    """
++    # Map the program id to the row of X and Y it should compute.
++    g_id = tl.program_id(0)
++    y_ptr += g_id * y_stride
++    y_q_ptr += g_id * y_stride
++    y_s_ptr += g_id
++
++    cols = tl.arange(0, BLOCK)  # N <= BLOCK
++    mask = cols < N
++
++    y = tl.load(y_ptr + cols, mask=mask, other=0.0).to(tl.float32)
++    # Quant
++    _absmax = tl.maximum(tl.max(tl.abs(y)), eps)
++    y_s = _absmax / bit8_max
++    y_s_inv = 1.0 / y_s
++    y_q = tl.clamp(y * y_s_inv, bit8_min, bit8_max).to(y_q_ptr.dtype.element_ty)
++
++    tl.store(y_q_ptr + cols, y_q, mask=mask)
++    tl.store(y_s_ptr, y_s)
++
++
++@triton.jit
++def _expand_mxfp4_to_block_fp8(
++    Packed,
++    GroupScales,
++    Expanded,
++    BlockScales,
++    GuardFlags,
++    N: tl.constexpr,
++    K: tl.constexpr,
++):
++    """Lossless logical N128/K128 fold; overwrite one guard flag per tile.
++
++    Flag bits: 1 = scale byte zero, 2 = scale byte 255, 4 = spread > 14.
++    Invalid tiles do not write expanded bytes or block scales. The caller must
++    reject every nonzero flag before using results or entering a timing phase.
++    """
++    bn = tl.program_id(0)
++    bk = tl.program_id(1)
++    rows = bn * 128 + tl.arange(0, 128)
++    groups = bk * 4 + tl.arange(0, 4)
++    scales = tl.load(
++        GroupScales + rows[:, None] * (K // 32) + groups[None, :],
++        mask=rows[:, None] < N,
++        other=127,
++    ).to(tl.int32)
++    low = tl.min(tl.min(tl.where(rows[:, None] < N, scales, 255), 1), 0)
++    high = tl.max(tl.max(tl.where(rows[:, None] < N, scales, 0), 1), 0)
++    invalid_zero = tl.max(tl.max((scales == 0).to(tl.int32), 1), 0)
++    invalid_reserved = tl.max(tl.max((scales == 255).to(tl.int32), 1), 0)
++    flags = invalid_zero | (invalid_reserved << 1) | ((high - low > 14).to(tl.int32) << 2)
++    tl.store(GuardFlags + bn * (K // 128) + bk, flags)
++    valid = flags == 0
++    exponent = tl.minimum(high - 127, low - 127 + 8)
++    # Avoid evaluating unsafe shifts for rejected data. These substitute values
++    # are never written and do not constitute a rounded expansion or fallback.
++    safe_exponent = tl.where(valid, exponent, 0)
++    block_scale = ((safe_exponent + 127) << 23).to(tl.float32, bitcast=True)
++    tl.store(BlockScales + bn * (K // 128) + bk, block_scale, mask=valid)
++
++    cols = bk * 128 + tl.arange(0, 128)
++    packed = tl.load(
++        Packed + rows[:, None] * (K // 2) + cols[None, :] // 2,
++        mask=rows[:, None] < N,
++        other=0,
++    ).to(tl.int32)
++    code = (packed >> (4 * (cols[None, :] % 2))) & 15
++    m = code & 7
++    group_scale = tl.load(
++        GroupScales + rows[:, None] * (K // 32) + cols[None, :] // 32,
++        mask=rows[:, None] < N,
++        other=127,
++    ).to(tl.int32)
++    delta = tl.where(valid, group_scale - 127 - safe_exponent, 0)
++    # Exact E4M3FN encoding, including its subnormal lattice 2^-9.
++    # Base codes for .5,1,1.5,2,3,4,6 are 48,56,60,64,68,72,76.
++    normal_code = tl.where(m == 1, 48, m * 4 + 48) + delta * 8
++    twice_magnitude = tl.where(m < 4, m, tl.where(m < 6, (m - 2) * 2, (m - 4) * 4))
++    subnormal_code = twice_magnitude << (delta + 8)
++    magnitude_code = tl.where(m == 0, 0, tl.where(normal_code >= 8, normal_code, subnormal_code))
++    bits = (magnitude_code | ((code & 8) << 4)).to(tl.uint8)
++    tl.store(
++        Expanded + rows[:, None] * K + cols[None, :],
++        bits.to(Expanded.dtype.element_ty, bitcast=True),
++        mask=(rows[:, None] < N) & valid,
++    )
++
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py
+new file mode 100644
+index 0000000..e07a946
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py
+@@ -0,0 +1,212 @@
++"""P1 prefill route for gfx1201: MXFP4 prefill rows on a lossless FP8 expansion.
++
++Ported from the serving repository's P1 route (P1-NUMERICAL-CONTRACT-v1,
++setting fp8-g128-b101-m1024-v1, operation 93). Admitted when
++1024 <= M <= 2048 on the five declared N/K layouts and never under graph
++capture. Decode and verify rows, and every other shape, stay on the MXFP4
++kernels. The kernel bodies (gfx1201_p1_fp8_kernels, byte-identical to the
++accepted p1_fp8_kernels.py), launch configurations, grids and argument order
++are unchanged; only the row count varies, and each output row's arithmetic is
++independent of it.
++
++Every admitted shard is expanded once at load and its guard flags must all be
++zero. The packed weights stay resident and are expanded again into one
++reusable per-card scratch on each admitted call. All state lives in this
++module; nothing is attached to a layer. Importing this module is CPU-only.
++
++Changes from the source route: the kernel import path, route markers go to the
++logger, and validate_layer(..., rebind=True) re-validates a layer whose packed
++weights were moved without changing their bytes (patch 0007 packs the GDN
++input projections into one tensor after loading).
++"""
++
++import logging
++
++logger = logging.getLogger(__name__)
++
++SETTING = "fp8-g128-b101-m1024-v1"
++MIN_ROWS, MAX_ROWS = 1024, 2048
++SHAPES = ((17408, 5120), (8192, 5120), (5120, 3072), (7168, 5120), (5120, 8704))
++QUANTIZER_CONFIG = {"BLOCK": 128, "num_warps": 1, "num_stages": 1}
++GEMM_CONFIG = {
++    "BLOCK_SIZE_M": 64, "BLOCK_SIZE_N": 128, "BLOCK_SIZE_K": 128,
++    "GROUP_SIZE_M": 32, "needs_masking": False, "num_warps": 4, "num_stages": 1,
++}
++EXPANSION_CONFIG = {"num_warps": 8, "num_stages": 1}
++MAX_WEIGHT = max(n * k for n, k in SHAPES)
++MAX_BLOCKS = max((n // 128) * (k // 128) for n, k in SHAPES)
++MAX_K = max(k for _, k in SHAPES)
++WARM_ROWS = (MIN_ROWS, MIN_ROWS + 1)  # Triton specializes integer M on divisibility by 16.
++ACTIVE = None  # the one route of this serving process
++
++
++def scratch_bytes():
++    """Persistent per-card scratch; allocator overhead is measured separately."""
++    return MAX_WEIGHT + 8 * MAX_BLOCKS + MAX_ROWS * MAX_K + 4 * MAX_ROWS * (MAX_K // 128)
++
++
++class PrefillRoute:
++    def __init__(self, torch, setting, emit=None):
++        if setting != SETTING:
++            raise ValueError("unknown P1 prefill setting")
++        self.torch, self.emit = torch, emit
++        self.scratch, self.validated, self.warmed = {}, {}, set()
++        self.calls, self.rows, self.seen = {}, {}, set()
++
++    def admits_shape(self, n, k):
++        return (n, k) in SHAPES
++
++    def admits(self, m, n, k):
++        return type(m) is int and MIN_ROWS <= m <= MAX_ROWS and (n, k) in SHAPES
++
++    def _runtime(self, device):
++        if type(device) is not int or device not in (0, 1):
++            raise ValueError("P1 requires card 0 or 1")
++        import triton
++
++        from sglang.srt.layers.quantization.quark.schemes import (
++            gfx1201_p1_fp8_kernels as kernels,
++        )
++
++        if self.torch.cuda.current_device() != device:
++            raise ValueError("P1 wrong current card")
++        target = triton.runtime.driver.active.get_current_target()
++        if target.backend != "hip" or target.arch != "gfx1201":
++            raise ValueError("P1 admits only gfx1201 HIP")
++        if self.torch.cuda.is_current_stream_capturing():
++            raise RuntimeError("P1 prefill route never runs under graph capture")
++        return triton, kernels
++
++    def _buffers(self, device):
++        if device not in self.scratch:
++            torch = self.torch
++            # One buffer per logical tensor: the launches require distinct storage.
++            self.scratch[device] = dict(
++                weight=torch.empty((MAX_WEIGHT,), dtype=torch.float8_e4m3fn, device=device),
++                block_scales=torch.empty((MAX_BLOCKS,), dtype=torch.float32, device=device),
++                flags=torch.empty((MAX_BLOCKS,), dtype=torch.int32, device=device),
++                x_q=torch.empty((MAX_ROWS * MAX_K,), dtype=torch.float8_e4m3fn, device=device),
++                x_scales=torch.empty((MAX_ROWS * (MAX_K // 128),), dtype=torch.float32, device=device))
++        return self.scratch[device]
++
++    def _views(self, device, m, n, k):
++        b = self._buffers(device)
++        blocks = (n // 128) * (k // 128)
++        return (b["weight"][:n * k].view(n, k), b["block_scales"][:blocks].view(n // 128, k // 128),
++                b["flags"][:blocks].view(n // 128, k // 128), b["x_q"][:m * k].view(m, k),
++                b["x_scales"][:m * (k // 128)].view(m, k // 128))
++
++    def _check(self, value, shape, dtype, device):
++        if (tuple(value.shape) != shape or value.dtype != dtype or not value.is_contiguous()
++                or value.device.type != "cuda" or value.device.index != device):
++            raise ValueError("P1 tensor shape/dtype/contiguity/card mismatch")
++
++    def _check_layer(self, layer, n, k, device):
++        self._check(layer.weight, (n, k // 2), self.torch.uint8, device)
++        self._check(layer.weight_scale, (n, k // 32), self.torch.uint8, device)
++
++    def _identity(self, layer):
++        w, s = layer.weight, layer.weight_scale
++        return (w.data_ptr(), s.data_ptr(), w._version, s._version, tuple(w.shape), tuple(s.shape))
++
++    def _expand(self, kernels, triton, layer, n, k, weight, block_scales, flags):
++        return kernels._expand_mxfp4_to_block_fp8[(triton.cdiv(n, 128), k // 128)](
++            layer.weight, layer.weight_scale, weight, block_scales, flags,
++            N=n, K=k, **EXPANSION_CONFIG,
++        )
++
++    def _quantize(self, kernels, x, x_q, x_scales, m, k):
++        return kernels._per_token_group_quant_8bit[(m * (k // 128),)](
++            x, x_q, x_scales, 128, 128, 1e-10, -448.0, 448.0, **QUANTIZER_CONFIG,
++        )
++
++    def _gemm(self, kernels, triton, x_q, weight, x_scales, block_scales, y, m, n, k):
++        return kernels._w8a8_block_fp8_matmul[(triton.cdiv(m, 64) * triton.cdiv(n, 128),)](
++            x_q, weight, y, x_scales, block_scales, m, n, k, 128, 128,
++            x_q.stride(0), x_q.stride(1), weight.stride(1), weight.stride(0),
++            y.stride(0), y.stride(1), x_scales.stride(0), x_scales.stride(1),
++            block_scales.stride(1), block_scales.stride(0), **GEMM_CONFIG,
++        )
++
++    def is_validated(self, layer):
++        return id(layer) in self.validated
++
++    def validate_layer(self, layer, n, k, rebind=False):
++        """Load time: expand once, require every guard flag zero, then warm the row-count variants.
++
++        rebind=True re-validates a layer validated before whose packed weights moved.
++        """
++        torch = self.torch
++        if (n, k) not in SHAPES:
++            raise ValueError("P1 validation of an undeclared shape")
++        device = layer.weight.device.index
++        triton, kernels = self._runtime(device)
++        if (id(layer) in self.validated) != rebind:
++            raise RuntimeError("P1 layer validated twice" if not rebind else "P1 rebind of an unvalidated layer")
++        self._check_layer(layer, n, k, device)
++        weight, block_scales, flags, _, _ = self._views(device, MIN_ROWS, n, k)
++        with torch.no_grad():
++            self._expand(kernels, triton, layer, n, k, weight, block_scales, flags)
++            bad = int(torch.count_nonzero(flags).item())  # synchronizes; load time only
++        if bad:
++            raise ValueError("P1 guard flags rejected %d blocks of an admitted shard" % bad)
++        self.validated[id(layer)] = self._identity(layer)
++        if device not in self.warmed:
++            # Compile both M specializations of the quantizer and GEMM before traffic, on this
++            # freshly expanded weight; outputs are discarded and nothing persists.
++            for m in WARM_ROWS:
++                x = torch.zeros((m, k), dtype=torch.bfloat16, device=device)
++                y = torch.empty((m, n), dtype=torch.bfloat16, device=device)
++                _, _, _, x_q, x_scales = self._views(device, m, n, k)
++                self._quantize(kernels, x, x_q, x_scales, m, k)
++                self._gemm(kernels, triton, x_q, weight, x_scales, block_scales, y, m, n, k)
++                del x, y
++            torch.cuda.synchronize(device)
++            self.warmed.add(device)
++            if self.emit is not None:
++                self.emit("P1_PREFILL_READY", {"device": device, "scratch_bytes": scratch_bytes(),
++                                               "warm_rows": list(WARM_ROWS), "setting": SETTING})
++
++    def apply(self, layer, x, n, k):
++        """One admitted prefill call: expand, quantize, GEMM; BF16 output in a fresh tensor."""
++        torch = self.torch
++        m = x.shape[0]
++        if not self.admits(m, n, k):
++            raise ValueError("P1 call outside its admission")
++        device = x.device.index
++        triton, kernels = self._runtime(device)
++        if self.validated.get(id(layer)) != self._identity(layer):
++            raise RuntimeError("P1 layer not validated at load or its packed weights changed")
++        self._check_layer(layer, n, k, device)
++        self._check(x, (m, k), torch.bfloat16, device)
++        weight, block_scales, flags, x_q, x_scales = self._views(device, m, n, k)
++        y = torch.empty((m, n), dtype=torch.bfloat16, device=device)
++        self._expand(kernels, triton, layer, n, k, weight, block_scales, flags)
++        self._quantize(kernels, x, x_q, x_scales, m, k)
++        self._gemm(kernels, triton, x_q, weight, x_scales, block_scales, y, m, n, k)
++        self.calls[(n, k)] = self.calls.get((n, k), 0) + 1
++        self.rows[m] = self.rows.get(m, 0) + 1
++        if (n, k) not in self.seen and self.emit is not None:
++            self.seen.add((n, k))
++            self.emit("P1_PREFILL_ROUTE", {"device": device, "n": n, "k": k, "rows": m})
++        return y
++
++    def snapshot(self):
++        return {"setting": SETTING, "validated_layers": len(self.validated), "warmed_devices": sorted(self.warmed),
++                "calls": {"%dx%d" % key: value for key, value in sorted(self.calls.items())},
++                "rows": {str(key): value for key, value in sorted(self.rows.items())}}
++
++
++def install(torch, setting):
++    """Create and register the single route for this serving process."""
++    global ACTIVE
++    if ACTIVE is not None:
++        raise RuntimeError("P1 prefill route is single-use per serving process")
++    ACTIVE = PrefillRoute(torch, setting, emit=log_emit)
++    return ACTIVE
++
++
++def log_emit(label, value):
++    import json
++
++    logger.info("%s %s", label, json.dumps(value, sort_keys=True))
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
+index 94081ad..40a3787 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
+@@ -174,6 +174,14 @@ def _is_gfx1201() -> bool:
+ # (ASM GEMM, pre-quantized and fused split-cat inputs) are unavailable there.
+ _use_gfx1201_mxfp4 = _is_hip and importlib.util.find_spec("aiter") is None and _is_gfx1201()
+ 
++# gfx1201 P1 prefill route (opt-in): admitted prefill rows run an FP8 GEMM on a
++# lossless FP8 expansion of the MXFP4 weight. One route per serving process.
++_gfx1201_p1 = None
++if _use_gfx1201_mxfp4 and envs.SGLANG_GFX1201_P1_PREFILL.get():
++    from sglang.srt.layers.quantization.quark.schemes import gfx1201_p1_prefill
++
++    _gfx1201_p1 = gfx1201_p1_prefill.install(torch, gfx1201_p1_prefill.SETTING)
++
+ if _use_gfx1201_mxfp4:
+     from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4 import (
+         dynamic_mxfp4_quant,
+@@ -450,6 +458,11 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             return
+ 
+         layer.use_aiter_asm_fp4_gemm = False
++        if _gfx1201_p1 is not None:
++            n, k = layer.weight.shape[0], layer.weight.shape[1] * 2
++            if _gfx1201_p1.admits_shape(n, k):
++                # Expand once, require zero guard flags, compile before traffic.
++                _gfx1201_p1.validate_layer(layer, n, k)
+         if not _use_aiter_asm_fp4_gemm or not is_gfx95_supported():
+             return
+ 
+@@ -957,6 +970,21 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             x = x.view(-1, x.shape[-1])
+             output_shape = [*x.shape[:-1], layer.weight.shape[0]]
+ 
++        if (
++            _gfx1201_p1 is not None
++            and x_s is None
++            and y is None
++            and not fused_gemm_split_cat
++            and bias is None
++            and x.dtype == torch.bfloat16
++            and x.is_contiguous()
++            and _gfx1201_p1.admits(x.shape[0], layer.weight.shape[0], x.shape[1])
++            and _gfx1201_p1.is_validated(layer)
++            and not torch.cuda.is_current_stream_capturing()
++        ):
++            y = _gfx1201_p1.apply(layer, x, layer.weight.shape[0], x.shape[1])
++            return y.view(*output_shape) if three_d else y
++
+         # use_fused_quant_gemm = true, x_q is a bf16/fp16 num
+         # x_s is not None = true, x_q is uint8 num
+         if use_fused_quant_gemm or x_s is not None:
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index a6f42cc..6901a8c 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -829,6 +829,15 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         qkvz.weight.data, ba.weight.data = weight[:rows], weight[rows:]
+         qkvz.weight_scale.data, ba.weight_scale.data = scale[:rows], scale[rows:]
+         self._gfx1201_in_proj = (weight, scale, rows)
++        # The P1 prefill route pins each validated layer's weight storage; the
++        # bytes are unchanged, so expand and check the moved shards again.
++        p1 = quark_w4a4_mxfp4._gfx1201_p1
++        if p1 is not None:
++            for proj in (qkvz, ba):
++                if p1.is_validated(proj):
++                    p1.validate_layer(
++                        proj, proj.weight.shape[0], proj.weight.shape[1] * 2, rebind=True
++                    )
+         return True
+ 
+     def _finalize_fused_fp8_in_proj(self) -> bool:
