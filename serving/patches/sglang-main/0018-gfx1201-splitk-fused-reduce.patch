@@ -1,0 +1,342 @@
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
+index 74f7ec3..894b7f4 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
+@@ -25,10 +25,16 @@ from the op234 runtime are available, each off unless its variable is 1:
+   A graph-captured, DRAM-fed sweep (2026-11-09) measured 80.0 to 66.8,
+   64.4 to 58.1 and 138.0 to 132.7 us per call at M8, with outputs bitwise
+   equal to the single partition on random data (not guaranteed in general).
++- SGLANG_GFX1201_SPLITK_FUSED_REDUCE: run those split-K GEMMs as one kernel,
++  the last partition of each tile summing the partials in the same fixed order
++  (gfx1201_mxfp4_splitk), instead of a GEMM plus a reduce kernel. Bitwise equal
++  to the two-kernel path. Each compiled variant's code is checked once
++  (fused_splitk_asm_ok); a variant that fails the check uses the two-kernel path.
+ """
+ 
+ import logging
+ import os
++import re
+ 
+ import torch
+ import triton
+@@ -47,6 +53,7 @@ def _enabled(name: str) -> bool:
+ GATE_UP_WAVE0 = _enabled("SGLANG_GFX1201_GATE_UP_WAVE0")
+ SPLITK_DOWNOUT = _enabled("SGLANG_GFX1201_SPLITK_DOWNOUT")
+ SPLITK_WIDE = _enabled("SGLANG_GFX1201_SPLITK_WIDE")
++SPLITK_FUSED_REDUCE = _enabled("SGLANG_GFX1201_SPLITK_FUSED_REDUCE")
+ _VERIFY_ROWS = (8, 16)
+ _GATE_UP_SHAPE = (17408, 5120)
+ # (N, K) -> K partitions; every partition covers whole BLOCK_SIZE_K=128 blocks.
+@@ -60,6 +67,12 @@ _SPLITK_SCRATCH_FLOATS = max(parts * max(_VERIFY_ROWS) * n
+                              for table in (_SPLITK_DOWNOUT_PARTS, _SPLITK_WIDE_PARTS)
+                              for (n, _), parts in table.items())
+ _splitk_scratch: dict = {}
++# One int32 arrival counter per output tile for the fused reduce, shared by every
++# launch on the device (each launch leaves its counters at zero). The largest
++# verify grid has cdiv(16, 16) * cdiv(17408, 64) = 272 tiles.
++_SPLITK_COUNTERS = 4096
++_splitk_counters: dict = {}
++_fused_asm_checked: dict = {}
+ 
+ _GEMM_CONFIG = {
+     "BLOCK_SIZE_M": 64,
+@@ -134,9 +147,57 @@ def _splitk_partials(device: torch.device, m: int, n: int, parts: int):
+             return None
+         scratch = torch.empty(_SPLITK_SCRATCH_FLOATS, dtype=torch.float32, device=device)
+         _splitk_scratch[device.index] = scratch
++        _splitk_counters[device.index] = torch.zeros(_SPLITK_COUNTERS, dtype=torch.int32, device=device)
+     return scratch[: parts * m * n].view(parts, m, n)
+ 
+ 
++def fused_splitk_asm_ok(asm: str):
++    """Check the compiled fused split-K kernel keeps the ordering it relies on.
++
++    Returns (ok, reason). Required, in the code before the counter atomic: an
++    s_wait_storecnt 0x0 between the last partial store and the workgroup barrier
++    (so every wave's stores are complete before the count is published); the
++    atomic at device scope; and, after it, device- or system-scope partial loads.
++    """
++    lines = [l.strip() for l in asm.splitlines() if l.strip() and not l.strip().startswith((";", "."))]
++    atom = [i for i, l in enumerate(lines) if re.match(r"(global|buffer)_atomic_add_u32", l)]
++    if len(atom) != 1:
++        return False, f"expected one counter atomic, found {len(atom)}"
++    a = atom[0]
++    if "scope:SCOPE_DEV" not in lines[a] and "scope:SCOPE_SYS" not in lines[a]:
++        return False, "counter atomic is not device scope"
++    stores = [i for i in range(a) if re.match(r"(global|buffer)_store", lines[i])]
++    bar = [i for i in range(a) if lines[i].startswith("s_barrier_signal")]
++    if not stores or not bar:
++        return False, "no partial store or barrier before the atomic"
++    last_store = stores[-1]
++    first_bar = next((i for i in bar if i > last_store), None)
++    if first_bar is None:
++        return False, "no barrier after the last partial store"
++    if not any(lines[i].startswith(("s_wait_storecnt 0x0", "s_wait_storecnt_dscnt 0x0")) for i in range(last_store + 1, first_bar)):
++        return False, "partial stores are not drained (s_wait_storecnt 0x0) before the barrier"
++    loads = [l for l in lines[a + 1:] if re.match(r"(global|buffer)_load", l)]
++    if not loads or not all(("scope:SCOPE_DEV" in l or "scope:SCOPE_SYS" in l) for l in loads):
++        return False, "partial reloads are not device scope"
++    return True, ""
++
++
++def _launch_fused(x, w, x_scales, w_scales, partials, y, counters, m, n, packed_k, config, grid):
++    from sglang.srt.layers.quantization.quark.schemes import gfx1201_mxfp4_splitk as _fk
++
++    return _fk._gemm_afp4wfp4_splitk_fused_kernel[grid](
++        x, w, partials, y, counters, x_scales, w_scales,
++        m, n, packed_k,
++        x.stride(0), x.stride(1),
++        w.stride(1), w.stride(0),
++        partials.stride(0), partials.stride(1), partials.stride(2),
++        y.stride(0), y.stride(1),
++        x_scales.stride(0), x_scales.stride(1),
++        w_scales.stride(0), w_scales.stride(1),
++        **config,
++    )
++
++
+ def _launch(x, w, x_scales, w_scales, c, m, n, packed_k, config, grid, c_strides):
+     _k._gemm_afp4wfp4_kernel[grid](
+         x, w, c, x_scales, w_scales,
+@@ -190,6 +251,23 @@ def gemm_afp4wfp4(x, w, x_scales, w_scales, dtype, y, *, gate_up_wave0=None, spl
+                 logger.info("Split-K MXFP4 verify GEMM (gfx1201) route: %d rows, N=%d K=%d, %d partitions",
+                             m, n, k, parts)
+             split = dict(config, NUM_KSPLIT=parts, SPLITK_BLOCK_SIZE=k // parts)
++            key = (y.device.index, m, n, k, parts)
++            if SPLITK_FUSED_REDUCE and _fused_asm_checked.get(key, True):
++                if k % (parts * config["BLOCK_SIZE_K"]) or grid[0] > _SPLITK_COUNTERS:
++                    raise ValueError("fused split-K needs whole K blocks per partition and a counter per tile")
++                compiled = _launch_fused(x, w, x_scales, w_scales, partials, y, _splitk_counters[y.device.index],
++                                         m, n, packed_k, split, (grid[0] * parts,))
++                if key not in _fused_asm_checked:
++                    ok, reason = fused_splitk_asm_ok(compiled.asm["amdgcn"])
++                    _fused_asm_checked[key] = ok
++                    if ok:
++                        logger.info("Fused split-K reduce (gfx1201) route: %d rows, N=%d K=%d, %d partitions",
++                                    m, n, k, parts)
++                    else:
++                        # This launch already ran: recompute it on the checked two-kernel path.
++                        logger.error("Fused split-K reduce disabled for %d rows, N=%d K=%d: %s", m, n, k, reason)
++                if _fused_asm_checked[key]:
++                    return y
+             _launch(x, w, x_scales, w_scales, partials, m, n, packed_k, split, (grid[0] * parts,),
+                     (partials.stride(0), partials.stride(1), partials.stride(2)))
+             _splitk_reduce_kernel[(triton.cdiv(m * n, _SPLITK_REDUCE_BLOCK),)](
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4_splitk.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4_splitk.py
+new file mode 100644
+index 0000000..08bdae8
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4_splitk.py
+@@ -0,0 +1,212 @@
++# SPDX-License-Identifier: MIT
++# Derived from AMD's AITER Triton FP4 GEMM (_gemm_afp4wfp4_kernel, MIT), as vendored
++# unchanged in gfx1201_mxfp4_kernels.py. Generated from that source by renaming the
++# kernel, adding y_ptr/counter_ptr/stride_ym/stride_yn, and replacing only the final
++# partial store with a fused split-K reduction (see the epilogue). The GEMM main loop
++# is textually identical to the vendored kernel.
++"""Split-K MXFP4 GEMM for gfx1201 with the partial reduction fused into the epilogue."""
++
++import triton
++import triton.language as tl
++
++from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4_kernels import pid_grid, remap_xcd  # noqa: F401
++
++
++@triton.heuristics(
++    {
++        "EVEN_K": lambda args: (args["K"] % (args["BLOCK_SIZE_K"] // 2) == 0)
++        and (args["SPLITK_BLOCK_SIZE"] % args["BLOCK_SIZE_K"] == 0)
++        and (args["K"] % (args["SPLITK_BLOCK_SIZE"] // 2) == 0),
++    }
++)
++@triton.jit
++def _gemm_afp4wfp4_splitk_fused_kernel(
++    a_ptr,
++    b_ptr,
++    c_ptr,
++    y_ptr,
++    counter_ptr,
++    a_scales_ptr,
++    b_scales_ptr,
++    M,
++    N,
++    K,
++    stride_am,
++    stride_ak,
++    stride_bk,
++    stride_bn,
++    stride_ck,
++    stride_cm,
++    stride_cn,
++    stride_ym,
++    stride_yn,
++    stride_asm,
++    stride_ask,
++    stride_bsn,
++    stride_bsk,
++    # Meta-parameters
++    BLOCK_SIZE_M: tl.constexpr,
++    BLOCK_SIZE_N: tl.constexpr,
++    BLOCK_SIZE_K: tl.constexpr,
++    GROUP_SIZE_M: tl.constexpr,
++    NUM_KSPLIT: tl.constexpr,
++    SPLITK_BLOCK_SIZE: tl.constexpr,
++    EVEN_K: tl.constexpr,
++    num_warps: tl.constexpr,
++    num_stages: tl.constexpr,
++    waves_per_eu: tl.constexpr,
++    matrix_instr_nonkdim: tl.constexpr,
++    cache_modifier: tl.constexpr,
++):
++    """
++    Kernel for computing the matmul C = A x B.
++    A and B inputs are in the microscale fp4 (mxfp4) format.
++    A_scales and B_scales are in e8m0 format.
++    A has shape (M, K), B has shape (K, N) and C has shape (M, N)
++    """
++
++    tl.assume(stride_am > 0)
++    tl.assume(stride_ak > 0)
++    tl.assume(stride_bk > 0)
++    tl.assume(stride_bn > 0)
++    tl.assume(stride_cm > 0)
++    tl.assume(stride_cn > 0)
++    tl.assume(stride_asm > 0)
++    tl.assume(stride_ask > 0)
++    tl.assume(stride_bsk > 0)
++    tl.assume(stride_bsn > 0)
++
++    GRID_MN = tl.cdiv(M, BLOCK_SIZE_M) * tl.cdiv(N, BLOCK_SIZE_N)
++
++    # -----------------------------------------------------------
++    # Map program ids `pid` to the block of C it should compute.
++    # This is done in a grouped ordering to promote L2 data reuse.
++    pid_unified = tl.program_id(axis=0)
++    # remap so that XCDs get continous chunks of pids (of CHUNK_SIZE).
++    pid_unified = remap_xcd(pid_unified, GRID_MN * NUM_KSPLIT, NUM_XCDS=8)
++
++    pid_k = pid_unified % NUM_KSPLIT
++    pid = pid_unified // NUM_KSPLIT
++    num_pid_m = tl.cdiv(M, BLOCK_SIZE_M)
++    num_pid_n = tl.cdiv(N, BLOCK_SIZE_N)
++
++    if NUM_KSPLIT == 1:
++        pid_m, pid_n = pid_grid(pid, num_pid_m, num_pid_n, GROUP_SIZE_M=GROUP_SIZE_M)
++    else:
++        pid_m = pid // num_pid_n
++        pid_n = pid % num_pid_n
++
++    tl.assume(pid_m >= 0)
++    tl.assume(pid_n >= 0)
++    tl.assume(pid_k >= 0)
++    # We assume 32 elements along K share the same scale.
++    SCALE_GROUP_SIZE: tl.constexpr = 32
++
++    if (pid_k * SPLITK_BLOCK_SIZE // 2) < K:
++
++        num_k_iter = tl.cdiv(SPLITK_BLOCK_SIZE // 2, BLOCK_SIZE_K // 2)
++
++        # Create pointers for first block of A and B input matrices
++        # The BLOCK sizes are of the elements and in fp4 we pack 2 per uint8 container.
++        offs_k = tl.arange(0, BLOCK_SIZE_K // 2)
++        offs_k_split = pid_k * (SPLITK_BLOCK_SIZE // 2) + offs_k
++        offs_am = (pid_m * BLOCK_SIZE_M + tl.arange(0, BLOCK_SIZE_M)) % M
++        offs_bn = (pid_n * BLOCK_SIZE_N + tl.arange(0, BLOCK_SIZE_N)) % N
++        a_ptrs = a_ptr + (
++            offs_am[:, None] * stride_am + offs_k_split[None, :] * stride_ak
++        )
++        b_ptrs = b_ptr + (
++            offs_k_split[:, None] * stride_bk + offs_bn[None, :] * stride_bn
++        )
++        # Create pointers for the first block of A and B scales
++        offs_ks = (pid_k * (SPLITK_BLOCK_SIZE // SCALE_GROUP_SIZE)) + tl.arange(
++            0, BLOCK_SIZE_K // SCALE_GROUP_SIZE
++        )
++        a_scale_ptrs = (
++            a_scales_ptr + offs_am[:, None] * stride_asm + offs_ks[None, :] * stride_ask
++        )
++        # B scales are N x K even though B operand is K x N.
++        b_scale_ptrs = (
++            b_scales_ptr + offs_bn[:, None] * stride_bsn + offs_ks[None, :] * stride_bsk
++        )
++
++        accumulator = tl.zeros((BLOCK_SIZE_M, BLOCK_SIZE_N), dtype=tl.float32)
++        offs_scale_k = tl.arange(0, BLOCK_SIZE_K // SCALE_GROUP_SIZE)
++
++        for k in range(pid_k * num_k_iter, (pid_k + 1) * num_k_iter):
++            # Load scales, masking OOB when K is not aligned to BLOCK_SIZE_K.
++            # OOB scales could contain 0xFF (NaN in e8m0) which propagates
++            # through dot_scaled even when the corresponding data is zero.
++            if EVEN_K:
++                a_scales = tl.load(a_scale_ptrs)
++                b_scales = tl.load(b_scale_ptrs, cache_modifier=cache_modifier)
++            else:
++                scale_mask = offs_scale_k[None, :] < (
++                    2 * K // SCALE_GROUP_SIZE - k * (BLOCK_SIZE_K // SCALE_GROUP_SIZE)
++                )
++                a_scales = tl.load(a_scale_ptrs, mask=scale_mask, other=127)
++                b_scales = tl.load(
++                    b_scale_ptrs,
++                    mask=scale_mask,
++                    other=127,
++                    cache_modifier=cache_modifier,
++                )
++
++            # Load the next block of A and B, generate a mask by checking the K dimension.
++            # If it is out of bounds, set it to 0.
++            if EVEN_K:
++                a = tl.load(a_ptrs)
++                b = tl.load(b_ptrs, cache_modifier=cache_modifier)
++            else:
++                a = tl.load(
++                    a_ptrs, mask=offs_k[None, :] < K - k * (BLOCK_SIZE_K // 2), other=0
++                )
++                b = tl.load(
++                    b_ptrs,
++                    mask=offs_k[:, None] < K - k * (BLOCK_SIZE_K // 2),
++                    other=0,
++                    cache_modifier=cache_modifier,
++                )
++
++            accumulator = tl.dot_scaled(
++                a, a_scales, "e2m1", b, b_scales, "e2m1", accumulator
++            )
++
++            # Advance the ptrs to the next K block.
++            a_ptrs += (BLOCK_SIZE_K // 2) * stride_ak
++            b_ptrs += (BLOCK_SIZE_K // 2) * stride_bk
++            a_scale_ptrs += (BLOCK_SIZE_K // SCALE_GROUP_SIZE) * stride_ask
++            b_scale_ptrs += (BLOCK_SIZE_K // SCALE_GROUP_SIZE) * stride_bsk
++
++        c = accumulator.to(c_ptr.type.element_ty)
++
++        # Write back the block of the output matrix C with masks.
++        offs_cm = pid_m * BLOCK_SIZE_M + tl.arange(0, BLOCK_SIZE_M).to(tl.int64)
++        offs_cn = pid_n * BLOCK_SIZE_N + tl.arange(0, BLOCK_SIZE_N).to(tl.int64)
++        c_ptrs = (
++            c_ptr
++            + stride_cm * offs_cm[:, None]
++            + stride_cn * offs_cn[None, :]
++            + pid_k * stride_ck
++        )
++        c_mask = (offs_cm[:, None] < M) & (offs_cn[None, :] < N)
++        # Fused split-K reduce (bitwise equal to _splitk_reduce_kernel's fixed order).
++        # 1. Every wave stores its FP32 partial; the workgroup barrier is preceded by
++        #    s_wait_storecnt 0 in every wave (checked in the compiled code by
++        #    gfx1201_mxfp4.fused_splitk_asm_ok), so all of this partition's stores are
++        #    complete, and on gfx120x a completed store is device-coherent.
++        # 2. One agent-scope acq_rel atomic counts the tile's arrivals.
++        # 3. The last partition re-reads every partial with device-scope loads
++        #    (.cg -> scope:SCOPE_DEV) and sums them as ((p0 + p1) + p2) + ...,
++        #    then resets the tile counter for the next launch on the stream.
++        tl.store(c_ptrs, c, mask=c_mask)
++        tl.debug_barrier()
++        arrived = tl.atomic_add(counter_ptr + pid, 1, sem="acq_rel", scope="gpu")
++        if arrived == NUM_KSPLIT - 1:
++            p_ptrs = c_ptr + stride_cm * offs_cm[:, None] + stride_cn * offs_cn[None, :]
++            acc = tl.load(p_ptrs, mask=c_mask, other=0.0, cache_modifier=".cg")
++            for i in tl.static_range(1, NUM_KSPLIT):
++                acc = acc + tl.load(p_ptrs + i * stride_ck, mask=c_mask, other=0.0, cache_modifier=".cg")
++            y_ptrs = y_ptr + stride_ym * offs_cm[:, None] + stride_yn * offs_cn[None, :]
++            tl.store(y_ptrs, acc.to(y_ptr.type.element_ty), mask=c_mask)
++            tl.atomic_xchg(counter_ptr + pid, 0, sem="relaxed", scope="gpu")
