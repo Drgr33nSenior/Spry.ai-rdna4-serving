@@ -1,0 +1,128 @@
+diff --git a/python/sglang/kernels/aot/csrc/allreduce/custom_all_reduce_hip.cuh b/python/sglang/kernels/aot/csrc/allreduce/custom_all_reduce_hip.cuh
+index 92dd919..91be603 100644
+--- a/python/sglang/kernels/aot/csrc/allreduce/custom_all_reduce_hip.cuh
++++ b/python/sglang/kernels/aot/csrc/allreduce/custom_all_reduce_hip.cuh
+@@ -74,6 +74,21 @@ struct packed_t {
+ 
+ #define DINLINE __device__ __forceinline__
+ 
++// gfx12 (RDNA4) peers reach each other over PCIe without cache coherence: a
++// relaxed start flag can reach the peer before this rank's input has left its
++// L2, and the peer then reads stale data (wrong, rank-divergent sums measured on
++// two R9700s). There the start flag is a system-scope release and its wait a
++// system-scope acquire. XGMI (gfx94x/gfx95x) builds keep the relaxed flags.
++#if defined(__gfx1200__) || defined(__gfx1201__)
++#define SGL_CAR_START_STORE_ORDER __ATOMIC_RELEASE
++#define SGL_CAR_START_LOAD_ORDER __ATOMIC_ACQUIRE
++#define SGL_CAR_START_LOAD_SCOPE __MEMORY_SCOPE_SYSTEM
++#else
++#define SGL_CAR_START_STORE_ORDER __ATOMIC_RELAXED
++#define SGL_CAR_START_LOAD_ORDER __ATOMIC_RELAXED
++#define SGL_CAR_START_LOAD_SCOPE __MEMORY_SCOPE_DEVICE
++#endif
++
+ // scalar cast functions
+ DINLINE float upcast_s(half val) {
+   return __half2float(val);
+@@ -166,10 +181,10 @@ DINLINE void start_sync(
+     // simultaneously write to the corresponding flag of all ranks.
+     // Latency = 1 p2p write
+     __scoped_atomic_store_n(
+-        &sg.signals[threadIdx.x]->start[blockIdx.x][rank], flag, __ATOMIC_RELAXED, __MEMORY_SCOPE_SYSTEM);
++        &sg.signals[threadIdx.x]->start[blockIdx.x][rank], flag, SGL_CAR_START_STORE_ORDER, __MEMORY_SCOPE_SYSTEM);
+     // wait until we got true from all ranks
+-    while (__scoped_atomic_load_n(&self_sg->start[blockIdx.x][threadIdx.x], __ATOMIC_RELAXED, __MEMORY_SCOPE_DEVICE) <
+-           flag)
++    while (__scoped_atomic_load_n(
++               &self_sg->start[blockIdx.x][threadIdx.x], SGL_CAR_START_LOAD_ORDER, SGL_CAR_START_LOAD_SCOPE) < flag)
+       ;
+   }
+   __syncthreads();
+diff --git a/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py b/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py
+index 68e2e06..28eb8b0 100644
+--- a/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py
++++ b/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py
+@@ -67,6 +67,7 @@ class CustomAllreduce:
+         are in the same node.
+         """
+         self._IS_CAPTURING = False
++        self.pcie_two_gpu = False
+         self.disabled = True  # This can be modified in-place by context manager in piecewise cuda graph runner
+         self.original_disabled = True  # To store the original state
+         self.use_amd_deterministic_impl = _use_amd_deterministic_impl()
+@@ -86,14 +87,26 @@ class CustomAllreduce:
+         # now `device` is a `torch.device` object
+         assert isinstance(device, torch.device)
+         self.device = device
+-        full_nvlink = can_use_custom_all_reduce_with_nvlink(
+-            group=group,
+-            device=device,
+-            supported_world_size=self._SUPPORTED_WORLD_SIZES,
+-            cls_name="CustomAllreduce",
+-        )
+-        if full_nvlink is None:
+-            return  # fail to get nvlink status
++        # SGLANG_GFX1201_PCIE_CUSTOM_AR=1: two gfx1201 GPUs over PCIe, which the
++        # XGMI check (and its amdsmi dependency) rejects. Decode-sized reductions
++        # only; larger ones (prefill chunks) stay on RCCL.
++        # The cap applies in should_custom_ar only: the IPC buffers keep their size,
++        # because a small torch allocation is not the base of its own hipMalloc
++        # block and hipIpcGetMemHandle rejects it.
++        self.pcie_two_gpu = _pcie_two_gpu(world_size, device)
++        if self.pcie_two_gpu:
++            full_nvlink = False
++            self.pcie_max_bytes = min(max_size, envs.SGLANG_GFX1201_PCIE_CUSTOM_AR_MAX_BYTES.get())
++            log_info_on_rank0(logger, f"[AR] gfx1201 PCIe custom all-reduce, up to {self.pcie_max_bytes} bytes")
++        else:
++            full_nvlink = can_use_custom_all_reduce_with_nvlink(
++                group=group,
++                device=device,
++                supported_world_size=self._SUPPORTED_WORLD_SIZES,
++                cls_name="CustomAllreduce",
++            )
++            if full_nvlink is None:
++                return  # fail to get nvlink status
+ 
+         self.group = group
+         self.max_size = max_size
+@@ -280,6 +293,8 @@ class CustomAllreduce:
+         if _is_hip:
+             if self.use_amd_deterministic_impl:
+                 return True
++            if self.pcie_two_gpu:
++                return inp_size <= self.pcie_max_bytes
+             if self.full_nvlink:
+                 return inp_size <= self.max_size
+             return False
+@@ -447,6 +462,16 @@ def dispatch_custom_allreduce(
+     return CustomAllreduce
+ 
+ 
++def _pcie_two_gpu(world_size: int, device: torch.device) -> bool:
++    """SGLANG_GFX1201_PCIE_CUSTOM_AR=1 on two gfx1201 GPUs that can reach each other."""
++    if not (_is_hip and world_size == 2 and envs.SGLANG_GFX1201_PCIE_CUSTOM_AR.get()):
++        return False
++    if torch.cuda.get_device_properties(device).gcnArchName.split(":")[0] != "gfx1201":
++        return False
++    peer = 1 - (device.index or 0) if torch.cuda.device_count() == 2 else None
++    return peer is not None and torch.cuda.can_device_access_peer(device.index or 0, peer)
++
++
+ def _use_amd_deterministic_impl() -> bool:
+     if not _is_hip:  # CUDA is always deterministic
+         return False
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index 7cbcca6..d65f7c8 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1636,6 +1636,10 @@ class Envs:
+     SGLANG_FORCE_CUSTOM_ALL_REDUCE_V2_PUSH_SIZE_KB = EnvInt(None)
+     # See docs/references/environment_variables.
+     SGLANG_ENABLE_PCIE_IPC_ALLREDUCE = EnvBool(False)
++    # Two gfx1201 GPUs over PCIe: SGLang's HIP custom all-reduce (1-stage) for
++    # reductions up to the byte limit (decode/verify sizes); larger ones use RCCL.
++    SGLANG_GFX1201_PCIE_CUSTOM_AR = EnvBool(False)
++    SGLANG_GFX1201_PCIE_CUSTOM_AR_MAX_BYTES = EnvInt(512 * 1024)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
