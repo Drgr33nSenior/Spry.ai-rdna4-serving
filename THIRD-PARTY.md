@@ -11,9 +11,12 @@ copyright and SPDX notices. The Apache-2.0 terms are included in
 `LICENSES/SGLang-Apache-2.0.txt`. Some SGLang files identify vLLM contributors and
 adaptation URLs; these notices remain unchanged.
 
-The current SGLang baseline is commit
-`e00930c5489053f26d86b179cee0d087f846acbb` from
+The current `serving/patches/sglang-main/` series targets SGLang `main` at
+commit `fcb3274646e43c16d70fd83806ebb3a5134d5e81` from
 [sgl-project/sglang](https://github.com/sgl-project/sglang).
+`prototype/image-source/`, `common-runtime/overlay/`,
+`serving/patches/sglang-0.5.21/` and the stock fixtures use the historical
+SGLang 0.5.21 baseline, commit `e00930c5489053f26d86b179cee0d087f846acbb`.
 `prototype/image-source/` is a modified, selected source overlay. It adds the
 private KV4 contract, backend and ownership integration. `patches/sglang-kv4.patch`
 and the provenance records identify modifications and added files.
@@ -23,6 +26,16 @@ repairs, not a complete upstream checkout.
 Historical fixtures retain their original source bytes and identities. They can
 contain earlier prototype modifications and are not the current serving source.
 Their source/import hashes are recorded in `provenance/SOURCE-IMPORT.json`.
+
+## AMD AITER-derived kernels
+
+`serving/patches/sglang-main/0004-gfx1201-mxfp4-without-aiter.patch` adds
+`gfx1201_mxfp4_kernels.py`, a Triton MXFP4 activation quantizer and FP4 GEMM
+derived from [ROCm/aiter](https://github.com/ROCm/aiter) commit
+`32214c295ea2eec1055bdb3467d2eee7289257be`. The file keeps its
+`SPDX-License-Identifier: MIT` line and the notice
+`Copyright (C) 2024-2026, Advanced Micro Devices, Inc. All rights reserved.`
+The MIT terms are included in `LICENSES/AITER-MIT.txt`.
 
 ## Qwen config fixture
 

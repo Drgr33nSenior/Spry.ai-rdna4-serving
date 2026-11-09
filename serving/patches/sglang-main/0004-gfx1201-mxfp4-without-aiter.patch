@@ -603,7 +603,7 @@ index 1ecdd029e1..b16726cf23 100644
      dynamic_mxfp4_quant = None
  
 diff --git a/python/sglang/srt/layers/quantization/quark_int4fp8_moe.py b/python/sglang/srt/layers/quantization/quark_int4fp8_moe.py
-index 276ee8eb6f..8f0913686e 100644
+index 276ee8eb6f..955814ee3e 100644
 --- a/python/sglang/srt/layers/quantization/quark_int4fp8_moe.py
 +++ b/python/sglang/srt/layers/quantization/quark_int4fp8_moe.py
 @@ -1,6 +1,7 @@
@@ -614,7 +614,7 @@ index 276ee8eb6f..8f0913686e 100644
  import torch
  from tqdm import tqdm
  from tqdm.std import EMA
-@@ -27,8 +28,12 @@ if TYPE_CHECKING:
+@@ -27,8 +28,16 @@ if TYPE_CHECKING:
  _is_hip = is_hip()
  
  
@@ -625,6 +625,10 @@ index 276ee8eb6f..8f0913686e 100644
 +
 +    def shuffle_weight(*args, **kwargs):
 +        raise NotImplementedError("INT4-FP8 MoE on ROCm needs AITER's shuffle_weight")
++
++
++# ON_GFX950 below stays defined on every HIP host, with or without AITER.
++if _is_hip:
  
      ON_GFX950 = "gfx950" in torch.cuda.get_device_properties("cuda").gcnArchName
  

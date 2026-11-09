@@ -8,12 +8,24 @@ Start with the [documentation guide](docs/README.md) for a reading path. This
 checkout contains source and tests; model weights, complete runtime images,
 native binaries and raw experiment archives are supplied separately.
 
+Status, 9 November 2026: serving now targets SGLang upstream `main` at
+`fcb3274646e43c16d70fd83806ebb3a5134d5e81` with the
+[`sglang-main` patch series](serving/patches/sglang-main/README.md). The
+workstation repository's [AI-stack pipeline](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/README.md)
+builds the image, and its
+[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json)
+records the flags and environment. That profile is unqualified. Operation234's
+split-K selection is historical: the 2026-11 workstation reinstall wiped its
+runtime, and neither it nor the operation232 rollback can be rebuilt from this
+repository as documented.
+
 ## What is in this project?
 
 | Area | Purpose | Where to start |
 | --- | --- | --- |
 | Serving source | Configure and assemble reproducible serving packets, validate responses, and retain release evidence | [Serving guide](serving/README.md) |
-| Selected serving candidate | The private MXFP4 selection, its rollback and the parked programme | [Split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json), [Qwen4 handoff](docs/QWEN4-SERVING-HANDOFF.md) and [current results](docs/CURRENT-SERVING-RESULTS.md) |
+| Current serving target | SGLang `main` with the gfx1201 patch series; the serving profile is unqualified | [`sglang-main` series](serving/patches/sglang-main/README.md) and the workstation [serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json) |
+| Historical serving selection | Operation234's private MXFP4 selection, its rollback and the parked programme; the runtime no longer exists | [Split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json), [Qwen4 handoff](docs/QWEN4-SERVING-HANDOFF.md) and [current results](docs/CURRENT-SERVING-RESULTS.md) |
 | Serving experiments | Bounded FP8 and MXFP4 results and their history | [Current results](docs/CURRENT-SERVING-RESULTS.md); the [historical FP8 session selection](provenance/CURRENT-SESSION-SELECTION.json) is retained unchanged |
 | KV4 prototype | Study four-bit attention-cache storage with a separate native codec and SGLang overlay | [Architecture](docs/ARCHITECTURE.md) and [KV4 status](docs/STATUS.md) |
 
@@ -36,11 +48,12 @@ values are not whole-device peaks.
 
 Read the [sign-off and its limits](serving/measurements/native-qualification/CLEANUP-SIGNOFF.md)
 or open the [measurement report](serving/measurements/native-qualification/GPU-207-MEASUREMENT.html).
-This result covers the tested packet. The selected experimental candidate is
+This result covers the tested packet. The historical experimental selection is
 recorded separately in the [split-K selection](provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json):
 operation234's logical `mtp` arm (physical `kv4`, start 2), with operation232's
-selected arm as rollback. That is a private experimental selection, not an
-installed service. No installed service is changed by cloning this repository.
+selected arm as rollback. That was a private experimental selection, not an
+installed service; its runtime was wiped in November 2026 (see the status note
+above). No installed service is changed by cloning this repository.
 
 ## Run the local checks
 

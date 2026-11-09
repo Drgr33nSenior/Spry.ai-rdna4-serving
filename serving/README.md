@@ -28,7 +28,8 @@ and [machine-readable progress](CLEANUP-PROGRESS.json).
 | Understand the repository and runtime boundaries | [Architecture](../docs/ARCHITECTURE.md) |
 | Change a configured run | [W5 run configuration](config/runs/w5-v2/run.json), its menu, and the referenced host file |
 | Assemble source for review | `build.py`, `propose_packet.py` and [caller projection](launcher/PROJECTION.md) |
-| Reproduce the pinned overlays | [Patch series](patches/README.md) |
+| Find the current SGLang `main` patch series | [`sglang-main` series](patches/sglang-main/README.md) |
+| Reproduce the historical 0.5.21 overlays | [Patch series](patches/README.md) |
 | Understand a one-use native campaign | [Caller workflow](launcher/README.md) |
 | Check or extend validation | [Testing procedure](measurements/native-qualification/TESTING.md) |
 | Understand final-answer grading | [Quality guide](quality/README.md) |
@@ -45,7 +46,7 @@ and [machine-readable progress](CLEANUP-PROGRESS.json).
 | `spry_common/` | Shared serialization, guards and limit derivation |
 | `launcher/` | Authenticated one-use caller and power-observation source |
 | `quality/` | Actual-input binding, isolated CPU grading and retained replay |
-| `upstream/`, `patches/` | Exact input identities and active overlay patches |
+| `upstream/`, `patches/` | Exact 0.5.21 input identities, the historical 0.5.21 overlays and the current `sglang-main` series |
 | `proposals/` | Versioned increments, source selections, diffs and verification records |
 | `measurements/` | Published summaries and links to their retained evidence |
 | `legacy/` | Retained source used by the base builder and compatibility checks |

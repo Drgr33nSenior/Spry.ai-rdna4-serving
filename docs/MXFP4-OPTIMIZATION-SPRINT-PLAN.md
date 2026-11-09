@@ -1,5 +1,7 @@
 # MXFP4 optimisation sprint plan
 
+**Superseded, 9 November 2026:** [remaining gates](MXFP4-REMAINING-GATES.md) records this programme as complete and parked. The queue and plans below are historical.
+
 **Current queue, 4 November:** see [remaining gates](MXFP4-REMAINING-GATES.md). The gate/up wave-hint CPU follow-up passed; its narrow host/launch gate is now CPU-signed-off. The full GPU component and serving qualification remain pending. The historical sprint results below are preserved.
 
 **New backlog addition:** [effective memory bandwidth](MXFP4-EFFECTIVE-BANDWIDTH-LEADS.md). BW-01 and BW-02 refine the existing entropy and integer leads; BW-03 adds certified output-head screening; BW-04 adds graphics-compression feasibility. Start with a representative checkpoint entropy/scale census. All original 21 references and cumulative candidates remain recorded.

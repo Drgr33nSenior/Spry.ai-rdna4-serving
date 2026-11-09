@@ -5,13 +5,22 @@ description: Resume AIThreadripper RDNA4 serving validation using the selected t
 
 # AIThreadripper serving validation
 
+Status, 9 November 2026: the op234 selection below is historical. The 2026-11
+workstation reinstall wiped its SGLang 0.5.21 runtime, and neither it nor the
+op232 rollback can be rebuilt from this repository as documented. Current
+serving work targets SGLang `main` at `fcb3274` with the
+[`sglang-main` patch series](../../../serving/patches/sglang-main/README.md).
+Its flags and environment are in the workstation
+[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json),
+which is unqualified.
+
 Resolve the project root as `../../..` from this skill. Read the
-[current selection](../../../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json),
+[historical op234 selection](../../../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json),
 [finalization record](../../../provenance/MXFP4-FINALIZATION-20261105.json),
 [Qwen4 handoff](../../../docs/QWEN4-SERVING-HANDOFF.md) and the relevant section
 of [current results](../../../docs/CURRENT-SERVING-RESULTS.md) before choosing
 work. The selection record names the selected arm and its rollback; the private
-pointer it pins is the selection authority. The
+pointer it pins was the selection authority for that runtime. The
 [FP8 session selection](../../../provenance/CURRENT-SESSION-SELECTION.json)
 and [Sprint 7](../../../docs/SPRINT7-QUALIFICATION.md) are historical inputs.
 Do not infer selection from the newest scratchpad directory. Private selection
@@ -51,13 +60,24 @@ functional, format, ungraded and sustained-final-output results.
 
 ## Preserve experiment meaning
 
-Use the selected stack, precision, flags, kernels, pools and owner controls.
-FP8 target **weights** do not imply FP8 attention KV. Both attention caches remain
-BF16; preserve the explicit BF16 draft-KV override. FP8 target KV is a deferred
-optional work item. Read the selected recurrent profile separately from the
-GEMM source: the same GEMM can run with snapshot or aligned ring-fold. Carry
-that profile into both arms unless it is the stated A/B variable. Keep the
-original compact `--enable-linear-replayssm` flag disabled.
+The op234 stack, flags and kernels are tied to SGLang 0.5.21. At `fcb3274`,
+`--enable-linear-replayssm-spec` raises with DFLASH on models without KDA, such
+as Qwen3.8's GDN layers, so op234's canonical command line cannot be used as is.
+Take current flags from the workstation
+[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json);
+within one experiment, keep its stack, precision, flags, kernels, pools and
+owner controls fixed except for the stated variable.
+
+Weight precision does not choose attention-KV precision. The op234 selection
+uses MXFP4 weights with BF16 target and draft KV; preserve the explicit BF16
+draft-KV override. FP8 target KV was tested on 26 October with FP8 weights: it
+passed the retained answer checks but ran slower and was not selected (see the
+[diagnostic](../../../docs/FP8-TARGET-KV-DIAGNOSTIC-20261026.md)). FP8 draft
+KV has never been tested. For op234-era evidence, read the selected recurrent
+profile separately from the GEMM source: the same GEMM can run with snapshot or
+aligned ring-fold. Carry that profile into both arms unless it is the stated
+A/B variable. Keep the original compact `--enable-linear-replayssm` flag
+disabled. The ring-fold/ReplaySSM spec path is not in the `sglang-main` series.
 
 The split-KV verification adapter changes attention computation; it does not
 compress the BF16 cache. Attribute ring-fold savings to recurrent-state storage

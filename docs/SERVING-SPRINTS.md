@@ -1,4 +1,10 @@
-# Current serving sprint list
+# Serving sprint list (historical)
+
+Status, 9 November 2026: this list is historical. It describes FP8-weight work
+on the Torch 2.14 / ROCm SDK 10.2 stack, which is no longer current. Current
+serving work targets SGLang `main` with the
+[`sglang-main` patch series](../serving/patches/sglang-main/README.md); see the
+[documentation guide](README.md).
 
 Updated 22 October 2026. This list reconciles the retained sprint evidence with
 the Astra review and the owner decision to keep metadata reuse. Keep the current
@@ -224,6 +230,11 @@ implementation pass or GPU campaign is scheduled for this optional item.
 
 The bounded Sprint 7 screens completed with BF16 target/draft caches. FP8
 target KV remains a separate deferred option.
+
+Later result, 26 October: the
+[FP8 target-KV diagnostic](FP8-TARGET-KV-DIAGNOSTIC-20261026.md) ran FP8
+target KV on GPU. Both arms passed the retained answer checks, but FP8 target
+KV ran slower and was not selected. FP8 draft KV has never been tested.
 
 ## Optimization sprints 8–10
 
