@@ -1,0 +1,261 @@
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py
+new file mode 100644
+index 0000000..7991bfd
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py
+@@ -0,0 +1,193 @@
++# SPDX-License-Identifier: Apache-2.0
++"""Fused GDN output gated RMSNorm and MXFP4 quantization for gfx1201 (op234 F1).
++
++With SGLANG_GFX1201_GDN_NORM_QUANT=1, the Qwen3.5 GDN layers on gfx1201
++without AITER normalize their output (RMSNorm, then the SiLU gate of z) and
++quantize it to MXFP4 in one kernel, handing (packed, scales) to out_proj
++instead of a BF16 tensor that out_proj would quantize again. The kernel rounds
++each value to BF16 before quantizing, so the packed output equals
++quantize(bf16(norm(x) * silu(z))), the unfused path's input to out_proj.
++
++The kernel body is the op234 runtime's copy: the FLA gated layer-norm forward
++(upstream kernels/ops/attention/fla/layernorm_gated.py) with its BF16 store
++replaced by the vendored AITER MXFP4 quantizer (gfx1201_mxfp4_kernels).
++"""
++
++import torch
++import triton
++import triton.language as tl
++
++from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4_kernels import (
++    _mxfp4_quant_op,
++)
++from sglang.srt.utils import get_bool_env_var, is_hip
++
++ENABLED = (
++    is_hip()
++    and not get_bool_env_var("SGLANG_USE_AITER")
++    and get_bool_env_var("SGLANG_GFX1201_GDN_NORM_QUANT")
++)
++TOKENS = (8, 16)
++_ROWS_PER_BLOCK = 4
++
++
++@triton.jit
++def _gated_norm_mxfp4_kernel(
++    X,  # pointer to the input
++    Y,  # packed MXFP4 output (no BF16 intermediate)
++    Scales,
++    TOKENS,
++    HEADS: tl.constexpr,
++    W,  # pointer to the weights
++    B,  # pointer to the biases
++    Z,  # pointer to the other branch
++    Mean,  # pointer to the mean
++    Rstd,  # pointer to the 1/std
++    stride_x_row,  # how much to increase the pointer when moving by 1 row
++    stride_y_row,
++    stride_z_row,
++    stride_z_token,
++    stride_z_head,
++    M,  # number of rows in X
++    N: tl.constexpr,  # number of columns in X
++    eps,  # epsilon to avoid division by zero
++    BLOCK_N: tl.constexpr,
++    ROWS_PER_BLOCK: tl.constexpr,
++    HAS_BIAS: tl.constexpr,
++    HAS_Z: tl.constexpr,
++    Z_IS_3D: tl.constexpr,
++    Z_HEADS: tl.constexpr,
++    NORM_BEFORE_GATE: tl.constexpr,
++    IS_RMS_NORM: tl.constexpr,
++    ACTIVATION: tl.constexpr,
++    USE_GDC: tl.constexpr = False,
++):
++    if USE_GDC:
++        tl.extra.cuda.gdc_wait()
++
++    # Map the program id to the starting row of X and Y it should compute.
++    row_start = tl.program_id(0) * ROWS_PER_BLOCK
++    group = tl.program_id(1)
++
++    # Create 2D tile: [ROWS_PER_BLOCK, BLOCK_N]
++    rows = row_start + tl.arange(0, ROWS_PER_BLOCK)
++    cols = tl.arange(0, BLOCK_N)
++
++    # Compute offsets for 2D tile
++    row_offsets = rows[:, None] * stride_x_row
++    col_offsets = cols[None, :] + group * N
++
++    # Base pointers
++    X_base = X + row_offsets + col_offsets
++    Y_base = Y + rows[:, None] * stride_y_row + col_offsets
++
++    # Create mask for valid rows and columns
++    row_mask = rows[:, None] < M
++    col_mask = cols[None, :] < N
++    mask = row_mask & col_mask
++
++    # Load input data with 2D tile
++    x = tl.load(X_base, mask=mask, other=0.0).to(tl.float32)
++
++    if HAS_Z and not NORM_BEFORE_GATE:
++        if Z_IS_3D:
++            z_row_offsets = (rows[:, None] // Z_HEADS) * stride_z_token + (
++                rows[:, None] % Z_HEADS
++            ) * stride_z_head
++        else:
++            z_row_offsets = rows[:, None] * stride_z_row
++        Z_base = Z + z_row_offsets + col_offsets
++        z = tl.load(Z_base, mask=mask, other=0.0).to(tl.float32)
++        if ACTIVATION == "swish" or ACTIVATION == "silu":
++            x *= z * tl.sigmoid(z)
++        elif ACTIVATION == "sigmoid":
++            x *= tl.sigmoid(z)
++
++    # Compute mean and variance per row (reduce along axis 1)
++    if not IS_RMS_NORM:
++        mean = tl.sum(x, axis=1) / N  # Shape: [ROWS_PER_BLOCK]
++        # Store mean for each row
++        mean_offsets = group * M + rows
++        mean_mask = rows < M
++        tl.store(Mean + mean_offsets, mean, mask=mean_mask)
++        # Broadcast mean back to 2D for subtraction
++        xbar = tl.where(mask, x - mean[:, None], 0.0)
++        var = tl.sum(xbar * xbar, axis=1) / N  # Shape: [ROWS_PER_BLOCK]
++    else:
++        xbar = tl.where(mask, x, 0.0)
++        var = tl.sum(xbar * xbar, axis=1) / N  # Shape: [ROWS_PER_BLOCK]
++        mean = 0.0  # Placeholder for RMS norm
++
++    rstd = tl.rsqrt(var + eps)  # Shape: [ROWS_PER_BLOCK]
++
++    # Store rstd for each row
++    rstd_offsets = group * M + rows
++    rstd_mask = rows < M
++    tl.store(Rstd + rstd_offsets, rstd, mask=rstd_mask)
++
++    # Load weights and biases (broadcast across rows)
++    w_offsets = cols + group * N
++    w_mask = cols < N
++    w = tl.load(W + w_offsets, mask=w_mask, other=0.0).to(tl.float32)
++
++    if HAS_BIAS:
++        b = tl.load(B + w_offsets, mask=w_mask, other=0.0).to(tl.float32)
++
++    # Normalize and apply linear transformation
++    if not IS_RMS_NORM:
++        x_hat = (x - mean[:, None]) * rstd[:, None]
++    else:
++        x_hat = x * rstd[:, None]
++
++    y = x_hat * w[None, :] + b[None, :] if HAS_BIAS else x_hat * w[None, :]
++
++    if HAS_Z and NORM_BEFORE_GATE:
++        if Z_IS_3D:
++            z_row_offsets = (rows[:, None] // Z_HEADS) * stride_z_token + (
++                rows[:, None] % Z_HEADS
++            ) * stride_z_head
++        else:
++            z_row_offsets = rows[:, None] * stride_z_row
++        Z_base = Z + z_row_offsets + col_offsets
++        z = tl.load(Z_base, mask=mask, other=0.0).to(tl.float32)
++        if ACTIVATION == "swish" or ACTIVATION == "silu":
++            y *= z * tl.sigmoid(z)
++        elif ACTIVATION == "sigmoid":
++            y *= tl.sigmoid(z)
++
++    # Write output
++    # Preserve the materialized baseline's BF16 rounding before quantization.
++    rounded = y.to(tl.bfloat16).to(tl.float32)
++    packed, scale = _mxfp4_quant_op(rounded, BLOCK_N, ROWS_PER_BLOCK, 32)
++    token = rows // HEADS
++    head = rows % HEADS
++    packed_cols = tl.arange(0, BLOCK_N // 2)
++    quant_cols = tl.arange(0, BLOCK_N // 32)
++    packed_offsets = token[:, None] * (HEADS * N // 2) + head[:, None] * (N // 2) + packed_cols[None, :]
++    scale_offsets = token[:, None] + (head[:, None] * (N // 32) + quant_cols[None, :]) * TOKENS
++    tl.store(Y + packed_offsets, packed, mask=(rows < M)[:, None])
++    tl.store(Scales + scale_offsets, scale, mask=(rows < M)[:, None])
++
++    if USE_GDC:
++        tl.extra.cuda.gdc_launch_dependents()
++
++
++
++def gated_norm_mxfp4(x, z, weight, eps, heads):
++    """MXFP4 (packed [T, H*N/2], scales [T, H*N/32] with strides (1, T)) of
++    rmsnorm(x) * weight * silu(z) for x, z [T*H, N] BF16, one head per row."""
++    m, n = x.shape
++    tokens = m // heads
++    packed = torch.empty((tokens, heads * n // 2), dtype=torch.uint8, device=x.device)
++    scales = torch.empty_strided(
++        (tokens, heads * n // 32), (1, tokens), dtype=torch.uint8, device=x.device
++    )
++    rstd = torch.empty((m,), dtype=torch.float32, device=x.device)
++    _gated_norm_mxfp4_kernel[(triton.cdiv(m, _ROWS_PER_BLOCK), 1)](
++        x, packed, scales, tokens, heads, weight, None, z, None, rstd,
++        x.stride(0), n, z.stride(0), 0, 0, m, n, eps,
++        BLOCK_N=n, ROWS_PER_BLOCK=_ROWS_PER_BLOCK, HAS_BIAS=False, HAS_Z=True,
++        Z_IS_3D=False, Z_HEADS=1, NORM_BEFORE_GATE=True, IS_RMS_NORM=True,
++        ACTIVATION="swish", USE_GDC=False, num_warps=1,
++    )
++    return packed, scales
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index 444d238..f262aa7 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -745,6 +745,38 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         ba.weight.data = fused[self._fused_in_proj_qkvz_width :]
+         self._fused_in_proj_weight = fused
+ 
++    def _gfx1201_norm_quant_eligible(self, x, z, heads) -> bool:
++        """The fused gated-norm MXFP4 route (gfx1201_gdn_norm_quant) applies."""
++        from sglang.srt.layers.quantization.quark.schemes import (
++            gfx1201_gdn_norm_quant,
++            quark_w4a4_mxfp4,
++        )
++
++        if not gfx1201_gdn_norm_quant.ENABLED:
++            return False
++        proj, norm = self.out_proj, self.norm
++        return (
++            quark_w4a4_mxfp4._use_gfx1201_mxfp4
++            and type(getattr(proj, "scheme", None)) is quark_w4a4_mxfp4.QuarkW4A4MXFP4
++            and proj.bias is None
++            and not getattr(proj, "use_aiter_asm_fp4_gemm", False)
++            and not getattr(proj, "dequantized_bf16", False)
++            and getattr(norm, "activation", "swish") in ("swish", "silu")
++            and getattr(norm, "norm_before_gate", True)
++            and getattr(norm, "group_size", None) is None
++            and norm.weight.dtype == torch.bfloat16
++            and x.dim() == 2
++            and z.dim() == 2
++            and x.shape == z.shape
++            and x.dtype == z.dtype == torch.bfloat16
++            and x.shape[1] == norm.weight.shape[0]
++            and x.stride(1) == 1
++            and z.stride(1) == 1
++            and x.shape[0] % heads == 0
++            and x.shape[0] // heads in gfx1201_gdn_norm_quant.TOKENS
++            and proj.weight.shape[1] * 2 == heads * x.shape[1]
++        )
++
+     def finalize_gfx1201_mxfp4_in_proj(self) -> bool:
+         """Pack the loaded MXFP4 QKVZ and BA shards into one weight/scale pair.
+ 
+@@ -1171,6 +1203,18 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+             core_attn_out = core_attn_out_pad
+ 
+         nv = self.num_v_heads // self.attn_tp_size
++        if not use_strided_prefill_z and self._gfx1201_norm_quant_eligible(
++            core_attn_out, z, nv
++        ):
++            from sglang.srt.layers.quantization.quark.schemes import (
++                gfx1201_gdn_norm_quant,
++            )
++
++            # MXFP4 counterpart of the FP8 tuple path below (op234 F1).
++            packed = gfx1201_gdn_norm_quant.gated_norm_mxfp4(
++                core_attn_out, z, self.norm.weight, self.norm.eps, nv
++            )
++            return self.out_proj(packed)[0]
+         if not use_strided_prefill_z and _fp8_tuple_input(self.out_proj, len(z) // nv):
+             fp8, _, _ = _layer_norm_fwd(
+                 core_attn_out,
