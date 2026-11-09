@@ -1,0 +1,79 @@
+diff --git a/python/sglang/srt/mem_cache/kv_cache_configurator.py b/python/sglang/srt/mem_cache/kv_cache_configurator.py
+index 872d52f..62480b5 100644
+--- a/python/sglang/srt/mem_cache/kv_cache_configurator.py
++++ b/python/sglang/srt/mem_cache/kv_cache_configurator.py
+@@ -960,17 +960,19 @@ class KVCacheConfigurator:
+         return has_window, has_state
+ 
+     def _validate_replay_spec_algorithm(self) -> None:
+-        # DSPARK/DFLASH commit routes through the backend fold (KDA-only); a
+-        # non-KDA model there would scatter a None intermediate_ssm and crash.
++        # DSPARK commits through the backend fold (KDA-only); a non-KDA model
++        # there would scatter a None intermediate_ssm and crash. DFLASH also
++        # accepts GDN: its commit routes GDN compact replay through
++        # commit_mamba_states_after_verify (dflash_worker_v2).
+         _algo = (get_spec().speculative_algorithm or "").upper()
+         if (
+             get_exec().mamba.enable_linear_replayssm_spec
+-            and _algo in ("DSPARK", "DFLASH")
+             and self.hybrid_kda_config is None
++            and (_algo == "DSPARK" or (_algo == "DFLASH" and self.hybrid_gdn_config is None))
+         ):
+             raise ValueError(
+-                "--enable-linear-replayssm-spec with DSPARK/DFLASH requires a KDA "
+-                "model; got a non-KDA model."
++                "--enable-linear-replayssm-spec requires a KDA model with DSPARK, "
++                "and a KDA or GDN model with DFLASH."
+             )
+ 
+     def _kv_layer_decls(self) -> tuple:
+diff --git a/python/sglang/srt/speculative/dflash_worker_v2.py b/python/sglang/srt/speculative/dflash_worker_v2.py
+index aa0520f..5e101d4 100644
+--- a/python/sglang/srt/speculative/dflash_worker_v2.py
++++ b/python/sglang/srt/speculative/dflash_worker_v2.py
+@@ -99,6 +99,7 @@ from sglang.srt.speculative.spec_sampling_mask import (
+     SpeculativeSamplingMaskCapture,
+ )
+ from sglang.srt.speculative.spec_tp_sync import SpecTpSync, SpecTpSyncSite
++from sglang.srt.mem_cache.kv.decl import STATE_PART
+ from sglang.srt.speculative.spec_utils import (
+     SIMULATE_ACC_LEN,
+     SIMULATE_ACC_METHOD,
+@@ -106,6 +107,7 @@ from sglang.srt.speculative.spec_utils import (
+     GrammarTree,
+     build_grammar_vocab_mask,
+     check_simulate_acc_token_mode,
++    commit_mamba_states_after_verify,
+     draft_pp_context,
+     draft_tp_context,
+     simulated_acc_len_generator,
+@@ -2185,6 +2187,29 @@ class DFlashWorkerV2(BaseSpecWorker):
+             )
+ 
+         model_runner = self.target_worker.model_runner
++        # GDN ReplaySSM (--enable-linear-replayssm-spec): verify wrote compact
++        # d/k/g records instead of per-step SSM snapshots, so commit through the
++        # shared verify commit, which advances the replay cursors, folds the
++        # accepted prefix into the checkpoint, rolls back conv windows and
++        # snapshots track slots. The backend commit below handles only KDA
++        # ReplaySSM and would scatter the unallocated intermediate SSM states.
++        mamba_pool = model_runner.token_to_kv_pool.layer_router.part_view(STATE_PART)
++        if (
++            mamba_pool is not None
++            and getattr(mamba_pool, "replayssm_cache_base", None) is not None
++            and not mamba_pool.replayssm_is_kda
++        ):
++            # With prepared step indices the shared commit reads accept_index
++            # only to skip empty batches; DFLASH accepts a contiguous chain.
++            commit_mamba_states_after_verify(
++                self.target_worker,
++                batch,
++                accept_lens=commit_lens,
++                accept_index=commit_lens,
++                draft_token_num=int(self.block_size),
++                prepared_step_indices=(last_correct_step_indices, mamba_steps_to_track),
++            )
++            return
+         if hasattr(attn_backend, "update_mamba_state_after_mtp_verify"):
+             attn_backend.update_mamba_state_after_mtp_verify(
+                 last_correct_step_indices=last_correct_step_indices,
