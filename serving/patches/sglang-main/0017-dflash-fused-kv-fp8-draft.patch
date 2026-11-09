@@ -1,0 +1,119 @@
+diff --git a/python/sglang/kernels/ops/speculative/fused_kv_materialize.py b/python/sglang/kernels/ops/speculative/fused_kv_materialize.py
+index 0b8f528..1351e47 100644
+--- a/python/sglang/kernels/ops/speculative/fused_kv_materialize.py
++++ b/python/sglang/kernels/ops/speculative/fused_kv_materialize.py
+@@ -239,6 +239,33 @@ def _fused_norm_rope_stacked(
+     return k_out, v_out
+ 
+ 
++def _dense_kv_rows(qkv_proj, start: int, stop: int, dtype: torch.dtype) -> torch.Tensor:
++    """Rows [start, stop) of a QKV weight as a dense (rows, K) matrix.
++
++    BF16/FP16 weights are sliced as before. A non-block FP8 weight is stored
++    transposed, (K, N), as Fp8LinearMethod keeps it for apply_fp8_linear, and
++    is dequantized with its per-tensor or per-output-channel scale.
++    """
++    weight = qkv_proj.weight
++    if weight.dtype not in (torch.float8_e4m3fn, torch.float8_e4m3fnuz):
++        return weight[start:stop]
++    n = int(qkv_proj.output_size_per_partition)
++    if weight.dim() != 2 or weight.shape[1] != n:
++        raise ValueError(f"unsupported FP8 qkv weight layout {tuple(qkv_proj.weight.shape)}")
++    weight = weight.t()
++    if weight.shape[0] != n:
++        raise ValueError(f"unsupported FP8 qkv weight layout {tuple(qkv_proj.weight.shape)}")
++    scale = qkv_proj.weight_scale.float()
++    rows = weight[start:stop].float()
++    if scale.numel() == 1:
++        rows = rows * scale.reshape(())
++    elif scale.numel() == n:
++        rows = rows * scale.reshape(-1)[start:stop, None]
++    else:
++        raise ValueError(f"unsupported FP8 qkv weight scale shape {tuple(scale.shape)}")
++    return rows.to(dtype)
++
++
+ class FusedKVMaterializeHelper:
+     """Fused KV materialization helper using batched projection.
+ 
+@@ -319,8 +346,12 @@ class FusedKVMaterializeHelper:
+                     f"got (rotary_dim={layer_rotary_dim}, neox={layer_is_neox}) at layer {layer_id}."
+                 )
+ 
+-            qkv_w = attn.qkv_proj.weight
+-            kv_weight = qkv_w[attn.q_size : attn.q_size + 2 * attn.kv_size]
++            kv_weight = _dense_kv_rows(
++                attn.qkv_proj,
++                attn.q_size,
++                attn.q_size + 2 * attn.kv_size,
++                attn.k_norm.weight.dtype,
++            )
+             kv_weights.append(kv_weight)
+             k_norm_weights.append(attn.k_norm.weight)
+             eps_values.append(float(attn.k_norm.variance_epsilon))
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index 69f8c29..4874a0f 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1645,6 +1645,9 @@ class Envs:
+     SGLANG_GFX1201_P1_PREFILL = EnvBool(False)
+     # gfx1201 extend attention (prefill) with 8 warps for head dim 256 (C4).
+     SGLANG_GFX1201_EXTEND_WARPS8 = EnvBool(False)
++    # DFLASH fused KV materialization for a draft quantized to per-tensor or
++    # per-channel FP8: the helper's stacked K/V weight is dequantized to BF16.
++    SGLANG_DFLASH_FUSED_KV_FP8 = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
+diff --git a/python/sglang/srt/speculative/dflash_utils.py b/python/sglang/srt/speculative/dflash_utils.py
+index c2a320b..adc309d 100644
+--- a/python/sglang/srt/speculative/dflash_utils.py
++++ b/python/sglang/srt/speculative/dflash_utils.py
+@@ -13,6 +13,7 @@ from sglang.kernels.ops.sampling import argmax as sampling_argmax
+ from sglang.kernels.ops.speculative.verify_sampling import (
+     tree_speculative_sampling_target_only,
+ )
++from sglang.srt.environ import envs
+ from sglang.srt.layers.quantization.unquant import UnquantizedLinearMethod
+ from sglang.srt.layers.sampler import (
+     apply_custom_logit_processor,
+@@ -922,9 +923,39 @@ def can_dflash_slice_qkv_weight(qkv_proj: Any) -> Tuple[bool, str]:
+     return True, ""
+ 
+ 
++_FP8_WEIGHT_DTYPES = (torch.float8_e4m3fn, torch.float8_e4m3fnuz)
++
++
++def is_dflash_dequantizable_fp8_qkv(qkv_proj: Any) -> bool:
++    """Whether a QKV layer holds a non-block FP8 weight, stored (K, N) for
++    apply_fp8_linear, with a per-tensor or per-output-channel scale, which the
++    fused KV helper can dequantize once."""
++    from sglang.srt.layers.quantization.fp8 import Fp8LinearMethod
++
++    quant_method = getattr(qkv_proj, "quant_method", None)
++    weight = getattr(qkv_proj, "weight", None)
++    scale = getattr(qkv_proj, "weight_scale", None)
++    n = getattr(qkv_proj, "output_size_per_partition", None)
++    return (
++        isinstance(quant_method, Fp8LinearMethod)
++        and not getattr(quant_method, "block_quant", False)
++        and not getattr(quant_method, "use_marlin", False)
++        and weight is not None
++        and weight.dtype in _FP8_WEIGHT_DTYPES
++        and weight.dim() == 2
++        and scale is not None
++        and n is not None
++        and weight.shape[1] == n
++        and scale.numel() in (1, int(n))
++    )
++
++
+ def can_dflash_use_fused_qkv_proj(qkv_proj: Any) -> Tuple[bool, str]:
+     """Validate whether a QKV layer is eligible for DFlash fused KV materialization."""
+     eligible, reason = can_dflash_slice_qkv_weight(qkv_proj)
++    if not eligible and envs.SGLANG_DFLASH_FUSED_KV_FP8.get():
++        if is_dflash_dequantizable_fp8_qkv(qkv_proj):
++            eligible, reason = True, ""
+     if not eligible:
+         return False, reason
+     if getattr(qkv_proj, "bias", None) is not None:
