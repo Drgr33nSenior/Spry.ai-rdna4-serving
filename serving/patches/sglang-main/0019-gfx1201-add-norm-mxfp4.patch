@@ -1,0 +1,319 @@
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index 4874a0f..966d0b5 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1648,6 +1648,9 @@ class Envs:
+     # DFLASH fused KV materialization for a draft quantized to per-tensor or
+     # per-channel FP8: the helper's stacked K/V weight is dequantized to BF16.
+     SGLANG_DFLASH_FUSED_KV_FP8 = EnvBool(False)
++    # gfx1201: residual add + Gemma RMSNorm + MXFP4 quantization in one kernel
++    # for the MXFP4 projections that read the norm on verify-sized batches.
++    SGLANG_GFX1201_ADD_NORM_MXFP4 = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
+diff --git a/python/sglang/srt/layers/layer_boundary/residual/add_norm.py b/python/sglang/srt/layers/layer_boundary/residual/add_norm.py
+index 10224b1..e7234a8 100644
+--- a/python/sglang/srt/layers/layer_boundary/residual/add_norm.py
++++ b/python/sglang/srt/layers/layer_boundary/residual/add_norm.py
+@@ -14,6 +14,7 @@
+ """The plain residual: add and RMSNorm, and the fused all-reduce + add + norm
+ kernels."""
+ 
++import logging
+ from dataclasses import dataclass
+ from enum import Enum, auto
+ from typing import Optional
+@@ -193,6 +194,49 @@ def _update_and_read_residual_plain(
+     return norm(hidden_states, residual, post_residual_addition)
+ 
+ 
++_gfx1201_mxfp4_read_logged = False
++
++
++def _update_and_read_residual_gfx1201_mxfp4(
++    norm, hidden_states, residual, post_residual_addition
++):
++    """gfx1201: (packed MXFP4, scales) for a Gemma norm on verify-sized rows, in one
++    kernel that is bitwise equal to the plain path's Triton Gemma add+norm followed by
++    the gfx1201 MXFP4 quantizer. Every other case returns the plain BF16 read."""
++    from sglang.srt.layers import layernorm as _ln
++
++    if (
++        residual is None
++        or post_residual_addition is not None
++        or not isinstance(norm, GemmaRMSNorm)
++        or hidden_states.dim() != 2
++        or hidden_states.dtype != torch.bfloat16
++        or hidden_states.shape[0] not in (8, 16)
++        # the plain path must be the Triton Gemma add+norm with round_sum=True
++        or _ln._use_aiter
++        or _ln._has_vllm_rms_norm
++        or not _ln._has_rocm_triton_gemma_rms_norm
++    ):
++        return _update_and_read_residual_plain(
++            norm, hidden_states, residual, post_residual_addition
++        )
++    from sglang.srt.layers.quantization.quark.schemes.gfx1201_add_norm_mxfp4 import (
++        gemma_add_rmsnorm_mxfp4,
++    )
++
++    global _gfx1201_mxfp4_read_logged
++    if not _gfx1201_mxfp4_read_logged:
++        _gfx1201_mxfp4_read_logged = True
++        logging.getLogger(__name__).info(
++            "gfx1201 add+norm+MXFP4 read engaged: %d rows, hidden %d",
++            hidden_states.shape[0],
++            hidden_states.shape[1],
++        )
++    return gemma_add_rmsnorm_mxfp4(
++        hidden_states, residual, norm.weight.data, norm.variance_epsilon
++    )
++
++
+ def _update_and_read_residual_aiter_mxfp4(
+     norm, hidden_states, residual, post_residual_addition
+ ):
+@@ -271,6 +315,8 @@ def _norm_quant_kernel(quant_format: str):
+     input from it: the input norm, fused with the quantization this format
+     wants. Without a residual (the first layer, or one already folded into
+     hidden_states) the input itself becomes the residual."""
++    if quant_format == "mxfp4_gfx1201":
++        return _update_and_read_residual_gfx1201_mxfp4
+     if _use_aiter and _is_gfx95_supported and "mxfp4" in quant_format:
+         return _update_and_read_residual_aiter_mxfp4
+     if _use_aiter and _is_gfx95_supported and quant_format == "fp8":
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_add_norm_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_add_norm_mxfp4.py
+new file mode 100644
+index 0000000..bc15263
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_add_norm_mxfp4.py
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: Apache-2.0
++"""Fused residual add + Gemma RMSNorm + MXFP4 quantization for gfx1201.
++
++One kernel replaces gemma_fused_add_rmsnorm(round_sum=True) (minimax_m3_rmsnorm)
++followed by gfx1201_mxfp4.dynamic_mxfp4_quant on the normalized rows. The norm
++arithmetic is that kernel's, unchanged (fp32 sum rounded to the activation dtype,
++fp32 variance over the row, s * rstd * (1 + w)), launched with the same block
++width and warp count, so the normalized BF16 values are the same bits. The
++quantization is the vendored AITER _mxfp4_quant_op applied to those BF16 values;
++it works per 32-element group, so its output depends only on those values. The
++packed values and the transposed E8M0 scales are written in the layout
++dynamic_mxfp4_quant produces, which gemm_afp4wfp4 consumes.
++"""
++
++import torch
++import triton
++import triton.language as tl
++
++from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4_kernels import _mxfp4_quant_op
++
++
++def _num_warps(block_n: int) -> int:
++    # minimax_m3_rmsnorm._num_warps: the norm's reduction layout follows it.
++    if block_n >= 4096:
++        return 16
++    if block_n >= 1024:
++        return 8
++    return 4
++
++
++@triton.jit
++def _gemma_add_rmsnorm_mxfp4_kernel(
++    x_ptr,
++    res_ptr,
++    w_ptr,
++    q_ptr,
++    s_ptr,
++    res_out_ptr,
++    n_cols,
++    stride_xrow,
++    stride_xcol,
++    stride_rrow,
++    stride_rcol,
++    stride_qrow,
++    stride_srow,
++    stride_scol,
++    eps,
++    BLOCK_N: tl.constexpr,
++):
++    row = tl.program_id(0)
++    cols = tl.arange(0, BLOCK_N)
++    mask = cols < n_cols
++    x = tl.load(x_ptr + row * stride_xrow + cols * stride_xcol, mask=mask, other=0.0).to(tl.float32)
++    r = tl.load(res_ptr + row * stride_rrow + cols * stride_rcol, mask=mask, other=0.0).to(tl.float32)
++    s = x + r
++    # round_sum=True: normalize the sum as stored.
++    s = s.to(res_out_ptr.dtype.element_ty).to(tl.float32)
++    tl.store(res_out_ptr + row * n_cols + cols, s.to(res_out_ptr.dtype.element_ty), mask=mask)
++    var = tl.sum(s * s, axis=0) / n_cols
++    rstd = 1.0 / tl.sqrt(var + eps)
++    w = tl.load(w_ptr + cols, mask=mask, other=0.0).to(tl.float32)
++    out = s * rstd * (1.0 + w)
++    # The separate path stores BF16 and the quantizer reloads it as fp32.
++    out = out.to(tl.bfloat16).to(tl.float32)
++    q, scales = _mxfp4_quant_op(tl.reshape(out, (1, BLOCK_N)), BLOCK_N, 1, 32)
++    q = tl.reshape(q, (BLOCK_N // 2,))
++    scales = tl.reshape(scales, (BLOCK_N // 32,))
++    qcols = tl.arange(0, BLOCK_N // 2)
++    tl.store(q_ptr + row * stride_qrow + qcols, q, mask=qcols < n_cols // 2)
++    scols = tl.arange(0, BLOCK_N // 32)
++    tl.store(s_ptr + row * stride_srow + scols * stride_scol, scales, mask=scols < n_cols // 32)
++
++
++def gemma_add_rmsnorm_mxfp4(x: torch.Tensor, residual: torch.Tensor, weight: torch.Tensor, eps: float):
++    """(x + residual) -> Gemma RMSNorm -> MXFP4.
++
++    Returns ((packed (M, K/2) uint8, scales (M, K/32) uint8 with strides (1, M)), residual_out),
++    bitwise equal to dynamic_mxfp4_quant(gemma_fused_add_rmsnorm(..., round_sum=True)[0]) and
++    its residual output.
++    """
++    if x.dim() != 2 or x.dtype != torch.bfloat16 or residual.shape != x.shape:
++        raise ValueError("gfx1201 add+norm+MXFP4 takes 2-D BF16 input and a matching residual")
++    m, n = x.shape
++    if n % 32:
++        raise ValueError("hidden size must be a multiple of 32")
++    packed = torch.empty((m, n // 2), dtype=torch.uint8, device=x.device)
++    scales = torch.empty_strided((m, n // 32), (1, m), dtype=torch.uint8, device=x.device)
++    res_out = torch.empty((m, n), dtype=x.dtype, device=x.device)
++    block_n = triton.next_power_of_2(n)
++    _gemma_add_rmsnorm_mxfp4_kernel[(m,)](
++        x, residual, weight, packed, scales, res_out, n,
++        x.stride(0), x.stride(1), residual.stride(0), residual.stride(1),
++        packed.stride(0), scales.stride(0), scales.stride(1), eps,
++        BLOCK_N=block_n, num_warps=_num_warps(block_n),
++    )
++    return (packed, scales), res_out
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index 6901a8c..6283c1f 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -173,6 +173,36 @@ _gfx1201_packed_gdn_in_proj = (
+     _is_hip and not _use_aiter and get_bool_env_var("SGLANG_GFX1201_PACKED_GDN_IN_PROJ")
+ )
+ _GFX1201_PACKED_ROWS = (8, 16)
++# gfx1201: the norm read hands MXFP4 projections their quantized input
++# (gfx1201_add_norm_mxfp4) on verify batches; any other read stays BF16.
++_gfx1201_add_norm_mxfp4 = (
++    _is_hip and not _use_aiter and envs.SGLANG_GFX1201_ADD_NORM_MXFP4.get()
++)
++
++
++def _gfx1201_norm_quant_read(stage, forward_batch, consumers_ready: bool) -> dict:
++    """Read options for a boundary whose consumers all take a pre-quantized
++    (packed MXFP4, scales) input; the read may still return BF16."""
++    if (
++        _gfx1201_add_norm_mxfp4
++        and consumers_ready
++        and forward_batch is not None
++        and forward_batch.forward_mode.is_target_verify()
++        and stage.reads_quantized(forward_batch)
++    ):
++        return {"quant_format": "mxfp4_gfx1201"}
++    return {}
++
++
++def _is_gfx1201_mxfp4_linear(linear) -> bool:
++    from sglang.srt.layers.quantization.quark.schemes import quark_w4a4_mxfp4
++
++    return (
++        quark_w4a4_mxfp4._use_gfx1201_mxfp4
++        and type(getattr(linear, "scheme", None)) is quark_w4a4_mxfp4.QuarkW4A4MXFP4
++        and getattr(linear, "bias", None) is None
++        and not getattr(linear, "dequantized_bf16", False)
++    )
+ if _use_aiter:
+     from aiter.tuned_gemm import tgemm
+ 
+@@ -921,6 +951,30 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         )
+ 
+     def _forward_input_proj(self, hidden_states: torch.Tensor):
++        if (
++            self._gfx1201_in_proj is not None
++            and isinstance(hidden_states, tuple)
++            and len(hidden_states) == 2
++            and hidden_states[0].dtype == torch.uint8
++            and hidden_states[0].shape[0] in _GFX1201_PACKED_ROWS
++        ):
++            from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4 import (
++                gemm_afp4wfp4,
++            )
++
++            x_q, x_s = hidden_states
++            weight, scale, rows = self._gfx1201_in_proj
++            if not getattr(Qwen3_5GatedDeltaNet, "_gfx1201_prequant_logged", False):
++                Qwen3_5GatedDeltaNet._gfx1201_prequant_logged = True
++                logger.info(
++                    "Packed MXFP4 GDN input projection (gfx1201) takes the quantized norm read: %d rows",
++                    x_q.shape[0],
++                )
++            out = torch.empty(
++                (x_q.shape[0], weight.shape[0]), dtype=torch.bfloat16, device=x_q.device
++            )
++            gemm_afp4wfp4(x_q, weight, x_s, scale, torch.bfloat16, out)
++            return out[:, :rows], out[:, rows:]
+         if (
+             self._gfx1201_in_proj is not None
+             and isinstance(hidden_states, torch.Tensor)
+@@ -1350,6 +1404,11 @@ class Qwen3_5LinearDecoderLayer(nn.Module):
+             hidden_states,
+             forward_batch,
+             capture_gathered=kwargs.get("captured_last_layer_outputs", None),
++            **_gfx1201_norm_quant_read(
++                self.attn_boundary,
++                forward_batch,
++                getattr(self.linear_attn, "_gfx1201_in_proj", None) is not None,
++            ),
+         )
+ 
+         # fused AR+quant hands down a (fp8, scale) / (bf16, fp8, scale) tuple
+@@ -1362,7 +1421,16 @@ class Qwen3_5LinearDecoderLayer(nn.Module):
+ 
+         # Fully Connected
+         hidden_states = self.attn_boundary.finish(hidden_states, forward_batch)
+-        hidden_states = self.ffn_boundary.prepare(hidden_states, forward_batch)
++        hidden_states = self.ffn_boundary.prepare(
++            hidden_states,
++            forward_batch,
++            **_gfx1201_norm_quant_read(
++                self.ffn_boundary,
++                forward_batch,
++                not isinstance(self.mlp, Qwen2MoeSparseMoeBlock)
++                and _is_gfx1201_mxfp4_linear(getattr(self.mlp, "gate_up_proj", None)),
++            ),
++        )
+ 
+         with self.ffn_boundary.exit(forward_batch) as ffn_exit:
+             if isinstance(self.mlp, Qwen2MoeSparseMoeBlock):
+@@ -1798,6 +1866,11 @@ class Qwen3_5AttentionDecoderLayer(nn.Module):
+             hidden_states,
+             forward_batch,
+             capture_gathered=captured_last_layer_outputs,
++            **_gfx1201_norm_quant_read(
++                self.attn_boundary,
++                forward_batch,
++                _is_gfx1201_mxfp4_linear(getattr(self, "qkv_proj", None)),
++            ),
+         )
+ 
+         # fused AR+quant hands down a (fp8, scale) / (bf16, fp8, scale) tuple
+@@ -1811,7 +1884,16 @@ class Qwen3_5AttentionDecoderLayer(nn.Module):
+ 
+         # Fully Connected
+         hidden_states = self.attn_boundary.finish(hidden_states, forward_batch)
+-        hidden_states = self.ffn_boundary.prepare(hidden_states, forward_batch)
++        hidden_states = self.ffn_boundary.prepare(
++            hidden_states,
++            forward_batch,
++            **_gfx1201_norm_quant_read(
++                self.ffn_boundary,
++                forward_batch,
++                not isinstance(self.mlp, Qwen2MoeSparseMoeBlock)
++                and _is_gfx1201_mxfp4_linear(getattr(self.mlp, "gate_up_proj", None)),
++            ),
++        )
+         with self.ffn_boundary.exit(forward_batch) as ffn_exit:
+             if isinstance(self.mlp, Qwen2MoeSparseMoeBlock):
+                 hidden_states = self.mlp(
