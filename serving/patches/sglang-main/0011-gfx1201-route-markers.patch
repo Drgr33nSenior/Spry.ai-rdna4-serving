@@ -1,0 +1,104 @@
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py
+index 7991bfd..3ea23ba 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_gdn_norm_quant.py
+@@ -13,6 +13,8 @@ The kernel body is the op234 runtime's copy: the FLA gated layer-norm forward
+ replaced by the vendored AITER MXFP4 quantizer (gfx1201_mxfp4_kernels).
+ """
+ 
++import logging
++
+ import torch
+ import triton
+ import triton.language as tl
+@@ -28,6 +30,8 @@ ENABLED = (
+     and get_bool_env_var("SGLANG_GFX1201_GDN_NORM_QUANT")
+ )
+ TOKENS = (8, 16)
++logger = logging.getLogger(__name__)
++_routed = set()
+ _ROWS_PER_BLOCK = 4
+ 
+ 
+@@ -178,6 +182,9 @@ def gated_norm_mxfp4(x, z, weight, eps, heads):
+     rmsnorm(x) * weight * silu(z) for x, z [T*H, N] BF16, one head per row."""
+     m, n = x.shape
+     tokens = m // heads
++    if (tokens, heads) not in _routed:
++        _routed.add((tokens, heads))
++        logger.info("Fused GDN norm MXFP4 quant (gfx1201) route: %d tokens, %d heads", tokens, heads)
+     packed = torch.empty((tokens, heads * n // 2), dtype=torch.uint8, device=x.device)
+     scales = torch.empty_strided(
+         (tokens, heads * n // 32), (1, tokens), dtype=torch.uint8, device=x.device
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
+index 776ddf3..70df74c 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4.py
+@@ -21,6 +21,7 @@ from the op234 runtime are available, each off unless its variable is 1:
+   equal to the single partition (op234 S4).
+ """
+ 
++import logging
+ import os
+ 
+ import torch
+@@ -30,6 +31,9 @@ import triton.language as tl
+ from sglang.srt.layers.quantization.quark.schemes import gfx1201_mxfp4_kernels as _k
+ 
+ 
++logger = logging.getLogger(__name__)
++_splitk_routed = set()
++
+ def _enabled(name: str) -> bool:
+     return os.environ.get(name, "0").strip().lower() in ("1", "true", "yes")
+ 
+@@ -158,6 +162,9 @@ def gemm_afp4wfp4(x, w, x_scales, w_scales, dtype, y, *, gate_up_wave0=None, spl
+         # BLOCK_SIZE_K=128 blocks, so every partition is EVEN_K.
+         partials = _splitk_partials(y.device, m, n)
+         if partials is not None:
++            if (m, n, k) not in _splitk_routed:
++                _splitk_routed.add((m, n, k))
++                logger.info("Split-K MXFP4 verify GEMM (gfx1201) route: %d rows, N=%d K=%d", m, n, k)
+             split = dict(config, NUM_KSPLIT=_SPLITK_PARTS, SPLITK_BLOCK_SIZE=k // _SPLITK_PARTS)
+             _launch(x, w, x_scales, w_scales, partials, m, n, packed_k, split, (grid[0] * _SPLITK_PARTS,),
+                     (partials.stride(0), partials.stride(1), partials.stride(2)))
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index f262aa7..a6f42cc 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -156,6 +156,7 @@ from sglang.srt.utils import (
+ )
+ 
+ logger = logging.getLogger(__name__)
++_GFX1201_NORM_QUANT_SKIPS = set()
+ _is_cuda = is_cuda()
+ _is_npu = is_npu()
+ _is_cpu = is_cpu()
+@@ -755,7 +756,7 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         if not gfx1201_gdn_norm_quant.ENABLED:
+             return False
+         proj, norm = self.out_proj, self.norm
+-        return (
++        eligible = (
+             quark_w4a4_mxfp4._use_gfx1201_mxfp4
+             and type(getattr(proj, "scheme", None)) is quark_w4a4_mxfp4.QuarkW4A4MXFP4
+             and proj.bias is None
+@@ -776,6 +777,18 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+             and x.shape[0] // heads in gfx1201_gdn_norm_quant.TOKENS
+             and proj.weight.shape[1] * 2 == heads * x.shape[1]
+         )
++        small = x.dim() != 2 or x.shape[0] <= max(gfx1201_gdn_norm_quant.TOKENS) * heads
++        key = (tuple(x.shape), tuple(z.shape), x.dtype, heads)
++        if not eligible and small and key not in _GFX1201_NORM_QUANT_SKIPS:
++            _GFX1201_NORM_QUANT_SKIPS.add(key)
++            logger.info(
++                "Fused GDN norm MXFP4 quant (gfx1201) skipped: x %s %s stride %s, z %s %s stride %s, "
++                "heads %d, norm weight %s %s, out_proj scheme %s weight %s, gfx1201 MXFP4 %s",
++                tuple(x.shape), x.dtype, x.stride(), tuple(z.shape), z.dtype, z.stride(), heads,
++                tuple(norm.weight.shape), norm.weight.dtype, type(getattr(proj, "scheme", None)).__name__,
++                tuple(proj.weight.shape), quark_w4a4_mxfp4._use_gfx1201_mxfp4,
++            )
++        return eligible
+ 
+     def finalize_gfx1201_mxfp4_in_proj(self) -> bool:
+         """Pack the loaded MXFP4 QKVZ and BA shards into one weight/scale pair.
