@@ -1,0 +1,85 @@
+diff --git a/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py b/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
+index d8db0f9..48a8463 100644
+--- a/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
++++ b/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
+@@ -32,6 +32,12 @@ NSPLIT = 20
+ # gfx1201 (R9700, 64 CUs), Qwen3.8 at TP2 (12 q heads, 2 kv heads): 32 splits is the best
+ # single setting for one and two requests from 1k to 88k prefixes (20 to 96 swept)
+ NSPLIT_GFX1201 = 32
++# SGLANG_GFX1201_VERIFY_ATTENTION_B1_TILE=1: one request per batch runs (BT, warps, QC) =
++# (64, 8, 64) at 32 splits. A graph-captured, DRAM-fed sweep on gfx1201 (16 layers, each on
++# its own KV cache) measured 96.6 / 178 / 321 / 434 against 114.5 / 219 / 406 / 560 us per
++# layer at 23.5k / 47k / 88k / 120k prefixes (+1.3 us at 1k); at two requests it is slower
++# than the default tile, so batches of two or more keep it.
++GFX1201_B1_TILE = (64, 8, 64)
+ _routed = set()
+ 
+ 
+@@ -46,6 +52,12 @@ def gfx1201_enabled() -> bool:
+         return False
+ 
+ 
++@lru_cache(maxsize=1)
++def gfx1201_b1_tile_enabled() -> bool:
++    """SGLANG_GFX1201_VERIFY_ATTENTION_B1_TILE=1 with the gfx1201 route on."""
++    return gfx1201_enabled() and get_bool_env_var("SGLANG_GFX1201_VERIFY_ATTENTION_B1_TILE")
++
++
+ def enabled() -> bool:
+     """The kernel serves target verify on this device."""
+     return use_gfx115_kernels() or gfx1201_enabled()
+@@ -211,9 +223,10 @@ def verify_attention_gfx1151(
+     num_tokens_per_req,
+     scale,
+     nsplit=None,
+-    bt=32,
+-    num_warps=4,
++    bt=None,
++    num_warps=None,
+     hg=6,
++    qc=None,
+ ):
+     """``o[b * T + t, h]`` = attention of ``q[b * T + t, h]`` over ``seq_lens[b] + t + 1``
+     tokens of request ``b`` (``req_to_token[req_pool_indices[b]]``); ``q`` and ``o`` are
+@@ -224,11 +237,16 @@ def verify_attention_gfx1151(
+     B = rows // T
+     if nsplit is None:
+         nsplit = NSPLIT_GFX1201 if gfx1201_enabled() else NSPLIT
++    tile = GFX1201_B1_TILE if B == 1 and gfx1201_b1_tile_enabled() else (32, 4, 32)
++    bt = tile[0] if bt is None else bt
++    num_warps = tile[1] if num_warps is None else num_warps
++    qc = tile[2] if qc is None else qc
+     if (B, T, hq, hkv) not in _routed:
+         _routed.add((B, T, hq, hkv))
+         logger.info(
+-            "Verify attention (gfx115x kernel) route: %d requests x %d tokens, %d q / %d kv heads, %d splits",
+-            B, T, hq, hkv, nsplit,
++            "Verify attention (gfx115x kernel) route: %d requests x %d tokens, %d q / %d kv heads, %d splits, "
++            "tile BT %d / %d warps / QC %d",
++            B, T, hq, hkv, nsplit, bt, num_warps, qc,
+         )
+     part = torch.empty(rows * hq * nsplit, d, device=q.device, dtype=torch.float32)
+     ml = torch.empty(rows * hq * nsplit, 2, device=q.device, dtype=torch.float32)
+@@ -251,7 +269,7 @@ def verify_attention_gfx1151(
+         NSPLIT=nsplit,
+         BT=bt,
+         HG=hg,
+-        QC=32,
++        QC=qc,
+         num_warps=num_warps,
+         # the default software pipelining doubles the LDS and adds spills
+         num_stages=1,
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index 89fda80..ae8f0de 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1654,6 +1654,9 @@ class Envs:
+     # gfx1201: SiLU(gate) * up + MXFP4 quantization in one kernel for an MXFP4
+     # down projection on verify-sized batches.
+     SGLANG_GFX1201_SILU_MUL_MXFP4 = EnvBool(False)
++    # gfx1201: target-verify attention (SGLANG_GFX1201_VERIFY_ATTENTION) with a
++    # wider tile (BT 64, 8 warps, QC 64) when a batch has one request.
++    SGLANG_GFX1201_VERIFY_ATTENTION_B1_TILE = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
