@@ -1,0 +1,528 @@
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index ae8f0de..6ca6332 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1657,6 +1657,10 @@ class Envs:
+     # gfx1201: target-verify attention (SGLANG_GFX1201_VERIFY_ATTENTION) with a
+     # wider tile (BT 64, 8 warps, QC 64) when a batch has one request.
+     SGLANG_GFX1201_VERIFY_ATTENTION_B1_TILE = EnvBool(False)
++    # gfx1201: MXFP4 GEMMs of at most 16 rows run the kq3 kernel on the shards
++    # the split-K route serves; their weights are stored as kq3 records only and
++    # rebuilt into a per-card scratch for every other GEMM.
++    SGLANG_GFX1201_MXFP4_KQ3 = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4_kq3.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4_kq3.py
+new file mode 100644
+index 0000000..79ee7fa
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_mxfp4_kq3.py
+@@ -0,0 +1,372 @@
++# SPDX-License-Identifier: Apache-2.0
++"""kq3: register-fed MXFP4 x MXFP4 GEMM for gfx1201 rows of at most 16 (SGLANG_GFX1201_MXFP4_KQ3).
++
++One workgroup computes an M16 x N64 output tile. Its P waves each run one K
++partition, the partitions gfx1201_mxfp4's split-K uses, and exchange their FP32
++partials through LDS, summed in the fixed order ((p0 + p1) + p2) + p3. Each K32
++step of a wave reads one contiguous 1088-byte record (the 64 x 32 FP4 codes in
++WMMA fragment order, then 64 scale bytes stored as scale - 1), decodes it to
++scaled BF16 with integer operations and feeds v_wmma_f32_16x16x16_bf16 in
++ascending K: the operand values and the K order of the vendored AITER kernel.
++
++The records hold the same bytes as the canonical weight (N, K/2) and scales
++(N, K/32), so they replace them: a packed layer keeps no canonical copy. Every
++other consumer (the vendored GEMM for more than 16 rows, the P1 prefill
++expansion) gets the canonical pair rebuilt by one unpack kernel into a reusable
++per-card scratch immediately before it runs. The rebuilt pair is checked
++against the loaded weight once, before that weight is released.
++
++Importing this module needs Triton's Gluon front end; it is imported only when
++the switch is on.
++"""
++
++import logging
++from types import SimpleNamespace
++
++import torch
++import triton
++import triton.language as tl
++from triton.experimental import gluon
++from triton.experimental.gluon import language as gl
++from triton.experimental.gluon.language import BlockedLayout, DotOperandLayout, SliceLayout
++from triton.experimental.gluon.language.amd import AMDWMMALayout
++from triton.experimental.gluon.language.amd.cdna3 import buffer_load, buffer_store
++from triton.experimental.gluon.language.amd.rdna4 import wmma
++
++from sglang.srt.layers.quantization.quark.schemes import gfx1201_mxfp4 as _g
++
++logger = logging.getLogger(__name__)
++
++REC = 1088  # bytes per (N64 tile, K32 step): 1024 code bytes + 64 scale bytes
++MAX_ROWS = 16
++# The record stores scale - 1 and the decoder adds it to a BF16 exponent field.
++SCALE_MIN, SCALE_MAX = 2, 250
++# Warp bases of the WMMA layout: one K partition per wave.
++_WB = {1: (), 2: ((1, 0, 0),), 4: ((1, 0, 0), (2, 0, 0))}
++_SHAPES = tuple(_g._SPLITK_DOWNOUT_PARTS) + tuple(_g._SPLITK_WIDE_PARTS)
++# One canonical weight and scale buffer per card, sized for the largest packed
++# shard (17408 x 5120: 44.6 MB + 2.8 MB). GEMMs on a stream run in order, so
++# every layer shares it; it is allocated at load, never under graph capture.
++_SCRATCH_W = max(n * k // 2 for n, k in _SHAPES)
++_SCRATCH_S = max(n * k // 32 for n, k in _SHAPES)
++_UNPACK_GROUPS = 8
++_PACK_TILES = 64
++_scratch: dict = {}
++_qmaps: dict = {}
++_routed = set()
++
++
++@gluon.jit
++def _dec_b(w, base):
++    # w: e2m1 codes; nibbles j and j + 4 of each dword form one BF16 pair (packer order)
++    nzw = (w & 0x77777777) + 0x77777777                      # bit 4i+3: code i is not +-0
++    enz = ((w >> 1) & 0x33333333) + 0x33333333               # bit 4i+2: exponent field != 0
++    wm = w & ((enz >> 2) | 0xEEEEEEEE)                       # drop the mantissa bit of 0.5 (subnormal)
++    p0 = wm & 0x000F000F
++    p1 = (wm >> 4) & 0x000F000F
++    p2 = (wm >> 8) & 0x000F000F
++    p3 = (wm >> 12) & 0x000F000F
++    r0 = ((nzw >> 3) & 0x00010001) * base + ((p0 * 0x1041) & 0x81C081C0)
++    r1 = ((nzw >> 7) & 0x00010001) * base + ((p1 * 0x1041) & 0x81C081C0)
++    r2 = ((nzw >> 11) & 0x00010001) * base + ((p2 * 0x1041) & 0x81C081C0)
++    r3 = ((nzw >> 15) & 0x00010001) * base + ((p3 * 0x1041) & 0x81C081C0)
++    # join nests the new index above the old one: fragment register p of the lane = r_p (K pair 2p, 2p+1),
++    # the vendored kernel's order (WMMA adds the 16 products of a block in four groups; order matters)
++    x = gl.join(gl.join(r0, r2), gl.join(r1, r3))
++    return gl.join(x.to(gl.uint16), (x >> 16).to(gl.uint16)).to(gl.bfloat16, bitcast=True)
++
++
++@gluon.jit
++def _dec_a(w, base):
++    # w: e2m1 codes as the quantizer writes them (nibble i = element i of 8)
++    nzw = (w & 0x77777777) + 0x77777777
++    enz = ((w >> 1) & 0x33333333) + 0x33333333
++    wm = w & ((enz >> 2) | 0xEEEEEEEE)
++    p0 = ((wm & 0xFF) * 0x1001) & 0x000F000F
++    p1 = (((wm >> 8) & 0xFF) * 0x1001) & 0x000F000F
++    p2 = (((wm >> 16) & 0xFF) * 0x1001) & 0x000F000F
++    p3 = ((wm >> 24) * 0x1001) & 0x000F000F
++    n0 = (((nzw >> 3) & 0x11) * 0x1001) & 0x00010001
++    n1 = (((nzw >> 11) & 0x11) * 0x1001) & 0x00010001
++    n2 = (((nzw >> 19) & 0x11) * 0x1001) & 0x00010001
++    n3 = (((nzw >> 27) & 0x11) * 0x1001) & 0x00010001
++    r0 = n0 * base + ((p0 * 0x1041) & 0x81C081C0)
++    r1 = n1 * base + ((p1 * 0x1041) & 0x81C081C0)
++    r2 = n2 * base + ((p2 * 0x1041) & 0x81C081C0)
++    r3 = n3 * base + ((p3 * 0x1041) & 0x81C081C0)
++    x = gl.join(gl.join(r0, r2), gl.join(r1, r3))
++    return gl.join(x.to(gl.uint16), (x >> 16).to(gl.uint16)).to(gl.bfloat16, bitcast=True)
++
++
++@gluon.jit
++def _kq3_kernel(a_ptr, b_ptr, y_ptr, a_scales_ptr, M, N, G,
++                stride_am4, stride_ym, stride_yn, stride_asm, stride_ask,
++                P: gl.constexpr, SPLIT_STEPS: gl.constexpr, WB: gl.constexpr, num_warps: gl.constexpr):
++    gl.static_assert(num_warps == P)
++    pid_n = gl.program_id(0)
++    mma: gl.constexpr = AMDWMMALayout(2, True, WB, [[0, 0, 1], [0, 0, 2]], rank=3)
++    ad: gl.constexpr = DotOperandLayout(0, mma, 8)
++    bd: gl.constexpr = DotOperandLayout(1, mma, 8)
++    L8: gl.constexpr = BlockedLayout([1, 1, 8], [1, 32, 1], [P, 1, 1], [2, 1, 0])
++    LA: gl.constexpr = BlockedLayout([1, 1, 2], [1, 32, 1], [P, 1, 1], [2, 1, 0])
++    LR: gl.constexpr = BlockedLayout([P, 1, 32 // P], [1, 16, 2], [1, 1, P], [2, 1, 0])
++    LO: gl.constexpr = BlockedLayout([1, 32 // P], [16, 2], [1, P], [1, 0])
++
++    part = gl.expand_dims(gl.arange(0, P, layout=SliceLayout(1, SliceLayout(2, L8))), 1)       # [P,1]
++    lane = gl.expand_dims(gl.arange(0, 32, layout=SliceLayout(0, SliceLayout(2, L8))), 0)      # [1,32]
++    dreg = gl.expand_dims(gl.expand_dims(gl.arange(0, 8, layout=SliceLayout(0, SliceLayout(0, L8))), 0), 0)
++    soff = part * (SPLIT_STEPS * 272) + 256 + (lane % 16)                                       # [P,32]
++    boff = gl.expand_dims(part * (SPLIT_STEPS * 272) + lane * 8, 2) + dreg                      # [P,32,8]
++    ssh = (dreg // 2) * 8
++
++    part_a = gl.expand_dims(gl.arange(0, P, layout=SliceLayout(1, SliceLayout(2, LA))), 1)
++    lane_a = gl.expand_dims(gl.arange(0, 32, layout=SliceLayout(0, SliceLayout(2, LA))), 0)
++    kt = gl.expand_dims(gl.expand_dims(gl.arange(0, 2, layout=SliceLayout(0, SliceLayout(0, LA))), 0), 0)
++    m_a = (lane_a % 16) % M
++    aoff = gl.expand_dims(part_a * (SPLIT_STEPS * 4) + m_a * stride_am4 + lane_a // 16, 2) + kt * 2
++    asoff = part_a * (SPLIT_STEPS * stride_ask) + m_a * stride_asm
++
++    bp = (b_ptr + pid_n * G * 1088).to(gl.pointer_type(gl.uint32))
++    ap = a_ptr.to(gl.pointer_type(gl.uint32))
++
++    acc = gl.full((P, 16, 64), 0, gl.float32, mma)
++    # The next record is requested one K32 step ahead of its use.
++    w_n = buffer_load(bp, boff)
++    s_n = buffer_load(bp, soff)
++    for k in range(SPLIT_STEPS):
++        w = w_n
++        sdw = s_n
++        nk = gl.minimum(k + 1, SPLIT_STEPS - 1)
++        w_n = buffer_load(bp + nk * 272, boff)
++        s_n = buffer_load(bp + nk * 272, soff)
++        base_b = ((gl.expand_dims(sdw, 2) >> ssh) & 0xFF) << 7
++        bv = _dec_b(w, base_b)
++        bv = bv.reshape(P, 2, 16, 4, 2, 2, 2, 2).permute(0, 4, 1, 5, 6, 7, 3, 2).reshape(P, 32, 64)
++        bv = gl.convert_layout(bv, bd, assert_trivial=True)
++        araw = buffer_load(ap + k * 4, aoff)
++        sa = buffer_load(a_scales_ptr + k * stride_ask, asoff).to(gl.uint32)
++        base_a = gl.expand_dims((sa - 1) << 7, 2)
++        av = _dec_a(araw, base_a)
++        av = av.reshape(P, 2, 16, 2, 2, 2, 2).permute(0, 2, 3, 1, 4, 5, 6).reshape(P, 16, 32)
++        av = gl.convert_layout(av, ad, assert_trivial=True)
++        acc = wmma(av, bv, acc)
++
++    # Split-K reduce in the workgroup: every thread gets the P partials of its outputs (via LDS).
++    if P == 1:
++        tot = gl.convert_layout(acc, LR).reshape(16, 64)
++    else:
++        r = gl.convert_layout(acc, LR).permute(1, 2, 0)
++        if P == 2:
++            p0, p1 = gl.split(r)
++            tot = p0 + p1
++        else:
++            pe, po = gl.split(r.reshape(16, 64, 2, 2))
++            p0, p2 = gl.split(pe)
++            p1, p3 = gl.split(po)
++            tot = ((p0 + p1) + p2) + p3
++    tot = gl.convert_layout(tot, LO, assert_trivial=True)
++    cm = gl.arange(0, 16, layout=SliceLayout(1, LO))
++    cn = pid_n * 64 + gl.arange(0, 64, layout=SliceLayout(0, LO))
++    buffer_store(tot.to(y_ptr.dtype.element_ty), y_ptr, cm[:, None] * stride_ym + cn[None, :] * stride_yn,
++                 (cm[:, None] < M) & (cn[None, :] < N))
++
++
++@triton.jit
++def _unpack_kernel(rec_ptr, w_ptr, s_ptr, N, G, BG: tl.constexpr):
++    # One program: one N64 tile x BG K32 steps of records -> canonical codes (N, K/2), four
++    # packed dwords per row and step, and scales (N, K/32). Inverse of pack().
++    t = tl.program_id(0)
++    g0 = tl.program_id(1) * BG
++    row = tl.arange(0, 64)
++    j = tl.arange(0, BG * 4)
++    g = g0 + j // 4
++    c = j % 4
++    n = t * 64 + row
++    # Canonical dword c of a row holds K 8c .. 8c+7: record lane row % 16 + 16 * (c % 2),
++    # lane dword (row // 16) * 2 + c // 2; code 2i is nibble i, code 2i + 1 nibble i + 4.
++    rdw = ((row % 16)[:, None] + 16 * (c % 2)[None, :]) * 8 + (row // 16)[:, None] * 2 + (c // 2)[None, :]
++    mask = (n < N)[:, None] & (g < G)[None, :]
++    v = tl.load(rec_ptr.to(tl.pointer_type(tl.uint32)) + (t * G + g)[None, :] * 272 + rdw, mask=mask, other=0)
++    lo = v & 0xFFFF
++    hi = v >> 16
++    lo = (lo | (lo << 8)) & 0x00FF00FF
++    hi = (hi | (hi << 8)) & 0x00FF00FF
++    lo = (lo | (lo << 4)) & 0x0F0F0F0F
++    hi = (hi | (hi << 4)) & 0x0F0F0F0F
++    tl.store(w_ptr.to(tl.pointer_type(tl.uint32)) + n[:, None] * (G * 4) + (g0 * 4 + j)[None, :],
++             (lo | (hi << 4)).to(tl.uint32), mask=mask)
++    gs = g0 + tl.arange(0, BG)
++    smask = (n < N)[:, None] & (gs < G)[None, :]
++    s = tl.load(rec_ptr + (t * G + gs)[None, :] * 1088 + 1024 + (4 * (row % 16) + row // 16)[:, None],
++                mask=smask, other=0)
++    tl.store(s_ptr + n[:, None] * G + gs[None, :], (s + 1).to(tl.uint8), mask=smask)
++
++
++def _qmap(device):
++    """Record nibble position q (byte q // 2, low nibble first) -> n * 32 + k of the 64 x 32 tile.
++
++    Lane = byte // 32 holds column n % 16 and K half (k % 16) // 8; its 8 dwords are
++    (N16 tile, K16 block); nibbles i and i + 4 of a dword are the BF16 pair (2i, 2i + 1)
++    of the WMMA B fragment."""
++    if device not in _qmaps:
++        q = torch.arange(2048)
++        byte = q // 2
++        lane, d, i = byte // 32, (byte % 32) // 4, 2 * (byte % 4) + q % 2
++        n = (d // 2) * 16 + lane % 16
++        k = (d % 2) * 16 + (lane // 16) * 8 + 2 * (i % 4) + i // 4
++        _qmaps[device] = (n * 32 + k).to(device)
++    return _qmaps[device]
++
++
++def pack(w, s):
++    """w (N, K/2) u8 e2m1 codes, s (N, K/32) u8 E8M0 in [SCALE_MIN, SCALE_MAX] ->
++    (ceil(N / 64), K / 32, REC) u8 records. Rows past N are +0 codes with scale 1."""
++    n, k = w.shape[0], w.shape[1] * 2
++    t, g_ = -(-n // 64), k // 32
++    qmap = _qmap(w.device)
++    out = torch.empty((t, g_, REC), dtype=torch.uint8, device=w.device)
++    for t0 in range(0, t, _PACK_TILES):
++        t1 = min(t0 + _PACK_TILES, t)
++        rows = min(t1 * 64, n) - t0 * 64
++        nib = torch.zeros(((t1 - t0) * 64, k), dtype=torch.uint8, device=w.device)
++        nib[:rows, 0::2] = w[t0 * 64:t0 * 64 + rows] & 15
++        nib[:rows, 1::2] = w[t0 * 64:t0 * 64 + rows] >> 4
++        pn = nib.view(t1 - t0, 64, g_, 32).permute(0, 2, 1, 3).reshape(t1 - t0, g_, 2048)[:, :, qmap]
++        out[t0:t1, :, :1024] = pn[:, :, 0::2] | (pn[:, :, 1::2] << 4)
++        sp = torch.full(((t1 - t0) * 64, g_), 126, dtype=torch.uint8, device=w.device)
++        sp[:rows] = s[t0 * 64:t0 * 64 + rows] - 1
++        # scale byte 4 * n16 + ntile  <-  row ntile * 16 + n16
++        out[t0:t1, :, 1024:] = sp.view(t1 - t0, 4, 16, g_).permute(0, 3, 2, 1).reshape(t1 - t0, g_, 64)
++    return out
++
++
++class Records:
++    """One weight as records (a whole record tensor or whole tiles of a shared one), and
++    the views of the card's scratch its canonical (N, K/2) / (N, K/32) pair is rebuilt into."""
++
++    __slots__ = ("rec", "n", "k", "canon")
++
++    def __init__(self, rec, n, k):
++        self.rec, self.n, self.k = rec, n, k
++        w, s = _scratch[rec.device.index]
++        self.canon = SimpleNamespace(weight=w[: n * k // 2].view(n, k // 2),
++                                     weight_scale=s[: n * k // 32].view(n, k // 32))
++
++    def canonical(self):
++        """Rebuild the canonical pair in the scratch; valid until the next rebuild on the card.
++
++        Returns an object with .weight and .weight_scale, the stand-in for the layer."""
++        g_ = self.k // 32
++        _unpack_kernel[(self.rec.shape[0], triton.cdiv(g_, _UNPACK_GROUPS))](
++            self.rec, self.canon.weight, self.canon.weight_scale, self.n, g_,
++            BG=_UNPACK_GROUPS, num_warps=4)
++        return self.canon
++
++
++def _ensure_scratch(device):
++    if device.index not in _scratch:
++        if torch.cuda.is_current_stream_capturing():
++            raise RuntimeError("kq3 scratch must be allocated before graph capture")
++        # Normal tensors: the P1 route tracks the version of the views it validated.
++        with torch.inference_mode(False):
++            _scratch[device.index] = (torch.empty(_SCRATCH_W, dtype=torch.uint8, device=device),
++                                      torch.empty(_SCRATCH_S, dtype=torch.uint8, device=device))
++
++
++def _stand_in(n, cols, device):
++    # Shape, dtype and device of the released tensor on one byte; not contiguous, so the
++    # routes that check their weight storage reject it.
++    return torch.nn.Parameter(torch.zeros((1, 1), dtype=torch.uint8, device=device).expand(n, cols),
++                              requires_grad=False)
++
++
++def pack_weight(w, s, layers):
++    """Load time: replace the canonical MXFP4 weight w (N, K/2), s (N, K/32) by records.
++
++    layers: ((layer, first row), ...) in row order, covering w; each layer but the last
++    ends on a whole N64 tile. Every layer's weight and weight_scale become stand-ins and
++    the layer gets its Records as _gfx1201_kq3. Returns the Records of the whole weight,
++    or None with nothing changed when the weight is not eligible: (N, K) must be a shape
++    gfx1201_mxfp4 splits along K for 8 and 16 rows under the current switches.
++    """
++    n, k = w.shape[0], w.shape[1] * 2
++    parts = _g._splitk_parts(n, k, None, None)
++    if (
++        parts == 1
++        or parts not in _WB
++        or w.dtype != torch.uint8
++        or s.dtype != torch.uint8
++        or not w.is_cuda
++        or tuple(s.shape) != (n, k // 32)
++        or k % (32 * parts)
++        or n * k // 2 > _SCRATCH_W
++        or any(row % 64 for _, row in layers)
++    ):
++        return None
++    lo, hi = int(s.min()), int(s.max())  # synchronizes; load time only
++    if lo < SCALE_MIN or hi > SCALE_MAX:
++        logger.warning("MXFP4 kq3 (gfx1201) keeps N=%d K=%d canonical: weight scales %d..%d outside %d..%d",
++                       n, k, lo, hi, SCALE_MIN, SCALE_MAX)
++        return None
++    _ensure_scratch(w.device)
++    rec = pack(w.contiguous(), s.contiguous())
++    whole = Records(rec, n, k)
++    ends = [row for _, row in layers[1:]] + [n]
++    states = [whole] if len(layers) == 1 else [
++        Records(rec[row // 64: -(-end // 64)], end - row, k) for (_, row), end in zip(layers, ends)]
++    for state, (_, row) in zip(states, layers):
++        c = state.canonical()
++        if not (torch.equal(c.weight, w[row:row + state.n]) and torch.equal(c.weight_scale, s[row:row + state.n])):
++            logger.error("MXFP4 kq3 (gfx1201) keeps N=%d K=%d canonical: records do not unpack to the weight", n, k)
++            return None
++    for state, (layer, _) in zip(states, layers):
++        layer.weight = _stand_in(state.n, k // 2, w.device)
++        layer.weight_scale = _stand_in(state.n, k // 32, w.device)
++        layer._gfx1201_kq3 = state
++    if (n, k) not in _routed:
++        _routed.add((n, k))
++        logger.info("MXFP4 kq3 verify GEMM (gfx1201) route: N=%d K=%d, %d partitions at 8 and 16 rows, "
++                    "records replace the weight", n, k, parts)
++    return whole
++
++
++def pack_layer(layer):
++    """Load time: pack one layer's own weight; its Records, or None when not eligible."""
++    packed = pack_weight(layer.weight.data, layer.weight_scale.data, ((layer, 0),))
++    # The released weight and the pack temporaries go back to the device.
++    torch.cuda.empty_cache()
++    return packed
++
++
++def admits(state, x_q, x_s, dtype):
++    """Quantized rows the kernel takes: at most 16, contiguous codes, BF16 or FP32 output."""
++    return (
++        x_q.dim() == 2
++        and 0 < x_q.shape[0] <= MAX_ROWS
++        and x_q.dtype == torch.uint8
++        and x_q.shape[1] * 2 == state.k
++        and x_q.is_contiguous()
++        and x_s.dtype == torch.uint8
++        and tuple(x_s.shape) == (x_q.shape[0], state.k // 32)
++        and dtype in (torch.bfloat16, torch.float32)
++    )
++
++
++def gemm(state, x_q, x_s, y):
++    """y[M, N] = dequant(x) @ dequant(w).T for admitted rows, bitwise equal to
++    gfx1201_mxfp4.gemm_afp4wfp4: its K partitions at 8 and 16 rows, one partition otherwise."""
++    m, n, g_ = x_q.shape[0], state.n, state.k // 32
++    parts = _g._splitk_parts(n, state.k, None, None) if m in _g._VERIFY_ROWS else 1
++    _kq3_kernel[(triton.cdiv(n, 64),)](
++        x_q, state.rec, y, x_s, m, n, g_, x_q.stride(0) // 4, y.stride(0), y.stride(1),
++        x_s.stride(0), x_s.stride(1),
++        P=parts, SPLIT_STEPS=g_ // parts, WB=_WB[parts], num_warps=parts)
++    return y
++
++
++def gemm_any(state, x_q, x_s, dtype, y):
++    """gemm() for admitted rows; otherwise gfx1201_mxfp4.gemm_afp4wfp4 on the rebuilt weight."""
++    if admits(state, x_q, x_s, dtype):
++        return gemm(state, x_q, x_s, y)
++    c = state.canonical()
++    return _g.gemm_afp4wfp4(x_q, c.weight, x_s, c.weight_scale, dtype, y)
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
+index 40a3787..3e04c1f 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
+@@ -182,6 +182,14 @@ if _use_gfx1201_mxfp4 and envs.SGLANG_GFX1201_P1_PREFILL.get():
+ 
+     _gfx1201_p1 = gfx1201_p1_prefill.install(torch, gfx1201_p1_prefill.SETTING)
+ 
++# gfx1201 kq3 (opt-in): GEMMs of at most 16 rows read the weight as kq3 records,
++# which replace the canonical weight of every shard the split-K route serves.
++_gfx1201_kq3 = None
++if _use_gfx1201_mxfp4 and envs.SGLANG_GFX1201_MXFP4_KQ3.get():
++    from sglang.srt.layers.quantization.quark.schemes import (
++        gfx1201_mxfp4_kq3 as _gfx1201_kq3,
++    )
++
+ if _use_gfx1201_mxfp4:
+     from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4 import (
+         dynamic_mxfp4_quant,
+@@ -458,11 +466,15 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             return
+ 
+         layer.use_aiter_asm_fp4_gemm = False
++        kq3 = _gfx1201_kq3.pack_layer(layer) if _gfx1201_kq3 is not None else None
+         if _gfx1201_p1 is not None:
+             n, k = layer.weight.shape[0], layer.weight.shape[1] * 2
+             if _gfx1201_p1.admits_shape(n, k):
+                 # Expand once, require zero guard flags, compile before traffic.
+-                _gfx1201_p1.validate_layer(layer, n, k)
++                # A kq3 layer is validated as the canonical pair rebuilt from its records.
++                _gfx1201_p1.validate_layer(
++                    layer if kq3 is None else kq3.canonical(), n, k
++                )
+         if not _use_aiter_asm_fp4_gemm or not is_gfx95_supported():
+             return
+ 
+@@ -970,6 +982,26 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             x = x.view(-1, x.shape[-1])
+             output_shape = [*x.shape[:-1], layer.weight.shape[0]]
+ 
++        if _gfx1201_kq3 is not None and "_gfx1201_kq3" in layer.__dict__:
++            kq3 = layer._gfx1201_kq3
++            if (
++                y is None
++                and not fused_gemm_split_cat
++                and x.shape[0] <= _gfx1201_kq3.MAX_ROWS
++            ):
++                if x_s is None:
++                    x, x_s = dynamic_mxfp4_quant(x)
++                if _gfx1201_kq3.admits(kq3, x, x_s, self.out_dtype):
++                    y = torch.empty(
++                        x.shape[0], kq3.n, device=x.device, dtype=self.out_dtype
++                    )
++                    _gfx1201_kq3.gemm(kq3, x, x_s, y)
++                    if bias is not None:
++                        y = y + bias
++                    return y.view(*output_shape) if three_d else y
++            # Every other route reads the canonical weight, rebuilt from the records.
++            layer = kq3.canonical()
++
+         if (
+             _gfx1201_p1 is not None
+             and x_s is None
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index 16729df..d5de203 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -861,12 +861,30 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+         rows = qkvz.weight.shape[0]
+         weight = torch.cat([qkvz.weight.data, ba.weight.data], dim=0).contiguous()
+         scale = torch.cat([qkvz.weight_scale.data, ba.weight_scale.data], dim=0).contiguous()
++        p1 = quark_w4a4_mxfp4._gfx1201_p1
++        kq3 = quark_w4a4_mxfp4._gfx1201_kq3
++        records = None
++        if kq3 is not None:
++            # kq3 records replace the packed weight; QKVZ and BA rebuild their rows from them.
++            records = kq3.pack_weight(weight, scale, ((qkvz, 0), (ba, rows)))
++        if records is not None:
++            del weight, scale
++            torch.cuda.empty_cache()
++            self._gfx1201_in_proj = (records, None, rows)
++            if p1 is not None:
++                for proj in (qkvz, ba):
++                    if p1.validated.pop(id(proj), None) is not None:
++                        p1.validate_layer(
++                            proj._gfx1201_kq3.canonical(),
++                            proj.weight.shape[0],
++                            proj.weight.shape[1] * 2,
++                        )
++            return True
+         qkvz.weight.data, ba.weight.data = weight[:rows], weight[rows:]
+         qkvz.weight_scale.data, ba.weight_scale.data = scale[:rows], scale[rows:]
+         self._gfx1201_in_proj = (weight, scale, rows)
+         # The P1 prefill route pins each validated layer's weight storage; the
+         # bytes are unchanged, so expand and check the moved shards again.
+-        p1 = quark_w4a4_mxfp4._gfx1201_p1
+         if p1 is not None:
+             for proj in (qkvz, ba):
+                 if p1.is_validated(proj):
+@@ -955,6 +973,17 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+             )
+         )
+ 
++    def _gfx1201_kq3_in_proj(self, x_q, x_s):
++        """The packed input projection on kq3 records (SGLANG_GFX1201_MXFP4_KQ3)."""
++        from sglang.srt.layers.quantization.quark.schemes import gfx1201_mxfp4_kq3
++
++        records, _, rows = self._gfx1201_in_proj
++        out = torch.empty(
++            (x_q.shape[0], records.n), dtype=torch.bfloat16, device=x_q.device
++        )
++        gfx1201_mxfp4_kq3.gemm_any(records, x_q, x_s, torch.bfloat16, out)
++        return out[:, :rows], out[:, rows:]
++
+     def _forward_input_proj(self, hidden_states: torch.Tensor):
+         if (
+             self._gfx1201_in_proj is not None
+@@ -975,6 +1004,8 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+                     "Packed MXFP4 GDN input projection (gfx1201) takes the quantized norm read: %d rows",
+                     x_q.shape[0],
+                 )
++            if scale is None:
++                return self._gfx1201_kq3_in_proj(x_q, x_s)
+             out = torch.empty(
+                 (x_q.shape[0], weight.shape[0]), dtype=torch.bfloat16, device=x_q.device
+             )
+@@ -994,6 +1025,8 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+ 
+             weight, scale, rows = self._gfx1201_in_proj
+             x_q, x_s = dynamic_mxfp4_quant(hidden_states)
++            if scale is None:
++                return self._gfx1201_kq3_in_proj(x_q, x_s)
+             out = torch.empty(
+                 (hidden_states.shape[0], weight.shape[0]),
+                 dtype=torch.bfloat16,
