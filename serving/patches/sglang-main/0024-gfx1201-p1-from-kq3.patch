@@ -1,0 +1,319 @@
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index e7951c4..22829fe 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1664,6 +1664,10 @@ class Envs:
+     # the split-K route serves; their weights are stored as kq3 records only and
+     # rebuilt into a per-card scratch for every other GEMM.
+     SGLANG_GFX1201_MXFP4_KQ3 = EnvBool(False)
++    # gfx1201: the P1 prefill route expands a kq3 layer's FP8 weight directly
++    # from its records instead of first rebuilding the canonical weight
++    # (needs SGLANG_GFX1201_P1_PREFILL and SGLANG_GFX1201_MXFP4_KQ3).
++    SGLANG_GFX1201_P1_FROM_KQ3 = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_kq3.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_kq3.py
+new file mode 100644
+index 0000000..6d4da5c
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_kq3.py
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: Apache-2.0
++"""P1 weight expansion read from kq3 records (SGLANG_GFX1201_P1_FROM_KQ3).
++
++gfx1201_p1_fp8_kernels._expand_mxfp4_to_block_fp8 reads the canonical MXFP4
++pair, which a kq3 layer no longer keeps: gfx1201_mxfp4_kq3 rebuilds it into a
++scratch before every P1 call. The kernel here writes the same expansion, block
++scales and guard flags from the records themselves. Its arithmetic is that
++kernel's, statement for statement; only the addressing differs. One program is
++still one N128 x K128 block: two N64 record tiles by four K32 records.
++
++Importing this module needs Triton; the P1 route imports it on first use.
++"""
++
++import triton
++import triton.language as tl
++
++
++@triton.jit
++def _expand_kq3_to_block_fp8(Records, Expanded, BlockScales, GuardFlags, K: tl.constexpr):
++    """Records (tiles of 64 rows, K / 32, 1088) of N rows, N a multiple of 128 ->
++    what _expand_mxfp4_to_block_fp8 writes for the canonical pair they unpack to."""
++    bn = tl.program_id(0)
++    bk = tl.program_id(1)
++    r = tl.arange(0, 128)
++    j = tl.arange(0, 16)  # canonical dword of the block: K 8j .. 8j + 7
++    row = r % 64
++    rec = (2 * bn + r // 64)[:, None] * (K // 32) + (bk * 4 + j // 4)[None, :]
++    # A record stores scale - 1 at byte 4 * (row % 16) + row // 16; the canonical byte wraps.
++    scales = (tl.load(Records + rec * 1088 + 1024 + (4 * (row % 16) + row // 16)[:, None]).to(tl.int32) + 1) & 255
++    low = tl.min(tl.min(scales, 1), 0)
++    high = tl.max(tl.max(scales, 1), 0)
++    invalid_zero = tl.max(tl.max((scales == 0).to(tl.int32), 1), 0)
++    invalid_reserved = tl.max(tl.max((scales == 255).to(tl.int32), 1), 0)
++    flags = invalid_zero | (invalid_reserved << 1) | ((high - low > 14).to(tl.int32) << 2)
++    tl.store(GuardFlags + bn * (K // 128) + bk, flags)
++    valid = flags == 0
++    exponent = tl.minimum(high - 127, low - 127 + 8)
++    safe_exponent = tl.where(valid, exponent, 0)
++    block_scale = ((safe_exponent + 127) << 23).to(tl.float32, bitcast=True)
++    tl.store(BlockScales + bn * (K // 128) + bk, block_scale, mask=valid)
++
++    # Canonical dword c of a row and K32 step is record lane row % 16 + 16 * (c % 2), lane
++    # dword (row // 16) * 2 + c // 2; its nibbles i and i + 4 are codes 2i and 2i + 1.
++    c = j % 4
++    rdw = ((row % 16)[:, None] + 16 * (c % 2)[None, :]) * 8 + (row // 16)[:, None] * 2 + (c // 2)[None, :]
++    v = tl.load(Records.to(tl.pointer_type(tl.uint32)) + rec * 272 + rdw)
++    kk = tl.arange(0, 8)
++    shift = (4 * (kk // 2 + 4 * (kk % 2))).to(tl.uint32)
++    code = ((v[:, :, None] >> shift[None, None, :]) & 15).to(tl.int32)
++    m = code & 7
++    delta = tl.where(valid, scales - 127 - safe_exponent, 0)[:, :, None]
++    normal_code = tl.where(m == 1, 48, m * 4 + 48) + delta * 8
++    twice_magnitude = tl.where(m < 4, m, tl.where(m < 6, (m - 2) * 2, (m - 4) * 4))
++    subnormal_code = twice_magnitude << (delta + 8)
++    magnitude_code = tl.where(m == 0, 0, tl.where(normal_code >= 8, normal_code, subnormal_code))
++    bits = (magnitude_code | ((code & 8) << 4)).to(tl.uint8)
++    tl.store(
++        Expanded + ((bn * 128 + r) * K)[:, None, None] + (bk * 128 + j * 8)[None, :, None] + kk[None, None, :],
++        bits.to(Expanded.dtype.element_ty, bitcast=True),
++        mask=valid,
++    )
++
++
++def expand(rec, n, k, weight, block_scales, flags, **config):
++    """Launch on the grid of _expand_mxfp4_to_block_fp8: one program per N128 x K128 block."""
++    if n % 128 or k % 128 or rec.dim() != 3 or tuple(rec.shape[1:]) != (k // 32, 1088) or rec.shape[0] * 64 < n:
++        raise ValueError("P1 kq3 expansion of an unsupported record layout")
++    return _expand_kq3_to_block_fp8[(n // 128, k // 128)](rec, weight, block_scales, flags, K=k, **config)
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py
+index e07a946..1b415e8 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_p1_prefill.py
+@@ -17,7 +17,10 @@ module; nothing is attached to a layer. Importing this module is CPU-only.
+ Changes from the source route: the kernel import path, route markers go to the
+ logger, and validate_layer(..., rebind=True) re-validates a layer whose packed
+ weights were moved without changing their bytes (patch 0007 packs the GDN
+-input projections into one tensor after loading).
++input projections into one tensor after loading); and a layer stored as kq3
++records (gfx1201_mxfp4_kq3) can be expanded from the records
++(validate_records, apply(..., records=...)) by gfx1201_p1_kq3, whose output is
++compared at load with the expansion above.
+ """
+ 
+ import logging
+@@ -52,6 +55,7 @@ class PrefillRoute:
+         self.torch, self.emit = torch, emit
+         self.scratch, self.validated, self.warmed = {}, {}, set()
+         self.calls, self.rows, self.seen = {}, {}, set()
++        self.records, self.from_records = {}, 0
+ 
+     def admits_shape(self, n, k):
+         return (n, k) in SHAPES
+@@ -115,6 +119,17 @@ class PrefillRoute:
+             N=n, K=k, **EXPANSION_CONFIG,
+         )
+ 
++    def _records_identity(self, records):
++        rec = records.rec
++        return (rec.data_ptr(), rec._version, tuple(rec.shape), records.n, records.k)
++
++    def _expand_records(self, records, n, k, weight, block_scales, flags):
++        from sglang.srt.layers.quantization.quark.schemes import gfx1201_p1_kq3
++
++        if (records.n, records.k) != (n, k) or not records.rec.is_contiguous():
++            raise ValueError("P1 records shape/contiguity mismatch")
++        return gfx1201_p1_kq3.expand(records.rec, n, k, weight, block_scales, flags, **EXPANSION_CONFIG)
++
+     def _quantize(self, kernels, x, x_q, x_scales, m, k):
+         return kernels._per_token_group_quant_8bit[(m * (k // 128),)](
+             x, x_q, x_scales, 128, 128, 1e-10, -448.0, 448.0, **QUANTIZER_CONFIG,
+@@ -167,8 +182,53 @@ class PrefillRoute:
+                 self.emit("P1_PREFILL_READY", {"device": device, "scratch_bytes": scratch_bytes(),
+                                                "warm_rows": list(WARM_ROWS), "setting": SETTING})
+ 
+-    def apply(self, layer, x, n, k):
+-        """One admitted prefill call: expand, quantize, GEMM; BF16 output in a fresh tensor."""
++    def has_records(self, records):
++        return id(records) in self.records
++
++    def validate_records(self, records, n, k):
++        """Load time, after validate_layer(records.canonical(), n, k): the expansion read from
++        the records must be, bit for bit, the validated expansion of that canonical pair.
++
++        The comparison buffers start as the complement of the reference, so a byte the
++        records kernel does not write cannot compare equal.
++        """
++        torch = self.torch
++        device = records.rec.device.index
++        triton, kernels = self._runtime(device)
++        canon = records.canonical()
++        if self.validated.get(id(canon)) != self._identity(canon):
++            raise RuntimeError("P1 records validated before their canonical pair")
++        if id(records) in self.records:
++            raise RuntimeError("P1 records validated twice")
++        self._check(records.rec, tuple(records.rec.shape), torch.uint8, device)
++        weight, block_scales, flags, _, _ = self._views(device, MIN_ROWS, n, k)
++        with torch.no_grad():
++            self._expand(kernels, triton, canon, n, k, weight, block_scales, flags)
++            got_w = torch.empty_like(weight)
++            got_s = torch.empty_like(block_scales)
++            got_f = torch.full_like(flags, -1)
++            got_w.view(torch.uint8).copy_(~weight.view(torch.uint8))
++            got_s.view(torch.int32).copy_(~block_scales.view(torch.int32))
++            self._expand_records(records, n, k, got_w, got_s, got_f)
++            same = (int(torch.count_nonzero(flags).item()) == 0  # synchronizes; load time only
++                    and torch.equal(got_f, flags)
++                    and torch.equal(got_s.view(torch.int32), block_scales.view(torch.int32))
++                    and torch.equal(got_w.view(torch.uint8), weight.view(torch.uint8)))
++            del got_w, got_s, got_f
++        # The comparison buffers go back to the device.
++        torch.cuda.empty_cache()
++        if not same:
++            raise ValueError("P1 expansion from kq3 records differs from the validated expansion")
++        self.records[id(records)] = self._records_identity(records)
++        if ("kq3", n, k) not in self.seen and self.emit is not None:
++            self.seen.add(("kq3", n, k))
++            self.emit("P1_PREFILL_FROM_KQ3", {"device": device, "n": n, "k": k})
++
++    def apply(self, layer, x, n, k, records=None):
++        """One admitted prefill call: expand, quantize, GEMM; BF16 output in a fresh tensor.
++
++        records: the layer's kq3 Records, validated by validate_records; the weight is then
++        expanded from them and the canonical pair (layer) is not read."""
+         torch = self.torch
+         m = x.shape[0]
+         if not self.admits(m, n, k):
+@@ -177,13 +237,21 @@ class PrefillRoute:
+         triton, kernels = self._runtime(device)
+         if self.validated.get(id(layer)) != self._identity(layer):
+             raise RuntimeError("P1 layer not validated at load or its packed weights changed")
++        if records is not None and (
++                layer is not records.canon or self.records.get(id(records)) != self._records_identity(records)):
++            raise RuntimeError("P1 records not validated at load or changed")
+         self._check_layer(layer, n, k, device)
+         self._check(x, (m, k), torch.bfloat16, device)
+         weight, block_scales, flags, x_q, x_scales = self._views(device, m, n, k)
+         y = torch.empty((m, n), dtype=torch.bfloat16, device=device)
+-        self._expand(kernels, triton, layer, n, k, weight, block_scales, flags)
++        if records is None:
++            self._expand(kernels, triton, layer, n, k, weight, block_scales, flags)
++        else:
++            self._expand_records(records, n, k, weight, block_scales, flags)
+         self._quantize(kernels, x, x_q, x_scales, m, k)
+         self._gemm(kernels, triton, x_q, weight, x_scales, block_scales, y, m, n, k)
++        if records is not None:
++            self.from_records += 1
+         self.calls[(n, k)] = self.calls.get((n, k), 0) + 1
+         self.rows[m] = self.rows.get(m, 0) + 1
+         if (n, k) not in self.seen and self.emit is not None:
+@@ -192,9 +260,12 @@ class PrefillRoute:
+         return y
+ 
+     def snapshot(self):
+-        return {"setting": SETTING, "validated_layers": len(self.validated), "warmed_devices": sorted(self.warmed),
++        snap = {"setting": SETTING, "validated_layers": len(self.validated), "warmed_devices": sorted(self.warmed),
+                 "calls": {"%dx%d" % key: value for key, value in sorted(self.calls.items())},
+                 "rows": {str(key): value for key, value in sorted(self.rows.items())}}
++        if self.records:
++            snap["kq3_records"] = {"validated_layers": len(self.records), "calls": self.from_records}
++        return snap
+ 
+ 
+ def install(torch, setting):
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
+index 3e04c1f..1808ab5 100644
+--- a/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
++++ b/python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4.py
+@@ -190,6 +190,23 @@ if _use_gfx1201_mxfp4 and envs.SGLANG_GFX1201_MXFP4_KQ3.get():
+         gfx1201_mxfp4_kq3 as _gfx1201_kq3,
+     )
+ 
++# gfx1201 P1 from kq3 (opt-in): the P1 route expands a kq3 layer from its records.
++_gfx1201_p1_from_kq3 = (
++    _gfx1201_p1 is not None
++    and _gfx1201_kq3 is not None
++    and envs.SGLANG_GFX1201_P1_FROM_KQ3.get()
++)
++
++
++def _gfx1201_p1_validate_kq3(kq3, n, k):
++    """Load time: validate a kq3 layer for P1 as the canonical pair rebuilt from its
++    records; with SGLANG_GFX1201_P1_FROM_KQ3 the expansion read from the records
++    must then equal that validated expansion bit for bit."""
++    _gfx1201_p1.validate_layer(kq3.canonical(), n, k)
++    if _gfx1201_p1_from_kq3:
++        _gfx1201_p1.validate_records(kq3, n, k)
++
++
+ if _use_gfx1201_mxfp4:
+     from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4 import (
+         dynamic_mxfp4_quant,
+@@ -471,10 +488,10 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             n, k = layer.weight.shape[0], layer.weight.shape[1] * 2
+             if _gfx1201_p1.admits_shape(n, k):
+                 # Expand once, require zero guard flags, compile before traffic.
+-                # A kq3 layer is validated as the canonical pair rebuilt from its records.
+-                _gfx1201_p1.validate_layer(
+-                    layer if kq3 is None else kq3.canonical(), n, k
+-                )
++                if kq3 is None:
++                    _gfx1201_p1.validate_layer(layer, n, k)
++                else:
++                    _gfx1201_p1_validate_kq3(kq3, n, k)
+         if not _use_aiter_asm_fp4_gemm or not is_gfx95_supported():
+             return
+ 
+@@ -982,6 +999,7 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             x = x.view(-1, x.shape[-1])
+             output_shape = [*x.shape[:-1], layer.weight.shape[0]]
+ 
++        p1_records = None
+         if _gfx1201_kq3 is not None and "_gfx1201_kq3" in layer.__dict__:
+             kq3 = layer._gfx1201_kq3
+             if (
+@@ -999,8 +1017,12 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+                     if bias is not None:
+                         y = y + bias
+                     return y.view(*output_shape) if three_d else y
+-            # Every other route reads the canonical weight, rebuilt from the records.
+-            layer = kq3.canonical()
++            # Every other route reads the canonical weight, rebuilt from the records;
++            # P1 may expand from the records, so that rebuild waits for its decision.
++            if _gfx1201_p1_from_kq3 and _gfx1201_p1.has_records(kq3):
++                p1_records, layer = kq3, kq3.canon
++            else:
++                layer = kq3.canonical()
+ 
+         if (
+             _gfx1201_p1 is not None
+@@ -1014,8 +1036,12 @@ class QuarkW4A4MXFP4(QuarkLinearScheme):
+             and _gfx1201_p1.is_validated(layer)
+             and not torch.cuda.is_current_stream_capturing()
+         ):
+-            y = _gfx1201_p1.apply(layer, x, layer.weight.shape[0], x.shape[1])
++            y = _gfx1201_p1.apply(
++                layer, x, layer.weight.shape[0], x.shape[1], records=p1_records
++            )
+             return y.view(*output_shape) if three_d else y
++        if p1_records is not None:
++            p1_records.canonical()
+ 
+         # use_fused_quant_gemm = true, x_q is a bf16/fp16 num
+         # x_s is not None = true, x_q is uint8 num
+diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
+index d5de203..1c6c54a 100644
+--- a/python/sglang/srt/models/qwen3_5.py
++++ b/python/sglang/srt/models/qwen3_5.py
+@@ -874,8 +874,8 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+             if p1 is not None:
+                 for proj in (qkvz, ba):
+                     if p1.validated.pop(id(proj), None) is not None:
+-                        p1.validate_layer(
+-                            proj._gfx1201_kq3.canonical(),
++                        quark_w4a4_mxfp4._gfx1201_p1_validate_kq3(
++                            proj._gfx1201_kq3,
+                             proj.weight.shape[0],
+                             proj.weight.shape[1] * 2,
+                         )
