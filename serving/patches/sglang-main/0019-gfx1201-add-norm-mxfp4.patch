@@ -186,7 +186,7 @@ index 0000000..bc15263
 +    )
 +    return (packed, scales), res_out
 diff --git a/python/sglang/srt/models/qwen3_5.py b/python/sglang/srt/models/qwen3_5.py
-index 6901a8c..6283c1f 100644
+index 6901a8c..16729df 100644
 --- a/python/sglang/srt/models/qwen3_5.py
 +++ b/python/sglang/srt/models/qwen3_5.py
 @@ -173,6 +173,36 @@ _gfx1201_packed_gdn_in_proj = (
@@ -226,7 +226,23 @@ index 6901a8c..6283c1f 100644
  if _use_aiter:
      from aiter.tuned_gemm import tgemm
  
-@@ -921,6 +951,30 @@ class Qwen3_5GatedDeltaNet(nn.Module):
+@@ -257,9 +287,14 @@ def _qwen3_5_stage_facts(
+     read, which declares what the plain one does and also hands on the
+     quantized input its projection takes."""
+     sparse = _qwen3_5_is_moe(config)
++    # gfx1201 add+norm+MXFP4: the dense FFN's read must also take quant_format
++    # (as upstream qwen3 declares it); with an empty format it is the plain read.
++    ffn_read = (
++        {"read": NORM_QUANT_READOUT} if _gfx1201_add_norm_mxfp4 and not sparse else {}
++    )
+     return (
+         declare_attn(read=attn_read),
+-        declare_ffn(sparse=sparse, next_layer_sparse=sparse),
++        declare_ffn(sparse=sparse, next_layer_sparse=sparse, **ffn_read),
+     )
+ 
+ 
+@@ -921,6 +956,30 @@ class Qwen3_5GatedDeltaNet(nn.Module):
          )
  
      def _forward_input_proj(self, hidden_states: torch.Tensor):
@@ -257,7 +273,7 @@ index 6901a8c..6283c1f 100644
          if (
              self._gfx1201_in_proj is not None
              and isinstance(hidden_states, torch.Tensor)
-@@ -1350,6 +1404,11 @@ class Qwen3_5LinearDecoderLayer(nn.Module):
+@@ -1350,6 +1409,11 @@ class Qwen3_5LinearDecoderLayer(nn.Module):
              hidden_states,
              forward_batch,
              capture_gathered=kwargs.get("captured_last_layer_outputs", None),
@@ -269,7 +285,7 @@ index 6901a8c..6283c1f 100644
          )
  
          # fused AR+quant hands down a (fp8, scale) / (bf16, fp8, scale) tuple
-@@ -1362,7 +1421,16 @@ class Qwen3_5LinearDecoderLayer(nn.Module):
+@@ -1362,7 +1426,16 @@ class Qwen3_5LinearDecoderLayer(nn.Module):
  
          # Fully Connected
          hidden_states = self.attn_boundary.finish(hidden_states, forward_batch)
@@ -287,7 +303,7 @@ index 6901a8c..6283c1f 100644
  
          with self.ffn_boundary.exit(forward_batch) as ffn_exit:
              if isinstance(self.mlp, Qwen2MoeSparseMoeBlock):
-@@ -1798,6 +1866,11 @@ class Qwen3_5AttentionDecoderLayer(nn.Module):
+@@ -1798,6 +1871,11 @@ class Qwen3_5AttentionDecoderLayer(nn.Module):
              hidden_states,
              forward_batch,
              capture_gathered=captured_last_layer_outputs,
@@ -299,7 +315,7 @@ index 6901a8c..6283c1f 100644
          )
  
          # fused AR+quant hands down a (fp8, scale) / (bf16, fp8, scale) tuple
-@@ -1811,7 +1884,16 @@ class Qwen3_5AttentionDecoderLayer(nn.Module):
+@@ -1811,7 +1889,16 @@ class Qwen3_5AttentionDecoderLayer(nn.Module):
  
          # Fully Connected
          hidden_states = self.attn_boundary.finish(hidden_states, forward_batch)
