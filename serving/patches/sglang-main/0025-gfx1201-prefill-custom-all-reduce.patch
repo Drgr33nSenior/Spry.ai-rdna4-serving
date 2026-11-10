@@ -1,0 +1,27 @@
+diff --git a/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py b/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py
+index 28eb8b0..3eb1155 100644
+--- a/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py
++++ b/python/sglang/srt/distributed/device_communicators/custom_all_reduce.py
+@@ -89,14 +89,19 @@ class CustomAllreduce:
+         self.device = device
+         # SGLANG_GFX1201_PCIE_CUSTOM_AR=1: two gfx1201 GPUs over PCIe, which the
+         # XGMI check (and its amdsmi dependency) rejects. Decode-sized reductions
+-        # only; larger ones (prefill chunks) stay on RCCL.
++        # by default; larger ones (prefill chunks) stay on RCCL.
+         # The cap applies in should_custom_ar only: the IPC buffers keep their size,
+         # because a small torch allocation is not the base of its own hipMalloc
+-        # block and hipIpcGetMemHandle rejects it.
++        # block and hipIpcGetMemHandle rejects it. A cap above the default buffer
++        # (prefill chunks: 2048 x 5120 BF16 = 20 MiB) grows the buffer to the cap,
++        # rounded up to a whole MiB.
+         self.pcie_two_gpu = _pcie_two_gpu(world_size, device)
+         if self.pcie_two_gpu:
+             full_nvlink = False
+-            self.pcie_max_bytes = min(max_size, envs.SGLANG_GFX1201_PCIE_CUSTOM_AR_MAX_BYTES.get())
++            cap = envs.SGLANG_GFX1201_PCIE_CUSTOM_AR_MAX_BYTES.get()
++            if cap > max_size:
++                max_size = -(-cap // (1 << 20)) * (1 << 20)
++            self.pcie_max_bytes = min(max_size, cap)
+             log_info_on_rank0(logger, f"[AR] gfx1201 PCIe custom all-reduce, up to {self.pcie_max_bytes} bytes")
+         else:
+             full_nvlink = can_use_custom_all_reduce_with_nvlink(
