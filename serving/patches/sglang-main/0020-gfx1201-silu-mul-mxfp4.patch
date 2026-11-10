@@ -1,0 +1,142 @@
+diff --git a/python/sglang/srt/environ.py b/python/sglang/srt/environ.py
+index 966d0b5..89fda80 100644
+--- a/python/sglang/srt/environ.py
++++ b/python/sglang/srt/environ.py
+@@ -1651,6 +1651,9 @@ class Envs:
+     # gfx1201: residual add + Gemma RMSNorm + MXFP4 quantization in one kernel
+     # for the MXFP4 projections that read the norm on verify-sized batches.
+     SGLANG_GFX1201_ADD_NORM_MXFP4 = EnvBool(False)
++    # gfx1201: SiLU(gate) * up + MXFP4 quantization in one kernel for an MXFP4
++    # down projection on verify-sized batches.
++    SGLANG_GFX1201_SILU_MUL_MXFP4 = EnvBool(False)
+     SGLANG_PCIE_IPC_MAX_NUMEL = EnvInt(0)
+ 
+     # ===================================================================
+diff --git a/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_silu_mul_mxfp4.py b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_silu_mul_mxfp4.py
+new file mode 100644
+index 0000000..dd0ba6e
+--- /dev/null
++++ b/python/sglang/srt/layers/quantization/quark/schemes/gfx1201_silu_mul_mxfp4.py
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: Apache-2.0
++"""Fused SiLU(gate) * up + MXFP4 quantization for gfx1201 (candidate; bitwise target).
++
++Replaces sgl_hip act_and_mul_kernel<bf16, silu> followed by
++gfx1201_mxfp4.dynamic_mxfp4_quant. The HIP kernel computes, per element,
++bf16(bf16(g / (1 + expf(-g))) * u) with g, u read as fp32; this kernel uses the
++same rounding points, the device library exp (libdevice) and round-to-nearest
++division, so the BF16 activations can be the same bits. The quantization is the
++vendored AITER _mxfp4_quant_op (per 32-element group).
++"""
++
++import torch
++import triton
++import triton.language as tl
++from triton.language.extra.hip import libdevice
++
++from sglang.srt.layers.quantization.quark.schemes.gfx1201_mxfp4_kernels import _mxfp4_quant_op
++
++
++@triton.jit
++def _silu_mul_mxfp4_kernel(
++    gu_ptr,
++    q_ptr,
++    s_ptr,
++    d,
++    stride_gu,
++    stride_q,
++    stride_srow,
++    stride_scol,
++    BLOCK: tl.constexpr,
++):
++    row = tl.program_id(0)
++    blk = tl.program_id(1)
++    cols = blk * BLOCK + tl.arange(0, BLOCK)
++    mask = cols < d
++    g = tl.load(gu_ptr + row * stride_gu + cols, mask=mask, other=0.0).to(tl.float32)
++    u = tl.load(gu_ptr + row * stride_gu + d + cols, mask=mask, other=0.0).to(tl.float32)
++    act = tl.math.div_rn(g, 1.0 + libdevice.exp(-g))
++    act = act.to(tl.bfloat16).to(tl.float32)
++    out = (act * u).to(tl.bfloat16).to(tl.float32)
++    q, scales = _mxfp4_quant_op(tl.reshape(out, (1, BLOCK)), BLOCK, 1, 32)
++    q = tl.reshape(q, (BLOCK // 2,))
++    scales = tl.reshape(scales, (BLOCK // 32,))
++    qcols = blk * (BLOCK // 2) + tl.arange(0, BLOCK // 2)
++    tl.store(q_ptr + row * stride_q + qcols, q, mask=qcols < d // 2)
++    scols = blk * (BLOCK // 32) + tl.arange(0, BLOCK // 32)
++    tl.store(s_ptr + row * stride_srow + scols * stride_scol, scales, mask=scols < d // 32)
++
++
++def silu_mul_mxfp4(gate_up: torch.Tensor):
++    """(packed (M, D/2) uint8, scales (M, D/32) uint8 with strides (1, M)) for SiLU(gate)*up,
++    gate_up = [gate | up] of width 2D."""
++    if gate_up.dim() != 2 or gate_up.dtype != torch.bfloat16 or gate_up.shape[1] % 64:
++        raise ValueError("gfx1201 SiLU*mul+MXFP4 takes 2-D BF16 [gate | up] with D % 32 == 0")
++    gate_up = gate_up.contiguous()
++    m, d = gate_up.shape[0], gate_up.shape[1] // 2
++    packed = torch.empty((m, d // 2), dtype=torch.uint8, device=gate_up.device)
++    scales = torch.empty_strided((m, d // 32), (1, m), dtype=torch.uint8, device=gate_up.device)
++    block = 1024
++    _silu_mul_mxfp4_kernel[(m, triton.cdiv(d, block))](
++        gate_up, packed, scales, d, gate_up.stride(0), packed.stride(0), scales.stride(0), scales.stride(1),
++        BLOCK=block, num_warps=4,
++    )
++    return packed, scales
+diff --git a/python/sglang/srt/models/qwen2_moe.py b/python/sglang/srt/models/qwen2_moe.py
+index 86ad181..505f0dd 100644
+--- a/python/sglang/srt/models/qwen2_moe.py
++++ b/python/sglang/srt/models/qwen2_moe.py
+@@ -184,6 +184,33 @@ def can_fuse_shared_expert(
+     return True
+ 
+ 
++_gfx1201_silu_mxfp4_logged = False
++
++
++def _gfx1201_silu_mul_mxfp4_ready(mlp: nn.Module, gate_up) -> bool:
++    """gfx1201: SiLU(gate) * up and the down projection's MXFP4 quantization in one
++    kernel (bitwise equal to act_and_mul then the quantizer) on verify-sized rows."""
++    if not envs.SGLANG_GFX1201_SILU_MUL_MXFP4.get():
++        return False
++    if (
++        isinstance(gate_up, tuple)
++        or gate_up.dim() != 2
++        or gate_up.dtype != torch.bfloat16
++        or gate_up.shape[0] not in (8, 16)
++        or not isinstance(mlp.act_fn, SiluAndMul)
++        or hasattr(mlp.down_proj, "base_layer")
++        or getattr(mlp.down_proj, "bias", None) is not None
++    ):
++        return False
++    from sglang.srt.layers.quantization.quark.schemes import quark_w4a4_mxfp4
++
++    return (
++        quark_w4a4_mxfp4._use_gfx1201_mxfp4
++        and type(getattr(mlp.down_proj, "scheme", None)) is quark_w4a4_mxfp4.QuarkW4A4MXFP4
++        and not getattr(mlp.down_proj, "dequantized_bf16", False)
++    )
++
++
+ class Qwen2MoeMLP(nn.Module):
+     def __init__(
+         self,
+@@ -237,6 +264,19 @@ class Qwen2MoeMLP(nn.Module):
+         if can_run_silu_fp4_quant_fusion(self, gate_up):
+             x, _ = self.down_proj(silu_and_mul_fp4_quant(self, gate_up))
+             return x
++        if _gfx1201_silu_mul_mxfp4_ready(self, gate_up):
++            from sglang.srt.layers.quantization.quark.schemes.gfx1201_silu_mul_mxfp4 import (
++                silu_mul_mxfp4,
++            )
++
++            global _gfx1201_silu_mxfp4_logged
++            if not _gfx1201_silu_mxfp4_logged:
++                _gfx1201_silu_mxfp4_logged = True
++                logger.info(
++                    "gfx1201 SiLU*mul+MXFP4 for down_proj engaged: %d rows", gate_up.shape[0]
++                )
++            x, _ = self.down_proj(silu_mul_mxfp4(gate_up))
++            return x
+         x = self.act_fn(gate_up)
+         x, _ = self.down_proj(x)
+         return x
