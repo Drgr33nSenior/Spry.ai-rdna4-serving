@@ -1,0 +1,312 @@
+diff --git a/python/sglang/kernels/ops/attention/decode_attention.py b/python/sglang/kernels/ops/attention/decode_attention.py
+index 59bfb3afbb..dcffba71d3 100644
+--- a/python/sglang/kernels/ops/attention/decode_attention.py
++++ b/python/sglang/kernels/ops/attention/decode_attention.py
+@@ -560,6 +560,8 @@ def _fwd_grouped_kernel_stage1(
+     IS_GFX1250: tl.constexpr = False,
+     # gfx1201_fp8_kv: keep q and p in bf16 and cast the fp8 K/V tiles up for both dots
+     KV_DEQUANT: tl.constexpr = False,
++    # gfx1201_fp8_kv.DECODE_HW: decode the e4m3fn tiles with v_cvt_f32_fp8 (bit-identical)
++    KV_DECODE: tl.constexpr = 0,
+     PAGE_SIZE: tl.constexpr = 1,
+     SCORE_MOD: tl.constexpr = None,
+     Aux0=None,
+@@ -680,7 +682,9 @@ def _fwd_grouped_kernel_stage1(
+                 mask=(offs_n[None, :] < split_kv_end) & (mask_d[:, None]),
+                 other=0.0,
+             )
+-            if IS_GFX1250 or KV_DEQUANT:
++            if KV_DECODE == 1:
++                qk = tl.dot(q_k, gfx1201_fp8_kv.e4m3fn_to_bf16(k))
++            elif IS_GFX1250 or KV_DEQUANT:
+                 qk = tl.dot(q_k, k.to(q_k.dtype))
+             else:
+                 qk = tl.dot(q_k, k)
+@@ -752,6 +756,8 @@ def _fwd_grouped_kernel_stage1(
+             # TODO: remove this branch once the gfx1250 bf16 P·V issue is resolved.
+             if IS_GFX1250:
+                 acc += tl.dot(p, v.to(tl.float32), out_dtype=tl.float32)
++            elif KV_DECODE == 1:
++                acc += tl.dot(p.to(q.dtype), gfx1201_fp8_kv.e4m3fn_to_bf16(v))
+             elif KV_DEQUANT:
+                 acc += tl.dot(p.to(q.dtype), v.to(q.dtype))
+             else:
+@@ -914,6 +920,7 @@ def _decode_grouped_att_m_fwd(
+         USE_PDL=use_pdl,
+         IS_GFX1250=_is_gfx1250,
+         KV_DEQUANT=gfx1201_fp8_kv.applies(k_buffer, v_buffer),
++        KV_DECODE=gfx1201_fp8_kv.decode(q, k_buffer, v_buffer),
+         PAGE_SIZE=page_size,
+         SCORE_MOD=score_mod,
+         Aux0=aux0,
+diff --git a/python/sglang/kernels/ops/attention/extend_attention.py b/python/sglang/kernels/ops/attention/extend_attention.py
+index 3d02e843b1..119150e7cd 100644
+--- a/python/sglang/kernels/ops/attention/extend_attention.py
++++ b/python/sglang/kernels/ops/attention/extend_attention.py
+@@ -460,6 +460,8 @@ def _fwd_kernel(
+     IS_GFX1250: tl.constexpr = False,
+     # gfx1201_fp8_kv: cast the fp8 prefix K/V tiles to q's dtype (bf16) for both dots
+     KV_DEQUANT: tl.constexpr = False,
++    # gfx1201_fp8_kv.DECODE_HW: decode the e4m3fn tiles with v_cvt_f32_fp8 (bit-identical)
++    KV_DECODE: tl.constexpr = 0,
+     PAGE_SIZE: tl.constexpr = 1,
+     IDENTITY_KV_INDICES: tl.constexpr = False,
+     SCORE_MOD: tl.constexpr = None,
+@@ -640,7 +642,9 @@ def _fwd_kernel(
+             # downcasting q to fp8. No-op for a bf16 cache. (Do NOT revert to q.to(fp8).)
+             # On all other platforms keep the original q.to(k.dtype) downcast.
+             # TODO: remove this branch once the gfx1250 fp8 tl.dot issue is resolved.
+-            if IS_GFX1250 or KV_DEQUANT:
++            if KV_DECODE == 1:
++                qk = tl.dot(q, gfx1201_fp8_kv.e4m3fn_to_bf16(k))
++            elif IS_GFX1250 or KV_DEQUANT:
+                 qk = tl.dot(q, k.to(q.dtype))
+             else:
+                 qk = tl.dot(q.to(k.dtype), k)
+@@ -735,6 +739,8 @@ def _fwd_kernel(
+                 # TODO: remove this branch once the gfx1250 bf16 P·V issue is resolved.
+                 if IS_GFX1250:
+                     dot = tl.dot(p, v.to(tl.float32), out_dtype=tl.float32)
++                elif KV_DECODE == 1:
++                    dot = tl.dot(p.to(q.dtype), gfx1201_fp8_kv.e4m3fn_to_bf16(v))
+                 elif KV_DEQUANT:
+                     dot = tl.dot(p.to(q.dtype), v.to(q.dtype))
+                 else:
+@@ -1200,6 +1206,7 @@ def extend_attention_fwd(
+         HAS_SINK=HAS_SINK,
+         IS_GFX1250=_is_gfx1250,
+         KV_DEQUANT=gfx1201_fp8_kv.applies(k_buffer, v_buffer),
++        KV_DECODE=gfx1201_fp8_kv.decode(q_extend, k_buffer, v_buffer),
+         STORE_TRANSPOSE=_is_hip,
+         USE_COMPACT_TILE_GRID=use_compact_tile_grid,
+         USE_EXP2=USE_EXP2,
+diff --git a/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py b/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py
+index 7677e52c4c..eaac8dba0e 100644
+--- a/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py
++++ b/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py
+@@ -12,15 +12,35 @@ With this switch the cache stays fp8 (half the bytes of bf16), but the extend, g
+ decode and target-verify kernels cast each loaded K/V tile up to bf16 and keep ``q`` and
+ ``p`` in bf16, the same operands as a bf16 cache. Per-layer ``k_scale``/``v_scale`` apply
+ as before. Only the storage rounding of K and V remains.
++
++The cast itself: Triton lowers ``fp8e4nv -> bf16`` on gfx1201 to integer arithmetic (about
++nine vector instructions per value) although the ISA has ``v_cvt_f32_fp8``. For an
++``float8_e4m3fn`` cache the kernels decode with that instruction instead (``DECODE``): every
++e4m3fn value has at most four significant bits, so the f32 result's high half is the exact
++bf16, and the outputs are bitwise equal to the Triton cast's. ``DECODE_HW`` converts one
++value per instruction on any tile (extend, grouped decode); ``DECODE_PAIRS`` reads 16-bit
++pairs and packs two bf16 per ``v_perm_b32`` (target verify). On an R9700 at Qwen3.8 TP2
++shapes (16 layers, DRAM-fed) this takes fp8 target verify from 1.9-2.5x the bf16 time to
++0.96-1.04x (8k-123k), grouped decode from 1.8x to 0.80x (47k) and extend from 2.4-2.5x to
++1.15-1.18x (8k-88k prefix, 2048-token chunk). The asm is
++declared impure on purpose: a pure (or Triton-cast) decode lets the layout pass move the
++dot-operand conversion above it to shuffle the narrower fp8 data, and the decode then runs
++on the replicated operand (6x the conversions at the B1 verify tile). Impure, it runs once
++per loaded value, before the shuffle.
+ """
+ 
++import os
+ from functools import lru_cache
+ 
+ import torch
++import triton
++import triton.language as tl
+ 
+ from sglang.srt.utils import get_bool_env_var, is_hip
+ 
+ FP8_TYPES = (torch.float8_e4m3fn, torch.float8_e4m3fnuz, torch.float8_e5m2)
++DECODE_TO, DECODE_HW, DECODE_PAIRS = 0, 1, 2
++_DECODE_NAMES = {"to": DECODE_TO, "hw": DECODE_HW, "pairs": DECODE_PAIRS}
+ 
+ 
+ @lru_cache(maxsize=1)
+@@ -37,3 +57,52 @@ def enabled() -> bool:
+ def applies(k_buffer: torch.Tensor, v_buffer: torch.Tensor) -> bool:
+     """The switch is on and both caches hold the same fp8 type."""
+     return enabled() and k_buffer.dtype in FP8_TYPES and v_buffer.dtype == k_buffer.dtype
++
++
++def decode(q: torch.Tensor, k_buffer: torch.Tensor, v_buffer: torch.Tensor, pairs: bool = False) -> int:
++    """The ``DECODE`` constexpr for a kernel reading these caches with a bf16 ``q``: a
++    hardware decode for e4m3fn caches under the switch (pairs where the kernel supports
++    them), else Triton's cast. SGLANG_GFX1201_FP8_KV_DECODE=to|hw|pairs overrides
++    (measurement only)."""
++    if not (
++        applies(k_buffer, v_buffer)
++        and k_buffer.dtype == torch.float8_e4m3fn
++        and q.dtype == torch.bfloat16
++    ):
++        return DECODE_TO
++    mode = _DECODE_NAMES[os.environ.get("SGLANG_GFX1201_FP8_KV_DECODE", "pairs")]
++    return DECODE_HW if mode == DECODE_PAIRS and not pairs else mode
++
++
++@triton.jit
++def e4m3fn_to_bf16(x):
++    """float8_e4m3fn tensor (any layout) -> bf16, exact: v_cvt_f32_fp8, keep the high half."""
++    f = tl.inline_asm_elementwise(
++        asm="v_cvt_f32_fp8_e64 $0, $1",
++        constraints="=v,v",
++        args=[x.to(tl.uint8, bitcast=True).to(tl.uint32)],
++        dtype=tl.uint32,
++        is_pure=False,
++        pack=1,
++    )
++    return (f >> 16).to(tl.uint16).to(tl.bfloat16, bitcast=True)
++
++
++@triton.jit
++def e4m3fn_pairs_to_bf16(h):
++    """[R, C] uint16, each two float8_e4m3fn bytes (low byte first) -> [R, 2C] bf16, exact.
++    Two u16 per register: v_cvt_f32_fp8 each byte, v_perm_b32 packs the f32 high halves."""
++    lo, hi, _ = tl.inline_asm_elementwise(
++        asm="v_cvt_f32_fp8_e64 $0, $3\n"
++        "v_cvt_f32_fp8_e64 $1, $3 byte_sel:2\n"
++        "v_perm_b32 $0, $1, $0, 0x07060302\n"
++        "v_cvt_f32_fp8_e64 $1, $3 byte_sel:1\n"
++        "v_cvt_f32_fp8_e64 $2, $3 byte_sel:3\n"
++        "v_perm_b32 $1, $2, $1, 0x07060302",
++        constraints="=&v,=&v,=&v,v",
++        args=[h],
++        dtype=(tl.bfloat16, tl.bfloat16, tl.bfloat16),
++        is_pure=False,
++        pack=2,
++    )
++    return tl.reshape(tl.join(lo, hi), [h.shape[0], h.shape[1] * 2])
+diff --git a/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py b/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
+index 919cc1886f..9c790d87b4 100644
+--- a/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
++++ b/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
+@@ -39,6 +39,12 @@ NSPLIT_GFX1201 = 32
+ # layer at 23.5k / 47k / 88k / 120k prefixes (+1.3 us at 1k); at two requests it is slower
+ # than the default tile, so batches of two or more keep it.
+ GFX1201_B1_TILE = (64, 8, 64)
++# With an fp8 cache under gfx1201_fp8_kv.DECODE_PAIRS, batches of one or two requests run
++# (64, 4, 64). Measured the same way against the bf16 cache on its own tile: 54.6 / 111 /
++# 207 / 369 / 506 against 56.6 / 113 / 208 / 367 / 500 us per layer at 8k / 23.5k / 47k /
++# 88k / 123k for one request, 312 against 367 us at 47k for two; with 8 warps the fp8 cache
++# took 246 / 440 us at 47k / 88k.
++GFX1201_FP8_B1_TILE = (64, 4, 64)
+ _routed = set()
+ 
+ 
+@@ -84,6 +90,7 @@ def _verify_split_kernel(
+     BT: tl.constexpr,
+     HG: tl.constexpr,
+     QC: tl.constexpr,
++    DECODE: tl.constexpr = 0,
+ ):
+     """One program per (request, kv head, group of ``HG`` of its q heads, split); rows are
+     (block token, q head of the group), 8 x next_pow2(HG). The groups of a kv head are
+@@ -114,6 +121,11 @@ def _verify_split_kernel(
+     # padding rows read a real q row (finite scores) and are never stored
+     q_rows = q_ptr + tl.where(valid, qrow, b * T * HQ + j * GQ)[:, None] * D
+     bt = tl.arange(0, BT)
++    # gfx1201_fp8_kv.DECODE_PAIRS reads the fp8 cache as 16-bit pairs (in uint16 units)
++    k16 = k_ptr.to(tl.pointer_type(tl.uint16))
++    v16 = v_ptr.to(tl.pointer_type(tl.uint16))
++    dq2 = tl.arange(0, QC // 2)
++    d2 = tl.arange(0, D // 2)
+     m_i = tl.full((R,), float("-inf"), tl.float32)
+     l_i = tl.zeros((R,), tl.float32)
+     acc = tl.zeros((R, D), tl.float32)
+@@ -130,12 +142,33 @@ def _verify_split_kernel(
+             qc = tl.load(q_rows + c + dq[None, :], volatile=True)
+             # bf16 operands for both dots; a no-op for a bf16 cache, the dequant of an
+             # fp8 one (gfx1201_fp8_kv; the caller folds k_scale into scale)
+-            kc = tl.load(
+-                tl.max_contiguous(
+-                    tl.multiple_of(k_ptr + base[:, None] + c + dq[None, :], [1, 16]),
+-                    [1, 8],
++            if DECODE == 2:
++                kc = gfx1201_fp8_kv.e4m3fn_pairs_to_bf16(
++                    tl.load(
++                        tl.max_contiguous(
++                            tl.multiple_of(
++                                k16 + (base // 2)[:, None] + c // 2 + dq2[None, :], [1, 8]
++                            ),
++                            [1, 8],
++                        )
++                    )
+                 )
+-            ).to(tl.bfloat16)
++            elif DECODE == 1:
++                kc = gfx1201_fp8_kv.e4m3fn_to_bf16(
++                    tl.load(
++                        tl.max_contiguous(
++                            tl.multiple_of(k_ptr + base[:, None] + c + dq[None, :], [1, 16]),
++                            [1, 16],
++                        )
++                    )
++                )
++            else:
++                kc = tl.load(
++                    tl.max_contiguous(
++                        tl.multiple_of(k_ptr + base[:, None] + c + dq[None, :], [1, 16]),
++                        [1, 8],
++                    )
++                ).to(tl.bfloat16)
+             sc = tl.dot(qc, tl.trans(kc), sc)
+         sc = sc * scale
+         off = base[:, None] + d[None, :]
+@@ -147,9 +180,23 @@ def _verify_split_kernel(
+         p = tl.exp(sc - m_safe[:, None])
+         alpha = tl.exp(m_i - m_safe)
+         l_i = l_i * alpha + tl.sum(p, axis=1)
+-        v = tl.load(tl.max_contiguous(tl.multiple_of(v_ptr + off, [1, 16]), [1, 8])).to(
+-            tl.bfloat16
+-        )
++        if DECODE == 2:
++            v = gfx1201_fp8_kv.e4m3fn_pairs_to_bf16(
++                tl.load(
++                    tl.max_contiguous(
++                        tl.multiple_of(v16 + (base // 2)[:, None] + d2[None, :], [1, 8]),
++                        [1, 8],
++                    )
++                )
++            )
++        elif DECODE == 1:
++            v = gfx1201_fp8_kv.e4m3fn_to_bf16(
++                tl.load(tl.max_contiguous(tl.multiple_of(v_ptr + off, [1, 16]), [1, 16]))
++            )
++        else:
++            v = tl.load(
++                tl.max_contiguous(tl.multiple_of(v_ptr + off, [1, 16]), [1, 8])
++            ).to(tl.bfloat16)
+         acc = acc * alpha[:, None] + tl.dot(p.to(tl.bfloat16), v)
+         m_i = m_new
+     # partial row of (request token row, q head, split)
+@@ -250,7 +297,13 @@ def verify_attention_gfx1151(
+     B = rows // T
+     if nsplit is None:
+         nsplit = NSPLIT_GFX1201 if gfx1201_enabled() else NSPLIT
+-    tile = GFX1201_B1_TILE if B == 1 and gfx1201_b1_tile_enabled() else (32, 4, 32)
++    decode = gfx1201_fp8_kv.decode(q, k_buffer, v_buffer, pairs=True)
++    if B <= 2 and decode == gfx1201_fp8_kv.DECODE_PAIRS and gfx1201_b1_tile_enabled():
++        tile = GFX1201_FP8_B1_TILE
++    elif B == 1 and gfx1201_b1_tile_enabled():
++        tile = GFX1201_B1_TILE
++    else:
++        tile = (32, 4, 32)
+     bt = tile[0] if bt is None else bt
+     num_warps = tile[1] if num_warps is None else num_warps
+     qc = tile[2] if qc is None else qc
+@@ -258,8 +311,8 @@ def verify_attention_gfx1151(
+         _routed.add((B, T, hq, hkv))
+         logger.info(
+             "Verify attention (gfx115x kernel) route: %d requests x %d tokens, %d q / %d kv heads, %d splits, "
+-            "tile BT %d / %d warps / QC %d",
+-            B, T, hq, hkv, nsplit, bt, num_warps, qc,
++            "tile BT %d / %d warps / QC %d, kv decode %d",
++            B, T, hq, hkv, nsplit, bt, num_warps, qc, decode,
+         )
+     part = torch.empty(rows * hq * nsplit, d, device=q.device, dtype=torch.float32)
+     ml = torch.empty(rows * hq * nsplit, 2, device=q.device, dtype=torch.float32)
+@@ -283,6 +336,7 @@ def verify_attention_gfx1151(
+         BT=bt,
+         HG=hg,
+         QC=qc,
++        DECODE=decode,
+         num_warps=num_warps,
+         # the default software pipelining doubles the LDS and adds spills
+         num_stages=1,
