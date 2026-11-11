@@ -1,0 +1,332 @@
+diff --git a/python/sglang/kernels/ops/attention/decode_attention.py b/python/sglang/kernels/ops/attention/decode_attention.py
+index 93af1a7..59bfb3a 100644
+--- a/python/sglang/kernels/ops/attention/decode_attention.py
++++ b/python/sglang/kernels/ops/attention/decode_attention.py
+@@ -29,6 +29,7 @@ import triton
+ import triton.language as tl
+ 
+ from sglang.kernels.arch import current_arch
++from sglang.kernels.ops.attention import gfx1201_fp8_kv
+ from sglang.kernels.ops.attention.score_mod import unpack_aux_tensors
+ from sglang.srt.environ import envs
+ from sglang.srt.utils import (
+@@ -557,6 +558,8 @@ def _fwd_grouped_kernel_stage1(
+     HAS_MLA: tl.constexpr = False,
+     USE_PDL: tl.constexpr = False,
+     IS_GFX1250: tl.constexpr = False,
++    # gfx1201_fp8_kv: keep q and p in bf16 and cast the fp8 K/V tiles up for both dots
++    KV_DEQUANT: tl.constexpr = False,
+     PAGE_SIZE: tl.constexpr = 1,
+     SCORE_MOD: tl.constexpr = None,
+     Aux0=None,
+@@ -646,7 +649,7 @@ def _fwd_grouped_kernel_stage1(
+         # bf16 cache. (Do NOT "optimize" this back to q.to(fp8) on gfx1250.)
+         # On all other platforms keep the original downcast of q to the KV dtype.
+         # TODO: remove this branch once the gfx1250 fp8 tl.dot issue is resolved.
+-        if IS_GFX1250:
++        if IS_GFX1250 or KV_DEQUANT:
+             q_k = q
+         else:
+             q_k = q.to(K_Buffer.dtype.element_ty)
+@@ -677,7 +680,7 @@ def _fwd_grouped_kernel_stage1(
+                 mask=(offs_n[None, :] < split_kv_end) & (mask_d[:, None]),
+                 other=0.0,
+             )
+-            if IS_GFX1250:
++            if IS_GFX1250 or KV_DEQUANT:
+                 qk = tl.dot(q_k, k.to(q_k.dtype))
+             else:
+                 qk = tl.dot(q_k, k)
+@@ -749,6 +752,8 @@ def _fwd_grouped_kernel_stage1(
+             # TODO: remove this branch once the gfx1250 bf16 P·V issue is resolved.
+             if IS_GFX1250:
+                 acc += tl.dot(p, v.to(tl.float32), out_dtype=tl.float32)
++            elif KV_DEQUANT:
++                acc += tl.dot(p.to(q.dtype), v.to(q.dtype))
+             else:
+                 acc += tl.dot(p.to(v.dtype), v)
+ 
+@@ -908,6 +913,7 @@ def _decode_grouped_att_m_fwd(
+         HAS_MLA=has_mla,
+         USE_PDL=use_pdl,
+         IS_GFX1250=_is_gfx1250,
++        KV_DEQUANT=gfx1201_fp8_kv.applies(k_buffer, v_buffer),
+         PAGE_SIZE=page_size,
+         SCORE_MOD=score_mod,
+         Aux0=aux0,
+@@ -1231,6 +1237,8 @@ def decode_attention_fwd(
+             enable_lean, logit_cap, sinks, xai_temperature_len, score_mod
+         )
+         and lean_locks is not None
++        # Lean runs fp8 x fp8 dots; gfx1201_fp8_kv keeps fp8 caches on the grouped kernel
++        and not gfx1201_fp8_kv.applies(k_buffer, v_buffer)
+     ):
+         total_programs, XCD_REMAP, NUM_XCDS = _lean_decode_launch_params(
+             v_buffer.shape[-2], kv_group_num
+diff --git a/python/sglang/kernels/ops/attention/extend_attention.py b/python/sglang/kernels/ops/attention/extend_attention.py
+index f298ba4..3d02e84 100644
+--- a/python/sglang/kernels/ops/attention/extend_attention.py
++++ b/python/sglang/kernels/ops/attention/extend_attention.py
+@@ -25,6 +25,7 @@ import triton
+ import triton.language as tl
+ 
+ from sglang.kernels.arch import current_arch
++from sglang.kernels.ops.attention import gfx1201_fp8_kv
+ from sglang.kernels.ops.attention.decode_attention import _extract_kv_strides
+ from sglang.kernels.ops.attention.score_mod import unpack_aux_tensors
+ from sglang.srt.environ import envs
+@@ -457,6 +458,8 @@ def _fwd_kernel(
+     USE_FP8_EXTEND: tl.constexpr,
+     FP8_MAX: tl.constexpr,
+     IS_GFX1250: tl.constexpr = False,
++    # gfx1201_fp8_kv: cast the fp8 prefix K/V tiles to q's dtype (bf16) for both dots
++    KV_DEQUANT: tl.constexpr = False,
+     PAGE_SIZE: tl.constexpr = 1,
+     IDENTITY_KV_INDICES: tl.constexpr = False,
+     SCORE_MOD: tl.constexpr = None,
+@@ -637,7 +640,7 @@ def _fwd_kernel(
+             # downcasting q to fp8. No-op for a bf16 cache. (Do NOT revert to q.to(fp8).)
+             # On all other platforms keep the original q.to(k.dtype) downcast.
+             # TODO: remove this branch once the gfx1250 fp8 tl.dot issue is resolved.
+-            if IS_GFX1250:
++            if IS_GFX1250 or KV_DEQUANT:
+                 qk = tl.dot(q, k.to(q.dtype))
+             else:
+                 qk = tl.dot(q.to(k.dtype), k)
+@@ -732,6 +735,8 @@ def _fwd_kernel(
+                 # TODO: remove this branch once the gfx1250 bf16 P·V issue is resolved.
+                 if IS_GFX1250:
+                     dot = tl.dot(p, v.to(tl.float32), out_dtype=tl.float32)
++                elif KV_DEQUANT:
++                    dot = tl.dot(p.to(q.dtype), v.to(q.dtype))
+                 else:
+                     dot = tl.dot(p.to(v.dtype), v)
+                 acc = acc * re_scale[:, None] + dot * v_scale
+@@ -1194,6 +1199,7 @@ def extend_attention_fwd(
+         SKIP_EXTEND=skip_extend,
+         HAS_SINK=HAS_SINK,
+         IS_GFX1250=_is_gfx1250,
++        KV_DEQUANT=gfx1201_fp8_kv.applies(k_buffer, v_buffer),
+         STORE_TRANSPOSE=_is_hip,
+         USE_COMPACT_TILE_GRID=use_compact_tile_grid,
+         USE_EXP2=USE_EXP2,
+diff --git a/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py b/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py
+new file mode 100644
+index 0000000..7677e52
+--- /dev/null
++++ b/python/sglang/kernels/ops/attention/gfx1201_fp8_kv.py
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: Apache-2.0
++"""SGLANG_GFX1201_FP8_KV_DEQUANT=1 on gfx1201: read an fp8 KV cache as bf16.
++
++With ``--kv-cache-dtype fp8_e4m3`` the stock Triton attention kernels cast ``q`` and the
++softmax weights ``p`` down to the cache's fp8 type and run fp8 x fp8 dots, so query
++precision and every weight below e4m3's smallest subnormal (2^-9 of the row maximum) are
++lost. The target-verify kernel (``verify_attention_gfx1151``) refuses fp8 caches outright,
++which sends DFlash verification to ``extend_attention_fwd`` (30-40x slower per layer at
++long prefixes on gfx1201).
++
++With this switch the cache stays fp8 (half the bytes of bf16), but the extend, grouped
++decode and target-verify kernels cast each loaded K/V tile up to bf16 and keep ``q`` and
++``p`` in bf16, the same operands as a bf16 cache. Per-layer ``k_scale``/``v_scale`` apply
++as before. Only the storage rounding of K and V remains.
++"""
++
++from functools import lru_cache
++
++import torch
++
++from sglang.srt.utils import get_bool_env_var, is_hip
++
++FP8_TYPES = (torch.float8_e4m3fn, torch.float8_e4m3fnuz, torch.float8_e5m2)
++
++
++@lru_cache(maxsize=1)
++def enabled() -> bool:
++    """SGLANG_GFX1201_FP8_KV_DEQUANT=1 and the device is gfx1201."""
++    if not (is_hip() and get_bool_env_var("SGLANG_GFX1201_FP8_KV_DEQUANT")):
++        return False
++    try:
++        return torch.cuda.get_device_properties(0).gcnArchName.split(":")[0] == "gfx1201"
++    except Exception:
++        return False
++
++
++def applies(k_buffer: torch.Tensor, v_buffer: torch.Tensor) -> bool:
++    """The switch is on and both caches hold the same fp8 type."""
++    return enabled() and k_buffer.dtype in FP8_TYPES and v_buffer.dtype == k_buffer.dtype
+diff --git a/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py b/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
+index 48a8463..919cc18 100644
+--- a/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
++++ b/python/sglang/kernels/ops/attention/verify_attention_gfx1151.py
+@@ -22,6 +22,7 @@ import torch
+ import triton
+ import triton.language as tl
+ 
++from sglang.kernels.ops.attention import gfx1201_fp8_kv
+ from sglang.srt.utils import get_bool_env_var, is_hip, use_gfx115_kernels
+ 
+ logger = logging.getLogger(__name__)
+@@ -127,12 +128,14 @@ def _verify_split_kernel(
+         sc = tl.zeros((R, BT), tl.float32)
+         for c in tl.static_range(0, D, QC):
+             qc = tl.load(q_rows + c + dq[None, :], volatile=True)
++            # bf16 operands for both dots; a no-op for a bf16 cache, the dequant of an
++            # fp8 one (gfx1201_fp8_kv; the caller folds k_scale into scale)
+             kc = tl.load(
+                 tl.max_contiguous(
+                     tl.multiple_of(k_ptr + base[:, None] + c + dq[None, :], [1, 16]),
+                     [1, 8],
+                 )
+-            )
++            ).to(tl.bfloat16)
+             sc = tl.dot(qc, tl.trans(kc), sc)
+         sc = sc * scale
+         off = base[:, None] + d[None, :]
+@@ -144,7 +147,9 @@ def _verify_split_kernel(
+         p = tl.exp(sc - m_safe[:, None])
+         alpha = tl.exp(m_i - m_safe)
+         l_i = l_i * alpha + tl.sum(p, axis=1)
+-        v = tl.load(tl.max_contiguous(tl.multiple_of(v_ptr + off, [1, 16]), [1, 8]))
++        v = tl.load(tl.max_contiguous(tl.multiple_of(v_ptr + off, [1, 16]), [1, 8])).to(
++            tl.bfloat16
++        )
+         acc = acc * alpha[:, None] + tl.dot(p.to(tl.bfloat16), v)
+         m_i = m_new
+     # partial row of (request token row, q head, split)
+@@ -156,9 +161,10 @@ def _verify_split_kernel(
+ 
+ @triton.jit
+ def _verify_combine_kernel(
+-    part_ptr, ml_ptr, o_ptr, D: tl.constexpr, NSPLIT: tl.constexpr
++    part_ptr, ml_ptr, o_ptr, v_scale, D: tl.constexpr, NSPLIT: tl.constexpr
+ ):
+-    """Merge one (token row, q head)'s splits into ``o`` (bf16)."""
++    """Merge one (token row, q head)'s splits into ``o`` (bf16); ``v_scale`` dequantises
++    the fp8 V contribution (1.0 for a bf16 cache)."""
+     row = tl.program_id(0)
+     d = tl.arange(0, D)
+     mx = tl.full((8,), float("-inf"), tl.float32)
+@@ -187,14 +193,16 @@ def _verify_combine_kernel(
+         num += tl.sum(w[:, None] * acc, axis=0)
+         den += w * ll
+     tl.store(
+-        o_ptr + row * D + d, (num / tl.sum(den, axis=0)).to(o_ptr.dtype.element_ty)
++        o_ptr + row * D + d,
++        (num / tl.sum(den, axis=0) * v_scale).to(o_ptr.dtype.element_ty),
+     )
+ 
+ 
+ def covered(q, o, k_buffer, v_buffer, num_tokens_per_req, hq, hkv, d) -> bool:
+-    """Whether ``verify_attention_gfx1151`` takes this layer: gfx115x, bf16, at most 8 draft
+-    tokens per request and 8 q heads per kv head, dense ``[B * T, H, D]`` q and o (the
+-    kernel addresses them without strides), int32-addressable contiguous caches."""
++    """Whether ``verify_attention_gfx1151`` takes this layer: gfx115x, bf16 (or an fp8
++    cache under gfx1201_fp8_kv), at most 8 draft tokens per request and 8 q heads per kv
++    head, dense ``[B * T, H, D]`` q and o (the kernel addresses them without strides),
++    int32-addressable contiguous caches."""
+     return (
+         enabled()
+         and 0 < num_tokens_per_req <= 8
+@@ -204,7 +212,10 @@ def covered(q, o, k_buffer, v_buffer, num_tokens_per_req, hq, hkv, d) -> bool:
+         and q.dtype == torch.bfloat16
+         and q.is_contiguous()
+         and o.is_contiguous()
+-        and k_buffer.dtype == v_buffer.dtype == torch.bfloat16
++        and (
++            k_buffer.dtype == v_buffer.dtype == torch.bfloat16
++            or gfx1201_fp8_kv.applies(k_buffer, v_buffer)
++        )
+         and k_buffer.is_contiguous()
+         and v_buffer.is_contiguous()
+         and k_buffer.shape == v_buffer.shape
+@@ -224,13 +235,15 @@ def verify_attention_gfx1151(
+     scale,
+     nsplit=None,
+     bt=None,
++    v_scale=1.0,
+     num_warps=None,
+     hg=6,
+     qc=None,
+ ):
+     """``o[b * T + t, h]`` = attention of ``q[b * T + t, h]`` over ``seq_lens[b] + t + 1``
+     tokens of request ``b`` (``req_to_token[req_pool_indices[b]]``); ``q`` and ``o`` are
+-    ``[B * T, HQ, D]``, the caches ``[slots, HKV, D]``. Graph-capturable."""
++    ``[B * T, HQ, D]``, the caches ``[slots, HKV, D]``. For an fp8 cache ``scale``
++    includes ``k_scale`` and ``v_scale`` dequantises V. Graph-capturable."""
+     rows, hq, d = q.shape
+     hkv = k_buffer.shape[1]
+     T = num_tokens_per_req
+@@ -274,5 +287,7 @@ def verify_attention_gfx1151(
+         # the default software pipelining doubles the LDS and adds spills
+         num_stages=1,
+     )
+-    _verify_combine_kernel[(rows * hq,)](part, ml, o, D=d, NSPLIT=nsplit, num_warps=4)
++    _verify_combine_kernel[(rows * hq,)](
++        part, ml, o, float(v_scale), D=d, NSPLIT=nsplit, num_warps=4
++    )
+     return o
+diff --git a/python/sglang/srt/layers/attention/triton_backend.py b/python/sglang/srt/layers/attention/triton_backend.py
+index 64e51ab..2f691da 100644
+--- a/python/sglang/srt/layers/attention/triton_backend.py
++++ b/python/sglang/srt/layers/attention/triton_backend.py
+@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, List, Optional
+ import torch
+ import triton
+ 
++from sglang.kernels.ops.attention import gfx1201_fp8_kv
+ from sglang.kernels.ops.attention.metadata import get_num_kv_splits_triton
+ from sglang.kernels.ops.attention.mla_kv_pack_quantize_fp8 import (
+     mla_kv_pack_quantize_fp8,
+@@ -1685,10 +1686,12 @@ class TritonAttnBackend(AttentionBackend):
+                 layer, loc, k, v, k_scale, v_scale, **kwargs
+             )
+ 
+-    def _gfx115_verify_attention(self, q, o, layer, forward_batch) -> bool:
++    def _gfx115_verify_attention(
++        self, q, o, layer, forward_batch, k_descale=1.0, v_descale=1.0
++    ) -> bool:
+         """Target-verify attention on gfx115x that reads the cached prefix once for the
+         whole draft block (the block's K/V are already in the cache). Returns whether it
+-        ran."""
++        ran. The descales are 1.0 except for an fp8 cache under gfx1201_fp8_kv."""
+         from sglang.kernels.ops.attention import verify_attention_gfx1151 as va
+ 
+         # the token count qo_indptr is built from
+@@ -1723,7 +1726,8 @@ class TritonAttnBackend(AttentionBackend):
+             forward_batch.req_pool_indices,
+             forward_batch.seq_lens,
+             num_tokens_per_req,
+-            layer.scaling,
++            layer.scaling * k_descale,
++            v_scale=v_descale,
+         )
+         return True
+ 
+@@ -1916,9 +1920,12 @@ class TritonAttnBackend(AttentionBackend):
+             and score_mod is None
+             and sinks is None
+             and sliding_window_size == -1
+-            # bf16 KV checkpoints may still load unit k/v scales
+-            and k_descale == 1.0
+-            and v_descale == 1.0
++            # bf16 KV checkpoints may still load unit k/v scales; an fp8 cache read
++            # through gfx1201_fp8_kv applies its scales in the kernel
++            and (
++                (k_descale == 1.0 and v_descale == 1.0)
++                or gfx1201_fp8_kv.applies(*self.kv_layers.read(layer.layer_id).kv())
++            )
+             and not logits_soft_cap
+             and self.forward_metadata.custom_mask is None
+             and not (
+@@ -1926,7 +1933,9 @@ class TritonAttnBackend(AttentionBackend):
+                 and self.kv_layers.route(layer.layer_id).sub_pool
+                 == IdSpaceKind.SLIDING_WINDOW
+             )
+-            and self._gfx115_verify_attention(q, o, layer, forward_batch)
++            and self._gfx115_verify_attention(
++                q, o, layer, forward_batch, k_descale, v_descale
++            )
+         ):
+             return o
+ 
