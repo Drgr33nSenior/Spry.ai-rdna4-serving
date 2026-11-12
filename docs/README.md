@@ -1,86 +1,66 @@
 # Documentation guide
 
-Start here to choose a guide. The repository contains a serving implementation,
-an experimental KV4 cache path and a history of bounded measurements. Their
-results apply to different source, precision and request profiles.
+Start here to find the right page. This folder holds two kinds of document:
 
-Status, 9 November 2026: serving now targets SGLang upstream `main` at
-`fcb3274646e43c16d70fd83806ebb3a5134d5e81` with the
-[`sglang-main` patch series](../serving/patches/sglang-main/README.md). The
-workstation repository's
-[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json)
-holds the flags and environment; it is unqualified. Operation234's split-K
-selection and everything built on its SGLang 0.5.21 runtime are historical.
+- **Living guides**, kept up to date. They are listed below.
+- **Dated records** of experiments, kept unchanged once written. The
+  [history index](HISTORY-INDEX.md) lists them and says what replaced each one.
+
+If you are new, read the [project README](../README.md) first. It explains what
+runs today and how this repository relates to the workstation repository.
 
 ## Pick a reading path
 
 | Your goal | Start with | Then read |
 | --- | --- | --- |
-| Get oriented | [Project overview](../README.md) | [Architecture](ARCHITECTURE.md) |
-| Work on the cleaned serving source | [Serving guide](../serving/README.md) | [Caller workflow](../serving/launcher/README.md) and [quality guide](../serving/quality/README.md) |
-| Run local checks | [Verification](VERIFICATION.md) | [Cleanup test procedure](../serving/measurements/native-qualification/TESTING.md) |
-| Assemble or build source | [Build guide](BUILD.md) | [Patch series](../serving/patches/README.md) |
-| Review the completed cleanup | [Sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md) | [Measurement report](../serving/measurements/native-qualification/GPU-207-MEASUREMENT.html) |
-| Find the current serving target | [`sglang-main` series](../serving/patches/sglang-main/README.md) | Workstation [serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json) and [research notes](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/RESEARCH-20261108.md) |
-| Find the historical op234 selection | [Split-K selection](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json) | [Qwen4 handoff](QWEN4-SERVING-HANDOFF.md), [finalization record](../provenance/MXFP4-FINALIZATION-20261105.json), [current results](CURRENT-SERVING-RESULTS.md) and [sprint index](SERVING-SPRINTS.md) |
-| Understand the KV4 prototype | [KV4 status](STATUS.md) | [Cache path](CACHE-PATH.md), [operator guide](KV4-OPERATIONS.md) and [historical benchmark contract](BENCHMARKING.md) |
+| Understand the project | [README](../README.md) | [Architecture](ARCHITECTURE.md) |
+| Change or add a patch | [Patch series](../serving/patches/sglang-main/README.md) | [Verification](VERIFICATION.md) |
+| Understand how the image is built | [Build guide](BUILD.md) | Workstation [AI-stack pipeline](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/README.md) |
+| Run the local checks | [Verification](VERIFICATION.md) | — |
+| See the latest KV-cache research | [INT4 verify-kernel record](UQ3-INT4-VERIFY-KERNEL-20261112.md) | [Draft-pool plan](DFLASH-BOUNDED-DRAFT-POOL-PLAN-20261111.md) and its note in the [history index](HISTORY-INDEX.md#current-records-sglang-main-era) |
+| Find an older experiment | [History index](HISTORY-INDEX.md) | The record and its `provenance/` summary |
+| Work as an agent | [AGENTS.md](../AGENTS.md) | — |
 
-## Terms you will meet
+## Living guides
 
-| Term | Meaning here |
+| Guide | Covers |
 | --- | --- |
-| FP8 / MXFP4 weights | How a particular model checkpoint stores its weights. Check the run's model identity. |
-| BF16 / KV4 cache | How attention keys and values are stored. This choice is separate from weight precision. |
-| GDN | Gated DeltaNet recurrent layers. Their state has separate allocation and rollback rules from attention KV. |
-| TP2 | Tensor-parallel execution across two GPUs; reported TP2 throughput is combined service throughput. |
-| C1 / C2 | One or two concurrent HTTP requests. This label alone does not prove native batch size. |
-| Production mode | The reduced-diagnostic evidence mode in these packets; it is not a deployment approval. |
-| Instrumented mode | A packet that retains the specified diagnostic observers and startup witnesses. |
-| Packet / campaign | A prepared source author and bindings / the bounded operation that consumes them. |
-| Sealed evidence | A retained tree whose membership and file hashes are fixed by its manifest. |
+| [README](../README.md) | What the project is, what runs today, the repository map |
+| [AGENTS.md](../AGENTS.md) | Rules for agents, including the immutability rule |
+| [Architecture](ARCHITECTURE.md) | How a request is served, and how weights, cache and recurrent state differ |
+| [Patch series](../serving/patches/sglang-main/README.md) | Each SGLang patch, its switch and which arms use it |
+| [Build guide](BUILD.md) | How the workstation builds the image from this series |
+| [Verification](VERIFICATION.md) | CPU checks, patch-series checks and GPU check Jobs |
+| [Third-party notices](../THIRD-PARTY.md) | Licences of copied code |
+| [History index](HISTORY-INDEX.md) | Every older record, by era |
 
-## Which record answers which question?
+## Glossary
 
-- **Current serving target:** SGLang `main` with the
-  [`sglang-main` patch series](../serving/patches/sglang-main/README.md) and
-  the workstation serving profile. It is unqualified; no result in this
-  repository applies to it yet.
-- **Historical experimental choice:** the
-  [split-K selection](../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json). It names operation234's
-  `mtp` arm (physical `kv4`, start 2) and operation232's selected arm as
-  rollback. The [finalization record](../provenance/MXFP4-FINALIZATION-20261105.json) holds the operation232
-  selection and the parking decision. The [Qwen4 handoff](QWEN4-SERVING-HANDOFF.md)
-  describes how that work was parked. This was a private experimental
-  selection, not an installed service; the 2026-11 workstation reinstall wiped
-  its runtime, and it cannot be rebuilt from this repository as documented. The
-  [FP8 session selection](../provenance/CURRENT-SESSION-SELECTION.json) is
-  historical and retained unchanged. The newest sprint filename does not choose a
-  runtime.
-- **Quality scope:** operation207 and operation232 natural-answer grades cover
-  the cleanup packet and the rollback arm. BetterBench (operations 233 and 234)
-  has no answer-quality oracle, so no result here qualifies the browser or
-  coding-agent workflow.
-- **Completed cleanup:** use the serving sign-off and its exact source and run
-  bindings. It covers eight distinct prompt-message sequences repeated across
-  the frozen menu.
-- **A historical measurement:** use that experiment's own page and provenance.
-  Keep its model, cache, context, output policy, concurrency and timing scope.
-- **Earlier implementation decisions:** use the
-  [serving history](../serving/HISTORY.md) and [proposal index](../serving/proposals/README.md).
-  Pending-state text in those records belongs to that increment.
-
-## More detailed guides
-
-| Subject | Documents |
+| Term | Meaning |
 | --- | --- |
-| Build and execution boundaries | [Build](BUILD.md), [host ownership](HOST-OWNER.md), [owner collection](OWNER-COLLECTION.md) |
-| Cache implementation | [Cache path](CACHE-PATH.md), [metadata reuse](METADATA-REUSE.md), [GPU test contract](CACHE-GPU-TEST.md), [phase profiling](CACHE-PHASE-PROFILE.md) |
-| Recorded baselines | [Native FP8 baseline](FP8.md), [frozen Qwen baseline](QWEN38-FROZEN-BASELINE.md), [MXFP4 Phase 1](MXFP4-CANDIDATE-PHASE1.md), [MXFP4 128K](MXFP4-CANDIDATE-128K.md) |
-| Performance investigation | [Current cost analysis](CURRENT-COST-ANALYSIS.md), [profiling](PROFILING.md), [host-path cleanup](HOST-PATH-CLEANUP.md), [optimization candidates](OPTIMIZATION-CANDIDATES.md) |
-| Planning and research | [Next optimization plan](NEXT-OPTIMIZATION-PLAN.md) (superseded), [performance plan](PERFORMANCE-PLAN.md), [reopened tuning](QWEN38-REOPENED-TUNING.md), [weight candidates](QWEN-NEXT-WEIGHT-CANDIDATES.md) |
-| Experiment history | [Sprint index](SERVING-SPRINTS.md) (historical) and each sprint's linked provenance |
-| Historical MXFP4 and FP8 records | [Remaining gates](MXFP4-REMAINING-GATES.md), [OPT-00 baseline and witness](MXFP4-OPT00-BASELINE-AND-WITNESS.md), [OPT-01 host and runtime audit](MXFP4-OPT01-HOST-RUNTIME-AUDIT.md), [OPT-06 cache and graph screen](MXFP4-OPT06-CACHE-GRAPH-SCREEN.md), [OPT-07 shared-owner integration](MXFP4-OPT07-SHARED-OWNER-INTEGRATION.md), [P3 fused-norm candidate](MXFP4-P3-FUSED-NORM-CANDIDATE.md), [FP8 target-KV diagnostic](FP8-TARGET-KV-DIAGNOSTIC-20261026.md) |
+| R9700, gfx1201 | The AMD Radeon AI PRO R9700 GPU, 32 GB, and its LLVM target name (RDNA4) |
+| TP2 | Tensor parallelism over two GPUs. The model is split in half, one half per card. Throughput figures are for both cards together |
+| MXFP4 | A 4-bit floating-point weight format with a shared scale per block of 32 values. The live model's weights use it |
+| FP8, BF16 | 8-bit and 16-bit floating-point formats. Weight format and cache format are chosen separately |
+| KV cache, FP8 KV | The attention keys and values kept for each token. "FP8 KV" stores them in FP8 and patches 0026 and 0027 read them back as bf16 |
+| GDN | Gated DeltaNet, the recurrent layers in the hybrid Qwen model. Their state is stored separately from the KV cache |
+| DFlash, DFlash2 | SGLang's speculative decoding. A small draft model proposes a block of 8 tokens and the target model verifies them in one pass |
+| Verify | The target model's pass that checks the draft tokens |
+| C1, C2 | One or two requests in flight at once, as BetterBench reports them |
+| BetterBench | The throughput benchmark used here, version 0.6.1. It has no answer-quality oracle |
+| Profile, arm | The workstation's serving profile is a JSON file of server flags. An arm is a named variant of those flags, such as Y or UQS |
+| Mode | What the workstation runs on its two GPUs. Shared mode runs arm UQS beside image generators; large mode runs arm UQL alone |
+| Y | The arm qualified on 2026-11-10: the selected gfx1201 speed patches on, BF16 KV cache |
+| UQS, UQL | The live arms, qualified on 2026-11-11: arm Y plus an FP8 KV cache. UQS gives 81,888 tokens per conversation; UQL gives 262,112 |
+| UQ, UQ2, UQ3, K8V4 | Names for KV-cache compression work. UQ2 is the FP8 cache now live. UQ3 is 4-bit integer KV, and K8V4 keeps keys in FP8 with 4-bit values; both were parked on 2026-11-12 |
+| KV4, UltraQuant | The earlier 4-bit KV prototype on SGLang 0.5.21, informed by the UltraQuant v3 paper. Historical |
+| op207, op234, "operation N" | Numbered GPU runs on the old 0.5.21 runtime. Op207 signed off the W5 cleanup. Op232–234 chose the final MXFP4 profile on 6–7 November |
+| W5 | The serving configuration used for the 0.5.21 cleanup (`serving/config/runs/w5-v2`) |
+| cap16, S4, F1, C4, P1 | Names of op-era optimisations: cap16 caps verify attention at 16 KV splits; S4 is a four-way split-K for the down and output GEMMs; F1 fuses GDN norm and quantize; C4 is 8-warp prefill attention; P1 is a block-FP8 prefill route. Several are now patches in the series |
+| Sealed evidence | A retained directory whose file list and hashes are fixed by a manifest. Never edited |
+| Qualified | The owner accepted an arm after a bench Job and the quality menu on a specific image. Recorded in the profile's `qualification` list |
 
-Raw private archives, credentials, model weights and complete runtime images are
-outside this repository. A public summary or a passing CPU fixture is not a
-transferable native build proof or permission to launch a workload.
+## What is not in this repository
+
+Model weights, credentials, runtime images and raw private archives are kept
+elsewhere. A passing CPU test here does not prove anything about a GPU run.
