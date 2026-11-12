@@ -1,46 +1,114 @@
 # Verification guide
 
-Run checks from the repository root with an existing configured interpreter.
-The completed cleanup used CPython 3.14. Use a C++17 compiler with sanitizers
-for the C++ CPU codec checks. No Python package installation or model
-weights are needed for the public CPU suite.
+This page lists the checks for this repository, from quick CPU tests to GPU
+check Jobs on the workstation. Run commands from the repository root.
+
+| Check | Where it runs | Needs |
+| --- | --- | --- |
+| [CPU test suite](#run-the-cpu-tests) | Any machine | Python 3.14, a C++17 compiler |
+| [KV-cache tool tests](#test-the-kv-cache-tools) | Any machine | Python with PyTorch (CPU build is enough) |
+| [Patch-series checks](#check-the-patch-series) | Any machine | A clone of SGLang and the workstation repository |
+| [GPU check Jobs](#run-the-gpu-check-jobs) | The workstation's K3s | A built image and one free GPU |
+
+None of the CPU checks loads a model or uses a GPU. A passing CPU check is not
+evidence about GPU behaviour.
+
+## Run the CPU tests
 
 ```sh
 make test PYTHON=python3.14 CXX=clang++
 ```
 
-## Choose a focused check
+Set `PYTHON` and `CXX` to your installed tools. Build products go in
+`.test-build/`. Most of these tests cover the historical 0.5.21 source; the
+table says what each focused target exercises.
 
 | Target | What it exercises | What it does not establish |
 | --- | --- | --- |
 | `test-serving-cleanup` | Serving configuration, source assembly, receipts, quality policy and caller contracts | A completed native campaign |
 | `test-validation-preflight` | Actual public guard, package and collector entry points with declared substitutes | GPU allocation or model quality |
 | `test-cpu` | Retained source, integration and metadata contracts | Native GPU arithmetic |
-| `test-codec` | C++ CPU codec and numerical checks with ASan/UBSan | HIP device behavior or speed |
+| `test-codec` | C++ CPU codec and numerical checks with ASan/UBSan | HIP device behaviour or speed |
 | `test-host-owner` | Local process supervision and mocked platform observations | Current workstation ownership or release |
 | `test-benchmark` and `test-benchmark-readout` | Frozen schedules, inner results and measurement arithmetic | A matched physical result |
 | `test-fp8` | Recorded FP8 baseline identities and scope | Qualification of a different cache or model profile |
 
-Pass `PYTHON=python3.14` to a focused target, and set `CXX` when it compiles C++.
-Replace these names with the absolute paths to your configured tools if needed.
-The full `make test` target combines the public CPU checks. Products stay in
-`.test-build/`.
+## Test the KV-cache tools
 
-## Before native work
+Two newer targets are not part of `make test`. Run them when you change the
+matching tool.
 
-Follow the [serving test procedure](../serving/measurements/native-qualification/TESTING.md).
-It adds exact-packet checks, the declared native interpreter and complete
-retained artifact replay to the public fixture suite. Reuse authenticated
-unchanged results; rerun the affected checks when code, inputs or unresolved
-failures justify it. A documentation-only edit needs documentation and link
-validation, rather than another GPU campaign.
+| Target | Tests | Tool |
+| --- | --- | --- |
+| `make test-int4-bench PYTHON=python3` | The host-side INT4 codec that the benchmark kernel reads | `tools/bench_int4_kv.py` |
+| `make test-uq3 PYTHON=python3` | The UQ3 fake-quantization harness: codec invariants and both input paths | `tools/uq3_fakequant.py` |
 
-For the completed result, see the
+`tools/check_fp8_kv_dequant.py`, the GPU check for patches 0026 and 0027, has
+no CPU test. It runs only as a GPU Job.
+
+## Check the patch series
+
+Do this after any change to `serving/patches/sglang-main/`.
+
+1. Confirm the series hash. From the workstation repository, run:
+
+   ```sh
+   infrastructure/ai-stack/patchset-hash.sh ../Spry.ai-rdna4-serving/serving/patches/sglang-main
+   ```
+
+   Compare the output with `SGLANG_PATCHSET_SHA256` in the workstation's
+   `infrastructure/ai-stack/stack.lock`. If you changed a patch, update that
+   value. On macOS, where `sha256sum` is missing, this gives the same hash:
+
+   ```sh
+   cd serving/patches/sglang-main && shasum -a 256 *.patch | shasum -a 256
+   ```
+
+2. Confirm the series applies. In a disposable clone of SGLang checked out at
+   the `SGLANG_COMMIT` from `stack.lock`, apply every patch in name order, as
+   the workstation's `sglang/build.sh` does:
+
+   ```sh
+   for p in /path/to/Spry.ai-rdna4-serving/serving/patches/sglang-main/*.patch; do
+     git apply --check "$p" && git apply "$p" || { echo "FAILED: $p"; break; }
+   done
+   ```
+
+   Each patch is checked after the earlier ones are applied, because later
+   patches build on earlier ones.
+
+3. Build the image and run the GPU checks below. The workstation's
+   [AI-stack guide](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/README.md)
+   has the build steps.
+
+## Run the GPU check Jobs
+
+The workstation renders these Jobs from a checkout of this repository. See its
+[AI-stack guide](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/README.md)
+for the full commands.
+
+| Job | Rendered by | What it checks |
+| --- | --- | --- |
+| FP8 KV check | `kernel_check.py IMAGE --serving REPO` | `tools/check_fp8_kv_dequant.py`: the hardware FP8 decode is exact, kernel outputs match, and verify time against a bf16 cache |
+| INT4 bench | `kernel_check.py IMAGE --serving REPO --tool int4-bench` | `tools/bench_int4_kv.py`: INT4 KV verify cost (research; parked) |
+| Bench | `render.py bench PROFILE IMAGE --serving REPO --arm ARM` | BetterBench throughput, prefill and long-context phases, then the quality menu |
+
+A kernel check Job needs one free GPU. A bench Job needs both GPUs, so the
+serving Deployment must be stopped first. Record a qualifying result in the
+serving profile, not in this repository.
+
+## Historical: before native work on the 0.5.21 runtime
+
+The checks below served the SGLang 0.5.21 runtime, which was wiped in November
+2026. They are kept for readers of the older records.
+
+The [serving test procedure](../serving/measurements/native-qualification/TESTING.md)
+added exact-packet checks, the declared native interpreter and complete
+retained artifact replay to the public fixture suite. For the completed result,
+see the
 [cleanup sign-off](../serving/measurements/native-qualification/CLEANUP-SIGNOFF.md).
-Its counts and native outcomes are a recorded snapshot, not a promise about
-future packets.
 
-## Retained verification notes
+### Retained verification notes
 
 The following sections preserve the earlier source-suite contracts and sprint
 outcomes. Counts such as the 112-case selection refer to that specific suite,
@@ -110,7 +178,7 @@ follow independently. The historical physical pass is described in `STATUS.md`;
 it was not rerun for publication. The source subset here cannot substitute for
 that complete installed composition.
 
-## Sprint 8 host attribution
+### Sprint 8 host attribution
 
 `make test-sampling-host-timing` checks the bounded sampling recorder with CPU
 clock/request substitutes. It runs without Torch, SGLang or device access and
@@ -149,7 +217,7 @@ classification, retained component harness failure and corrected two-card
 component result. Component parity and timing do not establish serving speedup.
 
 
-## Sprint 10 matched M8 serving
+### Sprint 10 matched M8 serving
 
 The [Sprint 10 record](SPRINT10-M8-SERVING.md) retains both matched orders,
 56/56 packet/startup checks per order, 53/53 per quality packet and 65/65 for

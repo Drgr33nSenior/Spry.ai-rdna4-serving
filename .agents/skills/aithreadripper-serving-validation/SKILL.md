@@ -5,14 +5,17 @@ description: Resume AIThreadripper RDNA4 serving validation using the selected t
 
 # AIThreadripper serving validation
 
-Status, 9 November 2026: the op234 selection below is historical. The 2026-11
-workstation reinstall wiped its SGLang 0.5.21 runtime, and neither it nor the
-op232 rollback can be rebuilt from this repository as documented. Current
-serving work targets SGLang `main` at `fcb3274` with the
-[`sglang-main` patch series](../../../serving/patches/sglang-main/README.md).
-Its flags and environment are in the workstation
+Status, 12 November 2026: this skill covers the evidence workflow of the
+historical SGLang 0.5.21 runtime. The November 2026 workstation reinstall wiped
+that runtime, including the op234 selection and the op232 rollback; neither can
+be rebuilt from this repository. Serving now runs SGLang `main` at `fcb32746`
+with the [`sglang-main` patch series](../../../serving/patches/sglang-main/README.md).
+Its flags are in the workstation
 [serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json),
-which is unqualified.
+where arm Y (2026-11-10) and arms UQS and UQL (2026-11-11) are qualified.
+Current validation uses the workstation's K3s bench and check Jobs; see
+[AGENTS.md](../../../AGENTS.md) and [Verification](../../../docs/VERIFICATION.md).
+Use the rest of this skill only to read or extend the historical record.
 
 Resolve the project root as `../../..` from this skill. Read the
 [historical op234 selection](../../../provenance/MXFP4-SPLITK-S4-SELECTION-20261107.json),
@@ -72,12 +75,15 @@ Weight precision does not choose attention-KV precision. The op234 selection
 uses MXFP4 weights with BF16 target and draft KV; preserve the explicit BF16
 draft-KV override. FP8 target KV was tested on 26 October with FP8 weights: it
 passed the retained answer checks but ran slower and was not selected (see the
-[diagnostic](../../../docs/FP8-TARGET-KV-DIAGNOSTIC-20261026.md)). FP8 draft
-KV has never been tested. For op234-era evidence, read the selected recurrent
+[diagnostic](../../../docs/FP8-TARGET-KV-DIAGNOSTIC-20261026.md)). That finding
+is historical: on SGLang `main`, arms UQS and UQL serve FP8 target and draft KV
+read as bf16 by patches 0026/0027. For op234-era evidence, read the selected recurrent
 profile separately from the GEMM source: the same GEMM can run with snapshot or
 aligned ring-fold. Carry that profile into both arms unless it is the stated
 A/B variable. Keep the original compact `--enable-linear-replayssm` flag
-disabled. The ring-fold/ReplaySSM spec path is not in the `sglang-main` series.
+disabled. Op234's ring-fold/ReplaySSM spec path is not in the `sglang-main`
+series; patch 0008 enables upstream's GDN compact replay instead, and no live
+arm uses it.
 
 The split-KV verification adapter changes attention computation; it does not
 compress the BF16 cache. Attribute ring-fold savings to recurrent-state storage

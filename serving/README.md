@@ -1,12 +1,24 @@
-# Serving source and validation
+# Serving source (historical 0.5.21 cleanup)
 
-This directory contains the maintained source for the completed serving
-cleanup: configuration, packet assembly, runtime hooks, evidence readers and
-the checks that connect them. Use this guide for the current layout. The
-[implementation history](HISTORY.md) retains earlier increments and their
-original status notes.
+**This tree is not what serves today.** Apart from
+[`patches/sglang-main/`](patches/sglang-main/README.md), everything under
+`serving/` is the cleanup source for the SGLang 0.5.21 runtime. The November
+2026 workstation reinstall wiped that runtime, so this source cannot be run as
+documented.
 
-## Current result
+What is live instead:
+
+- The SGLang patch series in [`patches/sglang-main/`](patches/sglang-main/README.md).
+- The workstation's
+  [serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json)
+  for flags, and its K3s bench and check Jobs for validation.
+- The [project README](../README.md) explains how the two repositories fit
+  together.
+
+The rest of this page describes the cleanup source as it was on 2 November
+2026. The [history index](../docs/HISTORY-INDEX.md) lists the related records.
+
+## Result of the cleanup (operation 207)
 
 Operation 207 completed the reviewed production-mode packet on two R9700 GPUs.
 All 352 request and output token vectors matched B186; all 352 natural-answer

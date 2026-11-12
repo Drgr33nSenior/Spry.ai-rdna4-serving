@@ -37,6 +37,32 @@ derived from [ROCm/aiter](https://github.com/ROCm/aiter) commit
 `Copyright (C) 2024-2026, Advanced Micro Devices, Inc. All rights reserved.`
 The MIT terms are included in `LICENSES/AITER-MIT.txt`.
 
+Patches 0010, 0019 and 0020 reuse the vendored AITER MXFP4 quantizer from 0004
+inside new kernels. Their new files carry
+`SPDX-License-Identifier: Apache-2.0`.
+
+## Flash Linear Attention (FLA)-derived kernel
+
+`serving/patches/sglang-main/0010-gfx1201-gdn-norm-quant.patch` adds
+`gfx1201_gdn_norm_quant.py`. Its docstring says the kernel body is a copy of
+SGLang's in-tree FLA gated layer-norm forward
+(`kernels/ops/attention/fla/layernorm_gated.py`), with the store replaced by the
+AITER quantizer. The new file carries only `SPDX-License-Identifier: Apache-2.0`.
+It has no separate FLA copyright line. Upstream
+[flash-linear-attention](https://github.com/fla-org/flash-linear-attention) is
+MIT-licensed. Whether SGLang's copy carries an FLA notice that should be kept
+here was not checked against the SGLang source; check it before the next
+release of this series.
+
+## BetterBench
+
+`benchmarks/betterbench/upstream/` and `benchmarks/betterbench/native-v2/upstream/`
+contain [BetterBench](https://github.com/GGZ14/BetterBench) v0.6.1, commit
+`f72bb9011a830fd98e82ab89d01e549efa76e9c5`, under the Apache-2.0 licence. Each
+copy keeps the upstream `LICENSE` file. The native-v2 client carries an
+explicit vendor patch (`vendorclient.patch`); the other files in
+`benchmarks/betterbench/` are this project's adapter, under the root MIT licence.
+
 ## Qwen config fixture
 
 The small configuration fixture is from `Qwen/Qwen3.8-27B-FP8`, model revision
