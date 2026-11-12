@@ -84,6 +84,9 @@ test-cpu:
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_verify_metadata_reuse.py
 	OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B -S tests/test_context64_public_patch.py
 
+test-int4-bench:
+	OMP_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B tests/test_bench_int4_kv.py
+
 test-uq3:
 	OMP_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1 $(PYTHON) -I -B tests/test_uq3_fakequant.py
 
