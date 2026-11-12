@@ -527,7 +527,7 @@ def rel_err(out, ref):
 
 def check(prefix=8192):
     k, v = cache(prefix + T, 1)
-    q, r2t, rpi, seq = inputs(prefix)
+    q, r2t, rpi, seq = inputs(prefix, seed=2)  # not the cache's seed: equal streams make q a multiple of K
     visible = [prefix + t + 1 for t in range(T)]
     ref_bf16 = reference(q, k, v, visible)
     row = {"phase": "check", "prefix": prefix}
@@ -626,7 +626,7 @@ def time_row(prefix, batch, reps, sweep):
     best_of("ctl_bf16", lambda tile: lambda: [run_variant(FMT_BF16, q, o, c, r2t, rpi, seq, bt=tile[0], warps=tile[1],
                                                           qc=tile[2]) for c in bf16], CTL_TILES if sweep else CTL_TILES[:1])
     fp8 = [(k.to(FP8), v.to(FP8)) for k, v in bf16]
-    fp8_tile = va.GFX1201_FP8_B1_TILE if batch == 1 else (32, 4, 32)
+    fp8_tile = va.GFX1201_FP8_B1_TILE if batch <= 2 else (32, 4, 32)  # patch 0027: pairs decode, B <= 2
     row["prod_fp8_us"] = round(graph_us(prod(fp8, fp8_tile), reps), 2)
     del fp8
     for gph in (1, 4):

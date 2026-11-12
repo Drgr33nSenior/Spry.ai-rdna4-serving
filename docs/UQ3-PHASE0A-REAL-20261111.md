@@ -81,4 +81,4 @@ add concurrent full-length conversations.
 
 ## Follow-up (12 November 2026)
 
-The INT4 verify-kernel measurements ([UQ3-INT4-VERIFY-KERNEL-20261112.md](UQ3-INT4-VERIFY-KERNEL-20261112.md)) put every 4-bit KV layout at 1.6x or more of FP8 verify time. UQ3 and K8V4 stay parked.
+The INT4 verify-kernel measurements ([UQ3-INT4-VERIFY-KERNEL-20261112.md](UQ3-INT4-VERIFY-KERNEL-20261112.md)) put every 4-bit KV layout at 1.7x or more of FP8 verify time. UQ3 and K8V4 stay parked.
