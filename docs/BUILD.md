@@ -1,44 +1,65 @@
-# Build and source-assembly guide
+# Build guide
 
-Choose the path that matches your work:
-
-| Goal | Entry point | Required external inputs |
-| --- | --- | --- |
-| Build the current serving image | [Current build](#current-build) and the [`sglang-main` series](../serving/patches/sglang-main/README.md) | The workstation AI-stack pipeline and its `stack.lock` |
-| Assemble cleaned serving source for review | [Serving guide](../serving/README.md) and [caller projection](../serving/launcher/PROJECTION.md) | Authenticated sealed donor, selected proposal and configured assets |
-| Reproduce the historical 0.5.21 overlays | [Patch series](../serving/patches/README.md) | Exact effective base files from the lock; that base image is lost |
-| Build the separate KV4 native library | The KV4 build contract below | Complete pinned Linux toolchain, runtime sources and independent build review |
-| Run local CPU checks | [Verification](VERIFICATION.md) | Existing configured Python and C++ compiler |
-
-A source review bundle, a native library and an accepted runtime/build proof
-are different outputs. Follow the selected path through its own checks. The
-runtime pins below describe the recorded FP8/KV4 composition; they are not a
-universal installation recipe for every later experiment.
-
-This repository does not install dependencies, pull an image or start a GPU.
-Use an isolated owned output directory and a separately reviewed execution plan.
-Do not run historical experiment controllers or treat test fixtures as proof.
+The serving image is built by the workstation repository, not here. This
+repository supplies the SGLang patch series that the build applies. This page
+explains how the two connect, then keeps the build notes for the historical
+SGLang 0.5.21 runtime.
 
 ## Current build
 
-Status, 9 November 2026: the serving image is built from SGLang upstream `main`
-at `fcb3274646e43c16d70fd83806ebb3a5134d5e81` (about v0.5.23 plus 957 commits)
-by the workstation repository's
-[AI-stack pipeline](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/README.md). Its
-[`stack.lock`](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/stack.lock) pins Python 3.14
-(cp314), PyTorch 2.16.0a0 built from `main`, TheRock ROCm 10.3.0.dev20261108
-(HIP 7.18), Triton 3.9.0 and sglang-kernel 0.4.10 built ahead of time for
-gfx1201. The pipeline applies the
-[`sglang-main` patch series](../serving/patches/sglang-main/README.md), which
-`stack.lock` pins by content hash rather than by a commit of this repository.
+The workstation's
+[AI-stack pipeline](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/README.md)
+builds every component from upstream source, pinned in its
+[`stack.lock`](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/stack.lock).
 
-The serving flags and environment are in the workstation
-[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json);
-it is unqualified. The sections below describe the historical SGLang 0.5.21
-build. The 2026-11 workstation reinstall removed its base image and built
-trees, so that build cannot be reproduced from this repository as documented.
+| Component | Pinned version (refreshed 2026-11-08) |
+| --- | --- |
+| SGLang | `main` at `fcb32746` (0.5.23.post957) |
+| Patch series | This repository's [`sglang-main` series](../serving/patches/sglang-main/README.md), pinned by content hash `142d0ae7…` |
+| ROCm | TheRock 10.3.0-dev (2026-11-08), HIP 7.18 |
+| PyTorch | 2.16.0a0 nightly, built from `main` for that ROCm |
+| Triton | 3.9.0, the commit PyTorch pins |
+| Python | 3.14 (cp314) |
+| Target | gfx1201, with SGLang's kernels built ahead of time |
 
-## Shared runtime (historical 0.5.21)
+The build runs these stages on the workstation:
+
+1. `refresh.sh` moves the pins to the current upstream heads and recomputes
+   the patchset hash from a checkout of this repository.
+2. `sync.sh` copies the pipeline and this patch series to the workstation.
+3. The `rocm`, `torch` and `sglang` stages build wheels. The `sglang` stage
+   applies the patch series in name order and stops if any patch fails.
+4. The `image` stage installs the wheels into the serving image, which is then
+   referenced by its digest.
+
+The serving flags and environment are in the workstation's
+[serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json).
+Its `qualification` list records which image and patchset each arm was
+qualified on. Arm Y was qualified on 2026-11-10, and arms UQS and UQL on
+2026-11-11. Rebuilding the image or changing the series needs a new
+qualification.
+
+To change a patch, follow the steps in the
+[patch series guide](../serving/patches/sglang-main/README.md#change-a-patch).
+
+## Historical builds
+
+Everything below describes the SGLang 0.5.21 build. The November 2026
+workstation reinstall removed its base image and built trees, so it cannot be
+reproduced from this repository.
+
+| Goal | Entry point | Required external inputs |
+| --- | --- | --- |
+| Assemble cleaned serving source for review | [Serving guide](../serving/README.md) and [caller projection](../serving/launcher/PROJECTION.md) | Authenticated sealed donor, selected proposal and configured assets |
+| Reproduce the 0.5.21 overlays | [Patch series](../serving/patches/README.md) | Exact effective base files from the lock; that base image is lost |
+| Build the KV4 native library | The KV4 build contract below | Complete pinned Linux toolchain, runtime sources and independent build review |
+
+A source review bundle, a native library and an accepted runtime/build proof
+are different outputs. The runtime pins below describe the recorded FP8/KV4
+composition. Do not run historical experiment controllers or treat test
+fixtures as proof.
+
+### Shared runtime (0.5.21)
 
 The [qualified native FP8 baseline](FP8.md) has a separate exact image/runtime
 identity and stock BF16 KV path. Its profile is historical evidence, not an
@@ -67,7 +88,7 @@ private build used the AOT `setup_rocm.py bdist_wheel` path and the serving
 Run dependency and effective-provenance checks afterward. A ModelRunner import
 can query GPUs; it is not a device-free check.
 
-## KV4 native build
+### KV4 native build
 
 The maintained producer is `prototype/scripts/build_bf16_v2.py`; the source
 inventory and static protocol helper is `bf16_source_identity.py`. The collector
