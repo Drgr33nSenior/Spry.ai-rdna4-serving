@@ -87,7 +87,7 @@ flowchart TB
 | Arm | Mode | Context per conversation | Cache pool | Measured |
 | --- | --- | --- | --- | --- |
 | UQS | Shared (default) | 81,888 tokens | 163,840 tokens | BetterBench 135.1 tok/s at one request, 224.8 at two (2026-11-11) |
-| UQL | Large | 262,112 tokens | 524,288 tokens | BetterBench 133.8 / 229.9 tok/s (2026-11-11) |
+| UQL | Large | 262,112 tokens | 524,288 requested; 502,093 fitted at qualification | BetterBench 133.8 / 229.9 tok/s (2026-11-11) |
 | Y | None (previous default) | 131,040 tokens | 262,144 tokens, BF16 | BetterBench median 139.2 / 254.7 tok/s (2026-11-10) |
 
 A single interactive chat probe on the live service measured about 86 tok/s on

@@ -52,7 +52,7 @@ This covers:
   `docs/SPRINT*`, `docs/MXFP4-*`, `docs/FP8-*`, `docs/UQ3-*` and
   `docs/*-2026MMDD.md`;
 - the historical logs `docs/CURRENT-SERVING-RESULTS.md`,
-  `docs/CURRENT-COST-ANALYSIS.md` and `docs/AGENTS-LOG-20261112.md`;
+  `docs/CURRENT-COST-ANALYSIS.md` and `AGENTS-LOG-20261112.md`;
 - any private evidence root with a seal manifest.
 
 To mark a record as superseded, add a line to
@@ -87,7 +87,7 @@ fresh fixtures and must refuse to write into sealed roots.
   and which arms use it.
 - [History index](docs/HISTORY-INDEX.md): every older record, with
   "superseded by" pointers.
-- [Agent log to 12 November 2026](docs/AGENTS-LOG-20261112.md): the previous
-  AGENTS.md, unchanged. Its links are relative to the repository root.
+- [Agent log to 12 November 2026](AGENTS-LOG-20261112.md): the previous
+  AGENTS.md, unchanged, kept at the repository root so its links resolve.
 - [Serving-validation skill](.agents/skills/aithreadripper-serving-validation/SKILL.md):
   the evidence workflow for the earlier runtime.

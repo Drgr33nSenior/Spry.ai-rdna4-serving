@@ -46,7 +46,7 @@ These dated records describe the live stack. They are current as of their date.
 | [UQ3-PHASE0A-REAL-20261111.md](UQ3-PHASE0A-REAL-20261111.md) | Real Q/K/V screen; K8V4 looked best | INT4 kernel cost parked it on 12 November |
 | [UQ3-INT4-VERIFY-KERNEL-20261112.md](UQ3-INT4-VERIFY-KERNEL-20261112.md) | INT4 verify attention is 1.6–2.3x FP8 time; UQ3 and K8V4 parked | Current |
 | [DFLASH-BOUNDED-DRAFT-POOL-PLAN-20261111.md](DFLASH-BOUNDED-DRAFT-POOL-PLAN-20261111.md) | Plan to bound the DFlash draft KV pool for about 1.3x more target cache | The owner chose upstream SGLang [#47058](https://github.com/sgl-project/sglang/issues/47058) as the route on 12 November. The plan's statements that it "compounds with UQ3" and its 2.4x figure no longer apply, because UQ3 is parked |
-| [AGENTS-LOG-20261112.md](AGENTS-LOG-20261112.md) | The previous AGENTS.md: a running log of the op207–op234 work | Replaced by the short [AGENTS.md](../AGENTS.md). Its relative links are written from the repository root, so they do not resolve from `docs/` |
+| [AGENTS-LOG-20261112.md](../AGENTS-LOG-20261112.md) | The previous AGENTS.md: a running log of the op207–op234 work, copied unchanged to the repository root so its links still resolve | Replaced by the short [AGENTS.md](../AGENTS.md) |
 
 ## Records with misleading titles or claims
 
