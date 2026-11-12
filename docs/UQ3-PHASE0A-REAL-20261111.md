@@ -78,3 +78,7 @@ add concurrent full-length conversations.
   Code, chat and very long (128k-262k) contexts are not covered.
 - **Not token quality:** "attention KL" is per-head softmax divergence, not token KLD.
   Phase 2 measures task quality.
+
+## Follow-up (12 November 2026)
+
+The INT4 verify-kernel measurements ([UQ3-INT4-VERIFY-KERNEL-20261112.md](UQ3-INT4-VERIFY-KERNEL-20261112.md)) put every 4-bit KV layout at 1.6x or more of FP8 verify time. UQ3 and K8V4 stay parked.
