@@ -23,6 +23,11 @@ and the provenance records identify modifications and added files.
 `common-runtime/overlay/` contains the five separately recorded shared runtime
 repairs, not a complete upstream checkout.
 
+`serving/patches/sglang-main/0028-upstream-47057-swa-checkpoint-windows.patch` and
+`0029-upstream-47058-dflash-draft-kv-bundling.patch` carry the changes of the open
+SGLang pull requests #47057 and #47058, by their upstream author, rebased to
+`fcb32746`. They are contributions to SGLang under its Apache-2.0 license.
+
 Historical fixtures retain their original source bytes and identities. They can
 contain earlier prototype modifications and are not the current serving source.
 Their source/import hashes are recorded in `provenance/SOURCE-IMPORT.json`.

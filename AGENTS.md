@@ -30,7 +30,7 @@ builds the image, owns the serving profile and runs everything on K3s. The
 | Qualified arms | Y (BF16 KV) on 2026-11-10; UQS and UQL (FP8 KV) on 2026-11-11 | The profile's `qualification` list |
 | Modes | Shared mode runs arm UQS; large mode runs arm UQL | Workstation [modes guide](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/docs/MODES.md) |
 | Parked | INT4 KV research (UQ3, K8V4), parked 2026-11-12 | [INT4 verify-kernel record](docs/UQ3-INT4-VERIFY-KERNEL-20261112.md) |
-| Next | Bound the DFlash draft KV pool through upstream SGLang [#47058](https://github.com/sgl-project/sglang/issues/47058) | Owner decision, 2026-11-12 |
+| Next | Bound the DFlash draft KV pool through upstream SGLang [#47058](https://github.com/sgl-project/sglang/issues/47058). Ported as patches `0028` to `0030` on 13 November: CPU-tested, in no image, awaiting GPU qualification | Owner decision, 2026-11-12; [port record](docs/DFLASH-DRAFT-KV-BUNDLING-PORT-20261113.md) |
 
 The owner's 2026-11-12 decision to follow upstream #47058 replaces the route in
 the [11 November draft-pool plan](docs/DFLASH-BOUNDED-DRAFT-POOL-PLAN-20261111.md).
