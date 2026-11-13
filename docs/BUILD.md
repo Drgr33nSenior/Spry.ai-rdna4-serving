@@ -15,7 +15,7 @@ builds every component from upstream source, pinned in its
 | Component | Pinned version (refreshed 2026-11-08) |
 | --- | --- |
 | SGLang | `main` at `fcb32746` (0.5.23.post957) |
-| Patch series | This repository's [`sglang-main` series](../serving/patches/sglang-main/README.md), pinned by content hash `142d0ae7…` |
+| Patch series | This repository's [`sglang-main` series](../serving/patches/sglang-main/README.md), pinned by content hash `142d0ae7…` (patches `0001` to `0027`) |
 | ROCm | TheRock 10.3.0-dev (2026-11-08), HIP 7.18 |
 | PyTorch | 2.16.0a0 nightly, built from `main` for that ROCm |
 | Triton | 3.9.0, the commit PyTorch pins |

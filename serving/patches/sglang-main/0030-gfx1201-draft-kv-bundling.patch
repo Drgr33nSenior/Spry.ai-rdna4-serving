@@ -1,0 +1,514 @@
+diff --git a/python/sglang/srt/arg_groups/speculative_hook.py b/python/sglang/srt/arg_groups/speculative_hook.py
+index e21e5446..1d57db46 100644
+--- a/python/sglang/srt/arg_groups/speculative_hook.py
++++ b/python/sglang/srt/arg_groups/speculative_hook.py
+@@ -307,6 +307,10 @@ def _validate_draft_kv_bundling(cfg) -> None:
+         )
+     for setting, active in (
+         ("--enable-unified-memory", cfg.enable_unified_memory),
++        # gfx1201 port: the HiCache paths of upstream #47057/#47058 were rebased
++        # over the pin's batched write-back eviction but could not be run without
++        # a GPU, so they stay closed until they are qualified.
++        ("--enable-hierarchical-cache", cfg.enable_hierarchical_cache),
+         ("--enable-hisparse", cfg.enable_hisparse),
+         ("--enable-int8-mamba-checkpoint", cfg.enable_int8_mamba_checkpoint),
+         ("PD disaggregation", cfg.disaggregation_mode != "null"),
+diff --git a/python/sglang/srt/layers/attention/triton_backend.py b/python/sglang/srt/layers/attention/triton_backend.py
+index 2f691daa..31cb9a76 100644
+--- a/python/sglang/srt/layers/attention/triton_backend.py
++++ b/python/sglang/srt/layers/attention/triton_backend.py
+@@ -264,6 +264,19 @@ class TritonAttnBackend(AttentionBackend):
+             and self.page_size == 1
+             and not self.runner_ids.is_translating
+         )
++        if model_runner.is_draft_worker and get_spec().speculative_draft_kv_bundling:
++            # A bundled draft keeps every layer's KV in the window sub-pool, which
++            # is far smaller than the target's slot space. Its reads and writes
++            # must take that sub-pool's ids; full-space ids would index other
++            # requests' rows, or past the buffer.
++            if not (
++                self.use_sliding_window_kv_pool
++                and self.runner_ids.window_kv_kind == IdSpaceKind.SLIDING_WINDOW
++            ):
++                raise RuntimeError(
++                    "--speculative-draft-kv-bundling: the draft's attention backend "
++                    "has no sliding-window id space for its KV pool."
++                )
+         self.dcp_size = attention_dcp_size(
+             backend="triton",
+             model_config=model_runner.model_config,
+@@ -1694,6 +1707,13 @@ class TritonAttnBackend(AttentionBackend):
+         ran. The descales are 1.0 except for an fp8 cache under gfx1201_fp8_kv."""
+         from sglang.kernels.ops.attention import verify_attention_gfx1151 as va
+ 
++        # The kernel gathers full-space slot ids from req_to_token, so it cannot
++        # serve a layer whose KV lives in the window sub-pool (a hybrid-SWA
++        # model's window layers, every layer of a bundled DFLASH draft).
++        if self.use_sliding_window_kv_pool and self.kv_layers.plays(
++            layer.layer_id, IdSpaceKind.SLIDING_WINDOW
++        ):
++            return False
+         # the token count qo_indptr is built from
+         num_tokens_per_req = self._target_verify_num_tokens_per_req(
+             forward_batch.spec_info
+diff --git a/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_checkpoint_window_device_only.py b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_checkpoint_window_device_only.py
+new file mode 100644
+index 00000000..01de556a
+--- /dev/null
++++ b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_checkpoint_window_device_only.py
+@@ -0,0 +1,135 @@
++"""SWA checkpoint windows without HiCache, the way the gfx1201 serving arms
++run them: device-only inserts, evictions and locks on a small SWA pool.
++
++Upstream's randomized case (test_unified_radix_cache_checkpoint_window) needs
++HiCache transfers, so it only runs on a GPU. This one keeps to the device
++tier and also checks the property the DFLASH draft depends on: every cached
++Mamba checkpoint still has the SWA KV of the window before it.
++"""
++
++import random
++import unittest
++
++from sglang.srt.mem_cache.base_prefix_cache import EvictParams
++from sglang.srt.mem_cache.unified_cache.components.base import ComponentType
++from sglang.test.ci.ci_register import register_cpu_ci
++from sglang.test.kits.unified_radix_cache.checkpoint_window import (
++    SWACheckpointWindowFixtures,
++)
++from sglang.test.kits.unified_radix_cache.config import CacheConfig
++from sglang.test.kits.unified_radix_cache.fixtures import match_prefix
++from sglang.test.test_utils import CustomTestCase
++
++register_cpu_ci(est_time=20, suite="base-a-test-cpu")
++
++
++class DeviceOnlyCheckpointWindowSuite(SWACheckpointWindowFixtures):
++    def _assert_checkpoints_keep_their_windows(self, cache, seqs):
++        checkpoints = 0
++        for seq in seqs:
++            match = match_prefix(cache, seq)
++            node = match.last_device_node
++            if node == cache.root_node_handle():
++                continue
++            spans = self._path(cache, node, match.device_prefix_len)
++            for _, end, _, has_checkpoint in spans:
++                if not has_checkpoint:
++                    continue
++                checkpoints += 1
++                window_start = max(0, end - self.window)
++                for start, stop, has_swa, _ in spans:
++                    if stop > window_start and start < end:
++                        self.assertTrue(
++                            has_swa,
++                            f"checkpoint at {end} lost SWA KV of [{start}, {stop})",
++                        )
++        return checkpoints
++
++    def _run_random_operations(self, seed):
++        # A small SWA pool, so allocations alone run it out and trigger eviction.
++        cache, allocator, pool = self._build(swa_kv_size=self.cfg.kv_size // 4)
++        rng = random.Random(seed)
++        seqs, locks = [], []
++        next_token, checked = 1, 0
++        for _ in range(300):
++            op = rng.random()
++            if op < 0.45 or not seqs:
++                base = rng.choice(seqs) if seqs and rng.random() < 0.7 else []
++                keep = rng.randrange(len(base) // self.page + 1) * self.page
++                extra = rng.randint(1, 3 * self.window // self.page) * self.page
++                seq = base[:keep] + list(range(next_token, next_token + extra))
++                next_token += extra
++                if self._make_room(cache, allocator, len(seq)):
++                    self._insert(cache, allocator, pool, seq)
++                    seqs.append(seq)
++            elif op < 0.65:
++                pages = rng.randint(1, 16) * self.page
++                cache.evict(
++                    rng.choice(
++                        [
++                            EvictParams(num_tokens=pages),
++                            EvictParams(num_tokens=0, window_num_tokens={"swa": pages}),
++                            EvictParams(num_tokens=0, mamba_num=1),
++                        ]
++                    )
++                )
++            elif op < 0.85:
++                match = match_prefix(cache, rng.choice(seqs))
++                if match.last_device_node != cache.root_node_handle():
++                    locks.append(cache.lock(match.last_device_node))
++            elif locks:
++                lock = locks.pop(rng.randrange(len(locks)))
++                if not lock.swa_released and rng.random() < 0.3:
++                    cache.release_swa(lock)
++                    locks.append(lock)
++                else:
++                    cache.unlock(lock)
++            cache.sanity_check()
++            checked += self._assert_checkpoints_keep_their_windows(cache, seqs)
++        self.assertGreater(checked, 0)
++        for lock in locks:
++            cache.unlock(lock)
++        swa = ComponentType.SWA
++        cache.evict_for_alloc(
++            EvictParams(
++                num_tokens=0,
++                window_num_tokens={
++                    "swa": cache.tree_core.component_evictable_size(swa)
++                },
++            )
++        )
++        self.assertEqual(cache.tree_core.component_evictable_size(swa), 0)
++        cache.sanity_check()
++
++    def test_random_device_operations_keep_every_checkpoint_window(self):
++        for seed in range(6):
++            with self.subTest(seed=seed):
++                self._run_random_operations(seed)
++
++
++_CFG = dict(
++    components=(ComponentType.FULL, ComponentType.SWA, ComponentType.MAMBA),
++    swa_checkpoint_windows=True,
++    kv_size=1024,
++    max_num_reqs=400,
++    mamba_cache_size=400,
++)
++
++
++class TestDeviceOnlyCheckpointWindowsPage1(
++    DeviceOnlyCheckpointWindowSuite, CustomTestCase
++):
++    # no_buffer checkpoints at page size 1, as the serving arms run.
++    cfg = CacheConfig(page_size=1, sliding_window_size=4, **_CFG)
++
++
++class TestDeviceOnlyCheckpointWindowsPage4(
++    DeviceOnlyCheckpointWindowSuite, CustomTestCase
++):
++    cfg = CacheConfig(
++        page_size=4, sliding_window_size=6, enable_mamba_extra_buffer=True, **_CFG
++    )
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/test/registered/unit/model_executor/test_gfx1201_draft_kv_bundling.py b/test/registered/unit/model_executor/test_gfx1201_draft_kv_bundling.py
+new file mode 100644
+index 00000000..d443d636
+--- /dev/null
++++ b/test/registered/unit/model_executor/test_gfx1201_draft_kv_bundling.py
+@@ -0,0 +1,291 @@
++"""--speculative-draft-kv-bundling on the gfx1201 stack: which slots the DFLASH
++draft's KV is written to and read from, and how large the draft pool is for
++the workstation's serving arms.
++
++A bundled draft keeps its KV in a window pool much smaller than the target's
++slot space, so a full-space slot id used as a draft index names another
++request's row or runs past the buffer. Everything here runs on the CPU.
++"""
++
++import unittest
++from types import SimpleNamespace
++
++import torch
++from test_pool_configurator import _make_model_runner, mock_cpu_env
++
++from sglang.srt.layers.attention.triton_backend import TritonAttnBackend
++from sglang.srt.mem_cache.allocator.swa import SWATokenToKVPoolAllocator
++from sglang.srt.mem_cache.kv.alloc.id_space import IdSpaceKind
++from sglang.srt.mem_cache.kv.alloc.runner_ids import RunnerIds
++from sglang.srt.mem_cache.memory_pool import (
++    KVWriteLoc,
++    MHATokenToKVPool,
++    ReqToTokenPool,
++)
++from sglang.srt.mem_cache.swa_memory_pool import SWAKVPool
++from sglang.test.ci.ci_register import register_cpu_ci
++from sglang.test.test_utils import CustomTestCase
++
++register_cpu_ci(est_time=5, suite="base-a-test-cpu")
++
++TARGET_TOKENS = 64
++DRAFT_TOKENS = 16
++DRAFT_LAYERS = (0, 1)
++
++
++class _Stack:
++    """A target without window layers, its allocator with a draft-only window
++    side, the draft pool on that side, and each runner's id translation."""
++
++    def __init__(self):
++        pool_args = dict(
++            page_size=1, dtype=torch.bfloat16, head_num=2, head_dim=8, device="cpu"
++        )
++        self.target = MHATokenToKVPool(
++            size=TARGET_TOKENS, layer_num=2, enable_memory_saver=False, **pool_args
++        )
++        self.allocator = SWATokenToKVPoolAllocator(
++            size=TARGET_TOKENS,
++            size_swa=DRAFT_TOKENS,
++            page_size=1,
++            dtype=torch.bfloat16,
++            device="cpu",
++            kvcache=self.target,
++            need_sort=False,
++            target_swa=False,
++        )
++        self.draft = SWAKVPool(
++            size=TARGET_TOKENS,
++            size_swa=DRAFT_TOKENS,
++            swa_attention_layer_ids=list(DRAFT_LAYERS),
++            full_attention_layer_ids=[],
++            **pool_args,
++        )
++        self.draft.register_mapping(self.allocator.full_to_swa_index_mapping)
++        self.rows = ReqToTokenPool(
++            size=2, max_context_len=32, device="cpu", enable_memory_saver=False
++        )
++        runner_args = dict(
++            req_to_token=self.rows.req_to_token,
++            token_to_kv_pool_allocator=self.allocator,
++            page_size=1,
++            device="cpu",
++        )
++        self.target_ids = RunnerIds(token_to_kv_pool=self.target, **runner_args)
++        self.draft_ids = RunnerIds(
++            token_to_kv_pool=self.draft, is_draft_worker=True, **runner_args
++        )
++
++    def alloc_apart(self, num_tokens: int) -> torch.Tensor:
++        """Target slots whose window slots have other numbers: earlier tokens
++        slid out of the window, so the window side reuses slots while the
++        target side moves on, past the end of the window pool."""
++        for earlier_tokens in (6, 8):
++            self.allocator.free_swa(self.allocator.alloc(earlier_tokens))
++        return self.allocator.alloc(num_tokens)
++
++    def plan(self, write_virtual: torch.Tensor):
++        return self.target_ids.plan(
++            req_pool_indices=torch.zeros(1, dtype=torch.int64),
++            seq_lens=torch.zeros(1, dtype=torch.int64),
++            seq_lens_cpu=None,
++            write_virtual=write_virtual,
++        )
++
++
++def _kv(num_tokens: int) -> torch.Tensor:
++    return torch.randn(num_tokens, 2, 8, dtype=torch.bfloat16)
++
++
++class TestBundledDraftKVSlots(CustomTestCase):
++    def setUp(self):
++        self.stack = _Stack()
++        self.locs = self.stack.alloc_apart(5)
++        self.swa_locs = self.stack.allocator.full_to_swa_index_mapping[self.locs]
++        # The premise of every case: the two id spaces disagree.
++        self.assertFalse(torch.equal(self.locs, self.swa_locs))
++        self.assertGreater(int(self.locs.max()), DRAFT_TOKENS)
++        self.assertLessEqual(int(self.swa_locs.max()), DRAFT_TOKENS)
++
++    def test_draft_write_ids_are_the_mapped_window_slots(self):
++        # DFlashWorkerV2._draft_write_ids: the plan's write window as the draft
++        # runner's pool indexes it.
++        stack = self.stack
++        plan = stack.plan(self.locs)
++        full = plan.write_ids(stack.draft_ids, kind=IdSpaceKind.FULL)
++        window = plan.write_ids(stack.draft_ids, kind=IdSpaceKind.SLIDING_WINDOW)
++        self.assertTrue(torch.equal(full, self.locs))
++        self.assertTrue(torch.equal(window, self.swa_locs))
++        # The target runner has no window side of its own.
++        self.assertIsNone(
++            plan.write_ids(stack.target_ids, kind=IdSpaceKind.SLIDING_WINDOW)
++        )
++
++    def test_draft_layers_store_at_the_window_slots(self):
++        # The DFLASH context-KV writers (sequential and fused) store through the
++        # layer router with both ids bundled.
++        draft = self.stack.draft
++        for layer_id in DRAFT_LAYERS:
++            k, v = _kv(5), _kv(5)
++            draft.layer_router.layer(layer_id).store(
++                SimpleNamespace(layer_id=layer_id),
++                KVWriteLoc(self.locs, swa_loc=self.swa_locs, physical=True),
++                k,
++                v,
++            )
++            key = draft.swa_kv_pool.get_key_buffer(layer_id)
++            value = draft.swa_kv_pool.get_value_buffer(layer_id)
++            self.assertTrue(torch.equal(key[self.swa_locs], k))
++            self.assertTrue(torch.equal(value[self.swa_locs], v))
++            written = torch.zeros(key.shape[0], dtype=torch.bool)
++            written[self.swa_locs] = True
++            self.assertEqual(int(key[~written].abs().sum()), 0)
++            self.assertEqual(int(value[~written].abs().sum()), 0)
++
++    def test_a_write_without_window_slots_fails_instead_of_using_target_slots(self):
++        layer = self.stack.draft.layer_router.layer(DRAFT_LAYERS[0])
++        with self.assertRaisesRegex(AssertionError, "no swa_loc"):
++            layer.store(
++                SimpleNamespace(layer_id=DRAFT_LAYERS[0]),
++                KVWriteLoc(self.locs, physical=True),
++                _kv(5),
++                _kv(5),
++            )
++
++    def test_draft_reads_translate_through_the_same_mapping(self):
++        # update_sliding_window_buffer: a static window pool's gather goes
++        # through the pool's full-to-window table, or through ids_in.
++        stack = self.stack
++        self.assertEqual(stack.draft_ids.window_kv_kind, IdSpaceKind.SLIDING_WINDOW)
++        self.assertIsNotNone(
++            stack.draft.layer_router.sub_pool(IdSpaceKind.SLIDING_WINDOW)
++        )
++        # One table, edited in place: a cache flush must not leave the draft
++        # translating through a copy the allocator no longer updates.
++        mapping = stack.allocator.full_to_swa_index_mapping
++        self.assertIs(stack.draft.full_to_swa_index_mapping, mapping)
++        self.assertTrue(
++            torch.equal(
++                stack.draft_ids.ids_in(IdSpaceKind.SLIDING_WINDOW, self.locs),
++                self.swa_locs,
++            )
++        )
++        for layer_id in DRAFT_LAYERS:
++            self.assertTrue(
++                stack.draft.layer_router.plays(layer_id, IdSpaceKind.SLIDING_WINDOW)
++            )
++        stack.allocator.clear()
++        self.assertIs(stack.allocator.full_to_swa_index_mapping, mapping)
++        self.assertIs(stack.draft.full_to_swa_index_mapping, mapping)
++        self.assertEqual(int(mapping[self.locs].abs().sum()), 0)
++        # The target keeps reading its own slots.
++        self.assertEqual(stack.target_ids.window_kv_kind, IdSpaceKind.FULL)
++        self.assertIsNone(stack.target_ids.space(IdSpaceKind.SLIDING_WINDOW))
++
++    def test_freed_window_slots_no_longer_map(self):
++        # A token that slid out of the window must not keep naming a slot the
++        # allocator may hand to another request.
++        self.stack.allocator.free_swa(self.locs[:2])
++        mapping = self.stack.allocator.full_to_swa_index_mapping
++        self.assertTrue(torch.equal(mapping[self.locs[2:]], self.swa_locs[2:]))
++        for slot in mapping[self.locs[:2]].tolist():
++            self.assertNotIn(slot, self.swa_locs[2:].tolist())
++
++    def test_gfx115_verify_kernel_refuses_a_window_pool_layer(self):
++        # verify_attention_gfx1151 (patches 0012, 0021, 0026, 0027) gathers
++        # full-space ids from req_to_token.
++        backend = SimpleNamespace(
++            use_sliding_window_kv_pool=True, kv_layers=self.stack.draft.layer_router
++        )
++        ran = TritonAttnBackend._gfx115_verify_attention(
++            backend, None, None, SimpleNamespace(layer_id=DRAFT_LAYERS[0]), None
++        )
++        self.assertFalse(ran)
++
++
++class TestServingArmDraftPool(CustomTestCase):
++    """Draft pool of the workstation's FP8 arms: 19 Mamba slots, two running
++    requests, no_buffer checkpoints, no overlap schedule, 2048-token prefill
++    chunks, page size 1, 8 draft tokens, and the DFlash2 draft's 2048 window."""
++
++    WINDOW = 2047  # config.sliding_window - 1
++    TARGET_CELL = 16 * 1024
++    DRAFT_CELL = 5 * 1024
++
++    def _config(self, max_total_tokens):
++        mr = _make_model_runner(
++            self,
++            page_size=1,
++            speculative_algorithm="DFLASH",
++            speculative_num_steps=1,
++            speculative_eagle_topk=1,
++            speculative_num_draft_tokens=8,
++            max_mamba_cache_size=19,
++            max_running_requests=2,
++            mamba_radix_cache_strategy="no_buffer",
++            disable_overlap_schedule=True,
++            chunked_prefill_size=2048,
++        )
++        mr.spec_algorithm.is_dflash.return_value = True
++        mr.spec_algorithm.is_dflash_family.return_value = True
++        mr.spec_algorithm.is_none.return_value = False
++        mr.spec_aux_config.dflash_draft_num_layers = 5
++        mr.dflash_draft_cell_size_per_token = self.DRAFT_CELL
++        mr.bundles_draft_kv = True
++        mr.draft_kv_window = self.WINDOW
++        mr._calculate_mamba_ratio.return_value = 3
++        with mock_cpu_env(swa_eviction_interval=128):
++            from sglang.srt.model_executor.pool_configurator import (
++                compute_swa_request_cap,
++                create_memory_pool_configurator,
++            )
++
++            configurator = create_memory_pool_configurator(mr)
++            config = configurator.calculate_pool_sizes_from_max_tokens(
++                max_total_tokens, 1
++            )
++            caps = tuple(
++                compute_swa_request_cap(
++                    page_size=1,
++                    window=self.WINDOW,
++                    attn_dp_size=1,
++                    max_running_requests=running,
++                )
++                for running in (2, 1)
++            )
++        return configurator, config, caps
++
++    def test_request_caps(self):
++        _, _, (two_requests, one_request) = self._config(163840)
++        # window + eviction interval * draft tokens + page, plus one verify block.
++        per_request = 2047 + 128 * 8 + 1 + 8
++        self.assertEqual(two_requests, 2 * per_request + 2048 + 1)
++        self.assertEqual(one_request, per_request + 2048 + 1)
++
++    def test_shared_arm_draft_pool(self):
++        configurator, config, (two_requests, _) = self._config(163840)
++        self.assertEqual(configurator._running, 2)
++        self.assertEqual(configurator._private_mamba_slots, 1)
++        self.assertEqual(
++            config.swa_max_total_num_tokens, 19 * 2047 + two_requests - 2 * 2047
++        )
++        self.assertEqual(config.swa_max_total_num_tokens, 43008)
++        self.assertEqual(config.max_total_num_tokens, 163840)
++        self.assertEqual(config.full_max_total_num_tokens, 163840)
++
++    def test_draft_pool_does_not_grow_with_the_target_pool(self):
++        for max_total_tokens in (201600, 524288):
++            _, config, _ = self._config(max_total_tokens)
++            self.assertEqual(config.swa_max_total_num_tokens, 43008)
++            self.assertEqual(config.max_total_num_tokens, max_total_tokens)
++
++    def test_shared_arm_bytes_hold_more_target_tokens(self):
++        # Per card: today's 163,840 tokens with one draft slot each, against
++        # 201,600 target tokens with the bundled draft pool.
++        today = 163840 * (self.TARGET_CELL + self.DRAFT_CELL)
++        bundled = 201600 * self.TARGET_CELL + 43008 * self.DRAFT_CELL
++        self.assertEqual(bundled, today)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/test/registered/unit/model_executor/test_pool_configurator.py b/test/registered/unit/model_executor/test_pool_configurator.py
+index f72da486..08aeabfd 100644
+--- a/test/registered/unit/model_executor/test_pool_configurator.py
++++ b/test/registered/unit/model_executor/test_pool_configurator.py
+@@ -2375,6 +2375,7 @@ class TestDraftKVBundlingChecks(CustomTestCase):
+             speculative_algorithm="DFLASH",
+             device="cuda",
+             enable_unified_memory=False,
++            enable_hierarchical_cache=False,
+             enable_hisparse=False,
+             enable_int8_mamba_checkpoint=False,
+             disaggregation_mode="null",
+@@ -2386,6 +2387,10 @@ class TestDraftKVBundlingChecks(CustomTestCase):
+             (dict(device="cpu"), "CUDA"),
+             (dict(disaggregation_mode="decode"), "PD disaggregation"),
+             (dict(enable_unified_memory=True), "--enable-unified-memory"),
++            (
++                dict(enable_hierarchical_cache=True),
++                "--enable-hierarchical-cache",
++            ),
+             (
+                 dict(enable_int8_mamba_checkpoint=True),
+                 "--enable-int8-mamba-checkpoint",

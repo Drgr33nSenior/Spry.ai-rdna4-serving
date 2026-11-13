@@ -1,0 +1,1355 @@
+diff --git a/docs/docs/advanced_features/server_arguments.mdx b/docs/docs/advanced_features/server_arguments.mdx
+index bba3e027..655af418 100644
+--- a/docs/docs/advanced_features/server_arguments.mdx
++++ b/docs/docs/advanced_features/server_arguments.mdx
+@@ -1726,6 +1726,12 @@ Combining `--enable-response-store` with `--disaggregation-mode=prefill` or `dec
+       <td style={{padding: "9px 12px", backgroundColor: "rgba(255,255,255,0.02)"}}>`None`</td>
+       <td style={{padding: "9px 12px", backgroundColor: "rgba(255,255,255,0.05)"}}>Type: int</td>
+     </tr>
++    <tr>
++      <td style={{padding: "9px 12px", fontWeight: 500, backgroundColor: "rgba(255,255,255,0.02)"}}>`--speculative-draft-kv-bundling`</td>
++      <td style={{padding: "9px 12px", backgroundColor: "rgba(255,255,255,0.05)"}}>Keep a DFLASH or DSPARK draft's KV only as the sliding window before each Mamba checkpoint the radix cache keeps, and evict each window with its checkpoint. Requires a draft whose layers are all sliding-window and a Mamba-hybrid target without sliding-window layers. The draft pool is sized from the Mamba cache instead of one slot per target token.</td>
++      <td style={{padding: "9px 12px", backgroundColor: "rgba(255,255,255,0.02)"}}>`False`</td>
++      <td style={{padding: "9px 12px", backgroundColor: "rgba(255,255,255,0.05)"}}>bool flag (set to enable)</td>
++    </tr>
+ </tbody>
+ </table>
+ 
+diff --git a/docs/docs/advanced_features/speculative_decoding.mdx b/docs/docs/advanced_features/speculative_decoding.mdx
+index 5b044f4d..548e48c8 100644
+--- a/docs/docs/advanced_features/speculative_decoding.mdx
++++ b/docs/docs/advanced_features/speculative_decoding.mdx
+@@ -601,6 +601,8 @@ python3 -m sglang.launch_server \
+     --speculative-draft-model-path z-lab/LLaMA3.1-8B-Instruct-DFlash-UltraChat
+ ```
+ 
++On a hybrid SSM target (Mamba, GDN or other linear-attention layers) without sliding-window layers, a DFlash or DSpark draft whose layers all use sliding-window attention can keep its KV only where a cached prefix can resume: the window before each cached Mamba checkpoint. Set `--speculative-draft-kv-bundling`. Each checkpoint and its draft window are then cached, moved to and from the HiCache host tier, and evicted together, and the draft pool is sized from the Mamba slots instead of holding one draft slot per target token, which leaves the rest to the target KV cache. It does not support PD disaggregation, DCP, KV cache sharding, HiCache storage backends or buffer mode, LMCache, FlexKV, HiSparse or unified memory yet.
++
+ **Send a request:**
+ 
+ ```python Example
+diff --git a/python/sglang/srt/arg_groups/fields/spec.py b/python/sglang/srt/arg_groups/fields/spec.py
+index 924d1c4a..49d54124 100644
+--- a/python/sglang/srt/arg_groups/fields/spec.py
++++ b/python/sglang/srt/arg_groups/fields/spec.py
+@@ -170,6 +170,10 @@ class Spec(msgspec.Struct):
+         Optional[int],
+         "Number of leading 'attention sink' tokens the draft always attends to, in addition to the --speculative-draft-window-size recent window (StreamingLLM-style). Honored only by the built-in EAGLE/MTP draft-decode path on the Triton and FlashInfer draft backends; the Llama EAGLE-3 and DFLASH windows ignore it. 0/unset => pure recent window. Requires --speculative-draft-window-size.",
+     ] = None
++    speculative_draft_kv_bundling: A[
++        bool,
++        "Keep a DFLASH or DSPARK draft's KV only as the sliding window before each Mamba checkpoint the radix cache keeps, and evict each window with its checkpoint. Requires a draft whose layers are all sliding-window and a Mamba-hybrid target without sliding-window layers. The draft pool is sized from the Mamba cache instead of one slot per target token.",
++    ] = False
+     speculative_moe_runner_backend: A[
+         Optional[str],
+         Arg(
+diff --git a/python/sglang/srt/arg_groups/speculative_hook.py b/python/sglang/srt/arg_groups/speculative_hook.py
+index 3671fe1d..e21e5446 100644
+--- a/python/sglang/srt/arg_groups/speculative_hook.py
++++ b/python/sglang/srt/arg_groups/speculative_hook.py
+@@ -225,6 +225,9 @@ def handle_speculative_decoding(server_args: ServerArgs) -> None:
+                 cfg.speculative_algorithm,
+             )
+ 
++    if cfg.speculative_draft_kv_bundling:
++        _validate_draft_kv_bundling(cfg)
++
+     if cfg.speculative_draft_sink_size is not None:
+         sink_size = int(cfg.speculative_draft_sink_size)
+         if sink_size < 0:
+@@ -291,6 +294,30 @@ def handle_speculative_decoding(server_args: ServerArgs) -> None:
+             algo.handle_server_args(server_args)
+ 
+ 
++def _validate_draft_kv_bundling(cfg) -> None:
++    """Reject the settings --speculative-draft-kv-bundling does not support yet."""
++    if cfg.speculative_algorithm not in ("DFLASH", "DSPARK"):
++        raise ValueError(
++            "--speculative-draft-kv-bundling requires --speculative-algorithm "
++            "DFLASH or DSPARK."
++        )
++    if current_platform.is_out_of_tree() or not cfg.device.startswith("cuda"):
++        raise ValueError(
++            "--speculative-draft-kv-bundling supports CUDA and ROCm devices only."
++        )
++    for setting, active in (
++        ("--enable-unified-memory", cfg.enable_unified_memory),
++        ("--enable-hisparse", cfg.enable_hisparse),
++        ("--enable-int8-mamba-checkpoint", cfg.enable_int8_mamba_checkpoint),
++        ("PD disaggregation", cfg.disaggregation_mode != "null"),
++        ("--dcp-size", cfg.dcp_size > 1),
++    ):
++        if active:
++            raise ValueError(
++                f"--speculative-draft-kv-bundling does not support {setting} yet."
++            )
++
++
+ def _handle_dflash(server_args: ServerArgs) -> None:
+     cfg = resolving_view(server_args)
+ 
+diff --git a/python/sglang/srt/layers/attention/trtllm_mha_backend.py b/python/sglang/srt/layers/attention/trtllm_mha_backend.py
+index 49f008a9..313ab038 100644
+--- a/python/sglang/srt/layers/attention/trtllm_mha_backend.py
++++ b/python/sglang/srt/layers/attention/trtllm_mha_backend.py
+@@ -195,6 +195,7 @@ class TRTLLMMHAMetadata:
+     # so each token attends the full window despite the causal decode kernel.
+     encoder_cache_seqlens: torch.Tensor = None
+     encoder_page_table: torch.Tensor = None
++    encoder_swa_page_table: torch.Tensor = None
+     encoder_row_map: torch.Tensor = None
+     # Prefix before trailing one-token requests; -1 means there is no decode tail.
+     mixed_prefill_reqs: int = -1
+@@ -871,6 +872,9 @@ class TRTLLMHAAttnBackend(FlashInferAttnBackend):
+                     dtype=torch.int32,
+                     device=self.device,
+                 )
++                self.target_verify_metadata["encoder_swa_page_table"] = (
++                    self._alloc_swa_page_table(max_verify_rows, max_num_pages)
++                )
+ 
+             self.draft_extend_metadata = {
+                 "cache_seqlens": torch.zeros(
+@@ -1019,6 +1023,13 @@ class TRTLLMHAAttnBackend(FlashInferAttnBackend):
+                 metadata.encoder_page_table = self.target_verify_metadata[
+                     "encoder_page_table"
+                 ][:verify_rows, :]
++                encoder_swa_page_table = self.target_verify_metadata[
++                    "encoder_swa_page_table"
++                ]
++                if encoder_swa_page_table is not None:
++                    metadata.encoder_swa_page_table = encoder_swa_page_table[
++                        :verify_rows, :
++                    ]
+             self.target_verify_metadata[bs] = metadata
+         elif forward_mode.is_draft_extend_v2():
+             num_tokens_per_req = spec_info.num_tokens_per_req
+@@ -1160,6 +1171,10 @@ class TRTLLMHAAttnBackend(FlashInferAttnBackend):
+             metadata.encoder_page_table.copy_(
+                 metadata.page_table[metadata.encoder_row_map]
+             )
++            if metadata.encoder_swa_page_table is not None:
++                metadata.encoder_swa_page_table.copy_(
++                    metadata.swa_page_table[metadata.encoder_row_map]
++                )
+ 
+         self.forward_metadata = metadata
+ 
+@@ -1515,6 +1530,8 @@ class TRTLLMHAAttnBackend(FlashInferAttnBackend):
+             metadata.encoder_row_map = row_map
+             metadata.encoder_cache_seqlens = metadata.cache_seqlens_int32[row_map]
+             metadata.encoder_page_table = metadata.page_table[row_map]
++            if metadata.swa_page_table is not None:
++                metadata.encoder_swa_page_table = metadata.swa_page_table[row_map]
+ 
+         # int64 scatter index (unlike the int32 read page table above).
+         if self.use_sliding_window_kv_pool and forward_batch.out_cache_loc is not None:
+@@ -1970,11 +1987,17 @@ class TRTLLMHAAttnBackend(FlashInferAttnBackend):
+                     "ENCODER_ONLY target_verify requires the expanded decode "
+                     "metadata (built only on the draft worker)"
+                 )
++                encoder_page_table = self.forward_metadata.encoder_page_table
++                if (
++                    self.forward_metadata.encoder_swa_page_table is not None
++                    and self._is_window_layer(layer)
++                ):
++                    encoder_page_table = self.forward_metadata.encoder_swa_page_table
+                 o = flashinfer.decode.trtllm_batch_decode_with_kv_cache(
+                     query=q,
+                     kv_cache=kv_cache,
+                     workspace_buffer=self.workspace_buffer,
+-                    block_tables=self.forward_metadata.encoder_page_table,
++                    block_tables=encoder_page_table,
+                     seq_lens=self.forward_metadata.encoder_cache_seqlens,
+                     max_seq_len=self.max_context_len,
+                     bmm1_scale=bmm1_scale,
+diff --git a/python/sglang/srt/mem_cache/allocator/swa.py b/python/sglang/srt/mem_cache/allocator/swa.py
+index 2b73586c..33b49b7b 100644
+--- a/python/sglang/srt/mem_cache/allocator/swa.py
++++ b/python/sglang/srt/mem_cache/allocator/swa.py
+@@ -40,6 +40,7 @@ class SWATokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+     # Per-request SWA ring (BaseSWAKVPool.swa_req_ring_size). Class default so
+     # subclasses that bypass this __init__ read False.
+     _swa_req_ring = False
++    _target_swa = True
+ 
+     @property
+     def has_window_pool(self) -> bool:
+@@ -55,16 +56,22 @@ class SWATokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+         kvcache: BaseSWAKVPool,
+         need_sort: bool,
+         req_to_token_pool=None,
++        target_swa: bool = True,
+     ):
+-        assert isinstance(kvcache, BaseSWAKVPool)
+         self._size_full = size
+         self._size_swa = size_swa
+         self.dtype = dtype
+         self.device = device
+         self.page_size = page_size
+ 
+-        full_kv_pool = getattr(kvcache, "full_kv_pool", None)
+-        swa_kv_pool = getattr(kvcache, "swa_kv_pool", None)
++        # A target without SWA layers holds SWA slots only for a draft's SWA pool, which registers the mapping.
++        self._target_swa = target_swa
++        if target_swa:
++            assert isinstance(kvcache, BaseSWAKVPool)
++            full_kv_pool = getattr(kvcache, "full_kv_pool", None)
++            swa_kv_pool = getattr(kvcache, "swa_kv_pool", None)
++        else:
++            full_kv_pool, swa_kv_pool = kvcache, None
+ 
+         if page_size == 1:
+             self.full_attn_allocator = TokenToKVPoolAllocator(
+@@ -129,7 +136,7 @@ class SWATokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+ 
+         # Per-request SWA ring: the paged SWA indices built here are unused and
+         # SWA capacity is bounded by req slots, not tokens.
+-        ring_size = kvcache.swa_req_ring_size
++        ring_size = kvcache.swa_req_ring_size if self._target_swa else None
+         self._swa_req_ring = ring_size is not None
+         self._req_to_token_pool = req_to_token_pool
+         if self._swa_req_ring:
+@@ -150,7 +157,13 @@ class SWATokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+             self._swa_ring_cost = 0
+ 
+         self.clear()
+-        self._kvcache.register_mapping(self.full_to_swa_index_mapping)
++        if self._target_swa:
++            self._kvcache.register_mapping(self.full_to_swa_index_mapping)
++
++    @property
++    def target_swa(self) -> bool:
++        """Whether the target's own layers use the SWA side."""
++        return self._target_swa
+ 
+     @property
+     def swa_req_ring(self) -> bool:
+@@ -271,6 +284,8 @@ class SWATokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+         return self._kvcache
+ 
+     def translate_loc_from_full_to_swa(self, kv_indices: torch.Tensor):
++        if not self._target_swa:
++            return self.full_to_swa_index_mapping[kv_indices]
+         assert self._kvcache.full_to_swa_index_mapping is not None
+         return self._kvcache.translate_loc_from_full_to_swa(kv_indices)
+ 
+@@ -897,3 +912,7 @@ class PureSWATokenToKVPoolAllocator(SWATokenToKVPoolAllocator):
+ 
+ def is_swa_req_ring(allocator) -> bool:
+     return isinstance(allocator, SWATokenToKVPoolAllocator) and allocator.swa_req_ring
++
++
++def is_swa_draft_only(allocator) -> bool:
++    return isinstance(allocator, SWATokenToKVPoolAllocator) and not allocator.target_swa
+diff --git a/python/sglang/srt/mem_cache/hicache_auto_size.py b/python/sglang/srt/mem_cache/hicache_auto_size.py
+index bd364622..9c21ffb9 100644
+--- a/python/sglang/srt/mem_cache/hicache_auto_size.py
++++ b/python/sglang/srt/mem_cache/hicache_auto_size.py
+@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
+ 
+ import torch
+ 
++from sglang.srt.mem_cache.allocator.swa import is_swa_draft_only
+ from sglang.srt.mem_cache.deepseek_v4_memory_pool import DeepSeekV4TokenToKVPool
+ from sglang.srt.mem_cache.kv.alloc.id_space import IdSpaceKind
+ from sglang.srt.mem_cache.memory_pool import (
+@@ -59,7 +60,14 @@ def _leaf_bytes(pool) -> int:
+     return sum(sizes) if isinstance(sizes, tuple) else sizes
+ 
+ 
+-def _draft_bytes(target, draft) -> int:
++def _draft_bytes(params: CacheInitParams, target, draft) -> int:
++    if is_swa_draft_only(params.token_to_kv_pool_allocator):
++        # Matches how attach_draft_swa_host_pool sizes the draft-only SWA host pool.
++        draft = draft.swa_kv_pool
++        window = -(-params.swa_retain_window // params.page_size) * params.page_size
++        state_slots = params.token_to_kv_pool_allocator.state.pool.size
++        slots = min(state_slots * window, target.size)
++        return _pool_bytes(draft) * slots // draft.size
+     if draft.layer_router.sub_pool(
+         IdSpaceKind.SLIDING_WINDOW
+     ) is not None or isinstance(draft, DeepSeekV4TokenToKVPool):
+@@ -91,7 +99,7 @@ def _estimate_hicache_bytes(
+     drafts = params.mtp_draft_device_pools
+     if draft_plan is not None and draft_plan.mode == "sidecar":
+         drafts = draft_plan.device_pools
+-    return total + sum(_draft_bytes(pool, draft) for draft in drafts)
++    return total + sum(_draft_bytes(params, pool, draft) for draft in drafts)
+ 
+ 
+ @contextmanager
+diff --git a/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py b/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py
+index 426fc015..d9c1129d 100644
+--- a/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py
++++ b/python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py
+@@ -1893,6 +1893,51 @@ def validate_fused_hicache_draft(
+             )
+ 
+ 
++def attach_draft_swa_host_pool(*, cache: Any, draft_kv_pool: Any) -> None:
++    """Give a draft's SWA pool a host pool, registered as the SWA pool of a target without one."""
++    draft_pool = draft_kv_pool.swa_kv_pool
++    controller = cache.cache_controller
++    host_pool_group = controller.mem_pool_host
++    # Draft layer i loads with target transfer layer i.
++    assert draft_pool.layer_num <= controller.transfer_layer_id_max
++    page_size = controller.page_size
++    window_tokens = -(-cache.sliding_window_size // page_size) * page_size
++    host_mamba_slots = host_pool_group.get_pool(PoolName.MAMBA).size
++    host_tokens = min(host_mamba_slots * window_tokens, host_pool_group.logical_size)
++    host_pool = _build_mha_mla_host_pool(
++        pool=draft_pool,
++        host_to_device_ratio=host_tokens / draft_pool.size,
++        page_size=page_size,
++        layout=get_memory().hicache_mem_layout,
++        allocator_type=_get_allocator_type(),
++        pool_label="swa",
++    )
++    controller.register_host_pool_entry(
++        build_pool_entry(
++            name=PoolName.SWA,
++            host_pool=host_pool,
++            device_pool=draft_pool,
++            layer_mapping={i: i for i in range(draft_pool.layer_num)},
++            transfer_layer_id_max=draft_pool.layer_num,
++            host_evict_fn=lambda n: cache.evict_host(n, ComponentType.SWA),
++            device_evict_fn=lambda n: _evict_swa_for_device_alloc(cache, n),
++            **_swa_allocation_callbacks(
++                cache.token_to_kv_pool_allocator.swa_attn_allocator
++            ),
++        )
++    )
++    cache_attr, component_attr = _COMPONENT_HOST_ATTR[ComponentType.SWA]
++    setattr(cache, cache_attr, host_pool)
++    setattr(cache.components[ComponentType.SWA], component_attr, host_pool)
++    cache.tree_core.has_swa_host_pool = True
++    logger.info(
++        "Draft SWA host pool: %d tokens (%d host Mamba slots x %d-token windows)",
++        host_pool.size,
++        host_mamba_slots,
++        window_tokens,
++    )
++
++
+ def build_hicache_draft_sidecars(
+     *,
+     draft_device_pools: tuple[Any, ...],
+@@ -2522,6 +2567,8 @@ def attach_hybrid_pool_to_unified_cache(
+     storage_prefetch_threshold: int = 256,
+ ) -> None:
+     """Attach HostPoolGroup + HybridCacheController to UnifiedRadixCache."""
++    from sglang.srt.mem_cache.allocator.swa import is_swa_draft_only
++
+     try:
+         kvcache = params.token_to_kv_pool_allocator.get_kvcache()
+         storage = params.token_to_kv_pool_allocator.storage
+@@ -2544,6 +2591,8 @@ def attach_hybrid_pool_to_unified_cache(
+             )
+         else:
+             components = set(cache.components.keys())
++            if is_swa_draft_only(params.token_to_kv_pool_allocator):
++                components.discard(ComponentType.SWA)
+             strategy = _select_strategy(kvcache, components)
+             result = strategy.build(
+                 cache=cache,
+diff --git a/python/sglang/srt/mem_cache/kv_cache_builder.py b/python/sglang/srt/mem_cache/kv_cache_builder.py
+index 9b3e4e71..ae6f6e73 100644
+--- a/python/sglang/srt/mem_cache/kv_cache_builder.py
++++ b/python/sglang/srt/mem_cache/kv_cache_builder.py
+@@ -37,7 +37,7 @@ from sglang.srt.configs.hybrid_arch import (
+ from sglang.srt.configs.model_config import ModelImpl, is_deepseek_dsa
+ from sglang.srt.environ import envs
+ from sglang.srt.managers.mm_schedule import init_mm_embedding_cache
+-from sglang.srt.mem_cache.allocator.swa import is_swa_req_ring
++from sglang.srt.mem_cache.allocator.swa import is_swa_draft_only, is_swa_req_ring
+ from sglang.srt.mem_cache.cache_init_params import CacheInitParams
+ from sglang.srt.mem_cache.deepseek_v4_memory_pool import DeepSeekV4TokenToKVPool
+ from sglang.srt.mem_cache.events import KvEventLoraNames
+@@ -61,6 +61,7 @@ from sglang.srt.runtime_context import (
+     get_memory,
+     get_parallel,
+     get_schedule,
++    get_spec,
+ )
+ from sglang.srt.speculative.base_spec_worker import HiCacheDraftMode
+ from sglang.srt.utils import ceil_align, is_hip, is_npu
+@@ -192,9 +193,15 @@ def maybe_register_hicache_draft(
+         raise NotImplementedError("HiCache draft pools require UnifiedRadixCache.")
+ 
+     from sglang.srt.mem_cache.hybrid_cache.hybrid_pool_assembler import (
++        attach_draft_swa_host_pool,
+         build_hicache_draft_sidecars,
+     )
+ 
++    if is_swa_draft_only(tree_cache.token_to_kv_pool_allocator):
++        attach_draft_swa_host_pool(
++            cache=tree_cache, draft_kv_pool=draft_plan.device_pools[0]
++        )
++        return
+     specs, entries = build_hicache_draft_sidecars(
+         draft_device_pools=draft_plan.device_pools,
+         tree_cache=tree_cache,
+@@ -386,8 +393,16 @@ def build_kv_cache(
+     is_dsa = is_deepseek_dsa(model_config.hf_config)
+ 
+     sliding_window_size = None
++    bundles_draft_kv = get_spec().speculative_draft_kv_bundling
+     if is_hybrid_swa:
+         sliding_window_size = tp_worker.sliding_window_size
++    elif bundles_draft_kv:
++        # The target has no SWA layers, so the SWA pool holds only the draft's window.
++        is_hybrid_swa = True
++        sliding_window_size = (
++            tp_worker.model_runner.kv_cache_configurator.draft_kv_window
++        )
++    if is_hybrid_swa:
+         full_tokens_per_layer, swa_tokens_per_layer = (
+             tp_worker.get_tokens_per_layer_info()
+         )
+@@ -469,6 +484,7 @@ def build_kv_cache(
+         attn_cp_size=parallel.attn_cp_size,
+         chunked_prefill_size=effective_chunked_prefill_size,
+         sliding_window_size=sliding_window_size,
++        swa_checkpoint_windows=bundles_draft_kv,
+         swa_gates_prefix_match=swa_gates_prefix_match,
+         mtp_draft_device_pools=mtp_draft_device_pools,
+         mtp_draft_mamba_pools=tp_worker.model_runner.mtp_draft_mamba_pools,
+diff --git a/python/sglang/srt/mem_cache/kv_cache_configurator.py b/python/sglang/srt/mem_cache/kv_cache_configurator.py
+index 62480b53..c260b3cf 100644
+--- a/python/sglang/srt/mem_cache/kv_cache_configurator.py
++++ b/python/sglang/srt/mem_cache/kv_cache_configurator.py
+@@ -427,6 +427,8 @@ class KVCacheConfigurator:
+     kv_shard_group: Optional[GroupCoordinator] = field(init=False)
+     draft_owns_its_depth: bool = field(init=False)
+     draft_swa_full_capacity: bool = field(init=False)
++    bundles_draft_kv: bool = field(init=False)
++    draft_kv_window: Optional[int] = field(init=False, default=None)
+     modelslim_cache_layout: Optional[Any] = field(init=False, default=None)
+     _unified_plan: Any = field(init=False, default=None)
+     _unified_sized: Any = field(init=False, default=None)
+@@ -468,6 +470,10 @@ class KVCacheConfigurator:
+         self.mambaish_config = mambaish_config(self.model_config)
+         self.hybrid_gdn_config = hybrid_gdn_config(self.model_config)
+         self.hybrid_kda_config = hybrid_kda_config(self.model_config)
++        # Only the target checks the bundling setup, before its draft worker is built.
++        self.bundles_draft_kv = get_spec().speculative_draft_kv_bundling
++        if self.bundles_draft_kv and not self.is_draft_worker:
++            self.draft_kv_window = self._resolve_draft_kv_window()
+         self._resolve_kv_shard()
+         self.draft_owns_its_depth = self.layer_info.draft_owns_its_depth
+         self.draft_swa_full_capacity = self.draft_owns_its_depth and bool(
+@@ -654,7 +660,7 @@ class KVCacheConfigurator:
+         max_running_requests = config.max_running_requests
+         full_max_total_num_tokens = None
+         swa_max_total_num_tokens = None
+-        if self.is_hybrid_swa:
++        if self.is_hybrid_swa or self.bundles_draft_kv:
+             full_max_total_num_tokens = config.full_max_total_num_tokens
+             swa_max_total_num_tokens = config.swa_max_total_num_tokens
+ 
+@@ -1799,6 +1805,12 @@ class KVCacheConfigurator:
+                     swa_max_total_num_tokens=sizes.swa_max_total_num_tokens,
+                     mha_pool_class=mha_pool_class,
+                 )
++            elif self.is_draft_worker and self.bundles_draft_kv:
++                token_to_kv_pool = self._build_draft_swa_kv_pool(
++                    full_max_total_num_tokens=sizes.full_max_total_num_tokens,
++                    swa_max_total_num_tokens=sizes.swa_max_total_num_tokens,
++                    mha_pool_class=mha_pool_class,
++                )
+             elif is_minimax_sparse(self.model_config.hf_config):
+                 reject_out_of_tree_path(
+                     current_platform, subsystem="the MiniMax sparse-index KV pool"
+@@ -2493,6 +2505,39 @@ class KVCacheConfigurator:
+         )
+         return token_to_kv_pool
+ 
++    def _build_draft_swa_kv_pool(
++        self,
++        *,
++        full_max_total_num_tokens: int,
++        swa_max_total_num_tokens: int,
++        mha_pool_class: type,
++    ) -> KVCache:
++        """Draft KV pool whose layers all use the SWA slots of the target's allocator."""
++        return SWAKVPool(
++            size=full_max_total_num_tokens,
++            size_swa=swa_max_total_num_tokens,
++            page_size=self.pool_page_size,
++            dtype=self.kv_cache_dtype,
++            post_capture_active=self.post_capture_kv_active,
++            head_num=self.model_config.get_num_kv_heads(
++                get_parallel().attn_tp_size, get_parallel().attn_dcp_size
++            ),
++            head_dim=self.model_config.head_dim,
++            v_head_dim=self.model_config.v_head_dim,
++            swa_attention_layer_ids=list(
++                range(self.layer_info.start_layer, self.layer_info.end_layer)
++            ),
++            full_attention_layer_ids=[],
++            device=self.device,
++            enable_kv_cache_copy=True,
++            token_to_kv_pool_class=(
++                MHATokenToKVPoolMXFP8
++                if self.kv_cache_dtype_str == "mxfp8"
++                else mha_pool_class
++            ),
++            enable_memory_saver=get_exec().features.enable_memory_saver,
++        )
++
+     def _build_minimax_sparse_kv_pool(self, *, max_total_num_tokens: int) -> KVCache:
+         from sglang.srt.configs.model_config import (
+             uses_minimax_m3_packed_nvfp4_kv,
+@@ -2852,7 +2897,7 @@ class KVCacheConfigurator:
+                         kvcache=token_to_kv_pool,
+                         need_sort=need_sort,
+                     )
+-                elif self.is_hybrid_swa:
++                elif self.is_hybrid_swa or self.bundles_draft_kv:
+                     token_to_kv_pool_allocator = SWATokenToKVPoolAllocator(
+                         sizes.full_max_total_num_tokens,
+                         sizes.swa_max_total_num_tokens,
+@@ -2862,6 +2907,7 @@ class KVCacheConfigurator:
+                         kvcache=token_to_kv_pool,
+                         need_sort=need_sort,
+                         req_to_token_pool=req_to_token_pool,
++                        target_swa=self.is_hybrid_swa,
+                     )
+                 else:
+                     if get_memory().enable_hisparse:
+@@ -2930,9 +2976,12 @@ class KVCacheConfigurator:
+ 
+         else:
+             assert self.is_draft_worker
+-            if self.is_hybrid_swa and (
+-                not isinstance(token_to_kv_pool, DeepSeekV4TokenToKVPool)
+-                or token_to_kv_pool.needs_paged_swa_allocator
++            if self.bundles_draft_kv or (
++                self.is_hybrid_swa
++                and (
++                    not isinstance(token_to_kv_pool, DeepSeekV4TokenToKVPool)
++                    or token_to_kv_pool.needs_paged_swa_allocator
++                )
+             ):
+                 if isinstance(
+                     token_to_kv_pool_allocator,
+@@ -3038,6 +3087,36 @@ class KVCacheConfigurator:
+ 
+         return int(rest_memory * (1 << 30))  # return in bytes
+ 
++    def _resolve_draft_kv_window(self) -> int:
++        """The draft's window, after checking the target and draft can bundle its KV."""
++        from sglang.srt.mem_cache.kv_cache_builder import uses_ssm_state
++        from sglang.srt.speculative.dflash_utils import draft_kv_bundle_window
++
++        flag = "--speculative-draft-kv-bundling"
++        aux = self.spec_aux_config
++        if not uses_ssm_state(self.model_config):
++            raise ValueError(f"{flag} requires a target with Mamba-style layers.")
++        if self.is_hybrid_swa:
++            raise ValueError(
++                f"{flag} requires a target without sliding-window layers: the "
++                "draft's window uses the stack's SWA slot space."
++            )
++        if self.post_capture_kv_active:
++            raise ValueError(
++                f"{flag} does not support SGLANG_ENABLE_POST_CAPTURE_KV_SIZING."
++            )
++        chunked_prefill_size = get_schedule().chunked_prefill_size
++        if chunked_prefill_size is None or chunked_prefill_size <= 0:
++            raise ValueError(
++                f"{flag} requires chunked prefill: an unchunked prefill writes the "
++                "whole prompt into the draft pool."
++            )
++        if aux.draft_model_config is None or not self.dflash_draft_cell_size_per_token:
++            raise ValueError(f"{flag} could not resolve the draft's KV size.")
++        if aux.draft_model_config.attention_arch != AttentionArch.MHA:
++            raise ValueError(f"{flag} requires a draft with MHA attention.")
++        return draft_kv_bundle_window(aux.draft_model_config.hf_config)
++
+     def _calculate_mamba_ratio(self) -> int:
+         if get_memory().disable_radix_cache:
+             return 1
+diff --git a/python/sglang/srt/model_executor/model_runner.py b/python/sglang/srt/model_executor/model_runner.py
+index 1f57d2d1..5f7a42f4 100644
+--- a/python/sglang/srt/model_executor/model_runner.py
++++ b/python/sglang/srt/model_executor/model_runner.py
+@@ -1041,7 +1041,7 @@ class ModelRunner:
+         self.token_to_kv_pool = result.token_to_kv_pool
+         self.token_to_kv_pool_allocator = result.token_to_kv_pool_allocator
+         self.memory_pool_config = result.memory_pool_config
+-        if self.is_hybrid_swa:
++        if self.is_hybrid_swa or self.kv_cache_configurator.bundles_draft_kv:
+             self.full_max_total_num_tokens = result.full_max_total_num_tokens
+             self.swa_max_total_num_tokens = result.swa_max_total_num_tokens
+ 
+diff --git a/python/sglang/srt/model_executor/pool_configurator.py b/python/sglang/srt/model_executor/pool_configurator.py
+index 7c8a3e1c..d57a2e48 100644
+--- a/python/sglang/srt/model_executor/pool_configurator.py
++++ b/python/sglang/srt/model_executor/pool_configurator.py
+@@ -10,7 +10,7 @@ from __future__ import annotations
+ 
+ import logging
+ from bisect import bisect_right
+-from dataclasses import dataclass
++from dataclasses import dataclass, replace
+ from typing import TYPE_CHECKING, Optional
+ 
+ import torch
+@@ -37,7 +37,10 @@ from sglang.srt.configs.model_config import (
+ )
+ from sglang.srt.environ import envs
+ from sglang.srt.layers.dcp.layout import dsa_shards_index_k
+-from sglang.srt.mem_cache.allocation_sizing import get_alloc_len_per_decode
++from sglang.srt.mem_cache.allocation_sizing import (
++    get_alloc_len_per_decode,
++    get_mamba_tracking_slots,
++)
+ from sglang.srt.mem_cache.deepseek_v4_memory_pool import (
+     collect_sources_by_ratio,
+     get_compress_state_write_pad,
+@@ -354,7 +357,11 @@ class DefaultPoolConfigurator(MemoryPoolConfigurator):
+ 
+         # DFLASH/DSPARK: the draft's per-token KV cost can differ from the target's
+         # (e.g. MLA target, per-head K/V draft), so size from the draft config.
+-        if kvc.spec_algorithm.is_dflash_family() and not kvc.is_draft_worker:
++        if (
++            kvc.spec_algorithm.is_dflash_family()
++            and not kvc.is_draft_worker
++            and not kvc.bundles_draft_kv
++        ):
+             from sglang.srt.speculative.dflash_utils import (
+                 scale_kv_cell_size_per_token_for_dflash,
+             )
+@@ -1045,6 +1052,99 @@ def compute_swa_request_cap(
+         )
+ 
+ 
++class DraftKVBundlePoolConfigurator(DefaultPoolConfigurator):
++    """Draft pool D = ceil_page(M * W' + max(0, C_run(R) - p * R * W', C_run(1) - p * W')), at most one slot per target token."""
++
++    def __init__(self, kvc: KVCacheConfigurator):
++        super().__init__(kvc)
++        self._page_size = kvc.page_size
++        self._window = kvc.draft_kv_window
++        self._window_tokens = ceil_div(self._window, self._page_size) * self._page_size
++        self._draft_cell_size = _dflash_draft_cell_size(kvc)
++        self._attn_dp_size = kvc.attn_dp_size
++        self._mamba_slots_per_request = kvc._calculate_mamba_ratio()
++        # p: the Mamba slots a running request holds outside the tree.
++        self._private_mamba_slots = 1 + get_mamba_tracking_slots(
++            extra_buffer=get_exec().mamba.enable_mamba_extra_buffer,
++            overlap=not get_schedule().disable_overlap_schedule,
++            lazy=get_exec().mamba.enable_mamba_extra_buffer_lazy,
++        )
++
++    def _draft_tokens(self) -> int:
++        schedule = get_schedule()
++        mamba_slots = schedule.max_mamba_cache_size
++        # The same cap KVCacheConfigurator puts on max_running_requests.
++        self._running = min(
++            schedule.max_running_requests // self._attn_dp_size,
++            mamba_slots // self._mamba_slots_per_request,
++        )
++        self._request_cap = compute_swa_request_cap(
++            page_size=self._page_size,
++            window=self._window,
++            attn_dp_size=self._attn_dp_size,
++            max_running_requests=self._running * self._attn_dp_size,
++        )
++        self._one_request_cap = compute_swa_request_cap(
++            page_size=self._page_size,
++            window=self._window,
++            attn_dp_size=self._attn_dp_size,
++            max_running_requests=self._attn_dp_size,
++        )
++        if get_memory().disable_radix_cache:
++            tokens = self._request_cap
++        else:
++            window = self._window_tokens
++            p = self._private_mamba_slots
++            # The draft KV that the tree and r running requests need is linear in r, so check r = 1 and r = R.
++            tokens = mamba_slots * window + max(
++                0,
++                self._request_cap - p * self._running * window,
++                self._one_request_cap - p * window,
++            )
++        return ceil_div(tokens, self._page_size) * self._page_size
++
++    def _with_draft_pool(
++        self, config: MemoryPoolConfig, draft_tokens: int
++    ) -> MemoryPoolConfig:
++        logger.info(
++            f"Draft KV bundles: window={self._window} "
++            f"({self._window_tokens} tokens per bundle), "
++            f"mamba slots={get_schedule().max_mamba_cache_size}, running requests="
++            f"{self._running} x {self._private_mamba_slots} slots, "
++            f"request cap={self._request_cap}, "
++            f"one-request cap={self._one_request_cap}, "
++            f"draft pool={draft_tokens} tokens "
++            f"({draft_tokens * self._draft_cell_size / (1 << 30):.2f} GB)"
++        )
++        return replace(
++            config,
++            full_max_total_num_tokens=config.max_total_num_tokens,
++            swa_max_total_num_tokens=draft_tokens,
++        )
++
++    def calculate_pool_sizes(
++        self, available_bytes: int, page_size: int
++    ) -> MemoryPoolConfig:
++        joint_tokens = available_bytes // (self._cell_size + self._draft_cell_size)
++        draft_tokens = min(self._draft_tokens(), joint_tokens // page_size * page_size)
++        config = super().calculate_pool_sizes(
++            available_bytes - draft_tokens * self._draft_cell_size, page_size
++        )
++        return self._with_draft_pool(
++            config, min(draft_tokens, config.max_total_num_tokens)
++        )
++
++    def calculate_pool_sizes_from_max_tokens(
++        self, max_total_num_tokens: int, page_size: int
++    ) -> MemoryPoolConfig:
++        config = super().calculate_pool_sizes_from_max_tokens(
++            max_total_num_tokens, page_size
++        )
++        return self._with_draft_pool(
++            config, min(self._draft_tokens(), config.max_total_num_tokens)
++        )
++
++
+ class SWARequestCapPoolConfigurator(HybridSWAPoolConfigurator):
+     """Hybrid SWA with the SWA pool sized from the explicit max_running_requests
+     worst case instead of swa_full_tokens_ratio; the rest goes to the full pool."""
+@@ -1846,5 +1946,7 @@ def create_memory_pool_configurator(
+         if SWARequestCapPoolConfigurator.is_applicable(kvc):
+             return SWARequestCapPoolConfigurator(kvc)
+         return HybridSWAPoolConfigurator(kvc)
++    if kvc.bundles_draft_kv and not kvc.is_draft_worker:
++        return DraftKVBundlePoolConfigurator(kvc)
+     # Future: MambaPoolConfigurator
+     return DefaultPoolConfigurator(kvc)
+diff --git a/python/sglang/srt/speculative/dflash_utils.py b/python/sglang/srt/speculative/dflash_utils.py
+index adc309d4..be4ecde7 100644
+--- a/python/sglang/srt/speculative/dflash_utils.py
++++ b/python/sglang/srt/speculative/dflash_utils.py
+@@ -432,6 +432,22 @@ def get_dflash_attention_sliding_window_size(config: Any) -> Optional[int]:
+     return int(sliding_window) - 1
+ 
+ 
++def draft_kv_bundle_window(draft_hf_config: Any) -> int:
++    """How many tokens before the committed length a bundled draft reads."""
++    layer_types = get_dflash_layer_types(draft_hf_config)
++    if not layer_types or any(t != "sliding_attention" for t in layer_types):
++        raise ValueError(
++            "--speculative-draft-kv-bundling requires a draft whose layers are all "
++            f"sliding-window, got layer_types={layer_types}."
++        )
++    window = get_dflash_attention_sliding_window_size(draft_hf_config)
++    spec = get_spec()
++    # A DFLASH compact draft cache reads at most --speculative-draft-window-size tokens back.
++    if spec.speculative_algorithm == "DFLASH" and spec.speculative_draft_window_size:
++        return min(int(spec.speculative_draft_window_size), window)
++    return window
++
++
+ def _cfg_get(config: Any, key: str, default: Any = None) -> Any:
+     if isinstance(config, dict):
+         return config.get(key, default)
+diff --git a/test/registered/attention/test_trtllm_mha_graph_metadata.py b/test/registered/attention/test_trtllm_mha_graph_metadata.py
+index 9a4a60ed..50823ff0 100644
+--- a/test/registered/attention/test_trtllm_mha_graph_metadata.py
++++ b/test/registered/attention/test_trtllm_mha_graph_metadata.py
+@@ -197,6 +197,66 @@ def test_xqa_verify_mask_forwarding(
+     assert len(calls) == min(splits, q.shape[0] // width)
+ 
+ 
++@pytest.mark.parametrize("is_swa", [False, True])
++def test_encoder_only_verify_reads_the_layer_page_table(
++    make_xqa_backend, monkeypatch, is_swa
++):
++    backend = make_xqa_backend(2, is_xqa=False)
++    full_pages = torch.tensor([[10], [11]], dtype=torch.int32)
++    swa_pages = torch.tensor([[1], [2]], dtype=torch.int32)
++    backend.forward_metadata = SimpleNamespace(
++        is_ragged_verify=False,
++        max_seq_len_q=1,
++        cache_seqlens_int32=torch.tensor([3, 3], dtype=torch.int32),
++        encoder_cache_seqlens=torch.tensor([3, 3], dtype=torch.int32),
++        encoder_page_table=full_pages,
++        encoder_swa_page_table=swa_pages,
++    )
++    swa_pool = SimpleNamespace()
++    kind = IdSpaceKind.SLIDING_WINDOW if is_swa else IdSpaceKind.FULL
++    swa_pool.layer_router = KVLayerRouter.from_layer_maps(
++        swa_pool, [(kind, None, {0: 0})]
++    )
++    backend._swa_kv_pool = swa_pool
++    backend.token_to_kv_pool = _routed(
++        SimpleNamespace(get_kv_buffer=lambda _: (None, None))
++    )
++    backend._should_use_fused_fp8_path = lambda *a: False
++    backend._reshape_paged_kv_cache = lambda *a: (None, None)
++    backend._get_bmm_scales = lambda *a: (1.0, 1.0)
++    backend._get_layer_page_table = lambda *a: None
++    block_tables = []
++
++    def decode(**kwargs):
++        block_tables.append(kwargs["block_tables"])
++        return torch.zeros_like(kwargs["query"])
++
++    monkeypatch.setattr(trtllm_mha_backend, "is_cp_active", lambda _: False)
++    monkeypatch.setattr(
++        trtllm_mha_backend,
++        "flashinfer",
++        SimpleNamespace(
++            decode=SimpleNamespace(trtllm_batch_decode_with_kv_cache=decode)
++        ),
++        raising=False,
++    )
++    layer = SimpleNamespace(
++        layer_id=0,
++        tp_q_head_num=2,
++        head_dim=4,
++        sliding_window_size=-1,
++        attn_type=trtllm_mha_backend.AttentionType.ENCODER_ONLY,
++    )
++    fb = SimpleNamespace(
++        out_cache_loc=None, forward_mode=ForwardMode.TARGET_VERIFY, batch_size=2
++    )
++    q = torch.zeros(2, 2, 4, dtype=torch.bfloat16)
++    backend.forward_extend(q, None, None, layer, fb, save_kv_cache=False)
++
++    (table,) = block_tables
++    assert table is (swa_pages if is_swa else full_pages)
++
++
+ @pytest.mark.parametrize(
+     "is_xqa,mode,expected_q_dtype",
+     [
+diff --git a/test/registered/spec/dflash/test_dflash_draft_kv_bundling.py b/test/registered/spec/dflash/test_dflash_draft_kv_bundling.py
+new file mode 100644
+index 00000000..45f10105
+--- /dev/null
++++ b/test/registered/spec/dflash/test_dflash_draft_kv_bundling.py
+@@ -0,0 +1,165 @@
++"""DFlash draft KV bundled with Mamba checkpoints, with a write-back host tier."""
++
++import os
++import re
++import tempfile
++import unittest
++
++import requests
++
++from sglang.test.ci.ci_register import register_cuda_ci
++from sglang.test.kits.eval_accuracy_kit import GSM8KMixin
++from sglang.test.test_utils import (
++    DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
++    DEFAULT_URL_FOR_TEST,
++    CustomTestCase,
++    popen_launch_server,
++    terminate_and_kill_process_tree,
++)
++
++register_cuda_ci(est_time=600, stage="nightly", runner_config="1-gpu-large")
++
++TARGET_MODEL = "Qwen/Qwen3.8-27B"
++DRAFT_MODEL = "z-lab/Qwen3.8-27B-DFlash2"
++# The checkpoint's sliding_window of 2048, less the current token.
++DRAFT_WINDOW = 2047
++PAGE_SIZE = 64
++# Few enough Mamba slots that a few dozen cached prompts overflow them.
++MAMBA_SLOTS = 64
++
++
++def _prompt(entries: int) -> str:
++    return " ".join(
++        f"Entry {i}: the quick brown fox number {i} jumps over the lazy dog number {i + 1}."
++        for i in range(entries)
++    )
++
++
++_QUESTION = (
++    "\n\nWrite a detailed essay on how foxes and dogs are portrayed in folklore, "
++    "with examples from at least three cultures."
++)
++
++
++class TestDFlashDraftKVBundling(CustomTestCase, GSM8KMixin):
++    model = TARGET_MODEL
++    gsm8k_accuracy_thres = 0.80
++    gsm8k_accept_length_thres = 3.0
++    gsm8k_num_questions = 200
++
++    @classmethod
++    def setUpClass(cls):
++        cls.base_url = DEFAULT_URL_FOR_TEST
++        cls.log_dir = tempfile.mkdtemp(prefix="dflash_draft_kv_bundling_")
++        cls.stdout = open(os.path.join(cls.log_dir, "server_stdout.log"), "w")
++        cls.stderr = open(os.path.join(cls.log_dir, "server_stderr.log"), "w")
++        cls.process = popen_launch_server(
++            cls.model,
++            cls.base_url,
++            timeout=max(DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH, 1800),
++            other_args=[
++                "--trust-remote-code",
++                "--speculative-algorithm=DFLASH",
++                f"--speculative-draft-model-path={DRAFT_MODEL}",
++                "--speculative-num-draft-tokens=8",
++                f"--speculative-draft-window-size={DRAFT_WINDOW}",
++                "--speculative-draft-kv-bundling",
++                "--max-running-requests=8",
++                f"--max-mamba-cache-size={MAMBA_SLOTS}",
++                f"--page-size={PAGE_SIZE}",
++                "--mem-fraction-static=0.8",
++                "--enable-hierarchical-cache",
++                "--hicache-write-policy=write_back",
++                # Auto-sizing needs a visible cgroup memory limit.
++                "--hicache-size=48",
++            ],
++            return_stdout_stderr=(cls.stdout, cls.stderr),
++        )
++
++    @classmethod
++    def tearDownClass(cls):
++        terminate_and_kill_process_tree(cls.process)
++        cls.stdout.close()
++        cls.stderr.close()
++
++    def _server_log(self) -> str:
++        self.stdout.flush()
++        self.stderr.flush()
++        text = ""
++        for name in ("server_stdout.log", "server_stderr.log"):
++            with open(os.path.join(self.log_dir, name)) as f:
++                text += f.read()
++        return text
++
++    def _generate(self, prompt: str, max_new_tokens: int) -> dict:
++        res = requests.post(
++            self.base_url + "/generate",
++            json={
++                "text": prompt,
++                "sampling_params": {"max_new_tokens": max_new_tokens, "temperature": 0},
++            },
++        )
++        res.raise_for_status()
++        return res.json()
++
++    def test_pools_hold_one_window_per_mamba_slot(self):
++        log = self._server_log()
++        window = -(-DRAFT_WINDOW // PAGE_SIZE) * PAGE_SIZE
++        slots, running, per_request, cap, cap_one, tokens = map(
++            int,
++            re.search(
++                r"mamba slots=(\d+), running requests=(\d+) x (\d+) slots, "
++                r"request cap=(\d+), one-request cap=(\d+), draft pool=(\d+) tokens",
++                log,
++            ).groups(),
++        )
++        self.assertEqual(slots, MAMBA_SLOTS)
++        expected = slots * window + max(
++            0,
++            cap - running * per_request * window,
++            cap_one - per_request * window,
++        )
++        self.assertEqual(tokens, -(-expected // PAGE_SIZE) * PAGE_SIZE)
++        host_tokens, host_slots = map(
++            int, re.search(r"host pool: (\d+) tokens \((\d+) host Mamba", log).groups()
++        )
++        self.assertLessEqual(host_tokens, host_slots * window + PAGE_SIZE)
++
++    def test_hit_keeps_greedy_output_and_acceptance(self):
++        requests.post(self.base_url + "/flush_cache").raise_for_status()
++        prompt = _prompt(700) + _QUESTION
++        cold = self._generate(prompt, 256)
++        warm = self._generate(prompt, 256)
++        meta = warm["meta_info"]
++        self.assertGreater(meta["cached_tokens"], meta["prompt_tokens"] - DRAFT_WINDOW)
++        self.assertEqual(cold["text"], warm["text"])
++        self.assertGreaterEqual(
++            meta["spec_accept_length"], 0.9 * cold["meta_info"]["spec_accept_length"]
++        )
++
++    def test_evicted_bundle_is_restored_from_host(self):
++        requests.post(self.base_url + "/flush_cache").raise_for_status()
++        # Longer than one draft window and shorter than one prefill chunk.
++        prompts = [
++            _prompt(95).replace("quick", f"quick-{i}") + _QUESTION
++            for i in range(MAMBA_SLOTS + 8)
++        ]
++        self._generate(prompts[0], 64)
++        resident = self._generate(prompts[0], 64)
++        for prompt in prompts[1:]:
++            self._generate(prompt, 8)
++
++        warm = self._generate(prompts[0], 64)
++        meta = warm["meta_info"]
++        self.assertGreater((meta.get("cached_tokens_details") or {}).get("host", 0), 0)
++        self.assertEqual(meta["cached_tokens"], resident["meta_info"]["cached_tokens"])
++        self.assertEqual(warm["text"], resident["text"])
++        self.assertGreaterEqual(
++            meta["spec_accept_length"],
++            0.8 * resident["meta_info"]["spec_accept_length"],
++        )
++        self.assertIsNone(self.process.poll())
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/test/registered/unit/mem_cache/test_hicache_auto_size.py b/test/registered/unit/mem_cache/test_hicache_auto_size.py
+index efe537be..30787799 100644
+--- a/test/registered/unit/mem_cache/test_hicache_auto_size.py
++++ b/test/registered/unit/mem_cache/test_hicache_auto_size.py
+@@ -6,6 +6,7 @@ import torch
+ 
+ from sglang.srt.arg_groups.overrides import resolution_result
+ from sglang.srt.mem_cache import hicache_auto_size as sizing
++from sglang.srt.mem_cache.allocator.swa import SWATokenToKVPoolAllocator
+ from sglang.srt.mem_cache.base_swa_memory_pool import BaseSWAKVPool
+ from sglang.srt.mem_cache.cache_init_params import CacheInitParams
+ from sglang.srt.mem_cache.kv.alloc.id_space import IdSpaceKind
+@@ -139,6 +140,48 @@ class TestHiCacheAutoSize(CustomTestCase):
+         )
+         self.assertEqual(sizing._estimate_hicache_bytes(params, None), 4096 + 1024)
+ 
++    def test_draft_only_swa_side_holds_one_window_per_mamba_slot(self):
++        target = _leaf(
++            Mock(
++                spec=MHATokenToKVPool,
++                size=128,
++                host_capacity_bytes=None,
++                get_kv_size_bytes=Mock(return_value=(2048, 2048)),
++            )
++        )
++        draft = _leaf(
++            Mock(
++                spec=MHATokenToKVPool,
++                size=32,
++                host_capacity_bytes=None,
++                get_kv_size_bytes=Mock(return_value=(256, 256)),
++            )
++        )
++        mamba_pool = Mock(
++            size=4, host_capacity_bytes=None, get_kv_size_bytes=Mock(return_value=100)
++        )
++        params = CacheInitParams(
++            disable=False,
++            req_to_token_pool=SimpleNamespace(holds_state_slots=True),
++            token_to_kv_pool_allocator=Mock(
++                spec=SWATokenToKVPoolAllocator,
++                target_swa=False,
++                get_kvcache=Mock(return_value=target),
++                state=SimpleNamespace(pool=mamba_pool),
++                storage=None,
++                window_pool_names=Mock(return_value=("swa",)),
++                window_retention={"swa": 10},
++            ),
++            page_size=4,
++            sliding_window_size=10,
++        )
++        plan = Mock(
++            mode="sidecar", device_pools=(Mock(spec=SWAKVPool, swa_kv_pool=draft),)
++        )
++        self.assertEqual(
++            sizing._estimate_hicache_bytes(params, plan), 4096 + 100 + 4 * 12 * 16
++        )
++
+     def test_default_ratio_fits_host_budget_and_pools_book_it(self):
+         """With only --enable-hierarchical-cache the default ratio shrinks to the
+         per-rank budget, pools book one snapshot, and an explicit ratio opts out."""
+diff --git a/test/registered/unit/mem_cache/test_swa_unittest.py b/test/registered/unit/mem_cache/test_swa_unittest.py
+index 21d0240e..0cbb376b 100644
+--- a/test/registered/unit/mem_cache/test_swa_unittest.py
++++ b/test/registered/unit/mem_cache/test_swa_unittest.py
+@@ -18,7 +18,11 @@ from sglang.srt.mem_cache.base_prefix_cache import (
+ from sglang.srt.mem_cache.common import (
+     free_kv_row_segments,
+ )
+-from sglang.srt.mem_cache.memory_pool import ReqToTokenPool
++from sglang.srt.mem_cache.memory_pool import (
++    KVWriteLoc,
++    MHATokenToKVPool,
++    ReqToTokenPool,
++)
+ from sglang.srt.mem_cache.swa_memory_pool import SWAKVPool
+ from sglang.srt.utils import get_device
+ from sglang.test.ci.ci_register import register_amd_ci, register_cuda_ci
+@@ -847,5 +851,51 @@ class TestSWAPageRepsFree(CustomTestCase):
+                 self.assertTrue(torch.all(mapping[indices[touched:]] > 0))
+ 
+ 
++class TestDraftOnlySWASide(CustomTestCase):
++    def test_draft_pool_holds_the_swa_side_of_a_target_without_swa_layers(self):
++        device = get_device()
++        pool_args = dict(
++            page_size=1, dtype=torch.bfloat16, head_num=8, head_dim=128, device=device
++        )
++        target = MHATokenToKVPool(
++            size=64, layer_num=2, enable_memory_saver=False, **pool_args
++        )
++        allocator = SWATokenToKVPoolAllocator(
++            size=64,
++            size_swa=16,
++            page_size=1,
++            dtype=torch.bfloat16,
++            device=device,
++            kvcache=target,
++            need_sort=False,
++            target_swa=False,
++        )
++        draft = SWAKVPool(
++            size=64,
++            size_swa=16,
++            swa_attention_layer_ids=[0],
++            full_attention_layer_ids=[],
++            **pool_args,
++        )
++        draft.register_mapping(allocator.full_to_swa_index_mapping)
++        self.assertIs(allocator.get_kvcache(), target)
++
++        locs = allocator.alloc(4)
++        swa_locs = allocator.translate_loc_from_full_to_swa(locs)
++        self.assertTrue(
++            torch.equal(swa_locs, draft.translate_loc_from_full_to_swa(locs))
++        )
++        k = torch.randn(4, 8, 128, dtype=torch.bfloat16, device=device)
++        draft.set_kv_buffer(
++            SimpleNamespace(layer_id=0),
++            KVWriteLoc(locs, swa_loc=swa_locs, physical=True),
++            k,
++            k,
++        )
++        self.assertTrue(torch.equal(draft.swa_kv_pool.get_key_buffer(0)[swa_locs], k))
++        allocator.free_swa(locs)
++        self.assertEqual(allocator.swa_available_size(), 16)
++
++
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/test/registered/unit/model_executor/test_pool_configurator.py b/test/registered/unit/model_executor/test_pool_configurator.py
+index ea3a4188..f72da486 100644
+--- a/test/registered/unit/model_executor/test_pool_configurator.py
++++ b/test/registered/unit/model_executor/test_pool_configurator.py
+@@ -91,6 +91,8 @@ def _make_model_runner(
+     qk_rope_head_dim=64,
+     swa_kv_lora_rank=128,
+     swa_qk_rope_head_dim=32,
++    max_mamba_cache_size=None,
++    mamba_radix_cache_strategy="auto",
+ ):
+     """Create a mock ModelRunner with the fields configurators need."""
+     mr = MagicMock()
+@@ -153,6 +155,8 @@ def _make_model_runner(
+         speculative_algorithm=speculative_algorithm,
+         speculative_num_steps=speculative_num_steps,
+         speculative_eagle_topk=speculative_eagle_topk,
++        max_mamba_cache_size=max_mamba_cache_size,
++        mamba_radix_cache_strategy=mamba_radix_cache_strategy,
+         disaggregation_mode=disaggregation_mode,
+         max_running_requests=max_running_requests,
+         disaggregation_decode_extra_slots=disaggregation_decode_extra_slots,
+@@ -186,11 +190,14 @@ def _make_model_runner(
+     )
+     mr.attn_dp_size = 1
+     mr.pp_size = 1
++    mr.bundles_draft_kv = False
++    mr.draft_kv_window = None
+     mr.pp_group = SimpleNamespace(rank_in_group=0)
+     mr.spec_aux_config = SimpleNamespace(
+         eagle_draft_num_layers=None,
+         eagle_draft_swa_num_layers=None,
+         dflash_draft_num_layers=None,
++        dflash_draft_cell_size_per_token=None,
+     )
+     # Fused draft KV is off unless a test opts in (a bare MagicMock return
+     # would read as a truthy entry size and take the fused pricing branch).
+@@ -2207,5 +2214,186 @@ class TestDSV4LowRatioBudget(CustomTestCase):
+                     self.assertEqual(planner._get_low_ratio_kv_padding_bytes(256), 0)
+ 
+ 
++class TestDraftKVBundlePoolConfigurator(CustomTestCase):
++    WINDOW = 60  # rounds up to 64 tokens at page size 16
++    PAGE = 16
++    DRAFT_CELL = 48
++    MAMBA_SLOTS = 40
++    SLOTS_PER_REQUEST = 3
++
++    def _run(self, available_bytes=100_000_000, swa_eviction_interval=4, **kwargs):
++        kwargs = {
++            "disable_overlap_schedule": True,
++            "chunked_prefill_size": 32,
++            **kwargs,
++        }
++        mr = _make_model_runner(
++            self,
++            num_layers=4,
++            page_size=self.PAGE,
++            speculative_algorithm="DFLASH",
++            speculative_num_steps=1,
++            speculative_eagle_topk=1,
++            speculative_num_draft_tokens=8,
++            max_mamba_cache_size=self.MAMBA_SLOTS,
++            **kwargs,
++        )
++        mr.spec_algorithm.is_dflash.return_value = True
++        mr.spec_algorithm.is_dflash_family.return_value = True
++        mr.spec_algorithm.is_none.return_value = False
++        mr.spec_aux_config.dflash_draft_num_layers = 5
++        mr.dflash_draft_cell_size_per_token = self.DRAFT_CELL
++        mr.bundles_draft_kv = True
++        mr.draft_kv_window = self.WINDOW
++        mr._calculate_mamba_ratio.return_value = self.SLOTS_PER_REQUEST
++        with mock_cpu_env(swa_eviction_interval=swa_eviction_interval):
++            from sglang.srt.model_executor.pool_configurator import (
++                compute_swa_request_cap,
++                create_memory_pool_configurator,
++            )
++
++            cfg = create_memory_pool_configurator(mr)
++            config = cfg.calculate_pool_sizes(available_bytes, self.PAGE)
++            cap = compute_swa_request_cap(
++                page_size=self.PAGE,
++                window=self.WINDOW,
++                attn_dp_size=1,
++                max_running_requests=cfg._running,
++            )
++            cap_one = compute_swa_request_cap(
++                page_size=self.PAGE,
++                window=self.WINDOW,
++                attn_dp_size=1,
++                max_running_requests=1,
++            )
++        return mr, config, cap, cap_one
++
++    def _ceil_page(self, tokens):
++        return -(-tokens // self.PAGE) * self.PAGE
++
++    def _assert_budget_used(self, mr, config, available):
++        target_cell = _full_per_token(mr) * 4
++        used = (
++            config.max_total_num_tokens * target_cell
++            + config.swa_max_total_num_tokens * self.DRAFT_CELL
++        )
++        self.assertLessEqual(used, available)
++        self.assertGreater(
++            used, available - self.PAGE * (target_cell + self.DRAFT_CELL)
++        )
++
++    def test_idle_tree_bounds_a_lightly_loaded_pool(self):
++        # An overlapped extra-buffer request holds its state and two tracking slots.
++        _, config, cap, cap_one = self._run(
++            swa_eviction_interval=1,
++            max_running_requests=2,
++            mamba_radix_cache_strategy="extra_buffer",
++            disable_overlap_schedule=False,
++            chunked_prefill_size=16,
++        )
++        self.assertLessEqual(cap, 3 * 2 * 64)
++        self.assertLessEqual(cap_one, 3 * 64)
++        self.assertEqual(config.swa_max_total_num_tokens, self.MAMBA_SLOTS * 64)
++
++    def test_one_request_with_a_prefill_chunk_can_need_the_most(self):
++        _, config, cap, cap_one = self._run(
++            swa_eviction_interval=1,
++            max_running_requests=2,
++            mamba_radix_cache_strategy="extra_buffer",
++            disable_overlap_schedule=False,
++            chunked_prefill_size=256,
++        )
++        extra = cap_one - 3 * 64
++        self.assertGreater(extra, max(0, cap - 3 * 2 * 64))
++        self.assertEqual(
++            config.swa_max_total_num_tokens,
++            self._ceil_page(self.MAMBA_SLOTS * 64 + extra),
++        )
++
++    def test_running_requests_add_what_their_slots_do_not_hold(self):
++        mr, config, cap, cap_one = self._run(
++            swa_eviction_interval=128, max_running_requests=8
++        )
++        extra = cap - 8 * 64
++        self.assertGreater(extra, max(0, cap_one - 64))
++        self.assertEqual(
++            config.swa_max_total_num_tokens,
++            self._ceil_page(self.MAMBA_SLOTS * 64 + extra),
++        )
++        self.assertEqual(config.full_max_total_num_tokens, config.max_total_num_tokens)
++        self._assert_budget_used(mr, config, 100_000_000)
++
++    def test_windows_beyond_the_budget_fall_back_to_one_slot_per_token(self):
++        mr, config, _, _ = self._run(available_bytes=100_000, max_running_requests=2)
++        self.assertGreater(config.swa_max_total_num_tokens, 0)
++        self.assertLessEqual(
++            config.swa_max_total_num_tokens, config.max_total_num_tokens
++        )
++        self._assert_budget_used(mr, config, 100_000)
++
++
++class TestDraftKVBundlingChecks(CustomTestCase):
++    def _bundle_window(self, layer_types, **server_args):
++        from sglang.srt.speculative.dflash_utils import draft_kv_bundle_window
++
++        _publish_config(self, **server_args)
++        return draft_kv_bundle_window(
++            SimpleNamespace(layer_types=layer_types, sliding_window=2048)
++        )
++
++    def test_window_is_what_the_draft_reads(self):
++        sliding = ["sliding_attention"] * 5
++        self.assertEqual(
++            self._bundle_window(sliding, speculative_algorithm="DSPARK"), 2047
++        )
++        self.assertEqual(
++            self._bundle_window(
++                sliding,
++                speculative_algorithm="DFLASH",
++                speculative_draft_window_size=1024,
++            ),
++            1024,
++        )
++        self.assertEqual(
++            self._bundle_window(
++                sliding,
++                speculative_algorithm="DFLASH",
++                speculative_draft_window_size=4096,
++            ),
++            2047,
++        )
++        with self.assertRaisesRegex(ValueError, "all sliding-window"):
++            self._bundle_window(
++                ["sliding_attention", "full_attention"],
++                speculative_algorithm="DFLASH",
++            )
++
++    def test_unsupported_settings_are_rejected(self):
++        from sglang.srt.arg_groups.speculative_hook import _validate_draft_kv_bundling
++
++        supported = dict(
++            speculative_algorithm="DFLASH",
++            device="cuda",
++            enable_unified_memory=False,
++            enable_hisparse=False,
++            enable_int8_mamba_checkpoint=False,
++            disaggregation_mode="null",
++            dcp_size=1,
++        )
++        _validate_draft_kv_bundling(SimpleNamespace(**supported))
++        for change, message in (
++            (dict(speculative_algorithm="EAGLE"), "DFLASH or DSPARK"),
++            (dict(device="cpu"), "CUDA"),
++            (dict(disaggregation_mode="decode"), "PD disaggregation"),
++            (dict(enable_unified_memory=True), "--enable-unified-memory"),
++            (
++                dict(enable_int8_mamba_checkpoint=True),
++                "--enable-int8-mamba-checkpoint",
++            ),
++        ):
++            with self.subTest(**change), self.assertRaisesRegex(ValueError, message):
++                _validate_draft_kv_bundling(SimpleNamespace(**{**supported, **change}))
++
++
+ if __name__ == "__main__":
+     unittest.main()

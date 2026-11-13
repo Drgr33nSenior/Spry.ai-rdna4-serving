@@ -1,0 +1,2267 @@
+diff --git a/python/sglang/srt/mem_cache/cache_init_params.py b/python/sglang/srt/mem_cache/cache_init_params.py
+index f6aead0a..c88b0427 100644
+--- a/python/sglang/srt/mem_cache/cache_init_params.py
++++ b/python/sglang/srt/mem_cache/cache_init_params.py
+@@ -59,6 +59,8 @@ class CacheInitParams:
+     # paged SWA pool only a draft uses), so it must not gate prefix matching.
+     swa_gates_prefix_match: bool = True
+     decoder_swa_bounded_replay: bool = False
++    # Keep SWA KV only for the window before each cached Mamba checkpoint, and evict it with that checkpoint.
++    swa_checkpoint_windows: bool = False
+ 
+     # The prefix tree's slots in drive order; the KV storage supplies them.
+     tree_slots: Optional[tuple[TreeSlot, ...]] = None
+diff --git a/python/sglang/srt/mem_cache/registry.py b/python/sglang/srt/mem_cache/registry.py
+index b7c871d9..ac6256e8 100644
+--- a/python/sglang/srt/mem_cache/registry.py
++++ b/python/sglang/srt/mem_cache/registry.py
+@@ -323,6 +323,11 @@ def create_tree_cache(ctx: TreeCacheBuildContext) -> BasePrefixCache:
+             "mamba state lives in UnifiedRadixCache. Please open an issue or a PR "
+             "at https://github.com/sgl-project/sglang if you need this."
+         )
++    if ctx.params.swa_checkpoint_windows and type(cache) is not UnifiedRadixCache:
++        raise ValueError(
++            "SWA checkpoint windows require the built-in UnifiedRadixCache; "
++            f"this config selected {type(cache).__name__}."
++        )
+ 
+     hicache_attached = cache.cache_controller is not None
+     logger.info(
+diff --git a/python/sglang/srt/mem_cache/rust_tree_core/adapter.py b/python/sglang/srt/mem_cache/rust_tree_core/adapter.py
+index 79deab0e..4ff13890 100644
+--- a/python/sglang/srt/mem_cache/rust_tree_core/adapter.py
++++ b/python/sglang/srt/mem_cache/rust_tree_core/adapter.py
+@@ -552,6 +552,7 @@ class RustUnifiedTreeCore(UnifiedTreeCoreInterface):
+                 # fused draft's front rows included.
+                 swa_sliding_window_size=window,
+                 swa_req_ring=not params.swa_gates_prefix_match,
++                swa_checkpoint_windows=params.swa_checkpoint_windows,
+                 enable_kv_cache_events=params.enable_kv_cache_events,
+                 dynamo_kv_event_format=params.dynamo_kv_event_format,
+                 mamba_cache_chunk_size=(
+diff --git a/python/sglang/srt/mem_cache/unified_cache/components/base.py b/python/sglang/srt/mem_cache/unified_cache/components/base.py
+index 9a5b43b8..59931264 100644
+--- a/python/sglang/srt/mem_cache/unified_cache/components/base.py
++++ b/python/sglang/srt/mem_cache/unified_cache/components/base.py
+@@ -105,6 +105,9 @@ class ComponentData:
+     metadata: dict[str, Any] = dataclasses.field(default_factory=dict)
+     host_value: Optional[torch.Tensor] = None
+     host_lock_ref: int = 0
++    # Number of cached checkpoints whose window includes this node, on device and on host.
++    cover_ref: int = 0
++    host_cover_ref: int = 0
+     session_ref: int = 0
+     session_ids: Optional[set[str]] = None
+ 
+@@ -412,6 +415,13 @@ class TreeComponent(ABC):
+             if fallback is not None:
+                 self._mark_session_leaf(session_id, fallback)
+ 
++    def validate_component_state(
++        self,
++        reachable_nodes: set[UnifiedTreeNode],
++        report_error: Callable[[str], None],
++    ) -> None:
++        """Report violations of invariants this component keeps across nodes."""
++
+     def validate_session_state(
+         self,
+         reachable_nodes: set[UnifiedTreeNode],
+@@ -469,6 +479,21 @@ class TreeComponent(ABC):
+         through ``UnifiedTreeCore.adjust_component_size``."""
+         return self.value_len(node)
+ 
++    def on_device_value_set(self, node: UnifiedTreeNode) -> None:
++        """Called after UnifiedTreeCore.set_component_device_value stores a value."""
++
++    def on_peer_value_freed(
++        self,
++        node: UnifiedTreeNode,
++        component_type: ComponentType,
++        layer: EvictLayer,
++        device_frees: dict[ComponentType, list[torch.Tensor]],
++        host_frees: dict[ComponentType, list[torch.Tensor]],
++        cache_actions: list[CacheAction | ComponentAction],
++        tracker: Optional[dict[ComponentType, int]],
++    ) -> None:
++        """Called after the core frees another component's value on this node, on device or on host."""
++
+     def has_host_value_only(self, node: UnifiedTreeNode) -> bool:
+         """Whether this component's data is evicted from device but host-backed."""
+         cd = node.component_data[self.component_type]
+diff --git a/python/sglang/srt/mem_cache/unified_cache/components/checkpoint_window.py b/python/sglang/srt/mem_cache/unified_cache/components/checkpoint_window.py
+new file mode 100644
+index 00000000..4c2b0d1a
+--- /dev/null
++++ b/python/sglang/srt/mem_cache/unified_cache/components/checkpoint_window.py
+@@ -0,0 +1,283 @@
++"""SWA KV kept only for the window before each cached Mamba checkpoint."""
++
++from __future__ import annotations
++
++from collections import defaultdict
++from typing import TYPE_CHECKING, Callable, NamedTuple, Optional
++
++import torch
++
++from sglang.srt.mem_cache.unified_cache.components.base import (
++    ComponentType,
++    EvictLayer,
++)
++
++if TYPE_CHECKING:
++    from sglang.srt.mem_cache.unified_cache.cache_action import (
++        CacheAction,
++        ComponentAction,
++    )
++    from sglang.srt.mem_cache.unified_cache.unified_tree_core import (
++        UnifiedTreeCore,
++    )
++    from sglang.srt.mem_cache.unified_radix_cache import UnifiedTreeNode
++
++
++class _Tier(NamedTuple):
++    """Attribute names of a node's SWA value, lock count, and window count on device or host."""
++
++    layer: EvictLayer
++    value: str
++    lock_ref: str
++    cover_ref: str
++
++
++_TIERS = (
++    _Tier(EvictLayer.DEVICE, "value", "lock_ref", "cover_ref"),
++    _Tier(EvictLayer.HOST, "host_value", "host_lock_ref", "host_cover_ref"),
++)
++
++
++def _is_reclaimable(node: UnifiedTreeNode, host: bool) -> bool:
++    tier = _TIERS[host]
++    cd = node.component_data[ComponentType.SWA]
++    return (
++        getattr(cd, tier.value) is not None
++        and getattr(cd, tier.lock_ref) == 0
++        and getattr(cd, tier.cover_ref) == 0
++    )
++
++
++def _window(
++    tree_core: UnifiedTreeCore, checkpoint: UnifiedTreeNode
++) -> list[UnifiedTreeNode]:
++    """Nodes of the window ending at checkpoint, deepest first."""
++    window_tokens = tree_core.checkpoint_window_tokens
++    nodes = []
++    covered = 0
++    node = checkpoint
++    while node is not tree_core.root_node and covered < window_tokens:
++        nodes.append(node)
++        covered += len(node.key)
++        node = node.parent
++    assert covered <= window_tokens, (
++        f"window of node {checkpoint.id} does not start on a node "
++        f"boundary ({covered} > {window_tokens} tokens)"
++    )
++    return nodes
++
++
++def store_checkpoint(
++    tree_core: UnifiedTreeCore,
++    checkpoint: UnifiedTreeNode,
++    cache_actions: list[CacheAction | ComponentAction],
++) -> None:
++    """Split the node that straddles a new checkpoint's window start, then add the window to its nodes' counts."""
++    window_tokens = tree_core.checkpoint_window_tokens
++    covered = 0
++    node = checkpoint
++    while node is not tree_core.root_node and covered < window_tokens:
++        if covered + len(node.key) > window_tokens:
++            _, action = tree_core._split_node(
++                node.key, node, covered + len(node.key) - window_tokens
++            )
++            if action is not None:
++                cache_actions.append(action)
++            break
++        covered += len(node.key)
++        node = node.parent
++    acquire_window(tree_core, checkpoint, False)
++
++
++def acquire_window(
++    tree_core: UnifiedTreeCore, checkpoint: UnifiedTreeNode, host: bool
++) -> None:
++    """Add a new checkpoint's window to the count of every node it includes."""
++    tier = _TIERS[host]
++    uncovered = tree_core.swa_uncovered[host]
++    for node in _window(tree_core, checkpoint):
++        cd = node.component_data[ComponentType.SWA]
++        setattr(cd, tier.cover_ref, getattr(cd, tier.cover_ref) + 1)
++        uncovered.pop(node.id, None)
++
++
++def release_window(
++    tree_core: UnifiedTreeCore,
++    checkpoint: UnifiedTreeNode,
++    host: bool,
++    device_frees: dict[ComponentType, list[torch.Tensor]],
++    host_frees: dict[ComponentType, list[torch.Tensor]],
++    cache_actions: list[CacheAction | ComponentAction],
++    tracker: Optional[dict[ComponentType, int]],
++) -> None:
++    """Drop a checkpoint's window, freeing KV no other window covers."""
++    tier = _TIERS[host]
++    for node in _window(tree_core, checkpoint):
++        cd = node.component_data[ComponentType.SWA]
++        ref = getattr(cd, tier.cover_ref)
++        assert ref > 0, f"window release hit {tier.cover_ref}=0 on node {node.id}"
++        setattr(cd, tier.cover_ref, ref - 1)
++        if not _is_reclaimable(node, host):
++            continue
++        if host:
++            _free(
++                tree_core, node, True, device_frees, host_frees, cache_actions, tracker
++            )
++        else:
++            release_device_kv(
++                tree_core, node, device_frees, host_frees, cache_actions, tracker
++            )
++
++
++def release_device_kv(
++    tree_core: UnifiedTreeCore,
++    node: UnifiedTreeNode,
++    device_frees: dict[ComponentType, list[torch.Tensor]],
++    host_frees: dict[ComponentType, list[torch.Tensor]],
++    cache_actions: list[CacheAction | ComponentAction],
++    tracker: Optional[dict[ComponentType, int]],
++) -> None:
++    """Free a node's unlocked device SWA KV outside every window, or queue it while a host window still needs it."""
++    cd = node.component_data[ComponentType.SWA]
++    # Hack: a write-through backup stops at an in-flight ancestor, so a host window can lack this node's SWA.
++    # TODO: back up that SWA when the ancestor's ack lands, then hold the node only until then.
++    if cd.host_cover_ref > 0 and cd.host_value is None:
++        queue_if_uncovered(tree_core, node, False)
++    else:
++        _free(tree_core, node, False, device_frees, host_frees, cache_actions, tracker)
++
++
++def _free(
++    tree_core: UnifiedTreeCore,
++    node: UnifiedTreeNode,
++    host: bool,
++    device_frees: dict[ComponentType, list[torch.Tensor]],
++    host_frees: dict[ComponentType, list[torch.Tensor]],
++    cache_actions: list[CacheAction | ComponentAction],
++    tracker: Optional[dict[ComponentType, int]],
++) -> None:
++    tree_core._evict_component_and_detach_lru(
++        node,
++        tree_core.components_by_type[ComponentType.SWA],
++        device_frees,
++        host_frees,
++        cache_actions,
++        target=_TIERS[host].layer,
++        tracker=tracker,
++    )
++    tree_core._update_evictable_leaf_sets(node)
++
++
++def queue_if_uncovered(
++    tree_core: UnifiedTreeCore, node: UnifiedTreeNode, host: bool
++) -> None:
++    """Queue the node to be freed if its SWA KV on this tier is unlocked and outside every window."""
++    if _is_reclaimable(node, host):
++        tree_core.swa_uncovered[host][node.id] = node
++
++
++def dequeue(
++    tree_core: UnifiedTreeCore, node: UnifiedTreeNode, target: EvictLayer
++) -> None:
++    for host, tier in enumerate(_TIERS):
++        if tier.layer in target:
++            tree_core.swa_uncovered[host].pop(node.id, None)
++
++
++def _pop_reclaimable(
++    tree_core: UnifiedTreeCore, host: bool
++) -> Optional[UnifiedTreeNode]:
++    uncovered = tree_core.swa_uncovered[host]
++    while uncovered:
++        node_id = next(iter(uncovered))
++        node = uncovered.pop(node_id)
++        if tree_core._node_arena.get(node_id) is node and _is_reclaimable(node, host):
++            return node
++    return None
++
++
++def redistribute_on_node_split(
++    tree_core: UnifiedTreeCore,
++    new_parent: UnifiedTreeNode,
++    child: UnifiedTreeNode,
++) -> None:
++    """Copy the child's window counts and free-queue entry to the new parent of a split."""
++    parent_cd = new_parent.component_data[ComponentType.SWA]
++    child_cd = child.component_data[ComponentType.SWA]
++    for host, tier in enumerate(_TIERS):
++        setattr(parent_cd, tier.cover_ref, getattr(child_cd, tier.cover_ref))
++        queue_if_uncovered(tree_core, new_parent, bool(host))
++
++
++def evict_device_next_node(
++    tree_core: UnifiedTreeCore,
++    request_cnt: int,
++    tracker: dict[ComponentType, int],
++    device_frees: dict[ComponentType, list[torch.Tensor]],
++    host_frees: dict[ComponentType, list[torch.Tensor]],
++    cache_actions: list[CacheAction | ComponentAction],
++) -> None:
++    """Free one node's SWA KV that is outside every window. Windowed KV is freed with its checkpoint."""
++    if tracker[ComponentType.SWA] < request_cnt:
++        node = _pop_reclaimable(tree_core, False)
++        if node is not None:
++            _free(
++                tree_core, node, False, device_frees, host_frees, cache_actions, tracker
++            )
++
++
++def drive_host_eviction(
++    tree_core: UnifiedTreeCore,
++    num_tokens: int,
++    tracker: dict[ComponentType, int],
++    device_frees: dict[ComponentType, list[torch.Tensor]],
++    host_frees: dict[ComponentType, list[torch.Tensor]],
++    cache_actions: list[CacheAction | ComponentAction],
++) -> None:
++    """Free host SWA KV outside every window, then evict host checkpoints with their windows in LRU order."""
++    swa = ComponentType.SWA
++    while tracker[swa] < num_tokens:
++        node = _pop_reclaimable(tree_core, True)
++        if node is None:
++            break
++        _free(tree_core, node, True, device_frees, host_frees, cache_actions, tracker)
++    mamba = tree_core.components_by_type[ComponentType.MAMBA]
++    while tracker[swa] < num_tokens:
++        checkpoint_tracker: dict[ComponentType, int] = defaultdict(int)
++        mamba.drive_host_eviction(
++            1, checkpoint_tracker, device_frees, host_frees, cache_actions
++        )
++        if not any(checkpoint_tracker.values()):
++            break
++        for component, count in checkpoint_tracker.items():
++            tracker[component] += count
++
++
++def validate(
++    tree_core: UnifiedTreeCore,
++    reachable_nodes: set[UnifiedTreeNode],
++    report_error: Callable[[str], None],
++) -> None:
++    """Report window counts and reclaim queues that disagree with the tree."""
++    swa = ComponentType.SWA
++    nodes = [node for node in reachable_nodes if node is not tree_core.root_node]
++    for host, tier in enumerate(_TIERS):
++        expected: dict[int, int] = defaultdict(int)
++        for node in nodes:
++            if getattr(node.component_data[ComponentType.MAMBA], tier.value) is None:
++                continue
++            for covered in _window(tree_core, node):
++                expected[covered.id] += 1
++        uncovered = tree_core.swa_uncovered[host]
++        for node in nodes:
++            ref = getattr(node.component_data[swa], tier.cover_ref)
++            if ref != expected.get(node.id, 0):
++                report_error(
++                    f"{swa} node {node.id} {tier.cover_ref}={ref}, "
++                    f"expected {expected.get(node.id, 0)}"
++                )
++            if _is_reclaimable(node, bool(host)) and uncovered.get(node.id) is not node:
++                report_error(
++                    f"{swa} node {node.id} holds uncovered {tier.layer.name} "
++                    "KV unqueued"
++                )
+diff --git a/python/sglang/srt/mem_cache/unified_cache/components/mamba.py b/python/sglang/srt/mem_cache/unified_cache/components/mamba.py
+index 6b57344d..65417077 100644
+--- a/python/sglang/srt/mem_cache/unified_cache/components/mamba.py
++++ b/python/sglang/srt/mem_cache/unified_cache/components/mamba.py
+@@ -27,6 +27,7 @@ from sglang.srt.mem_cache.unified_cache.cache_action import (
+     FreeComponentHostSlot,
+     MambaEvictExcessPathStates,
+ )
++from sglang.srt.mem_cache.unified_cache.components import checkpoint_window
+ from sglang.srt.mem_cache.unified_cache.component_type import (
+     BASE_COMPONENT_TYPE,
+     ComponentType,
+@@ -384,6 +385,8 @@ class MambaComponent(TreeComponent):
+                 self.reclaimable_value_len(node)
+             )
+             self._emit_excess_path_states_eviction(node, cache_actions)
++            if self.tree_core.checkpoint_windows:
++                checkpoint_window.store_checkpoint(self.tree_core, node, cache_actions)
+             return
+         if node.component_data[self.component_type].value is None:
+             self.tree_core.set_component_device_value(
+@@ -391,6 +394,8 @@ class MambaComponent(TreeComponent):
+             )
+             node.last_access_time = get_and_increase_time_counter()
+             self._emit_excess_path_states_eviction(node, cache_actions)
++            if self.tree_core.checkpoint_windows:
++                checkpoint_window.store_checkpoint(self.tree_core, node, cache_actions)
+             return
+         self.tree_core.lru_lists[self.component_type].reset_node_mru(node)
+         node.last_access_time = get_and_increase_time_counter()
+@@ -760,6 +765,9 @@ class MambaComponent(TreeComponent):
+         if cache_len <= token_ids_len:
+             return cache_len, keep_idx
+ 
++        # The SWA retain floor keeps only the latest checkpoint's window.
++        if self.cache.swa_checkpoint_windows:
++            return None
+         # Overshoot: the latest state ran past the key. The other slot always
+         # holds a tensor; only this seqlen says whether a key can name it.
+         previous_cache_len = req.kv.mamba_prev_track_seqlen
+@@ -1152,6 +1160,8 @@ class MambaComponent(TreeComponent):
+                 cd = node.component_data[ct]
+                 if cd.host_value is None:
+                     cd.host_value = transfers[0].host_indices.clone()
++                    if self.tree_core.checkpoint_windows:
++                        checkpoint_window.acquire_window(self.tree_core, node, True)
+ 
+         elif phase == CacheTransferPhase.LOAD_BACK:
+             # Host-only: the only transfer targets the request's slot, which
+@@ -1165,8 +1175,13 @@ class MambaComponent(TreeComponent):
+                 self.tree_core.set_component_device_value(
+                     node.id, ct, transfer.device_indices.clone()
+                 )
++                if self.tree_core.checkpoint_windows:
++                    checkpoint_window.acquire_window(self.tree_core, node, False)
+ 
+         elif phase == CacheTransferPhase.PREFETCH:
++            assert not self.tree_core.checkpoint_windows, (
++                "checkpoint windows do not support storage prefetch"
++            )
+             if not transfers:
+                 return
+             transfer = transfers[0]
+diff --git a/python/sglang/srt/mem_cache/unified_cache/components/swa.py b/python/sglang/srt/mem_cache/unified_cache/components/swa.py
+index 62ccc2cc..ba5eb8b4 100644
+--- a/python/sglang/srt/mem_cache/unified_cache/components/swa.py
++++ b/python/sglang/srt/mem_cache/unified_cache/components/swa.py
+@@ -30,6 +30,7 @@ from sglang.srt.mem_cache.unified_cache.cache_action import (
+     RecoverSWAWithLockedFull,
+     SWARebuild,
+ )
++from sglang.srt.mem_cache.unified_cache.components import checkpoint_window
+ from sglang.srt.mem_cache.unified_cache.component_type import (
+     BASE_COMPONENT_TYPE,
+     ComponentType,
+@@ -135,6 +136,11 @@ class SWAComponent(TreeComponent):
+         """
+         if not self.tree_core.has_swa_host_pool:
+             return []
++        if self.tree_core.checkpoint_windows:
++            # Only a checkpoint node's window is kept, so only it gets a host copy.
++            mamba = node.component_data[ComponentType.MAMBA]
++            if mamba.value is None and mamba.host_value is None:
++                return []
+         if self.tree_core.is_host_memory_buffer_only:
+             cd = node.component_data[self.component_type]
+             return [node] if cd.value is not None else []
+@@ -259,6 +265,14 @@ class SWAComponent(TreeComponent):
+                         f"{ct} session {session_id!r} leaf {leaf.id} has no coverage record"
+                     )
+ 
++    def validate_component_state(
++        self,
++        reachable_nodes: set[UnifiedTreeNode],
++        report_error: Callable[[str], None],
++    ) -> None:
++        if self.tree_core.checkpoint_windows:
++            checkpoint_window.validate(self.tree_core, reachable_nodes, report_error)
++
+     def _translate_full_to_swa(self, full_indices: torch.Tensor) -> torch.Tensor:
+         # Tree component values use int64 indices; the storage hands them so.
+         storage, sub_pool = self.storage_and_sub_pool()
+@@ -683,6 +697,10 @@ class SWAComponent(TreeComponent):
+             child.component_data[self.component_type].metadata.get("host_uuid")
+         )
+         child.component_data[self.component_type].metadata.pop("host_uuid", None)
++        if self.tree_core.checkpoint_windows:
++            checkpoint_window.redistribute_on_node_split(
++                self.tree_core, new_parent, child
++            )
+ 
+     def evict_component(
+         self,
+@@ -693,6 +711,8 @@ class SWAComponent(TreeComponent):
+         target: EvictLayer = EvictLayer.DEVICE,
+     ) -> tuple[int, int]:
+         ct = self.component_type
++        if self.tree_core.checkpoint_windows:
++            checkpoint_window.dequeue(self.tree_core, node, target)
+         cd = node.component_data[ct]
+         freed = 0
+         host_freed = 0
+@@ -729,6 +749,31 @@ class SWAComponent(TreeComponent):
+ 
+         return freed, host_freed
+ 
++    def on_device_value_set(self, node: UnifiedTreeNode) -> None:
++        if self.tree_core.checkpoint_windows:
++            checkpoint_window.queue_if_uncovered(self.tree_core, node, False)
++
++    def on_peer_value_freed(
++        self,
++        node: UnifiedTreeNode,
++        component_type: ComponentType,
++        layer: EvictLayer,
++        device_frees: dict[ComponentType, list[torch.Tensor]],
++        host_frees: dict[ComponentType, list[torch.Tensor]],
++        cache_actions: list[CacheAction | ComponentAction],
++        tracker: Optional[dict[ComponentType, int]],
++    ) -> None:
++        if component_type == ComponentType.MAMBA and self.tree_core.checkpoint_windows:
++            checkpoint_window.release_window(
++                self.tree_core,
++                node,
++                layer == EvictLayer.HOST,
++                device_frees,
++                host_frees,
++                cache_actions,
++                tracker,
++            )
++
+     def eviction_priority(self, is_leaf: bool) -> int:
+         return 0 if is_leaf else 1
+ 
+@@ -746,6 +791,9 @@ class SWAComponent(TreeComponent):
+     def _evict_device_start(self, request_cnt: int) -> None:
+         """Begin the device-eviction walk from this component's LRU cursor."""
+         self._evict_device_request_cnt = request_cnt
++        if self.tree_core.checkpoint_windows:
++            self._evict_device_cursor = None
++            return
+         if self.tree_core.enable_session_radix_cache:
+             lru = self.tree_core.lru_lists[self.component_type]
+             lru.cursor_begin()
+@@ -770,6 +818,16 @@ class SWAComponent(TreeComponent):
+         from the partition sentinel with session refs on, else it restarts at
+         the LRU tail.
+         """
++        if self.tree_core.checkpoint_windows:
++            checkpoint_window.evict_device_next_node(
++                self.tree_core,
++                self._evict_device_request_cnt,
++                tracker,
++                device_frees,
++                host_frees,
++                cache_actions,
++            )
++            return None
+         ct = self.component_type
+         lru = self.tree_core.lru_lists[ct]
+         enabled = self.tree_core.enable_session_radix_cache
+@@ -954,6 +1012,8 @@ class SWAComponent(TreeComponent):
+                 # the evictable-leaf sets; refresh it here rather than rely
+                 # on the Full walk running after this one.
+                 self.tree_core._update_evictable_leaf_sets(cur)
++                if self.tree_core.checkpoint_windows:
++                    checkpoint_window.queue_if_uncovered(self.tree_core, cur, lock_host)
+             if swa_uuid_for_lock and comp.metadata.get(uuid_key) == swa_uuid_for_lock:
+                 dec_swa = False
+             cur = cur.parent
+@@ -991,7 +1051,17 @@ class SWAComponent(TreeComponent):
+                 value_len = self.reclaimable_value_len(cur)
+                 self.tree_core.component_protected_size_[ct] -= value_len
+                 self.tree_core.component_evictable_size_[ct] += value_len
+-                if self.tree_core._is_device_leaf(cur):
++                if self.tree_core.checkpoint_windows:
++                    if cd.cover_ref == 0:
++                        checkpoint_window.release_device_kv(
++                            self.tree_core,
++                            cur,
++                            device_frees,
++                            host_frees,
++                            cache_actions,
++                            None,
++                        )
++                elif self.tree_core._is_device_leaf(cur):
+                     self.tree_core._evict_component_and_detach_lru(
+                         cur,
+                         self,
+@@ -1348,6 +1418,8 @@ class SWAComponent(TreeComponent):
+                 assert cd.value is not None and cd.host_value is None
+                 size = len(cd.value)
+                 cd.host_value = xfer.host_indices[offset : offset + size].clone()
++                if self.tree_core.checkpoint_windows:
++                    checkpoint_window.queue_if_uncovered(self.tree_core, target, True)
+                 offset += size
+             assert offset == len(xfer.host_indices)
+             return
+@@ -1515,6 +1587,16 @@ class SWAComponent(TreeComponent):
+         """Evict SWA host resources.
+         Internal nodes: private tombstone (free SWA host only).
+         Host leaves: atomic eviction via _evict_host_leaf."""
++        if self.tree_core.checkpoint_windows:
++            checkpoint_window.drive_host_eviction(
++                self.tree_core,
++                num_tokens,
++                tracker,
++                device_frees,
++                host_frees,
++                cache_actions,
++            )
++            return
+         ct = self.component_type
+         host_lru = self.tree_core.host_lru_lists[ct]
+         enabled = self.tree_core.enable_session_radix_cache
+diff --git a/python/sglang/srt/mem_cache/unified_cache/storage_attachment.py b/python/sglang/srt/mem_cache/unified_cache/storage_attachment.py
+index c3a63ede..6cf50f2f 100644
+--- a/python/sglang/srt/mem_cache/unified_cache/storage_attachment.py
++++ b/python/sglang/srt/mem_cache/unified_cache/storage_attachment.py
+@@ -62,8 +62,11 @@ class StorageAttachment:
+         cache = self._cache
+ 
+         # Validate first: a rejected request must have no side effects.
+-        invalid = self._validate_policies(
+-            hicache_storage_prefetch_policy, hicache_write_policy
++        invalid = (
++            self._validate_policies(
++                hicache_storage_prefetch_policy, hicache_write_policy
++            )
++            or self.unsupported_reason()
+         )
+         if invalid is not None:
+             return False, invalid
+@@ -356,6 +359,12 @@ class StorageAttachment:
+             )
+         return existing_collector
+ 
++    def unsupported_reason(self) -> Optional[str]:
++        """Why this cache cannot take a storage backend, or None."""
++        if self._cache.swa_checkpoint_windows:
++            return "SWA checkpoint windows do not support a HiCache storage backend."
++        return None
++
+     # ---- Internals ----
+ 
+     @staticmethod
+diff --git a/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py b/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py
+index e3f64f2d..54eac86e 100644
+--- a/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py
++++ b/python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py
+@@ -505,6 +505,13 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+         self.is_write_back = False
+         self.has_swa_host_pool = False
+         self.enable_session_radix_cache = params.enable_session_radix_cache
++        self.checkpoint_windows = params.swa_checkpoint_windows
++        self.checkpoint_window_tokens = None
++        if params.swa_checkpoint_windows:
++            window = components[self._family_slot_ids[TREE_WINDOW]].sliding_window_size
++            self.checkpoint_window_tokens = (
++                -(-window // self.page_size) * self.page_size
++            )
+         self.eviction_strategy = get_eviction_strategy(
+             params.eviction_policy.lower(), params.eviction_policy_config
+         )
+@@ -607,6 +614,8 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+         # Full KV on both tiers -> redundant host copy, reclaimed first by
+         # write_back; insertion-ordered dict keeps victims TP-deterministic.
+         self.full_host_duplicates: dict[NodeId, UnifiedTreeNode] = {}
++        # Device and host queues of unlocked nodes whose SWA KV is outside every window, oldest first.
++        self.swa_uncovered: tuple[dict[NodeId, UnifiedTreeNode], ...] = ({}, {})
+         # Rolling digest of reclaim victim ids, cross-checked across TP ranks.
+         self.write_back_duplicate_reclaim_digest: int = 0
+ 
+@@ -2349,7 +2358,7 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+                 node,
+                 comp,
+                 target=EvictLayer.ALL,
+-                tracker=None,
++                tracker=tracker,
+                 device_frees=device_frees,
+                 host_frees=host_frees,
+                 cache_actions=cache_actions,
+@@ -2529,7 +2538,9 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+         target: EvictLayer = EvictLayer.DEVICE,
+         tracker: Optional[dict[ComponentType, int]] = None,
+     ) -> tuple[int, int]:
+-        had_host_copy = node.component_data[comp.component_type].host_value is not None
++        cd = node.component_data[comp.component_type]
++        had_device_value = cd.value is not None
++        had_host_copy = cd.host_value is not None
+         device_freed, host_freed = comp.evict_component(
+             node,
+             target=target,
+@@ -2566,6 +2577,22 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+                 lru = lru_lists[ct]
+                 if lru.in_list(node):
+                     lru.remove_node(node)
++        for layer, had_value, value in (
++            (EvictLayer.DEVICE, had_device_value, cd.value),
++            (EvictLayer.HOST, had_host_copy, cd.host_value),
++        ):
++            if had_value and value is None:
++                for peer in self.components:
++                    if peer is not comp:
++                        peer.on_peer_value_freed(
++                            node,
++                            ct,
++                            layer,
++                            device_frees,
++                            host_frees,
++                            cache_actions,
++                            tracker,
++                        )
+         return device_freed, host_freed
+ 
+     def _iteratively_delete_tombstone_leaf(
+@@ -3325,11 +3352,13 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+             self.joint_lru.stamp_swa(node)
+         # A value materialized under lock is protected; the last release
+         # moves it to evictable.
+-        ledger = self.components_by_type[component_type].reclaimable_value_len(node)
++        component = self.components_by_type[component_type]
++        ledger = component.reclaimable_value_len(node)
+         if cd.lock_ref > 0:
+             self.component_protected_size_[component_type] += ledger
+         else:
+             self.component_evictable_size_[component_type] += ledger
++        component.on_device_value_set(node)
+ 
+     def adjust_component_size(
+         self, node_id: NodeId, component_type: ComponentType, delta: int
+@@ -3500,6 +3529,8 @@ class UnifiedTreeCore(UnifiedTreeCoreInterface):
+                 f"[Leaf] {len(overlap)} in both sets: {[n.id for n in list(overlap)[:5]]}"
+             )
+ 
++        for component in self.components:
++            component.validate_component_state(all_node_set, E)
+         if self.enable_session_radix_cache:
+             for component in self.components:
+                 component.validate_session_state(all_node_set, E)
+diff --git a/python/sglang/srt/mem_cache/unified_radix_cache.py b/python/sglang/srt/mem_cache/unified_radix_cache.py
+index 72b63402..e70512ed 100644
+--- a/python/sglang/srt/mem_cache/unified_radix_cache.py
++++ b/python/sglang/srt/mem_cache/unified_radix_cache.py
+@@ -239,6 +239,23 @@ class UnifiedRadixCache(BasePrefixCache):
+         assert params.tree_slots is not None
+         self.tree_components = params.tree_components
+         self.enable_session_radix_cache = params.enable_session_radix_cache
++        self.swa_checkpoint_windows = params.swa_checkpoint_windows
++        if self.swa_checkpoint_windows:
++            components = self.tree_components
++            assert (
++                ComponentType.SWA in components
++                and ComponentType.MAMBA in components
++                and components.index(ComponentType.SWA)
++                < components.index(ComponentType.MAMBA)
++            ), "checkpoint windows need the SWA component ordered before Mamba"
++            if self.enable_session_radix_cache:
++                raise ValueError(
++                    "SWA checkpoint windows do not support the session radix cache."
++                )
++            if params.token_to_kv_pool_allocator.storage is not None:
++                raise ValueError(
++                    "SWA checkpoint windows do not support unified memory."
++                )
+         component_registry = COMPONENT_REGISTRY
+         if params.component_registry_override:
+             component_registry = {
+@@ -456,6 +473,10 @@ class UnifiedRadixCache(BasePrefixCache):
+ 
+     def init_cache_linker(self, cache_linker: UnifiedCacheLinker) -> None:
+         """Attach an external KV store directly to the device pools."""
++        if self.swa_checkpoint_windows:
++            raise ValueError(
++                "SWA checkpoint windows do not support the external cache linker."
++            )
+         if cache_linker.load_mode == "prefetch":
+             memory = get_memory()
+             self.prefetch_stop_policy = cache_linker.prefetch_policy
+@@ -522,6 +543,11 @@ class UnifiedRadixCache(BasePrefixCache):
+     def init_hicache(self, server_args: ServerArgs, params: CacheInitParams) -> None:
+         """Initialize HiCache infrastructure."""
+         self.host_memory_mode = get_memory().hicache_host_memory_mode
++        if self.host_memory_mode == "buffer_only" and self.swa_checkpoint_windows:
++            raise ValueError(
++                "SWA checkpoint windows do not support "
++                "--hicache-host-memory-mode buffer_only."
++            )
+         if self.host_memory_mode == "buffer_only":
+             supported = {ComponentType.FULL, ComponentType.MAMBA, *self.window_slots()}
+             if not set(self.tree_components) <= supported:
+@@ -547,6 +573,9 @@ class UnifiedRadixCache(BasePrefixCache):
+         prefetch_timeout_per_ki_token = 0.25
+         hicache_storage_pass_prefix_keys = False
+         if storage_backend is not None:
++            unsupported = self._storage_attachment.unsupported_reason()
++            if unsupported is not None:
++                raise ValueError(unsupported)
+             (
+                 storage_extra_config,
+                 storage_prefetch_threshold,
+@@ -851,8 +880,40 @@ class UnifiedRadixCache(BasePrefixCache):
+                         )
+                         result.add(fallback_result)
+ 
++        swa_target = available_size_targets.get(self.slot_id(TREE_WINDOW))
++        if (
++            self.swa_checkpoint_windows
++            and swa_target is not None
++            and self._component_available_size(self.slot_id(TREE_WINDOW))
++            < swa_target[1]
++        ):
++            self._evict_checkpoints_for_swa(result, swa_target)
+         return result
+ 
++    def _evict_checkpoints_for_swa(
++        self, result: EvictResult, swa_target: tuple[ComponentType, int]
++    ) -> None:
++        """Evict Mamba checkpoints with their windows until the allocation has enough free SWA slots."""
++        mamba_evictable = self.mamba_evictable_size()
++        if mamba_evictable == 0:
++            return
++        # Evicting every window would still leave too few free SWA slots, so evict nothing.
++        if (
++            self._component_available_size(self.slot_id(TREE_WINDOW))
++            + self.tree_core.component_evictable_size(self.slot_id(TREE_WINDOW))
++            < swa_target[1]
++        ):
++            return
++        checkpoint_result = self._evict(
++            EvictParams(mamba_num=mamba_evictable),
++            {self.slot_id(TREE_STATE): swa_target},
++        )
++        result.add(checkpoint_result)
++        if self.metrics_collector is not None and checkpoint_result.mamba_num_evicted:
++            self.metrics_collector.increment_swa_checkpoint_evictions(
++                checkpoint_result.mamba_num_evicted
++            )
++
+     def _evict_request_by_type(self, params: EvictParams) -> dict[ComponentType, int]:
+         """Per tree component, what ``params`` asks of it."""
+         request = {ct: 0 for ct in self.tree_components}
+diff --git a/python/sglang/srt/observability/metrics_collector.py b/python/sglang/srt/observability/metrics_collector.py
+index b879c194..ca34b5af 100644
+--- a/python/sglang/srt/observability/metrics_collector.py
++++ b/python/sglang/srt/observability/metrics_collector.py
+@@ -2548,6 +2548,13 @@ class RadixCacheMetricsCollector(_StatLoggerDIMixin):
+             labelnames=labels.keys(),
+         )
+ 
++        self.swa_checkpoint_evictions = Counter(
++            name="sglang:swa_checkpoint_evictions_total",
++            documentation="Device Mamba checkpoints evicted, with their SWA "
++            "windows, because the SWA pool ran short (checkpoint windows only).",
++            labelnames=labels.keys(),
++        )
++
+         self.load_back_duration_seconds = Histogram(
+             name="sglang:load_back_duration_seconds",
+             documentation="GPU-stream span of a merged host-to-device load-back "
+@@ -2624,6 +2631,9 @@ class RadixCacheMetricsCollector(_StatLoggerDIMixin):
+     def increment_eviction_num_tokens(self, num_tokens: int) -> None:
+         self.eviction_num_tokens.labels(**self.labels).inc(num_tokens)
+ 
++    def increment_swa_checkpoint_evictions(self, num_checkpoints: int) -> None:
++        self.swa_checkpoint_evictions.labels(**self.labels).inc(num_checkpoints)
++
+     def increment_load_back_num_tokens(self, num_tokens: int, pool: str) -> None:
+         self.load_back_num_tokens.labels(**self.labels, pool=pool).inc(num_tokens)
+ 
+diff --git a/python/sglang/test/kits/unified_radix_cache/checkpoint_window.py b/python/sglang/test/kits/unified_radix_cache/checkpoint_window.py
+new file mode 100644
+index 00000000..e3ef8535
+--- /dev/null
++++ b/python/sglang/test/kits/unified_radix_cache/checkpoint_window.py
+@@ -0,0 +1,158 @@
++"""Test steps for SWA KV kept only for the window before each cached Mamba checkpoint."""
++
++import random
++from dataclasses import replace
++
++from sglang.srt.mem_cache.base_prefix_cache import EvictParams, InitLoadBackParams
++from sglang.srt.mem_cache.unified_cache.components.base import ComponentType
++from sglang.test.kits.unified_radix_cache.fixtures import (
++    build_fixture,
++    match_prefix,
++    node_device_value,
++    node_key_length,
++    node_parent,
++)
++from sglang.test.kits.unified_radix_cache.mixins import UnifiedRadixCacheFixtures
++
++
++class SWACheckpointWindowFixtures(UnifiedRadixCacheFixtures):
++    def _build(self, write_policy=None, swa_kv_size=None):
++        cache, allocator, pool = build_fixture(
++            replace(self.cfg, swa_kv_size=swa_kv_size)
++        )
++        if write_policy is not None:
++            self._init_hicache(cache, write_policy=write_policy)
++            if write_policy == "write_through":
++                cache.write_through_threshold = 1
++        self.page = self.cfg.page_size
++        self.window = -(-self.cfg.sliding_window_size // self.page) * self.page
++        return cache, allocator, pool
++
++    def _seq(self, start, num_tokens):
++        return self._make_seq(start, num_tokens // self.page)
++
++    def _insert_seq(self, cache, allocator, pool, seq):
++        return self._insert(cache, allocator, pool, seq).last_device_node
++
++    def _path(self, cache, node_id, end):
++        """(start, end, has SWA KV, has checkpoint) of each node from the root."""
++        root, spans = cache.root_node_handle(), []
++        while node_id != root:
++            start = end - node_key_length(cache, node_id)
++            spans.append(
++                (
++                    start,
++                    end,
++                    node_device_value(cache, node_id, ComponentType.SWA) is not None,
++                    node_device_value(cache, node_id, ComponentType.MAMBA) is not None,
++                )
++            )
++            node_id, end = node_parent(cache, node_id), start
++        return spans[::-1]
++
++    def _two_overlapping_checkpoints(self, cache, allocator, pool):
++        seq_a = self._seq(1, 2 * self.window + self.page)
++        seq_b = seq_a + self._seq(1000, self.page)
++        self._insert_seq(cache, allocator, pool, seq_a)
++        return len(seq_a), len(seq_b), self._insert_seq(cache, allocator, pool, seq_b)
++
++    def _load_back(self, cache, pool, seq):
++        match = match_prefix(cache, seq)
++        req = self._make_req(pool)
++        self._apply_match_to_req(req, match)
++        loaded, last_node = cache.init_load_back(
++            InitLoadBackParams(
++                best_match_node=match.best_match_node,
++                host_hit_length=match.host_hit_length,
++                req=req,
++            )
++        )
++        if loaded:
++            self._finish_pending_loads(cache)
++        self._release_ongoing_load_back_locks(cache)
++        return match, loaded, last_node
++
++    def _make_room(self, cache, allocator, need):
++        full_short = need - allocator.full_available_size()
++        swa_short = need - allocator.swa_available_size()
++        if full_short > 0 or swa_short > 0:
++            cache.evict_for_alloc(
++                EvictParams(
++                    num_tokens=max(full_short, 0),
++                    window_num_tokens={"swa": max(swa_short, 0)},
++                )
++            )
++        return (
++            allocator.full_available_size() >= need
++            and allocator.swa_available_size() >= need
++        )
++
++    def _run_random_operations(self, write_policy, seed):
++        # A small SWA pool, so allocations alone run it out and trigger eviction.
++        cache, allocator, pool = self._build(
++            write_policy, swa_kv_size=self.cfg.kv_size // 4
++        )
++        rng = random.Random(seed)
++        seqs, locks = [], []
++        next_token, restored = 1, 0
++        for _ in range(300):
++            op = rng.random()
++            if op < 0.4 or not seqs:
++                base = rng.choice(seqs) if seqs and rng.random() < 0.7 else []
++                keep = rng.randrange(len(base) // self.page + 1) * self.page
++                extra = rng.randint(1, 3 * self.window // self.page) * self.page
++                seq = base[:keep] + list(range(next_token, next_token + extra))
++                next_token += extra
++                if self._make_room(cache, allocator, len(seq)):
++                    self._insert(cache, allocator, pool, seq)
++                    seqs.append(seq)
++            elif op < 0.55:
++                pages = rng.randint(1, 16) * self.page
++                cache.evict(
++                    rng.choice(
++                        [
++                            EvictParams(num_tokens=pages),
++                            EvictParams(num_tokens=0, window_num_tokens={"swa": pages}),
++                            EvictParams(num_tokens=0, mamba_num=1),
++                        ]
++                    )
++                )
++            elif op < 0.65:
++                component = rng.choice(
++                    [ComponentType.FULL, ComponentType.SWA, ComponentType.MAMBA]
++                )
++                cache.evict_host(
++                    1 if component == ComponentType.MAMBA else self.page, component
++                )
++            elif op < 0.75:
++                seq = rng.choice(seqs)
++                match = match_prefix(cache, seq)
++                if match.host_hit_length and self._make_room(
++                    cache, allocator, len(seq)
++                ):
++                    restored += self._load_back(cache, pool, seq)[1] > 0
++            elif op < 0.87:
++                match = match_prefix(cache, rng.choice(seqs))
++                if match.last_device_node != cache.root_node_handle():
++                    locks.append(cache.lock(match.last_device_node))
++            elif locks:
++                lock = locks.pop(rng.randrange(len(locks)))
++                if not lock.swa_released and rng.random() < 0.3:
++                    cache.release_swa(lock)
++                    locks.append(lock)
++                else:
++                    cache.unlock(lock)
++            cache.writing_check(write_back=True)
++            cache.sanity_check()
++        self.assertGreater(restored, 0)
++        for lock in locks:
++            cache.unlock(lock)
++        swa = ComponentType.SWA
++        cache.evict_for_alloc(
++            EvictParams(
++                num_tokens=0,
++                window_num_tokens={"swa": cache.tree_core.component_evictable_size(swa)},
++            )
++        )
++        self.assertEqual(cache.tree_core.component_evictable_size(swa), 0)
++        cache.sanity_check()
+diff --git a/python/sglang/test/kits/unified_radix_cache/config.py b/python/sglang/test/kits/unified_radix_cache/config.py
+index 052c4360..d124e411 100644
+--- a/python/sglang/test/kits/unified_radix_cache/config.py
++++ b/python/sglang/test/kits/unified_radix_cache/config.py
+@@ -21,6 +21,8 @@ class CacheConfig:
+     sliding_window_size: Optional[int] = None
+     draft_swa_window: int = 0
+     decoder_swa_bounded_replay: bool = False
++    swa_checkpoint_windows: bool = False
++    swa_kv_size: Optional[int] = None
+ 
+     enable_mamba_extra_buffer: bool = False
+     mamba_cache_size: int = 20
+diff --git a/python/sglang/test/kits/unified_radix_cache/core.py b/python/sglang/test/kits/unified_radix_cache/core.py
+index eb160ada..37ba37a1 100644
+--- a/python/sglang/test/kits/unified_radix_cache/core.py
++++ b/python/sglang/test/kits/unified_radix_cache/core.py
+@@ -325,7 +325,7 @@ class MambaFinishedOvershootCheckpointFixtures:
+         req.kv.mamba_prev_track_seqlen = previous_track_seqlen
+         req.kv.mamba_last_track_idx = 0
+         req.kv.mamba_next_track_idx = pool.get_mamba_ping_pong_other_idx(0)
+-        indices = allocator.alloc(len(tokens))
++        indices = UnifiedRadixCacheFixtures._alloc(self, allocator, len(tokens))
+         self.assertIsNotNone(indices)
+         pool.write((req.kv.req_pool_idx, slice(0, len(tokens))), indices)
+         return req, tokens
+diff --git a/python/sglang/test/kits/unified_radix_cache/fixtures.py b/python/sglang/test/kits/unified_radix_cache/fixtures.py
+index d5ed3f9c..3767172c 100644
+--- a/python/sglang/test/kits/unified_radix_cache/fixtures.py
++++ b/python/sglang/test/kits/unified_radix_cache/fixtures.py
+@@ -179,9 +179,10 @@ def build_fixture(
+         )
+ 
+     if cfg.has_swa:
++        swa_kv_size = cfg.kv_size if cfg.swa_kv_size is None else cfg.swa_kv_size
+         kv_pool = SWAKVPool(
+             size=cfg.kv_size,
+-            size_swa=cfg.kv_size,
++            size_swa=swa_kv_size,
+             page_size=cfg.page_size,
+             dtype=cfg.dtype,
+             head_num=cfg.head_num,
+@@ -195,7 +196,7 @@ def build_fixture(
+         with envs.SGLANG_DEBUG_MEMORY_POOL.override(True):
+             allocator = SWATokenToKVPoolAllocator(
+                 size=cfg.kv_size,
+-                size_swa=cfg.kv_size,
++                size_swa=swa_kv_size,
+                 page_size=cfg.page_size,
+                 dtype=cfg.dtype,
+                 device=device,
+@@ -257,6 +258,7 @@ def build_fixture(
+         disable=False,
+         sliding_window_size=cfg.sliding_window_size,
+         decoder_swa_bounded_replay=cfg.decoder_swa_bounded_replay,
++        swa_checkpoint_windows=cfg.swa_checkpoint_windows,
+         tree_slots=tree_slots_of(
+             cfg.components,
+             window=(
+diff --git a/rust/sglang-radix-tree/src/components/checkpoint_window.rs b/rust/sglang-radix-tree/src/components/checkpoint_window.rs
+new file mode 100644
+index 00000000..779fdbd4
+--- /dev/null
++++ b/rust/sglang-radix-tree/src/components/checkpoint_window.rs
+@@ -0,0 +1,358 @@
++//! SWA KV kept only for the window before each cached Mamba checkpoint.
++
++use std::collections::HashMap;
++
++use tch::Tensor;
++
++use crate::components::{ComponentType, MAMBA, SWA};
++use crate::node::{ChildKeyType, NodeIdx_, ValueSlotIdx};
++use crate::unified_tree_core::{CacheActions, EvictLayer, UnifiedTreeCore};
++
++fn swa_slot(host: bool) -> ValueSlotIdx {
++    if host {
++        ValueSlotIdx::host(SWA)
++    } else {
++        ValueSlotIdx::device(SWA)
++    }
++}
++
++fn is_reclaimable<K: ChildKeyType>(
++    tree_core: &UnifiedTreeCore<K>,
++    node_id: NodeIdx_,
++    host: bool,
++) -> bool {
++    let state = tree_core.arena.node(node_id).state_(swa_slot(host));
++    state.value.is_some() && state.lock_ref == 0 && state.cover_ref == 0
++}
++
++/// Nodes of the window ending at checkpoint, deepest first.
++fn window<K: ChildKeyType>(tree_core: &UnifiedTreeCore<K>, checkpoint: NodeIdx_) -> Vec<NodeIdx_> {
++    let window_tokens = tree_core
++        .checkpoint_window_tokens
++        .expect("checkpoint windows are disabled");
++    let mut nodes = Vec::new();
++    let mut covered = 0;
++    let mut cur = checkpoint;
++    while !tree_core.arena.node(cur).is_root() && covered < window_tokens {
++        nodes.push(cur);
++        covered += tree_core.arena.node(cur).key.atom_len();
++        cur = tree_core.arena.node(cur).parent();
++    }
++    assert!(
++        covered <= window_tokens,
++        "window of node {checkpoint} does not start on a node boundary \
++         ({covered} > {window_tokens} tokens)"
++    );
++    nodes
++}
++
++/// Split the node that straddles a new checkpoint's window start, then add the window to its nodes' counts.
++pub(crate) fn store_checkpoint<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    checkpoint: NodeIdx_,
++    cache_actions: &mut CacheActions,
++) {
++    let window_tokens = tree_core
++        .checkpoint_window_tokens
++        .expect("checkpoint windows are disabled");
++    let mut covered = 0;
++    let mut cur = checkpoint;
++    while !tree_core.arena.node(cur).is_root() && covered < window_tokens {
++        let len = tree_core.arena.node(cur).key.atom_len();
++        if covered + len > window_tokens {
++            let (_, action) = tree_core.split_node_(cur, covered + len - window_tokens);
++            if let Some(action) = action {
++                cache_actions.push(Box::new(action));
++            }
++            break;
++        }
++        covered += len;
++        cur = tree_core.arena.node(cur).parent();
++    }
++    acquire_window(tree_core, checkpoint, false);
++}
++
++/// Add a new checkpoint's window to the count of every node it includes.
++pub(crate) fn acquire_window<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    checkpoint: NodeIdx_,
++    host: bool,
++) {
++    for node_id in window(tree_core, checkpoint) {
++        tree_core
++            .arena
++            .node_mut(node_id)
++            .state_mut_(swa_slot(host))
++            .cover_ref += 1;
++        tree_core.component_state_mut(SWA).uncovered[usize::from(host)].discard(node_id);
++    }
++}
++
++/// Drop a checkpoint's window, freeing KV no other window covers.
++pub(crate) fn release_window<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    checkpoint: NodeIdx_,
++    host: bool,
++    device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    cache_actions: &mut CacheActions,
++    mut tracker: Option<&mut HashMap<ComponentType, usize>>,
++) {
++    for node_id in window(tree_core, checkpoint) {
++        let state = tree_core.arena.node_mut(node_id).state_mut_(swa_slot(host));
++        assert!(
++            state.cover_ref > 0,
++            "window release hit {} cover_ref=0 on node {node_id}",
++            swa_slot(host).tier()
++        );
++        state.cover_ref -= 1;
++        if !is_reclaimable(tree_core, node_id, host) {
++            continue;
++        }
++        if host {
++            free(
++                tree_core,
++                node_id,
++                true,
++                device_frees,
++                host_frees,
++                cache_actions,
++                tracker.as_deref_mut(),
++            );
++        } else {
++            release_device_kv(
++                tree_core,
++                node_id,
++                device_frees,
++                host_frees,
++                cache_actions,
++                tracker.as_deref_mut(),
++            );
++        }
++    }
++}
++
++/// Free a node's unlocked device SWA KV outside every window, or queue it while a host window still needs it.
++pub(crate) fn release_device_kv<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    node_id: NodeIdx_,
++    device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    cache_actions: &mut CacheActions,
++    tracker: Option<&mut HashMap<ComponentType, usize>>,
++) {
++    let host_state = tree_core.arena.node(node_id).state_(swa_slot(true));
++    // Hack: a write-through backup stops at an in-flight ancestor, so a host window can lack this node's SWA.
++    // TODO: back up that SWA when the ancestor's ack lands, then hold the node only until then.
++    if host_state.cover_ref > 0 && host_state.value.is_none() {
++        queue_if_uncovered(tree_core, node_id, false);
++    } else {
++        free(
++            tree_core,
++            node_id,
++            false,
++            device_frees,
++            host_frees,
++            cache_actions,
++            tracker,
++        );
++    }
++}
++
++fn free<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    node_id: NodeIdx_,
++    host: bool,
++    device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    cache_actions: &mut CacheActions,
++    tracker: Option<&mut HashMap<ComponentType, usize>>,
++) {
++    let target = if host {
++        EvictLayer::Host
++    } else {
++        EvictLayer::Device
++    };
++    tree_core.evict_component_and_detach_lru_(
++        node_id,
++        SWA,
++        device_frees,
++        host_frees,
++        cache_actions,
++        target,
++        tracker,
++    );
++    tree_core.update_evictable_leaf_sets_(node_id);
++}
++
++/// Queue the node to be freed if its SWA KV on this tier is unlocked and outside every window.
++pub(crate) fn queue_if_uncovered<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    node_id: NodeIdx_,
++    host: bool,
++) {
++    if is_reclaimable(tree_core, node_id, host) {
++        tree_core.component_state_mut(SWA).uncovered[usize::from(host)].add(node_id);
++    }
++}
++
++pub(crate) fn dequeue<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    node_id: NodeIdx_,
++    target: EvictLayer,
++) {
++    let uncovered = &mut tree_core.component_state_mut(SWA).uncovered;
++    if target.contains(EvictLayer::Device) {
++        uncovered[0].discard(node_id);
++    }
++    if target.contains(EvictLayer::Host) {
++        uncovered[1].discard(node_id);
++    }
++}
++
++fn pop_reclaimable<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    host: bool,
++) -> Option<NodeIdx_> {
++    loop {
++        let uncovered = &mut tree_core.component_state_mut(SWA).uncovered[usize::from(host)];
++        let node_id = uncovered.iter().next()?;
++        uncovered.discard(node_id);
++        if is_reclaimable(tree_core, node_id, host) {
++            return Some(node_id);
++        }
++    }
++}
++
++/// Copy the child's window counts and free-queue entry to the new parent of a split.
++pub(crate) fn redistribute_on_node_split<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    new_parent_id: NodeIdx_,
++    child_id: NodeIdx_,
++) {
++    for host in [false, true] {
++        let cover_ref = tree_core
++            .arena
++            .node(child_id)
++            .state_(swa_slot(host))
++            .cover_ref;
++        tree_core
++            .arena
++            .node_mut(new_parent_id)
++            .state_mut_(swa_slot(host))
++            .cover_ref = cover_ref;
++        queue_if_uncovered(tree_core, new_parent_id, host);
++    }
++}
++
++/// Free one node's SWA KV that is outside every window. Windowed KV is freed with its checkpoint.
++pub(crate) fn evict_device_next_node<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    tracker: &mut HashMap<ComponentType, usize>,
++    device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    cache_actions: &mut CacheActions,
++) -> Option<NodeIdx_> {
++    if tracker[&SWA] < tree_core.component_state(SWA).evict_device_request_cnt
++        && let Some(node_id) = pop_reclaimable(tree_core, false)
++    {
++        free(
++            tree_core,
++            node_id,
++            false,
++            device_frees,
++            host_frees,
++            cache_actions,
++            Some(tracker),
++        );
++    }
++    None
++}
++
++/// Free host SWA KV outside every window, then evict host checkpoints with their windows in LRU order.
++pub(crate) fn drive_host_eviction<K: ChildKeyType>(
++    tree_core: &mut UnifiedTreeCore<K>,
++    num_tokens: usize,
++    tracker: &mut HashMap<ComponentType, usize>,
++    device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++    cache_actions: &mut CacheActions,
++) {
++    while tracker[&SWA] < num_tokens {
++        let Some(node_id) = pop_reclaimable(tree_core, true) else {
++            break;
++        };
++        free(
++            tree_core,
++            node_id,
++            true,
++            device_frees,
++            host_frees,
++            cache_actions,
++            Some(tracker),
++        );
++    }
++    let mamba = tree_core.component_by_type_(MAMBA);
++    while tracker[&SWA] < num_tokens {
++        let mut checkpoint_tracker = HashMap::from([(MAMBA, 0)]);
++        mamba.drive_host_eviction(
++            tree_core,
++            1,
++            &mut checkpoint_tracker,
++            device_frees,
++            host_frees,
++            cache_actions,
++        );
++        if checkpoint_tracker.values().all(|&count| count == 0) {
++            break;
++        }
++        for (component_type, count) in checkpoint_tracker {
++            *tracker.entry(component_type).or_insert(0) += count;
++        }
++    }
++}
++
++/// Report window counts and reclaim queues that disagree with the tree.
++pub(crate) fn validate<K: ChildKeyType>(
++    tree_core: &UnifiedTreeCore<K>,
++    nodes: &[NodeIdx_],
++    errors: &mut Vec<String>,
++) {
++    let nodes: Vec<NodeIdx_> = nodes
++        .iter()
++        .copied()
++        .filter(|&node_id| !tree_core.arena.node(node_id).is_root())
++        .collect();
++    for host in [false, true] {
++        let tier = swa_slot(host).tier();
++        let mamba_slot = if host {
++            ValueSlotIdx::host(MAMBA)
++        } else {
++            ValueSlotIdx::device(MAMBA)
++        };
++        let mut expected: HashMap<NodeIdx_, u32> = HashMap::new();
++        for &node_id in &nodes {
++            if tree_core.arena.node(node_id).has_value_(mamba_slot) {
++                for covered in window(tree_core, node_id) {
++                    *expected.entry(covered).or_insert(0) += 1;
++                }
++            }
++        }
++        let uncovered = &tree_core.component_state(SWA).uncovered[usize::from(host)];
++        for &node_id in &nodes {
++            let state = tree_core.arena.node(node_id).state_(swa_slot(host));
++            let want = expected.get(&node_id).copied().unwrap_or(0);
++            if state.cover_ref != want {
++                errors.push(format!(
++                    "[CheckpointWindow] SWA node {node_id} {tier} cover_ref={}, expected {want}",
++                    state.cover_ref
++                ));
++            }
++            if is_reclaimable(tree_core, node_id, host) && !uncovered.contains(node_id) {
++                errors.push(format!(
++                    "[CheckpointWindow] SWA node {node_id} holds uncovered {tier} KV unqueued"
++                ));
++            }
++        }
++    }
++}
+diff --git a/rust/sglang-radix-tree/src/components/mamba.rs b/rust/sglang-radix-tree/src/components/mamba.rs
+index a5699125..f7c363e3 100644
+--- a/rust/sglang-radix-tree/src/components/mamba.rs
++++ b/rust/sglang-radix-tree/src/components/mamba.rs
+@@ -8,6 +8,7 @@ use tch::Tensor;
+ 
+ use crate::cache_action::{FreeComponentHostSlot, MambaEvictExcessPathStates};
+ use crate::components::TreeComponent;
++use crate::components::checkpoint_window;
+ use crate::components::{ComponentType, FULL, Family, MAMBA};
+ use crate::node::ChildKeyType;
+ use crate::node::Node;
+@@ -233,6 +234,9 @@ impl<K: ChildKeyType> TreeComponent<K> for MambaComponent {
+             let tokens = tree_core.component_reclaimable_value_len_(node_id, MAMBA);
+             tree_core.inc_evictable_size(MAMBA, tokens);
+             self.emit_excess_path_states_eviction_(tree_core.arena.node(node_id).id, cache_actions);
++            if tree_core.checkpoint_windows() {
++                checkpoint_window::store_checkpoint(tree_core, node_id, cache_actions);
++            }
+             return;
+         }
+         if !tree_core.arena.has_device_value(node_id, MAMBA) {
+@@ -240,6 +244,9 @@ impl<K: ChildKeyType> TreeComponent<K> for MambaComponent {
+             let tick = tree_core.arena.get_and_bump_access_counter();
+             tree_core.arena.node_mut(node_id).last_access_counter = tick;
+             self.emit_excess_path_states_eviction_(tree_core.arena.node(node_id).id, cache_actions);
++            if tree_core.checkpoint_windows() {
++                checkpoint_window::store_checkpoint(tree_core, node_id, cache_actions);
++            }
+             return;
+         }
+         tree_core.device_lru_list_mut(MAMBA).reset_node_mru(node_id);
+@@ -722,6 +729,9 @@ impl<K: ChildKeyType> TreeComponent<K> for MambaComponent {
+                     let node = tree_core.arena.node_mut(node_id);
+                     if !node.has_host_value(MAMBA) {
+                         node.set_host_value(MAMBA, host_indices.copy());
++                        if tree_core.checkpoint_windows() {
++                            checkpoint_window::acquire_window(tree_core, node_id, true);
++                        }
+                     }
+                 }
+             }
+@@ -738,11 +748,18 @@ impl<K: ChildKeyType> TreeComponent<K> for MambaComponent {
+                     // The materialization primitive owns the ledger/LRU moves,
+                     // including crediting protected when restored under lock.
+                     tree_core.set_component_device_value_(node_id, MAMBA, device_indices.copy());
++                    if tree_core.checkpoint_windows() {
++                        checkpoint_window::acquire_window(tree_core, node_id, false);
++                    }
+                 }
+             }
+             // The python elif chain has no BACKUP_STORAGE arm.
+             CacheTransferPhase::BackupStorage => {}
+             CacheTransferPhase::Prefetch => {
++                assert!(
++                    !tree_core.checkpoint_windows(),
++                    "checkpoint windows do not support storage prefetch"
++                );
+                 let Some(transfer) = transfers.first() else {
+                     return;
+                 };
+diff --git a/rust/sglang-radix-tree/src/components/mod.rs b/rust/sglang-radix-tree/src/components/mod.rs
+index de8daa04..49ac540f 100644
+--- a/rust/sglang-radix-tree/src/components/mod.rs
++++ b/rust/sglang-radix-tree/src/components/mod.rs
+@@ -12,6 +12,7 @@ use crate::unified_tree_core::{
+     PoolTransferResult, UnifiedTreeCore,
+ };
+ 
++pub(crate) mod checkpoint_window;
+ mod full;
+ mod mamba;
+ mod swa;
+@@ -515,6 +516,33 @@ pub trait TreeComponent<K: ChildKeyType> {
+         _cache_actions: &mut CacheActions,
+     ) {
+     }
++
++    /// Called after UnifiedTreeCore::set_component_device_value_ stores a value.
++    fn on_device_value_set(&self, _tree_core: &mut UnifiedTreeCore<K>, _node_id: NodeIdx_) {}
++
++    /// Called after the core frees another component's value on this node, on device or on host.
++    #[allow(clippy::too_many_arguments)]
++    fn on_peer_value_freed(
++        &self,
++        _tree_core: &mut UnifiedTreeCore<K>,
++        _node_id: NodeIdx_,
++        _component_type: ComponentType,
++        _host: bool,
++        _device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++        _host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++        _cache_actions: &mut CacheActions,
++        _tracker: Option<&mut HashMap<ComponentType, usize>>,
++    ) {
++    }
++
++    /// Report violations of invariants this component keeps across nodes.
++    fn validate_component_state(
++        &self,
++        _tree_core: &UnifiedTreeCore<K>,
++        _nodes: &[NodeIdx_],
++        _errors: &mut Vec<String>,
++    ) {
++    }
+ }
+ 
+ // Tree component types.
+diff --git a/rust/sglang-radix-tree/src/components/swa.rs b/rust/sglang-radix-tree/src/components/swa.rs
+index 86688b69..5c910665 100644
+--- a/rust/sglang-radix-tree/src/components/swa.rs
++++ b/rust/sglang-radix-tree/src/components/swa.rs
+@@ -12,7 +12,8 @@ use crate::cache_action::{
+     SwaRebuild,
+ };
+ use crate::components::TreeComponent;
+-use crate::components::{ComponentType, FULL, Family, SWA};
++use crate::components::checkpoint_window;
++use crate::components::{ComponentType, FULL, Family, MAMBA, SWA};
+ use crate::node::ChildKeyType;
+ use crate::node::Node;
+ use crate::node::{NodeId, NodeIdx_, TreeCoreRuntimeError, ValueSlotIdx};
+@@ -145,6 +146,13 @@ impl SwaComponent {
+         if !tree_core.has_swa_host_pool {
+             return Vec::new();
+         }
++        let node = tree_core.arena.node(node_id);
++        if tree_core.checkpoint_windows()
++            && !node.has_device_value(MAMBA)
++            && !node.has_host_value(MAMBA)
++        {
++            return Vec::new();
++        }
+         if tree_core.is_host_memory_buffer_only {
+             return if tree_core.arena.node(node_id).has_device_value(SWA) {
+                 vec![node_id]
+@@ -674,6 +682,9 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+         tree_core.arena.node_mut(new_parent_id).swa_uuid = swa_uuid;
+         let swa_host_uuid = tree_core.arena.node_mut(child_id).swa_host_uuid.take();
+         tree_core.arena.node_mut(new_parent_id).swa_host_uuid = swa_host_uuid;
++        if tree_core.checkpoint_windows() {
++            checkpoint_window::redistribute_on_node_split(tree_core, new_parent_id, child_id);
++        }
+     }
+ 
+     fn evict_component(
+@@ -686,6 +697,9 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+         target: EvictLayer,
+     ) -> (usize, usize) {
+         let ct = SWA;
++        if tree_core.checkpoint_windows() {
++            checkpoint_window::dequeue(tree_core, node_id, target);
++        }
+         let node = tree_core.arena.node(node_id);
+         let mut freed = 0;
+         let mut host_freed = 0;
+@@ -736,6 +750,9 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+ 
+     fn evict_device_start(&self, tree_core: &mut UnifiedTreeCore<K>, request_cnt: usize) {
+         tree_core.set_evict_device_start(SWA, request_cnt);
++        if tree_core.checkpoint_windows() {
++            return;
++        }
+         let cursor = tree_core
+             .device_lru_list(SWA)
+             .get_lru_no_lock(&tree_core.arena);
+@@ -766,6 +783,15 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+                 .is_none(),
+             "finish the pending internal SWA eviction before advancing"
+         );
++        if tree_core.checkpoint_windows() {
++            return checkpoint_window::evict_device_next_node(
++                tree_core,
++                tracker,
++                device_frees,
++                host_frees,
++                cache_actions,
++            );
++        }
+         let mut cursor = tree_core.component_state(SWA).evict_device_cursor;
+         // The cursor is re-validated (reset to LRU head) if the previous
+         // node's eviction removed it.
+@@ -861,6 +887,17 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+         host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
+         cache_actions: &mut CacheActions,
+     ) {
++        if tree_core.checkpoint_windows() {
++            checkpoint_window::drive_host_eviction(
++                tree_core,
++                num_tokens,
++                tracker,
++                device_frees,
++                host_frees,
++                cache_actions,
++            );
++            return;
++        }
+         let ct = SWA;
+         let mut x = tree_core
+             .host_lru_list(SWA)
+@@ -1090,6 +1127,9 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+                     if !node.has_host_value(SWA) {
+                         node.set_host_value(SWA, host_indices.copy());
+                     }
++                    if tree_core.checkpoint_windows() {
++                        checkpoint_window::queue_if_uncovered(tree_core, node_id, true);
++                    }
+                     return;
+                 };
+                 let mut offset = 0i64;
+@@ -1110,6 +1150,9 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+                         SWA,
+                         host_indices.narrow(0, offset, size).copy(),
+                     );
++                    if tree_core.checkpoint_windows() {
++                        checkpoint_window::queue_if_uncovered(tree_core, target_idx, true);
++                    }
+                     offset += size;
+                 }
+                 assert_eq!(offset, host_indices.size()[0]);
+@@ -1275,6 +1318,9 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+                 // the evictable-leaf sets; refresh it here rather than rely
+                 // on the Full walk running after this one.
+                 tree_core.update_evictable_leaf_sets_(cur);
++                if tree_core.checkpoint_windows() {
++                    checkpoint_window::queue_if_uncovered(tree_core, cur, lock_host);
++                }
+             }
+             if swa_uuid_for_lock.is_some()
+                 && Self::swa_uuid(tree_core.arena.node(cur), lock_host) == swa_uuid_for_lock
+@@ -1328,7 +1374,18 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+             if now_unlocked && has_value {
+                 tree_core.dec_protected_size(SWA, value_len);
+                 tree_core.inc_evictable_size(SWA, value_len);
+-                if tree_core.is_evictable_device_leaf_(tree_core.arena.node(cur)) {
++                if tree_core.checkpoint_windows() {
++                    if tree_core.arena.node(cur).state_(Self::DEVICE).cover_ref == 0 {
++                        checkpoint_window::release_device_kv(
++                            tree_core,
++                            cur,
++                            device_frees,
++                            host_frees,
++                            cache_actions,
++                            None,
++                        );
++                    }
++                } else if tree_core.is_evictable_device_leaf_(tree_core.arena.node(cur)) {
+                     tree_core.evict_component_and_detach_lru_(
+                         cur,
+                         ct,
+@@ -1349,6 +1406,47 @@ impl<K: ChildKeyType> TreeComponent<K> for SwaComponent {
+             cur = parent;
+         }
+     }
++
++    fn on_device_value_set(&self, tree_core: &mut UnifiedTreeCore<K>, node_id: NodeIdx_) {
++        if tree_core.checkpoint_windows() {
++            checkpoint_window::queue_if_uncovered(tree_core, node_id, false);
++        }
++    }
++
++    fn validate_component_state(
++        &self,
++        tree_core: &UnifiedTreeCore<K>,
++        nodes: &[NodeIdx_],
++        errors: &mut Vec<String>,
++    ) {
++        if tree_core.checkpoint_windows() {
++            checkpoint_window::validate(tree_core, nodes, errors);
++        }
++    }
++
++    fn on_peer_value_freed(
++        &self,
++        tree_core: &mut UnifiedTreeCore<K>,
++        node_id: NodeIdx_,
++        component_type: ComponentType,
++        host: bool,
++        device_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++        host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
++        cache_actions: &mut CacheActions,
++        tracker: Option<&mut HashMap<ComponentType, usize>>,
++    ) {
++        if component_type == MAMBA && tree_core.checkpoint_windows() {
++            checkpoint_window::release_window(
++                tree_core,
++                node_id,
++                host,
++                device_frees,
++                host_frees,
++                cache_actions,
++                tracker,
++            );
++        }
++    }
+ }
+ 
+ #[cfg(test)]
+diff --git a/rust/sglang-radix-tree/src/node.rs b/rust/sglang-radix-tree/src/node.rs
+index d27c0672..c8d28c17 100644
+--- a/rust/sglang-radix-tree/src/node.rs
++++ b/rust/sglang-radix-tree/src/node.rs
+@@ -730,6 +730,8 @@ pub struct ValueState {
+     pub value: Option<Tensor>,
+     /// In-flight request refcount; a host slot's own `lock_ref` IS the host lock.
+     pub lock_ref: u32,
++    /// Number of cached checkpoints on this tier whose window includes this node.
++    pub cover_ref: u32,
+ }
+ 
+ // Tree-core runtime errors.
+diff --git a/rust/sglang-radix-tree/src/python_bindings.rs b/rust/sglang-radix-tree/src/python_bindings.rs
+index 1ab2bb9a..07dd5117 100644
+--- a/rust/sglang-radix-tree/src/python_bindings.rs
++++ b/rust/sglang-radix-tree/src/python_bindings.rs
+@@ -403,6 +403,7 @@ pub struct TreeCoreInitParamsBinding {
+     pub device: String,
+     pub swa_sliding_window_size: Option<usize>,
+     pub swa_req_ring: bool,
++    pub swa_checkpoint_windows: bool,
+     pub enable_kv_cache_events: bool,
+     pub dynamo_kv_event_format: bool,
+     pub mamba_cache_chunk_size: Option<usize>,
+@@ -425,6 +426,7 @@ impl TreeCoreInitParamsBinding {
+             device: parse_device(&self.device)?,
+             swa_sliding_window_size: self.swa_sliding_window_size,
+             swa_req_ring: self.swa_req_ring,
++            swa_checkpoint_windows: self.swa_checkpoint_windows,
+             // Wired post-construction via set_has_swa_host_pool.
+             has_swa_host_pool: false,
+             enable_kv_cache_events: self.enable_kv_cache_events,
+@@ -439,7 +441,7 @@ impl TreeCoreInitParamsBinding {
+ #[pymethods]
+ impl TreeCoreInitParamsBinding {
+     #[new]
+-    #[pyo3(signature = (eviction_policy = "lru".to_string(), page_size = 1, is_write_back = false, enable_hicache = false, write_through_threshold = 256, device = "cpu".to_string(), swa_sliding_window_size = None, enable_kv_cache_events = false, mamba_cache_chunk_size = None, mamba_max_states_per_path = None, slru_protected_threshold = 2, swa_req_ring = false, tlru_tail_budget = 0, tlru_float_config = None, dynamo_kv_event_format = false, mamba_host_only_checkpoint = false))]
++    #[pyo3(signature = (eviction_policy = "lru".to_string(), page_size = 1, is_write_back = false, enable_hicache = false, write_through_threshold = 256, device = "cpu".to_string(), swa_sliding_window_size = None, enable_kv_cache_events = false, mamba_cache_chunk_size = None, mamba_max_states_per_path = None, slru_protected_threshold = 2, swa_req_ring = false, tlru_tail_budget = 0, tlru_float_config = None, dynamo_kv_event_format = false, mamba_host_only_checkpoint = false, swa_checkpoint_windows = false))]
+     fn new(
+         eviction_policy: String,
+         page_size: usize,
+@@ -457,6 +459,7 @@ impl TreeCoreInitParamsBinding {
+         tlru_float_config: Option<TlruFloatConfigBinding>,
+         dynamo_kv_event_format: bool,
+         mamba_host_only_checkpoint: bool,
++        swa_checkpoint_windows: bool,
+     ) -> Self {
+         TreeCoreInitParamsBinding {
+             eviction_policy,
+@@ -470,6 +473,7 @@ impl TreeCoreInitParamsBinding {
+             device,
+             swa_sliding_window_size,
+             swa_req_ring,
++            swa_checkpoint_windows,
+             enable_kv_cache_events,
+             dynamo_kv_event_format,
+             mamba_cache_chunk_size,
+diff --git a/rust/sglang-radix-tree/src/unified_tree_core.rs b/rust/sglang-radix-tree/src/unified_tree_core.rs
+index bb18c64d..01c02763 100644
+--- a/rust/sglang-radix-tree/src/unified_tree_core.rs
++++ b/rust/sglang-radix-tree/src/unified_tree_core.rs
+@@ -507,6 +507,8 @@ pub struct ComponentState {
+     pub(crate) evict_device_pending_num_tokens: usize,
+     /// Token budget for the current eviction walk.
+     pub(crate) evict_device_request_cnt: usize,
++    /// Device and host queues of unlocked nodes whose SWA KV is outside every window, oldest first.
++    pub(crate) uncovered: [NodeSet; 2],
+ }
+ 
+ /// Tree-construction parameters: the tree-consumed slice of the cache's init params.
+@@ -533,6 +535,8 @@ pub struct CacheInitParams {
+     pub swa_sliding_window_size: Option<usize>,
+     /// Whether SWA lives in a per-request ring rather than cached paged slots.
+     pub swa_req_ring: bool,
++    /// Whether SWA KV is kept only for the window before each cached Mamba checkpoint.
++    pub swa_checkpoint_windows: bool,
+     /// Whether the cache wired a host SWA pool (HiCache).
+     pub has_swa_host_pool: bool,
+     /// Whether tree mutations emit BlockStored/BlockRemoved events.
+@@ -562,6 +566,7 @@ impl Default for CacheInitParams {
+             device: Device::Cpu,
+             swa_sliding_window_size: None,
+             swa_req_ring: false,
++            swa_checkpoint_windows: false,
+             has_swa_host_pool: false,
+             enable_kv_cache_events: false,
+             dynamo_kv_event_format: false,
+@@ -639,6 +644,8 @@ pub struct UnifiedTreeCore<K: ChildKeyType> {
+     pub(crate) enable_external_cache_linker: bool,
+     /// Whether the cache wired a host SWA pool (HiCache).
+     pub(crate) has_swa_host_pool: bool,
++    /// Page-aligned SWA window per Mamba checkpoint, None when disabled.
++    pub(crate) checkpoint_window_tokens: Option<usize>,
+     /// Whether tree mutations emit BlockStored/BlockRemoved events.
+     pub(crate) enable_kv_cache_events: bool,
+     /// If true, events use the dynamo format: namespaced block hashes and extra_key.
+@@ -801,6 +808,10 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+         )
+     }
+ 
++    pub(crate) fn checkpoint_windows(&self) -> bool {
++        self.checkpoint_window_tokens.is_some()
++    }
++
+     /// The component's tree-wide bookkeeping state.
+     pub(crate) fn component_state(&self, component_type: ComponentType) -> &ComponentState {
+         &self.component_states[component_type.idx()]
+@@ -926,6 +937,11 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+         if params.page_size == 0 {
+             return Err("page_size must be at least 1".to_owned());
+         }
++        if params.swa_checkpoint_windows
++            && !(families.contains(&Family::Window) && families.contains(&Family::State))
++        {
++            return Err("checkpoint windows need the window and state slots".to_owned());
++        }
+         let eviction_policy = params.eviction_policy.to_lowercase();
+         if !matches!(
+             eviction_policy.as_str(),
+@@ -980,6 +996,16 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+     ) -> Self {
+         let component_types: Vec<_> = components.iter().map(|c| c.component_type()).collect();
+         Self::validate_components_(&component_types, params.page_size);
++        let checkpoint_window_tokens = params.swa_checkpoint_windows.then(|| {
++            assert!(
++                component_types.contains(&SWA) && component_types.contains(&MAMBA),
++                "checkpoint windows need the SWA and Mamba components"
++            );
++            let window = params
++                .swa_sliding_window_size
++                .expect("the SWA component requires swa_sliding_window_size");
++            window.div_ceil(params.page_size) * params.page_size
++        });
+         let arena = NodeArena::new(component_types.clone(), params.page_size);
+         let mut tree_core = UnifiedTreeCore {
+             arena,
+@@ -1010,6 +1036,7 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+             enable_storage: false,
+             enable_external_cache_linker: false,
+             has_swa_host_pool: params.has_swa_host_pool,
++            checkpoint_window_tokens,
+             enable_kv_cache_events: params.enable_kv_cache_events,
+             dynamo_kv_event_format: params.dynamo_kv_event_format,
+             kv_event_queue: Vec::new(),
+@@ -2719,7 +2746,7 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+     }
+ 
+     /// The component driver for `component_type`; panics if not enabled.
+-    fn component_by_type_(
++    pub(crate) fn component_by_type_(
+         &self,
+         component_type: ComponentType,
+     ) -> Arc<dyn TreeComponent<K> + Send + Sync> {
+@@ -3230,7 +3257,7 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+                 host_frees,
+                 cache_actions,
+                 EvictLayer::All,
+-                None,
++                Some(&mut *tracker),
+             );
+             *tracker.entry(component_type).or_insert(0) += host_freed;
+         }
+@@ -3455,6 +3482,9 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+         let node_handle = self.arena.node(node_id).id;
+         // Arena slots are reused, so discard tracking before freeing the node.
+         self.full_coexisting_host_nodes.discard(node_id);
++        for uncovered in &mut self.component_state_mut(SWA).uncovered {
++            uncovered.discard(node_id);
++        }
+         self.namespaced_event_hashes
+             .remove(&self.arena.node(node_id).id);
+         // The arena is the registry: freeing detaches by page key and recycles the slot.
+@@ -3475,8 +3505,9 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+         host_frees: &mut HashMap<ComponentType, Vec<Tensor>>,
+         cache_actions: &mut CacheActions,
+         target: EvictLayer,
+-        tracker: Option<&mut HashMap<ComponentType, usize>>,
++        mut tracker: Option<&mut HashMap<ComponentType, usize>>,
+     ) -> (usize, usize) {
++        let had_device_value = self.arena.has_device_value(node_id, component_type);
+         let had_host_copy = self.arena.has_host_value(node_id, component_type);
+         let component = self.component_by_type_(component_type);
+         let (device_freed, host_freed) = component.evict_component(
+@@ -3487,7 +3518,7 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+             cache_actions,
+             target,
+         );
+-        if let Some(tracker) = tracker {
++        if let Some(tracker) = tracker.as_deref_mut() {
+             let freed = if target.contains(EvictLayer::Device) {
+                 device_freed
+             } else {
+@@ -3515,6 +3546,31 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+                 lru.remove_node(node_id);
+             }
+         }
++        for (host, had_value) in [(false, had_device_value), (true, had_host_copy)] {
++            let freed = if host {
++                !self.arena.has_host_value(node_id, component_type)
++            } else {
++                !self.arena.has_device_value(node_id, component_type)
++            };
++            if !(had_value && freed) {
++                continue;
++            }
++            for i in 0..self.components.len() {
++                let peer = Arc::clone(&self.components[i]);
++                if peer.component_type() != component_type {
++                    peer.on_peer_value_freed(
++                        self,
++                        node_id,
++                        component_type,
++                        host,
++                        device_frees,
++                        host_frees,
++                        cache_actions,
++                        tracker.as_deref_mut(),
++                    );
++                }
++            }
++        }
+         (device_freed, host_freed)
+     }
+ 
+@@ -5197,6 +5253,8 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+         } else {
+             self.inc_evictable_size(component_type, tokens);
+         }
++        self.component_by_type_(component_type)
++            .on_device_value_set(self, node_id);
+     }
+ 
+     /// Logical radix-key lengths for transfer nodes, preserving caller order.
+@@ -5709,6 +5767,10 @@ impl<K: ChildKeyType> UnifiedTreeCore<K> {
+             }
+         }
+ 
++        for component in &self.components {
++            component.validate_component_state(self, &all_nodes, &mut errors);
++        }
++
+         if !errors.is_empty() {
+             return Err(format!(
+                 "Sanity check FAILED ({} violations across {} nodes):\n{}",
+diff --git a/test/registered/unit/mem_cache/test_unified_radix_allocation_eviction.py b/test/registered/unit/mem_cache/test_unified_radix_allocation_eviction.py
+index a120e0a1..7946d416 100644
+--- a/test/registered/unit/mem_cache/test_unified_radix_allocation_eviction.py
++++ b/test/registered/unit/mem_cache/test_unified_radix_allocation_eviction.py
+@@ -31,6 +31,7 @@ class TestUnifiedRadixAllocationEviction(CustomTestCase):
+         index_slots(cache, cache.tree_components)
+         cache.is_swa_enabled = False
+         cache.evicts_by_joint_lru = False
++        cache.swa_checkpoint_windows = False
+         cache.cache_controller = None
+         cache.metrics_collector = None
+         cache.tree_core = MagicMock()
+@@ -76,6 +77,7 @@ class TestUnifiedRadixAllocationEviction(CustomTestCase):
+         )
+         index_slots(cache, cache.tree_components)
+         cache.is_swa_enabled = tri_pool
++        cache.swa_checkpoint_windows = False
+         cache.cache_controller = None
+         cache.metrics_collector = None
+         cache.tree_core = MagicMock()
+@@ -175,6 +177,7 @@ class TestUnifiedRadixAllocationEviction(CustomTestCase):
+         cache.tree_components = (ComponentType.FULL, ComponentType.MAMBA)
+         index_slots(cache, cache.tree_components)
+         cache.is_swa_enabled = False
++        cache.swa_checkpoint_windows = False
+         cache.cache_controller = None
+         cache.metrics_collector = None
+         cache.tree_core = MagicMock()
+diff --git a/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_checkpoint_window.py b/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_checkpoint_window.py
+new file mode 100644
+index 00000000..fc4d6130
+--- /dev/null
++++ b/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_checkpoint_window.py
+@@ -0,0 +1,214 @@
++"""Tests for SWA KV kept only for the window before each cached Mamba checkpoint."""
++
++import unittest
++
++import torch
++
++from sglang.srt.mem_cache.base_prefix_cache import EvictParams
++from sglang.srt.mem_cache.unified_cache.components.base import ComponentType
++from sglang.test.ci.ci_register import register_amd_ci, register_cuda_ci
++from sglang.test.kits.unified_radix_cache.checkpoint_window import (
++    SWACheckpointWindowFixtures,
++)
++from sglang.test.kits.unified_radix_cache.config import CacheConfig
++from sglang.test.kits.unified_radix_cache.core import (
++    MambaFinishedOvershootCheckpointFixtures,
++)
++from sglang.test.kits.unified_radix_cache.fixtures import (
++    match_prefix,
++    node_device_value,
++    node_host_value,
++    node_key_length,
++    node_parent,
++)
++from sglang.test.mem_cache_utils import finish_req
++from sglang.test.test_utils import CustomTestCase
++
++register_cuda_ci(est_time=10, stage="base-b", runner_config="1-gpu-small")
++register_amd_ci(est_time=10, suite="stage-b-test-1-gpu-small-amd")
++
++
++class SWACheckpointWindowSuite(SWACheckpointWindowFixtures):
++    def test_overlapping_windows_share_swa_kv(self):
++        cache, allocator, pool = self._build()
++        a, b, leaf = self._two_overlapping_checkpoints(cache, allocator, pool)
++        w = self.window
++        self.assertEqual(
++            self._path(cache, leaf, b),
++            [
++                (0, a - w, True, False),
++                (a - w, b - w, True, False),
++                (b - w, a, True, True),
++                (a, b, True, True),
++            ],
++        )
++        cache.sanity_check()
++
++    def test_evicting_a_checkpoint_frees_only_its_unshared_window(self):
++        cache, allocator, pool = self._build()
++        a, b, leaf = self._two_overlapping_checkpoints(cache, allocator, pool)
++        available = allocator.swa_available_size()
++
++        result = cache.evict(EvictParams(num_tokens=0, mamba_num=1))
++
++        w = self.window
++        self.assertEqual(result.mamba_num_evicted, 1)
++        self.assertEqual(result.window_num_tokens_evicted.get("swa", 0), b - a)
++        self.assertEqual(allocator.swa_available_size(), available + (b - a))
++        self.assertEqual(
++            self._path(cache, leaf, b)[1:],
++            [
++                (a - w, b - w, False, False),
++                (b - w, a, True, False),
++                (a, b, True, True),
++            ],
++        )
++        cache.sanity_check()
++
++    def test_swa_pressure_reclaims_uncovered_kv_then_evicts_checkpoints(self):
++        cache, allocator, pool = self._build()
++        seqs = [self._seq(1000 * i, 2 * self.window + self.page) for i in range(1, 4)]
++        leaves = [self._insert_seq(cache, allocator, pool, seq) for seq in seqs]
++        uncovered = 3 * (self.window + self.page)
++        available = allocator.swa_available_size()
++
++        result = cache.evict(EvictParams(num_tokens=0, window_num_tokens={"swa": uncovered}))
++        self.assertEqual(result.window_num_tokens_evicted.get("swa", 0), uncovered)
++        self.assertEqual(allocator.swa_available_size(), available + uncovered)
++        for seq in seqs:
++            self.assertEqual(match_prefix(cache, seq).device_prefix_len, len(seq))
++
++        result = cache.evict_for_alloc(
++            EvictParams(num_tokens=0, window_num_tokens={"swa": self.page})
++        )
++        self.assertEqual(result.window_num_tokens_evicted.get("swa", 0), self.window)
++        self.assertEqual(
++            allocator.swa_available_size(), available + uncovered + self.window
++        )
++        self.assertFalse(cache.tree_core.contains_node(leaves[0]))
++        for leaf in leaves[1:]:
++            self.assertIsNotNone(node_device_value(cache, leaf, ComponentType.MAMBA))
++            self.assertIsNotNone(node_device_value(cache, leaf, ComponentType.SWA))
++        cache.sanity_check()
++
++    def test_finished_request_does_not_donate_its_previous_checkpoint(self):
++        if not self.cfg.enable_mamba_extra_buffer:
++            self.skipTest("the previous checkpoint needs the extra buffer")
++        cache, allocator, pool = self._build()
++        req, tokens = MambaFinishedOvershootCheckpointFixtures._build_req(
++            self, allocator, pool, previous_track_seqlen=8
++        )
++        req.last_node = cache.root_node_handle()
++
++        finish_req(cache, req, 11)
++
++        self.assertEqual(match_prefix(cache, tokens).device_prefix_len, 0)
++        self.assertIsNone(req.kv.mamba_pool_idx)
++        cache.sanity_check()
++
++    def test_storage_backend_attach_is_refused(self):
++        cache, _, _ = self._build("write_back")
++
++        attached, message = cache.attach_storage_backend("file")
++
++        self.assertFalse(attached)
++        self.assertIn("checkpoint windows", message)
++        self.assertIsNone(cache.cache_controller.storage_backend)
++
++    def test_host_eviction_counts_window_frees_in_ancestors(self):
++        cache, allocator, pool = self._build("write_back")
++        _, b, _ = self._two_overlapping_checkpoints(cache, allocator, pool)
++        cache.evict(EvictParams(num_tokens=b))
++        host_pool = cache.swa_kv_pool_host
++        available = host_pool.available_size()
++
++        freed = cache.evict_host(b, ComponentType.SWA)
++
++        self.assertGreater(freed, 0)
++        self.assertEqual(freed, host_pool.available_size() - available)
++        cache.sanity_check()
++
++    def test_write_through_keeps_window_kv_the_host_copy_missed(self):
++        cache, allocator, pool = self._build("write_through")
++        seq_r = self._seq(1, 2 * self.window + self.page)
++        self._insert_seq(cache, allocator, pool, seq_r)
++        # Backed up while seq_r's backup is still in flight.
++        seq_q = seq_r[: self.window] + self._seq(1000, self.page)
++        leaf = self._insert_seq(cache, allocator, pool, seq_q)
++        fragment = node_parent(cache, leaf)
++        self.assertEqual(node_key_length(cache, fragment), self.window - self.page)
++        self.assertIsNone(node_host_value(cache, fragment, ComponentType.SWA))
++        cache.writing_check(write_back=True)
++
++        cache.evict(EvictParams(num_tokens=0, mamba_num=2))
++
++        self.assertIsNone(node_device_value(cache, leaf, ComponentType.MAMBA))
++        self.assertIsNotNone(node_device_value(cache, fragment, ComponentType.SWA))
++        cache.sanity_check()
++
++    def test_write_back_restores_a_checkpoint_with_its_window(self):
++        cache, allocator, pool = self._build("write_back")
++        seq = self._seq(1, 2 * self.window + self.page)
++        leaf = self._insert_seq(cache, allocator, pool, seq)
++        kv_pool = allocator.get_kvcache()
++        layers = self.cfg.non_full_layer_ids[:2]
++        slots = node_device_value(cache, leaf, ComponentType.SWA)
++        written = []
++        for layer in layers:
++            k_buffer = kv_pool.get_key_buffer(layer)
++            written.append(torch.randn_like(k_buffer[slots], dtype=torch.float32))
++            k_buffer[slots] = written[-1].to(k_buffer.dtype)
++
++        cache.evict(EvictParams(num_tokens=len(seq)))
++        for component in (ComponentType.FULL, ComponentType.MAMBA, ComponentType.SWA):
++            self.assertIsNone(node_device_value(cache, leaf, component))
++            self.assertIsNotNone(node_host_value(cache, leaf, component))
++        parent = node_parent(cache, leaf)
++        self.assertIsNone(node_host_value(cache, parent, ComponentType.SWA))
++        for layer in layers:
++            kv_pool.get_key_buffer(layer).zero_()
++
++        match, loaded, last_node = self._load_back(cache, pool, seq)
++        self.assertEqual(last_node, leaf)
++        self.assertEqual(match.device_prefix_len + loaded, len(seq))
++        slots = node_device_value(cache, leaf, ComponentType.SWA)
++        for layer, values in zip(layers, written):
++            k_buffer = kv_pool.get_key_buffer(layer)
++            self.assertTrue(torch.equal(k_buffer[slots], values.to(k_buffer.dtype)))
++        cache.sanity_check()
++
++    def test_random_operations_keep_window_invariants(self):
++        """Random inserts, evictions, locks and load-backs on a small SWA pool."""
++        for write_policy in ("write_back", "write_through"):
++            for seed in range(3):
++                with self.subTest(write_policy=write_policy, seed=seed):
++                    self._run_random_operations(write_policy, seed)
++
++
++_SWA_CHECKPOINT_WINDOW_CFG = dict(
++    components=(ComponentType.FULL, ComponentType.SWA, ComponentType.MAMBA),
++    swa_checkpoint_windows=True,
++    kv_size=1024,
++    max_num_reqs=400,
++    mamba_cache_size=400,
++)
++
++
++@unittest.skipUnless(torch.cuda.is_available(), "cache fixtures need CUDA")
++class TestSWACheckpointWindowsPage1(SWACheckpointWindowSuite, CustomTestCase):
++    cfg = CacheConfig(page_size=1, sliding_window_size=4, **_SWA_CHECKPOINT_WINDOW_CFG)
++
++
++@unittest.skipUnless(torch.cuda.is_available(), "cache fixtures need CUDA")
++class TestSWACheckpointWindowsPage4(SWACheckpointWindowSuite, CustomTestCase):
++    # A 6-token window rounds up to two pages.
++    cfg = CacheConfig(
++        page_size=4,
++        sliding_window_size=6,
++        enable_mamba_extra_buffer=True,
++        **_SWA_CHECKPOINT_WINDOW_CFG,
++    )
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_rust.py b/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_rust.py
+index b80b9476..9c0f4bc1 100644
+--- a/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_rust.py
++++ b/test/registered/unit/mem_cache/unified_radix_cache/test_unified_radix_cache_rust.py
+@@ -2,6 +2,7 @@
+ 
+ import unittest
+ 
++import test_unified_radix_cache_checkpoint_window
+ import test_unified_radix_cache_core
+ import test_unified_radix_cache_hicache
+ import test_unified_radix_cache_insert_walk
+@@ -15,6 +16,7 @@ from sglang.test.kits.unified_radix_cache import fixtures
+ register_cuda_ci(est_time=80, stage="base-b", runner_config="1-gpu-small")
+ 
+ _SHARED_SUITES = (
++    test_unified_radix_cache_checkpoint_window,
+     test_unified_radix_cache_core,
+     test_unified_radix_cache_hicache,
+     test_unified_radix_cache_insert_walk,

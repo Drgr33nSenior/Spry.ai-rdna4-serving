@@ -1,6 +1,6 @@
 # SGLang main patch series
 
-These 27 patches make SGLang `main` serve Qwen3.8-27B MXFP4 well on gfx1201
+These 30 patches make SGLang `main` serve Qwen3.8-27B MXFP4 well on gfx1201
 (the R9700). The workstation's AI-stack pipeline applies them before it builds
 the serving image.
 
@@ -13,9 +13,14 @@ the serving image.
   pins the SGLang commit and a content hash of this series,
   `SGLANG_PATCHSET_SHA256`. It does not pin a commit of this repository.
 - Today it pins SGLang `fcb3274646e43c16d70fd83806ebb3a5134d5e81` and patchset
-  `142d0ae78fa1a4a48b7aa1e1a78baa28b2df10533b9304b178d89803279db10f`. The live
-  UQS image was built from exactly that pair on 2026-11-11, so the whole
-  series applies cleanly to `fcb32746`.
+  `142d0ae78fa1a4a48b7aa1e1a78baa28b2df10533b9304b178d89803279db10f`, which is
+  patches `0001` to `0027`. The live UQS image was built from exactly that pair
+  on 2026-11-11.
+- Patches `0028` to `0030` (13 November) are not in any image yet. With them
+  the series hash is
+  `40067ef9288c4cc26d98f1d006c1323806ffb7d0635fa078c27ff37a5868bf74`, and all
+  30 patches apply in order to `fcb32746`. `stack.lock` must move to that hash
+  before the next build, or `sync.sh` and the build stop.
 - Most patches add a kernel route behind an environment switch that is off by
   default. The workstation's
   [serving profile](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/main/infrastructure/ai-stack/serving/qwen3.8-27b-mxfp4-tp2.json)
@@ -68,17 +73,18 @@ flowchart TB
     p08["0008 DFlash<br/>ReplaySSM on GDN"]
     p17["0017 fused KV<br/>for an FP8 draft"]
     p23["0023 32 x 32 tile,<br/>would replace 0016's"]
+    p28["0028-0030 bundled<br/>DFlash draft KV"]
   end
   mx -->|"kernels reused"| gemm
   classDef off fill:#f4f4f4,stroke:#999,stroke-dasharray:5 5,color:#555
-  class p08,p17,p23 off
+  class p08,p17,p23,p28 off
 ```
 
 ## Patches
 
 "Live arms" are the profile arms that turn a patch on: Y (BF16 KV, qualified
 2026-11-10) and UQS and UQL (FP8 KV, qualified 2026-11-11). "All" means the
-patch has no switch. Each patch number links to its full notes.
+patch has no switch. "Not built" means no image contains the patch yet. Each patch number links to its full notes.
 
 | Patch | What it does | Switch | Used by live arms |
 | --- | --- | --- | --- |
@@ -109,6 +115,9 @@ patch has no switch. Each patch number links to its full notes.
 | [0025](#0025-gfx1201-prefill-custom-all-reduce) | Let prefill-chunk reductions use the PCIe custom all-reduce (needs 0014) | `SGLANG_GFX1201_PCIE_CUSTOM_AR_MAX_BYTES` above 16 MiB | Y, UQS, UQL |
 | [0026](#0026-gfx1201-fp8-kv-dequant) | Keep the KV cache in FP8 and read it as bf16 in the attention kernels | `SGLANG_GFX1201_FP8_KV_DEQUANT` with an FP8 KV cache | UQS, UQL |
 | [0027](#0027-gfx1201-fp8-kv-hw-decode) | Decode FP8 KV with gfx1201's hardware convert instruction (needs 0026) | Automatic with 0026 | UQS, UQL |
+| [0028](#0028-upstream-47057-swa-checkpoint-windows) | Upstream PR #47057: keep sliding-window KV only for the window before each cached Mamba checkpoint | `CacheInitParams.swa_checkpoint_windows`, set by 0029's flag | None (not built) |
+| [0029](#0029-upstream-47058-dflash-draft-kv-bundling) | Upstream PR #47058: size the DFlash draft KV pool by Mamba checkpoints instead of one slot per target token (needs 0028) | `--speculative-draft-kv-bundling` | None (not built) |
+| [0030](#0030-gfx1201-draft-kv-bundling) | Guards and CPU tests for 0029 on this stack (needs 0029) | With 0029's flag | None (not built) |
 
 The `sglang-0.5.21/` directory is the older overlay series for the wiped
 SGLang 0.5.21 image. It is kept as history. Port a change from it only after
@@ -248,3 +257,15 @@ With 0014's `SGLANG_GFX1201_PCIE_CUSTOM_AR=1`, setting `SGLANG_GFX1201_PCIE_CUST
 ### 0027-gfx1201-fp8-kv-hw-decode
 
 With `0026`'s switch on a `float8_e4m3fn` cache and a bf16 `q`: decode the K/V tiles with gfx1201's `v_cvt_f32_fp8` (inline asm) instead of Triton's cast, which lowers to about nine integer instructions per value. Every e4m3fn value is exact in bf16, so the f32 result's high half is the bf16 and outputs are bitwise equal to `0026`'s: all 256 codes, and verify, extend and decode outputs at every measured shape. Verify reads 16-bit pairs and packs two bf16 per `v_perm_b32`; extend and grouped decode convert one value per instruction. The asm is declared impure: pure (or Triton's cast), the layout pass moves the dot-operand shuffle above the decode to move fewer bytes, and the decode then runs on the replicated operand (6x the conversions at the B1 verify tile). Verify batches of one or two requests on an fp8 cache run a (64, 4, 64) tile under 0021's `SGLANG_GFX1201_VERIFY_ATTENTION_B1_TILE`. Measured against the bf16 cache on its own serving tile, 16 layers on separate caches, DRAM-fed: verify 0.96-1.04x (54.6 / 111 / 207 / 369 / 506 against 56.6 / 113 / 208 / 367 / 500 us per layer at 8k / 23.5k / 47k / 88k / 123k; two requests at 47k: 312 against 367 us), grouped decode 0.80x at 47k, extend 1.15-1.18x per 2048-token chunk at 8k-88k prefixes (no tile in a five-tile sweep did better). The kernels are compute-bound at these shapes (about 245 G values/s either way), so halving the bytes gives parity rather than a speedup. `SGLANG_GFX1201_FP8_KV_DECODE=to|hw|pairs` overrides the choice for measurement.
+
+### 0028-upstream-47057-swa-checkpoint-windows
+
+Upstream SGLang PR [#47057](https://github.com/sgl-project/sglang/pull/47057) (`69c84e12`, open on 13 November 2026), rebased from its base `b960aa90` (29 October) to `fcb32746`. With `CacheInitParams.swa_checkpoint_windows`, the unified radix cache keeps sliding-window KV only for the window before each cached Mamba checkpoint, and evicts each window with its checkpoint. Nothing sets the parameter except 0029's flag. Differences from the PR, all forced by the pin's newer cache code: evictions name the window sub-pool (`EvictParams.window_num_tokens`, `EvictResult.window_num_tokens_evicted` and `EvictResult.add`) instead of `swa_num_tokens`; the Rust binding keeps the pin's `mamba_host_only_checkpoint` argument beside the new one; the PR's `draft_swa_window` context line is gone because the pin removed that field. The Rust crate changes are included but no image runs them: the gfx1201 wheel builds only the `multimodal` extension and PyTorch 2.16 is outside the Rust tree core's 2.11 to 2.15 range, so SGLang uses the Python tree core. Delete this patch when the pin includes the merged PR. See the [port record](../../../docs/DFLASH-DRAFT-KV-BUNDLING-PORT-20261113.md).
+
+### 0029-upstream-47058-dflash-draft-kv-bundling
+
+Upstream SGLang PR [#47058](https://github.com/sgl-project/sglang/pull/47058) (`1846b83e`, open on 13 November 2026), rebased onto 0028. `--speculative-draft-kv-bundling` gives a Mamba target without sliding-window layers a window side for its all-sliding DFlash draft: the target allocator becomes an `SWATokenToKVPoolAllocator`, the draft keeps every layer's KV in a pool of `M*W' + max(0, C_run(R) - p*R*W', C_run(1) - p*W')` tokens, and the rest of the budget goes to the target. For the FP8 arms that is 43,008 draft tokens instead of one per target token. Differences from the PR: the pin already carries each draft write's window slots from the iteration's id plan to the layer router (`_draft_write_ids`, `KVWriteLoc.swa_loc`), so the PR's `draft_kv_write_loc` helpers, its `SWAKVPool.set_kv_buffer_prefix_valid` and its edits to `dflash_worker_v2.py` and `dspark.py` are left out; one unit-test fixture gains the allocator fields the pin's window retention reads. Delete this patch when the pin includes the merged PR. Not run on a GPU here; the [port record](../../../docs/DFLASH-DRAFT-KV-BUNDLING-PORT-20261113.md) has the audit, the pool sizes and the qualification plan.
+
+### 0030-gfx1201-draft-kv-bundling
+
+Guards and tests for 0029 on gfx1201. A bundled draft's pool is much smaller than the target's slot space, so a target slot id used as a draft index would read or write another request's rows. The Triton backend of a bundled draft now refuses to start without a sliding-window id space for its pool, and the gfx1151 verify kernel's wrapper (0012, 0021, 0026, 0027), which gathers target slot ids from `req_to_token`, returns before reading when the layer's KV lives in the window pool (its caller already excluded those layers). The flag is rejected with `--enable-hierarchical-cache`: the HiCache paths of 0028 and 0029 could not be run without a GPU. Two CPU test files cover the draft's write and read slots, the pool size of the serving arms, and random device-only cache operations that must leave every cached checkpoint its window.

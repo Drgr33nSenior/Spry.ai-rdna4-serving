@@ -57,7 +57,7 @@ and [`stack.lock`](https://github.com/Drgr33nSenior/ArchLinuxThreadripper/blob/m
 | Part | What is used |
 | --- | --- |
 | Model | Qwen3.8-27B with MXFP4 weights, plus a DFlash2 draft model for speculative decoding |
-| Server | SGLang `main` at `fcb32746` (0.5.23.post957) with this repository's 27-patch series (patchset hash `142d0ae7…`) |
+| Server | SGLang `main` at `fcb32746` (0.5.23.post957) with patches `0001` to `0027` of this repository's series (patchset hash `142d0ae7…`) |
 | Libraries | PyTorch 2.16.0a0 nightly built for ROCm 10.3.0-dev (2026-11-08), HIP 7.18 |
 | Hardware | Two R9700 cards, each capped at 235 W; tensor parallel across both (TP2) |
 | Attention cache | FP8, read back as bf16 by patches 0026 and 0027 |
