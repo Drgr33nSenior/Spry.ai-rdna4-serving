@@ -1,0 +1,1490 @@
+diff --git a/python/sglang/srt/mem_cache/elastic_kv_tail.py b/python/sglang/srt/mem_cache/elastic_kv_tail.py
+new file mode 100644
+index 0000000..725e877
+--- /dev/null
++++ b/python/sglang/srt/mem_cache/elastic_kv_tail.py
+@@ -0,0 +1,1452 @@
++# SPDX-License-Identifier: Apache-2.0
++"""Elastic KV tail for gfx1201 shared mode: a KV pool whose upper slots are backed
++with device memory only while another GPU tenant does not need it.
++
++Off unless ``SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS`` is set. With it set, the
++server is started at the *large* pool size (``--max-total-tokens``,
++``--context-length``) and this module keeps only the first ``base`` tokens of
++every target KV buffer backed:
++
++- each KV buffer is a tensor over its own HIP virtual address range, sized for
++  the whole pool; the base rows are mapped once, the tail rows are one extent
++  that is mapped (``grow``) and unmapped (``shrink``) on request;
++- the token allocator hands out base slots first and tail slots only while the
++  tail is open (``TokenToKVPoolAllocator.enable_elastic_tail``);
++- a shrink closes the tail, evicts idle prefix-cache entries that hold tail
++  slots, waits for running requests that hold them, unmaps, and acknowledges
++  only when every TP rank sees the device memory free again;
++- request limits (context length, pool size) follow the backed size, so the
++  server advertises the base context unless the tail is backed.
++
++The draft KV pool is not touched: ``--speculative-draft-kv-bundling`` keeps it
++at a fixed size and this module requires it.
++
++Everything that talks to the device goes through a ``VmmBackend``;
++``FakeVmmBackend`` stands in on a CPU so the logic is testable without a GPU.
++"""
++
++from __future__ import annotations
++
++import ctypes
++import logging
++import mmap
++import os
++import time
++from dataclasses import dataclass, field
++from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
++
++import torch
++
++logger = logging.getLogger(__name__)
++
++ENV_BASE_TOKENS = "SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS"
++ENV_BASE_CONTEXT = "SGLANG_GFX1201_ELASTIC_KV_BASE_CONTEXT"
++
++STATE_DISABLED = "disabled"
++STATE_UNBACKED = "unbacked"
++STATE_BACKED = "backed"
++STATE_DRAINING = "draining"
++STATE_RELEASING = "releasing"
++
++# A release counts as visible when the device's used memory fell by the
++# released bytes, less this slack for unrelated allocations in between.
++_RELEASE_SLACK_BYTES = 64 << 20
++_RELEASE_POLL_INTERVAL_S = 0.02
++# While a shrink waits, look for newly idle tail holders at least this often.
++_RESCAN_STEPS = 64
++
++
++# --------------------------------------------------------------------------
++# Configuration
++# --------------------------------------------------------------------------
++
++
++@dataclass(frozen=True)
++class ElasticTailConfig:
++    base_tokens: int
++    base_context: int
++
++
++def _env_int(name: str) -> Optional[int]:
++    raw = os.environ.get(name, "").strip()
++    if not raw:
++        return None
++    try:
++        value = int(raw)
++    except ValueError:
++        raise ValueError(f"{name}={raw!r} is not an integer") from None
++    return value
++
++
++def config() -> Optional[ElasticTailConfig]:
++    """The elastic tail settings, or None when the feature is off."""
++    base_tokens = _env_int(ENV_BASE_TOKENS)
++    if not base_tokens:
++        return None
++    if base_tokens < 0:
++        raise ValueError(f"{ENV_BASE_TOKENS} must be positive, got {base_tokens}")
++    base_context = _env_int(ENV_BASE_CONTEXT)
++    if not base_context or base_context < 0:
++        raise ValueError(
++            f"{ENV_BASE_TOKENS} is set, so {ENV_BASE_CONTEXT} must give the "
++            "context length to advertise while the tail is not backed"
++        )
++    return ElasticTailConfig(base_tokens=base_tokens, base_context=base_context)
++
++
++def effective_limits(
++    *,
++    base_tokens: int,
++    base_context: int,
++    max_context: int,
++    max_running_requests: int,
++    tail_tokens: int,
++) -> Tuple[int, int]:
++    """(pool tokens, context length) to serve with ``tail_tokens`` backed.
++
++    The base context is the profile's per-conversation share of the base pool;
++    a backed tail is shared the same way, up to the server's context length.
++    """
++    pool_tokens = base_tokens + tail_tokens
++    if tail_tokens <= 0:
++        return pool_tokens, min(base_context, max_context)
++    share = tail_tokens // max(1, max_running_requests)
++    return pool_tokens, min(max_context, base_context + share)
++
++
++# --------------------------------------------------------------------------
++# Device backends
++# --------------------------------------------------------------------------
++
++
++class VmmBackend:
++    """Device virtual memory as the tail needs it. Addresses are integers."""
++
++    name = "abstract"
++
++    def granularity(self) -> int:
++        raise NotImplementedError
++
++    def reserve(self, size: int) -> int:
++        """Reserve ``size`` bytes of address space; nothing is backed."""
++        raise NotImplementedError
++
++    def free_address(self, address: int, size: int) -> None:
++        raise NotImplementedError
++
++    def map(self, address: int, size: int) -> Any:
++        """Create ``size`` bytes of device memory and map them read-write at
++        ``address``. Returns the handle ``unmap`` needs. Maps nothing on error."""
++        raise NotImplementedError
++
++    def unmap(self, address: int, size: int, handle: Any) -> None:
++        """Unmap the extent and release its memory."""
++        raise NotImplementedError
++
++    def used_bytes(self) -> int:
++        """Device memory in use, as the whole device sees it."""
++        raise NotImplementedError
++
++    def free_bytes(self) -> int:
++        raise NotImplementedError
++
++    def tensor(
++        self, address: int, nbytes: int, dtype: torch.dtype, shape: Sequence[int]
++    ) -> torch.Tensor:
++        """A tensor over ``[address, address + nbytes)`` that does not own it."""
++        raise NotImplementedError
++
++    def synchronize(self) -> None:
++        return None
++
++
++class _HipMemLocation(ctypes.Structure):
++    _fields_ = [("type", ctypes.c_int), ("id", ctypes.c_int)]
++
++
++class _HipAllocFlags(ctypes.Structure):
++    _fields_ = [
++        ("compressionType", ctypes.c_ubyte),
++        ("gpuDirectRDMACapable", ctypes.c_ubyte),
++        ("usage", ctypes.c_ushort),
++    ]
++
++
++class _HipMemAllocationProp(ctypes.Structure):
++    _fields_ = [
++        ("type", ctypes.c_int),
++        ("requestedHandleTypes", ctypes.c_int),
++        ("location", _HipMemLocation),
++        ("win32HandleMetaData", ctypes.c_void_p),
++        ("allocFlags", _HipAllocFlags),
++    ]
++
++
++class _HipMemAccessDesc(ctypes.Structure):
++    _fields_ = [("location", _HipMemLocation), ("flags", ctypes.c_int)]
++
++
++_HIP_MEM_ALLOCATION_TYPE_PINNED = 0x1
++_HIP_MEM_LOCATION_TYPE_DEVICE = 1
++_HIP_MEM_ACCESS_FLAGS_PROT_READWRITE = 3
++_HIP_MEM_HANDLE_TYPE_NONE = 0x0
++_HIP_MEM_ALLOCATION_GRANULARITY_RECOMMENDED = 0x1
++
++
++class HipVmmBackend(VmmBackend):
++    """HIP virtual memory management through ``libamdhip64`` (ctypes).
++
++    Layouts and constants follow ``hip/hip_runtime_api.h`` and
++    ``hip/driver_types.h`` of ROCm 10.3 (HIP 7.18).
++    """
++
++    name = "hip"
++
++    def __init__(self, device_id: int):
++        self.device_id = int(device_id)
++        self._lib = self._load()
++        self._prop = _HipMemAllocationProp()
++        self._prop.type = _HIP_MEM_ALLOCATION_TYPE_PINNED
++        self._prop.requestedHandleTypes = _HIP_MEM_HANDLE_TYPE_NONE
++        self._prop.location.type = _HIP_MEM_LOCATION_TYPE_DEVICE
++        self._prop.location.id = self.device_id
++        self._access = _HipMemAccessDesc()
++        self._access.location.type = _HIP_MEM_LOCATION_TYPE_DEVICE
++        self._access.location.id = self.device_id
++        self._access.flags = _HIP_MEM_ACCESS_FLAGS_PROT_READWRITE
++        self._sysfs_dir = self._find_sysfs_dir()
++
++    @staticmethod
++    def _load() -> ctypes.CDLL:
++        last_error: Optional[OSError] = None
++        for name in ("libamdhip64.so", "libamdhip64.so.7"):
++            try:
++                lib = ctypes.CDLL(name)
++                break
++            except OSError as error:
++                last_error = error
++        else:
++            raise RuntimeError(
++                f"elastic KV tail: cannot load libamdhip64 ({last_error})"
++            )
++        vp, sz, ull = ctypes.c_void_p, ctypes.c_size_t, ctypes.c_ulonglong
++        signatures = {
++            "hipMemAddressReserve": [ctypes.POINTER(vp), sz, sz, vp, ull],
++            "hipMemAddressFree": [vp, sz],
++            "hipMemCreate": [
++                ctypes.POINTER(vp),
++                sz,
++                ctypes.POINTER(_HipMemAllocationProp),
++                ull,
++            ],
++            "hipMemMap": [vp, sz, sz, vp, ull],
++            "hipMemSetAccess": [vp, sz, ctypes.POINTER(_HipMemAccessDesc), sz],
++            "hipMemUnmap": [vp, sz],
++            "hipMemRelease": [vp],
++            "hipMemGetAllocationGranularity": [
++                ctypes.POINTER(sz),
++                ctypes.POINTER(_HipMemAllocationProp),
++                ctypes.c_int,
++            ],
++        }
++        for symbol, argtypes in signatures.items():
++            fn = getattr(lib, symbol)
++            fn.argtypes = argtypes
++            fn.restype = ctypes.c_int
++        return lib
++
++    def _check(self, err: int, what: str) -> None:
++        if err != 0:
++            raise RuntimeError(f"{what} failed with hipError_t {err}")
++
++    def _find_sysfs_dir(self) -> Optional[str]:
++        """The card's sysfs directory: the kernel's own VRAM counters, which
++        lag a release that HIP already reports as done."""
++        try:
++            props = torch.cuda.get_device_properties(self.device_id)
++            path = "/sys/bus/pci/devices/%04x:%02x:%02x.0" % (
++                int(props.pci_domain_id),
++                int(props.pci_bus_id),
++                int(props.pci_device_id),
++            )
++        except Exception as error:  # pragma: no cover - needs a GPU
++            logger.warning("elastic KV tail: no PCI address for the device: %s", error)
++            return None
++        if os.path.isfile(os.path.join(path, "mem_info_vram_used")):
++            return path
++        return None  # pragma: no cover - needs a GPU
++
++    def _sysfs_int(self, name: str) -> int:
++        with open(os.path.join(self._sysfs_dir, name)) as f:
++            return int(f.read().strip())
++
++    @property
++    def vram_source(self) -> str:
++        return "sysfs" if self._sysfs_dir is not None else "hipMemGetInfo"
++
++    def granularity(self) -> int:
++        value = ctypes.c_size_t(0)
++        with torch.cuda.device(self.device_id):
++            self._check(
++                self._lib.hipMemGetAllocationGranularity(
++                    ctypes.byref(value),
++                    ctypes.byref(self._prop),
++                    _HIP_MEM_ALLOCATION_GRANULARITY_RECOMMENDED,
++                ),
++                "hipMemGetAllocationGranularity",
++            )
++        return int(value.value)
++
++    def reserve(self, size: int) -> int:
++        address = ctypes.c_void_p(0)
++        with torch.cuda.device(self.device_id):
++            self._check(
++                self._lib.hipMemAddressReserve(
++                    ctypes.byref(address), size, self.granularity(), None, 0
++                ),
++                f"hipMemAddressReserve({size})",
++            )
++        return int(address.value)
++
++    def free_address(self, address: int, size: int) -> None:
++        with torch.cuda.device(self.device_id):
++            self._check(
++                self._lib.hipMemAddressFree(address, size), "hipMemAddressFree"
++            )
++
++    def map(self, address: int, size: int) -> Any:
++        handle = ctypes.c_void_p(0)
++        with torch.cuda.device(self.device_id):
++            self._check(
++                self._lib.hipMemCreate(
++                    ctypes.byref(handle), size, ctypes.byref(self._prop), 0
++                ),
++                f"hipMemCreate({size})",
++            )
++            mapped = False
++            try:
++                self._check(
++                    self._lib.hipMemMap(address, size, 0, handle, 0),
++                    f"hipMemMap({size})",
++                )
++                mapped = True
++                self._check(
++                    self._lib.hipMemSetAccess(
++                        address, size, ctypes.byref(self._access), 1
++                    ),
++                    "hipMemSetAccess",
++                )
++            except BaseException:
++                if mapped:
++                    self._lib.hipMemUnmap(address, size)
++                self._lib.hipMemRelease(handle)
++                raise
++        return handle
++
++    def unmap(self, address: int, size: int, handle: Any) -> None:
++        with torch.cuda.device(self.device_id):
++            self._check(self._lib.hipMemUnmap(address, size), "hipMemUnmap")
++            self._check(self._lib.hipMemRelease(handle), "hipMemRelease")
++
++    def used_bytes(self) -> int:
++        if self._sysfs_dir is not None:
++            return self._sysfs_int("mem_info_vram_used")
++        free, total = torch.cuda.mem_get_info(self.device_id)
++        return int(total) - int(free)
++
++    def free_bytes(self) -> int:
++        if self._sysfs_dir is not None:
++            return self._sysfs_int("mem_info_vram_total") - self._sysfs_int(
++                "mem_info_vram_used"
++            )
++        free, _ = torch.cuda.mem_get_info(self.device_id)
++        return int(free)
++
++    def tensor(self, address, nbytes, dtype, shape):
++        # Non-owning storage at a fixed device address: the mechanism
++        # cuda_vmm_utils.tensor_from_pointer uses for VMM-mapped memory.
++        device = torch.device("cuda", self.device_id)
++        storage = torch._C._construct_storage_from_data_pointer(
++            address, device, nbytes
++        )
++        return torch.empty(0, dtype=dtype, device=device).set_(
++            storage, 0, tuple(shape)
++        )
++
++    def synchronize(self) -> None:
++        torch.cuda.synchronize(self.device_id)
++
++
++class FakeVmmBackend(VmmBackend):
++    """Host memory dressed as device virtual memory, for CPU tests.
++
++    A reservation is real anonymous memory, so tensors over it work; mapping
++    is bookkeeping. Fresh maps are filled with 0xA5 and unmapped extents with
++    0xEE, so code that relies on stale or zeroed contents fails a test.
++    ``release_delay_polls`` makes released bytes stay "in use" for that many
++    ``used_bytes`` calls, as the kernel does after ``hipMemRelease``.
++    """
++
++    name = "fake"
++    vram_source = "fake"
++
++    def __init__(
++        self,
++        *,
++        total_bytes: int = 1 << 40,
++        granularity: int = 4096,
++        release_delay_polls: int = 0,
++    ):
++        self.total_bytes = int(total_bytes)
++        self._granularity = int(granularity)
++        self.release_delay_polls = int(release_delay_polls)
++        self.release_never_visible = False
++        self.fail_next_map: Optional[str] = None
++        self.other_used_bytes = 0
++        self.log: List[Tuple] = []
++        self._reservations: Dict[int, mmap.mmap] = {}
++        self._mapped: Dict[int, int] = {}
++        self._pending_release: List[List[int]] = []
++        self._next_handle = 1
++
++    def granularity(self) -> int:
++        return self._granularity
++
++    def reserve(self, size: int) -> int:
++        region = mmap.mmap(-1, size)
++        address = ctypes.addressof(ctypes.c_char.from_buffer(region))
++        self._reservations[address] = region
++        self.log.append(("reserve", address, size))
++        return address
++
++    def _region_of(self, address: int) -> Tuple[int, mmap.mmap]:
++        for base, region in self._reservations.items():
++            if base <= address < base + len(region):
++                return base, region
++        raise RuntimeError(f"address {address:#x} is in no reservation")
++
++    def free_address(self, address: int, size: int) -> None:
++        self.log.append(("free_address", address, size))
++        self._reservations.pop(address)
++
++    def _fill(self, address: int, size: int, value: int) -> None:
++        ctypes.memset(address, value, size)
++
++    def map(self, address: int, size: int) -> Any:
++        if self.fail_next_map is not None:
++            message, self.fail_next_map = self.fail_next_map, None
++            raise RuntimeError(message)
++        base, region = self._region_of(address)
++        assert address + size <= base + len(region), "map past the reservation"
++        assert address % self._granularity == 0 and size % self._granularity == 0
++        for start, length in self._mapped.items():
++            assert address + size <= start or start + length <= address, (
++                "map over a mapped extent"
++            )
++        if self.free_bytes() < size:
++            raise RuntimeError(f"fake hipMemCreate({size}): out of memory")
++        self._mapped[address] = size
++        self._fill(address, size, 0xA5)
++        handle = self._next_handle
++        self._next_handle += 1
++        self.log.append(("map", address, size))
++        return handle
++
++    def unmap(self, address: int, size: int, handle: Any) -> None:
++        assert self._mapped.get(address) == size, "unmap of an unknown extent"
++        del self._mapped[address]
++        self._fill(address, size, 0xEE)
++        self._pending_release.append([size, self.release_delay_polls])
++        self.log.append(("unmap", address, size))
++
++    def is_mapped(self, address: int, size: int) -> bool:
++        return any(
++            start <= address and address + size <= start + length
++            for start, length in self._mapped.items()
++        )
++
++    def mapped_bytes(self) -> int:
++        return sum(self._mapped.values())
++
++    def _lagging_bytes(self, *, poll: bool) -> int:
++        """Released bytes the device still counts as used. A poll ages them."""
++        if self.release_never_visible:
++            return sum(size for size, _ in self._pending_release)
++        self._pending_release = [e for e in self._pending_release if e[1] > 0]
++        lagging = sum(size for size, _ in self._pending_release)
++        if poll:
++            for entry in self._pending_release:
++                entry[1] -= 1
++        return lagging
++
++    def used_bytes(self) -> int:
++        return (
++            self.mapped_bytes() + self._lagging_bytes(poll=True) + self.other_used_bytes
++        )
++
++    def free_bytes(self) -> int:
++        return (
++            self.total_bytes
++            - self.mapped_bytes()
++            - self._lagging_bytes(poll=False)
++            - self.other_used_bytes
++        )
++
++    def tensor(self, address, nbytes, dtype, shape):
++        base, region = self._region_of(address)
++        flat = torch.frombuffer(
++            region, dtype=torch.uint8, count=nbytes, offset=address - base
++        )
++        return flat.view(dtype).view(tuple(shape))
++
++
++_backend_factory: Optional[Callable[[int], VmmBackend]] = None
++
++
++def set_backend_factory(factory: Optional[Callable[[int], VmmBackend]]) -> None:
++    """Tests: build pools on this backend instead of HIP. None restores HIP."""
++    global _backend_factory
++    _backend_factory = factory
++
++
++def _make_backend(device_id: int) -> VmmBackend:
++    if _backend_factory is not None:
++        return _backend_factory(device_id)
++    return HipVmmBackend(device_id)
++
++
++def align_up(value: int, alignment: int) -> int:
++    return (int(value) + alignment - 1) // alignment * alignment
++
++
++# --------------------------------------------------------------------------
++# Buffers
++# --------------------------------------------------------------------------
++
++
++@dataclass
++class _TailBuffer:
++    name: str
++    address: int
++    reserved_bytes: int  # address space, granularity-aligned
++    row_bytes: int
++    base_bytes: int  # always-mapped prefix, granularity-aligned
++    base_handle: Any
++    tensor: torch.Tensor
++    tail_bytes: int = 0
++    tail_handle: Any = None
++
++
++class TailBufferOwner:
++    """The KV buffers of one pool: a mapped base and one tail extent each.
++
++    ``descs`` are the pool's ``KvBufferDesc`` (one per buffer, in its k/v
++    order); ``tensors`` come back in the same order, each shaped for the whole
++    pool. A buffer's base extent covers the rows of slots ``0..base_tokens``
++    rounded up to the device granularity, so the tail extent starts on a
++    granularity boundary at or after the first tail row.
++    """
++
++    def __init__(
++        self,
++        *,
++        backend: VmmBackend,
++        descs: Sequence[Any],
++        store_dtype: torch.dtype,
++        page_size: int,
++        base_tokens: int,
++        reserved_tokens: int,
++    ):
++        if not 0 < base_tokens < reserved_tokens:
++            raise ValueError(
++                f"elastic KV tail: base {base_tokens} must be below the pool "
++                f"size {reserved_tokens}"
++            )
++        self.backend = backend
++        self.store_dtype = store_dtype
++        self.page_size = int(page_size)
++        self.base_tokens = int(base_tokens)
++        self.reserved_tokens = int(reserved_tokens)
++        self.tail_tokens = 0
++        self._descs = list(descs)
++        self._buffers: List[_TailBuffer] = []
++        gran = backend.granularity()
++        itemsize = store_dtype.itemsize
++        try:
++            for desc in self._descs:
++                span = desc.reserved_span_bytes(itemsize)
++                reserved = align_up(span, gran)
++                base = min(
++                    reserved,
++                    align_up(desc.final_span_bytes(base_tokens, page_size), gran),
++                )
++                address = backend.reserve(reserved)
++                handle = backend.map(address, base)
++                tensor = backend.tensor(address, span, store_dtype, desc.shape)
++                self._buffers.append(
++                    _TailBuffer(
++                        name=desc.name,
++                        address=address,
++                        reserved_bytes=reserved,
++                        row_bytes=desc.row_bytes,
++                        base_bytes=base,
++                        base_handle=handle,
++                        tensor=tensor,
++                    )
++                )
++            # As torch.zeros does for an ordinary pool: slot 0 absorbs padded
++            # writes and must read as zeros.
++            for buf in self._buffers:
++                self._rows(buf, 0, buf.base_bytes).zero_()
++            backend.synchronize()
++        except BaseException:
++            self.close()
++            raise
++        self.tensors = [buf.tensor for buf in self._buffers]
++
++    # -- geometry ----------------------------------------------------------
++
++    @property
++    def reserved_tail_tokens(self) -> int:
++        return self.reserved_tokens - self.base_tokens
++
++    @property
++    def base_bytes(self) -> int:
++        return sum(buf.base_bytes for buf in self._buffers)
++
++    def _tail_end(self, desc, buf: _TailBuffer, tail_tokens: int) -> int:
++        gran = self.backend.granularity()
++        end = align_up(
++            desc.final_span_bytes(self.base_tokens + tail_tokens, self.page_size),
++            gran,
++        )
++        return max(buf.base_bytes, min(buf.reserved_bytes, end))
++
++    def tail_bytes_for(self, tail_tokens: int) -> int:
++        """Device bytes a tail of ``tail_tokens`` adds across all buffers."""
++        return sum(
++            self._tail_end(desc, buf, tail_tokens) - buf.base_bytes
++            for desc, buf in zip(self._descs, self._buffers)
++        )
++
++    @property
++    def tail_bytes(self) -> int:
++        return sum(buf.tail_bytes for buf in self._buffers)
++
++    @staticmethod
++    def _rows(buf: _TailBuffer, start: int, end: int) -> torch.Tensor:
++        """The whole rows of ``buf`` inside bytes ``[start, end)``."""
++        first = -(-start // buf.row_bytes)
++        last = min(end // buf.row_bytes, buf.tensor.shape[0])
++        return buf.tensor[first:last]
++
++    # -- tail --------------------------------------------------------------
++
++    def map_tail(self, tail_tokens: int) -> int:
++        """Back the first ``tail_tokens`` tail slots of every buffer and zero
++        them. Returns the bytes mapped. On error nothing stays mapped."""
++        if self.tail_tokens:
++            raise RuntimeError("elastic KV tail: the tail is already mapped")
++        if not 0 < tail_tokens <= self.reserved_tail_tokens:
++            raise ValueError(
++                f"elastic KV tail: {tail_tokens} tail tokens outside "
++                f"(0, {self.reserved_tail_tokens}]"
++            )
++        try:
++            for desc, buf in zip(self._descs, self._buffers):
++                size = self._tail_end(desc, buf, tail_tokens) - buf.base_bytes
++                if size <= 0:
++                    continue
++                buf.tail_handle = self.backend.map(buf.address + buf.base_bytes, size)
++                buf.tail_bytes = size
++            # Touch every byte now: a lazily committed extent must fail here,
++            # where the grow can still be refused, and not under a request.
++            for buf in self._buffers:
++                if buf.tail_bytes:
++                    rows = self._rows(
++                        buf, buf.base_bytes, buf.base_bytes + buf.tail_bytes
++                    )
++                    rows.zero_()
++            self.backend.synchronize()
++            for buf in self._buffers:
++                if buf.tail_bytes:
++                    rows = self._rows(
++                        buf, buf.base_bytes, buf.base_bytes + buf.tail_bytes
++                    )
++                    for probe in (rows[:1], rows[-1:]):
++                        if probe.numel() and int(
++                            probe.reshape(-1).view(torch.uint8).max()
++                        ):
++                            raise RuntimeError(
++                                f"elastic KV tail: buffer {buf.name} read back "
++                                "non-zero after map and zero-fill"
++                            )
++        except BaseException:
++            self._unmap_tail_extents()
++            raise
++        self.tail_tokens = int(tail_tokens)
++        return self.tail_bytes
++
++    def _unmap_tail_extents(self) -> int:
++        released = 0
++        for buf in self._buffers:
++            if buf.tail_handle is None:
++                continue
++            self.backend.unmap(
++                buf.address + buf.base_bytes, buf.tail_bytes, buf.tail_handle
++            )
++            released += buf.tail_bytes
++            buf.tail_handle, buf.tail_bytes = None, 0
++        return released
++
++    def unmap_tail(self) -> int:
++        """Release the tail extent of every buffer. Returns the bytes released."""
++        self.backend.synchronize()
++        released = self._unmap_tail_extents()
++        self.tail_tokens = 0
++        return released
++
++    def base_checksum(self) -> int:
++        """A checksum of the base rows of every buffer (tests, GPU checks)."""
++        total = 0
++        for buf in self._buffers:
++            rows = self._rows(buf, 0, (self.base_tokens + 1) * buf.row_bytes)
++            total += int(rows.reshape(-1).view(torch.uint8).to(torch.int64).sum())
++        return total
++
++    def close(self) -> None:
++        buffers, self._buffers = self._buffers, []
++        self.tensors = []
++        for buf in buffers:
++            try:
++                if buf.tail_handle is not None:
++                    self.backend.unmap(
++                        buf.address + buf.base_bytes, buf.tail_bytes, buf.tail_handle
++                    )
++                self.backend.unmap(buf.address, buf.base_bytes, buf.base_handle)
++                self.backend.free_address(buf.address, buf.reserved_bytes)
++            except Exception as error:  # pragma: no cover - teardown
++                logger.warning("elastic KV tail: close failed: %s", error)
++
++
++_owners: List[TailBufferOwner] = []
++
++
++def claims_pool(pool) -> bool:
++    """Whether ``pool`` (an MHA KV pool being built) is the target's
++    full-attention pool the tail applies to: the feature is on, the pool has
++    layers, and it is larger than the base. The bundled draft pool is smaller
++    than the base, and its full-attention side has no layers."""
++    cfg = config()
++    if cfg is None or pool.layer_num <= 0 or pool.size <= cfg.base_tokens:
++        return False
++    if pool.kv_cache_layout != "nhd" or pool.is_quantized_kv_cache:
++        raise RuntimeError(
++            "elastic KV tail supports the plain NHD KV layout only, got "
++            f"layout={pool.kv_cache_layout!r}, "
++            f"quantized={pool.is_quantized_kv_cache}"
++        )
++    return True
++
++
++def allocate_pool_buffers(pool) -> TailBufferOwner:
++    """Allocate ``pool``'s K and V buffers with only the base backed."""
++    cfg = config()
++    device = torch.device(pool.device)
++    if device.type == "cuda":
++        device_id = (
++            device.index if device.index is not None else torch.cuda.current_device()
++        )
++    else:
++        device_id = 0
++    owner = TailBufferOwner(
++        backend=_make_backend(device_id),
++        descs=pool._build_kv_buffer_descs(),
++        store_dtype=pool.store_dtype,
++        page_size=pool.page_size,
++        base_tokens=cfg.base_tokens,
++        reserved_tokens=pool.size,
++    )
++    pool.k_buffer = owner.tensors[: pool.layer_num]
++    pool.v_buffer = owner.tensors[pool.layer_num :]
++    _owners.append(owner)
++    logger.info(
++        "Elastic KV tail: %d buffers, base %d tokens backed (%.2f GiB), tail up "
++        "to %d tokens (%.2f GiB) not backed, backend %s",
++        len(owner.tensors),
++        owner.base_tokens,
++        owner.base_bytes / (1 << 30),
++        owner.reserved_tail_tokens,
++        owner.tail_bytes_for(owner.reserved_tail_tokens) / (1 << 30),
++        owner.backend.name,
++    )
++    return owner
++
++
++# --------------------------------------------------------------------------
++# Prefix cache
++# --------------------------------------------------------------------------
++
++
++def evict_tail_holders(tree_cache, base_tokens: int) -> Tuple[int, int]:
++    """Evict every idle prefix-cache entry that holds a slot above
++    ``base_tokens``, with the entries below it in the tree.
++
++    An entry whose own KV sits in tail slots cannot keep its descendants: they
++    are prefixes that continue through it. Entries a running request has
++    locked are left; the caller retries once they are released.
++
++    Returns (full-attention tokens evicted, tail-holding entries left).
++    """
++    from sglang.srt.mem_cache.unified_cache.component_type import BASE_COMPONENT_TYPE
++
++    core = tree_cache.tree_core
++    if core.has_ongoing_insert():
++        return 0, -1
++    ct = BASE_COMPONENT_TYPE
++    root = core.root_node
++
++    def holds_tail(node) -> bool:
++        value = node.component_data[ct].value
++        if value is None or value.numel() == 0:
++            return False
++        return int(value.max()) > base_tokens
++
++    doomed: Dict[int, Any] = {}
++    stack = [(child, False) for child in root.children.values()]
++    while stack:
++        node, under_holder = stack.pop()
++        doomed_here = under_holder or holds_tail(node)
++        if doomed_here and node.component_data[ct].value is not None:
++            doomed[node.id] = node
++        stack.extend((child, doomed_here) for child in node.children.values())
++
++    tracker = {component: 0 for component in tree_cache.tree_components}
++    start = time.perf_counter()
++    progressed = True
++    while progressed and doomed:
++        progressed = False
++        # Node ids are assigned in creation order, the same on every rank.
++        for node_id in sorted(doomed, reverse=True):
++            node = doomed[node_id]
++            if node not in core.evictable_device_leaves:
++                continue
++            backup = tree_cache._evict_device_leaf(node.id, tracker)
++            assert backup is None, "elastic KV tail does not support write-back"
++            del doomed[node_id]
++            progressed = True
++    evicted = tracker[ct]
++    if evicted:
++        tree_cache.update_eviction_metrics(evicted, start)
++    left = sum(1 for node in doomed.values() if holds_tail(node))
++    return evicted, left
++
++
++# --------------------------------------------------------------------------
++# Control
++# --------------------------------------------------------------------------
++
++
++@dataclass
++class _Pending:
++    recv_req: Any
++    started: float
++    deadline: float
++    release_timeout_s: float
++    long_rids: set = field(default_factory=set)
++    gate_closed: bool = False
++    waited: bool = False
++    waited_long_requests: int = 0
++    waited_tail_slots: int = 0
++    evicted_tokens: int = 0
++    last_evictable: Optional[int] = None
++    steps_since_scan: int = 0
++    released_bytes: int = 0
++    used_before_release: int = 0
++    release_started: float = 0.0
++    release_deadline: float = 0.0
++    last_release_poll: float = 0.0
++    used_now: int = 0
++    ranks_identical: bool = True
++
++
++class ElasticKvTail:
++    """One rank's tail: buffers, allocator gate, prefix cache and limits.
++
++    Every TP rank owns one and receives the same control requests at the same
++    scheduler step. Each decision that depends on something a rank measures
++    for itself (device memory, a map failure, the clock) is taken from the
++    reports of all ranks, gathered with ``gather``, so the ranks move together.
++    """
++
++    def __init__(
++        self,
++        *,
++        owner: TailBufferOwner,
++        allocator,
++        tree_cache,
++        base_context: int,
++        max_context: int,
++        max_running_requests: int,
++        input_len_margin: int,
++        apply_limits: Callable[[int, int, int], None],
++        live_requests: Callable[[], Iterable[Any]],
++        gather: Callable[[Any], List[Any]],
++        send_output: Callable[[Any, Any], None],
++        make_output: Callable[..., Any],
++        scrub_stale_slots: Callable[[int], None] = lambda base_tokens: None,
++        rank: int = 0,
++        clock: Callable[[], float] = time.monotonic,
++    ):
++        self.owner = owner
++        self.allocator = allocator
++        self.tree_cache = tree_cache
++        self.base_tokens = owner.base_tokens
++        self.base_context = int(base_context)
++        self.max_context = int(max_context)
++        self.max_running_requests = int(max_running_requests)
++        self.input_len_margin = int(input_len_margin)
++        self._apply_limits = apply_limits
++        self._live_requests = live_requests
++        self._gather = gather
++        self._send_output = send_output
++        self._make_output = make_output
++        self._scrub_stale_slots = scrub_stale_slots
++        self.rank = int(rank)
++        self._clock = clock
++        self.state = STATE_UNBACKED
++        self.tail_tokens = 0
++        self._pending: Optional[_Pending] = None
++        self.last_result: Dict[str, Any] = {}
++        self._set_limits(0)
++
++    # -- limits ------------------------------------------------------------
++
++    def limits(self, tail_tokens: int) -> Tuple[int, int, int, int]:
++        """(pool tokens, context, max request length, max input length)."""
++        pool_tokens, context = effective_limits(
++            base_tokens=self.base_tokens,
++            base_context=self.base_context,
++            max_context=self.max_context,
++            max_running_requests=self.max_running_requests,
++            tail_tokens=tail_tokens,
++        )
++        max_req_len = min(context - 1, pool_tokens - 1)
++        return pool_tokens, context, max_req_len, max_req_len - self.input_len_margin
++
++    def _set_limits(self, tail_tokens: int) -> None:
++        pool_tokens, _, max_req_len, max_req_input_len = self.limits(tail_tokens)
++        self._apply_limits(pool_tokens, max_req_len, max_req_input_len)
++
++    @property
++    def context_length(self) -> int:
++        """What the server accepts now: the base while unbacked or shrinking."""
++        tail = self.tail_tokens if self.state == STATE_BACKED else 0
++        return self.limits(tail)[1]
++
++    # -- status ------------------------------------------------------------
++
++    def status(self) -> Dict[str, Any]:
++        info = {
++            "state": self.state,
++            "tail_tokens": self.tail_tokens if self.state != STATE_UNBACKED else 0,
++            "reserved_tail_tokens": self.owner.reserved_tail_tokens,
++            "base_tokens": self.base_tokens,
++            "pool_tokens": self.limits(
++                self.tail_tokens if self.state == STATE_BACKED else 0
++            )[0],
++            "context_length": self.context_length,
++            "base_context_length": self.limits(0)[1],
++            "max_context_length": self.max_context,
++            "tail_bytes": self.owner.tail_bytes,
++            "tail_slots_in_use": self.allocator.tail_outstanding,
++            "backend": self.owner.backend.name,
++        }
++        pending = self._pending
++        if pending is not None:
++            info["pending"] = {
++                "action": "shrink",
++                "elapsed_s": round(self._clock() - pending.started, 3),
++                "waiting_for_long_requests": len(self._live_long_rids(pending)),
++                "waiting_for_tail_slots": (
++                    self.allocator.tail_outstanding if pending.gate_closed else 0
++                ),
++                "waiting_for_vram_release": self.state == STATE_RELEASING,
++            }
++        return info
++
++    def _output(self, ok: bool, message: str, **extra) -> Any:
++        info = self.status()
++        info.update(extra)
++        self.last_result = info
++        return self._make_output(ok=ok, state=info["state"], message=message, info=info)
++
++    # -- requests ----------------------------------------------------------
++
++    def handle(self, recv_req) -> Optional[Any]:
++        """Dispatch one control request. None means the answer comes later,
++        through ``send_output`` from ``check_pending``."""
++        action = recv_req.action
++        if self._pending is not None:
++            return self._output(
++                False, "a shrink is in progress", action=action, reason="busy"
++            )
++        if action == "grow":
++            return self._grow(recv_req)
++        if action == "shrink":
++            return self._begin_shrink(recv_req)
++        return self._output(
++            False, f"unknown action {action!r}", action=action, reason="bad_request"
++        )
++
++    def _grow(self, recv_req) -> Any:
++        reserved = self.owner.reserved_tail_tokens
++        tokens = reserved if recv_req.tail_tokens is None else int(recv_req.tail_tokens)
++        if self.state == STATE_BACKED:
++            if tokens == self.tail_tokens:
++                return self._output(
++                    True, "the tail is already backed", action="grow", waited=False
++                )
++            return self._output(
++                False,
++                f"the tail is backed with {self.tail_tokens} tokens; shrink first",
++                action="grow",
++                reason="already_backed",
++            )
++        if not 0 < tokens <= reserved:
++            return self._output(
++                False,
++                f"tail_tokens must be in (0, {reserved}], got {tokens}",
++                action="grow",
++                reason="bad_request",
++            )
++        backend = self.owner.backend
++        need = self.owner.tail_bytes_for(tokens)
++        keep_free = max(0, int(recv_req.keep_free_mib)) << 20
++        free = backend.free_bytes()
++        frees = self._gather((self.rank, free))
++        short = [(rank, f) for rank, f in frees if f < need + keep_free]
++        if short:
++            return self._output(
++                False,
++                f"not enough free device memory for {need} bytes plus "
++                f"{keep_free} kept free: {short}",
++                action="grow",
++                reason="insufficient_vram",
++                needed_bytes=need,
++                free_bytes_by_rank={str(rank): f for rank, f in frees},
++            )
++        error = None
++        tic = self._clock()
++        try:
++            self.owner.map_tail(tokens)
++        except Exception as e:
++            error = f"rank {self.rank}: {e}"
++            logger.error("Elastic KV tail: grow failed: %s", error)
++        errors = [e for e in self._gather(error) if e is not None]
++        if errors:
++            if error is None:
++                self.owner.unmap_tail()
++            return self._output(
++                False, " | ".join(errors), action="grow", reason="map_failed"
++            )
++        self.allocator.open_tail(tokens)
++        self.tail_tokens = tokens
++        self.state = STATE_BACKED
++        self._set_limits(tokens)
++        logger.info(
++            "Elastic KV tail: grew by %d tokens (%.2f GiB) in %.3f s; pool %d, "
++            "context %d",
++            tokens,
++            need / (1 << 30),
++            self._clock() - tic,
++            self.limits(tokens)[0],
++            self.context_length,
++        )
++        return self._output(
++            True,
++            "tail backed",
++            action="grow",
++            waited=False,
++            mapped_bytes=need,
++            map_s=round(self._clock() - tic, 4),
++        )
++
++    def _begin_shrink(self, recv_req) -> Optional[Any]:
++        if self.state == STATE_UNBACKED:
++            return self._output(
++                True,
++                "the tail is not backed",
++                action="shrink",
++                waited=False,
++                vram_confirmed=True,
++                released_bytes=0,
++            )
++        now = self._clock()
++        pending = _Pending(
++            recv_req=recv_req,
++            started=now,
++            deadline=now + max(0.0, float(recv_req.timeout_s)),
++            release_timeout_s=max(0.0, float(recv_req.release_timeout_s)),
++        )
++        # New requests are held to the base from here on. A request already
++        # past the base keeps the tail until it finishes; any other is capped
++        # at the base, as it would have been without the tail.
++        self.state = STATE_DRAINING
++        self._set_limits(0)
++        _, _, base_req_len, base_input_len = self.limits(0)
++        for req in self._live_requests():
++            input_len = len(req.origin_input_ids)
++            if (
++                input_len >= base_input_len
++                or input_len + len(req.output_ids) >= base_req_len - 1
++            ):
++                pending.long_rids.add(req.rid)
++                continue
++            cap = max(0, base_req_len - input_len - 1)
++            params = req.sampling_params
++            if params.max_new_tokens is None or params.max_new_tokens > cap:
++                params.max_new_tokens = cap
++                if params.min_new_tokens > cap:
++                    params.min_new_tokens = cap
++        pending.waited_long_requests = len(pending.long_rids)
++        self._pending = pending
++        return self._step()
++
++    def check_pending(self) -> None:
++        """Advance a deferred shrink; called once per scheduler iteration."""
++        if self._pending is None:
++            return
++        pending = self._pending
++        output = self._step()
++        if output is not None:
++            self._send_output(output, pending.recv_req)
++
++    # -- shrink ------------------------------------------------------------
++
++    def _live_long_rids(self, pending: _Pending) -> set:
++        if not pending.long_rids:
++            return pending.long_rids
++        live = {req.rid for req in self._live_requests()}
++        return pending.long_rids & live
++
++    def _step(self) -> Optional[Any]:
++        pending = self._pending
++        if self.state == STATE_DRAINING:
++            output = self._drain_step(pending)
++            if output is not None or self.state != STATE_RELEASING:
++                return output
++        return self._release_step(pending)
++
++    def _drain_step(self, pending: _Pending) -> Optional[Any]:
++        if not pending.gate_closed:
++            pending.long_rids = self._live_long_rids(pending)
++            if not pending.long_rids:
++                self.allocator.close_tail()
++                pending.gate_closed = True
++                pending.waited_tail_slots = self.allocator.tail_outstanding
++        if pending.gate_closed and self.allocator.tail_outstanding:
++            # Scan the tree when its idle part changed, and now and then in
++            # case a lock moved without changing its size. Both triggers count
++            # scheduler steps, never time, so every rank scans at the same step.
++            evictable = self.tree_cache.evictable_size()
++            pending.steps_since_scan += 1
++            if (
++                evictable != pending.last_evictable
++                or pending.steps_since_scan >= _RESCAN_STEPS
++            ):
++                evicted, left = evict_tail_holders(self.tree_cache, self.base_tokens)
++                pending.evicted_tokens += evicted
++                if left >= 0:
++                    pending.last_evictable = self.tree_cache.evictable_size()
++                    pending.steps_since_scan = 0
++        drained = pending.gate_closed and self.allocator.tail_outstanding == 0
++        expired = self._clock() >= pending.deadline
++        reports = self._gather(
++            (
++                drained,
++                expired,
++                pending.evicted_tokens,
++                self.allocator.tail_outstanding,
++            )
++        )
++        identical = len({report[2:] for report in reports}) == 1 and (
++            len({report[0] for report in reports}) == 1
++        )
++        if not identical:
++            logger.error(
++                "Elastic KV tail: TP ranks disagree while draining "
++                "(drained, expired, evicted tokens, tail slots in use): %s",
++                reports,
++            )
++        if all(report[0] for report in reports):
++            return self._start_release(pending, identical)
++        if reports[0][1]:
++            return self._abort_shrink(pending, reports)
++        pending.waited = True
++        return None
++
++    def _abort_shrink(self, pending: _Pending, reports) -> Any:
++        """The drain deadline passed: give the tail back to the chat."""
++        long_requests = len(pending.long_rids)
++        in_use = self.allocator.tail_outstanding
++        self.allocator.reopen_tail()
++        self.state = STATE_BACKED
++        self._set_limits(self.tail_tokens)
++        self._pending = None
++        logger.warning(
++            "Elastic KV tail: shrink timed out after %.1f s (%d long requests, "
++            "%d tail slots in use); the tail stays backed",
++            self._clock() - pending.started,
++            long_requests,
++            in_use,
++        )
++        return self._output(
++            False,
++            "timed out waiting for requests that hold the tail; it stays backed",
++            action="shrink",
++            reason="timeout",
++            waited=True,
++            waited_s=round(self._clock() - pending.started, 3),
++            waited_for={
++                "long_requests": long_requests,
++                "tail_slots_in_use": in_use,
++            },
++            evicted_tokens=pending.evicted_tokens,
++            vram_confirmed=False,
++            released_bytes=0,
++        )
++
++    def _start_release(self, pending: _Pending, identical: bool) -> Optional[Any]:
++        backend = self.owner.backend
++        # Nothing live names a tail slot now; what still does is stale (the
++        # request table rows of finished requests) and must not be followed
++        # into unmapped memory.
++        self._scrub_stale_slots(self.base_tokens)
++        pending.used_before_release = backend.used_bytes()
++        pending.released_bytes = self.owner.unmap_tail()
++        self.allocator.drop_tail()
++        self.state = STATE_RELEASING
++        now = self._clock()
++        pending.release_started = now
++        pending.release_deadline = now + pending.release_timeout_s
++        pending.last_release_poll = float("-inf")
++        pending.ranks_identical = identical
++        return None
++
++    def _release_step(self, pending: _Pending) -> Optional[Any]:
++        now = self._clock()
++        # One device read per poll interval: the wait is the kernel's.
++        if now - pending.last_release_poll >= _RELEASE_POLL_INTERVAL_S:
++            pending.last_release_poll = now
++            pending.used_now = self.owner.backend.used_bytes()
++        slack = min(_RELEASE_SLACK_BYTES, pending.released_bytes // 8)
++        freed = pending.used_before_release - pending.used_now
++        confirmed = freed >= pending.released_bytes - slack
++        expired = now >= pending.release_deadline
++        reports = self._gather((self.rank, confirmed, expired, freed))
++        all_confirmed = all(report[1] for report in reports)
++        if not all_confirmed and not reports[0][2]:
++            pending.waited = True
++            return None
++        self.state = STATE_UNBACKED
++        self.tail_tokens = 0
++        self._pending = None
++        waited_s = round(now - pending.started, 3)
++        extra = dict(
++            action="shrink",
++            waited=pending.waited,
++            waited_s=waited_s,
++            waited_for={
++                "long_requests": pending.waited_long_requests,
++                "tail_slots_in_use": pending.waited_tail_slots,
++            },
++            evicted_tokens=pending.evicted_tokens,
++            released_bytes=pending.released_bytes,
++            vram_confirmed=all_confirmed,
++            vram_release_s=round(now - pending.release_started, 3),
++            vram_freed_bytes_by_rank={
++                str(report[0]): report[3] for report in reports
++            },
++            vram_source=getattr(self.owner.backend, "vram_source", "unknown"),
++            ranks_identical=pending.ranks_identical,
++        )
++        if not all_confirmed:
++            logger.error(
++                "Elastic KV tail: released %d bytes but the device did not "
++                "show them free within %.1f s: %s",
++                pending.released_bytes,
++                pending.release_timeout_s,
++                reports,
++            )
++            return self._output(
++                False,
++                "the tail is unmapped, but the device did not report the "
++                "memory free in time; do not start the media job yet",
++                reason="release_unconfirmed",
++                **extra,
++            )
++        logger.info(
++            "Elastic KV tail: shrank; released %.2f GiB, waited %.3f s "
++            "(%d long requests, %d tail slots in use, %d tokens evicted)",
++            pending.released_bytes / (1 << 30),
++            waited_s,
++            pending.waited_long_requests,
++            pending.waited_tail_slots,
++            pending.evicted_tokens,
++        )
++        return self._output(True, "tail released", **extra)
++
++
++def dispatch(tail: Optional[ElasticKvTail], recv_req, make_output) -> Optional[Any]:
++    """The scheduler's handler for a tail control request."""
++    action = recv_req.action
++    if tail is None:
++        info = {"state": STATE_DISABLED, "action": action}
++        if action != "status":
++            info["reason"] = "disabled"
++        return make_output(
++            ok=action == "status",
++            state=STATE_DISABLED,
++            message=f"the elastic KV tail is off ({ENV_BASE_TOKENS} is not set)",
++            info=info,
++        )
++    if action == "status":
++        info = tail.status()
++        info["action"] = action
++        return make_output(ok=True, state=info["state"], message="status", info=info)
++    return tail.handle(recv_req)
++
++
++# --------------------------------------------------------------------------
++# Scheduler wiring
++# --------------------------------------------------------------------------
++
++
++def _full_token_allocator(allocator):
++    from sglang.srt.mem_cache.allocator.swa import SWATokenToKVPoolAllocator
++    from sglang.srt.mem_cache.allocator.token import TokenToKVPoolAllocator
++
++    if type(allocator) is not SWATokenToKVPoolAllocator or allocator.page_size != 1:
++        raise RuntimeError(
++            "elastic KV tail needs the page-size-1 allocator of "
++            "--speculative-draft-kv-bundling (SWATokenToKVPoolAllocator), got "
++            f"{type(allocator).__name__} with page size {allocator.page_size}"
++        )
++    full = allocator.full_attn_allocator
++    if type(full) is not TokenToKVPoolAllocator:
++        raise RuntimeError(
++            f"elastic KV tail: unsupported token allocator {type(full).__name__}"
++        )
++    return full
++
++
++def _find_owner(pool) -> Optional[TailBufferOwner]:
++    for candidate in (pool, getattr(pool, "full_kv_pool", None)):
++        owner = getattr(candidate, "_elastic_tail_owner", None)
++        if owner is not None:
++            return owner
++    return None
++
++
++def _check_tree_cache(tree_cache) -> None:
++    from sglang.srt.mem_cache.unified_cache.unified_tree_core import UnifiedTreeCore
++    from sglang.srt.mem_cache.unified_radix_cache import UnifiedRadixCache
++
++    if not isinstance(tree_cache, UnifiedRadixCache) or tree_cache.disable:
++        raise RuntimeError("elastic KV tail needs the unified radix cache")
++    if not isinstance(tree_cache.tree_core, UnifiedTreeCore):
++        raise RuntimeError(
++            "elastic KV tail needs the Python tree core "
++            "(SGLANG_UNIFIED_RADIX_TREE_CORE_BACKEND=python)"
++        )
++    if tree_cache.cache_controller is not None:
++        raise RuntimeError("elastic KV tail does not support HiCache")
++
++
++def install(scheduler) -> Optional[ElasticKvTail]:
++    """Build the scheduler's tail, or None when the feature is off. Raises at
++    startup when the feature is on and the server cannot support it."""
++    cfg = config()
++    if cfg is None:
++        return None
++    from sglang.srt.managers.io_struct import KvTailReqOutput
++    from sglang.srt.managers.scheduler_components.request_list import ListKind
++    from sglang.srt.runtime_context import get_parallel
++
++    parallel = get_parallel()
++    if parallel.num_dp_ranks != 1 or parallel.pp_size != 1:
++        raise RuntimeError("elastic KV tail supports tensor parallelism only")
++    runner = scheduler.tp_worker.model_runner
++    owner = _find_owner(runner.token_to_kv_pool)
++    if owner is None or _owners != [owner]:
++        raise RuntimeError(
++            "elastic KV tail: expected exactly one elastic KV pool, the "
++            f"target's; found {len(_owners)} (target has one: {owner is not None}). "
++            f"The pool must be larger than {ENV_BASE_TOKENS}={cfg.base_tokens} "
++            "and the draft must use --speculative-draft-kv-bundling"
++        )
++    full_allocator = _full_token_allocator(scheduler.token_to_kv_pool_allocator)
++    _check_tree_cache(scheduler.tree_cache)
++    if full_allocator.size != owner.reserved_tokens:
++        raise RuntimeError(
++            f"elastic KV tail: allocator holds {full_allocator.size} tokens, "
++            f"the pool {owner.reserved_tokens}"
++        )
++    max_context = int(scheduler.model_config.context_len)
++    if cfg.base_context > max_context:
++        raise RuntimeError(
++            f"{ENV_BASE_CONTEXT}={cfg.base_context} exceeds --context-length "
++            f"{max_context}"
++        )
++    full_allocator.enable_elastic_tail(cfg.base_tokens)
++    tp_size = parallel.tp_size
++    tp_cpu_group = parallel.tp_group.cpu_group if tp_size > 1 else None
++
++    def gather(report):
++        if tp_cpu_group is None:
++            return [report]
++        reports = [None] * tp_size
++        torch.distributed.all_gather_object(reports, report, group=tp_cpu_group)
++        return reports
++
++    def apply_limits(pool_tokens, max_req_len, max_req_input_len):
++        scheduler.max_total_num_tokens = pool_tokens
++        scheduler.max_req_len = max_req_len
++        scheduler.max_req_input_len = max_req_input_len
++
++    def live_requests():
++        for kind, reqs in scheduler.request_lists().items():
++            # Finished, and held on the output rank only: ranks must agree.
++            if kind is not ListKind.DEFERRED:
++                yield from reqs
++
++    def scrub_stale_slots(base_tokens):
++        req_to_token = scheduler.req_to_token_pool.req_to_token
++        req_to_token.masked_fill_(req_to_token > base_tokens, 0)
++
++    tail = ElasticKvTail(
++        owner=owner,
++        allocator=full_allocator,
++        tree_cache=scheduler.tree_cache,
++        base_context=cfg.base_context,
++        max_context=max_context,
++        max_running_requests=scheduler.max_running_requests or 1,
++        input_len_margin=scheduler.max_req_len - scheduler.max_req_input_len,
++        apply_limits=apply_limits,
++        live_requests=live_requests,
++        gather=gather,
++        send_output=scheduler.send_control_output,
++        make_output=KvTailReqOutput,
++        scrub_stale_slots=scrub_stale_slots,
++        rank=parallel.tp_rank,
++    )
++    logger.info(
++        "Elastic KV tail: on. Base %d tokens and context %d; up to %d tail "
++        "tokens and context %d when grown",
++        tail.base_tokens,
++        tail.context_length,
++        owner.reserved_tail_tokens,
++        tail.limits(owner.reserved_tail_tokens)[1],
++    )
++    return tail
+diff --git a/python/sglang/srt/mem_cache/memory_pool.py b/python/sglang/srt/mem_cache/memory_pool.py
+index b0d75e2..f045c22 100644
+--- a/python/sglang/srt/mem_cache/memory_pool.py
++++ b/python/sglang/srt/mem_cache/memory_pool.py
+@@ -71,6 +71,7 @@ from sglang.srt.layers.quantization.fp4_kv_cache_quant_method import (
+     UnquantizedKVCacheMethod,
+ )
+ from sglang.srt.layers.radix_attention import RadixAttention
++from sglang.srt.mem_cache import elastic_kv_tail
+ from sglang.srt.mem_cache.allocation_sizing import get_mamba_tracking_slots
+ from sglang.srt.mem_cache.allocator.mamba import MambaSlotAllocator
+ from sglang.srt.mem_cache.index_key_cache import IndexKeyCache
+@@ -2243,6 +2244,7 @@ class MHATokenToKVPool(KVCache, MHAKVView):
+         )
+         self.post_capture_active = post_capture_active
+         self._post_capture_owner = None
++        self._elastic_tail_owner = None
+         self.head_num = swa_head_num if swa_head_num is not None else head_num
+         self.head_dim = swa_head_dim if swa_head_dim is not None else head_dim
+         self.v_head_dim = (
+@@ -2459,6 +2461,11 @@ class MHATokenToKVPool(KVCache, MHAKVView):
+             self.dq_v_buffer = None
+             if self.post_capture_active:
+                 self._alloc_post_capture_buffers()
++            elif elastic_kv_tail.claims_pool(self):
++                # SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS: only the base is backed.
++                self._elastic_tail_owner = elastic_kv_tail.allocate_pool_buffers(
++                    self
++                )
+             else:
+                 self._create_buffers_normal()
+         self._kv_buffer_descs = self._build_kv_buffer_descs()

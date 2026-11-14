@@ -1,0 +1,1672 @@
+diff --git a/python/sglang/srt/entrypoints/http_server.py b/python/sglang/srt/entrypoints/http_server.py
+index 17d2c0d..c12cf83 100644
+--- a/python/sglang/srt/entrypoints/http_server.py
++++ b/python/sglang/srt/entrypoints/http_server.py
+@@ -158,6 +158,7 @@ from sglang.srt.managers.io_struct import (
+     PauseGenerationReqInput,
+     PdRoleSwitchReqInput,
+     PluginWeightUpdateReqInput,
++    KvTailReqInput,
+     ProfileReq,
+     ReleaseMemoryOccupationReqInput,
+     ResumeMemoryOccupationReqInput,
+@@ -1602,6 +1603,68 @@ async def release_memory_occupation(
+         return _create_error_response(e)
+ 
+ 
++@app.api_route("/kv_tail", methods=["GET", "POST"])
++@auth_level(AuthLevel.ADMIN_OPTIONAL)
++async def kv_tail(request: Request):
++    """Elastic KV tail (SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS).
++
++    GET, or POST {"action": "status"}, reports the state. POST {"action":
++    "grow"} backs the tail and POST {"action": "shrink"} releases it; both
++    answer only when every TP rank has finished, with "ok" false when it did
++    not happen. 200 when ok, 400 for a bad request, 409 otherwise.
++    """
++    try:
++        body = {}
++        if request.method == "POST" and await request.body():
++            body = await request.json()
++        if not isinstance(body, dict):
++            raise ValueError("the request body must be a JSON object")
++        action = body.pop("action", "status")
++        if action == "status":
++            if body:
++                raise ValueError(f"status takes no fields, got {sorted(body)}")
++            ret = await _global_state.tokenizer_manager.kv_tail_status()
++        else:
++            if action not in ("grow", "shrink"):
++                raise ValueError(f"unknown action {action!r}")
++            numbers = {
++                "tail_tokens": int,
++                "keep_free_mib": int,
++                "timeout_s": (int, float),
++                "release_timeout_s": (int, float),
++            }
++            for name, value in body.items():
++                if name not in numbers:
++                    raise ValueError(f"unknown field {name!r}")
++                if isinstance(value, bool) or not isinstance(value, numbers[name]):
++                    raise ValueError(f"{name} must be a number, got {value!r}")
++                if value < 0:
++                    raise ValueError(f"{name} must not be negative")
++            ret = await _global_state.tokenizer_manager.kv_tail(
++                KvTailReqInput(action=action, **body)
++            )
++    except ValueError as e:
++        return ORJSONResponse(
++            {
++                "ok": False,
++                "state": "unknown",
++                "message": str(e),
++                "reason": "bad_request",
++            },
++            status_code=HTTPStatus.BAD_REQUEST,
++        )
++    except Exception as e:
++        return _create_error_response(e)
++    content = {**ret.info, "ok": ret.ok, "state": ret.state, "message": ret.message}
++    if ret.ok:
++        status_code = HTTPStatus.OK
++    elif content.get("reason") == "bad_request":
++        status_code = HTTPStatus.BAD_REQUEST
++    else:
++        status_code = HTTPStatus.CONFLICT
++    return ORJSONResponse(content, status_code=status_code)
++
++
+ @app.api_route("/resume_memory_occupation", methods=["GET", "POST"])
+ @auth_level(AuthLevel.ADMIN_OPTIONAL)
+ async def resume_memory_occupation(
+diff --git a/python/sglang/srt/managers/io_struct.py b/python/sglang/srt/managers/io_struct.py
+index 21f80ff..c76cbc1 100644
+--- a/python/sglang/srt/managers/io_struct.py
++++ b/python/sglang/srt/managers/io_struct.py
+@@ -2262,6 +2262,40 @@ class ReleaseMemoryOccupationReqOutput(BaseReq, kw_only=True):
+     message: str
+ 
+ 
++class KvTailReqInput(BaseReq, kw_only=True):
++    """Resize the elastic KV tail (mem_cache/elastic_kv_tail.py)."""
++
++    action: Literal["grow", "shrink"]
++    # grow: tail tokens to back; None backs the whole reserved tail.
++    tail_tokens: Optional[int] = None
++    # grow: refuse unless this much device memory stays free afterwards.
++    keep_free_mib: int = 1536
++    # shrink: how long to wait for requests that hold the tail.
++    timeout_s: float = 300.0
++    # shrink: how long to wait for the device to show the memory free.
++    release_timeout_s: float = 10.0
++
++
++class KvTailReqOutput(BaseReq, kw_only=True):
++    ok: bool
++    state: str
++    message: str = ""
++    info: Dict[str, Any] = {}
++
++
++class KvTailStatusReqInput(BaseReq, kw_only=True):
++    """Read the elastic KV tail's state; answered while a shrink waits."""
++
++    action: Literal["status"] = "status"
++
++
++class KvTailStatusReqOutput(BaseReq, kw_only=True):
++    ok: bool
++    state: str
++    message: str = ""
++    info: Dict[str, Any] = {}
++
++
+ class ResumeMemoryOccupationReqInput(BaseReq, kw_only=True):
+     # Optional tags to identify the memory region, which is primarily used for RL
+     # Currently we only support `weights` and `kv_cache`
+diff --git a/python/sglang/srt/managers/scheduler.py b/python/sglang/srt/managers/scheduler.py
+index f5466c2..0b52b75 100644
+--- a/python/sglang/srt/managers/scheduler.py
++++ b/python/sglang/srt/managers/scheduler.py
+@@ -189,6 +189,10 @@ from sglang.srt.managers.io_struct import (
+     PauseGenerationReqInput,
+     PdRoleSwitchReqInput,
+     PluginWeightUpdateReqInput,
++    KvTailReqInput,
++    KvTailReqOutput,
++    KvTailStatusReqInput,
++    KvTailStatusReqOutput,
+     ProfileReq,
+     ReleaseMemoryOccupationReqInput,
+     ReleaseUocrDocReqInput,
+@@ -340,7 +344,7 @@ from sglang.srt.managers.utils import (
+     make_abort_req,
+     validate_input_length,
+ )
+-from sglang.srt.mem_cache import kv_cache_builder
++from sglang.srt.mem_cache import elastic_kv_tail, kv_cache_builder
+ from sglang.srt.mem_cache.allocator.page_interleave import page_interleave_shard_size
+ from sglang.srt.mem_cache.common import checkpoint_kv_cache, storage_prefetch_end
+ from sglang.srt.mem_cache.events import KvEventLoraNames
+@@ -766,6 +770,9 @@ class Scheduler(
+ 
+         self.init_weight_updater()
+ 
++        # SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS; None when it is not set
++        self.kv_tail = elastic_kv_tail.install(self)
++
+         # Init request dispatcher
+         self.init_request_dispatcher()
+ 
+@@ -1991,6 +1998,18 @@ class Scheduler(
+                     ResumeMemoryOccupationReqInput,
+                     self.weight_updater.resume_memory_occupation,
+                 ),
++                (
++                    KvTailReqInput,
++                    lambda req: elastic_kv_tail.dispatch(
++                        self.kv_tail, req, KvTailReqOutput
++                    ),
++                ),
++                (
++                    KvTailStatusReqInput,
++                    lambda req: elastic_kv_tail.dispatch(
++                        self.kv_tail, req, KvTailStatusReqOutput
++                    ),
++                ),
+                 (
+                     CheckWeightsReqInput,
+                     self.weight_updater.check_weights,
+@@ -2344,6 +2363,8 @@ class Scheduler(
+                     self.send_control_output(output, recv_req)
+ 
+         self.flush_wrapper.check_pending()
++        if self.kv_tail is not None:
++            self.kv_tail.check_pending()
+         if self.external_corpus_manager is not None:
+             self.external_corpus_manager.check_pending_load()
+ 
+diff --git a/python/sglang/srt/managers/tokenizer_control_mixin.py b/python/sglang/srt/managers/tokenizer_control_mixin.py
+index c9f1e07..1dadbf2 100644
+--- a/python/sglang/srt/managers/tokenizer_control_mixin.py
++++ b/python/sglang/srt/managers/tokenizer_control_mixin.py
+@@ -64,6 +64,10 @@ from sglang.srt.managers.io_struct import (
+     ProfileReq,
+     ProfileReqOutput,
+     ProfileReqType,
++    KvTailReqInput,
++    KvTailReqOutput,
++    KvTailStatusReqInput,
++    KvTailStatusReqOutput,
+     ReleaseMemoryOccupationReqInput,
+     ReleaseMemoryOccupationReqOutput,
+     ReleaseUocrDocReqInput,
+@@ -90,6 +94,7 @@ from sglang.srt.managers.io_struct import (
+     UpdateWeightVersionReqOutput,
+ )
+ from sglang.srt.managers.load_snapshot import LoadSnapshot
++from sglang.srt.mem_cache import elastic_kv_tail
+ from sglang.srt.platforms import current_platform
+ from sglang.srt.runtime_context import (
+     get_disagg,
+@@ -128,6 +133,8 @@ _COMMUNICATOR_SPECS = [
+     ("get_weights_by_name", GetWeightsByNameReqOutput),
+     ("release_memory_occupation", ReleaseMemoryOccupationReqOutput),
+     ("resume_memory_occupation", ResumeMemoryOccupationReqOutput),
++    ("kv_tail", KvTailReqOutput),
++    ("kv_tail_status", KvTailStatusReqOutput),
+     ("check_weights", CheckWeightsReqOutput),
+     ("slow_down", SlowDownReqOutput),
+     ("pd_role_switch", PdRoleSwitchReqOutput),
+@@ -201,6 +208,11 @@ class TokenizerControlMixin:
+             setattr(self, f"{name}_communicator", comm)
+             dispatch_pairs.append((resp_type, comm.handle_recv))
+         self._result_dispatcher += TypeBasedDispatcher(dispatch_pairs)
++        # With an elastic KV tail the server starts at the base context.
++        self._kv_tail_max_context_len = self.context_len
++        kv_tail_config = elastic_kv_tail.config()
++        if kv_tail_config is not None:
++            self._set_kv_tail_context_len(kv_tail_config.base_context)
+ 
+     def update_control_communicator_fan_out(self: TokenizerManager, worker_count: int):
+         primary_group_control = (
+@@ -910,6 +922,27 @@ class TokenizerControlMixin:
+         if not success:
+             raise RuntimeError(message)
+ 
++    def _set_kv_tail_context_len(self: TokenizerManager, context_len: int) -> None:
++        """Accept and advertise ``context_len``, up to the server's own."""
++        context_len = min(int(context_len), self._kv_tail_max_context_len)
++        self.context_len = context_len
++        self.model_config.context_len = context_len
++
++    async def kv_tail(self: TokenizerManager, obj: KvTailReqInput) -> KvTailReqOutput:
++        self.auto_create_handle_loop()
++        kv_tail_config = elastic_kv_tail.config()
++        if kv_tail_config is not None and obj.action == "shrink":
++            # Before the scheduler starts: no new request may count on the tail.
++            self._set_kv_tail_context_len(kv_tail_config.base_context)
++        result = (await self.kv_tail_communicator(obj))[0]
++        if "context_length" in result.info:
++            self._set_kv_tail_context_len(result.info["context_length"])
++        return result
++
++    async def kv_tail_status(self: TokenizerManager) -> KvTailStatusReqOutput:
++        self.auto_create_handle_loop()
++        return (await self.kv_tail_status_communicator(KvTailStatusReqInput()))[0]
++
+     async def resume_memory_occupation(
+         self: TokenizerManager,
+         obj: ResumeMemoryOccupationReqInput,
+diff --git a/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py
+new file mode 100644
+index 0000000..2700f2b
+--- /dev/null
++++ b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py
+@@ -0,0 +1,1406 @@
++"""Elastic KV tail (SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS) on the CPU.
++
++Device memory is a FakeVmmBackend, so nothing here needs a GPU. The prefix
++cache is the unified radix cache as the gfx1201 serving arms run it: Full, SWA
++and Mamba slots with SWA checkpoint windows, page size 1, Python tree core.
++
++Run with tools/run_sglang_unit_on_cpu.py (the cache kit is gated on CUDA).
++"""
++
++import asyncio
++import ctypes
++import os
++import random
++import threading
++import unittest
++from types import SimpleNamespace
++from unittest import mock
++
++import torch
++
++from sglang.srt.managers.io_struct import (
++    KvTailReqInput,
++    KvTailReqOutput,
++    KvTailStatusReqInput,
++    KvTailStatusReqOutput,
++)
++from sglang.srt.mem_cache import elastic_kv_tail as ekt
++from sglang.srt.mem_cache.allocator.token import TokenToKVPoolAllocator
++from sglang.srt.mem_cache.memory_pool import KvBufferDesc, MHATokenToKVPool
++from sglang.srt.mem_cache.unified_cache.components.base import ComponentType
++from sglang.test.ci.ci_register import register_cpu_ci
++from sglang.test.kits.unified_radix_cache.checkpoint_window import (
++    SWACheckpointWindowFixtures,
++)
++from sglang.test.kits.unified_radix_cache.config import CacheConfig
++from sglang.test.kits.unified_radix_cache.fixtures import match_prefix
++from sglang.test.test_utils import CustomTestCase
++
++register_cpu_ci(est_time=60, suite="base-a-test-cpu")
++
++BASE = 192
++POOL = 512
++ROW = 16  # bytes per token and buffer in the fake pool
++GRAN = 4096
++
++
++def _token_allocator(size):
++    return TokenToKVPoolAllocator(size, torch.bfloat16, "cpu", None, False)
++
++
++def _descs(pool_tokens=POOL, layers=2):
++    shape = (pool_tokens + 1, 2, ROW // 2)
++    return [
++        KvBufferDesc(f"{kind}{layer}", shape, row_bytes=ROW, tokens_per_row=1)
++        for kind in "kv"
++        for layer in range(layers)
++    ]
++
++
++def _owner(backend=None, base=BASE, pool_tokens=POOL):
++    return ekt.TailBufferOwner(
++        backend=backend or ekt.FakeVmmBackend(granularity=GRAN),
++        descs=_descs(pool_tokens),
++        store_dtype=torch.uint8,
++        page_size=1,
++        base_tokens=base,
++        reserved_tokens=pool_tokens,
++    )
++
++
++class _ReferenceAllocator:
++    """TokenToKVPoolAllocator as upstream has it at the pin (need_sort off)."""
++
++    def __init__(self, size):
++        self.free_pages = torch.arange(1, size + 1, dtype=torch.int64)
++
++    def available_size(self):
++        return len(self.free_pages)
++
++    def alloc(self, need_size):
++        if need_size > len(self.free_pages):
++            return None
++        select = self.free_pages[:need_size]
++        self.free_pages = self.free_pages[need_size:]
++        return select
++
++    def free(self, free_index):
++        if free_index.numel():
++            self.free_pages = torch.cat((self.free_pages, free_index))
++
++
++class TestTailAllocator(CustomTestCase):
++    def test_without_the_tail_the_allocator_is_unchanged(self):
++        for seed in range(5):
++            rng = random.Random(seed)
++            new, ref = _token_allocator(300), _ReferenceAllocator(300)
++            held = []
++            for _ in range(400):
++                if held and rng.random() < 0.45:
++                    index = held.pop(rng.randrange(len(held)))
++                    new.free(index)
++                    ref.free(index.clone())
++                else:
++                    need = rng.randint(1, 60)
++                    got, want = new.alloc(need), ref.alloc(need)
++                    self.assertEqual(got is None, want is None)
++                    if got is not None:
++                        self.assertTrue(torch.equal(got, want))
++                        held.append(got)
++                self.assertEqual(new.available_size(), ref.available_size())
++                self.assertTrue(torch.equal(new.free_pages, ref.free_pages))
++            self.assertEqual(new.tail_outstanding, 0)
++            self.assertEqual(new.unavailable_size(), 0)
++            self.assertIsNone(new._tail_free)
++
++    def test_low_slots_first(self):
++        alloc = _token_allocator(48)
++        alloc.enable_elastic_tail(16)
++        alloc.open_tail(32)
++        first = alloc.alloc(10)
++        self.assertEqual(first.tolist(), list(range(1, 11)))
++        alloc.free(torch.tensor([3, 4]))
++        # Six low slots never used, then the two freed ones: no tail slot yet.
++        second = alloc.alloc(8)
++        self.assertEqual(second.tolist(), [11, 12, 13, 14, 15, 16, 3, 4])
++        self.assertEqual(alloc.tail_outstanding, 0)
++        alloc.free(torch.tensor([7]))
++        third = alloc.alloc(4)
++        self.assertEqual(third.tolist(), [7, 17, 18, 19])
++        self.assertEqual(alloc.tail_outstanding, 3)
++
++    def test_random_operations_take_the_tail_last_and_conserve_slots(self):
++        for seed in range(6):
++            rng = random.Random(seed)
++            size, base = 200, 80
++            alloc = _token_allocator(size)
++            alloc.enable_elastic_tail(base)
++            held, in_use, is_open, tail = [], 0, False, 0
++            for _ in range(600):
++                op = rng.random()
++                if op < 0.05 and not is_open and alloc.tail_outstanding == 0:
++                    if tail:
++                        alloc.drop_tail()
++                    tail = rng.randint(1, size - base)
++                    alloc.open_tail(tail)
++                    is_open = True
++                elif op < 0.10 and is_open:
++                    alloc.close_tail()
++                    is_open = False
++                elif op < 0.13 and tail and not is_open:
++                    alloc.reopen_tail()
++                    is_open = True
++                elif op < 0.5 and held:
++                    index = held.pop(rng.randrange(len(held)))
++                    in_use -= index.numel()
++                    alloc.free(index)
++                else:
++                    need = rng.randint(1, 40)
++                    low_free = len(alloc.free_pages)
++                    got = alloc.alloc(need)
++                    if got is None:
++                        self.assertGreater(need, alloc.available_size())
++                    else:
++                        num_tail = int((got > base).sum())
++                        self.assertEqual(num_tail, max(0, need - low_free))
++                        if num_tail:
++                            self.assertTrue(is_open)
++                            self.assertLessEqual(int(got.max()), base + tail)
++                        held.append(got)
++                        in_use += need
++                tail_in_use = sum(int((h > base).sum()) for h in held)
++                self.assertEqual(alloc.tail_outstanding, tail_in_use)
++                self.assertEqual(
++                    alloc.available_size() + in_use + alloc.unavailable_size(), size
++                )
++                everything = torch.cat([alloc.free_pages, alloc._tail_free, *held])
++                self.assertEqual(everything.numel(), everything.unique().numel())
++
++    def test_closed_tail_is_never_handed_out(self):
++        alloc = _token_allocator(48)
++        alloc.enable_elastic_tail(16)
++        self.assertEqual(alloc.available_size(), 16)
++        self.assertEqual(alloc.unavailable_size(), 32)
++        self.assertIsNone(alloc.alloc(17))
++        self.assertEqual(alloc.alloc(16).tolist(), list(range(1, 17)))
++        self.assertIsNone(alloc.alloc(1))
++        alloc.open_tail(20)
++        self.assertEqual(alloc.available_size(), 20)
++        self.assertEqual(alloc.unavailable_size(), 12)
++        held = alloc.alloc(5)
++        self.assertEqual(held.tolist(), [17, 18, 19, 20, 21])
++        alloc.close_tail()
++        self.assertEqual(alloc.available_size(), 0)
++        self.assertIsNone(alloc.alloc(1))
++        # A freed tail slot goes back to the tail, not into circulation.
++        alloc.free(held[:2])
++        self.assertEqual(alloc.available_size(), 0)
++        self.assertEqual(alloc.tail_outstanding, 3)
++        self.assertEqual(alloc.unavailable_size(), 32 - 3)
++        alloc.free(torch.tensor([5, 6]))
++        self.assertEqual(alloc.alloc(2).tolist(), [5, 6])
++        alloc.free(held[2:])
++        self.assertEqual(alloc.tail_outstanding, 0)
++        alloc.drop_tail()
++        self.assertEqual(alloc.unavailable_size(), 32)
++
++    def test_clear_keeps_the_gate(self):
++        alloc = _token_allocator(48)
++        alloc.enable_elastic_tail(16)
++        alloc.open_tail(8)
++        alloc.alloc(20)
++        alloc.clear()
++        self.assertEqual(alloc.available_size(), 24)
++        self.assertEqual(alloc.tail_outstanding, 0)
++        alloc.alloc(20)
++        alloc.close_tail()
++        alloc.clear()
++        self.assertEqual(alloc.available_size(), 16)
++        self.assertEqual(alloc.tail_outstanding, 0)
++
++    def test_enable_rejects_a_used_or_sorted_pool(self):
++        alloc = _token_allocator(48)
++        alloc.alloc(1)
++        with self.assertRaises(RuntimeError):
++            alloc.enable_elastic_tail(16)
++        with self.assertRaises(ValueError):
++            TokenToKVPoolAllocator(
++                48, torch.bfloat16, "cpu", None, True
++            ).enable_elastic_tail(16)
++
++
++class TestTailBuffers(CustomTestCase):
++    def test_only_the_base_is_backed_and_zero(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        owner = _owner(backend)
++        base_bytes = ekt.align_up((BASE + 1) * ROW, GRAN)
++        self.assertEqual(len(owner.tensors), 4)
++        for tensor, buf in zip(owner.tensors, owner._buffers):
++            self.assertEqual(tuple(tensor.shape), (POOL + 1, 2, ROW // 2))
++            self.assertTrue(tensor.is_contiguous())
++            self.assertEqual(tensor.data_ptr(), buf.address)
++            self.assertEqual(buf.address % 16, 0)
++            self.assertEqual(buf.base_bytes, base_bytes)
++            self.assertTrue(backend.is_mapped(buf.address, base_bytes))
++            self.assertFalse(backend.is_mapped(buf.address + base_bytes, GRAN))
++            self.assertEqual(int(tensor[: BASE + 1].max()), 0)
++        self.assertEqual(backend.mapped_bytes(), 4 * base_bytes)
++        owner.close()
++        self.assertEqual(backend.mapped_bytes(), 0)
++
++    def test_one_tail_extent_per_buffer_zeroed_and_released(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        owner = _owner(backend)
++        del backend.log[:]
++        mapped = owner.map_tail(owner.reserved_tail_tokens)
++        maps = [entry for entry in backend.log if entry[0] == "map"]
++        self.assertEqual(len(maps), len(owner.tensors))
++        self.assertEqual(mapped, sum(size for _, _, size in maps))
++        self.assertEqual(mapped, owner.tail_bytes_for(owner.reserved_tail_tokens))
++        for (_, address, size), buf, tensor in zip(maps, owner._buffers, owner.tensors):
++            self.assertEqual(address, buf.address + buf.base_bytes)
++            self.assertEqual(address + size, buf.address + buf.reserved_bytes)
++            # The fake fills a fresh map with 0xA5; the tail must read zero.
++            self.assertEqual(int(tensor.max()), 0)
++        released = owner.unmap_tail()
++        self.assertEqual(released, mapped)
++        self.assertEqual(backend.mapped_bytes(), owner.base_bytes)
++        with self.assertRaises(ValueError):
++            owner.map_tail(owner.reserved_tail_tokens + 1)
++
++    def test_a_partial_tail_backs_only_its_rows(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        owner = _owner(backend)
++        mapped = owner.map_tail(100)
++        want = ekt.align_up((BASE + 100 + 1) * ROW, GRAN) - ekt.align_up(
++            (BASE + 1) * ROW, GRAN
++        )
++        self.assertEqual(mapped, 4 * want)
++        for buf in owner._buffers:
++            last_row = buf.address + (BASE + 100) * ROW
++            self.assertTrue(backend.is_mapped(last_row, ROW))
++
++    def test_base_survives_grow_and_shrink_cycles_at_the_same_address(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        owner = _owner(backend)
++        generator = torch.Generator().manual_seed(0)
++        for tensor in owner.tensors:
++            tensor[: BASE + 1] = torch.randint(
++                0, 255, tensor[: BASE + 1].shape, generator=generator, dtype=torch.uint8
++            )
++        checksum = owner.base_checksum()
++        addresses = [tensor.data_ptr() for tensor in owner.tensors]
++        for cycle in range(50):
++            owner.map_tail(owner.reserved_tail_tokens if cycle % 2 else 150)
++            for tensor in owner.tensors:
++                tensor[BASE + 1 : BASE + 100] = cycle % 250 + 1
++            self.assertEqual(owner.base_checksum(), checksum)
++            owner.unmap_tail()
++            self.assertEqual(owner.base_checksum(), checksum)
++        self.assertEqual([t.data_ptr() for t in owner.tensors], addresses)
++
++    def test_a_failed_map_leaves_nothing_mapped(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        owner = _owner(backend)
++        original = backend.map
++        calls = []
++
++        def failing_map(address, size):
++            calls.append(address)
++            if len(calls) == 3:
++                raise RuntimeError("hipMemCreate failed with hipError_t 2")
++            return original(address, size)
++
++        backend.map = failing_map
++        with self.assertRaises(RuntimeError):
++            owner.map_tail(owner.reserved_tail_tokens)
++        self.assertEqual(backend.mapped_bytes(), owner.base_bytes)
++        self.assertEqual(owner.tail_tokens, 0)
++        backend.map = original
++        owner.map_tail(owner.reserved_tail_tokens)
++
++    def test_fake_release_lags_like_the_kernel(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, release_delay_polls=2)
++        owner = _owner(backend)
++        mapped = owner.map_tail(owner.reserved_tail_tokens)
++        used = backend.used_bytes()
++        owner.unmap_tail()
++        self.assertEqual(backend.used_bytes(), used)
++        self.assertEqual(backend.used_bytes(), used)
++        self.assertEqual(backend.used_bytes(), used - mapped)
++
++    def test_hip_struct_layouts(self):
++        self.assertEqual(ctypes.sizeof(ekt._HipMemLocation), 8)
++        self.assertEqual(ctypes.sizeof(ekt._HipMemAccessDesc), 12)
++        self.assertEqual(ctypes.sizeof(ekt._HipMemAllocationProp), 32)
++        self.assertEqual(ekt._HipMemAllocationProp.location.offset, 8)
++        self.assertEqual(ekt._HipMemAllocationProp.win32HandleMetaData.offset, 16)
++        self.assertEqual(ekt._HipMemAllocationProp.allocFlags.offset, 24)
++
++    def test_torch_builds_a_tensor_at_a_fixed_address(self):
++        # What HipVmmBackend.tensor relies on, on host memory.
++        buffer = (ctypes.c_uint8 * 64)()
++        address = ctypes.addressof(buffer)
++        storage = torch._C._construct_storage_from_data_pointer(
++            address, torch.device("cpu"), 64
++        )
++        tensor = torch.empty(0, dtype=torch.uint8).set_(storage, 0, (4, 16))
++        self.assertEqual(tensor.data_ptr(), address)
++        tensor[1, 2] = 7
++        self.assertEqual(buffer[18], 7)
++
++
++class TestTailPool(CustomTestCase):
++    def setUp(self):
++        self.backend = ekt.FakeVmmBackend(granularity=GRAN)
++        ekt.set_backend_factory(lambda device_id: self.backend)
++        self.addCleanup(ekt.set_backend_factory, None)
++        self.addCleanup(lambda: ekt._owners.clear())
++        ekt._owners.clear()
++
++    def _pool(self, size, layer_num=2):
++        return MHATokenToKVPool(
++            size=size,
++            page_size=1,
++            dtype=torch.bfloat16,
++            head_num=2,
++            head_dim=8,
++            layer_num=layer_num,
++            device="cpu",
++            enable_memory_saver=False,
++        )
++
++    def test_flag_off_builds_ordinary_buffers(self):
++        with mock.patch.dict(os.environ):
++            os.environ.pop(ekt.ENV_BASE_TOKENS, None)
++            self.assertIsNone(ekt.config())
++            pool = self._pool(POOL)
++        self.assertIsNone(pool._elastic_tail_owner)
++        self.assertEqual(ekt._owners, [])
++        self.assertEqual(self.backend.log, [])
++        self.assertIsNone(ekt.install(object()))
++
++    def test_flag_on_backs_only_the_base_of_the_target_pool(self):
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        with mock.patch.dict(os.environ, env):
++            plain_env = dict(os.environ)
++            pool = self._pool(POOL)
++            draft_window = self._pool(64)  # the bundled draft pool: below the base
++            draft_full = self._pool(POOL, layer_num=0)  # its empty full side
++        with mock.patch.dict(os.environ, plain_env):
++            os.environ.pop(ekt.ENV_BASE_TOKENS)
++            reference = self._pool(POOL)
++        owner = pool._elastic_tail_owner
++        self.assertEqual(ekt._owners, [owner])
++        self.assertIsNone(draft_window._elastic_tail_owner)
++        self.assertIsNone(draft_full._elastic_tail_owner)
++        self.assertEqual(owner.base_tokens, BASE)
++        self.assertEqual(owner.reserved_tokens, POOL)
++        for got, want in zip(
++            pool.k_buffer + pool.v_buffer, reference.k_buffer + reference.v_buffer
++        ):
++            self.assertEqual(got.shape, want.shape)
++            self.assertEqual(got.dtype, want.dtype)
++            self.assertTrue(got.is_contiguous())
++        self.assertEqual(pool.get_kv_buffer_shape(), reference.get_kv_buffer_shape())
++        self.assertEqual(pool.data_strides.tolist(), reference.data_strides.tolist())
++        row_bytes = 2 * 8 * 2
++        self.assertEqual(
++            self.backend.mapped_bytes(),
++            4 * ekt.align_up((BASE + 1) * row_bytes, GRAN),
++        )
++        # Slots of the base are usable through the pool's own accessors.
++        k, v = pool.get_kv_buffer(0)
++        k[BASE] = 1.0
++        self.assertEqual(float(pool.k_buffer[0][BASE].float().sum()), 16.0)
++
++    def test_the_switch_needs_a_base_context(self):
++        with mock.patch.dict(os.environ, {ekt.ENV_BASE_TOKENS: "100"}):
++            os.environ.pop(ekt.ENV_BASE_CONTEXT, None)
++            with self.assertRaises(ValueError):
++                ekt.config()
++
++
++class TestLimits(CustomTestCase):
++    def test_serving_arm_numbers(self):
++        def limits(tail):
++            return ekt.effective_limits(
++                base_tokens=201600,
++                base_context=100768,
++                max_context=262112,
++                max_running_requests=2,
++                tail_tokens=tail,
++            )
++
++        self.assertEqual(limits(0), (201600, 100768))
++        self.assertEqual(limits(140000), (341600, 170768))
++        self.assertEqual(limits(443958), (645558, 262112))
++
++    def test_verify_kernel_takes_the_whole_reserved_pool(self):
++        # The gfx1201 target-verify kernel addresses the cache with int32
++        # offsets and needs contiguous, equally shaped K and V. At TP2 a rank
++        # holds 2 kv heads of dimension 256; the large arm's pool is the
++        # reserved size. Storage is not touched, only described.
++        from sglang.kernels.ops.attention import (
++            gfx1201_fp8_kv,
++            verify_attention_gfx1151 as verify,
++        )
++
++        rows = 645558 + 1
++        k = torch.empty((rows, 2, 256), dtype=torch.float8_e4m3fn)
++        v = torch.empty((rows, 2, 256), dtype=torch.float8_e4m3fn)
++        q = torch.empty((8, 12, 256), dtype=torch.bfloat16)
++        o = torch.empty((8, 12, 256), dtype=torch.bfloat16)
++        self.assertLess(k.numel(), 2**31)
++        self.assertLess((rows - 1) * 2 * 256 + 2 * 256, 2**31)
++        with (
++            mock.patch.object(verify, "enabled", lambda: True),
++            mock.patch.object(gfx1201_fp8_kv, "enabled", lambda: True),
++        ):
++            self.assertTrue(verify.covered(q, o, k, v, 8, 12, 2, 256))
++            too_big = torch.empty((2**31 // 512 + 1, 2, 256), dtype=k.dtype)
++            self.assertFalse(verify.covered(q, o, too_big, too_big, 8, 12, 2, 256))
++
++
++class _Clock:
++    def __init__(self):
++        self.now = 1000.0
++
++    def __call__(self):
++        return self.now
++
++
++def _req(rid, input_len, output_len=0, max_new_tokens=None):
++    return SimpleNamespace(
++        rid=rid,
++        origin_input_ids=[0] * input_len,
++        output_ids=[0] * output_len,
++        sampling_params=SimpleNamespace(
++            max_new_tokens=max_new_tokens, min_new_tokens=0
++        ),
++    )
++
++
++class _Rank:
++    """One simulated TP rank: cache, allocator, buffers and its tail."""
++
++    def __init__(self, suite, rank=0, gather=None, backend=None):
++        self.cache, self.allocator, self.pool = suite._build()
++        self.full = self.allocator.full_attn_allocator
++        self.backend = backend or ekt.FakeVmmBackend(granularity=GRAN)
++        self.owner = _owner(self.backend, pool_tokens=suite.cfg.kv_size)
++        self.full.enable_elastic_tail(BASE)
++        self.clock = _Clock()
++        self.limits = []
++        self.outputs = []
++        self.requests = []
++        self.events = []
++        self._watch(self.full, "close_tail", "close")
++        self._watch(self.owner, "unmap_tail", "unmap")
++        self.tail = ekt.ElasticKvTail(
++            owner=self.owner,
++            allocator=self.full,
++            tree_cache=self.cache,
++            base_context=90,
++            max_context=400,
++            max_running_requests=2,
++            input_len_margin=5,
++            apply_limits=lambda *limits: self.limits.append(limits),
++            live_requests=lambda: list(self.requests),
++            gather=gather or (lambda report: [report]),
++            send_output=lambda output, req: (
++                self.events.append("ack"),
++                self.outputs.append(output),
++            ),
++            make_output=KvTailReqOutput,
++            scrub_stale_slots=lambda base_tokens: self.events.append("scrub"),
++            rank=rank,
++            clock=self.clock,
++        )
++
++    def _watch(self, obj, name, event):
++        original = getattr(obj, name)
++
++        def wrapper(*args, **kwargs):
++            self.events.append(event)
++            return original(*args, **kwargs)
++
++        setattr(obj, name, wrapper)
++
++    def grow(self, tokens=None, **kwargs):
++        return self.tail.handle(
++            KvTailReqInput(action="grow", tail_tokens=tokens, keep_free_mib=0, **kwargs)
++        )
++
++    def shrink(self, **kwargs):
++        return self.tail.handle(KvTailReqInput(action="shrink", **kwargs))
++
++    def tree_slots(self):
++        return self.cache.all_values_flatten()
++
++
++class ElasticTailSuite(SWACheckpointWindowFixtures):
++    def _fill(self, rank, rng, count, next_token=1):
++        """Insert ``count`` prefixes; returns them with their slot ids."""
++        seqs = []
++        for _ in range(count):
++            base = rng.choice(seqs)[0] if seqs and rng.random() < 0.5 else []
++            keep = rng.randrange(len(base) + 1)
++            extra = rng.randint(4, 3 * self.window)
++            seq = base[:keep] + list(range(next_token, next_token + extra))
++            next_token += extra
++            if not self._make_room(rank.cache, rank.allocator, len(seq)):
++                continue
++            self._insert(rank.cache, rank.allocator, rank.pool, seq)
++            seqs.append((seq, None))
++        return seqs, next_token
++
++    def _path_slots(self, rank, seq):
++        match = match_prefix(rank.cache, seq)
++        if match.device_prefix_len == 0:
++            return match, torch.empty(0, dtype=torch.int64)
++        return match, rank.cache.path_device_indices(match.last_device_node)
++
++    def _assert_windows(self, rank, seqs):
++        for seq, _ in seqs:
++            match = match_prefix(rank.cache, seq)
++            node = match.last_device_node
++            if node == rank.cache.root_node_handle():
++                continue
++            spans = self._path(rank.cache, node, match.device_prefix_len)
++            for _, end, _, has_checkpoint in spans:
++                if not has_checkpoint:
++                    continue
++                window_start = max(0, end - self.window)
++                for start, stop, has_swa, _ in spans:
++                    if stop > window_start and start < end:
++                        self.assertTrue(has_swa)
++
++    # -- tests --------------------------------------------------------------
++
++    def test_starts_unbacked_at_the_base(self):
++        rank = _Rank(self)
++        self.assertEqual(rank.tail.state, ekt.STATE_UNBACKED)
++        self.assertEqual(rank.limits[-1], (BASE, 89, 84))
++        self.assertEqual(rank.tail.context_length, 90)
++        self.assertEqual(rank.full.available_size(), BASE)
++        status = ekt.dispatch(rank.tail, KvTailStatusReqInput(), KvTailStatusReqOutput)
++        self.assertIsInstance(status, KvTailStatusReqOutput)
++        self.assertEqual(status.info["reserved_tail_tokens"], self.cfg.kv_size - BASE)
++        self.assertEqual(status.info["context_length"], 90)
++        off = ekt.dispatch(None, KvTailReqInput(action="grow"), KvTailReqOutput)
++        self.assertFalse(off.ok)
++        self.assertEqual(off.state, ekt.STATE_DISABLED)
++        self.assertTrue(
++            ekt.dispatch(None, KvTailStatusReqInput(), KvTailStatusReqOutput).ok
++        )
++
++    def test_grow_maps_then_enables_then_raises_the_limits(self):
++        rank = _Rank(self)
++        tail_tokens = self.cfg.kv_size - BASE
++        out = rank.grow()
++        self.assertTrue(out.ok, out.message)
++        self.assertEqual(out.state, ekt.STATE_BACKED)
++        self.assertEqual(out.info["tail_tokens"], tail_tokens)
++        self.assertEqual(out.info["mapped_bytes"], rank.owner.tail_bytes)
++        self.assertEqual(rank.full.available_size(), self.cfg.kv_size)
++        # 90 + 320 // 2 = 250 tokens of context, the pool at its full size.
++        self.assertEqual(out.info["context_length"], 250)
++        self.assertEqual(rank.limits[-1], (self.cfg.kv_size, 249, 244))
++        self.assertTrue(rank.grow().ok)  # idempotent
++        self.assertEqual(rank.grow(10).info["reason"], "already_backed")
++
++    def test_grow_is_refused_without_device_memory(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
++        rank = _Rank(self, backend=backend)
++        backend.other_used_bytes = backend.free_bytes() - 4096
++        out = rank.grow()
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "insufficient_vram")
++        self.assertEqual(out.state, ekt.STATE_UNBACKED)
++        self.assertEqual(backend.mapped_bytes(), rank.owner.base_bytes)
++        self.assertEqual(rank.full.available_size(), BASE)
++        out = rank.tail.handle(
++            KvTailReqInput(action="grow", tail_tokens=8, keep_free_mib=1)
++        )
++        self.assertEqual(out.info["reason"], "insufficient_vram")
++
++    def test_shrink_with_an_idle_tail_is_immediate(self):
++        rank = _Rank(self)
++        rank.grow()
++        used = rank.backend.used_bytes()
++        out = rank.shrink()
++        self.assertTrue(out.ok, out.message)
++        self.assertEqual(out.state, ekt.STATE_UNBACKED)
++        self.assertFalse(out.info["waited"])
++        self.assertTrue(out.info["vram_confirmed"])
++        self.assertEqual(out.info["released_bytes"], used - rank.owner.base_bytes)
++        self.assertEqual(rank.events, ["close", "scrub", "unmap"])
++        self.assertEqual(rank.limits[-1], (BASE, 89, 84))
++        self.assertTrue(rank.shrink().ok)  # idempotent
++        self.assertTrue(rank.grow(64).ok)  # and the tail can come back
++
++    def test_shrink_order_with_idle_prefixes_and_a_running_request(self):
++        rank = _Rank(self)
++        rank.grow()
++        rng = random.Random(1)
++        seqs, _ = self._fill(rank, rng, 40)
++        held = rank.allocator.alloc(30)  # a running request's own slots
++        self.assertGreater(int(held.max()), BASE)
++        tail_seqs, base_seqs = [], []
++        for seq, _ in seqs:
++            match, slots = self._path_slots(rank, seq)
++            if match.device_prefix_len == len(seq):
++                (tail_seqs if int(slots.max()) > BASE else base_seqs).append(seq)
++        self.assertTrue(tail_seqs and base_seqs)
++        # A running request has one tail-holding prefix locked.
++        locked_seq = tail_seqs[0]
++        lock = rank.cache.lock(match_prefix(rank.cache, locked_seq).last_device_node)
++        locked_slots = self._path_slots(rank, locked_seq)[1]
++
++        self.assertIsNone(rank.shrink())
++        self.assertEqual(rank.events, ["close"])
++        self.assertEqual(rank.tail.state, ekt.STATE_DRAINING)
++        self.assertEqual(rank.limits[-1], (BASE, 89, 84))
++        # 1. No tail slot is handed out any more.
++        self.assertLessEqual(rank.full.available_size(), BASE)
++        got = rank.full.alloc(rank.full.available_size())
++        self.assertTrue(got.numel() == 0 or int(got.max()) <= BASE)
++        rank.full.free(got)
++        # 2. Idle prefixes in the tail are gone; the locked one and every
++        #    prefix that fits the base are still cached.
++        slots = rank.tree_slots()
++        in_tail = slots[slots > BASE]
++        self.assertTrue(set(in_tail.tolist()) <= set(locked_slots.tolist()))
++        self.assertEqual(
++            match_prefix(rank.cache, locked_seq).device_prefix_len, len(locked_seq)
++        )
++        for seq in base_seqs:
++            match, kept = self._path_slots(rank, seq)
++            if match.device_prefix_len:
++                self.assertLessEqual(int(kept.max()), BASE)
++        kept_base = [
++            seq
++            for seq in base_seqs
++            if match_prefix(rank.cache, seq).device_prefix_len == len(seq)
++        ]
++        self.assertTrue(kept_base)
++        rank.cache.sanity_check()
++        self._assert_windows(rank, seqs)
++        # 3. It waits: nothing is unmapped while tail slots are in use.
++        for _ in range(3):
++            rank.tail.check_pending()
++        self.assertEqual(rank.events, ["close"])
++        self.assertEqual(rank.outputs, [])
++        status = rank.tail.status()
++        self.assertEqual(status["context_length"], 90)
++        self.assertGreater(status["pending"]["waiting_for_tail_slots"], 0)
++        busy = rank.grow()
++        self.assertEqual(busy.info["reason"], "busy")
++        # The request finishes: its lock goes, then its own slots.
++        rank.cache.unlock(lock)
++        rank.tail.check_pending()
++        self.assertEqual(rank.events, ["close"])
++        rank.allocator.free(held)
++        rank.tail.check_pending()
++        # 4. Unmap, then 5. acknowledge.
++        self.assertEqual(rank.events, ["close", "scrub", "unmap", "ack"])
++        (out,) = rank.outputs
++        self.assertTrue(out.ok, out.message)
++        self.assertTrue(out.info["waited"])
++        self.assertGreater(out.info["evicted_tokens"], 0)
++        self.assertGreater(out.info["waited_for"]["tail_slots_in_use"], 0)
++        self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++        slots = rank.tree_slots()
++        self.assertEqual(int((slots > BASE).sum()), 0)
++        for seq in kept_base:
++            self.assertEqual(match_prefix(rank.cache, seq).device_prefix_len, len(seq))
++        rank.cache.sanity_check()
++
++    def test_eviction_returns_checkpoints_and_windows_with_the_prefix(self):
++        rank = _Rank(self)
++        rank.grow()
++        seqs, _ = self._fill(rank, random.Random(2), 40)
++        mamba = rank.allocator.state_slots
++        swa_before = rank.allocator.swa_available_size()
++        mamba_before = mamba.available_size()
++        checkpoints_before = rank.cache.all_mamba_values_flatten().numel()
++        full_evictable = rank.cache.full_evictable_size()
++        evicted, left = ekt.evict_tail_holders(rank.cache, BASE)
++        self.assertGreater(evicted, 0)
++        self.assertEqual(left, 0)
++        self.assertEqual(int((rank.tree_slots() > BASE).sum()), 0)
++        self.assertEqual(rank.cache.full_evictable_size(), full_evictable - evicted)
++        # The Mamba checkpoints and SWA windows of the evicted prefixes went
++        # back to their pools; nothing is left without its prefix.
++        checkpoints_after = rank.cache.all_mamba_values_flatten().numel()
++        self.assertLess(checkpoints_after, checkpoints_before)
++        self.assertEqual(
++            mamba.available_size() - mamba_before,
++            checkpoints_before - checkpoints_after,
++        )
++        self.assertGreater(rank.allocator.swa_available_size(), swa_before)
++        self.assertEqual(rank.full.tail_outstanding, 0)
++        rank.cache.sanity_check()
++        self._assert_windows(rank, seqs)
++        swa = ComponentType.SWA
++        self.assertEqual(
++            rank.allocator.swa_available_size()
++            + rank.cache.tree_core.component_evictable_size(swa)
++            + rank.cache.tree_core.component_protected_size(swa),
++            rank.allocator.size_swa,
++        )
++        # A second pass finds nothing.
++        self.assertEqual(ekt.evict_tail_holders(rank.cache, BASE), (0, 0))
++
++    def test_base_only_descendants_of_a_tail_holder_go_with_it(self):
++        rank = _Rank(self)
++        rank.grow()
++        held = rank.allocator.alloc(BASE)  # fill the base: the parent gets the tail
++        parent = list(range(1, 21))
++        self._insert(rank.cache, rank.allocator, rank.pool, parent)
++        rank.allocator.free(held)
++        # Inserted with the base free again: the child and the other prefix
++        # hold base slots only.
++        child = parent + list(range(1001, 1021))
++        other = list(range(2001, 2021))
++        for seq in (child, other):
++            self._insert(rank.cache, rank.allocator, rank.pool, seq)
++        _, child_slots = self._path_slots(rank, child)
++        self.assertEqual(int((child_slots > BASE).sum()), len(parent))
++        evicted, left = ekt.evict_tail_holders(rank.cache, BASE)
++        self.assertEqual((evicted, left), (len(child), 0))
++        self.assertEqual(match_prefix(rank.cache, child).device_prefix_len, 0)
++        self.assertEqual(match_prefix(rank.cache, other).device_prefix_len, len(other))
++        self.assertEqual(rank.full.tail_outstanding, 0)
++        rank.cache.sanity_check()
++        # Locked below the tail holder: nothing of the path can go yet.
++        held = rank.allocator.alloc(BASE - len(other))
++        self._insert(rank.cache, rank.allocator, rank.pool, parent)
++        rank.allocator.free(held)
++        node = self._insert(rank.cache, rank.allocator, rank.pool, child)
++        lock = rank.cache.lock(node.last_device_node)
++        evicted, left = ekt.evict_tail_holders(rank.cache, BASE)
++        self.assertEqual(evicted, 0)
++        self.assertGreater(left, 0)
++        self.assertEqual(match_prefix(rank.cache, child).device_prefix_len, len(child))
++        rank.cache.unlock(lock)
++        self.assertEqual(ekt.evict_tail_holders(rank.cache, BASE), (len(child), 0))
++        rank.cache.sanity_check()
++
++    def test_random_traffic_with_grow_and_shrink_cycles(self):
++        for seed in range(4):
++            with self.subTest(seed=seed):
++                self._run_random_cycles(seed)
++
++    def _run_random_cycles(self, seed):
++        rank = _Rank(self)
++        rng = random.Random(seed)
++        seqs, locks, next_token, shrinks = [], [], 1, 0
++        for step in range(400):
++            op = rng.random()
++            state = rank.tail.state
++            if op < 0.04 and state == ekt.STATE_UNBACKED:
++                tokens = rng.randint(1, self.cfg.kv_size - BASE)
++                self.assertTrue(rank.grow(tokens).ok)
++            elif op < 0.10 and state == ekt.STATE_BACKED:
++                rank.outputs.clear()
++                out = rank.shrink(timeout_s=1e9)
++                if out is None:
++                    # Requests finish; the shrink completes on a later step.
++                    for lock in locks:
++                        rank.cache.unlock(lock)
++                    locks.clear()
++                    rank.tail.check_pending()
++                    (out,) = rank.outputs
++                self.assertTrue(out.ok, out.message)
++                shrinks += 1
++                self.assertEqual(rank.tail.state, ekt.STATE_UNBACKED)
++                self.assertEqual(int((rank.tree_slots() > BASE).sum()), 0)
++                self.assertEqual(rank.full.tail_outstanding, 0)
++                self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++            elif op < 0.55 or not seqs:
++                grown, next_token = self._fill(rank, rng, 1, next_token)
++                seqs.extend(grown)
++            elif op < 0.75:
++                match = match_prefix(rank.cache, rng.choice(seqs)[0])
++                if match.last_device_node != rank.cache.root_node_handle():
++                    locks.append(rank.cache.lock(match.last_device_node))
++            elif locks:
++                rank.cache.unlock(locks.pop(rng.randrange(len(locks))))
++            rank.cache.sanity_check()
++            self._assert_windows(rank, seqs)
++            slots = rank.tree_slots()
++            backed = rank.tail.state != ekt.STATE_UNBACKED
++            limit = BASE + (rank.tail.tail_tokens if backed else 0)
++            if slots.numel():
++                self.assertLessEqual(int(slots.max()), limit)
++            # The leak check's identity: free + cached + unavailable = pool.
++            self.assertEqual(
++                rank.full.available_size()
++                + rank.cache.full_evictable_size()
++                + rank.cache.full_protected_size()
++                + rank.full.unavailable_size(),
++                self.cfg.kv_size,
++            )
++            (full_capacity, full_available), _ = (
++                rank.allocator.swa_capacity_and_available(
++                    full_capacity=self.cfg.kv_size, swa_capacity=0
++                )
++            )
++            self.assertEqual(
++                full_capacity,
++                full_available
++                + rank.cache.full_evictable_size()
++                + rank.cache.full_protected_size(),
++            )
++        self.assertGreater(shrinks, 2)
++
++    def test_a_long_request_keeps_the_tail_until_it_finishes(self):
++        rank = _Rank(self)
++        rank.grow()
++        long_req = _req("long", input_len=120, output_len=10, max_new_tokens=100)
++        short_req = _req("short", input_len=40, output_len=5)
++        capped_req = _req("capped", input_len=30, max_new_tokens=20)
++        rank.requests = [long_req, short_req, capped_req]
++        self.assertIsNone(rank.shrink())
++        # New requests are held to the base at once; the short request is
++        # capped at it, the long one is left alone and keeps the tail open.
++        self.assertEqual(rank.limits[-1], (BASE, 89, 84))
++        self.assertEqual(short_req.sampling_params.max_new_tokens, 89 - 40 - 1)
++        self.assertEqual(capped_req.sampling_params.max_new_tokens, 20)
++        self.assertEqual(long_req.sampling_params.max_new_tokens, 100)
++        self.assertEqual(rank.events, [])
++        self.assertEqual(rank.full.available_size(), self.cfg.kv_size)
++        status = rank.tail.status()
++        self.assertEqual(status["state"], ekt.STATE_DRAINING)
++        self.assertEqual(status["pending"]["waiting_for_long_requests"], 1)
++        rank.tail.check_pending()
++        self.assertEqual(rank.events, [])
++        rank.requests = [short_req, capped_req]
++        rank.tail.check_pending()
++        self.assertEqual(rank.events, ["close", "scrub", "unmap", "ack"])
++        (out,) = rank.outputs
++        self.assertTrue(out.ok)
++        self.assertTrue(out.info["waited"])
++        self.assertEqual(out.info["waited_for"]["long_requests"], 1)
++
++    def test_rescans_when_the_idle_size_hides_an_unlock(self):
++        rank = _Rank(self)
++        rank.grow()
++        held = rank.allocator.alloc(BASE)  # fill the base: the tree gets the tail
++        seq = list(range(1, 21))
++        self._insert(rank.cache, rank.allocator, rank.pool, seq)
++        rank.allocator.free(held)
++        lock = rank.cache.lock(match_prefix(rank.cache, seq).last_device_node)
++        self.assertIsNone(rank.shrink())
++        # As if another prefix of the same size was locked in the same step.
++        idle = rank.cache.evictable_size()
++        rank.cache.evictable_size = lambda: idle
++        rank.cache.unlock(lock)
++        for _ in range(ekt._RESCAN_STEPS - 1):
++            rank.tail.check_pending()
++        self.assertEqual(rank.outputs, [])
++        rank.tail.check_pending()
++        self.assertTrue(rank.outputs[0].ok)
++        self.assertEqual(rank.outputs[0].info["evicted_tokens"], len(seq))
++
++    def test_drain_timeout_gives_the_tail_back(self):
++        rank = _Rank(self)
++        rank.grow()
++        held = rank.allocator.alloc(BASE + 10)
++        self.assertIsNone(rank.shrink(timeout_s=30))
++        rank.clock.now += 29
++        rank.tail.check_pending()
++        self.assertEqual(rank.outputs, [])
++        rank.clock.now += 2
++        rank.tail.check_pending()
++        (out,) = rank.outputs
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "timeout")
++        self.assertEqual(out.state, ekt.STATE_BACKED)
++        self.assertEqual(out.info["waited_for"]["tail_slots_in_use"], 10)
++        self.assertNotIn("unmap", rank.events)
++        self.assertEqual(rank.limits[-1], (self.cfg.kv_size, 249, 244))
++        self.assertEqual(out.info["context_length"], 250)
++        self.assertEqual(rank.full.available_size(), self.cfg.kv_size - BASE - 10)
++        rank.allocator.free(held)
++        self.assertTrue(rank.shrink().ok)
++
++    def test_acknowledges_only_when_the_device_shows_the_memory_free(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, release_delay_polls=3)
++        rank = _Rank(self, backend=backend)
++        rank.grow()
++        self.assertIsNone(rank.shrink())
++        self.assertEqual(rank.events, ["close", "scrub", "unmap"])
++        self.assertEqual(rank.tail.state, ekt.STATE_RELEASING)
++        self.assertTrue(rank.tail.status()["pending"]["waiting_for_vram_release"])
++        self.assertEqual(rank.tail.context_length, 90)
++        self.assertEqual(rank.grow().info["reason"], "busy")
++        polls = 0
++        while not rank.outputs:
++            rank.clock.now += 0.05
++            rank.tail.check_pending()
++            polls += 1
++            self.assertLess(polls, 10)
++        self.assertEqual(polls, 3)
++        (out,) = rank.outputs
++        self.assertTrue(out.ok, out.message)
++        self.assertTrue(out.info["waited"])
++        self.assertTrue(out.info["vram_confirmed"])
++        self.assertAlmostEqual(out.info["vram_release_s"], 0.15, places=3)
++        self.assertEqual(
++            out.info["vram_freed_bytes_by_rank"], {"0": out.info["released_bytes"]}
++        )
++
++    def test_reports_failure_when_the_memory_never_shows_free(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        backend.release_never_visible = True
++        rank = _Rank(self, backend=backend)
++        rank.grow()
++        self.assertIsNone(rank.shrink(release_timeout_s=5))
++        rank.clock.now += 4.9
++        rank.tail.check_pending()
++        self.assertEqual(rank.outputs, [])
++        rank.clock.now += 0.2
++        rank.tail.check_pending()
++        (out,) = rank.outputs
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "release_unconfirmed")
++        self.assertFalse(out.info["vram_confirmed"])
++        # The tail is unmapped all the same, and stays out of circulation.
++        self.assertEqual(out.state, ekt.STATE_UNBACKED)
++        self.assertEqual(backend.mapped_bytes(), rank.owner.base_bytes)
++        self.assertEqual(rank.full.available_size(), BASE)
++
++    def test_polls_the_device_at_most_once_per_interval(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, release_delay_polls=2)
++        rank = _Rank(self, backend=backend)
++        rank.grow()
++        self.assertIsNone(rank.shrink())
++        for _ in range(20):  # scheduler iterations inside one poll interval
++            rank.tail.check_pending()
++        self.assertEqual(rank.outputs, [])
++        rank.clock.now += 0.05
++        rank.tail.check_pending()
++        self.assertEqual(rank.outputs, [])
++        rank.clock.now += 0.05
++        rank.tail.check_pending()
++        self.assertEqual(len(rank.outputs), 1)
++
++    # -- two ranks ----------------------------------------------------------
++
++    def _two_ranks(self, backends=(None, None)):
++        slots = [None, None]
++        barrier = threading.Barrier(2, timeout=30)
++
++        def gather_for(index):
++            def gather(report):
++                slots[index] = report
++                barrier.wait()
++                reports = list(slots)
++                barrier.wait()
++                return reports
++
++            return gather
++
++        return [
++            _Rank(self, rank=i, gather=gather_for(i), backend=backends[i])
++            for i in range(2)
++        ]
++
++    def _on_both(self, ranks, fn):
++        results, errors = [None, None], []
++
++        def run(i):
++            try:
++                results[i] = fn(ranks[i])
++            except BaseException as error:  # surfaced below
++                errors.append(error)
++
++        threads = [threading.Thread(target=run, args=(i,)) for i in range(2)]
++        for thread in threads:
++            thread.start()
++        for thread in threads:
++            thread.join(60)
++        if errors:
++            raise errors[0]
++        return results
++
++    def _assert_identical(self, ranks):
++        a, b = ranks
++        self.assertEqual(a.tail.state, b.tail.state)
++        self.assertEqual(a.tail.tail_tokens, b.tail.tail_tokens)
++        self.assertEqual(a.limits[-1], b.limits[-1])
++        self.assertTrue(torch.equal(a.full.free_pages, b.full.free_pages))
++        self.assertTrue(torch.equal(a.full._tail_free, b.full._tail_free))
++        self.assertEqual(a.full.tail_outstanding, b.full.tail_outstanding)
++        self.assertEqual(a.full._tail_open, b.full._tail_open)
++        self.assertEqual(
++            sorted(a.tree_slots().tolist()), sorted(b.tree_slots().tolist())
++        )
++        self.assertEqual(
++            a.allocator.swa_available_size(), b.allocator.swa_available_size()
++        )
++        self.assertEqual(a.cache.evictable_size(), b.cache.evictable_size())
++
++    def test_two_ranks_end_identical(self):
++        ranks = self._two_ranks()
++        outs = self._on_both(ranks, lambda rank: rank.grow(250))
++        self.assertTrue(all(out.ok for out in outs))
++        self._assert_identical(ranks)
++        # The same requests on both ranks, as the broadcast delivers them.
++        filled = [self._fill(rank, random.Random(7), 40)[0] for rank in ranks]
++        held = [rank.allocator.alloc(20) for rank in ranks]
++        self._assert_identical(ranks)
++        self.assertGreater(int((ranks[0].tree_slots() > BASE).sum()), 0)
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        self.assertEqual(outs, [None, None])
++        self._assert_identical(ranks)
++        for rank, index in zip(ranks, held):
++            rank.allocator.free(index)
++        self._on_both(ranks, lambda rank: rank.tail.check_pending())
++        for rank in ranks:
++            (out,) = rank.outputs
++            self.assertTrue(out.ok, out.message)
++            self.assertTrue(out.info["ranks_identical"])
++            self.assertEqual(sorted(out.info["vram_freed_bytes_by_rank"]), ["0", "1"])
++            self.assertEqual(int((rank.tree_slots() > BASE).sum()), 0)
++            rank.cache.sanity_check()
++        self.assertEqual(
++            ranks[0].outputs[0].info["evicted_tokens"],
++            ranks[1].outputs[0].info["evicted_tokens"],
++        )
++        self._assert_identical(ranks)
++        for seq, _ in filled[0]:
++            self.assertEqual(
++                match_prefix(ranks[0].cache, seq).device_prefix_len,
++                match_prefix(ranks[1].cache, seq).device_prefix_len,
++            )
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        self.assertTrue(all(out.ok for out in outs))
++        self._assert_identical(ranks)
++
++    def test_ranks_wait_for_the_slowest_device(self):
++        slow = ekt.FakeVmmBackend(granularity=GRAN, release_delay_polls=4)
++        ranks = self._two_ranks(backends=(None, slow))
++        self._on_both(ranks, lambda rank: rank.grow())
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        self.assertEqual(outs, [None, None])
++        steps = 0
++        while not ranks[0].outputs:
++            for rank in ranks:
++                rank.clock.now += 0.05
++            self._on_both(ranks, lambda rank: rank.tail.check_pending())
++            steps += 1
++            self.assertEqual(len(ranks[0].outputs), len(ranks[1].outputs))
++            self.assertLess(steps, 10)
++        self.assertEqual(steps, 4)
++        self.assertTrue(ranks[0].outputs[0].ok)
++        self._assert_identical(ranks)
++
++    def test_a_rank_whose_release_never_shows_fails_the_shrink_on_all(self):
++        stuck = ekt.FakeVmmBackend(granularity=GRAN)
++        stuck.release_never_visible = True
++        ranks = self._two_ranks(backends=(None, stuck))
++        self._on_both(ranks, lambda rank: rank.grow())
++        self._on_both(ranks, lambda rank: rank.shrink(release_timeout_s=1))
++        for rank in ranks:
++            rank.clock.now += 2
++        self._on_both(ranks, lambda rank: rank.tail.check_pending())
++        for rank in ranks:
++            (out,) = rank.outputs
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "release_unconfirmed")
++            freed = out.info["vram_freed_bytes_by_rank"]
++            self.assertEqual(freed["0"], out.info["released_bytes"])
++            self.assertEqual(freed["1"], 0)
++        self._assert_identical(ranks)
++
++    def test_a_failed_map_on_one_rank_leaves_both_unbacked(self):
++        ranks = self._two_ranks()
++        ranks[1].backend.fail_next_map = "hipMemCreate failed with hipError_t 2"
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "map_failed")
++            self.assertIn("rank 1", out.message)
++            self.assertEqual(rank.tail.state, ekt.STATE_UNBACKED)
++            self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++            self.assertEqual(rank.full.available_size(), BASE)
++        self._assert_identical(ranks)
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        self.assertTrue(all(out.ok for out in outs))
++
++    def test_one_rank_short_of_memory_refuses_the_grow_on_both(self):
++        small = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
++        ranks = self._two_ranks(backends=(None, small))
++        small.other_used_bytes = small.free_bytes() - 4096
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertEqual(out.info["reason"], "insufficient_vram")
++            self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++        self._assert_identical(ranks)
++
++
++class WiringSuite(SWACheckpointWindowFixtures):
++    """The pieces around the tail: scheduler install, IPC, tokenizer, HTTP."""
++
++    def _scheduler(self):
++        self.backend = ekt.FakeVmmBackend(granularity=GRAN)
++        ekt.set_backend_factory(lambda device_id: self.backend)
++        self.addCleanup(ekt.set_backend_factory, None)
++        self.addCleanup(lambda: ekt._owners.clear())
++        ekt._owners.clear()
++        # The window pool is below the base, as the bundled draft pool is.
++        cache, allocator, pool = self._build(swa_kv_size=128)
++        sent = []
++        scheduler = SimpleNamespace(
++            tp_worker=SimpleNamespace(
++                model_runner=SimpleNamespace(token_to_kv_pool=allocator.get_kvcache())
++            ),
++            token_to_kv_pool_allocator=allocator,
++            tree_cache=cache,
++            model_config=SimpleNamespace(context_len=400),
++            max_running_requests=2,
++            max_total_num_tokens=self.cfg.kv_size,
++            max_req_len=399,
++            max_req_input_len=394,
++            send_control_output=lambda output, req: sent.append(output),
++            request_lists=lambda: {},
++            req_to_token_pool=pool,
++        )
++        scheduler.req_pool = pool
++        return scheduler, allocator, sent
++
++    def test_install_wires_a_scheduler(self):
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        from sglang.srt.runtime_context import get_parallel
++
++        with mock.patch.dict(os.environ, env), get_parallel().override(tp_rank=0):
++            scheduler, allocator, _ = self._scheduler()
++            tail = ekt.install(scheduler)
++        self.assertEqual(ekt._owners, [tail.owner])
++        self.assertIs(tail.allocator, allocator.full_attn_allocator)
++        # The scheduler starts at the base although the pool is the large one.
++        self.assertEqual(scheduler.max_total_num_tokens, BASE)
++        self.assertEqual(scheduler.max_req_len, 89)
++        self.assertEqual(scheduler.max_req_input_len, 84)
++        self.assertEqual(allocator.full_available_size(), BASE)
++        self.assertEqual(self.backend.mapped_bytes(), tail.owner.base_bytes)
++        out = ekt.dispatch(tail, KvTailReqInput(action="grow"), KvTailReqOutput)
++        self.assertTrue(out.ok, out.message)
++        self.assertEqual(scheduler.max_total_num_tokens, self.cfg.kv_size)
++        self.assertEqual(scheduler.max_req_len, 249)
++        self.assertEqual(allocator.full_available_size(), self.cfg.kv_size)
++        # The cache works on the elastic pool, tail slots included.
++        seq = list(range(1, 61))
++        self.assertTrue(self._make_room(scheduler.tree_cache, allocator, len(seq)))
++        self._insert(scheduler.tree_cache, allocator, scheduler.req_pool, seq)
++        full = allocator.full_attn_allocator
++        held = full.alloc(BASE)
++        self.assertEqual(int(held.max()), BASE + 60)
++        k_buffer = allocator.get_kvcache().full_kv_pool.k_buffer[0]
++        k_buffer[held] = 1.0
++        self.assertEqual(
++            float(k_buffer[BASE + 60].float().sum()), k_buffer[0].numel()
++        )
++        full.free(held)
++        # A finished request leaves its slot ids in the request table.
++        table = scheduler.req_pool.req_to_token
++        table[3, :4] = torch.tensor([5, BASE, BASE + 1, BASE + 60], dtype=table.dtype)
++        out = ekt.dispatch(tail, KvTailReqInput(action="shrink"), KvTailReqOutput)
++        self.assertTrue(out.ok, out.message)
++        self.assertEqual(scheduler.max_total_num_tokens, BASE)
++        self.assertEqual(table[3, :4].tolist(), [5, BASE, 0, 0])
++        self.assertEqual(int((table > BASE).sum()), 0)
++
++    def test_install_refuses_what_it_cannot_support(self):
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        from sglang.srt.runtime_context import get_parallel
++
++        with mock.patch.dict(os.environ, env), get_parallel().override(tp_rank=0):
++            scheduler, allocator, _ = self._scheduler()
++            scheduler.model_config.context_len = 80
++            with self.assertRaisesRegex(RuntimeError, "exceeds --context-length"):
++                ekt.install(scheduler)
++            scheduler.model_config.context_len = 400
++            ekt._owners.append(ekt._owners[0])
++            with self.assertRaisesRegex(RuntimeError, "exactly one elastic KV pool"):
++                ekt.install(scheduler)
++            ekt._owners.pop()
++            scheduler.tree_cache.cache_controller = object()
++            with self.assertRaisesRegex(RuntimeError, "HiCache"):
++                ekt.install(scheduler)
++        # A pool no larger than the base has no tail to manage.
++        env[ekt.ENV_BASE_TOKENS] = str(self.cfg.kv_size)
++        with mock.patch.dict(os.environ, env):
++            scheduler, _, _ = self._scheduler()
++            with self.assertRaisesRegex(RuntimeError, "exactly one elastic KV pool"):
++                ekt.install(scheduler)
++
++    def test_requests_cross_the_ipc_codec(self):
++        from sglang.srt.managers.io_struct import msgpack_decode, msgpack_encode
++
++        req = KvTailReqInput(action="grow", tail_tokens=7, keep_free_mib=3)
++        self.assertEqual(msgpack_decode(msgpack_encode(req)), req)
++        self.assertEqual(
++            msgpack_decode(msgpack_encode(KvTailStatusReqInput())),
++            KvTailStatusReqInput(),
++        )
++        rank = _Rank(self)
++        rank.grow()
++        out = rank.shrink()
++        back = msgpack_decode(msgpack_encode(out))
++        self.assertIsInstance(back, KvTailReqOutput)
++        self.assertEqual(back.info, out.info)
++        self.assertEqual(back.info["waited_for"]["long_requests"], 0)
++
++    def _tokenizer(self, replies):
++        from sglang.srt.managers.tokenizer_control_mixin import TokenizerControlMixin
++
++        class Tokenizer(TokenizerControlMixin):
++            pass
++
++        tokenizer = Tokenizer()
++        tokenizer.context_len = 400
++        tokenizer.model_config = SimpleNamespace(context_len=400)
++        tokenizer._kv_tail_max_context_len = 400
++        tokenizer.auto_create_handle_loop = lambda: None
++        tokenizer.seen = []
++
++        async def communicator(obj):
++            # What the server accepts while the scheduler handles the request.
++            tokenizer.seen.append((obj.action, tokenizer.context_len))
++            return [replies.pop(0)]
++
++        tokenizer.kv_tail_communicator = communicator
++        tokenizer.kv_tail_status_communicator = communicator
++        return tokenizer
++
++    def test_tokenizer_advertises_the_base_unless_the_tail_is_backed(self):
++        def reply(ok, context):
++            return KvTailReqOutput(
++                ok=ok, state="x", info={"context_length": context}
++            )
++
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        tokenizer = self._tokenizer(
++            [reply(True, 250), reply(False, 250), reply(True, 90), reply(False, 90)]
++        )
++        with mock.patch.dict(os.environ, env):
++            tokenizer._set_kv_tail_context_len(ekt.config().base_context)
++            self.assertEqual(tokenizer.context_len, 90)
++            asyncio.run(tokenizer.kv_tail(KvTailReqInput(action="grow")))
++            # Raised only once the scheduler has acknowledged the grow.
++            self.assertEqual(tokenizer.seen[-1], ("grow", 90))
++            self.assertEqual(tokenizer.context_len, 250)
++            self.assertEqual(tokenizer.model_config.context_len, 250)
++            # Lowered before the shrink is sent; restored when it fails.
++            asyncio.run(tokenizer.kv_tail(KvTailReqInput(action="shrink")))
++            self.assertEqual(tokenizer.seen[-1], ("shrink", 90))
++            self.assertEqual(tokenizer.context_len, 250)
++            asyncio.run(tokenizer.kv_tail(KvTailReqInput(action="shrink")))
++            self.assertEqual(tokenizer.context_len, 90)
++            self.assertEqual(tokenizer.model_config.context_len, 90)
++            # A refused grow leaves the base in place.
++            asyncio.run(tokenizer.kv_tail(KvTailReqInput(action="grow")))
++            self.assertEqual(tokenizer.context_len, 90)
++
++    def _http(self, tokenizer, method="POST", body=None):
++        import orjson
++
++        from sglang.srt.entrypoints import http_server
++
++        payload = b"" if body is None else orjson.dumps(body)
++
++        async def read_body():
++            return payload
++
++        async def read_json():
++            return orjson.loads(payload)
++
++        request = SimpleNamespace(method=method, body=read_body, json=read_json)
++        state = SimpleNamespace(tokenizer_manager=tokenizer)
++        with mock.patch.object(http_server, "_global_state", state):
++            response = asyncio.run(http_server.kv_tail(request))
++        return response.status_code, orjson.loads(response.body)
++
++    def test_http_endpoint(self):
++        info = {"context_length": 250, "tail_tokens": 320, "waited": False}
++        status = KvTailStatusReqOutput(ok=True, state="unbacked", info={"x": 1})
++        tokenizer = self._tokenizer(
++            [
++                status,
++                status,
++                KvTailReqOutput(ok=True, state="backed", message="m", info=info),
++                KvTailReqOutput(
++                    ok=False, state="backed", info={"reason": "timeout"}
++                ),
++            ]
++        )
++        with mock.patch.dict(os.environ):
++            os.environ.pop(ekt.ENV_BASE_TOKENS, None)
++            self.assertEqual(
++                self._http(tokenizer, "GET"),
++                (200, {"x": 1, "ok": True, "state": "unbacked", "message": ""}),
++            )
++            self.assertEqual(self._http(tokenizer, body={"action": "status"})[0], 200)
++            code, body = self._http(
++                tokenizer, body={"action": "grow", "tail_tokens": 320}
++            )
++            self.assertEqual(code, 200)
++            self.assertEqual(
++                body, {**info, "ok": True, "state": "backed", "message": "m"}
++            )
++            self.assertEqual(tokenizer.seen[-1][0], "grow")
++            code, body = self._http(
++                tokenizer, body={"action": "shrink", "timeout_s": 5}
++            )
++            self.assertEqual(
++                (code, body["ok"], body["reason"]), (409, False, "timeout")
++            )
++            for bad in (
++                {"action": "resize"},
++                {"action": "grow", "tail_tokens": "many"},
++                {"action": "status", "tail_tokens": 1},
++                {"action": "grow", "tail_tokens": -1},
++                {"action": "grow", "tail_tokens": True},
++                {"action": "shrink", "force": 1},
++                [1],
++            ):
++                code, body = self._http(tokenizer, body=bad)
++                self.assertEqual((code, body["ok"]), (400, False), bad)
++                self.assertEqual(body["reason"], "bad_request")
++
++
++_CFG = dict(
++    page_size=1,
++    sliding_window_size=4,
++    components=(ComponentType.FULL, ComponentType.SWA, ComponentType.MAMBA),
++    swa_checkpoint_windows=True,
++    kv_size=POOL,
++    max_num_reqs=600,
++    mamba_cache_size=600,
++)
++
++
++class TestElasticTailWiring(WiringSuite, CustomTestCase):
++    cfg = CacheConfig(**_CFG)
++
++
++class TestElasticTailPage1(ElasticTailSuite, CustomTestCase):
++    # no_buffer checkpoints at page size 1, as the serving arms run.
++    cfg = CacheConfig(
++        page_size=1,
++        sliding_window_size=4,
++        components=(ComponentType.FULL, ComponentType.SWA, ComponentType.MAMBA),
++        swa_checkpoint_windows=True,
++        kv_size=POOL,
++        max_num_reqs=600,
++        mamba_cache_size=600,
++    )
++
++
++if __name__ == "__main__":
++    unittest.main()
