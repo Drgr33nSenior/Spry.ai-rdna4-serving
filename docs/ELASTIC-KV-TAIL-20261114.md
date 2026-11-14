@@ -1,7 +1,8 @@
-# Elastic KV tail: Phase B1 record, 14 November 2026
+# Elastic KV tail: B1 and B2 record, 14 November 2026
 
-**Status:** built and tested on the CPU only. Nothing here has run on a GPU, no
-image contains it, and the serving profile is unchanged. Patches `0031` to
+**Status:** CPU-tested, then GPU-tested on 14 November in the B2 window on both
+R9700s (results under [Phase B2 results](#phase-b2-results-14-november)). The
+workstation's candidate arm `UQSE` runs it; the shared default is still `UQSB`. Patches `0031` to
 `0033` of the [`sglang-main` series](../serving/patches/sglang-main/README.md)
 hold the work. It is off unless one environment switch is set.
 
@@ -589,6 +590,41 @@ wrong place shows. What it shows:
 10. **`kv_allocated_len`** as the length of a row that covers every slot the
     request holds, DFLASH's two verify blocks included. If it is shorter, the
     slots past it are unnamed and a shrink during that request is refused.
+
+## Phase B2 results, 14 November
+
+Image built from series `9506987f` (this branch at `d70ba98`, before the
+sizeless-grow change), arm `UQSE` in shared mode on both R9700s, Linux 7.3.4
+with the amdgpu TLB-fence fix, live pictures and video beside it. Logs are in
+`~/ai-stack/b2-20261114T155616Z/` on the workstation.
+
+| Check | Result |
+| --- | --- |
+| Startup with the flag on, tail unbacked | Starts; margin 40 slots; context 100,768 |
+| Startup self-test (32 same-address remaps) | Passed on both ranks |
+| Idle decode against UQSB (86 tok/s) | 86.3 tok/s |
+| Decode with tail slots in use | 87.9 tok/s (the free-path sync costs nothing measurable) |
+| Grow, 330,000 tokens | 5.0 GiB per card mapped in 72 ms, 13-22 ms afterwards |
+| Shrink, idle | Release confirmed through sysfs in about 1.0 s (the kernel's deferred free) |
+| Shrink during a generation | 22,021-27,137 tokens migrated in 4-70 ms; shrink 0.07-0.10 s |
+| Worst case, two ~85k-token requests in the tail | 170,112 tokens migrated in 19 ms; shrink 0.11 s |
+| Shrink during a chunked prefill | 14,324 tokens migrated; the 40,792-token document recalled exactly |
+| Shrink with one of two requests finished (batch 2 to 1) | Both counts (1-120, 1-300) exact, finish `stop` |
+| Count from 1 to 300 across a migrating shrink | Exact, finish `stop` |
+| 70 grow/shrink cycles | No failure; slowest grow 0.02 s, slowest shrink 1.01 s |
+| Base KV after migration and cycles | A code recalled from the cached base prefix (38,912 cached tokens) |
+| 4 pictures and 1 Wan clip through service-tools' hand-over | All succeeded; shrinks 0.07-1.02 s; no out-of-memory |
+| amdgpu faults or resets in the kernel log; pod restarts | None |
+
+What B2 changed:
+
+- A grow without a size asked for the whole reserved tail, which never fits
+  beside the unloaded ComfyUIs (7.34 and 7.83 GB free against 7.18 GB plus
+  1.61 GB kept free). The default grow now sizes itself; see [Grow](#grow).
+- Chat during a Wan clip dips to about 12-13 tok/s whether or not the tail is
+  in use (median 34 without it). That dip belongs to the clip, not this work.
+- The first counting checks were cut short by their own token budgets (Qwen
+  tokenizes digits singly); the reruns above use enough budget.
 
 ## For Phase B2, in this order
 
