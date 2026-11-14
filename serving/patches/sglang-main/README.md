@@ -23,7 +23,7 @@ the serving image.
   before the next build, or `sync.sh` and the build stop.
 - Patches `0031` to `0033` (14 November) add the elastic KV tail. They are
   CPU-tested only and in no image. With them the series hash is
-  `bfd43a2ed4eb66f811fe7fc55c731728e1704dc2da6d012a8473af7efca017e4`, and all
+  `4002e1d4e86660867015f8be50f399ea8a590b35df33279d27e2a4ab56d84737`, and all
   33 patches apply in order to `fcb32746`.
 - Most patches add a kernel route behind an environment switch that is off by
   default. The workstation's
@@ -123,7 +123,7 @@ patch has no switch. "Not built" means no image contains the patch yet. Each pat
 | [0028](#0028-upstream-47057-swa-checkpoint-windows) | Upstream PR #47057: keep sliding-window KV only for the window before each cached Mamba checkpoint | `CacheInitParams.swa_checkpoint_windows`, set by 0029's flag | None (not built) |
 | [0029](#0029-upstream-47058-dflash-draft-kv-bundling) | Upstream PR #47058: size the DFlash draft KV pool by Mamba checkpoints instead of one slot per target token (needs 0028) | `--speculative-draft-kv-bundling` | None (not built) |
 | [0030](#0030-gfx1201-draft-kv-bundling) | Guards and CPU tests for 0029 on this stack (needs 0029) | With 0029's flag | None (not built) |
-| [0031](#0031-gfx1201-elastic-kv-tail-allocator) | Token allocator hands out slots above a base only while a tail is open, low slots first | `SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS` | None (not built) |
+| [0031](#0031-gfx1201-elastic-kv-tail-allocator) | Token allocator hands out slots above a base only while a tail is open, low slots first; lists the tail slots in use | `SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS` | None (not built) |
 | [0032](#0032-gfx1201-elastic-kv-tail-buffers) | Target KV buffers over HIP virtual memory with one mappable tail extent each; the tail's shrink and grow logic (needs 0031, 0029) | `SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS` | None (not built) |
 | [0033](#0033-gfx1201-elastic-kv-tail-control) | Scheduler control request and `/kv_tail` endpoint for the tail; CPU tests (needs 0032) | `SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS` | None (not built) |
 
@@ -284,8 +284,8 @@ First of three patches for the elastic KV tail; the [record](../../../docs/ELAST
 
 ### 0032-gfx1201-elastic-kv-tail-buffers
 
-Adds `mem_cache/elastic_kv_tail.py` and one branch in `MHATokenToKVPool._create_buffers`. With `SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS` set (and `SGLANG_GFX1201_ELASTIC_KV_BASE_CONTEXT`), the target's full-attention KV buffers are tensors over HIP virtual address ranges sized for the whole pool: the base rows are mapped at startup, the rest is one extent per buffer that `grow` maps and `shrink` unmaps (`hipMemAddressReserve`, `hipMemCreate`, `hipMemMap`, `hipMemSetAccess`, `hipMemUnmap`, `hipMemRelease` through `ctypes`). The module also holds the shrink order (close the tail, evict idle prefix-cache entries that hold tail slots, wait for running requests, unmap, wait until the device shows the memory free), the request limits that follow the backed size, the agreement between TP ranks, and a fake device backend for CPU tests. The server is started at the large pool size and context; it refuses to start with the switch on if it lacks `--speculative-draft-kv-bundling`, page size 1, the Python tree core, or has HiCache.
+Adds `mem_cache/elastic_kv_tail.py` and one branch in `MHATokenToKVPool._create_buffers`. With `SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS` set (and `SGLANG_GFX1201_ELASTIC_KV_BASE_CONTEXT`), the target's full-attention KV buffers are tensors over HIP virtual address ranges sized for the whole pool: the base rows are mapped at startup, the rest is one extent per buffer that `grow` maps and `shrink` unmaps (`hipMemAddressReserve`, `hipMemCreate`, `hipMemMap`, `hipMemSetAccess`, `hipMemUnmap`, `hipMemRelease` through `ctypes`). The module also holds the shrink, which never waits for a request (close the tail, evict idle prefix-cache entries that hold tail slots, move what running requests and locked prefixes hold into base slots and rename it in the request table, the prefix cache and the draft's window mapping, verify, unmap, wait until the device shows the memory free), the agreement between TP ranks, and a fake device backend for CPU tests. The tail is cache room only: requests stay within the base context. The server is started at the large pool size; it refuses to start with the switch on if it lacks `--speculative-draft-kv-bundling`, page size 1, the Python tree core or `--disable-overlap-schedule`, or has HiCache.
 
 ### 0033-gfx1201-elastic-kv-tail-control
 
-The control path for 0032: `KvTailReqInput` and `KvTailStatusReqInput` reach every TP rank through the scheduler's request broadcast, the scheduler advances a waiting shrink once per iteration, the tokenizer manager keeps the advertised context length at the base unless the tail is backed, and `GET` or `POST /kv_tail` exposes status, grow and shrink. Adds `test_gfx1201_elastic_kv_tail.py` (43 CPU tests on the fake backend).
+The control path for 0032: `KvTailReqInput` and `KvTailStatusReqInput` reach every TP rank through the scheduler's request broadcast, the scheduler polls a shrink's device release once per iteration, the tokenizer manager holds the context length at the base, and `GET` or `POST /kv_tail` exposes status, grow and shrink. Adds `test_gfx1201_elastic_kv_tail.py` (48 CPU tests on the fake backend).

@@ -13,7 +13,7 @@ index 33b49b7..e94425c 100644
              (full_capacity, self.full_available_size()),
              (swa_capacity, self.swa_available_size()),
 diff --git a/python/sglang/srt/mem_cache/allocator/token.py b/python/sglang/srt/mem_cache/allocator/token.py
-index 4782a1d..4f84eaa 100644
+index 4782a1d..13825ba 100644
 --- a/python/sglang/srt/mem_cache/allocator/token.py
 +++ b/python/sglang/srt/mem_cache/allocator/token.py
 @@ -28,6 +28,16 @@ if TYPE_CHECKING:
@@ -33,7 +33,7 @@ index 4782a1d..4f84eaa 100644
      def __init__(
          self,
          size: int,
-@@ -42,20 +52,115 @@ class TokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+@@ -42,20 +52,121 @@ class TokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
      def clear(self):
          # The padded slot 0 is used for writing dummy outputs from padded tokens.
          self.free_pages = torch.arange(
@@ -101,6 +101,12 @@ index 4782a1d..4f84eaa 100644
 +        self._tail_tokens = 0
 +        self._reset_tail_free()
 +
++    def tail_slots_in_use(self) -> torch.Tensor:
++        """The tail slots handed out and not yet freed, ascending."""
++        in_use = torch.ones(self._tail_tokens, dtype=torch.bool, device=self.device)
++        in_use[self._tail_free - self._tail_base - 1] = False
++        return in_use.nonzero().flatten() + self._tail_base + 1
++
 +    def unavailable_size(self) -> int:
 +        """Slots that are neither free to hand out nor held: the tail that is
 +        not open, less what is still in use from it."""
@@ -150,7 +156,7 @@ index 4782a1d..4f84eaa 100644
              return None
  
          select_index = self.free_pages[:need_size]
-@@ -67,6 +172,8 @@ class TokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
+@@ -67,6 +178,8 @@ class TokenToKVPoolAllocator(BaseTokenToKVPoolAllocator):
              return
  
          if self.free_group is None:

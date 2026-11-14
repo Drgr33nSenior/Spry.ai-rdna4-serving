@@ -1,9 +1,9 @@
 diff --git a/python/sglang/srt/mem_cache/elastic_kv_tail.py b/python/sglang/srt/mem_cache/elastic_kv_tail.py
 new file mode 100644
-index 0000000..725e877
+index 0000000..4c0f2d2
 --- /dev/null
 +++ b/python/sglang/srt/mem_cache/elastic_kv_tail.py
-@@ -0,0 +1,1452 @@
+@@ -0,0 +1,1495 @@
 +# SPDX-License-Identifier: Apache-2.0
 +"""Elastic KV tail for gfx1201 shared mode: a KV pool whose upper slots are backed
 +with device memory only while another GPU tenant does not need it.
@@ -18,11 +18,13 @@ index 0000000..725e877
 +  that is mapped (``grow``) and unmapped (``shrink``) on request;
 +- the token allocator hands out base slots first and tail slots only while the
 +  tail is open (``TokenToKVPoolAllocator.enable_elastic_tail``);
-+- a shrink closes the tail, evicts idle prefix-cache entries that hold tail
-+  slots, waits for running requests that hold them, unmaps, and acknowledges
-+  only when every TP rank sees the device memory free again;
-+- request limits (context length, pool size) follow the backed size, so the
-+  server advertises the base context unless the tail is backed.
++- a shrink never waits for a request: it closes the tail, evicts idle
++  prefix-cache entries that hold tail slots, moves what running requests and
++  locked prefixes hold into base slots, unmaps, and acknowledges only when
++  every TP rank sees the device memory free again;
++- the tail is cache room only. The context a request may use is the base
++  context whether or not the tail is backed, so what is running always fits
++  the base.
 +
 +The draft KV pool is not touched: ``--speculative-draft-kv-bundling`` keeps it
 +at a fixed size and this module requires it.
@@ -38,7 +40,7 @@ index 0000000..725e877
 +import mmap
 +import os
 +import time
-+from dataclasses import dataclass, field
++from dataclasses import dataclass
 +from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
 +
 +import torch
@@ -51,15 +53,14 @@ index 0000000..725e877
 +STATE_DISABLED = "disabled"
 +STATE_UNBACKED = "unbacked"
 +STATE_BACKED = "backed"
-+STATE_DRAINING = "draining"
 +STATE_RELEASING = "releasing"
 +
 +# A release counts as visible when the device's used memory fell by the
 +# released bytes, less this slack for unrelated allocations in between.
 +_RELEASE_SLACK_BYTES = 64 << 20
 +_RELEASE_POLL_INTERVAL_S = 0.02
-+# While a shrink waits, look for newly idle tail holders at least this often.
-+_RESCAN_STEPS = 64
++# Rows moved per step of a migration: 16,384 rows of 512 bytes are 8 MiB.
++_COPY_CHUNK_ROWS = 16384
 +
 +
 +# --------------------------------------------------------------------------
@@ -98,26 +99,6 @@ index 0000000..725e877
 +            "context length to advertise while the tail is not backed"
 +        )
 +    return ElasticTailConfig(base_tokens=base_tokens, base_context=base_context)
-+
-+
-+def effective_limits(
-+    *,
-+    base_tokens: int,
-+    base_context: int,
-+    max_context: int,
-+    max_running_requests: int,
-+    tail_tokens: int,
-+) -> Tuple[int, int]:
-+    """(pool tokens, context length) to serve with ``tail_tokens`` backed.
-+
-+    The base context is the profile's per-conversation share of the base pool;
-+    a backed tail is shared the same way, up to the server's context length.
-+    """
-+    pool_tokens = base_tokens + tail_tokens
-+    if tail_tokens <= 0:
-+        return pool_tokens, min(base_context, max_context)
-+    share = tail_tokens // max(1, max_running_requests)
-+    return pool_tokens, min(max_context, base_context + share)
 +
 +
 +# --------------------------------------------------------------------------
@@ -712,6 +693,22 @@ index 0000000..725e877
 +        self.tail_tokens = 0
 +        return released
 +
++    @property
++    def token_bytes(self) -> int:
++        """Bytes one token takes across all buffers."""
++        return sum(buf.row_bytes for buf in self._buffers)
++
++    def copy_rows(self, src: torch.Tensor, dst: torch.Tensor) -> None:
++        """Copy the rows of slots ``src`` to slots ``dst`` in every buffer,
++        a bounded number of rows at a time so the copy needs little memory."""
++        for start in range(0, src.numel(), _COPY_CHUNK_ROWS):
++            chunk_src = src[start : start + _COPY_CHUNK_ROWS]
++            chunk_dst = dst[start : start + _COPY_CHUNK_ROWS]
++            for buf in self._buffers:
++                buf.tensor.index_copy_(
++                    0, chunk_dst, buf.tensor.index_select(0, chunk_src)
++                )
++
 +    def base_checksum(self) -> int:
 +        """A checksum of the base rows of every buffer (tests, GPU checks)."""
 +        total = 0
@@ -794,38 +791,50 @@ index 0000000..725e877
 +# --------------------------------------------------------------------------
 +
 +
-+def evict_tail_holders(tree_cache, base_tokens: int) -> Tuple[int, int]:
-+    """Evict every idle prefix-cache entry that holds a slot above
-+    ``base_tokens``, with the entries below it in the tree.
++def _holds_tail(value: Optional[torch.Tensor], base_tokens: int) -> bool:
++    if value is None or value.numel() == 0:
++        return False
++    return int(value.max()) > base_tokens
 +
-+    An entry whose own KV sits in tail slots cannot keep its descendants: they
-+    are prefixes that continue through it. Entries a running request has
-+    locked are left; the caller retries once they are released.
 +
-+    Returns (full-attention tokens evicted, tail-holding entries left).
++def _tree_nodes(tree_cache) -> List[Any]:
++    """Every node below the root, parents before children."""
++    nodes, stack = [], list(tree_cache.tree_core.root_node.children.values())
++    while stack:
++        node = stack.pop()
++        nodes.append(node)
++        stack.extend(node.children.values())
++    return nodes
++
++
++def evict_idle_tail_holders(tree_cache, base_tokens: int) -> int:
++    """Evict the idle prefix-cache entries that hold a slot above
++    ``base_tokens``; returns the full-attention tokens evicted.
++
++    An entry goes only if nothing at or below it in the tree is locked, and
++    then the entries below it go too: they are prefixes that continue through
++    it. A tail holder with a lock at or below it stays, for migrate_tail().
 +    """
 +    from sglang.srt.mem_cache.unified_cache.component_type import BASE_COMPONENT_TYPE
 +
 +    core = tree_cache.tree_core
-+    if core.has_ongoing_insert():
-+        return 0, -1
 +    ct = BASE_COMPONENT_TYPE
-+    root = core.root_node
-+
-+    def holds_tail(node) -> bool:
-+        value = node.component_data[ct].value
-+        if value is None or value.numel() == 0:
-+            return False
-+        return int(value.max()) > base_tokens
-+
++    nodes = _tree_nodes(tree_cache)
++    locked_below: Dict[int, bool] = {}
++    for node in reversed(nodes):  # children before parents
++        locked_below[node.id] = any(
++            cd.lock_ref > 0 for cd in node.component_data
++        ) or any(locked_below[child.id] for child in node.children.values())
 +    doomed: Dict[int, Any] = {}
-+    stack = [(child, False) for child in root.children.values()]
-+    while stack:
-+        node, under_holder = stack.pop()
-+        doomed_here = under_holder or holds_tail(node)
-+        if doomed_here and node.component_data[ct].value is not None:
-+            doomed[node.id] = node
-+        stack.extend((child, doomed_here) for child in node.children.values())
++    under_doomed = set()
++    for node in nodes:  # parents before children
++        value = node.component_data[ct].value
++        if node.parent.id in under_doomed or (
++            not locked_below[node.id] and _holds_tail(value, base_tokens)
++        ):
++            under_doomed.add(node.id)
++            if value is not None:
++                doomed[node.id] = node
 +
 +    tracker = {component: 0 for component in tree_cache.tree_components}
 +    start = time.perf_counter()
@@ -844,8 +853,36 @@ index 0000000..725e877
 +    evicted = tracker[ct]
 +    if evicted:
 +        tree_cache.update_eviction_metrics(evicted, start)
-+    left = sum(1 for node in doomed.values() if holds_tail(node))
-+    return evicted, left
++    return evicted
++
++
++def tree_tail_slots(tree_cache, base_tokens: int) -> torch.Tensor:
++    """The slots above ``base_tokens`` that prefix-cache entries hold."""
++    from sglang.srt.mem_cache.unified_cache.component_type import BASE_COMPONENT_TYPE
++
++    found = []
++    for node in _tree_nodes(tree_cache):
++        value = node.component_data[BASE_COMPONENT_TYPE].value
++        if _holds_tail(value, base_tokens):
++            found.append(value[value > base_tokens])
++    if not found:
++        return torch.empty(0, dtype=torch.int64)
++    return torch.cat(found)
++
++
++def remap_tree_slots(tree_cache, base_tokens: int, remap: torch.Tensor) -> int:
++    """Rewrite every prefix-cache entry that holds a slot above
++    ``base_tokens`` through ``remap`` (old slot id -> new). Returns the
++    number of entries rewritten."""
++    from sglang.srt.mem_cache.unified_cache.component_type import BASE_COMPONENT_TYPE
++
++    rewritten = 0
++    for node in _tree_nodes(tree_cache):
++        cd = node.component_data[BASE_COMPONENT_TYPE]
++        if _holds_tail(cd.value, base_tokens):
++            cd.value = remap[cd.value.to(torch.int64)].to(cd.value.dtype)
++            rewritten += 1
++    return rewritten
 +
 +
 +# --------------------------------------------------------------------------
@@ -854,35 +891,31 @@ index 0000000..725e877
 +
 +
 +@dataclass
-+class _Pending:
++class _Release:
++    """A shrink that has unmapped and waits for the device to show it."""
++
 +    recv_req: Any
 +    started: float
 +    deadline: float
-+    release_timeout_s: float
-+    long_rids: set = field(default_factory=set)
-+    gate_closed: bool = False
-+    waited: bool = False
-+    waited_long_requests: int = 0
-+    waited_tail_slots: int = 0
-+    evicted_tokens: int = 0
-+    last_evictable: Optional[int] = None
-+    steps_since_scan: int = 0
-+    released_bytes: int = 0
-+    used_before_release: int = 0
-+    release_started: float = 0.0
-+    release_deadline: float = 0.0
-+    last_release_poll: float = 0.0
++    released_bytes: int
++    used_before: int
++    extra: Dict[str, Any]
++    last_poll: float = float("-inf")
 +    used_now: int = 0
-+    ranks_identical: bool = True
 +
 +
 +class ElasticKvTail:
 +    """One rank's tail: buffers, allocator gate, prefix cache and limits.
 +
 +    Every TP rank owns one and receives the same control requests at the same
-+    scheduler step. Each decision that depends on something a rank measures
-+    for itself (device memory, a map failure, the clock) is taken from the
-+    reports of all ranks, gathered with ``gather``, so the ranks move together.
++    scheduler step, between forwards. Each decision that depends on something
++    a rank measures for itself (device memory, a map failure, whether its
++    slots fit the base, the clock) is taken from the reports of all ranks,
++    gathered with ``gather``, so the ranks move together.
++
++    The tail is cache room only: the context a request may use is the base
++    context whether or not the tail is backed, so what running requests hold
++    always fits the base and a shrink can move it there without waiting.
 +    """
 +
 +    def __init__(
@@ -890,94 +923,71 @@ index 0000000..725e877
 +        *,
 +        owner: TailBufferOwner,
 +        allocator,
++        swa_allocator,
 +        tree_cache,
-+        base_context: int,
-+        max_context: int,
-+        max_running_requests: int,
++        req_to_token: torch.Tensor,
++        live_rows: Callable[[], Iterable[Tuple[int, int]]],
++        context_length: int,
 +        input_len_margin: int,
 +        apply_limits: Callable[[int, int, int], None],
-+        live_requests: Callable[[], Iterable[Any]],
 +        gather: Callable[[Any], List[Any]],
 +        send_output: Callable[[Any, Any], None],
 +        make_output: Callable[..., Any],
-+        scrub_stale_slots: Callable[[int], None] = lambda base_tokens: None,
 +        rank: int = 0,
 +        clock: Callable[[], float] = time.monotonic,
 +    ):
 +        self.owner = owner
 +        self.allocator = allocator
++        self.swa_allocator = swa_allocator
 +        self.tree_cache = tree_cache
++        self.req_to_token = req_to_token
++        self._live_rows = live_rows
 +        self.base_tokens = owner.base_tokens
-+        self.base_context = int(base_context)
-+        self.max_context = int(max_context)
-+        self.max_running_requests = int(max_running_requests)
++        self.context_length = int(context_length)
 +        self.input_len_margin = int(input_len_margin)
 +        self._apply_limits = apply_limits
-+        self._live_requests = live_requests
 +        self._gather = gather
 +        self._send_output = send_output
 +        self._make_output = make_output
-+        self._scrub_stale_slots = scrub_stale_slots
 +        self.rank = int(rank)
 +        self._clock = clock
 +        self.state = STATE_UNBACKED
 +        self.tail_tokens = 0
-+        self._pending: Optional[_Pending] = None
++        self._release: Optional[_Release] = None
 +        self.last_result: Dict[str, Any] = {}
 +        self._set_limits(0)
 +
 +    # -- limits ------------------------------------------------------------
 +
-+    def limits(self, tail_tokens: int) -> Tuple[int, int, int, int]:
-+        """(pool tokens, context, max request length, max input length)."""
-+        pool_tokens, context = effective_limits(
-+            base_tokens=self.base_tokens,
-+            base_context=self.base_context,
-+            max_context=self.max_context,
-+            max_running_requests=self.max_running_requests,
-+            tail_tokens=tail_tokens,
-+        )
-+        max_req_len = min(context - 1, pool_tokens - 1)
-+        return pool_tokens, context, max_req_len, max_req_len - self.input_len_margin
-+
 +    def _set_limits(self, tail_tokens: int) -> None:
-+        pool_tokens, _, max_req_len, max_req_input_len = self.limits(tail_tokens)
-+        self._apply_limits(pool_tokens, max_req_len, max_req_input_len)
-+
-+    @property
-+    def context_length(self) -> int:
-+        """What the server accepts now: the base while unbacked or shrinking."""
-+        tail = self.tail_tokens if self.state == STATE_BACKED else 0
-+        return self.limits(tail)[1]
++        """The pool grows with the tail; the context never does."""
++        pool_tokens = self.base_tokens + tail_tokens
++        max_req_len = min(self.context_length - 1, pool_tokens - 1)
++        self._apply_limits(
++            pool_tokens, max_req_len, max_req_len - self.input_len_margin
++        )
 +
 +    # -- status ------------------------------------------------------------
 +
 +    def status(self) -> Dict[str, Any]:
++        backed = self.tail_tokens if self.state == STATE_BACKED else 0
 +        info = {
 +            "state": self.state,
-+            "tail_tokens": self.tail_tokens if self.state != STATE_UNBACKED else 0,
++            "tail_tokens": backed,
 +            "reserved_tail_tokens": self.owner.reserved_tail_tokens,
 +            "base_tokens": self.base_tokens,
-+            "pool_tokens": self.limits(
-+                self.tail_tokens if self.state == STATE_BACKED else 0
-+            )[0],
++            "pool_tokens": self.base_tokens + backed,
 +            "context_length": self.context_length,
-+            "base_context_length": self.limits(0)[1],
-+            "max_context_length": self.max_context,
 +            "tail_bytes": self.owner.tail_bytes,
 +            "tail_slots_in_use": self.allocator.tail_outstanding,
 +            "backend": self.owner.backend.name,
 +        }
-+        pending = self._pending
-+        if pending is not None:
++        release = self._release
++        if release is not None:
 +            info["pending"] = {
 +                "action": "shrink",
-+                "elapsed_s": round(self._clock() - pending.started, 3),
-+                "waiting_for_long_requests": len(self._live_long_rids(pending)),
-+                "waiting_for_tail_slots": (
-+                    self.allocator.tail_outstanding if pending.gate_closed else 0
-+                ),
-+                "waiting_for_vram_release": self.state == STATE_RELEASING,
++                "elapsed_s": round(self._clock() - release.started, 3),
++                "waiting_for_vram_release": True,
 +            }
 +        return info
 +
@@ -993,14 +1003,14 @@ index 0000000..725e877
 +        """Dispatch one control request. None means the answer comes later,
 +        through ``send_output`` from ``check_pending``."""
 +        action = recv_req.action
-+        if self._pending is not None:
++        if self._release is not None:
 +            return self._output(
 +                False, "a shrink is in progress", action=action, reason="busy"
 +            )
 +        if action == "grow":
 +            return self._grow(recv_req)
 +        if action == "shrink":
-+            return self._begin_shrink(recv_req)
++            return self._shrink(recv_req)
 +        return self._output(
 +            False, f"unknown action {action!r}", action=action, reason="bad_request"
 +        )
@@ -1010,9 +1020,7 @@ index 0000000..725e877
 +        tokens = reserved if recv_req.tail_tokens is None else int(recv_req.tail_tokens)
 +        if self.state == STATE_BACKED:
 +            if tokens == self.tail_tokens:
-+                return self._output(
-+                    True, "the tail is already backed", action="grow", waited=False
-+                )
++                return self._output(True, "the tail is already backed", action="grow")
 +            return self._output(
 +                False,
 +                f"the tail is backed with {self.tail_tokens} tokens; shrink first",
@@ -1061,228 +1069,254 @@ index 0000000..725e877
 +        self.state = STATE_BACKED
 +        self._set_limits(tokens)
 +        logger.info(
-+            "Elastic KV tail: grew by %d tokens (%.2f GiB) in %.3f s; pool %d, "
-+            "context %d",
++            "Elastic KV tail: grew by %d tokens (%.2f GiB) in %.3f s; pool %d",
 +            tokens,
 +            need / (1 << 30),
 +            self._clock() - tic,
-+            self.limits(tokens)[0],
-+            self.context_length,
++            self.base_tokens + tokens,
 +        )
 +        return self._output(
 +            True,
 +            "tail backed",
 +            action="grow",
-+            waited=False,
 +            mapped_bytes=need,
 +            map_s=round(self._clock() - tic, 4),
++            elapsed_s=round(self._clock() - tic, 4),
 +        )
 +
-+    def _begin_shrink(self, recv_req) -> Optional[Any]:
++    # -- shrink ------------------------------------------------------------
++
++    def _plan_migration(self) -> Tuple[Optional[torch.Tensor], Optional[str]]:
++        """The tail slots still in use, or why they cannot move to the base.
++
++        Evicts idle base prefixes, oldest first, until the base has room.
++        Nothing a request or a locked prefix holds has changed when this
++        returns."""
++        from sglang.srt.mem_cache.base_prefix_cache import EvictParams
++
++        allocator, base = self.allocator, self.base_tokens
++        old = allocator.tail_slots_in_use()
++        count = old.numel()
++        if count == 0:
++            return old, None
++        # Every slot to move must be one this module knows how to rename.
++        rows = self.req_to_token[self._rows_naming_tail()]
++        named = torch.cat(
++            (
++                rows[rows > base].to(torch.int64).cpu(),
++                tree_tail_slots(self.tree_cache, base).cpu(),
++            )
++        )
++        unnamed = count - int(torch.isin(old.cpu(), named).sum())
++        if unnamed:
++            return None, (
++                f"{unnamed} tail slots in use are named by neither the request "
++                "table nor the prefix cache"
++            )
++        shortfall = count - allocator.available_size()
++        if shortfall > 0:
++            self.tree_cache.evict_for_alloc(EvictParams(num_tokens=shortfall))
++        available = allocator.available_size()
++        if available < count:
++            return None, (
++                f"{count} tail slots are in use and the base has room for "
++                f"{available} after evicting every idle prefix"
++            )
++        return old, None
++
++    def _rows_naming_tail(self) -> torch.Tensor:
++        """The request-table rows that name a slot above the base."""
++        table = self.req_to_token
++        return (table.max(dim=1).values > self.base_tokens).nonzero().flatten()
++
++    def _migrate(self, old: torch.Tensor) -> None:
++        """Move the KV of the tail slots ``old`` into base slots and rename
++        them wherever a slot id is kept: the request table, the prefix cache
++        and the window mapping the bundled draft pool is reached through."""
++        allocator, base = self.allocator, self.base_tokens
++        new = allocator.alloc(old.numel())
++        assert new is not None and int(new.max()) <= base
++        old = old.to(new.device)
++        self.owner.backend.synchronize()
++        self.owner.copy_rows(old, new)
++        mapping = self.swa_allocator.full_to_swa_index_mapping
++        mapping[new] = mapping[old]
++        self.swa_allocator.clear_full_to_swa_mapping(old)
++        # One table renames every holder, so a slot a request row and a
++        # prefix-cache entry both name stays one slot.
++        remap = torch.arange(mapping.numel(), dtype=torch.int64, device=new.device)
++        remap[old] = new
++        table = self.req_to_token
++        rows = self._rows_naming_tail()
++        table[rows] = remap.to(table.device)[table[rows].to(torch.int64)].to(
++            table.dtype
++        )
++        remap_tree_slots(self.tree_cache, base, remap.to(self.tree_cache.device))
++        allocator.free(old)
++
++    def _has_no_tail_refs(self) -> bool:
++        """No live request's row and no prefix-cache entry names a tail slot,
++        and the allocator holds none out."""
++        base, table = self.base_tokens, self.req_to_token
++        if self.allocator.tail_outstanding:
++            return False
++        for row, length in self._live_rows():
++            if length and int(table[row, :length].max()) > base:
++                return False
++        return tree_tail_slots(self.tree_cache, base).numel() == 0
++
++    def _shrink(self, recv_req) -> Optional[Any]:
 +        if self.state == STATE_UNBACKED:
 +            return self._output(
 +                True,
 +                "the tail is not backed",
 +                action="shrink",
-+                waited=False,
 +                vram_confirmed=True,
 +                released_bytes=0,
++                migrated_tokens=0,
++                evicted_tokens=0,
++                verified_no_tail_refs=True,
 +            )
-+        now = self._clock()
-+        pending = _Pending(
-+            recv_req=recv_req,
-+            started=now,
-+            deadline=now + max(0.0, float(recv_req.timeout_s)),
-+            release_timeout_s=max(0.0, float(recv_req.release_timeout_s)),
++        started = self._clock()
++        allocator, base = self.allocator, self.base_tokens
++        available_before = allocator.available_size()
++        in_use_before = allocator.tail_outstanding
++        # 1. No tail slot is handed out from here on.
++        allocator.close_tail()
++        # 2. Idle prefixes in the tail are dropped, not moved.
++        evicted_tail = evict_idle_tail_holders(self.tree_cache, base)
++        # 3. What is left belongs to running requests and locked prefixes. It
++        #    moves only if it fits the base on every rank.
++        evictable_before = self.tree_cache.full_evictable_size()
++        old, problem = self._plan_migration()
++        evicted_base = evictable_before - self.tree_cache.full_evictable_size()
++        plans = self._gather((self.rank, problem, None if old is None else old.numel()))
++        problems = [f"rank {rank}: {p}" for rank, p, _ in plans if p is not None]
++        counts = {count for _, _, count in plans}
++        extra = dict(
++            action="shrink",
++            evicted_tokens=evicted_tail + evicted_base,
++            evicted_tail_tokens=evicted_tail,
++            evicted_base_tokens=evicted_base,
 +        )
-+        # New requests are held to the base from here on. A request already
-+        # past the base keeps the tail until it finishes; any other is capped
-+        # at the base, as it would have been without the tail.
-+        self.state = STATE_DRAINING
-+        self._set_limits(0)
-+        _, _, base_req_len, base_input_len = self.limits(0)
-+        for req in self._live_requests():
-+            input_len = len(req.origin_input_ids)
-+            if (
-+                input_len >= base_input_len
-+                or input_len + len(req.output_ids) >= base_req_len - 1
-+            ):
-+                pending.long_rids.add(req.rid)
-+                continue
-+            cap = max(0, base_req_len - input_len - 1)
-+            params = req.sampling_params
-+            if params.max_new_tokens is None or params.max_new_tokens > cap:
-+                params.max_new_tokens = cap
-+                if params.min_new_tokens > cap:
-+                    params.min_new_tokens = cap
-+        pending.waited_long_requests = len(pending.long_rids)
-+        self._pending = pending
-+        return self._step()
-+
-+    def check_pending(self) -> None:
-+        """Advance a deferred shrink; called once per scheduler iteration."""
-+        if self._pending is None:
-+            return
-+        pending = self._pending
-+        output = self._step()
-+        if output is not None:
-+            self._send_output(output, pending.recv_req)
-+
-+    # -- shrink ------------------------------------------------------------
-+
-+    def _live_long_rids(self, pending: _Pending) -> set:
-+        if not pending.long_rids:
-+            return pending.long_rids
-+        live = {req.rid for req in self._live_requests()}
-+        return pending.long_rids & live
-+
-+    def _step(self) -> Optional[Any]:
-+        pending = self._pending
-+        if self.state == STATE_DRAINING:
-+            output = self._drain_step(pending)
-+            if output is not None or self.state != STATE_RELEASING:
-+                return output
-+        return self._release_step(pending)
-+
-+    def _drain_step(self, pending: _Pending) -> Optional[Any]:
-+        if not pending.gate_closed:
-+            pending.long_rids = self._live_long_rids(pending)
-+            if not pending.long_rids:
-+                self.allocator.close_tail()
-+                pending.gate_closed = True
-+                pending.waited_tail_slots = self.allocator.tail_outstanding
-+        if pending.gate_closed and self.allocator.tail_outstanding:
-+            # Scan the tree when its idle part changed, and now and then in
-+            # case a lock moved without changing its size. Both triggers count
-+            # scheduler steps, never time, so every rank scans at the same step.
-+            evictable = self.tree_cache.evictable_size()
-+            pending.steps_since_scan += 1
-+            if (
-+                evictable != pending.last_evictable
-+                or pending.steps_since_scan >= _RESCAN_STEPS
-+            ):
-+                evicted, left = evict_tail_holders(self.tree_cache, self.base_tokens)
-+                pending.evicted_tokens += evicted
-+                if left >= 0:
-+                    pending.last_evictable = self.tree_cache.evictable_size()
-+                    pending.steps_since_scan = 0
-+        drained = pending.gate_closed and self.allocator.tail_outstanding == 0
-+        expired = self._clock() >= pending.deadline
-+        reports = self._gather(
-+            (
-+                drained,
-+                expired,
-+                pending.evicted_tokens,
-+                self.allocator.tail_outstanding,
++        if problems:
++            allocator.reopen_tail()
++            logger.error("Elastic KV tail: cannot shrink: %s", " | ".join(problems))
++            return self._output(
++                False,
++                "the tail stays backed: " + " | ".join(problems),
++                reason="cannot_migrate",
++                elapsed_s=round(self._clock() - started, 4),
++                migrated_tokens=0,
++                verified_no_tail_refs=False,
++                vram_confirmed=False,
++                released_bytes=0,
++                **extra,
 +            )
-+        )
-+        identical = len({report[2:] for report in reports}) == 1 and (
-+            len({report[0] for report in reports}) == 1
++        # 4. Move, rename, and check that nothing names the tail any more.
++        tic = self._clock()
++        migrated = old.numel()
++        if migrated:
++            self._migrate(old)
++        verified = self._has_no_tail_refs()
++        # What is left above the base in the request table is stale (rows of
++        # finished requests) and must not be followed into unmapped memory.
++        table = self.req_to_token
++        table.masked_fill_(table > base, 0)
++        self.owner.backend.synchronize()
++        migrate_s = round(self._clock() - tic, 4)
++        checks = self._gather((self.rank, verified, migrated, evicted_tail))
++        identical = len(counts) == 1 and len({c[2:] for c in checks}) == 1
++        extra.update(
++            migrated_tokens=migrated,
++            migrated_bytes=migrated * self.owner.token_bytes,
++            migrate_s=migrate_s,
++            verified_no_tail_refs=all(check[1] for check in checks),
++            ranks_identical=identical,
++            tail_slots_in_use_before=in_use_before,
++            free_slots_before=available_before,
 +        )
 +        if not identical:
 +            logger.error(
-+                "Elastic KV tail: TP ranks disagree while draining "
-+                "(drained, expired, evicted tokens, tail slots in use): %s",
-+                reports,
++                "Elastic KV tail: TP ranks disagree after migration "
++                "(rank, verified, migrated, evicted): %s; plans %s",
++                checks,
++                plans,
 +            )
-+        if all(report[0] for report in reports):
-+            return self._start_release(pending, identical)
-+        if reports[0][1]:
-+            return self._abort_shrink(pending, reports)
-+        pending.waited = True
-+        return None
-+
-+    def _abort_shrink(self, pending: _Pending, reports) -> Any:
-+        """The drain deadline passed: give the tail back to the chat."""
-+        long_requests = len(pending.long_rids)
-+        in_use = self.allocator.tail_outstanding
-+        self.allocator.reopen_tail()
-+        self.state = STATE_BACKED
-+        self._set_limits(self.tail_tokens)
-+        self._pending = None
-+        logger.warning(
-+            "Elastic KV tail: shrink timed out after %.1f s (%d long requests, "
-+            "%d tail slots in use); the tail stays backed",
-+            self._clock() - pending.started,
-+            long_requests,
-+            in_use,
-+        )
-+        return self._output(
-+            False,
-+            "timed out waiting for requests that hold the tail; it stays backed",
-+            action="shrink",
-+            reason="timeout",
-+            waited=True,
-+            waited_s=round(self._clock() - pending.started, 3),
-+            waited_for={
-+                "long_requests": long_requests,
-+                "tail_slots_in_use": in_use,
-+            },
-+            evicted_tokens=pending.evicted_tokens,
-+            vram_confirmed=False,
-+            released_bytes=0,
-+        )
-+
-+    def _start_release(self, pending: _Pending, identical: bool) -> Optional[Any]:
++        if not extra["verified_no_tail_refs"]:
++            # Never unmap memory something may still name.
++            allocator.reopen_tail()
++            logger.error("Elastic KV tail: tail slots still named: %s", checks)
++            return self._output(
++                False,
++                "the tail stays backed: a slot of it is still named after migration",
++                reason="verify_failed",
++                elapsed_s=round(self._clock() - started, 4),
++                vram_confirmed=False,
++                released_bytes=0,
++                **extra,
++            )
++        # 5. Unmap, then wait for the device to show the memory free.
 +        backend = self.owner.backend
-+        # Nothing live names a tail slot now; what still does is stale (the
-+        # request table rows of finished requests) and must not be followed
-+        # into unmapped memory.
-+        self._scrub_stale_slots(self.base_tokens)
-+        pending.used_before_release = backend.used_bytes()
-+        pending.released_bytes = self.owner.unmap_tail()
-+        self.allocator.drop_tail()
++        used_before = backend.used_bytes()
++        released = self.owner.unmap_tail()
++        allocator.drop_tail()
 +        self.state = STATE_RELEASING
++        self._set_limits(0)
 +        now = self._clock()
-+        pending.release_started = now
-+        pending.release_deadline = now + pending.release_timeout_s
-+        pending.last_release_poll = float("-inf")
-+        pending.ranks_identical = identical
-+        return None
++        self._release = _Release(
++            recv_req=recv_req,
++            started=started,
++            deadline=now + max(0.0, float(recv_req.release_timeout_s)),
++            released_bytes=released,
++            used_before=used_before,
++            extra=extra,
++        )
++        return self._release_step()
 +
-+    def _release_step(self, pending: _Pending) -> Optional[Any]:
++    def check_pending(self) -> None:
++        """Advance a shrink that waits for the device; called once per
++        scheduler iteration."""
++        release = self._release
++        if release is None:
++            return
++        output = self._release_step()
++        if output is not None:
++            self._send_output(output, release.recv_req)
++
++    def _release_step(self) -> Optional[Any]:
++        release = self._release
 +        now = self._clock()
 +        # One device read per poll interval: the wait is the kernel's.
-+        if now - pending.last_release_poll >= _RELEASE_POLL_INTERVAL_S:
-+            pending.last_release_poll = now
-+            pending.used_now = self.owner.backend.used_bytes()
-+        slack = min(_RELEASE_SLACK_BYTES, pending.released_bytes // 8)
-+        freed = pending.used_before_release - pending.used_now
-+        confirmed = freed >= pending.released_bytes - slack
-+        expired = now >= pending.release_deadline
++        if now - release.last_poll >= _RELEASE_POLL_INTERVAL_S:
++            release.last_poll = now
++            release.used_now = self.owner.backend.used_bytes()
++        slack = min(_RELEASE_SLACK_BYTES, release.released_bytes // 8)
++        freed = release.used_before - release.used_now
++        confirmed = freed >= release.released_bytes - slack
++        expired = now >= release.deadline
 +        reports = self._gather((self.rank, confirmed, expired, freed))
 +        all_confirmed = all(report[1] for report in reports)
 +        if not all_confirmed and not reports[0][2]:
-+            pending.waited = True
 +            return None
 +        self.state = STATE_UNBACKED
 +        self.tail_tokens = 0
-+        self._pending = None
-+        waited_s = round(now - pending.started, 3)
++        self._release = None
 +        extra = dict(
-+            action="shrink",
-+            waited=pending.waited,
-+            waited_s=waited_s,
-+            waited_for={
-+                "long_requests": pending.waited_long_requests,
-+                "tail_slots_in_use": pending.waited_tail_slots,
-+            },
-+            evicted_tokens=pending.evicted_tokens,
-+            released_bytes=pending.released_bytes,
++            release.extra,
++            elapsed_s=round(now - release.started, 4),
++            released_bytes=release.released_bytes,
 +            vram_confirmed=all_confirmed,
-+            vram_release_s=round(now - pending.release_started, 3),
 +            vram_freed_bytes_by_rank={
 +                str(report[0]): report[3] for report in reports
 +            },
 +            vram_source=getattr(self.owner.backend, "vram_source", "unknown"),
-+            ranks_identical=pending.ranks_identical,
 +        )
 +        if not all_confirmed:
 +            logger.error(
 +                "Elastic KV tail: released %d bytes but the device did not "
-+                "show them free within %.1f s: %s",
-+                pending.released_bytes,
-+                pending.release_timeout_s,
++                "show them free in time: %s",
++                release.released_bytes,
 +                reports,
 +            )
 +            return self._output(
@@ -1293,13 +1327,13 @@ index 0000000..725e877
 +                **extra,
 +            )
 +        logger.info(
-+            "Elastic KV tail: shrank; released %.2f GiB, waited %.3f s "
-+            "(%d long requests, %d tail slots in use, %d tokens evicted)",
-+            pending.released_bytes / (1 << 30),
-+            waited_s,
-+            pending.waited_long_requests,
-+            pending.waited_tail_slots,
-+            pending.evicted_tokens,
++            "Elastic KV tail: shrank in %.3f s; released %.2f GiB, moved %d "
++            "tokens to the base in %.3f s, evicted %d",
++            extra["elapsed_s"],
++            release.released_bytes / (1 << 30),
++            extra["migrated_tokens"],
++            extra["migrate_s"],
++            extra["evicted_tokens"],
 +        )
 +        return self._output(True, "tail released", **extra)
 +
@@ -1399,11 +1433,23 @@ index 0000000..725e877
 +            f"elastic KV tail: allocator holds {full_allocator.size} tokens, "
 +            f"the pool {owner.reserved_tokens}"
 +        )
-+    max_context = int(scheduler.model_config.context_len)
-+    if cfg.base_context > max_context:
++    context_length = min(cfg.base_context, int(scheduler.model_config.context_len))
++    running = scheduler.max_running_requests or 1
++    if running * context_length > cfg.base_tokens:
 +        raise RuntimeError(
-+            f"{ENV_BASE_CONTEXT}={cfg.base_context} exceeds --context-length "
-+            f"{max_context}"
++            f"elastic KV tail: {running} running requests of {context_length} "
++            f"tokens do not fit the base of {cfg.base_tokens}, so a shrink "
++            "could not always move them out of the tail"
++        )
++    if scheduler.enable_overlap:
++        raise RuntimeError(
++            "elastic KV tail needs --disable-overlap-schedule: a shrink moves "
++            "KV between forwards"
++        )
++    server_args = getattr(scheduler, "server_args", None)
++    if getattr(server_args, "enable_prefill_weight_versions", False):
++        raise RuntimeError(
++            "elastic KV tail does not support --enable-prefill-weight-versions"
 +        )
 +    full_allocator.enable_elastic_tail(cfg.base_tokens)
 +    tp_size = parallel.tp_size
@@ -1421,39 +1467,36 @@ index 0000000..725e877
 +        scheduler.max_req_len = max_req_len
 +        scheduler.max_req_input_len = max_req_input_len
 +
-+    def live_requests():
++    def live_rows():
 +        for kind, reqs in scheduler.request_lists().items():
 +            # Finished, and held on the output rank only: ranks must agree.
-+            if kind is not ListKind.DEFERRED:
-+                yield from reqs
-+
-+    def scrub_stale_slots(base_tokens):
-+        req_to_token = scheduler.req_to_token_pool.req_to_token
-+        req_to_token.masked_fill_(req_to_token > base_tokens, 0)
++            if kind is ListKind.DEFERRED:
++                continue
++            for req in reqs:
++                if req.kv.holds_kv:
++                    yield req.kv.req_pool_idx, req.kv.kv_allocated_len
 +
 +    tail = ElasticKvTail(
 +        owner=owner,
 +        allocator=full_allocator,
++        swa_allocator=scheduler.token_to_kv_pool_allocator,
 +        tree_cache=scheduler.tree_cache,
-+        base_context=cfg.base_context,
-+        max_context=max_context,
-+        max_running_requests=scheduler.max_running_requests or 1,
++        req_to_token=scheduler.req_to_token_pool.req_to_token,
++        live_rows=live_rows,
++        context_length=context_length,
 +        input_len_margin=scheduler.max_req_len - scheduler.max_req_input_len,
 +        apply_limits=apply_limits,
-+        live_requests=live_requests,
 +        gather=gather,
 +        send_output=scheduler.send_control_output,
 +        make_output=KvTailReqOutput,
-+        scrub_stale_slots=scrub_stale_slots,
 +        rank=parallel.tp_rank,
 +    )
 +    logger.info(
-+        "Elastic KV tail: on. Base %d tokens and context %d; up to %d tail "
-+        "tokens and context %d when grown",
++        "Elastic KV tail: on. Base %d tokens, context %d; up to %d tail tokens "
++        "of cache room when grown",
 +        tail.base_tokens,
 +        tail.context_length,
 +        owner.reserved_tail_tokens,
-+        tail.limits(owner.reserved_tail_tokens)[1],
 +    )
 +    return tail
 diff --git a/python/sglang/srt/mem_cache/memory_pool.py b/python/sglang/srt/mem_cache/memory_pool.py
