@@ -17,7 +17,8 @@ prefix-cache room only and that media never waits for chat, so a shrink now
 moves what running requests hold into the base instead of waiting for them.
 An independent review of that version then found the defects listed under
 [Review findings](#review-findings); this text describes the code after they
-were fixed.
+were fixed. The first GPU run then showed that a grow without a size could
+never fit; it is now sized to the free memory (see [Grow](#grow)).
 
 ## What it does
 
@@ -289,9 +290,23 @@ takes on a GPU is not measured yet; it is skipped when the switch is off.
 
 ### Grow
 
-Every rank checks free device memory against the bytes needed plus
-`keep_free_mib`; if any rank is short, nothing is mapped. Then every rank
-maps and zero-fills. If any rank fails, the ranks that succeeded unmap again
+Every rank reads its free device memory and the ranks exchange the readings.
+What may be used is the smallest reading less `keep_free_mib`.
+
+- **Without `tail_tokens`** the tail is sized to fit: the most tokens whose
+  extents fit that budget on the tightest rank, which rounds down to whole
+  allocation granules and whole tokens, capped at the reserved tail. If that
+  is below a floor of 32,768 tokens (512 MiB per card), nothing is mapped and
+  the answer is `insufficient_vram` with `fits_tail_tokens`. The first GPU
+  run showed why this is the default: after the generators free their
+  memory the cards had 7.34 and 7.83 GB free, less than the whole tail
+  (7.18 GB) plus the 1.5 GiB kept free, so a fixed full-size grow could never
+  succeed.
+- **With `tail_tokens`** the size is exact: mapped as asked, or refused with
+  `insufficient_vram`.
+
+The size is computed from the gathered readings, so every rank maps the same
+number of tokens. Then every rank maps and zero-fills. If any rank fails, the ranks that succeeded unmap again
 and the answer is `ok: false`, `reason: "map_failed"`. Only then are the tail
 slots enabled.
 
@@ -327,7 +342,7 @@ endpoint has the same admin authentication level as
 | Request | Fields | Answer |
 | --- | --- | --- |
 | `{"action": "status"}` or `GET` | none | At once, also while a shrink waits for the device |
-| `{"action": "grow"}` | `tail_tokens` (default: the whole reserved tail), `keep_free_mib` (default 1536) | When every rank has mapped, or none has |
+| `{"action": "grow"}` | `tail_tokens` (default: the largest tail that fits every rank), `keep_free_mib` (default 1536) | When every rank has mapped, or none has |
 | `{"action": "shrink"}` | `release_timeout_s` (default 10) | When every rank has migrated, unmapped and seen the memory free; or at once when it is refused |
 
 An unknown field is a 400, including the first draft's `timeout_s`: a shrink
@@ -362,14 +377,17 @@ A shrink answer adds:
 | `elapsed_s` | Scheduler time from the request to the answer, the device wait included |
 | `ranks_identical` | The ranks reported the same counts |
 
-A grow answer adds `mapped_bytes`, `map_s` and `elapsed_s`. While a shrink
+A grow answer adds `mapped_bytes`, `sized_to_fit`, `free_bytes_by_rank`,
+`map_s` and `elapsed_s`; `tail_tokens` is the size chosen. While a shrink
 waits for the device, the status has `pending` with `elapsed_s` and
 `waiting_for_vram_release`.
 
 Rules for the caller:
 
-- `shrink` and `grow` are idempotent: a shrink of an unbacked tail and a grow
-  to the size already backed answer `ok: true`.
+- `shrink` and `grow` are idempotent: a shrink of an unbacked tail, a grow
+  without a size while any tail is backed, and a grow to the size already
+  backed answer `ok: true`. To change the size of a backed tail, shrink
+  first.
 - Start a media job only on a shrink answer with `ok: true`. On a 409 refuse
   the job. `cannot_migrate`, `verify_failed` and `rank_mismatch` leave the
   tail backed. `release_unconfirmed` leaves it unbacked with the memory not
@@ -419,7 +437,7 @@ bytes show as free.
 
 | Test | Baseline (patches 0001 to 0030) | With 0031 to 0033 |
 | --- | --- | --- |
-| `unified_radix_cache/test_gfx1201_elastic_kv_tail.py` (new), on the CPU runner | Not present | 67 passed |
+| `unified_radix_cache/test_gfx1201_elastic_kv_tail.py` (new), on the CPU runner | Not present | 71 passed |
 | `unit/model_executor/test_pool_configurator.py` | 78 passed | 78 passed |
 | `unit/model_executor/test_gfx1201_draft_kv_bundling.py` | 10 passed | 10 passed |
 | `unit/mem_cache/test_hicache_auto_size.py` | 4 passed | 4 passed |
@@ -444,9 +462,9 @@ Also checked:
 - **Series.** All 33 patches apply in name order to `fcb32746` with
   `git apply`, and the result is byte-identical to the tree the tests ran on.
   The series hash is
-  `9506987fdabd9ef335d91e04ddd7427258802bd7a5d063afb81e84726ad90dce`
+  `d9af3651b8857720c996ec27c4341437c1ef80a78cc49cf0eb14536a8565f9cd`
   (`40067ef9...` for the first 30, unchanged). `stack.lock` was not touched.
-- **Mutations.** Twenty-eight deliberate breaks of the new code each fail the
+- **Mutations.** Thirty-three deliberate breaks of the new code each fail the
   new test module. Among them: freed tail slots re-entering circulation, a
   closed tail handed out, locks ignored when choosing what to evict, KV not
   copied, the window mapping not carried or not cleared, request rows or the
@@ -454,8 +472,9 @@ Also checked:
   stale rows vouching for a slot, the table scrubbed before the verification,
   a retry answering from memory, rank comparisons skipped, a local failure
   raised between gathers, a fault or a self-test verdict kept to one rank, a
-  leaked reservation, session rows ignored, and the margin without decode's
-  headroom. The list is `scripts/mutate.sh` in the job folder, not in this
+  leaked reservation, session rows ignored, the margin without decode's
+  headroom, and a default grow sized to the larger rank, without the floor
+  or rounded up a granule. The list is `scripts/mutate.sh` in the job folder, not in this
   repository.
 - **This repository's own tests.** `make -k test` on macOS (run before the
   revisions; no tracked file other than this record, the series README and
@@ -521,6 +540,11 @@ wrong place shows. What it shows:
   free lists, request tables, mappings, cache contents and base KV after a
   migration; a rank that cannot migrate, a slow or never-visible release, a
   failed map and a memory shortage on one rank decide the outcome for both.
+- **Grow sizing.** Without a size, the largest tail that fits is mapped: one
+  byte short of a second granule per buffer maps one; the kept-free memory
+  comes off first; two ranks size to the smaller device and end identical;
+  below the floor nothing is mapped. With a size, one token more than fits is
+  refused and the exact size is mapped.
 - **Release confirmation.** A delayed free defers the acknowledgement; a free
   that never shows gives `release_unconfirmed` after the timeout.
 - **Buffers.** One extent per buffer at the same address over 50 cycles, base

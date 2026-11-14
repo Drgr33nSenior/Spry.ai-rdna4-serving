@@ -254,10 +254,10 @@ index c9f1e07..8f984d4 100644
          obj: ResumeMemoryOccupationReqInput,
 diff --git a/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py
 new file mode 100644
-index 0000000..0ef7e3f
+index 0000000..84b31d8
 --- /dev/null
 +++ b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py
-@@ -0,0 +1,2182 @@
+@@ -0,0 +1,2279 @@
 +"""Elastic KV tail (SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS) on the CPU.
 +
 +Device memory is a FakeVmmBackend, so nothing here needs a GPU. The prefix
@@ -1090,6 +1090,79 @@ index 0000000..0ef7e3f
 +        self.assertTrue(rank.grow().ok)  # idempotent
 +        self.assertEqual(rank.grow(10).info["reason"], "already_backed")
 +
++    def test_grow_without_a_size_maps_the_largest_tail_that_fits(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
++        rank = _Rank(self, backend=backend)
++        # One byte short of two granules per buffer: one each is mapped.
++        spare = 4 * GRAN - 1
++        backend.other_used_bytes = backend.free_bytes() - (4 * GRAN + spare)
++        free = backend.free_bytes()
++        with mock.patch.object(ekt, "_MIN_FIT_TAIL_TOKENS", 64):
++            out = rank.grow()
++        self.assertTrue(out.ok, out.message)
++        self.assertTrue(out.info["sized_to_fit"])
++        # Whole granules: 4 buffers x 4,096 bytes after the base's granule,
++        # and the last token whose row still lies inside them.
++        self.assertEqual(out.info["mapped_bytes"], 4 * GRAN)
++        tokens = (2 * GRAN) // ROW - 1 - BASE
++        self.assertEqual(out.info["tail_tokens"], tokens)
++        self.assertEqual(rank.owner.tail_bytes_for(tokens), 4 * GRAN)
++        self.assertGreater(rank.owner.tail_bytes_for(tokens + 1), 4 * GRAN)
++        self.assertEqual(out.info["free_bytes_by_rank"], {"0": free})
++        self.assertEqual(rank.full.available_size(), BASE + tokens)
++        self.assertEqual(rank.limits[-1], (BASE + tokens, 89, 84))
++        self.assertEqual(backend.free_bytes(), spare)
++        # Asking again while backed changes nothing; a shrink gives it back.
++        again = rank.grow()
++        self.assertTrue(again.ok)
++        self.assertEqual(again.info["tail_tokens"], tokens)
++        self.assertTrue(rank.shrink().ok)
++        # With memory to spare the default is the whole reserved tail, and
++        # what must stay free is taken off first.
++        backend.other_used_bytes = 0
++        out = rank.grow()
++        self.assertEqual(out.info["tail_tokens"], self.cfg.kv_size - BASE)
++        rank.shrink()
++        backend.other_used_bytes = backend.free_bytes() - (4 * GRAN + (1 << 20))
++        with mock.patch.object(ekt, "_MIN_FIT_TAIL_TOKENS", 64):
++            out = rank.tail.handle(KvTailReqInput(action="grow", keep_free_mib=1))
++        self.assertEqual(out.info["tail_tokens"], tokens)
++
++    def test_grow_without_a_size_is_refused_below_the_floor(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
++        rank = _Rank(self, backend=backend)
++        backend.other_used_bytes = backend.free_bytes() - (4 * GRAN + 5000)
++        fits = (2 * GRAN) // ROW - 1 - BASE
++        with mock.patch.object(ekt, "_MIN_FIT_TAIL_TOKENS", fits + 1):
++            out = rank.grow()
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "insufficient_vram")
++        self.assertEqual(out.info["fits_tail_tokens"], fits)
++        self.assertEqual(out.info["min_tail_tokens"], fits + 1)
++        self.assertEqual(out.state, ekt.STATE_UNBACKED)
++        self.assertEqual(backend.mapped_bytes(), rank.owner.base_bytes)
++        self.assertEqual(rank.full.available_size(), BASE)
++        # The floor never exceeds the reserved tail (here 320 tokens).
++        self.assertGreater(ekt._MIN_FIT_TAIL_TOKENS, self.cfg.kv_size - BASE)
++        backend.other_used_bytes = 0
++        self.assertTrue(rank.grow().ok)
++
++    def test_grow_with_a_size_is_exact_or_refused(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
++        rank = _Rank(self, backend=backend)
++        backend.other_used_bytes = backend.free_bytes() - (4 * GRAN + 5000)
++        fits = (2 * GRAN) // ROW - 1 - BASE
++        out = rank.grow(fits + 1)  # one token more needs another granule
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "insufficient_vram")
++        self.assertEqual(out.info["needed_bytes"], 4 * 2 * GRAN)
++        self.assertEqual(backend.mapped_bytes(), rank.owner.base_bytes)
++        out = rank.grow(fits)
++        self.assertTrue(out.ok, out.message)
++        self.assertFalse(out.info["sized_to_fit"])
++        self.assertEqual(out.info["tail_tokens"], fits)
++        self.assertEqual(rank.grow(fits - 1).info["reason"], "already_backed")
++
 +    def test_grow_is_refused_without_device_memory(self):
 +        backend = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
 +        rank = _Rank(self, backend=backend)
@@ -1727,6 +1800,30 @@ index 0000000..0ef7e3f
 +        outs = self._on_both(ranks, lambda rank: rank.grow())
 +        self.assertTrue(all(out.ok for out in outs))
 +
++    def test_ranks_size_a_default_grow_to_the_smaller_device(self):
++        small = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
++        ranks = self._two_ranks(backends=(None, small))
++        small.other_used_bytes = small.free_bytes() - (4 * GRAN + 5000)
++        fits = (2 * GRAN) // ROW - 1 - BASE
++        with mock.patch.object(ekt, "_MIN_FIT_TAIL_TOKENS", 64):
++            outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertTrue(out.ok, out.message)
++            self.assertEqual(out.info["tail_tokens"], fits)
++            self.assertEqual(out.info["mapped_bytes"], 4 * GRAN)
++            self.assertEqual(rank.owner.tail_bytes, 4 * GRAN)
++            self.assertEqual(sorted(out.info["free_bytes_by_rank"]), ["0", "1"])
++        self._assert_identical(ranks)
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        self.assertTrue(all(out.ok for out in outs))
++        # Below the floor on the smaller rank: neither maps.
++        with mock.patch.object(ekt, "_MIN_FIT_TAIL_TOKENS", fits + 1):
++            outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertEqual(out.info["reason"], "insufficient_vram")
++            self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++        self._assert_identical(ranks)
++
 +    def test_one_rank_short_of_memory_refuses_the_grow_on_both(self):
 +        small = ekt.FakeVmmBackend(granularity=GRAN, total_bytes=1 << 20)
 +        ranks = self._two_ranks(backends=(None, small))
@@ -1845,7 +1942,7 @@ index 0000000..0ef7e3f
 +            # Both the old and the new rows are mapped and hold the content.
 +            rank.check_content(seqs)
 +        # Neither rank resizes again, and neither waits for the other.
-+        for action in (lambda rank: rank.shrink(), lambda rank: rank.grow()):
++        for action in (lambda rank: rank.shrink(), lambda rank: rank.grow(7)):
 +            for out in self._on_both(ranks, action):
 +                self.assertFalse(out.ok)
 +                self.assertIn(out.info["reason"], ("rank_error", "already_backed"))

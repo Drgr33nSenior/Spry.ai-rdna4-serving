@@ -23,7 +23,7 @@ the serving image.
   before the next build, or `sync.sh` and the build stop.
 - Patches `0031` to `0033` (14 November) add the elastic KV tail. They are
   CPU-tested only and in no image. With them the series hash is
-  `9506987fdabd9ef335d91e04ddd7427258802bd7a5d063afb81e84726ad90dce`, and all
+  `d9af3651b8857720c996ec27c4341437c1ef80a78cc49cf0eb14536a8565f9cd`, and all
   33 patches apply in order to `fcb32746`.
 - Most patches add a kernel route behind an environment switch that is off by
   default. The workstation's
@@ -288,4 +288,4 @@ Adds `mem_cache/elastic_kv_tail.py` and one branch in `MHATokenToKVPool._create_
 
 ### 0033-gfx1201-elastic-kv-tail-control
 
-The control path for 0032: `KvTailReqInput` and `KvTailStatusReqInput` reach every TP rank through the scheduler's request broadcast, the scheduler polls a shrink's device release once per iteration, the tokenizer manager holds the context length at the base, and `GET` or `POST /kv_tail` exposes status, grow and shrink. Adds `test_gfx1201_elastic_kv_tail.py` (67 CPU tests on the fake backend).
+The control path for 0032: `KvTailReqInput` and `KvTailStatusReqInput` reach every TP rank through the scheduler's request broadcast, the scheduler polls a shrink's device release once per iteration, the tokenizer manager holds the context length at the base, and `GET` or `POST /kv_tail` exposes status, grow and shrink. Adds `test_gfx1201_elastic_kv_tail.py` (71 CPU tests on the fake backend).

@@ -1,9 +1,9 @@
 diff --git a/python/sglang/srt/mem_cache/elastic_kv_tail.py b/python/sglang/srt/mem_cache/elastic_kv_tail.py
 new file mode 100644
-index 0000000..1ea4f48
+index 0000000..98f5ff4
 --- /dev/null
 +++ b/python/sglang/srt/mem_cache/elastic_kv_tail.py
-@@ -0,0 +1,1860 @@
+@@ -0,0 +1,1896 @@
 +# SPDX-License-Identifier: Apache-2.0
 +"""Elastic KV tail for gfx1201 shared mode: a KV pool whose upper slots are backed
 +with device memory only while another GPU tenant does not need it.
@@ -61,6 +61,9 @@ index 0000000..1ea4f48
 +_RELEASE_POLL_INTERVAL_S = 0.02
 +# Rows moved per step of a migration: 16,384 rows of 512 bytes are 8 MiB.
 +_COPY_CHUNK_ROWS = 16384
++# A grow without a size maps the largest tail that fits; below this many
++# tokens (512 MiB per card on the serving arms) it is not worth the resize.
++_MIN_FIT_TAIL_TOKENS = 32768
 +# Startup remap self-test: rounds, extent size and watched rows per buffer.
 +_SELF_TEST_ROUNDS = 32
 +_SELF_TEST_BYTES = 8 << 20
@@ -648,6 +651,18 @@ index 0000000..1ea4f48
 +            for desc, buf in zip(self._descs, self._buffers)
 +        )
 +
++    def largest_tail_within(self, budget_bytes: int) -> int:
++        """The most tail tokens whose extents fit ``budget_bytes``, 0 if none.
++        Extents are whole granules, so this rounds down to both."""
++        low, high = 0, self.reserved_tail_tokens
++        while low < high:
++            middle = (low + high + 1) // 2
++            if self.tail_bytes_for(middle) <= budget_bytes:
++                low = middle
++            else:
++                high = middle - 1
++        return low
++
 +    @property
 +    def tail_bytes(self) -> int:
 +        return sum(buf.tail_bytes for buf in self._buffers)
@@ -1178,9 +1193,11 @@ index 0000000..1ea4f48
 +
 +    def _grow(self, recv_req) -> Any:
 +        reserved = self.owner.reserved_tail_tokens
-+        tokens = reserved if recv_req.tail_tokens is None else int(recv_req.tail_tokens)
++        # Without a size the tail is made as large as fits on every rank.
++        fit = recv_req.tail_tokens is None
++        tokens = reserved if fit else int(recv_req.tail_tokens)
 +        if self.state == STATE_BACKED:
-+            if tokens == self.tail_tokens:
++            if fit or tokens == self.tail_tokens:
 +                return self._output(True, "the tail is already backed", action="grow")
 +            return self._output(
 +                False,
@@ -1199,7 +1216,6 @@ index 0000000..1ea4f48
 +            return self._rank_error("grow", [self.fault])
 +        tic = self._clock()
 +        backend = self.owner.backend
-+        need = self.owner.tail_bytes_for(tokens)
 +        keep_free = max(0, int(recv_req.keep_free_mib)) << 20
 +        free, error = self._try("reading free device memory", backend.free_bytes)
 +        self_test = self.owner.self_test_error
@@ -1219,16 +1235,34 @@ index 0000000..1ea4f48
 +        errors = [e for _, _, e, _ in frees if e is not None]
 +        if errors:
 +            return self._rank_error("grow", errors)
-+        short = [(rank, f) for rank, f, _, _ in frees if f < need + keep_free]
-+        if short:
++        free_by_rank = {str(rank): f for rank, f, _, _ in frees}
++        # Sized from the gathered readings, so every rank picks the same size.
++        budget = min(free_by_rank.values()) - keep_free
++        if fit:
++            tokens = self.owner.largest_tail_within(budget)
++            floor = min(_MIN_FIT_TAIL_TOKENS, reserved)
++            if tokens < floor:
++                return self._output(
++                    False,
++                    f"the free device memory, less {keep_free} bytes kept free, "
++                    f"has room for a tail of {tokens} tokens; the smallest "
++                    f"worth mapping is {floor}",
++                    action="grow",
++                    reason="insufficient_vram",
++                    fits_tail_tokens=tokens,
++                    min_tail_tokens=floor,
++                    free_bytes_by_rank=free_by_rank,
++                )
++        need = self.owner.tail_bytes_for(tokens)
++        if need > budget:
 +            return self._output(
 +                False,
 +                f"not enough free device memory for {need} bytes plus "
-+                f"{keep_free} kept free: {short}",
++                f"{keep_free} kept free: {free_by_rank}",
 +                action="grow",
 +                reason="insufficient_vram",
 +                needed_bytes=need,
-+                free_bytes_by_rank={str(rank): f for rank, f, _, _ in frees},
++                free_bytes_by_rank=free_by_rank,
 +            )
 +
 +        def map_tail():
@@ -1266,6 +1300,8 @@ index 0000000..1ea4f48
 +            "tail backed",
 +            action="grow",
 +            mapped_bytes=need,
++            sized_to_fit=fit,
++            free_bytes_by_rank=free_by_rank,
 +            map_s=round(self._clock() - tic, 4),
 +            elapsed_s=round(self._clock() - tic, 4),
 +        )
