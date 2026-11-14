@@ -254,10 +254,10 @@ index c9f1e07..8f984d4 100644
          obj: ResumeMemoryOccupationReqInput,
 diff --git a/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py
 new file mode 100644
-index 0000000..e9aa8a9
+index 0000000..0ef7e3f
 --- /dev/null
 +++ b/test/registered/unit/mem_cache/unified_radix_cache/test_gfx1201_elastic_kv_tail.py
-@@ -0,0 +1,1682 @@
+@@ -0,0 +1,2182 @@
 +"""Elastic KV tail (SGLANG_GFX1201_ELASTIC_KV_BASE_TOKENS) on the CPU.
 +
 +Device memory is a FakeVmmBackend, so nothing here needs a GPU. The prefix
@@ -584,6 +584,26 @@ index 0000000..e9aa8a9
 +        backend.map = original
 +        owner.map_tail(owner.reserved_tail_tokens)
 +
++    def test_a_failed_start_gives_back_everything_it_took(self):
++        for failing, at in (("reserve", 2), ("map", 2), ("tensor", 2), ("map", 0)):
++            with self.subTest(failing=failing, at=at):
++                backend = ekt.FakeVmmBackend(granularity=GRAN)
++                original = getattr(backend, failing)
++                calls = []
++
++                def fail_at(*args, original=original, calls=calls, at=at):
++                    calls.append(args)
++                    if len(calls) == at + 1:
++                        raise RuntimeError("hipError_t 2")
++                    return original(*args)
++
++                setattr(backend, failing, fail_at)
++                with self.assertRaisesRegex(RuntimeError, "hipError_t 2"):
++                    _owner(backend)
++                # No mapping and no address range is left behind.
++                self.assertEqual(backend.mapped_bytes(), 0)
++                self.assertEqual(backend._reservations, {})
++
 +    def test_fake_release_lags_like_the_kernel(self):
 +        backend = ekt.FakeVmmBackend(granularity=GRAN, release_delay_polls=2)
 +        owner = _owner(backend)
@@ -692,6 +712,101 @@ index 0000000..e9aa8a9
 +        k, v = pool.get_kv_buffer(0)
 +        k[BASE] = 1.0
 +        self.assertEqual(float(pool.k_buffer[0][BASE].float().sum()), 16.0)
++
++    def test_flag_off_pool_is_laid_out_as_before(self):
++        # Same shapes, dtypes, strides and zeroed contents as a pool built by
++        # the code path without the tail, for both KV dtypes in use.
++        for dtype in (torch.bfloat16, torch.float8_e4m3fn):
++            with self.subTest(dtype=dtype), mock.patch.dict(os.environ):
++                os.environ.pop(ekt.ENV_BASE_TOKENS, None)
++                pool = MHATokenToKVPool(
++                    size=POOL,
++                    page_size=1,
++                    dtype=dtype,
++                    head_num=2,
++                    head_dim=8,
++                    layer_num=3,
++                    device="cpu",
++                    enable_memory_saver=False,
++                )
++                self.assertIsNone(pool._elastic_tail_owner)
++                self.assertEqual(len(pool.k_buffer), 3)
++                self.assertEqual(len(pool.v_buffer), 3)
++                for buffer in pool.k_buffer + pool.v_buffer:
++                    self.assertEqual(tuple(buffer.shape), (POOL + 1, 2, 8))
++                    self.assertEqual(buffer.dtype, pool.store_dtype)
++                    self.assertTrue(buffer.is_contiguous())
++                    self.assertEqual(int(buffer.view(-1).view(torch.uint8).max()), 0)
++                    # Ordinary torch memory, not a fake device reservation.
++                    with self.assertRaises(RuntimeError):
++                        self.backend._region_of(buffer.data_ptr())
++                self.assertEqual(
++                    pool.data_strides.tolist(),
++                    [2 * 8 * pool.store_dtype.itemsize] * 6,
++                )
++                self.assertEqual(
++                    pool.data_ptrs.tolist(),
++                    [b.data_ptr() for b in pool.k_buffer + pool.v_buffer],
++                )
++        self.assertEqual(self.backend.log, [])
++        self.assertEqual(ekt._owners, [])
++
++    def test_startup_self_test_passes_on_a_sound_device(self):
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        with mock.patch.dict(os.environ, env):
++            pool = self._pool(POOL)
++        owner = pool._elastic_tail_owner
++        self.assertIsNone(owner.self_test_error)
++        maps = [e for e in self.backend.log if e[0] == "map"]
++        self.assertEqual(len(maps), 4 + ekt._SELF_TEST_ROUNDS)
++        # One address, every round; nothing of it is left mapped or written.
++        self.assertEqual(len({address for _, address, _ in maps[4:]}), 1)
++        self.assertEqual(self.backend.mapped_bytes(), owner.base_bytes)
++        for tensor in owner.tensors:
++            base_rows = tensor[: BASE + 1].view(-1).view(torch.uint8)
++            self.assertEqual(int(base_rows.max()), 0)
++
++    def test_startup_self_test_catches_a_remap_that_corrupts_live_memory(self):
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        original = self.backend.map
++
++        def map_after_startup(address, size):
++            # The base maps are sound; only a later remap corrupts.
++            self.backend.corrupt_on_map = len(self.backend._mapped) >= 4
++            return original(address, size)
++
++        self.backend.map = map_after_startup
++        with mock.patch.dict(os.environ, env):
++            pool = self._pool(POOL)
++        owner = pool._elastic_tail_owner
++        self.assertIn("live memory changed", owner.self_test_error)
++        self.assertIn("round 0", owner.self_test_error)
++        self.assertEqual(self.backend.mapped_bytes(), owner.base_bytes)
++        # The tail is then never mapped; the server runs on the base.
++        full = _token_allocator(POOL)
++        full.enable_elastic_tail(BASE)
++        tail = ekt.ElasticKvTail(
++            owner=owner,
++            allocator=full,
++            swa_allocator=None,
++            tree_cache=None,
++            req_to_token=torch.zeros((2, 8), dtype=torch.int32),
++            live_rows=lambda: [],
++            context_length=90,
++            input_len_margin=5,
++            apply_limits=lambda *limits: None,
++            gather=lambda report: [report],
++            send_output=lambda output, req: None,
++            make_output=KvTailReqOutput,
++        )
++        self.backend.map = original
++        self.backend.corrupt_on_map = False
++        out = tail.handle(KvTailReqInput(action="grow", keep_free_mib=0))
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "self_test_failed")
++        self.assertEqual(out.state, ekt.STATE_UNBACKED)
++        self.assertEqual(self.backend.mapped_bytes(), owner.base_bytes)
++        self.assertEqual(full.available_size(), BASE)
 +
 +    def test_the_switch_needs_a_base_context(self):
 +        with mock.patch.dict(os.environ, {ekt.ENV_BASE_TOKENS: "100"}):
@@ -1433,7 +1548,8 @@ index 0000000..e9aa8a9
 +
 +    def _two_ranks(self, backends=(None, None)):
 +        slots = [None, None]
-+        barrier = threading.Barrier(2, timeout=30)
++        # A rank that leaves its peer waiting breaks the barrier: no hang.
++        barrier = threading.Barrier(2, timeout=10)
 +
 +        def gather_for(index):
 +            def gather(report):
@@ -1549,10 +1665,15 @@ index 0000000..e9aa8a9
 +            self.assertNotIn("copy", rank.events)
 +            self.assertNotIn("unmap", rank.events)
 +            rank.check_content(seqs)
++        # Rank 1 had more to make room for and evicted more of its cache, so
++        # the ranks are no longer copies of each other. Once its stray slots
++        # are gone both can move, but they end up different: not unmapped.
 +        ranks[1].full.free(stray)
 +        outs = self._on_both(ranks, lambda rank: rank.shrink())
-+        self.assertTrue(all(out.ok for out in outs))
-+        for rank in ranks:
++        for rank, out in zip(ranks, outs):
++            self.assertEqual(out.info["reason"], "rank_mismatch")
++            self.assertEqual(rank.tail.state, ekt.STATE_BACKED)
++            self.assertNotIn("unmap", rank.events)
 +            rank.check_content(seqs)
 +
 +    def test_ranks_wait_for_the_slowest_device(self):
@@ -1617,6 +1738,331 @@ index 0000000..e9aa8a9
 +        self._assert_identical(ranks)
 +
 +
++    # -- a rank that fails must not strand its peer --------------------------
++
++    def _loaded_ranks(self, backends=(None, None)):
++        ranks = self._two_ranks(backends=backends)
++        outs = self._on_both(ranks, lambda rank: rank.grow(300))
++        self.assertTrue(all(out.ok for out in outs))
++        return ranks, self._same_traffic(ranks)
++
++    def test_a_failed_memory_read_on_one_rank_refuses_the_grow_on_both(self):
++        ranks = self._two_ranks()
++        ranks[1].backend.fail_next["free_bytes"] = "sysfs read failed"
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_error")
++            self.assertIn("rank 1", out.message)
++            self.assertIn("sysfs read failed", out.message)
++            self.assertEqual(rank.tail.state, ekt.STATE_UNBACKED)
++            self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++        self._assert_identical(ranks)
++        self.assertTrue(all(o.ok for o in self._on_both(ranks, lambda r: r.grow())))
++
++    def test_a_failed_memory_read_before_unmap_keeps_both_backed(self):
++        ranks, seqs = self._loaded_ranks()
++        ranks[1].backend.fail_next["used_bytes"] = "sysfs read failed"
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_error")
++            self.assertIn("rank 1", out.message)
++            self.assertEqual(out.state, ekt.STATE_BACKED)
++            self.assertNotIn("unmap", rank.events)
++            self.assertGreater(rank.owner.tail_bytes, 0)
++            self.assertTrue(rank.full._tail_open)  # the tail serves again
++            rank.check_content(seqs)
++        self._assert_identical(ranks)
++        # Everything was already moved; the retry only has to unmap.
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertTrue(out.ok, out.message)
++            rank.assert_no_tail_refs()
++            rank.check_content(seqs)
++
++    def test_a_failed_unmap_on_one_rank_is_recovered_by_a_retry(self):
++        ranks, seqs = self._loaded_ranks()
++        ranks[1].backend.fail_next["unmap"] = "hipMemUnmap failed with hipError_t 1"
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_error")
++            self.assertIn("hipMemUnmap failed", out.message)
++            # The tail is out of use on both, whatever is still mapped.
++            self.assertEqual(out.state, ekt.STATE_UNBACKED)
++            self.assertTrue(out.info["verified_no_tail_refs"])
++            self.assertFalse(rank.full._tail_open)
++            self.assertTrue(rank.tail.status()["release_unconfirmed"])
++            rank.check_content(seqs)
++        self.assertEqual(ranks[0].backend.mapped_bytes(), ranks[0].owner.base_bytes)
++        self.assertGreater(ranks[1].backend.mapped_bytes(), ranks[1].owner.base_bytes)
++        self.assertEqual(outs[1].info["tail_bytes"], ranks[1].owner.tail_bytes)
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertTrue(out.ok, out.message)
++            self.assertTrue(out.info["vram_confirmed"])
++            self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++            self.assertFalse(rank.tail.status()["release_unconfirmed"])
++        self._assert_identical(ranks)
++        self.assertTrue(all(o.ok for o in self._on_both(ranks, lambda r: r.grow())))
++
++    def test_a_grow_also_recovers_from_a_failed_unmap(self):
++        ranks, _ = self._loaded_ranks()
++        ranks[1].backend.fail_next["unmap"] = "hipMemUnmap failed with hipError_t 1"
++        self._on_both(ranks, lambda rank: rank.shrink())
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertTrue(out.ok, out.message)
++            self.assertEqual(
++                rank.backend.mapped_bytes(),
++                rank.owner.base_bytes
++                + rank.owner.tail_bytes_for(rank.owner.reserved_tail_tokens),
++            )
++        self._assert_identical(ranks)
++
++    def test_a_rank_that_breaks_while_renaming_stops_resizing_on_both(self):
++        ranks, seqs = self._loaded_ranks()
++        rename, free = ranks[1].tail._rename, ranks[1].full.free
++
++        def failing_free(index):
++            ranks[1].full.free = free
++            raise AssertionError("tail slot freed twice")
++
++        def rename_then_fail(plan, new):
++            ranks[1].full.free = failing_free  # the last step of the rename
++            rename(plan, new)
++
++        ranks[1].tail._rename = rename_then_fail
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_error")
++            self.assertIn("tail slot freed twice", out.message)
++            self.assertEqual(out.state, ekt.STATE_BACKED)
++            self.assertNotIn("unmap", rank.events)
++            self.assertIn("rank 1 failed while renaming", rank.tail.fault)
++            # Both the old and the new rows are mapped and hold the content.
++            rank.check_content(seqs)
++        # Neither rank resizes again, and neither waits for the other.
++        for action in (lambda rank: rank.shrink(), lambda rank: rank.grow()):
++            for out in self._on_both(ranks, action):
++                self.assertFalse(out.ok)
++                self.assertIn(out.info["reason"], ("rank_error", "already_backed"))
++        self.assertIn("fault", ranks[0].tail.status())
++
++    def test_a_rank_that_breaks_while_planning_stops_resizing_on_both(self):
++        ranks, seqs = self._loaded_ranks()
++        idle = list(range(6000, 6020))
++        for rank in ranks:
++            filler = rank.full.alloc(len(rank.full.free_pages))
++            self.assertTrue(rank.insert(idle))  # an idle prefix in the tail
++            rank.full.free(filler)
++        free = ranks[1].full.free
++
++        def failing_free(index):
++            ranks[1].full.free = free
++            raise RuntimeError("device error in the middle of an eviction")
++
++        ranks[1].full.free = failing_free
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_error")
++            self.assertEqual(out.state, ekt.STATE_BACKED)
++            self.assertNotIn("copy", rank.events)
++            self.assertNotIn("unmap", rank.events)
++            self.assertIn("preparing a shrink", rank.tail.fault)
++            rank.check_content(seqs)
++        for out in self._on_both(ranks, lambda rank: rank.shrink()):
++            self.assertEqual(out.info["reason"], "rank_error")
++
++    def test_a_failing_release_poll_on_one_rank_times_out_on_both(self):
++        ranks = self._two_ranks()
++        self._on_both(ranks, lambda rank: rank.grow())
++        ranks[1].backend.fail_always["used_bytes"] = "sysfs read failed"
++        # The read before the unmap fails too: nothing is unmapped.
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        self.assertEqual([o.info["reason"] for o in outs], ["rank_error"] * 2)
++        self.assertEqual(ranks[1].tail.state, ekt.STATE_BACKED)
++        # Failing only once the tail is unmapped: the shrink cannot confirm.
++        del ranks[1].backend.fail_always["used_bytes"]
++        original = ranks[1].owner.unmap_tail
++
++        def unmap_then_break():
++            released = original()
++            ranks[1].backend.fail_always["used_bytes"] = "sysfs read failed"
++            return released
++
++        ranks[1].owner.unmap_tail = unmap_then_break
++        outs = self._on_both(ranks, lambda rank: rank.shrink(release_timeout_s=1))
++        self.assertEqual(outs, [None, None])
++        for rank in ranks:
++            rank.clock.now += 2
++        self._on_both(ranks, lambda rank: rank.tail.check_pending())
++        for rank in ranks:
++            (out,) = rank.outputs
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "release_unconfirmed")
++            self.assertIn("sysfs read failed", out.message)
++            self.assertEqual(rank.tail.state, ekt.STATE_UNBACKED)
++        self._assert_identical(ranks)
++
++    def test_ranks_that_would_move_different_slots_do_not_move_any(self):
++        ranks, seqs = self._loaded_ranks()
++        # Rank 1 alone has one more request in the tail.
++        filler = ranks[1].full.alloc(len(ranks[1].full.free_pages))
++        ranks[1].start(range(9000, 9005))
++        ranks[1].full.free(filler)
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_mismatch")
++            self.assertEqual(out.state, ekt.STATE_BACKED)
++            self.assertEqual(out.info["migrated_tokens"], 0)
++            self.assertNotIn("copy", rank.events)
++            self.assertNotIn("unmap", rank.events)
++            self.assertTrue(rank.full._tail_open)
++            rank.check_content(seqs)
++
++    def test_ranks_that_differ_after_moving_do_not_unmap(self):
++        ranks, seqs = self._loaded_ranks()
++        original = ranks[1].tail._rename
++
++        def rename_and_leak(plan, new):
++            original(plan, new)
++            ranks[1].full.alloc(1)  # a base slot only this rank lost
++
++        ranks[1].tail._rename = rename_and_leak
++        outs = self._on_both(ranks, lambda rank: rank.shrink())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "rank_mismatch")
++            self.assertFalse(out.info["ranks_identical"])
++            self.assertEqual(out.state, ekt.STATE_BACKED)
++            self.assertNotIn("unmap", rank.events)
++            self.assertGreater(rank.owner.tail_bytes, 0)
++            rank.check_content(seqs)
++
++    def test_a_failed_self_test_on_one_rank_keeps_both_at_the_base(self):
++        ranks = self._two_ranks()
++        ranks[1].owner.self_test_error = "round 3: live memory changed"
++        outs = self._on_both(ranks, lambda rank: rank.grow())
++        for rank, out in zip(ranks, outs):
++            self.assertFalse(out.ok)
++            self.assertEqual(out.info["reason"], "self_test_failed")
++            self.assertIn("rank 1: round 3", out.message)
++            self.assertEqual(rank.tail.state, ekt.STATE_UNBACKED)
++            self.assertEqual(rank.backend.mapped_bytes(), rank.owner.base_bytes)
++        self.assertIn("self_test_error", ranks[1].tail.status())
++
++    # -- what the review found ------------------------------------------------
++
++    def test_an_eviction_for_room_that_frees_tail_slots_is_not_moved_twice(self):
++        rank = _Rank(self)
++        rank.grow()
++        filler = rank.allocator.alloc(BASE)
++        oldest = list(range(100, 150))  # idle, in the tail, least recently used
++        self.assertTrue(rank.insert(oldest))
++        rank.allocator.free(filler)
++        idle = self._seqs(random.Random(5), 30, start=1000)
++        for seq in idle:
++            if len(rank.full.free_pages) > 30:
++                self.assertTrue(rank.insert(seq))
++        filler = rank.allocator.alloc(len(rank.full.free_pages))
++        row = rank.start(range(9000, 9060))  # in the tail; the base is full
++        rank.allocator.free(filler)
++        self.assertLess(len(rank.full.free_pages), 60)
++        # Leave the idle tail prefix in place, so that making room in the
++        # base is what evicts it, after the slots to move were first counted.
++        with mock.patch.object(ekt, "evict_idle_tail_holders", lambda *args: 0):
++            out = rank.shrink()
++        self.assertTrue(out.ok, out.message)
++        self.assertIsNone(rank.cached_slots(oldest))
++        self.assertEqual(out.info["migrated_tokens"], 60)
++        self.assertTrue(out.info["verified_no_tail_refs"])
++        rank.assert_no_tail_refs()
++        rank.check_content(idle)
++        free = torch.cat((rank.full.free_pages, rank.full._tail_free))
++        self.assertEqual(free.numel(), free.unique().numel())
++        self._assert_conserved(rank)
++        rank.cache.sanity_check()
++        self.assertIsNotNone(row)
++
++    def test_a_finished_requests_row_does_not_vouch_for_a_tail_slot(self):
++        rank = _Rank(self)
++        rank.grow()
++        filler = rank.allocator.alloc(BASE)
++        stray = rank.allocator.alloc(5)  # held by something this module cannot see
++        rank.allocator.free(filler)
++        # A request that finished earlier used the same slots; its row still
++        # shows them.
++        rank.table[7, :5] = stray.to(rank.table.dtype)
++        out = rank.shrink()
++        self.assertFalse(out.ok)
++        self.assertEqual(out.info["reason"], "cannot_migrate")
++        self.assertIn("named by neither", out.message)
++        self.assertEqual(out.state, ekt.STATE_BACKED)
++        self.assertNotIn("copy", rank.events)
++        self.assertNotIn("unmap", rank.events)
++        self.assertEqual(rank.table[7, :5].tolist(), stray.tolist())
++
++    def test_a_failed_verify_leaves_the_request_table_alone(self):
++        rank = _Rank(self)
++        rank.grow()
++        filler = rank.allocator.alloc(BASE)
++        shared = list(range(5000, 5010))
++        self.assertTrue(rank.insert(shared))
++        row = rank.start(range(1000, 1010), prefix=shared)
++        rank.allocator.free(filler)
++        rank.table[7, :3] = torch.tensor(
++            [BASE + 200, 3, BASE + 201], dtype=rank.table.dtype
++        )
++        with mock.patch.object(ekt, "remap_tree_slots", lambda *args: None):
++            out = rank.shrink()
++        self.assertEqual(out.info["reason"], "verify_failed")
++        # No entry was zeroed: not the stale row's, not the running request's.
++        self.assertEqual(rank.table[7, :3].tolist(), [BASE + 200, 3, BASE + 201])
++        self.assertGreater(int(rank.row_slots(row).min()), 0)
++        self.assertTrue(rank.holds(rank.row_slots(row)[10:], range(1000, 1010)))
++
++    def test_a_retry_after_an_unconfirmed_release_asks_the_device_again(self):
++        backend = ekt.FakeVmmBackend(granularity=GRAN)
++        backend.release_never_visible = True
++        rank = _Rank(self, backend=backend)
++        rank.grow()
++
++        def shrink_and_wait():
++            rank.outputs.clear()
++            out = rank.shrink(release_timeout_s=1)
++            if out is None:
++                rank.clock.now += 2
++                rank.tail.check_pending()
++                (out,) = rank.outputs
++            return out
++
++        first = shrink_and_wait()
++        self.assertEqual(first.info["reason"], "release_unconfirmed")
++        released = first.info["released_bytes"]
++        # Still not visible: the retry must not answer from memory.
++        again = shrink_and_wait()
++        self.assertFalse(again.ok)
++        self.assertEqual(again.info["reason"], "release_unconfirmed")
++        self.assertFalse(again.info["vram_confirmed"])
++        self.assertEqual(again.info["released_bytes"], released)
++        self.assertTrue(rank.tail.status()["release_unconfirmed"])
++        # The device catches up: now, and only now, the retry confirms.
++        backend.release_never_visible = False
++        final = shrink_and_wait()
++        self.assertTrue(final.ok, final.message)
++        self.assertTrue(final.info["vram_confirmed"])
++        self.assertTrue(final.info["rechecked"])
++        self.assertEqual(final.info["vram_freed_bytes_by_rank"], {"0": released})
++        self.assertFalse(rank.tail.status()["release_unconfirmed"])
++        # With nothing outstanding a further shrink is the plain no-op.
++        self.assertTrue(rank.shrink().ok)
++
++
 +class WiringSuite(SWACheckpointWindowFixtures):
 +    """The pieces around the tail: scheduler install, IPC, tokenizer, HTTP."""
 +
@@ -1638,11 +2084,12 @@ index 0000000..e9aa8a9
 +            ),
 +            token_to_kv_pool_allocator=allocator,
 +            tree_cache=cache,
-+            model_config=SimpleNamespace(context_len=400),
++            # The request table is 512 wide: 5 slots of headroom per row.
++            model_config=SimpleNamespace(context_len=507),
 +            max_running_requests=2,
 +            max_total_num_tokens=self.cfg.kv_size,
-+            max_req_len=399,
-+            max_req_input_len=394,
++            max_req_len=506,
++            max_req_input_len=501,
 +            enable_overlap=False,
 +            send_control_output=lambda output, req: None,
 +            request_lists=lambda: {
@@ -1668,6 +2115,10 @@ index 0000000..e9aa8a9
 +            tail = ekt.install(scheduler)
 +        self.assertEqual(ekt._owners, [tail.owner])
 +        self.assertIs(tail.allocator, allocator.full_attn_allocator)
++        self.assertIsNone(tail.owner.self_test_error)
++        # Two requests of at most 90 + 5 slots against a base of 192.
++        self.assertEqual(tail.base_margin, 2)
++        self.assertEqual(tail.status()["base_margin_tokens"], 2)
 +        # The scheduler starts at the base although the pool is the large
 +        # one, and requests are held to the base context.
 +        self.assertEqual(scheduler.max_total_num_tokens, BASE)
@@ -1716,11 +2167,27 @@ index 0000000..e9aa8a9
 +
 +        with mock.patch.dict(os.environ, env), get_parallel().override(tp_rank=0):
 +            scheduler, allocator = self._scheduler()
-+            # Three requests of 90 tokens could not all move into 192 slots.
++            # Three requests of 95 slots could not all move into 192.
 +            scheduler.max_running_requests = 3
-+            with self.assertRaisesRegex(RuntimeError, "do not fit the base"):
++            with self.assertRaisesRegex(RuntimeError, r"short by 93"):
 +                ekt.install(scheduler)
 +            scheduler.max_running_requests = 2
++            # Nor two, once decode may allocate 8 slots ahead of each.
++            scheduler.model_config.context_len = 504
++            with self.assertRaisesRegex(RuntimeError, "do not fit the base"):
++                ekt.install(scheduler)
++            scheduler.model_config.context_len = 507
++            with mock.patch.object(ekt, "_num_draft_tokens", lambda: 4):
++                with self.assertRaisesRegex(RuntimeError, r"short by 4"):
++                    ekt.install(scheduler)
++            scheduler.tree_cache.linker = object()
++            with self.assertRaisesRegex(RuntimeError, "external cache linker"):
++                ekt.install(scheduler)
++            scheduler.tree_cache.linker = None
++            scheduler.uocr_runtime = object()
++            with self.assertRaisesRegex(RuntimeError, "document reuse"):
++                ekt.install(scheduler)
++            del scheduler.uocr_runtime
 +            scheduler.enable_overlap = True
 +            with self.assertRaisesRegex(RuntimeError, "disable-overlap-schedule"):
 +                ekt.install(scheduler)
@@ -1737,15 +2204,48 @@ index 0000000..e9aa8a9
 +            with self.assertRaisesRegex(RuntimeError, "HiCache"):
 +                ekt.install(scheduler)
 +            scheduler.tree_cache.cache_controller = None
-+            # The server's own context length wins when it is the smaller.
-+            scheduler.model_config.context_len = 80
-+            self.assertEqual(ekt.install(scheduler).context_length, 80)
++            self.assertEqual(ekt.install(scheduler).context_length, 90)
 +        # A pool no larger than the base has no tail to manage.
 +        env[ekt.ENV_BASE_TOKENS] = str(self.cfg.kv_size)
 +        with mock.patch.dict(os.environ, env):
 +            scheduler, _ = self._scheduler()
 +            with self.assertRaisesRegex(RuntimeError, "exactly one elastic KV pool"):
 +                ekt.install(scheduler)
++
++    def test_a_streaming_sessions_row_is_moved_like_a_requests(self):
++        env = {ekt.ENV_BASE_TOKENS: str(BASE), ekt.ENV_BASE_CONTEXT: "90"}
++        from sglang.srt.runtime_context import get_parallel
++
++        with mock.patch.dict(os.environ, env), get_parallel().override(tp_rank=0):
++            scheduler, allocator = self._scheduler()
++            tail = ekt.install(scheduler)
++        ekt.dispatch(tail, KvTailReqInput(action="grow"), KvTailReqOutput)
++        full = allocator.full_attn_allocator
++        table = scheduler.req_to_token_pool.req_to_token
++        k_buffer = allocator.get_kvcache().full_kv_pool.k_buffer[0]
++        filler = full.alloc(BASE)
++        own = allocator.alloc(12)
++        full.free(filler)
++        values = torch.arange(1, 13, dtype=k_buffer.dtype)
++        k_buffer[own] = values[:, None, None]
++        table[580, :12] = own.to(table.dtype)
++        # No request is running: only the session holds the row.
++        session = self._live_req(580, 12).kv
++        scheduler.tree_cache.session_records = lambda: {"session": session}
++        out = ekt.dispatch(tail, KvTailReqInput(action="shrink"), KvTailReqOutput)
++        self.assertTrue(out.ok, out.message)
++        self.assertEqual(out.info["migrated_tokens"], 12)
++        moved = table[580, :12].to(torch.int64)
++        self.assertLessEqual(int(moved.max()), BASE)
++        self.assertTrue(torch.equal(k_buffer[moved][:, 0, 0], values))
++        # Without the session the same slots would be nobody's: refused.
++        ekt.dispatch(tail, KvTailReqInput(action="grow"), KvTailReqOutput)
++        filler = full.alloc(len(full.free_pages))
++        own = allocator.alloc(3)
++        full.free(filler)
++        table[581, :3] = own.to(table.dtype)
++        out = ekt.dispatch(tail, KvTailReqInput(action="shrink"), KvTailReqOutput)
++        self.assertEqual(out.info["reason"], "cannot_migrate")
 +
 +    def test_requests_cross_the_ipc_codec(self):
 +        from sglang.srt.managers.io_struct import msgpack_decode, msgpack_encode
